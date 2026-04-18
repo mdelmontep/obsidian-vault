@@ -18,6 +18,8 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- Setup completo Obsidian + Claude Code: estructura vault, slash commands mejorados, skills kepano instalados, repo GitHub sincronizado
+- Daily Briefing configurado (trigger L-V 9:00 → DM Slack) — pendiente verificar que llega
 - Statusline mejorada: barra de contexto corregida (ultimo turno vs acumulado), duracion de sesion, sin metricas de coste
 - Acceso Slack configurado: bot "Bot incidencias" puede escribir en canales y canvas via API desde Claude Code
 - Dos tareas añadidas al canvas de Tareas Pendientes en Slack (tickets + repo skill)

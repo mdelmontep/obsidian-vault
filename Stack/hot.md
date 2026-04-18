@@ -34,3 +34,9 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json; ch
 
 `GET /api/v1/credentials` lista id/nombre/tipo pero nunca devuelve secrets. Guardar tokens fuera de n8n si se necesitan en otro contexto.
 Ver [[n8n-api-publica-no-expone-valores-de-credenciales]]
+
+## Obsidian vault sync via GitHub (2026-04-18)
+
+Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `AgentesIAMadrid/obsidian-vault` (público).
+`/obsidian-1` hace push automático al final. Daily Briefing Manu lee de ahí cada mañana L-V 9:00.
+Trigger ID: `trig_01THsqqvV3pg3WNnbgvkkdzk`
