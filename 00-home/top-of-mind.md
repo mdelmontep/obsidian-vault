@@ -8,7 +8,10 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
-- **TOP: Terminar flujos Clinica Zen** — conectar todo y dejarlo funcionando end-to-end
+- **Clinica Zen — pendientes post-migración**:
+  - Añadir nodo Create Event en Leads entrantes (las reservas no crean evento en Google Calendar)
+  - Cambiar Google Calendar ID de gonzalo al de CZ
+  - Crear tipo de tarea "Cita asignada" en Kommo CZ UI, actualizar task_type_id en Especialista Asignado
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte` con Bot incidencias
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
@@ -18,9 +21,9 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
-- Auditoría prompt Retell Clinica Zen: identificados 5 problemas (URLs servidor viejo, parameter_type form, transfer_call sin configurar, appointment_available_ts innecesario, code node hardcodeado)
-- Setup completo Obsidian + Claude Code: estructura vault, slash commands mejorados, skills kepano instalados, repo GitHub sincronizado
-- Daily Briefing configurado (trigger L-V 9:00 → DM Slack) — pendiente verificar que llega
-- Statusline mejorada: barra de contexto corregida (ultimo turno vs acumulado), duracion de sesion, sin metricas de coste
-- Acceso Slack configurado: bot "Bot incidencias" puede escribir en canales y canvas via API desde Claude Code
-- Dos tareas añadidas al canvas de Tareas Pendientes en Slack (tickets + repo skill)
+- Migración completa 9 workflows Clinica Zen: reset desde JSONs originales gonzalo + reemplazo de 30+ IDs/credenciales vía script Python + upload API
+- Chatbot CZ testado end-to-end: reserva completa (WhatsApp → AI Agent → Kommo lead → email → Google Sheets)
+- Fix chatbot flooding: debounce Redis 1s→10s, contextWindowLength 13→30
+- Identificados salesbot IDs CZ (63808, 63810, 63812, 63814, 64322) y task types (1=Follow-up, 2=Meeting)
+- Auditoría prompt Retell Clinica Zen: identificados 5 problemas
+- Setup completo Obsidian + Claude Code + Daily Briefing + Slack bot

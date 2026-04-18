@@ -47,6 +47,19 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json; ch
 `GET /api/v1/credentials` lista id/nombre/tipo pero nunca devuelve secrets. Guardar tokens fuera de n8n si se necesitan en otro contexto.
 Ver [[n8n-api-publica-no-expone-valores-de-credenciales]]
 
+## Migración masiva de workflows n8n vía script Python (2026-04-18)
+
+Patrón para resetear N workflows desde JSONs originales con reemplazo de IDs:
+
+1. Script Python lee JSONs originales + aplica `str.replace()` por cada par viejo→nuevo (credenciales, field_ids, pipeline, status, sub-workflow IDs, dominios, etc.)
+2. Extrae solo campos válidos para la API: `name`, `nodes`, `connections`, `settings`, `staticData`
+3. Guarda en `/tmp/cz_upload/` → sube con `PUT /api/v1/workflows/{id}`
+4. Activar después con `POST /api/v1/workflows/{id}/activate`
+
+Clave: los `field_id` en Code nodes van SIN comillas (`field_id: 337714`), necesitan reemplazo por separado de los que van como string.
+
+Ver [[kommo-llt-requiere-subdominio-cuenta-no-api-c]] y [[n8n-debounce-redis-1s-causa-duplicados-en-chatbot]]
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `AgentesIAMadrid/obsidian-vault` (público).
