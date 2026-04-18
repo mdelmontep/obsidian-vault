@@ -13,6 +13,18 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## Retell → n8n checklist (2026-04-18)
+
+Antes de subir un prompt de Retell que conecta con webhooks de n8n:
+
+1. URLs de tools apuntan al dominio correcto (`dig +short` para verificar — EasyPanel ≠ dominio custom)
+2. Cada tool referenciada en el prompt existe en `general_tools`
+3. Nombres de parámetros coinciden con `Edit Fields` / `Set` del workflow n8n
+4. Workflow destino activo y no archivado
+5. `parameter_type: "json"` si n8n espera `body.args.X`
+
+Ver [[retell-parameter-type-form-vs-json-rompe-n8n-silenciosamente]] y [[easypanel-y-dominio-custom-pueden-resolver-a-ips-distintas]]
+
 ## Slack API — escribir en canvas (2026-04-18)
 
 ```bash

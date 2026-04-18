@@ -18,6 +18,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- Auditoría prompt Retell Clinica Zen: identificados 5 problemas (URLs servidor viejo, parameter_type form, transfer_call sin configurar, appointment_available_ts innecesario, code node hardcodeado)
 - Setup completo Obsidian + Claude Code: estructura vault, slash commands mejorados, skills kepano instalados, repo GitHub sincronizado
 - Daily Briefing configurado (trigger L-V 9:00 → DM Slack) — pendiente verificar que llega
 - Statusline mejorada: barra de contexto corregida (ultimo turno vs acumulado), duracion de sesion, sin metricas de coste

@@ -1,27 +1,29 @@
 ---
-title: configurar crear-ticket en retell aia-llamadas
-date: 2026-04-17
+title: crear-ticket en retell aia-llamadas — completado
+date: 2026-04-18
 source: claude-code-session
-tags: [inbox, pendiente, agentesia, retell, ticketing]
+tags: [completado, agentesia, retell, ticketing]
 ---
 
-Los nodos del workflow AIA Llamadas (`O80k1QzfSkJUgzkD`) ya están creados:
+Integración de ticketing en el agente de voz Retell completada (2026-04-18).
 
-- Switch Acción: 4o caso `Crear_ticket` (output 3)
-- `Normalizar Datos Ticket` (Set) — extrae whatsapp_number, subject, description, priority, category, nombre de `body.args`
-- `POST Crear Ticket` (HTTP Request) — POST al webhook del portal con `onError: continueRegularOutput`
-- `Preparar Respuesta Ticket` (Code) — interpreta statusCode y devuelve `{status, mensaje}`
-- `Respuesta Ticket` (respondToWebhook) — devuelve JSON a Retell
-- `Respuesta Callback OK` (respondToWebhook) — **BUG FIX** para ruta `Solicitar_callback` que no tenía respond
+## Implementado
 
-## Pendiente (manual en dashboard Retell)
+- **Retell LLM** (`llm_190533919a5b834eb3ceabebf0fe`): tool `Crear_ticket` + sección SOPORTE en prompt
+- **Prompt SOPORTE**: flujo IDENTIFICAR (empresa, nombre, teléfono) → ENTENDER (servicio, problema, desde cuándo) → CLASIFICAR → Crear_ticket → confirmar
+- **404**: redirige a WhatsApp 919 933 525 (no transfer_call)
+- **Anti-callback**: incidencias siempre van a ticket, nunca a Solicitar_callback
+- **Cierre cálido**: variado, sin repetir info
 
-1. **Crear Custom Tool "Crear_ticket"** en el agente de voz Retell
-   - URL: `https://n8n.agentesia.madrid/webhook/Reservas` (mismo webhook existente)
-   - Parámetros: subject (string, req), description (string, req), priority (string, opt), category (string, opt), telefono (string, req), nombre (string, req)
+## Workflow n8n (`O80k1QzfSkJUgzkD`)
 
-2. **Actualizar prompt del agente de voz** — añadir sección "Soporte a clientes existentes" con flujo: confirmar cliente → escuchar → clasificar → usar Crear_ticket → interpretar respuesta
+- Switch Acción output 3 → Normalizar Datos Ticket → POST Crear Ticket → Preparar Respuesta Ticket → Respuesta Ticket
+- `Normalizar Datos Ticket` lee de `$('Webhook').first().json.body.args.*` (no de `$json.body`)
+- `POST Crear Ticket` usa URL interna Docker: `http://agentesia-dashboard-interno-tpiuu8:3000`
+- `Preparar Respuesta Ticket` parsea statusCode de `error.message` (AxiosError)
+- Mensajes Slack con tag `- Retell (llamada de voz)` para identificar origen
 
-## Plan detallado
+## Pendiente
 
-Ver plan completo en `/Users/manueldelmonte/.claude/plans/peaceful-gliding-feigenbaum.md`, secciones B.6 y B.7.
+- Test con llamada real a un cliente registrado en el portal
+- Borrar tickets de test del portal (cuando haya acceso)
