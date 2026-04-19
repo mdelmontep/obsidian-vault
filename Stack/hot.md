@@ -13,6 +13,18 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## AI Agent con reservas — 3 reglas anti-bug (2026-04-19)
+
+Para cualquier AI Agent n8n que gestione reservas con Google Calendar:
+
+1. **0 eventos = todo libre** — añadir regla explícita en prompt, Think tool y tabla de herramientas. Los LLMs interpretan lista vacía como "no disponible"
+2. **Weekday number en Think** — incluir `{{ $now.weekday }}` (1-7) + fórmula + ejemplos + verificación. Sin esto el LLM calcula mal "lunes" desde "sábado"
+3. **Tool description con consecuencias** — para write-tools (Reservar, Cancelar), expandir descripción a ~280 chars explicando "sin esta llamada la acción NO ocurre". Descripción genérica = LLM genera texto sin ejecutar
+
+Ver [[google-calendar-tool-0-eventos-significa-todo-libre]], [[llm-calcula-mal-dia-semana-a-fecha-sin-weekday-number]], [[tool-description-generica-no-fuerza-ejecucion-de-tool-critica]]
+
+---
+
 ## Retell → n8n checklist (2026-04-18)
 
 Antes de subir un prompt de Retell que conecta con webhooks de n8n:

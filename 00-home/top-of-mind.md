@@ -8,22 +8,29 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
+- **BLOQUEANTE Clinica Zen: Google Calendar ID incorrecto** — `99e8af26...` devuelve "Not Found". Recordatorios falla cada 30 min. Preguntar a Gonzalo por el Calendar ID correcto o crear uno nuevo en la cuenta CZ
 - **Clinica Zen — pendientes post-migración**:
-  - Añadir nodo Create Event en Leads entrantes (las reservas no crean evento en Google Calendar)
-  - Cambiar Google Calendar ID de gonzalo al de CZ
-  - Crear tipo de tarea "Cita asignada" en Kommo CZ UI, actualizar task_type_id en Especialista Asignado
+  - ~~Añadir nodo Create Event en Leads entrantes~~ HECHO
+  - Cambiar Google Calendar ID en TODOS los workflows (chatbot, leads entrantes, especialista, recordatorios)
+  - ~~Verificar que SMTP `citas@clinicazen.es` funciona~~ HECHO — credencial yJGBBnGxWMImvH1x creada y verificada
+  - Cancelación de cita debe borrar evento del calendario (no implementado)
+  - Revisar agente de voz Retell: webhooks pueden apuntar al EasyPanel viejo
+  - Verificar contenido RAG (Supabase) actualizado para CZ — Google Doc fuente es privado y credencial Drive puede ser de gonzalo
+  - Confirmar task type "Cita asignada" con Gonzalo
+- **Clinica Zen: Chatbot prompt v3 aplicado — pendiente test real WhatsApp** (3 bugs críticos corregidos: fecha incorrecta, calendario vacío, Reservar_cita no ejecutado)
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte` con Bot incidencias
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
 ## Bloqueos activos
 
+- **Clinica Zen: Calendar ID no accesible** — bloquea recordatorios, disponibilidad del chatbot, y creación de eventos. Cada 30 min falla el workflow Recordatorios
 - Clinica Zen: pendiente scope "Chats" de Kommo (contactar soporte) — bloquea patrón Laserys para amojo_token dinámico
 
 ## Completado reciente
 
-- Migración completa 9 workflows Clinica Zen: reset desde JSONs originales gonzalo + reemplazo de 30+ IDs/credenciales vía script Python + upload API
-- Chatbot CZ testado end-to-end: reserva completa (WhatsApp → AI Agent → Kommo lead → email → Google Sheets)
-- Fix chatbot flooding: debounce Redis 1s→10s, contextWindowLength 13→30
-- Identificados salesbot IDs CZ (63808, 63810, 63812, 63814, 64322) y task types (1=Follow-up, 2=Meeting)
-- Auditoría prompt Retell Clinica Zen: identificados 5 problemas
+- SMTP citas@clinicazen.es verificado y funcional (cred yJGBBnGxWMImvH1x, mail.clinicazen.es:465)
+- Chatbot CZ prompt v3: 3 bugs críticos corregidos (fecha domingo→lunes, 0 eventos=todo libre, Reservar_cita forzado) + investigación mejores prácticas aplicada
+- Todas las credenciales de workflows CZ verificadas (Calendar, Kommo, SMTP)
+- Auditoría completa flujo de reserva CZ: 5 issues críticos encontrados y corregidos (Calendar Create, token gonzalo en Recordatorios, filtro timeMin/timeMax, emails kevinrcuenca14 → info@hiflymadrid.com)
+- Migración completa 9 workflows Clinica Zen + fix chatbot flooding
 - Setup completo Obsidian + Claude Code + Daily Briefing + Slack bot

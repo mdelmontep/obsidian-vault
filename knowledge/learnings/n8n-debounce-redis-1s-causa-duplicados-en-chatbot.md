@@ -9,4 +9,6 @@ En el patrón de debounce Redis (push → Wait → get all → delete → proces
 
 Con Wait de 10 segundos se agrupa correctamente. El chatbot acumula todos los mensajes del usuario en esos 10s y responde una sola vez.
 
+Para Clínica Zen se usa **15 segundos** porque los pacientes escriben más lento que leads comerciales y suelen enviar 2-3 mensajes seguidos con datos separados (nombre, teléfono, servicio). El valor óptimo depende del perfil del usuario.
+
 Síntoma visible: el bot envía múltiples respuestas al mismo mensaje, a veces repitiendo preguntas ya contestadas.
