@@ -13,6 +13,16 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## Supabase Cloud — RLS multi-tenant con SECURITY DEFINER (2026-04-19)
+
+Patrón para SaaS multi-tenant:
+1. `get_user_org_id()` SECURITY DEFINER STABLE — lee org_id de org_members via auth.uid()
+2. Todas las policies: `USING (org_id = get_user_org_id())`
+3. Onboarding: `create_org_for_user(org_nombre)` crea org + inserta en org_members
+4. `next_invoice_number(serie)` para auto-numeración con bloqueo de fila
+
+Ver [[rls-multi-tenant-supabase-con-security-definer]]
+
 ## AI Agent con reservas — 3 reglas anti-bug (2026-04-19)
 
 Para cualquier AI Agent n8n que gestione reservas con Google Calendar:

@@ -8,6 +8,7 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
+- **FacturaIA — dashboard facturación** — Fase 1 frontend completa (12 vistas). BLOQUEADO: ejecutar SQL schema (17 tablas + RLS) en Supabase Dashboard antes de continuar con Fase 2 (CRUD real). Luego quedan Fases 3-6
 - **BLOQUEANTE Clinica Zen: Google Calendar ID incorrecto** — `99e8af26...` devuelve "Not Found". Recordatorios falla cada 30 min. Preguntar a Gonzalo por el Calendar ID correcto o crear uno nuevo en la cuenta CZ
 - **Clinica Zen — pendientes post-migración**:
   - ~~Añadir nodo Create Event en Leads entrantes~~ HECHO
@@ -23,6 +24,7 @@ tags: [home, prioridades]
 
 ## Bloqueos activos
 
+- **FacturaIA: SQL schema no ejecutado** — `supabase/migrations/001_schema.sql` y `002_rls.sql` escritos pero no aplicados a Supabase Cloud (lahqlyaxvobqjgdiftag). Sin psql ni CLI local. Ejecutar en Dashboard SQL Editor
 - **Clinica Zen: Calendar ID no accesible** — bloquea recordatorios, disponibilidad del chatbot, y creación de eventos. Cada 30 min falla el workflow Recordatorios
 - Clinica Zen: pendiente scope "Chats" de Kommo (contactar soporte) — bloquea patrón Laserys para amojo_token dinámico
 
