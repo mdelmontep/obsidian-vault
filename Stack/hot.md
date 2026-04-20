@@ -112,6 +112,28 @@ Cada redeploy deja Bad Gateway. Contenedor arranca OK pero Traefik no re-descubr
 
 Ver [[dokploy-requiere-reload-manual-traefik-tras-redeploy]]
 
+## n8n $if isExecuted para ramas IF (2026-04-20)
+
+En workflows con ramas condicionales, cualquier expresión que referencia un nodo de otra rama debe usar:
+
+```
+={{ $if($('Nodo').isExecuted, $('Nodo').item.json.campo, fallbackValue) }}
+```
+
+Sin esto: error silencioso que rompe la ejecución. Caso típico: contacto existente vs nuevo, cada uno crea por su rama pero un nodo posterior referencia solo una.
+
+Ver [[n8n-expresion-nodo-no-ejecutado-falla-silencioso]]
+
+## Calendar events formato limpio (2026-04-20)
+
+Para Clínica Zen (y cualquier proyecto con Calendar):
+- **Summary**: `Valoración - Odontología - Ana López` (legible en vista calendario)
+- **Description**: Lead ID, teléfono, email, motivo, fuente (datos para gestión)
+
+Google Calendar `query` busca en summary + description, así que poner Lead ID en description funciona para buscar/cancelar/mover eventos programáticamente.
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
