@@ -1,6 +1,6 @@
 ---
 title: top of mind
-date: 2026-04-17
+date: 2026-04-20
 tags: [home, prioridades]
 ---
 
@@ -8,42 +8,39 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
-- ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado). Remote local, CLAUDE.md, hot.md y Daily Briefing trigger actualizados. **Pendiente**: decidir si mover más repos (facturaia descartado por ahora)
-- **FacturaIA — dashboard facturación** — Fases 1-5 completadas. Dashboard 100% funcional con datos reales Supabase (KPIs, sparklines, cashflow SVG, donut, alertas dinámicas). CRUD completo facturas (editar, eliminar, filtros, CSV export, bulk actions). Ingesta IA con OCR pipeline funcionando (n8n + GPT-4o-mini Vision + Realtime). Deploy en facturaia.agentesia.world. **Pendiente**: test e2e OCR en producción, deploy automático (webhook GitHub→Dokploy), developer dashboard `/admin`
-- ~~BLOQUEANTE Clinica Zen: Google Calendar ID incorrecto~~ RESUELTO — ID confirmado correcto por el usuario. Si Recordatorios falla, el problema es la credencial OAuth (Cuenta Gonzalo), no el ID
+- **FacturaIA — sesión larga de mejoras en curso** — calendario interactivo, cashflow con negativos, pills con pulso, filtros por rango de fechas, settings de apariencia (colores, tipografía Mermaid, pills, categorías), smart alerts, top proveedores, previsión de gastos fijos. Seed con 60 facturas realistas + PDFs generados con pdf-lib.
+  - **PENDIENTE INMEDIATO**: verificar visualmente en navegador que las facturas emitidas muestran nombres de clientes (datos OK en BD, falta hard refresh), verificar recibidas distribuidas correctamente entre proveedores, probar click en número de factura para previsualizar PDF, verificar columnas no se cortan
+  - **PENDIENTE**: deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
+- ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado)
 - **Clinica Zen — pendientes post-migración**:
-  - ~~Añadir nodo Create Event en Leads entrantes~~ HECHO
-  - Cambiar Google Calendar ID en TODOS los workflows (chatbot, leads entrantes, especialista, recordatorios)
-  - ~~Verificar que SMTP `citas@clinicazen.es` funciona~~ HECHO — credencial yJGBBnGxWMImvH1x creada y verificada
+  - Cambiar Google Calendar ID en TODOS los workflows
   - Cancelación de cita debe borrar evento del calendario (no implementado)
-  - Revisar agente de voz Retell: webhooks pueden apuntar al EasyPanel viejo
-  - Verificar contenido RAG (Supabase) actualizado para CZ — Google Doc fuente es privado y credencial Drive puede ser de gonzalo
-  - ~~Confirmar task type "Cita asignada" con Gonzalo~~ HECHO — es "Especialista asignado"
-- **Clinica Zen: Chatbot prompt v7 aplicado — pendiente test real WhatsApp** (confirmación con día semana, STOP antes de Reservar_cita, anti-invención disponibilidad, onError continueErrorOutput)
-- **Clinica Zen: Configurar agente de voz Retell** en workflow Leads entrantes — webhooks pueden apuntar a EasyPanel viejo, verificar URLs y config
-- **Clinica Zen: Test cancelar/cambiar cita** — flujo completo sin probar, cancelación no borra evento Calendar (pendiente implementar)
-- Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte` con Bot incidencias
+  - Verificar contenido RAG actualizado para CZ
+- **Clinica Zen: Chatbot prompt v7 aplicado — pendiente test real WhatsApp**
+- **Clinica Zen: Test cancelar/cambiar cita** — flujo completo sin probar
+- Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte`
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
 ## Bloqueos activos
 
-- ~~FacturaIA: SQL schema no ejecutado~~ RESUELTO — schema ejecutado, 17 tablas + RLS multi-tenant + funciones SECURITY DEFINER operativas
-- ~~Clinica Zen: Calendar ID no accesible~~ RESUELTO — ID confirmado correcto
-- Clinica Zen: pendiente scope "Chats" de Kommo (contactar soporte) — bloquea patrón Laserys para amojo_token dinámico
+- Clinica Zen: pendiente scope "Chats" de Kommo (contactar soporte)
 
 ## Completado reciente
 
-- Chatbot CZ prompt v7: confirmación con día semana + STOP antes de Reservar_cita + anti-invención disponibilidad
-- Todos los emails `info@hiflymadrid.com` → `citas@clinicazen.es` en todos los workflows CZ
-- Todos los `status_id` de gonzalo migrados a CZ
-- Especialista Asignado completo: webhook Kommo + IF anti-duplicados + field names + Calendar+Tasks+Email
-- toolWorkflow `onError: continueErrorOutput` en los 4 nodos tool del chatbot
-- Workflow archivado "Agente de Voz Clinica Zen" eliminado (no era de CZ)
-- FacturaIA Fases 1-5 completadas: dashboard con datos reales, CRUD facturas, ingesta IA con OCR, deploy funcional en facturaia.agentesia.world
-- SMTP citas@clinicazen.es verificado y funcional (cred yJGBBnGxWMImvH1x, mail.clinicazen.es:465)
-- Chatbot CZ prompt v3: 3 bugs críticos corregidos (fecha domingo→lunes, 0 eventos=todo libre, Reservar_cita forzado) + investigación mejores prácticas aplicada
-- Todas las credenciales de workflows CZ verificadas (Calendar, Kommo, SMTP)
-- Auditoría completa flujo de reserva CZ: 5 issues críticos encontrados y corregidos (Calendar Create, token gonzalo en Recordatorios, filtro timeMin/timeMax, emails kevinrcuenca14 → info@hiflymadrid.com)
-- Migración completa 9 workflows Clinica Zen + fix chatbot flooding
-- Setup completo Obsidian + Claude Code + Daily Briefing + Slack bot
-- Cerebro conectado: CLAUDE.md reducido de 442 a ~145 líneas (~80% menos tokens/turno). Reglas especializadas migradas a 11 archivos en Stack/. Lectura automática de vault por tema configurada
+- FacturaIA: 60 facturas seed (40 emitidas, 20 recibidas) con distribución round-robin de clientes/proveedores
+- FacturaIA: 60 PDFs profesionales generados con pdf-lib y subidos a Supabase Storage
+- FacturaIA: calendario interactivo con filtros, approve de sin_aprobar, click para navegar a factura
+- FacturaIA: filtro por rango de fechas con 7 presets (esta semana, mes, trimestre, año, anteriores)
+- FacturaIA: pills con pulso (rojo vencidas/cerca vencimiento, verde cerca cobro)
+- FacturaIA: cashflow chart arreglado para valores negativos
+- FacturaIA: settings apariencia funcional (brand colors, tipografía incluyendo Mermaid, pill colors, categorías)
+- FacturaIA: panel previsión gastos fijos en dashboard (6 gastos recurrentes seeded)
+- FacturaIA: top proveedores y smart alerts (5 tipos) en dashboard
+- FacturaIA: número de factura clickeable para previsualizar PDF en modal
+- FacturaIA: tabla facturas con layout fijo para evitar columnas cortadas
+- FacturaIA: proveedores 3-dot menu arreglado con createPortal
+- FacturaIA: donut chart "Estado de facturación" arreglado (faltaba estado enviada)
+- FacturaIA: fuente Mermaid añadida como opción de tipografía
+- Agente de voz Retell CZ creado via API
+- Chatbot CZ prompt v7 completado
+- FacturaIA Fases 1-5 completadas

@@ -67,13 +67,31 @@ tags: [clinica-zen, kommo, n8n, workflow]
 - Field names corregidos: "Día de preferencia", "Email" (diferentes a gonzalo)
 - Cadena completa: Calendar Create + Tasks Create + Email Confirmación
 
+## Agente de Voz Retell (2026-04-20)
+
+- **Agent ID**: `agent_350620f6b3044226efaeba9111`
+- **LLM ID**: `llm_271c1594207dffae30974c56b5e6`
+- **Voz**: `cartesia-Isabel` (española, femenina)
+- **Modelo**: GPT-4.1
+- **JSON corregido**: `~/Downloads/clinica zen 2 corregido.json`
+- **Webhooks corregidos**: URLs de EasyPanel → `n8nclinicazen.agentesia.madrid`
+- **Herramientas configuradas**:
+  - `Mirar_disponibilidad` → webhook `/mirar_disponibilidad` en workflow Leads entrantes — VERIFICADO OK
+  - `Reservar` → webhook `/Reservar_crm` en workflow Leads entrantes — VERIFICADO OK (crea contacto + lead en Kommo)
+  - `end_call` → nativo Retell
+  - `transfer_call` → PENDIENTE añadir desde dashboard Retell (número provisional: +34617314938, cambiar al definitivo de la clínica)
+- **Voz anterior eliminada**: `custom_voice_49ce5c13a6dfc05437d7be6e75` (ElevenLabs, daba error)
+- **parameter_type**: cambiado de `form` a `json` en Reservar (n8n espera JSON body)
+- **Community node Retell**: instalado en n8n pero requirió restart del contenedor Docker para cargarlo
+
 ## Pendientes post-sesión
 
 - Test cancelar cita (flujo completo + borrar evento Calendar — no implementado)
 - Test cambio de fecha (flujo completo + mover evento Calendar)
 - Validar prompt v7 con WhatsApp real
-- Configurar agente de voz Retell en Leads entrantes (webhooks pueden apuntar a EasyPanel viejo)
+- Añadir transfer_call desde dashboard Retell al número definitivo de la clínica
 - Formulario web Sheets — verificar funcional
+- Borrar lead de test (ID 28365044) de Kommo si no se ha borrado
 
 ## Fixes aplicados
 
