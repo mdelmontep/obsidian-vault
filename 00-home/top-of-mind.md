@@ -36,3 +36,4 @@ tags: [home, prioridades]
 - Auditoría completa flujo de reserva CZ: 5 issues críticos encontrados y corregidos (Calendar Create, token gonzalo en Recordatorios, filtro timeMin/timeMax, emails kevinrcuenca14 → info@hiflymadrid.com)
 - Migración completa 9 workflows Clinica Zen + fix chatbot flooding
 - Setup completo Obsidian + Claude Code + Daily Briefing + Slack bot
+- Cerebro conectado: CLAUDE.md reducido de 442 a ~145 líneas (~80% menos tokens/turno). Reglas especializadas migradas a 11 archivos en Stack/. Lectura automática de vault por tema configurada

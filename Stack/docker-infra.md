@@ -38,6 +38,19 @@ networks:
 - Si Postgres o Redis ya arrancaron con password corrupta, el volumen persiste — hay que borrarlo antes de redesplegar
 - SMTP: hardcodear valores directamente en el compose si las `${VAR}` no se inyectan correctamente desde Dokploy
 
+## Traefik reload obligatorio tras redeploy
+
+Cada redeploy en Dokploy deja **Bad Gateway** hasta hacer reload manual de Traefik. El contenedor arranca correctamente (Next.js escucha en 0.0.0.0:3000, verificable con `netstat -tlnp`), pero Traefik no re-descubre la ruta.
+
+**Ruta**: Dokploy → Settings → Web Server → **Reload**
+
+Diagnóstico rápido si Bad Gateway post-redeploy:
+1. Verificar contenedor running (`ps aux` en Docker Terminal de Dokploy)
+2. Hacer reload de Traefik
+3. Si sigue, entonces mirar logs del build
+
+Ocurrió 3 veces seguidas con FacturaIA. No hay auto-reload. Pendiente investigar webhook GitHub → Dokploy para deploy automático.
+
 ## Generación de credenciales
 
 ```bash

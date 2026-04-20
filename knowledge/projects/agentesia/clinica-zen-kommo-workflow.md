@@ -30,6 +30,12 @@ tags: [clinica-zen, kommo, n8n, workflow]
 | `15bh3GWag2IgwLe8` | Derivacion Humano | Derivar_agente |
 | `s3q2LceTDBvohSIx` | Buscar_base_de_datos | Buscar_base_de_datos |
 
+## Workflows auxiliares
+
+| ID | Nombre | Trigger |
+|---|---|---|
+| `qBUnBCRxKJEOJGFv` | Especialista Asignado | Webhook Kommo `status_lead` (id 47214819) |
+
 ## Credenciales n8n
 
 | ID | Tipo | Uso |
