@@ -49,15 +49,39 @@ tags: [clinica-zen, kommo, n8n, workflow]
 | `FuL6BvRXqQ4JJO47` | Supabase | Vector store RAG |
 | `evGPhnDHcPZ2fW7V` | Google Calendar | Citas |
 
-## Estado actual (2026-04-17)
+## Estado actual (2026-04-20)
 
 - **Funcional**: recibe mensajes y responde vía amojo API v1
+- **Prompt**: versión 7 — confirmación con día de semana + STOP antes de Reservar_cita + regla anti-invención disponibilidad
+- **Error handling**: 4 toolWorkflow nodes con `onError: continueErrorOutput` (antes: stopWorkflow)
+- **Emails**: todos apuntan a `citas@clinicazen.es` (antes: `info@hiflymadrid.com`)
+- **Status IDs**: todos migrados de gonzalo a CZ
 - **Problema**: amojo_token expira cada ~24h, hay que actualizarlo manualmente en la credencial Header Auth
 - **Pendiente**: soporte Kommo habilite scope "Chats" → aplicar patrón Laserys (token dinámico) + typing entre mensajes
 - **Integración OAuth2 Client ID**: `751c9caa-58b3-4d0b-aa90-e4204739b94d`
 
-## Fixes aplicados en esta sesión
+## Especialista Asignado (`qBUnBCRxKJEOJGFv`)
+
+- Webhook Kommo `status_lead` (id 47214819)
+- IF filter: `status_id == 104115983` para evitar ejecuciones en otros cambios de estado
+- Field names corregidos: "Día de preferencia", "Email" (diferentes a gonzalo)
+- Cadena completa: Calendar Create + Tasks Create + Email Confirmación
+
+## Pendientes post-sesión
+
+- Test cancelar cita (flujo completo + borrar evento Calendar — no implementado)
+- Test cambio de fecha (flujo completo + mover evento Calendar)
+- Validar prompt v7 con WhatsApp real
+- Configurar agente de voz Retell en Leads entrantes (webhooks pueden apuntar a EasyPanel viejo)
+- Formulario web Sheets — verificar funcional
+
+## Fixes aplicados
 
 - 26 correcciones vía API: headers, URLs, sub-workflow IDs, amojo_id (todo venía de gonzaloautomatizaciones)
 - Webhook Kommo: seleccionar solo "Mensaje entrante recibido"
 - Auth amojo: revertido de OAuth2 a Header Auth con token manual
+- Prompt v5→v6→v7: varied closing, blocked pre-Reservar text, immediate email, anti-invención, STOP+confirmation
+- Emails hiflymadrid→clinicazen en todos los workflows
+- Status IDs gonzalo→CZ en todos los workflows
+- IF anti-duplicados en Especialista Asignado
+- onError: continueErrorOutput en 4 toolWorkflow nodes

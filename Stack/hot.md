@@ -82,6 +82,22 @@ Clave: los `field_id` en Code nodes van SIN comillas (`field_id: 337714`), neces
 
 Ver [[kommo-llt-requiere-subdominio-cuenta-no-api-c]] y [[n8n-debounce-redis-1s-causa-duplicados-en-chatbot]]
 
+## OCR pipeline facturas — patrón Next.js + n8n + OpenAI Vision (2026-04-20)
+
+1. Next.js convierte archivo a base64 (`Buffer.from(arrayBuffer).toString('base64')`) — n8n Code Node sandbox no tiene `helpers.binaryToBuffer`
+2. Enviar `org_nombre` en el webhook body para que el prompt distinga emisor vs receptor
+3. Frontend simula progreso 0→90% con `setInterval` mientras `estado='procesando'`. Supabase Realtime sobrescribe con 100% al terminar
+4. n8n actualiza `bandeja_ingesta` con PATCH directo a Supabase (no PostgREST)
+
+Ver [[ocr-facturas-confunde-receptor-con-emisor-sin-org-nombre]], [[n8n-code-node-sandbox-no-tiene-helpers-binaryToBuffer]]
+
+## Dokploy — Traefik reload obligatorio tras redeploy (2026-04-20)
+
+Cada redeploy deja Bad Gateway. Contenedor arranca OK pero Traefik no re-descubre la ruta.
+**Fix**: Dokploy → Settings → Web Server → Reload. Verificar contenedor con `ps aux` + `netstat -tlnp` antes.
+
+Ver [[dokploy-requiere-reload-manual-traefik-tras-redeploy]]
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `AgentesIAMadrid/obsidian-vault` (público).
