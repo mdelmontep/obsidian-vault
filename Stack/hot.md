@@ -35,6 +35,20 @@ Ver [[google-calendar-tool-0-eventos-significa-todo-libre]], [[llm-calcula-mal-d
 
 ---
 
+## Kommo webhook status_lead — siempre filtrar (2026-04-20)
+
+`status_lead` dispara en TODOS los cambios de estado, no solo el target. Añadir IF `status_id == X` después del webhook para evitar ejecuciones duplicadas. Sin esto: emails duplicados, eventos Calendar duplicados, tareas duplicadas.
+
+Ver [[kommo-webhook-status-lead-dispara-en-todos-los-cambios]]
+
+## toolWorkflow onError — usar continueErrorOutput (2026-04-20)
+
+En nodos toolWorkflow del AI Agent, `stopWorkflow` mata al agente sin respuesta al usuario. Usar siempre `continueErrorOutput`.
+
+Ver [[toolWorkflow-onError-stopWorkflow-mata-al-agente-silenciosamente]]
+
+---
+
 ## Retell → n8n checklist (2026-04-18)
 
 Antes de subir un prompt de Retell que conecta con webhooks de n8n:

@@ -19,7 +19,9 @@ tags: [home, prioridades]
   - Revisar agente de voz Retell: webhooks pueden apuntar al EasyPanel viejo
   - Verificar contenido RAG (Supabase) actualizado para CZ — Google Doc fuente es privado y credencial Drive puede ser de gonzalo
   - ~~Confirmar task type "Cita asignada" con Gonzalo~~ HECHO — es "Especialista asignado"
-- **Clinica Zen: Chatbot prompt v3 aplicado — pendiente test real WhatsApp** (3 bugs críticos corregidos: fecha incorrecta, calendario vacío, Reservar_cita no ejecutado)
+- **Clinica Zen: Chatbot prompt v7 aplicado — pendiente test real WhatsApp** (confirmación con día semana, STOP antes de Reservar_cita, anti-invención disponibilidad, onError continueErrorOutput)
+- **Clinica Zen: Configurar agente de voz Retell** en workflow Leads entrantes — webhooks pueden apuntar a EasyPanel viejo, verificar URLs y config
+- **Clinica Zen: Test cancelar/cambiar cita** — flujo completo sin probar, cancelación no borra evento Calendar (pendiente implementar)
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte` con Bot incidencias
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
@@ -31,6 +33,12 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- Chatbot CZ prompt v7: confirmación con día semana + STOP antes de Reservar_cita + anti-invención disponibilidad
+- Todos los emails `info@hiflymadrid.com` → `citas@clinicazen.es` en todos los workflows CZ
+- Todos los `status_id` de gonzalo migrados a CZ
+- Especialista Asignado completo: webhook Kommo + IF anti-duplicados + field names + Calendar+Tasks+Email
+- toolWorkflow `onError: continueErrorOutput` en los 4 nodos tool del chatbot
+- Workflow archivado "Agente de Voz Clinica Zen" eliminado (no era de CZ)
 - FacturaIA Fases 1-5 completadas: dashboard con datos reales, CRUD facturas, ingesta IA con OCR, deploy funcional en facturaia.agentesia.world
 - SMTP citas@clinicazen.es verificado y funcional (cred yJGBBnGxWMImvH1x, mail.clinicazen.es:465)
 - Chatbot CZ prompt v3: 3 bugs críticos corregidos (fecha domingo→lunes, 0 eventos=todo libre, Reservar_cita forzado) + investigación mejores prácticas aplicada
