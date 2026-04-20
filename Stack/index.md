@@ -1,6 +1,6 @@
 ---
 title: stack index
-date: 2026-04-17
+date: 2026-04-20
 tags: [stack, index]
 ---
 
@@ -9,30 +9,33 @@ tags: [stack, index]
 Índice de conocimiento técnico organizado por herramienta.
 Para lo reciente (< 2 semanas), ver [[hot]].
 
-## n8n
+## Infraestructura
 
-- Ver `knowledge/learnings/` — filtrar por tag `n8n`
+- [[docker-infra]] — Traefik, Dokploy, healthchecks, passwords, credenciales
 
-## Chatwoot
+## Servicios
 
-- Ver `knowledge/learnings/` — filtrar por tag `chatwoot`
+- [[n8n]] — workflows, Kommo, AI Agents, API, migraciones
+- [[chatwoot]] — deploy, automation rules, teams, WhatsApp Cloud
+- [[supabase-cloud]] — proyectos SaaS (FacturaIA), psql, connection pooler, RLS
+- [[supabase-selfhosted]] — vector store para RAG, pgvector, LangChain schema
 
-## Kommo
+## Voice / Retell
 
-- Ver `knowledge/learnings/` — filtrar por tag `kommo`
-
-## Retell / Voice
-
-- Ver `knowledge/learnings/` — filtrar por tag `retell`
-
-## Slack
-
-- Ver `knowledge/learnings/` — filtrar por tag `slack`
-
-## Infra / Dokploy
-
-- (pendiente de poblar)
+- [[retell/retell-sdk-patterns]] — SDK, webhooks, parameter_type, checklist pre-deploy
+- [[retell/retell-nuevas-features-abril-2026-evaluar]] — Subagent Nodes, JS inline, SMS en llamada
 
 ## Frontend
 
-- Ver `knowledge/learnings/` — filtrar por tags `frontend`, `css`, `motion`
+- [[frontend-css-mobile]] — overflow horizontal, sticky headers, checklist mobile
+- [[frontend-motion]] — motion/react, performance, willChange, repeat:Infinity
+- [[frontend-images]] — webp, SVG marcas, overlays
+
+## Herramientas
+
+- [[notion]] — estructura workspace, API limitations
+- [[slack]] — bot API, canvas, scopes
+
+## Learnings
+
+- Ver `knowledge/learnings/` — 40+ aprendizajes técnicos individuales con tags
