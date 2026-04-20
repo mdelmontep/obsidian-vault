@@ -114,6 +114,6 @@ Ver [[dokploy-requiere-reload-manual-traefik-tras-redeploy]]
 
 ## Obsidian vault sync via GitHub (2026-04-18)
 
-Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `AgentesIAMadrid/obsidian-vault` (público).
+Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
 `/obsidian-1` hace push automático al final. Daily Briefing Manu lee de ahí cada mañana L-V 9:00.
 Trigger ID: `trig_01THsqqvV3pg3WNnbgvkkdzk`

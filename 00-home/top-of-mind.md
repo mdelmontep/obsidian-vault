@@ -8,7 +8,7 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
-- **Mover repos de AgentesIAMadrid a cuenta personal GitHub** — repos propios (obsidian-vault, facturaia, agency-portal, agentesia-web, etc.) están en la org. Moverlos a cuenta personal. Afecta: remotes locales, Daily Briefing trigger (usa `AgentesIAMadrid/obsidian-vault`), deploys Dokploy con webhook GitHub. Pendiente: definir cuenta destino y qué repos mover
+- ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado). Remote local, CLAUDE.md, hot.md y Daily Briefing trigger actualizados. **Pendiente**: decidir si mover más repos (facturaia descartado por ahora)
 - **FacturaIA — dashboard facturación** — Fases 1-5 completadas. Dashboard 100% funcional con datos reales Supabase (KPIs, sparklines, cashflow SVG, donut, alertas dinámicas). CRUD completo facturas (editar, eliminar, filtros, CSV export, bulk actions). Ingesta IA con OCR pipeline funcionando (n8n + GPT-4o-mini Vision + Realtime). Deploy en facturaia.agentesia.world. **Pendiente**: test e2e OCR en producción, deploy automático (webhook GitHub→Dokploy), developer dashboard `/admin`
 - ~~BLOQUEANTE Clinica Zen: Google Calendar ID incorrecto~~ RESUELTO — ID confirmado correcto por el usuario. Si Recordatorios falla, el problema es la credencial OAuth (Cuenta Gonzalo), no el ID
 - **Clinica Zen — pendientes post-migración**:
