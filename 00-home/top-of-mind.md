@@ -50,3 +50,4 @@ tags: [home, prioridades]
 - Agente de voz Retell CZ creado via API
 - Chatbot CZ prompt v7 completado
 - FacturaIA Fases 1-5 completadas
+- FacturaIA: rediseño visual completo — paleta azul profesional (#3D7BF5/#1B2B4B), gradientes eliminados, radios reducidos, subtítulos innecesarios quitados, countUp eliminado, font Filson Soft

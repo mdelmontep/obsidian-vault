@@ -4,7 +4,7 @@ date: 2026-04-17
 source: claude-code-session
 tags: [clinica-zen, kommo, pendiente]
 ---
-
+e ab
 ## Qué falta
 
 Soporte Kommo debe habilitar el scope "Chats" en la cuenta `citasclinicazenes.kommo.com` (Account ID: 36308863, Integration Client ID: `751c9caa-58b3-4d0b-aa90-e4204739b94d`).
