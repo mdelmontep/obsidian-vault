@@ -12,12 +12,18 @@ tags: [home, prioridades]
   - **PENDIENTE INMEDIATO**: verificar visualmente en navegador que las facturas emitidas muestran nombres de clientes (datos OK en BD, falta hard refresh), verificar recibidas distribuidas correctamente entre proveedores, probar click en número de factura para previsualizar PDF, verificar columnas no se cortan
   - **PENDIENTE**: deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
 - ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado)
-- **Clinica Zen — pendientes post-migración**:
-  - Cambiar Google Calendar ID en TODOS los workflows
-  - Cancelación de cita debe borrar evento del calendario (no implementado)
-  - Verificar contenido RAG actualizado para CZ
-- **Clinica Zen: Chatbot prompt v7 aplicado — pendiente test real WhatsApp**
-- **Clinica Zen: Test cancelar/cambiar cita** — flujo completo sin probar
+- **Clinica Zen — agente de voz funcional (2026-04-20)**:
+  - Agente Retell probado con llamada real (Julián Fernández). Reserva completada OK
+  - Code Node disponibilidad ARREGLADO — consulta calendario real
+  - Ruta contacto existente ARREGLADA — ya no falla Append row
+  - Prompt Retell v8 — "una pregunta cada vez" reforzado
+  - Calendar events con formato limpio (summary + description)
+  - 15 eventos test creados para semana 21-25 abril
+  - **Pendiente**: conectar teléfono definitivo en Retell + publicar agente
+  - **Pendiente**: cancelación de cita debe borrar evento Calendar (no implementado)
+  - **Pendiente**: test cambiar fecha (mover evento)
+  - **Pendiente**: verificar RAG Supabase actualizado
+  - **Pendiente**: scope "Chats" Kommo → token dinámico
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte`
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 

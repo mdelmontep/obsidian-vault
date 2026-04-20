@@ -52,10 +52,15 @@ tags: [clinica-zen, kommo, n8n, workflow]
 ## Estado actual (2026-04-20)
 
 - **Funcional**: recibe mensajes y responde vía amojo API v1
-- **Prompt**: versión 7 — confirmación con día de semana + STOP antes de Reservar_cita + regla anti-invención disponibilidad
-- **Error handling**: 4 toolWorkflow nodes con `onError: continueErrorOutput` (antes: stopWorkflow)
-- **Emails**: todos apuntan a `citas@clinicazen.es` (antes: `info@hiflymadrid.com`)
+- **Prompt Retell**: versión 8 — reglas reforzadas "UNA SOLA PREGUNTA cada vez" + secuencia post-disponibilidad paso a paso
+- **Prompt chatbot WhatsApp**: versión 7 — confirmación con día de semana + STOP antes de Reservar_cita + regla anti-invención disponibilidad
+- **Error handling**: 4 toolWorkflow nodes con `onError: continueErrorOutput`
+- **Emails**: todos apuntan a `citas@clinicazen.es`
 - **Status IDs**: todos migrados de gonzalo a CZ
+- **Code Node disponibilidad**: ARREGLADO — usa `$input.all()` del Calendar real (antes: datos hardcodeados 2025)
+- **Ruta contacto existente**: ARREGLADO — `$if($('Create new contacts1').isExecuted, ..., $('Code in JavaScript1').item.json.primer_contacto.id)` 
+- **Create new tasks fallback**: ARREGLADO — `doctorAsignado || 'Cita programada'` (doctor se asigna manualmente después)
+- **Calendar events formato limpio**: summary = `Valoración - Tipo - Nombre`, description = Lead ID + teléfono + motivo + fuente
 - **Problema**: amojo_token expira cada ~24h, hay que actualizarlo manualmente en la credencial Header Auth
 - **Pendiente**: soporte Kommo habilite scope "Chats" → aplicar patrón Laserys (token dinámico) + typing entre mensajes
 - **Integración OAuth2 Client ID**: `751c9caa-58b3-4d0b-aa90-e4204739b94d`
@@ -66,6 +71,8 @@ tags: [clinica-zen, kommo, n8n, workflow]
 - IF filter: `status_id == 104115983` para evitar ejecuciones en otros cambios de estado
 - Field names corregidos: "Día de preferencia", "Email" (diferentes a gonzalo)
 - Cadena completa: Calendar Create + Tasks Create + Email Confirmación
+- Tasks: `task_type_id: 1`, text = doctor asignado o "Cita programada" si aún no hay
+- Calendar: summary limpio `Valoración - tipoServicio - nombre`, description con Lead ID + datos
 
 ## Agente de Voz Retell (2026-04-20)
 
@@ -76,22 +83,23 @@ tags: [clinica-zen, kommo, n8n, workflow]
 - **JSON corregido**: `~/Downloads/clinica zen 2 corregido.json`
 - **Webhooks corregidos**: URLs de EasyPanel → `n8nclinicazen.agentesia.madrid`
 - **Herramientas configuradas**:
-  - `Mirar_disponibilidad` → webhook `/mirar_disponibilidad` en workflow Leads entrantes — VERIFICADO OK
-  - `Reservar` → webhook `/Reservar_crm` en workflow Leads entrantes — VERIFICADO OK (crea contacto + lead en Kommo)
+  - `Mirar_disponibilidad` → webhook `/mirar_disponibilidad` — VERIFICADO OK, devuelve datos reales del calendario
+  - `Reservar` → webhook `/Reservar_crm` — VERIFICADO OK (contacto existente + nuevo)
   - `end_call` → nativo Retell
-  - `transfer_call` → PENDIENTE añadir desde dashboard Retell (número provisional: +34617314938, cambiar al definitivo de la clínica)
-- **Voz anterior eliminada**: `custom_voice_49ce5c13a6dfc05437d7be6e75` (ElevenLabs, daba error)
-- **parameter_type**: cambiado de `form` a `json` en Reservar (n8n espera JSON body)
-- **Community node Retell**: instalado en n8n pero requirió restart del contenedor Docker para cargarlo
+  - `transfer_call` → configurado via JSON, número provisional +34617314938 (pendiente: cambiar al definitivo de la clínica)
+- **parameter_type**: `json` en Reservar (n8n espera JSON body)
+- **is_published**: false (pendiente publicar cuando se conecte teléfono)
+- **Test real completado**: llamada con reserva exitosa (Julián Fernández, 24/04 13:00)
 
 ## Pendientes post-sesión
 
+- Conectar teléfono definitivo de la clínica en Retell (en canvas Slack Tareas Pendientes)
 - Test cancelar cita (flujo completo + borrar evento Calendar — no implementado)
 - Test cambio de fecha (flujo completo + mover evento Calendar)
-- Validar prompt v7 con WhatsApp real
-- Añadir transfer_call desde dashboard Retell al número definitivo de la clínica
-- Formulario web Sheets — verificar funcional
-- Borrar lead de test (ID 28365044) de Kommo si no se ha borrado
+- Publicar agente Retell (`is_published: true`) una vez conectado teléfono
+- Scope "Chats" Kommo (contactar soporte) — bloquea token dinámico
+- Verificar contenido RAG (Supabase) actualizado para CZ
+- 15 eventos de test creados en calendario (semana 21-25 abril) para probar disponibilidad/alternativas
 
 ## Fixes aplicados
 
