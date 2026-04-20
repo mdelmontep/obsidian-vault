@@ -134,6 +134,14 @@ Google Calendar `query` busca en summary + description, así que poner Lead ID e
 
 ---
 
+## FacturaIA — pdf-lib para generar PDFs server-side (2026-04-20)
+
+PDFKit falla en Turbopack (ENOENT .afm). Usar pdf-lib: `PDFDocument.create()` + `StandardFonts`.
+Seed: nunca insertar campos calculados (facturado, pendiente, gasto) — columnas no existen en BD.
+API routes internas sin sesión: header `x-service-key` con service_role key.
+
+Ver [[pdf-lib-funciona-en-nextjs-turbopack-donde-pdfkit-falla]], [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]]
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
