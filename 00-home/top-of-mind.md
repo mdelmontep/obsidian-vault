@@ -27,7 +27,7 @@ tags: [home, prioridades]
 - **FacturaIA — Admin Panel + Feature Flags (implementado 2026-04-21)**
   - 24 tareas completadas, código en main, push hecho
   - Migración `004_admin_feature_flags.sql` ejecutada en Supabase — 8 tablas, 6 funciones SQL, RLS, seed (3 planes, 27 features, 60 plan_features)
-  - **PENDIENTE INMEDIATO**: probar en navegador (`npm run dev`) — login → verificar que sidebar filtra features → ir a `/admin` → probar dashboard KPIs, orgs list, org detail (6 tabs), features catalog, plans editor, alerts
+  - ~~**PENDIENTE INMEDIATO**: probar en navegador~~ HECHO 2026-04-21 — admin orgs/features/plans carga OK tras fix Zod v3
   - **PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`), impersonate banner (`?impersonate=org_id`)
   - **PENDIENTE**: probar toggle features por org (override vs plan default), toggle features por plan, editar limites
   - **PENDIENTE**: verificar lazy expiration (billing state machine: trial → grace_period → expired)
@@ -43,7 +43,7 @@ tags: [home, prioridades]
   - Phone normalization: strip +34, espacios, guiones — match bidireccional
   - Registro con telefono, config WhatsApp en settings y admin panel
   - UI "Canales de Ingesta" en pagina Agentes IA: 4 cards (WhatsApp, Dashboard, Email, Telegram)
-  - Conectado a feature flags (org_has_feature) y planes
+  - Conectado a FeatureProvider (useFeatures hook, no RPCs individuales)
   - Toggle persiste en settings.canales JSONB, stats reales desde bandeja_ingesta
   - Estados: activo (borde color canal), inactivo (opacity), locked (badge Upgrade)
   - Audit frontend aplicado: accesibilidad toggle, pills rgba() dark mode, race condition fix, skeleton loading
@@ -62,6 +62,10 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: fix Zod v3 syntax (z.email→z.string().email, z.uuid→z.string().uuid, z.iso.datetime→z.string().datetime) — rompía todas las API routes admin
+- FacturaIA: canales de ingesta conectados a FeatureProvider (useFeatures hook) — eliminada duplicación de RPCs que causaba tarjetas bloqueadas con plan correcto
+- FacturaIA: ID de org visible (read-only) en admin panel, tab General
+- FacturaIA: 5 tests manuales de seguridad verificados — email registro OK, XSS neutralizado, duplicado detectado, .txt rechazado, campos id/created_at no editables
 - FacturaIA: WhatsApp ingesta + Canales de Ingesta UI — webhook per-phone-number, n8n receptor+verify, multi-tenant por phone_number_id, 4 cards con feature flags, toggle JSONB sin race condition, audit frontend (a11y, dark mode pills, skeleton)
 - FacturaIA: Admin Panel + Feature Flags completo — 24 tareas, 8 tablas Supabase, 13 API routes, 5 páginas admin (dashboard, orgs, features, plans, alerts), providers (FeatureProvider fail-open + BillingProvider), billing state machine con lazy expiration, feature gates en sidebar, impersonate banner, middleware admin
 - FacturaIA: 60 facturas seed (40 emitidas, 20 recibidas) con distribución round-robin de clientes/proveedores

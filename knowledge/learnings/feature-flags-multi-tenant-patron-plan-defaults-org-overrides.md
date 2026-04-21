@@ -35,6 +35,8 @@ $$ LANGUAGE sql SECURITY DEFINER;
 - `useFeature(id)` devuelve `{ enabled, ready }`
 - `<Feature id="x">children</Feature>` wrapper component
 
+**Regla**: los componentes DEBEN usar `useFeatures()` del provider. Nunca hacer RPCs directos a `org_has_feature` desde componentes — causa desincronización (feature habilitada en plan pero UI bloqueada). Ver [[componentes-que-duplican-feature-check-se-desincronizan-del-provider]]
+
 ## Billing state machine
 
 trial → grace_period → expired → active/suspended/cancelled
