@@ -95,6 +95,24 @@ $$;
 
 La función centralizada es el punto único de cambio si el modelo de membresía evoluciona (ej: múltiples orgs por usuario).
 
+## Patrón admin: service_role client bypasses RLS
+
+Para operaciones admin (panel de gestión, impersonation), usar un Supabase client con `SUPABASE_SERVICE_ROLE_KEY` que bypasses RLS completamente:
+
+```typescript
+import { createClient } from '@supabase/supabase-js'
+
+export function createAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false } }
+  )
+}
+```
+
+Las tablas admin (plans, features, org_features, etc.) tienen policies con check `is_superadmin` para acceso via anon key, pero las API routes admin usan `createAdminClient()` directamente para simplicidad. Doble barrera: middleware redirect + server layout `isSuperadmin()`.
+
 ---
 
-*Usado en: [[FacturaIA]] — 17 tablas con este patrón*
+*Usado en: [[FacturaIA]] — 25 tablas con este patrón (17 originales + 8 admin/feature flags)*
