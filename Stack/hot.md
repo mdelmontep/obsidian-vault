@@ -220,6 +220,20 @@ Al hacer toggle sobre campos dentro de `settings` JSONB:
 
 Releer de BD causa race condition: dos toggles rapidos, la segunda lectura sobreescribe la primera escritura.
 
+## n8n workflow con 2 entry points — $if isExecuted para nodos compartidos (2026-04-21)
+
+Cuando un workflow tiene webhook (Retell) + executeWorkflowTrigger (chatbot) y ambos convergen en un nodo downstream:
+
+```
+={{ $if($('Edit Fields Retell').isExecuted, $('Edit Fields Retell').item.json.campo, $('Edit Fields Chatbot').item.json.campo) }}
+```
+
+Sin esto: "Invalid expression" porque el nodo de la otra rama no se ejecutó. Caso real: `Create an event1` en Clínica Zen.
+
+Ver [[n8n-nodos-compartidos-entre-ramas-requieren-if-isExecuted]]
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
