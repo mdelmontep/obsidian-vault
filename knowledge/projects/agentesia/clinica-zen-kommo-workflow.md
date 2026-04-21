@@ -85,21 +85,23 @@ tags: [clinica-zen, kommo, n8n, workflow]
 - **Herramientas configuradas**:
   - `Mirar_disponibilidad` → webhook `/mirar_disponibilidad` — VERIFICADO OK, devuelve datos reales del calendario
   - `Reservar` → webhook `/Reservar_crm` — VERIFICADO OK (contacto existente + nuevo)
+  - `Cancelar_cita` → webhook `/cancelar_cita` — AÑADIDO 2026-04-21, parameter_type json
   - `end_call` → nativo Retell
   - `transfer_call` → configurado via JSON, número provisional +34617314938 (pendiente: cambiar al definitivo de la clínica)
-- **parameter_type**: `json` en Reservar (n8n espera JSON body)
+- **parameter_type**: `json` en Reservar y Cancelar_cita (n8n espera JSON body)
 - **is_published**: false (pendiente publicar cuando se conecte teléfono)
 - **Test real completado**: llamada con reserva exitosa (Julián Fernández, 24/04 13:00)
+- **Prompt actualizado (2026-04-21)**: flujo cancelar/cambiar fecha con tools (antes redirigía a WhatsApp)
 
 ## Pendientes post-sesión
 
 - Conectar teléfono definitivo de la clínica en Retell (en canvas Slack Tareas Pendientes)
-- Test cancelar cita (flujo completo + borrar evento Calendar — no implementado)
-- Test cambio de fecha (flujo completo + mover evento Calendar)
+- ~~Test cancelar cita (flujo completo + borrar evento Calendar — no implementado)~~ HECHO 2026-04-21
+- ~~Test cambio de fecha (flujo completo + mover evento Calendar)~~ HECHO 2026-04-21 (cancel + re-reservar)
 - Publicar agente Retell (`is_published: true`) una vez conectado teléfono
 - Scope "Chats" Kommo (contactar soporte) — bloquea token dinámico
 - Verificar contenido RAG (Supabase) actualizado para CZ
-- 15 eventos de test creados en calendario (semana 21-25 abril) para probar disponibilidad/alternativas
+- ~~15 eventos de test creados en calendario (semana 21-25 abril)~~ Ya borrados (sesión test 2026-04-21)
 
 ## Fixes aplicados
 

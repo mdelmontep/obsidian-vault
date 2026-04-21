@@ -20,8 +20,8 @@ tags: [home, prioridades]
   - Calendar events con formato limpio (summary + description)
   - 15 eventos test creados para semana 21-25 abril
   - **Pendiente**: conectar teléfono definitivo en Retell + publicar agente
-  - **Pendiente**: cancelación de cita debe borrar evento Calendar (no implementado)
-  - **Pendiente**: test cambiar fecha (mover evento)
+  - ~~**Pendiente**: cancelación de cita debe borrar evento Calendar~~ HECHO 2026-04-21 — workflow busca por Lead_id y borra
+  - ~~**Pendiente**: test cambiar fecha~~ HECHO 2026-04-21 — flujo cancel + re-reservar verificado
   - **Pendiente**: verificar RAG Supabase actualizado
   - **Pendiente**: scope "Chats" Kommo → token dinámico
 - **FacturaIA — Admin Panel + Feature Flags (implementado 2026-04-21)**
@@ -36,6 +36,18 @@ tags: [home, prioridades]
   - Archivos clave: `src/lib/admin.ts`, `src/lib/features.ts`, `src/lib/billing.ts`, `src/providers/feature-provider.tsx`, `src/providers/billing-provider.tsx`, `src/app/(admin)/`
   - Spec: `docs/superpowers/specs/2026-04-21-admin-feature-flags-design.md`
   - Plan: `docs/superpowers/plans/2026-04-21-admin-feature-flags.md`
+- **FacturaIA — WhatsApp ingesta + Canales de Ingesta UI (completado 2026-04-21)**
+  - WhatsApp Cloud API conectado: webhook per-phone-number override (no rompe Chatwoot compartido)
+  - n8n workflows: `whatsapp-verify` (GET) + `whatsapp-receptor` (POST) con OCR pipeline
+  - Multi-tenant: lookup org por `settings.whatsapp.phone_number_id`
+  - Phone normalization: strip +34, espacios, guiones — match bidireccional
+  - Registro con telefono, config WhatsApp en settings y admin panel
+  - UI "Canales de Ingesta" en pagina Agentes IA: 4 cards (WhatsApp, Dashboard, Email, Telegram)
+  - Conectado a feature flags (org_has_feature) y planes
+  - Toggle persiste en settings.canales JSONB, stats reales desde bandeja_ingesta
+  - Estados: activo (borde color canal), inactivo (opacity), locked (badge Upgrade)
+  - Audit frontend aplicado: accesibilidad toggle, pills rgba() dark mode, race condition fix, skeleton loading
+  - Commit `ab58feb`, pusheado a main
 - **FacturaIA — Conciliación bancaria con IA (spec aprobada 2026-04-21)**
   - Spec completa en `docs/superpowers/specs/2026-04-21-conciliacion-bancaria-design.md`
   - 5 tablas nuevas, pipeline Claude 2 fases, UI con aprobación por lotes
@@ -50,6 +62,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: WhatsApp ingesta + Canales de Ingesta UI — webhook per-phone-number, n8n receptor+verify, multi-tenant por phone_number_id, 4 cards con feature flags, toggle JSONB sin race condition, audit frontend (a11y, dark mode pills, skeleton)
 - FacturaIA: Admin Panel + Feature Flags completo — 24 tareas, 8 tablas Supabase, 13 API routes, 5 páginas admin (dashboard, orgs, features, plans, alerts), providers (FeatureProvider fail-open + BillingProvider), billing state machine con lazy expiration, feature gates en sidebar, impersonate banner, middleware admin
 - FacturaIA: 60 facturas seed (40 emitidas, 20 recibidas) con distribución round-robin de clientes/proveedores
 - FacturaIA: 60 PDFs profesionales generados con pdf-lib y subidos a Supabase Storage

@@ -51,6 +51,13 @@ Al migrar workflows a una nueva instancia/cuenta, revisar y actualizar estos IDs
 9. **Google Calendar ID** — diferente por integración/cuenta
 10. **Credenciales n8n** — verificar que los IDs de credenciales del workflow existen en la instancia destino
 
+## Sandbox y Code Node
+
+- **Code Node sandbox no tiene `helpers.binaryToBuffer`** — en modo task runner, las helpers de binario no están disponibles. Mover conversiones base64 al caller (Next.js API route) con Node.js completo.
+- **Expresiones `$('Nodo')` fallan si el nodo no se ejecutó** — en flujos con ramas IF, usar `$if($('Nodo').isExecuted, $('Nodo').item.json.campo, fallback)`.
+- **Community nodes requieren restart del contenedor Docker** — aunque `GET /community-packages` muestre el paquete instalado, n8n no lo carga sin reinicio. Error: "Unrecognized node type".
+- **Test webhooks de Retell → datos dentro de `body.args`** — con `args_at_root: false`, Retell anida parámetros en `args`. Curl con datos planos en `body` produce nulls en Edit Fields.
+
 ## n8n API — credenciales
 
 - **`GET /api/v1/credentials` no expone valores reales** — lista nombre, tipo e ID pero nunca devuelve tokens ni passwords. No intentar extraer secrets por la API pública.

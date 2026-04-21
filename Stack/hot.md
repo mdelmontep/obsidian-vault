@@ -188,6 +188,38 @@ Ver spec: `facturaia/docs/superpowers/specs/2026-04-21-conciliacion-bancaria-des
 
 ---
 
+## WhatsApp Cloud API — webhook per-phone-number override (2026-04-21)
+
+Cuando la app Meta es compartida (ej: con Chatwoot), NO tocar el webhook a nivel app. Usar override por numero:
+
+```bash
+curl -X POST "https://graph.facebook.com/v22.0/{phone_number_id}" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d 'webhook_configuration={"override_callback_uri":"https://...","verify_token":"..."}'
+```
+
+Cada org tiene su `phone_number_id` en `settings.whatsapp`. El webhook receptor busca org por ese ID.
+
+## n8n binary data filesystem mode (2026-04-21)
+
+En modo filesystem, `binaryData.data` devuelve `"filesystem-v2"` (referencia), no los bytes reales. Para obtener el contenido:
+
+```js
+const buffer = await this.helpers.getBinaryDataBuffer(0, 'data')
+const base64 = buffer.toString('base64')
+```
+
+Nunca usar `$binary.data.data` directamente en expresiones — siempre Code Node con `getBinaryDataBuffer()`.
+
+## Settings JSONB toggle sin race condition (2026-04-21)
+
+Al hacer toggle sobre campos dentro de `settings` JSONB:
+1. Guardar `settingsRef` en estado React al cargar
+2. En toggle: derivar nuevo estado de `settingsRef` local, no releer de BD
+3. Actualizar ambos: `setSettingsRef(new)` + `supabase.update({ settings: new })`
+
+Releer de BD causa race condition: dos toggles rapidos, la segunda lectura sobreescribe la primera escritura.
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
