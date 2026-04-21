@@ -142,6 +142,18 @@ API routes internas sin sesión: header `x-service-key` con service_role key.
 
 Ver [[pdf-lib-funciona-en-nextjs-turbopack-donde-pdfkit-falla]], [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]]
 
+## FacturaIA — APIs admin devuelven objetos, no arrays (2026-04-21)
+
+Las API routes admin devuelven objetos con campos nombrados, no arrays directos:
+- `/api/admin/features` → `{ features, dependencies, orgCounts }`
+- `/api/admin/plans` → `{ plans, orgCounts }`
+- `/api/admin/plans/[id]/features` → `{ planFeatures, allFeatures }`
+- `/api/admin/plans/[id]/limits` → array directo (excepcion)
+- `/api/admin/orgs` → array directo
+- `/api/admin/orgs/[id]/members` → array directo
+
+Siempre desestructurar: `data.features || []`. Error causó crash en 3 páginas.
+
 ## FacturaIA — Admin Panel + Feature Flags arquitectura (2026-04-21)
 
 Sistema completo de admin multi-tenant con feature flags:
