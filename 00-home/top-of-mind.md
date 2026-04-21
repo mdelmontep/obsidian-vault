@@ -24,6 +24,18 @@ tags: [home, prioridades]
   - **Pendiente**: test cambiar fecha (mover evento)
   - **Pendiente**: verificar RAG Supabase actualizado
   - **Pendiente**: scope "Chats" Kommo → token dinámico
+- **FacturaIA — Admin Panel + Feature Flags (implementado 2026-04-21)**
+  - 24 tareas completadas, código en main, push hecho
+  - Migración `004_admin_feature_flags.sql` ejecutada en Supabase — 8 tablas, 6 funciones SQL, RLS, seed (3 planes, 27 features, 60 plan_features)
+  - **PENDIENTE INMEDIATO**: probar en navegador (`npm run dev`) — login → verificar que sidebar filtra features → ir a `/admin` → probar dashboard KPIs, orgs list, org detail (6 tabs), features catalog, plans editor, alerts
+  - **PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`), impersonate banner (`?impersonate=org_id`)
+  - **PENDIENTE**: probar toggle features por org (override vs plan default), toggle features por plan, editar limites
+  - **PENDIENTE**: verificar lazy expiration (billing state machine: trial → grace_period → expired)
+  - **PENDIENTE**: tests — no hay tests automatizados aun, considerar al menos tests para `orgHasFeature`, `getOrgBilling`, `isSuperadmin`
+  - **NOTA**: `profiles` tabla vacia — superadmin funciona via `SUPERADMIN_EMAILS` env var. Cuando haya signup real, el trigger insertara en profiles
+  - Archivos clave: `src/lib/admin.ts`, `src/lib/features.ts`, `src/lib/billing.ts`, `src/providers/feature-provider.tsx`, `src/providers/billing-provider.tsx`, `src/app/(admin)/`
+  - Spec: `docs/superpowers/specs/2026-04-21-admin-feature-flags-design.md`
+  - Plan: `docs/superpowers/plans/2026-04-21-admin-feature-flags.md`
 - **FacturaIA — Conciliación bancaria con IA (spec aprobada 2026-04-21)**
   - Spec completa en `docs/superpowers/specs/2026-04-21-conciliacion-bancaria-design.md`
   - 5 tablas nuevas, pipeline Claude 2 fases, UI con aprobación por lotes
@@ -38,6 +50,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: Admin Panel + Feature Flags completo — 24 tareas, 8 tablas Supabase, 13 API routes, 5 páginas admin (dashboard, orgs, features, plans, alerts), providers (FeatureProvider fail-open + BillingProvider), billing state machine con lazy expiration, feature gates en sidebar, impersonate banner, middleware admin
 - FacturaIA: 60 facturas seed (40 emitidas, 20 recibidas) con distribución round-robin de clientes/proveedores
 - FacturaIA: 60 PDFs profesionales generados con pdf-lib y subidos a Supabase Storage
 - FacturaIA: calendario interactivo con filtros, approve de sin_aprobar, click para navegar a factura

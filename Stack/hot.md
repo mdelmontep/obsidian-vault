@@ -142,6 +142,24 @@ API routes internas sin sesión: header `x-service-key` con service_role key.
 
 Ver [[pdf-lib-funciona-en-nextjs-turbopack-donde-pdfkit-falla]], [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]]
 
+## FacturaIA — Admin Panel + Feature Flags arquitectura (2026-04-21)
+
+Sistema completo de admin multi-tenant con feature flags:
+
+**Tablas**: plans, features, feature_dependencies, plan_features, plan_limits, org_features, org_limits, admin_alert_dismissals + ALTER organizations (billing_status, trial_ends_at, onboarding, last_activity_at, plan FK) + ALTER profiles (is_superadmin)
+
+**Feature resolution**: plan_features (defaults) → org_features (overrides). `org_has_feature(org_id, feature_id)` SQL function. Client-side: FeatureProvider carga via Supabase client, fail-open on error, polling 5min + visibility reload.
+
+**Billing state machine**: trial → grace_period → expired → active/suspended/cancelled. Lazy expiration en server layout (no cron). `getOrgBilling()` evalúa trial_ends_at + grace_days en cada request.
+
+**Admin auth**: doble barrera — middleware (redirect non-admin) + server layout (`isSuperadmin()`). Primero comprueba `SUPERADMIN_EMAILS` env, luego `profiles.is_superadmin`.
+
+**Admin client**: `createAdminClient()` usa `SUPABASE_SERVICE_ROLE_KEY` (bypasses RLS). Todas las API routes admin usan `requireAdmin()`.
+
+**13 API routes**: `/api/admin/stats`, `/api/admin/orgs` (GET/POST), `/api/admin/orgs/[id]` (GET/PATCH), `/api/admin/orgs/[id]/features|limits|billing|members`, `/api/admin/features` (GET/POST/PATCH), `/api/admin/plans`, `/api/admin/plans/[id]/features|limits`, `/api/admin/alerts`, `/api/admin/alerts/dismiss`
+
+**Impersonation**: botón "Ver como esta org" en org detail → `/?impersonate=org_id`. Middleware valida que solo superadmin puede usar el param. ImpersonateBanner morado en dashboard.
+
 ## Conciliación bancaria IA — patrón prompt 2 fases (2026-04-21)
 
 Pipeline para cruzar extractos bancarios con facturas:
