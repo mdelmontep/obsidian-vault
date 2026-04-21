@@ -234,6 +234,20 @@ Ver [[n8n-nodos-compartidos-entre-ramas-requieren-if-isExecuted]]
 
 ---
 
+## CLAUDE.md por proyecto — cascada de carga (2026-04-21)
+
+Claude Code carga instrucciones en cascada según el directorio de trabajo:
+
+1. `~/.claude/CLAUDE.md` → siempre (global, ~150 líneas max)
+2. `<repo>/CLAUDE.md` → solo al trabajar en ese repo
+3. `<repo>/src/CLAUDE.md` → herencia por subcarpeta (si existe)
+
+Cada nivel suma, no reemplaza. Gotchas específicos van en el CLAUDE.md del repo (ej: `facturaia/CLAUDE.md` con 20 reglas de schema/frontend/auth). Conocimiento técnico profundo va en `Stack/` y se carga bajo demanda via la tabla de "lectura por tema" del global.
+
+Ver [[claude-md-por-proyecto-reduce-tokens-y-carga-solo-lo-relevante]]
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).

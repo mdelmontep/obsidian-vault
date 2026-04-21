@@ -90,4 +90,6 @@ tags: [home, prioridades]
 - FacturaIA: columna acciones (3-dot menu) alineada entre emitidas y recibidas — anchos condicionales con clase .has-origen
 - FacturaIA: icono WhatsApp reemplazado por logo oficial, "camara" renombrado a "manual" (código + BD)
 - FacturaIA: spec completa conciliación bancaria con IA — modelo de datos, pipeline Claude, prompts optimizados para banca española, UI consistente
+- FacturaIA: CLAUDE.md por proyecto creado con 20 reglas específicas (schema, frontend, auth, OCR, repo)
+- CLAUDE.md global optimizado: 199→157 líneas. Gotchas movidos a Stack/ y facturaia/CLAUDE.md. SMTP movido a memory.
 - FacturaIA: manuales usuario y admin actualizados con sección Banco
