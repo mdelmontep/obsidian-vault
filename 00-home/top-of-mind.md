@@ -24,6 +24,11 @@ tags: [home, prioridades]
   - **Pendiente**: test cambiar fecha (mover evento)
   - **Pendiente**: verificar RAG Supabase actualizado
   - **Pendiente**: scope "Chats" Kommo → token dinámico
+- **FacturaIA — Conciliación bancaria con IA (spec aprobada 2026-04-21)**
+  - Spec completa en `docs/superpowers/specs/2026-04-21-conciliacion-bancaria-design.md`
+  - 5 tablas nuevas, pipeline Claude 2 fases, UI con aprobación por lotes
+  - Manuales usuario y admin actualizados
+  - **PENDIENTE**: crear plan de implementación (writing-plans) y ejecutar
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte`
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
@@ -53,3 +58,5 @@ tags: [home, prioridades]
 - FacturaIA: rediseño visual completo — paleta azul profesional (#3D7BF5/#1B2B4B), gradientes eliminados, radios reducidos, subtítulos innecesarios quitados, countUp eliminado, font Filson Soft
 - FacturaIA: columna acciones (3-dot menu) alineada entre emitidas y recibidas — anchos condicionales con clase .has-origen
 - FacturaIA: icono WhatsApp reemplazado por logo oficial, "camara" renombrado a "manual" (código + BD)
+- FacturaIA: spec completa conciliación bancaria con IA — modelo de datos, pipeline Claude, prompts optimizados para banca española, UI consistente
+- FacturaIA: manuales usuario y admin actualizados con sección Banco

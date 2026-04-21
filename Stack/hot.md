@@ -142,6 +142,22 @@ API routes internas sin sesión: header `x-service-key` con service_role key.
 
 Ver [[pdf-lib-funciona-en-nextjs-turbopack-donde-pdfkit-falla]], [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]]
 
+## Conciliación bancaria IA — patrón prompt 2 fases (2026-04-21)
+
+Pipeline para cruzar extractos bancarios con facturas:
+1. Fase 1 (extracción): Claude parsea cualquier formato → JSON de movimientos
+2. Fase 2 (matching): Claude recibe movimientos + facturas pendientes + reglas aprendidas → matches con score
+- Prompt caching: facturas/reglas en bloque cached, solo movimientos dinámicos
+- Scoring con tabla numérica fija (+50 importe, +25 nombre, +15 fecha, -100 descarte)
+- Comparar siempre contra factura.total (con IVA), nunca base
+- Hash dedup: cuenta+fecha+concepto+importe+idx (idx evita falsos positivos)
+- Batches de 50 si >100 movimientos
+- Umbral auto-aprobación: 95 para gestorías, configurable por org
+
+Ver spec: `facturaia/docs/superpowers/specs/2026-04-21-conciliacion-bancaria-design.md`
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
