@@ -62,6 +62,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: Tanda 2 + Tanda 3 de Borja mergeadas a main (2026-04-21) — tokens CSS semánticos, focus ring, fuentes Filson en PDFs, empty states, skeletons, disabled styles, a11y (aria-labels), drop-zone mejorada. Issues: mobile responsive pendiente, preview PDF en Generar con campos apilados/fuera de posición. Test completo en [[facturaia-test-tanda-2-3]]
 - FacturaIA: fix Zod v3 syntax (z.email→z.string().email, z.uuid→z.string().uuid, z.iso.datetime→z.string().datetime) — rompía todas las API routes admin
 - FacturaIA: canales de ingesta conectados a FeatureProvider (useFeatures hook) — eliminada duplicación de RPCs que causaba tarjetas bloqueadas con plan correcto
 - FacturaIA: ID de org visible (read-only) en admin panel, tab General
