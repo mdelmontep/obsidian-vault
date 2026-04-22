@@ -268,6 +268,28 @@ Ver [[claude-md-por-proyecto-reduce-tokens-y-carga-solo-lo-relevante]]
 
 ---
 
+## Redis debounce — verificar nombres de campo entre ramas (2026-04-22)
+
+Cuando un Merge recibe inputs de ramas distintas (texto=`Mensaje`, audio=`text`), el Redis SET debe contemplar TODOS los campos posibles:
+
+```
+$('Merge').first().json.Mensaje || $('Merge').first().json.text || ''
+```
+
+Sin el fallback, la rama que usa un campo diferente guarda vacío → el IF post-debounce descarta el mensaje silenciosamente. No hay error visible.
+
+Ver [[redis-debounce-campo-nombre-diferente-pierde-mensajes]]
+
+## Kommo salesbot — puede mover leads sin n8n (2026-04-22)
+
+Los salesbots de Kommo tienen lógica interna (GUI) que puede incluir "Cambiar etapa". Cuando n8n dispara `POST /api/v2/salesbot/run`, el bot ejecuta TODA su cadena — incluyendo cambios de estado invisibles para n8n.
+
+Síntoma: lead cambia status entre ejecuciones sin que ningún sub-workflow lo haga. Debug: revisar salesbot en GUI Kommo → buscar acciones "Cambiar etapa".
+
+Ver [[kommo-salesbot-puede-mover-leads-de-estado-sin-n8n]]
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).

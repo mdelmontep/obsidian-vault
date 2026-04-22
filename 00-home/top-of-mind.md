@@ -12,16 +12,17 @@ tags: [home, prioridades]
   - **PENDIENTE INMEDIATO**: verificar visualmente en navegador que las facturas emitidas muestran nombres de clientes (datos OK en BD, falta hard refresh), verificar recibidas distribuidas correctamente entre proveedores, probar click en número de factura para previsualizar PDF
   - **PENDIENTE**: deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
 - ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado)
-- **Clinica Zen — agente de voz funcional (2026-04-20)**:
-  - Agente Retell probado con llamada real (Julián Fernández). Reserva completada OK
-  - Code Node disponibilidad ARREGLADO — consulta calendario real
-  - Ruta contacto existente ARREGLADA — ya no falla Append row
-  - Prompt Retell v8 — "una pregunta cada vez" reforzado
-  - Calendar events con formato limpio (summary + description)
-  - 15 eventos test creados para semana 21-25 abril
+- **Clinica Zen — chatbot + voz (2026-04-22)**:
+  - Agente Retell probado con llamada real. Reserva completada OK
+  - ~~Code Node disponibilidad ARREGLADO~~ ~~Ruta contacto existente ARREGLADA~~ ~~Prompt Retell v8~~ ~~Calendar events formato limpio~~ ~~cancelación de cita~~ ~~test cambiar fecha~~
+  - Envío mensajes migrado a salesbot (PATCH field 1903454 + bot_id 68822) — sin dependencia de amojo token
+  - Audios WhatsApp ARREGLADO (2026-04-22) — Redis debounce ahora busca `Mensaje` y `text` (transcripción Whisper)
+  - Flujo estados corregido (2026-04-22): Retell crea leads en 104111891 → actualiza a 104115975 tras booking
+  - Prompt AI Agent: regla anti-re-pregunta, regla cancelar-antes-de-mover, detección implícita cambio fecha
+  - Derivación Humano: dual entry (chatbot + Retell webhook)
+  - Calendar events: duración 30 min
+  - **PENDIENTE INMEDIATO**: revisar salesbot 68822 en GUI Kommo — tiene acción que mueve leads a 104115975 al enviar mensaje. Quitar esa acción
   - **Pendiente**: conectar teléfono definitivo en Retell + publicar agente
-  - ~~**Pendiente**: cancelación de cita debe borrar evento Calendar~~ HECHO 2026-04-21 — workflow busca por Lead_id y borra
-  - ~~**Pendiente**: test cambiar fecha~~ HECHO 2026-04-21 — flujo cancel + re-reservar verificado
   - **Pendiente**: verificar RAG Supabase actualizado
   - **Pendiente**: scope "Chats" Kommo → token dinámico
 - **FacturaIA — Admin Panel + Feature Flags (implementado 2026-04-21)**
