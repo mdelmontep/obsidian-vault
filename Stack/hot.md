@@ -13,6 +13,26 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## FacturaIA — Impersonation con proxy client (2026-04-22)
+
+Patrón para que superadmin vea datos de cualquier org sin tocar RLS:
+
+1. **Middleware** lee `?impersonate=org_id`, valida superadmin, setea cookie `impersonate_org` (1h maxAge)
+2. **Layout server** lee cookie → pasa `orgId` + `isImpersonating` al shell
+3. **OrgContext** React context con `useOrg()` y `useOrgClient()` hooks
+4. **Proxy client** (`createImpersonateClient(orgId)`) mimics Supabase fluent API pero rutea via `/api/admin/impersonate/query` POST
+5. **Query proxy** server-side usa `createAdminClient()` (service_role, bypasses RLS), auto-añade filtro `org_id`
+6. **Write stubs** — insert/update/delete/upsert devuelven error (read-only)
+
+Gotchas al migrar componentes:
+- `useOrgClient()` es hook → solo a nivel de componente, nunca dentro de useEffect
+- Componentes con `auth.getUser()` → `org_members` chain **fallan** con proxy (user=null). Simplificar a query directa a `organizations` (proxy filtra por org_id)
+- Realtime hooks (`useBandejaRealtime`) necesitan el proxy para carga inicial pero channels reales solo en modo normal
+- useEffect deps deben incluir `[isImpersonating, orgId]` para re-fetch al cambiar org
+- Helpers de módulo (fuera de componente) no pueden usar hooks → mantener `createClient` importado aparte
+
+---
+
 ## Supabase Cloud — RLS multi-tenant con SECURITY DEFINER (2026-04-19)
 
 Patrón para SaaS multi-tenant:

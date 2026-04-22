@@ -28,8 +28,9 @@ tags: [home, prioridades]
   - 24 tareas completadas, código en main, push hecho
   - Migración `004_admin_feature_flags.sql` ejecutada en Supabase — 8 tablas, 6 funciones SQL, RLS, seed (3 planes, 27 features, 60 plan_features)
   - ~~**PENDIENTE INMEDIATO**: probar en navegador~~ HECHO 2026-04-21 — admin orgs/features/plans carga OK tras fix Zod v3
-  - **PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`), impersonate banner (`?impersonate=org_id`)
+  - ~~**PENDIENTE**: impersonate banner (`?impersonate=org_id`)~~ HECHO 2026-04-22 — full impersonation con proxy client, banner animado, todas las páginas migradas
   - **PENDIENTE**: probar toggle features por org (override vs plan default), toggle features por plan, editar limites
+  - **PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`)
   - **PENDIENTE**: verificar lazy expiration (billing state machine: trial → grace_period → expired)
   - **PENDIENTE**: tests — no hay tests automatizados aun, considerar al menos tests para `orgHasFeature`, `getOrgBilling`, `isSuperadmin`
   - **NOTA**: `profiles` tabla vacia — superadmin funciona via `SUPERADMIN_EMAILS` env var. Cuando haya signup real, el trigger insertara en profiles
@@ -62,6 +63,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: Full impersonation (2026-04-22) — proxy client que bypassa RLS via admin client, cookie-based middleware, todas las vistas migradas de createClient a useOrgClient hook, banner animado OKLCH, modal previsión de gastos. Settings muestra datos admin (pendiente migrar sub-componentes). Commit `a7f6161`.
 - FacturaIA: Tanda 2 + Tanda 3 de Borja mergeadas a main (2026-04-21) — tokens CSS semánticos, focus ring, fuentes Filson en PDFs, empty states, skeletons, disabled styles, a11y (aria-labels), drop-zone mejorada. Issues: mobile responsive pendiente, preview PDF en Generar con campos apilados/fuera de posición. Test completo en [[facturaia-test-tanda-2-3]]
 - FacturaIA: fix Zod v3 syntax (z.email→z.string().email, z.uuid→z.string().uuid, z.iso.datetime→z.string().datetime) — rompía todas las API routes admin
 - FacturaIA: canales de ingesta conectados a FeatureProvider (useFeatures hook) — eliminada duplicación de RPCs que causaba tarjetas bloqueadas con plan correcto

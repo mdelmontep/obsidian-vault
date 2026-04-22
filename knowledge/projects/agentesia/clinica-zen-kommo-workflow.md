@@ -102,6 +102,7 @@ tags: [clinica-zen, kommo, n8n, workflow]
 - Scope "Chats" Kommo (contactar soporte) — bloquea token dinámico
 - Verificar contenido RAG (Supabase) actualizado para CZ
 - ~~15 eventos de test creados en calendario (semana 21-25 abril)~~ Ya borrados (sesión test 2026-04-21)
+- **Revisar salesbot 68822 en GUI Kommo** — tiene acción que mueve leads a 104115975 sin pasar por n8n. Quitar esa acción para que el lead se quede en 104111891 hasta que el AI Agent ejecute Reservar_cita
 
 ## Fixes aplicados
 
@@ -113,3 +114,9 @@ tags: [clinica-zen, kommo, n8n, workflow]
 - Status IDs gonzalo→CZ en todos los workflows
 - IF anti-duplicados en Especialista Asignado
 - onError: continueErrorOutput en 4 toolWorkflow nodes
+- Redis debounce: añadido fallback `Merge.json.text` para transcripciones Whisper (antes solo buscaba `Merge.json.Mensaje` → audios se perdían silenciosamente)
+- Flujo estados Retell: Create new leads2/3 ahora crean en 104111891 → Update lead to Pendiente actualiza a 104115975 → Respond to Webhook
+- Envío via salesbot: PATCH field 1903454 + POST /api/v2/salesbot/run bot_id 68822 (migrado de amojo v1)
+- Prompt AI Agent: regla 14 (no re-preguntar datos), regla 15 (cancelar antes de mover cita), detección implícita cambio fecha
+- Derivación Humano: dual entry (executeWorkflowTrigger + webhook `/derivar_humano`), field_id corregido a 1828350
+- Calendar events: duración 30 min (antes 60 min)
