@@ -290,6 +290,23 @@ Ver [[kommo-salesbot-puede-mover-leads-de-estado-sin-n8n]]
 
 ---
 
+## Compose n8n producción — checklist anti-caídas (2026-04-22)
+
+Antes de desplegar n8n para cualquier cliente, verificar estos 4:
+
+1. **Healthcheck HTTP** — `wget -qO- http://localhost:5678/healthz || exit 1` (interval 30s, retries 3, start_period 60s)
+2. **Pruning** — `EXECUTIONS_DATA_PRUNE=true` + `MAX_AGE=168` + `MAX_COUNT=5000`
+3. **Memory limit** — `deploy.resources.limits.memory: 2G` + `NODE_OPTIONS=--max-old-space-size=1536`
+4. **Versión fija** — nunca `:latest`, usar tag exacto (ej: `n8nio/n8n:2.15.1`)
+
+Sin healthcheck, n8n se cuelga sin crashear y Docker no lo reinicia. Sin pruning, las ejecuciones acumuladas son la causa del hang.
+
+Compose de referencia: `~/n8n-agentesia-world-compose.yml`
+
+Ver [[n8n-se-cuelga-sin-crashear-necesita-healthcheck-http]]
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).

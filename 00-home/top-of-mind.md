@@ -55,6 +55,7 @@ tags: [home, prioridades]
   - 5 tablas nuevas, pipeline Claude 2 fases, UI con aprobación por lotes
   - Manuales usuario y admin actualizados
   - **PENDIENTE**: crear plan de implementación (writing-plans) y ejecutar
+- **Tecnocloud — configurar WhatsApp en FacturaIA** — schema arreglado (telefono + settings), falta obtener phone_number_id de Meta, guardarlo en org, configurar webhook override
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte`
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
@@ -64,6 +65,8 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- n8n.agentesia.world: compose corregido con healthcheck HTTP, pruning ejecuciones, memory limit 2G, versión fija 2.15.1 (2026-04-22). Compose guardado en `~/n8n-agentesia-world-compose.yml`
+- FacturaIA: adminUpdateOrgSchema ampliado con `telefono` y `settings` — fix Zod `.strict()` que impedía guardar WhatsApp config desde admin (2026-04-22)
 - FacturaIA: Full impersonation (2026-04-22) — proxy client que bypassa RLS via admin client, cookie-based middleware, todas las vistas migradas de createClient a useOrgClient hook, banner animado OKLCH, modal previsión de gastos. Settings muestra datos admin (pendiente migrar sub-componentes). Commit `a7f6161`.
 - FacturaIA: Tanda 2 + Tanda 3 de Borja mergeadas a main (2026-04-21) — tokens CSS semánticos, focus ring, fuentes Filson en PDFs, empty states, skeletons, disabled styles, a11y (aria-labels), drop-zone mejorada. Issues: mobile responsive pendiente, preview PDF en Generar con campos apilados/fuera de posición. Test completo en [[facturaia-test-tanda-2-3]]
 - FacturaIA: fix Zod v3 syntax (z.email→z.string().email, z.uuid→z.string().uuid, z.iso.datetime→z.string().datetime) — rompía todas las API routes admin

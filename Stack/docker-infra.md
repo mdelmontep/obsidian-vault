@@ -51,6 +51,54 @@ Diagnóstico rápido si Bad Gateway post-redeploy:
 
 Ocurrió 3 veces seguidas con FacturaIA. No hay auto-reload. Pendiente investigar webhook GitHub → Dokploy para deploy automático.
 
+## n8n en producción — anti-caídas
+
+n8n se **cuelga sin crashear** — el proceso sigue vivo pero no responde HTTP. `restart: unless-stopped` no sirve para esto porque Docker cree que el contenedor está sano.
+
+**Solución**: healthcheck HTTP que fuerza reinicio:
+
+```yaml
+healthcheck:
+  test: ["CMD-SHELL", "wget -qO- http://localhost:5678/healthz || exit 1"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 60s
+```
+
+**Variables obligatorias de pruning** (sin esto, ejecuciones acumuladas cuelgan n8n):
+
+```yaml
+- EXECUTIONS_DATA_PRUNE=true
+- EXECUTIONS_DATA_MAX_AGE=168
+- EXECUTIONS_DATA_PRUNE_MAX_COUNT=5000
+- NODE_OPTIONS=--max-old-space-size=1536
+```
+
+**Límite de memoria** para proteger al servidor:
+
+```yaml
+deploy:
+  resources:
+    limits:
+      memory: 2G
+```
+
+**Versión fija** — nunca `:latest`. Usar tag exacto: `n8nio/n8n:2.15.1`.
+
+Compose de referencia guardado en `~/n8n-agentesia-world-compose.yml`.
+
+## Dokploy — diagnóstico sin SSH
+
+Si SSH al host falla (`ECONNREFUSED 172.18.0.1:22`), diagnosticar desde terminal del contenedor:
+
+```bash
+cat /proc/meminfo | head -5          # RAM del host
+cat /sys/fs/cgroup/memory.max        # límite contenedor ("max" = sin límite)
+env | grep -i "EXECUT\|PRUNE"        # config pruning
+ps aux | head -5                     # procesos y CPU time
+```
+
 ## Generación de credenciales
 
 ```bash
