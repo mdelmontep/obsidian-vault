@@ -301,10 +301,15 @@ Archivos clave: `src/lib/email/`, `src/app/api/email/poll/`, `src/app/api/auth/g
 
 ---
 
-## Obsidian vault sync via GitHub (2026-04-18)
+## FacturaIA — complimentary orgs para MRR (2026-04-25)
 
-> **NOTA**: >2 semanas, considerar mover a Stack/index.md
+Campo `complimentary` boolean en `organizations` (default false, migración puso true a las existentes). Patrón:
 
-Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
-`/obsidian-1` hace push automático al final. Daily Briefing Manu lee de ahí cada mañana L-V 9:00.
-Trigger ID: `trig_01THsqqvV3pg3WNnbgvkkdzk`
+- MRR SQL: `WHERE billing_status = 'active' AND NOT complimentary`
+- `admin_dashboard_stats` devuelve `complimentary_orgs` y `paying_orgs` además de `mrr`
+- Admin dashboard: banner de aviso cuando todas son complimentary, KPI MRR en amarillo
+- Lista orgs: estrella morada a la izquierda del nombre (con tooltip)
+- Detalle org > Billing: toggle complimentary con explicación
+
+Cuando se integre Stripe: poner `complimentary = false` al activar método de pago.
+Migración: `007_complimentary_orgs.sql`. Schema Zod: `adminUpdateOrgSchema` incluye `complimentary: z.boolean().optional()`.

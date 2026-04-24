@@ -1,8 +1,8 @@
 ---
-title: crear-ticket en retell aia-llamadas — completado
+title: retell ticketing en agente de voz aia — implementación completada
 date: 2026-04-18
 source: claude-code-session
-tags: [completado, agentesia, retell, ticketing]
+tags: [agentesia, retell, ticketing, n8n]
 ---
 
 Integración de ticketing en el agente de voz Retell completada (2026-04-18).
@@ -27,3 +27,5 @@ Integración de ticketing en el agente de voz Retell completada (2026-04-18).
 
 - Test con llamada real a un cliente registrado en el portal
 - Borrar tickets de test del portal (cuando haya acceso)
+
+Relacionado: [[retell-custom-tools-comparten-webhook-y-se-rutar-por-body-name]], [[retell-parameter-type-form-vs-json-rompe-n8n-silenciosamente]]

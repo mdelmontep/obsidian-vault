@@ -72,6 +72,8 @@ tags: [home, prioridades]
   - Manuales usuario y admin actualizados
   - **PENDIENTE**: crear plan de implementación (writing-plans) y ejecutar
 - **Tecnocloud — configurar WhatsApp en FacturaIA** — schema arreglado (telefono + settings), falta obtener phone_number_id de Meta, guardarlo en org, configurar webhook override
+- **Clínica Zen — cancelar cita debe borrar evento Calendar** — workflow `DkueIeGFWLKh8nTj` cambia status en Kommo pero no borra/modifica evento en Google Calendar. Añadir nodo Delete/Update Event
+- **Clínica Zen — configurar Retell en workflow leads entrantes** (`RN0wl8RaRmwLpnfQ`) — verificar webhooks apuntan a dominio CZ correcto (no EasyPanel viejo), configurar agente voz CZ
 - Notificaciones de tickets del dashboard a Slack `#01-tickets-soporte`
 - Repo GitHub privado para skill chatbot-chatwoot-replicator
 
@@ -81,6 +83,10 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- Obsidian inbox procesado: 25→1 notas, 3 promocionadas a knowledge/, 2 tareas añadidas (2026-04-25)
+- FacturaIA: vitest configurado con 22 tests para billing, features y admin (2026-04-25)
+- FacturaIA: complimentary orgs — campo boolean, MRR excluye complimentary, estrella morada en admin, toggle en billing tab (2026-04-25)
+- FacturaIA: KPI cards y status cards clickables en admin dashboard, navegan a orgs/plans con filtro por status (2026-04-25)
 - FacturaIA: Email Ingesta OAuth Gmail completo (2026-04-24) — OAuth connect/disconnect, polling configurable por org (1h/2h/6h/12h/24h), boton "Revisar ahora", dedup SHA256, timing-safe auth, code review fixes, manuales actualizados, precios planes dinámicos desde BD, Slack canvas actualizado
 - FacturaIA: WhatsApp multi-tenant matching corregido (2026-04-24) — matching por número remitente en vez de phone_number_id, sincronización telefono→settings.whatsapp.phone_number en settings, admin PATCH y auto-populate frontend
 - n8n.agentesia.world: compose corregido con healthcheck HTTP, pruning ejecuciones, memory limit 2G, versión fija 2.15.1 (2026-04-22). Compose guardado en `~/n8n-agentesia-world-compose.yml`

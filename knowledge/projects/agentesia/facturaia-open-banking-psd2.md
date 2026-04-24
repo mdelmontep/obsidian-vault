@@ -1,5 +1,5 @@
 ---
-title: investigar Open Banking PSD2 para FacturaIA
+title: open banking psd2 para facturaia — agregadores y puntos a investigar
 date: 2026-04-21
 source: claude-code-session
 tags: [facturaia, open-banking, investigación]
@@ -17,3 +17,5 @@ Puntos a investigar:
 - Cobertura de bancos españoles (CaixaBank, Santander, BBVA, Sabadell)
 - Requisitos de registro como TPP (Third Party Provider)
 - Tiempo de integración estimado
+
+Relacionado: spec conciliación bancaria en `facturaia/docs/superpowers/specs/2026-04-21-conciliacion-bancaria-design.md`

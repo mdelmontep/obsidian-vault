@@ -1,8 +1,8 @@
 ---
-title: checklist migración ChatBOT mejorado a nuevo cliente
+title: checklist migración chatbot mejorado a nuevo cliente
 date: 2026-04-16
 source: claude-code-session
-tags: [inbox, pendiente, n8n, chatwoot, chatbot, migración, checklist]
+tags: [agentesia, n8n, chatwoot, chatbot, migración, checklist]
 ---
 
 Patrón reutilizable para migrar el ChatBOT mejorado a un nuevo cliente. Ya aplicado en Agentesia y Tecnocloud.
@@ -42,3 +42,5 @@ Patrón reutilizable para migrar el ChatBOT mejorado a un nuevo cliente. Ya apli
 22. [ ] Verificar push notifications en app móvil
 23. [ ] Cambiar CW Enviar a usar token del Agent Bot (para que firme como bot, no como usuario)
 24. [ ] Desactivar workflow viejo del cliente
+
+Relacionado: [[chatwoot-agent-bot-debe-asignarse-al-inbox-correcto]], [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]]
