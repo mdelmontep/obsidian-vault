@@ -319,6 +319,19 @@ Archivos clave: `src/lib/email/`, `src/app/api/email/poll/`, `src/app/api/auth/g
 
 ---
 
+## Supabase Storage — calcular uso real via SDK, no SQL (2026-04-25)
+
+`storage.objects.metadata->>'size'` no es fiable — puede ser NULL aunque el archivo exista. La Storage API computa el tamaño al leer. Para calcular storage por org:
+
+```ts
+const { data: files } = await admin.storage.from('facturas').list(orgId, { limit: 1000 })
+const storageMb = Math.ceil(files?.reduce((sum, f) => sum + (f.metadata?.size || 0), 0) / 1048576)
+```
+
+Nunca usar RPCs SQL para esto. Ver [[supabase-storage-objects-metadata-no-es-fiable-para-size]]
+
+---
+
 ## FacturaIA — complimentary orgs para MRR (2026-04-25)
 
 Campo `complimentary` boolean en `organizations` (default false, migración puso true a las existentes). Patrón:

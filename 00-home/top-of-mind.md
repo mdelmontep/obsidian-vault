@@ -47,7 +47,7 @@ tags: [home, prioridades]
   - Migración `004_admin_feature_flags.sql` ejecutada en Supabase — 8 tablas, 6 funciones SQL, RLS, seed (3 planes, 27 features, 60 plan_features)
   - ~~**PENDIENTE INMEDIATO**: probar en navegador~~ HECHO 2026-04-21 — admin orgs/features/plans carga OK tras fix Zod v3
   - ~~**PENDIENTE**: impersonate banner (`?impersonate=org_id`)~~ HECHO 2026-04-22 — full impersonation con proxy client, banner animado, todas las páginas migradas
-  - **PENDIENTE**: probar toggle features por org (override vs plan default), toggle features por plan, editar limites
+  - ~~**PENDIENTE**: probar toggle features por org (override vs plan default), toggle features por plan, editar limites~~ HECHO 2026-04-25 — limits tab corregida (ilimitado, storage real, invalidación cache al cambiar plan)
   - **PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`)
   - **PENDIENTE**: verificar lazy expiration (billing state machine: trial → grace_period → expired)
   - **PENDIENTE**: tests — no hay tests automatizados aun, considerar al menos tests para `orgHasFeature`, `getOrgBilling`, `isSuperadmin`
@@ -84,6 +84,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: admin limits/storage fix (2026-04-25) — limits tab muestra "Ilimitado" para enterprise (no 99999), storage_mb calculado en tiempo real via Storage SDK (no columna estática), cache de limits se invalida al cambiar plan, conteos facturas+bandeja visibles en tab General
 - FacturaIA: UI improvements (2026-04-25) — filtros minimalistas con "Más filtros" colapsable, month rows compactos (-50% altura), sin_aprobar pinned arriba en recibidas, auto-logos proveedores (Google Favicon API con sentinel not_found), preview modal ajustada (max-height + fullscreen móvil), mobile responsive completo. Migración 008 (logo_url) ejecutada en Supabase Cloud.
 - Obsidian inbox procesado: 25→1 notas, 3 promocionadas a knowledge/, 2 tareas añadidas (2026-04-25)
 - FacturaIA: vitest configurado con 22 tests para billing, features y admin (2026-04-25)
