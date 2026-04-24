@@ -17,7 +17,7 @@ tags: [retell, voice, sdk, webhooks]
 - **Timeout de seguridad en estado `connecting`** (10-15s) — si Retell no dispara `call_started`, el estado queda colgado indefinidamente. El orb late eterno y el usuario no entiende qué pasa
 - **Singleton lazy del cliente** (`getRetellClient()` con try/catch que instancia en primer uso) evita crashes al cargar el módulo si el navegador no soporta WebRTC o mediaDevices
 - **Normalizar la respuesta del webhook de Retell** — puede venir como `access_token`, `accessToken` o `token` según cómo lo construyas en n8n. Hacer `data.access_token ?? data.accessToken ?? data.token`
-- **API de Retell — endpoints separados**: `PATCH /update-agent/{agent_id}` para config del agente (voz, webhook), `POST /update-retell-llm/{llm_id}` para prompt y tools. Son dos llamadas distintas
+- **API de Retell — endpoints separados**: lectura con `GET /get-agent/{agent_id}` y `GET /get-retell-llm/{llm_id}`. Escritura con `PATCH /update-agent/{agent_id}` (voz, webhook) y `PATCH /update-retell-llm/{llm_id}` (prompt y tools). NO existe `/v2/agent/` — la API es v1 sin prefijo. El `llm_id` está en `response_engine.llm_id` del agente
 - **`parameter_type` en custom tools debe coincidir con n8n**: si n8n lee `$json.body.args.X` (JSON anidado), la tool debe usar `"json"`. Con `"form"`, n8n recibe `body['args[name]']` en vez de `body.args.name` — la reserva falla silenciosamente
 ## API — importación y configuración
 

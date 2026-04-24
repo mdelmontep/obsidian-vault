@@ -108,3 +108,24 @@ openssl rand -base64 64 | tr -d '\n'
 # Passwords cortos seguros
 openssl rand -base64 18 | tr -d '+/=' | head -c 24
 ```
+
+## Flujo estándar — nuevo compose de cliente
+
+Antes de generar cualquier compose, preguntar siempre en este orden:
+1. Dominio (URL del servicio)
+2. Email/SMTP — ¿cuenta propia o reutilizar `info@agentesia.madrid`?
+3. Servidor — ¿cuál y qué IP?
+4. Locale — `es` o `en`
+5. `ENABLE_ACCOUNT_SIGNUP` — `false` = solo admin crea usuarios (producción recomendado)
+6. Passwords — ¿generar nuevos o reutilizar existentes?
+
+## Proyectos activos — mapa de infraestructura
+
+| Proyecto | Dominio n8n | Dominio Chatwoot | Servidor |
+|---|---|---|---|
+| AgentesIA World (Juan) | `n8n.agentesia.world` | `chatwoot.agentesia.world` | `185.99.186.76` |
+| AgentesIA Madrid | `n8n.agentesia.madrid` | `chatwoot.agentesia.madrid` | agentesia.madrid |
+| Tecnocloud | `n8n.tecnocloud.es` | `chatwoot.tecnocloud.es` | `185.47.13.165` |
+| Clinica Zen | `n8nclinicazen.agentesia.madrid` | — | `185.47.13.168` |
+| Simarro | `n8nsimarro.agentesia.madrid` | — | `185.47.13.168` |
+| FacturaIA | `n8n.agentesia.world` (compartido) | — | `185.99.186.76` |

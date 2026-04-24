@@ -6,25 +6,39 @@ tags: [home, prioridades]
 
 # Top of Mind
 
+## URGENTE
+
+- **Clinica Zen — Corregir email de confirmación (2026-04-25)**
+  - Las imágenes (hero + logo) se subieron como base64 inline pero hay que verificar que cargan en Gmail/Apple Mail
+  - Probar enviando un formulario de test y comprobar el email recibido
+  - Workflow: `13Roz21TOBwy8gp8` en `n8nclinicazen.agentesia.madrid`
+  - Nodo: `Send Confirmation Email`
+  - Si base64 no funciona en algún cliente, buscar alternativa (Cloudinary o similar)
+
 ## Prioridades esta semana
 
-- **FacturaIA — sesión larga de mejoras en curso** — calendario interactivo, cashflow con negativos, pills con pulso, filtros por rango de fechas, settings de apariencia (colores, tipografía Mermaid, pills, categorías), smart alerts, top proveedores, previsión de gastos fijos. Seed con 60 facturas realistas + PDFs generados con pdf-lib.
-  - **PENDIENTE INMEDIATO**: verificar visualmente en navegador que las facturas emitidas muestran nombres de clientes (datos OK en BD, falta hard refresh), verificar recibidas distribuidas correctamente entre proveedores, probar click en número de factura para previsualizar PDF
-  - **PENDIENTE**: deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
+- **FacturaIA — Canales de Ingesta + Plan y Facturación (spec aprobada 2026-04-24)**
+  - WhatsApp multi-tenant: matching por número remitente, quitar hardcode n8n
+  - Canales de ingesta: rediseño sin toggles, config expandible, banner confirmación, "Mejorar plan" para locked
+  - Plan y Facturación: página completa con planes reales, método de pago (UI), historial (mockup)
+  - Registro: captura de móvil obligatorio + auto-populate settings
+  - Spec: `docs/superpowers/specs/2026-04-24-canales-ingesta-plan-facturacion-design.md`
+  - **PENDIENTE**: crear plan de implementación (writing-plans) y ejecutar
+- **FacturaIA — Email ingesta con OAuth Gmail (PRIORITARIO)**
+  - Fase 2 de canales de ingesta: conectar Gmail del cliente vía OAuth, un solo workflow n8n pollea todas las orgs cada 5 min, extrae adjuntos PDF/imagen y manda al pipeline OCR
+  - Requiere: registrar app en Google Cloud Console, endpoint callback, workflow n8n con loop
+  - **PENDIENTE**: implementar después de la tanda actual de canales de ingesta
+- **FacturaIA — pendientes anteriores**
+  - Verificar visualmente facturas emitidas/recibidas en navegador
+  - Deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
 - ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado)
-- **Clinica Zen — chatbot + voz (2026-04-22)**:
-  - Agente Retell probado con llamada real. Reserva completada OK
-  - ~~Code Node disponibilidad ARREGLADO~~ ~~Ruta contacto existente ARREGLADA~~ ~~Prompt Retell v8~~ ~~Calendar events formato limpio~~ ~~cancelación de cita~~ ~~test cambiar fecha~~
-  - Envío mensajes migrado a salesbot (PATCH field 1903454 + bot_id 68822) — sin dependencia de amojo token
-  - Audios WhatsApp ARREGLADO (2026-04-22) — Redis debounce ahora busca `Mensaje` y `text` (transcripción Whisper)
-  - Flujo estados corregido (2026-04-22): Retell crea leads en 104111891 → actualiza a 104115975 tras booking
-  - Prompt AI Agent: regla anti-re-pregunta, regla cancelar-antes-de-mover, detección implícita cambio fecha
-  - Derivación Humano: dual entry (chatbot + Retell webhook)
-  - Calendar events: duración 30 min
-  - **PENDIENTE INMEDIATO**: revisar salesbot 68822 en GUI Kommo — tiene acción que mueve leads a 104115975 al enviar mensaje. Quitar esa acción
-  - **Pendiente**: conectar teléfono definitivo en Retell + publicar agente
-  - **Pendiente**: verificar RAG Supabase actualizado
-  - **Pendiente**: scope "Chats" Kommo → token dinámico
+- **Clinica Zen — chatbot + voz COMPLETADO (2026-04-23)**:
+  - Chatbot WhatsApp (prompt v7) + Agente Retell (prompt v8) — ambos en producción
+  - Teléfono definitivo conectado, agente publicado
+  - Salesbot 68822 corregido (acción mover leads eliminada)
+  - RAG Supabase verificado
+  - Scope "Chats" Kommo descartado — no se puede habilitar, se mantiene amojo token manual
+  - **Limitación conocida**: amojo_token expira ~24h, hay que actualizarlo manualmente
 - **FacturaIA — Admin Panel + Feature Flags (implementado 2026-04-21)**
   - 24 tareas completadas, código en main, push hecho
   - Migración `004_admin_feature_flags.sql` ejecutada en Supabase — 8 tablas, 6 funciones SQL, RLS, seed (3 planes, 27 features, 60 plan_features)
@@ -61,10 +75,11 @@ tags: [home, prioridades]
 
 ## Bloqueos activos
 
-- Clinica Zen: pendiente scope "Chats" de Kommo (contactar soporte)
+- ~~Clinica Zen: scope "Chats" de Kommo~~ DESCARTADO — no disponible
 
 ## Completado reciente
 
+- FacturaIA: WhatsApp multi-tenant matching corregido (2026-04-24) — matching por número remitente en vez de phone_number_id, sincronización telefono→settings.whatsapp.phone_number en settings, admin PATCH y auto-populate frontend
 - n8n.agentesia.world: compose corregido con healthcheck HTTP, pruning ejecuciones, memory limit 2G, versión fija 2.15.1 (2026-04-22). Compose guardado en `~/n8n-agentesia-world-compose.yml`
 - FacturaIA: adminUpdateOrgSchema ampliado con `telefono` y `settings` — fix Zod `.strict()` que impedía guardar WhatsApp config desde admin (2026-04-22)
 - FacturaIA: Full impersonation (2026-04-22) — proxy client que bypassa RLS via admin client, cookie-based middleware, todas las vistas migradas de createClient a useOrgClient hook, banner animado OKLCH, modal previsión de gastos. Settings muestra datos admin (pendiente migrar sub-componentes). Commit `a7f6161`.

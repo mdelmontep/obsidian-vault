@@ -218,7 +218,7 @@ curl -X POST "https://graph.facebook.com/v22.0/{phone_number_id}" \
   -d 'webhook_configuration={"override_callback_uri":"https://...","verify_token":"..."}'
 ```
 
-Cada org tiene su `phone_number_id` en `settings.whatsapp`. El webhook receptor busca org por ese ID.
+El webhook receptor (`zYcHHa8jWXB6dY5i`, nodo "Prepare Data") busca org comparando el número del **remitente** (`from`, normalizado sin prefijo 34) contra `settings.whatsapp.phone_number` de cada org. No usar `phone_number_id` (es el ID del número receptor, compartido entre todas las orgs).
 
 ## n8n binary data filesystem mode (2026-04-21)
 

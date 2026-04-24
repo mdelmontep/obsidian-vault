@@ -95,14 +95,14 @@ tags: [clinica-zen, kommo, n8n, workflow]
 
 ## Pendientes post-sesión
 
-- Conectar teléfono definitivo de la clínica en Retell (en canvas Slack Tareas Pendientes)
+- ~~Conectar teléfono definitivo de la clínica en Retell~~ HECHO 2026-04-23
 - ~~Test cancelar cita (flujo completo + borrar evento Calendar — no implementado)~~ HECHO 2026-04-21
 - ~~Test cambio de fecha (flujo completo + mover evento Calendar)~~ HECHO 2026-04-21 (cancel + re-reservar)
-- Publicar agente Retell (`is_published: true`) una vez conectado teléfono
-- Scope "Chats" Kommo (contactar soporte) — bloquea token dinámico
-- Verificar contenido RAG (Supabase) actualizado para CZ
+- ~~Publicar agente Retell (`is_published: true`)~~ HECHO 2026-04-23
+- ~~Scope "Chats" Kommo (contactar soporte)~~ DESCARTADO 2026-04-23 — no se puede habilitar
+- ~~Verificar contenido RAG (Supabase) actualizado para CZ~~ HECHO 2026-04-23
 - ~~15 eventos de test creados en calendario (semana 21-25 abril)~~ Ya borrados (sesión test 2026-04-21)
-- **Revisar salesbot 68822 en GUI Kommo** — tiene acción que mueve leads a 104115975 sin pasar por n8n. Quitar esa acción para que el lead se quede en 104111891 hasta que el AI Agent ejecute Reservar_cita
+- ~~Revisar salesbot 68822 en GUI Kommo — quitar acción que mueve leads a 104115975~~ HECHO 2026-04-23
 
 ## Fixes aplicados
 
