@@ -24,4 +24,6 @@ Sin el array `changes`, devuelve `"missing required field: changes"`. Pasar `doc
 
 Para leer secciones: `canvases.sections.lookup` con `criteria: { "section_types": ["any_header"] }`. El campo `contains_text` no acepta string vacío.
 
-Requisitos del bot: scopes `canvases:write` + `channels:join` (para unirse al canal antes de editar su canvas).
+Requisitos del bot: scopes `canvases:write` + `channels:join` (para unirse al canal antes de editar su canvas). Para canales privados anadir `groups:history` + `files:read`.
+
+**Limitacion importante**: `canvases.sections.lookup` devuelve metadata (titulo, ID) pero NO el contenido markdown. No hay endpoint para leer el cuerpo de un canvas. Disenar integraciones como write-only (append). Ver [[slack-canvas-api-no-permite-leer-contenido-de-secciones]].

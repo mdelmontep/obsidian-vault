@@ -69,7 +69,7 @@ Ver [[toolWorkflow-onError-stopWorkflow-mata-al-agente-silenciosamente]]
 
 ---
 
-## Retell → n8n checklist (2026-04-18)
+## Retell → n8n checklist (2026-04-18) — MOVER a Stack/retell/
 
 Antes de subir un prompt de Retell que conecta con webhooks de n8n:
 
@@ -81,7 +81,7 @@ Antes de subir un prompt de Retell que conecta con webhooks de n8n:
 
 Ver [[retell-parameter-type-form-vs-json-rompe-n8n-silenciosamente]] y [[easypanel-y-dominio-custom-pueden-resolver-a-ips-distintas]]
 
-## Migración masiva de workflows n8n vía script Python (2026-04-18)
+## Migración masiva de workflows n8n vía script Python (2026-04-18) — MOVER a Stack/n8n.md
 
 Patrón para resetear N workflows desde JSONs originales con reemplazo de IDs:
 
@@ -285,7 +285,25 @@ Ver [[n8n-se-cuelga-sin-crashear-necesita-healthcheck-http]]
 
 ---
 
+## Email OAuth Gmail + polling configurable por org (2026-04-24)
+
+Patron completo para ingesta de facturas via email:
+
+1. **OAuth connect**: Google OAuth2 con HMAC state validation, tokens en `settings.email.oauth_token/refresh_token` JSONB
+2. **Polling endpoint** (`/api/email/poll`): service-key auth con `timingSafeEqual`, per-org interval check (`settings.email.poll_interval_minutes`), skip si `elapsed < intervalMs`
+3. **Manual poll** (`/api/email/poll-now`): session-authenticated, procesa solo la org del usuario
+4. **n8n schedule**: 30min como base minima, per-org intervals (1h/2h/6h/12h/24h) filtrados en el endpoint
+5. **Dedup**: SHA256 hash de cada attachment, check contra `bandeja_ingesta.file_hash` antes de insertar
+6. **OCR webhook**: fire-and-forget con timeout 30s y 3 retries al n8n OCR pipeline existente
+7. **last_checked**: solo avanza al timestamp del ultimo email procesado con exito (no al final del batch)
+
+Archivos clave: `src/lib/email/`, `src/app/api/email/poll/`, `src/app/api/auth/google/`, `n8n/workflows/email-polling.json`
+
+---
+
 ## Obsidian vault sync via GitHub (2026-04-18)
+
+> **NOTA**: >2 semanas, considerar mover a Stack/index.md
 
 Vault en `/Users/manueldelmonte/Obsidian/Manu/` sincronizado con `mdelmontep/obsidian-vault` (privado).
 `/obsidian-1` hace push automático al final. Daily Briefing Manu lee de ahí cada mañana L-V 9:00.

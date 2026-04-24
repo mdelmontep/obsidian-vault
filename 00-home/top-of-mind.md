@@ -24,11 +24,12 @@ tags: [home, prioridades]
   - Registro: captura de móvil obligatorio + auto-populate settings
   - Spec: `docs/superpowers/specs/2026-04-24-canales-ingesta-plan-facturacion-design.md`
   - **PENDIENTE**: crear plan de implementación (writing-plans) y ejecutar
-- **FacturaIA — Email ingesta con OAuth Gmail (PRIORITARIO)**
-  - Fase 2 de canales de ingesta: conectar Gmail del cliente vía OAuth, un solo workflow n8n pollea todas las orgs cada 5 min, extrae adjuntos PDF/imagen y manda al pipeline OCR
-  - Credenciales Google OAuth configuradas (2026-04-24): `.env.local` con client_id/secret, redirect_uri auto-detecta local/prod
-  - Rutas corregidas: `/agentes-ia` → `/agentes`
-  - **PENDIENTE**: probar flujo completo end-to-end (conectar Gmail, verificar tokens guardados en org settings, test polling)
+- **FacturaIA — Email ingesta con OAuth Gmail COMPLETADO (2026-04-24)**
+  - OAuth Gmail conectado y probado e2e, polling configurable por org, boton "Revisar ahora"
+  - n8n workflow activo 30min (`dqvzeyeifTcNv50u`), dedup SHA256, timing-safe auth
+  - Code review: timing-safe compare, fuente vs origen, JSON.parse try/catch, last_checked fix
+  - Manuales actualizados (usuario + admin con referencia visual completa)
+  - Precios planes conectados a BD y editables desde admin, CLAUDE.md con regla manuales
 - **FacturaIA — pendientes anteriores**
   - Verificar visualmente facturas emitidas/recibidas en navegador
   - Deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
@@ -80,7 +81,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
-- FacturaIA: Google OAuth Gmail configurado (2026-04-24) — credenciales en .env.local, redirect_uri auto-detecta local/prod via request.nextUrl.origin, rutas corregidas /agentes-ia→/agentes
+- FacturaIA: Email Ingesta OAuth Gmail completo (2026-04-24) — OAuth connect/disconnect, polling configurable por org (1h/2h/6h/12h/24h), boton "Revisar ahora", dedup SHA256, timing-safe auth, code review fixes, manuales actualizados, precios planes dinámicos desde BD, Slack canvas actualizado
 - FacturaIA: WhatsApp multi-tenant matching corregido (2026-04-24) — matching por número remitente en vez de phone_number_id, sincronización telefono→settings.whatsapp.phone_number en settings, admin PATCH y auto-populate frontend
 - n8n.agentesia.world: compose corregido con healthcheck HTTP, pruning ejecuciones, memory limit 2G, versión fija 2.15.1 (2026-04-22). Compose guardado en `~/n8n-agentesia-world-compose.yml`
 - FacturaIA: adminUpdateOrgSchema ampliado con `telefono` y `settings` — fix Zod `.strict()` que impedía guardar WhatsApp config desde admin (2026-04-22)
