@@ -26,7 +26,7 @@ PRs mergeados a main el 21/04/2026: #2 (Tanda 2 — tokens, focus ring, fuentes 
 
 ## Issues encontrados
 
-1. **Mobile responsive (< 767px)**: la app no se ve bien en móvil. Hace falta un rediseño responsive más completo. Dejarlo para tanda dedicada.
+1. ~~**Mobile responsive (< 767px)**~~: RESUELTO (2026-04-25) — filtros apilados, cards 1 columna, pills con scroll horizontal, tabla scroll optimizada, preview fullscreen en móvil.
 2. **Preview PDF en Generar**: algunos campos aparecen fuera de posición y apilados. La tipografía parece Filson pero el layout del PDF tiene problemas de maquetación.
 3. **PDF descargado**: falta verificar descargando el PDF real y comprobando fuentes embebidas y layout.
 4. **autoFocus modal edición**: no se pudo verificar.

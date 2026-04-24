@@ -13,6 +13,24 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## Google Favicon API + auto-logo con sentinel not_found (2026-04-25)
+
+Patrón para auto-asignar logos a proveedores/clientes sin intervención:
+
+1. **API**: `https://www.google.com/s2/favicons?domain={slug}.es&sz=128` — gratis, sin key
+2. **Slug**: nombre de empresa → quitar S.L./S.A., normalizar acentos, solo alfanumérico
+3. **Filtro**: `byteLength > 750` descarta el globe default (~726 bytes)
+4. **Modo strict** (auto): solo `{slug}.es` y `{slug}.com` — coincidencia exacta con nombre
+5. **Modo broad** (manual): variantes (1ra palabra, 2 palabras, completo) × 5 TLDs
+6. **Sentinel**: `logo_url = null` → buscar; `'not_found'` → ya buscado, no repetir; `'https://...'` → mostrar
+7. **Best**: el favicon más grande en bytes = más detallado
+
+Clearbit (`logo.clearbit.com`) ya no funciona — adquirida por HubSpot, API cerrada.
+
+Ver [[clearbit-logo-api-ya-no-existe]] y [[google-favicon-api-patron-auto-logo]]
+
+---
+
 ## FacturaIA — Impersonation con proxy client (2026-04-22)
 
 Patrón para que superadmin vea datos de cualquier org sin tocar RLS:

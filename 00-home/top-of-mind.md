@@ -31,8 +31,9 @@ tags: [home, prioridades]
   - Manuales actualizados (usuario + admin con referencia visual completa)
   - Precios planes conectados a BD y editables desde admin, CLAUDE.md con regla manuales
 - **FacturaIA — pendientes anteriores**
-  - Verificar visualmente facturas emitidas/recibidas en navegador
+  - ~~Verificar visualmente facturas emitidas/recibidas en navegador~~ HECHO 2026-04-25 — UI redesign completo
   - Deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
+  - **PENDIENTE**: actualizar manuales usuario/admin con los 6 cambios de UI (filtros, month rows, sin_aprobar, logos, preview, responsive)
 - ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado)
 - **Clinica Zen — chatbot + voz COMPLETADO (2026-04-23)**:
   - Chatbot WhatsApp (prompt v7) + Agente Retell (prompt v8) — ambos en producción
@@ -83,6 +84,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: UI improvements (2026-04-25) — filtros minimalistas con "Más filtros" colapsable, month rows compactos (-50% altura), sin_aprobar pinned arriba en recibidas, auto-logos proveedores (Google Favicon API con sentinel not_found), preview modal ajustada (max-height + fullscreen móvil), mobile responsive completo. Migración 008 (logo_url) ejecutada en Supabase Cloud.
 - Obsidian inbox procesado: 25→1 notas, 3 promocionadas a knowledge/, 2 tareas añadidas (2026-04-25)
 - FacturaIA: vitest configurado con 22 tests para billing, features y admin (2026-04-25)
 - FacturaIA: complimentary orgs — campo boolean, MRR excluye complimentary, estrella morada en admin, toggle en billing tab (2026-04-25)
