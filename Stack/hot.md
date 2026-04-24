@@ -81,28 +81,6 @@ Antes de subir un prompt de Retell que conecta con webhooks de n8n:
 
 Ver [[retell-parameter-type-form-vs-json-rompe-n8n-silenciosamente]] y [[easypanel-y-dominio-custom-pueden-resolver-a-ips-distintas]]
 
-## Slack API — escribir en canvas (2026-04-18)
-
-```bash
-# 1. Unir bot al canal
-curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-  -d '{"channel":"C0ARS4X5MF0"}' "https://slack.com/api/conversations.join"
-
-# 2. Editar canvas (insert al final)
-curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json; charset=utf-8" \
-  -d '{"canvas_id":"F0AT6KEJLQZ","changes":[{"operation":"insert_at_end","document_content":{"type":"markdown","markdown":"- [ ] Tarea nueva\n"}}]}' \
-  "https://slack.com/api/canvases.edit"
-```
-
-- Canvas Tareas Pendientes: file_id `F0AT6KEJLQZ` en canal `C0ARS4X5MF0` (#01-tareas-pendientes)
-- Bot no tiene `groups:read` — solo listar canales publicos
-- Ver [[slack-canvas-api-requiere-changes-array-con-operation]] y [[slack-bot-sin-groups-read-no-lista-canales-privados]]
-
-## n8n API — credenciales no expuestas (2026-04-18)
-
-`GET /api/v1/credentials` lista id/nombre/tipo pero nunca devuelve secrets. Guardar tokens fuera de n8n si se necesitan en otro contexto.
-Ver [[n8n-api-publica-no-expone-valores-de-credenciales]]
-
 ## Migración masiva de workflows n8n vía script Python (2026-04-18)
 
 Patrón para resetear N workflows desde JSONs originales con reemplazo de IDs:
