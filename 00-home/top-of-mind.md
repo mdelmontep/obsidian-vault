@@ -17,6 +17,26 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
+- **FacturaIA — Probar generador facturas/presupuestos por voz WhatsApp (2026-04-25)**
+  - Workflows desplegados (voice-process, voice-confirm, voice-correct) en n8n.agentesia.world
+  - PENDIENTE:
+    1. Redeploy en Dokploy (código de /api/voice/extract y /api/voice/generate en prod)
+    2. Añadir OPENAI_API_KEY en env vars de Dokploy (Whisper la necesita)
+    3. Reload Traefik tras redeploy
+    4. Test e2e: enviar audio al +34 919 93 26 18 pidiendo factura ("Hazme una factura para X por Y de Z")
+    5. Verificar flujo completo: audio → transcripción → extracción → botones confirmar/corregir → PDF generado → PDF recibido por WhatsApp
+    6. Probar corrección: pulsar "Corregir", enviar texto con cambio, verificar que actualiza y re-muestra botones
+- **FacturaIA — Asistente IA conversacional multi-canal (VISIÓN)**
+  - Conectar el AI assistant (Claude, ya existe en dashboard) al canal WhatsApp
+  - Consultas por WhatsApp/email: facturas vencidas, resúmenes del mes/semana, pagos pendientes de cobro, datos de cuenta, listas, informes
+  - Extensiones futuras:
+    - Cobrador inteligente: recordatorios automáticos escalonados (amable → formal → urgente) por WhatsApp/email
+    - Predicción de cashflow: cuándo paga cada cliente, alertas de liquidez
+    - Auto-categorización de gastos recibidos con aprendizaje por org
+    - Alertas proactivas: "facturas un 30% menos", "3 vencen esta semana"
+    - Generación de presupuestos por contexto: "como el del mes pasado para X pero +10%"
+    - Informe fiscal trimestral automático (IVA para gestor)
+  - Arquitectura: reutilizar AI assistant route con tool-use para queries a BD, compartir entre canales
 - **FacturaIA — Google OAuth email por org (PENDIENTE)**
   - Cada org envia facturas desde su propio email via Google OAuth (no SMTP compartido)
   - Necesita: OAuth token storage per org, Gmail API send, template editor (asunto/cuerpo/firma con variables)
