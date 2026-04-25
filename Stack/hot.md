@@ -13,6 +13,14 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## Security hardening checklist — API routes Next.js (2026-04-25)
+
+Al crear o auditar endpoints: auth, rate limit, input whitelist, magic bytes upload, timingSafeEqual para secrets, no exponer errores internos, audit log en queries dinámicas. Checklist completo con ejemplos de código y bugs encontrados.
+
+Ver [[checklist-seguridad-api-routes-nextjs]]
+
+---
+
 ## Re-auth con password para config sensible admin (2026-04-25)
 
 Para ediciones que afectan a todas las orgs (config global, WhatsApp compartido, API keys):

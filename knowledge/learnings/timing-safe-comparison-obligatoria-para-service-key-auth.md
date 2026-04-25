@@ -25,3 +25,9 @@ const isValid = serviceKey.length > 0 &&
 - `timingSafeEqual` lanza error si los buffers tienen longitud diferente — verificar `.length ===` antes
 - Verificar que la key no esta vacia (`.length > 0`) para evitar que dos strings vacias pasen
 - Aplica a cualquier endpoint interno protegido con header secreto (poll, webhooks, admin internal)
+
+## Incidencias
+
+- `/api/email/poll` — corregido 2026-04-24 (code review)
+- `/api/generate-pdfs` — corregido 2026-04-25 (usaba `!==` directo)
+- `/api/render-pdf` — añadido auth + timingSafeEqual 2026-04-25 (no tenía ningún auth)
