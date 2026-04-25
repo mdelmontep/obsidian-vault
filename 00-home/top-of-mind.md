@@ -17,6 +17,11 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
+- **FacturaIA — Google OAuth email por org (PENDIENTE)**
+  - Cada org envia facturas desde su propio email via Google OAuth (no SMTP compartido)
+  - Necesita: OAuth token storage per org, Gmail API send, template editor (asunto/cuerpo/firma con variables)
+  - Seccion en Settings: "Emails transaccionales" con preview y variables ({{numero}}, {{cliente}}, {{total}})
+  - De momento funciona con SMTP centralizado (info@agentesia.madrid) + texto predeterminado con nombre de org
 - **FacturaIA — Canales de Ingesta + Plan y Facturación (spec aprobada 2026-04-24)**
   - ~~WhatsApp multi-tenant: matching por número remitente, quitar hardcode n8n~~ HECHO 2026-04-25 — n8n workflows desplegados, código en main
   - Canales de ingesta: rediseño sin toggles, config expandible, banner confirmación, "Mejorar plan" para locked
@@ -33,7 +38,7 @@ tags: [home, prioridades]
 - **FacturaIA — pendientes anteriores**
   - ~~Verificar visualmente facturas emitidas/recibidas en navegador~~ HECHO 2026-04-25 — UI redesign completo
   - Deploy a producción (push + Dokploy redeploy + Traefik reload), test e2e OCR en prod
-  - **PENDIENTE**: actualizar manuales usuario/admin con los 6 cambios de UI (filtros, month rows, sin_aprobar, logos, preview, responsive)
+  - ~~Actualizar manuales usuario/admin con cambios de UI~~ HECHO 2026-04-25 — manuales actualizados con envío email, filtros borrador/enviada, nuevo formulario, catálogo
 - ~~Mover repos de AgentesIAMadrid a cuenta personal GitHub~~ PARCIAL — `obsidian-vault` movido a `mdelmontep/obsidian-vault` (privado)
 - **Clinica Zen — chatbot + voz COMPLETADO (2026-04-23)**:
   - Chatbot WhatsApp (prompt v7) + Agente Retell (prompt v8) — ambos en producción
@@ -84,6 +89,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: rediseño formulario nueva factura + envío email (2026-04-25) — formulario con tarjetas, catálogo con autocompletado por categoría, descripción separada en plantillas, guardar borrador vs guardar y enviar, email auto-send al cliente, campo email para clientes sin email (guarda en cliente), opción "Enviar por email" en menú 3 puntos de emitidas, filtros Borrador/Enviada, migración email_envio, API /api/email/send con Nodemailer SMTP, manuales actualizados
 - FacturaIA: generador facturas por voz — n8n workflows desplegados (2026-04-25) — 3 sub-workflows (voice-process, voice-confirm, voice-correct) importados y activos en n8n.agentesia.world, receptor actualizado con routing de voz (31 nodos), OpenAI GPT-4o para extracción, Whisper con credencial OpenAI. Migración 010+011 ejecutadas. PENDIENTE: redeploy Dokploy + OPENAI_API_KEY en env + test e2e
 - FacturaIA: system_config + admin config page (2026-04-25) — tabla system_config (key-value JSONB), página /admin/config con número global WhatsApp editable (protegido por re-auth con contraseña), migración 011 ejecutada
 - FacturaIA: security hardening (2026-04-25) — auth en render-pdf, timingSafeEqual en generate-pdfs, whitelist métodos en impersonate query + audit log, rate limiting in-memory (upload 20/min, AI 30/min), magic number validation en uploads, sanitizado errores internos en respuestas API
