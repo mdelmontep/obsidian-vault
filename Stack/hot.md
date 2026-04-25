@@ -87,30 +87,17 @@ Ver [[toolWorkflow-onError-stopWorkflow-mata-al-agente-silenciosamente]]
 
 ---
 
-## Retell → n8n checklist (2026-04-18) — MOVER a Stack/retell/
+## n8n API — importar workflows con control chars (2026-04-25)
 
-Antes de subir un prompt de Retell que conecta con webhooks de n8n:
+Los JSON de workflows con nodos Code contienen `\n`/`\t` en `jsCode` que rompen shell escaping. Patrón seguro:
 
-1. URLs de tools apuntan al dominio correcto (`dig +short` para verificar — EasyPanel ≠ dominio custom)
-2. Cada tool referenciada en el prompt existe en `general_tools`
-3. Nombres de parámetros coinciden con `Edit Fields` / `Set` del workflow n8n
-4. Workflow destino activo y no archivado
-5. `parameter_type: "json"` si n8n espera `body.args.X`
+1. Python `json.dump(payload, f, ensure_ascii=True)` a `/tmp/`
+2. `curl -d @/tmp/file.json` (nunca inline)
+3. Parsear respuestas con `json.loads(raw, strict=False)` o grep
+4. `executeWorkflowTrigger` v1.1 requiere input schema — usar v1.0 si no necesitas validación
+5. Activar: `POST .../activate` (no PATCH/PUT). Actualizar: `PUT` (requiere `name`)
 
-Ver [[retell-parameter-type-form-vs-json-rompe-n8n-silenciosamente]] y [[easypanel-y-dominio-custom-pueden-resolver-a-ips-distintas]]
-
-## Migración masiva de workflows n8n vía script Python (2026-04-18) — MOVER a Stack/n8n.md
-
-Patrón para resetear N workflows desde JSONs originales con reemplazo de IDs:
-
-1. Script Python lee JSONs originales + aplica `str.replace()` por cada par viejo→nuevo (credenciales, field_ids, pipeline, status, sub-workflow IDs, dominios, etc.)
-2. Extrae solo campos válidos para la API: `name`, `nodes`, `connections`, `settings`, `staticData`
-3. Guarda en `/tmp/cz_upload/` → sube con `PUT /api/v1/workflows/{id}`
-4. Activar después con `POST /api/v1/workflows/{id}/activate`
-
-Clave: los `field_id` en Code nodes van SIN comillas (`field_id: 337714`), necesitan reemplazo por separado de los que van como string.
-
-Ver [[kommo-llt-requiere-subdominio-cuenta-no-api-c]] y [[n8n-debounce-redis-1s-causa-duplicados-en-chatbot]]
+Ver [[n8n-api-importar-workflows-json-requiere-archivos-temporales]], [[n8n-executeWorkflowTrigger-v1.1-requiere-input-schema]], [[n8n-api-activate-es-POST-no-PATCH]]
 
 ## OCR pipeline facturas — patrón Next.js + n8n + OpenAI Vision (2026-04-20)
 

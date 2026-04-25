@@ -122,3 +122,10 @@ Cualquier otro campo (`createdAt`, `updatedAt`, `active`, `binaryMode` en settin
 - **`onError: stopWorkflow` en toolWorkflow mata al agente** — usar SIEMPRE `continueErrorOutput` en nodos toolWorkflow conectados al AI Agent. `stopWorkflow` mata al agente entero sin responder al usuario. `continueRegularOutput` traga el error silenciosamente. Ver [[toolWorkflow-onError-stopWorkflow-mata-al-agente-silenciosamente]]
 - **n8n worker valida TODOS los nodos del workflow** — aunque no estén en el path de ejecución. Si un nodo usa un plugin no instalado en el worker, la ejecución se queda en "Queued" indefinidamente. Fix: instalar plugin en worker o separar en sub-workflow. Ver [[n8n-worker-valida-todos-los-nodos-aunque-no-esten-en-el-path]]
 - **Tool description de write-tools críticas: describir consecuencias** — una descripción genérica ("Usa esta herramienta para reservar cita", 74 chars) hizo que el LLM generara texto de confirmación sin ejecutar la tool. Expandir a ~280 chars explicando "sin esta llamada la cita NO queda registrada en el sistema" forzó la ejecución. Patrón: para toda tool que realice una acción irreversible, describir qué pasa si NO se llama
+
+## Importar workflows via API
+
+- **JSON con nodos Code rompe shell escaping** — los campos `jsCode` contienen `\n`, `\t` que rompen curl inline. Siempre escribir payload a `/tmp/` con Python (`json.dump(ensure_ascii=True)`) y usar `curl -d @/tmp/file.json`. Ver [[n8n-api-importar-workflows-json-requiere-archivos-temporales]]
+- **`executeWorkflowTrigger` v1.1 requiere input schema** — sin `workflowInputs`, activar falla. Usar `typeVersion: 1.0` si no necesitas validación. Ver [[n8n-executeWorkflowTrigger-v1.1-requiere-input-schema]]
+- **Activar: POST, no PATCH** — `POST /api/v1/workflows/{id}/activate`. PATCH y PUT devuelven 405. Para actualizar nodos: `PUT /api/v1/workflows/{id}` (requiere campo `name`). Ver [[n8n-api-activate-es-POST-no-PATCH]]
+- **Parsear respuestas con `strict=False`** — las respuestas contienen control chars del jsCode. Usar `json.loads(raw, strict=False)` o grep para extraer campos

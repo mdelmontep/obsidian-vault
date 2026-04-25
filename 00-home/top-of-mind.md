@@ -18,7 +18,7 @@ tags: [home, prioridades]
 ## Prioridades esta semana
 
 - **FacturaIA — Canales de Ingesta + Plan y Facturación (spec aprobada 2026-04-24)**
-  - WhatsApp multi-tenant: matching por número remitente, quitar hardcode n8n
+  - ~~WhatsApp multi-tenant: matching por número remitente, quitar hardcode n8n~~ HECHO 2026-04-25 — n8n workflows desplegados, código en main
   - Canales de ingesta: rediseño sin toggles, config expandible, banner confirmación, "Mejorar plan" para locked
   - Plan y Facturación: página completa con planes reales, método de pago (UI), historial (mockup)
   - Registro: captura de móvil obligatorio + auto-populate settings
@@ -84,6 +84,8 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: generador facturas por voz — n8n workflows desplegados (2026-04-25) — 3 sub-workflows (voice-process, voice-confirm, voice-correct) importados y activos en n8n.agentesia.world, receptor actualizado con routing de voz (31 nodos), OpenAI GPT-4o para extracción, Whisper con credencial OpenAI. Migración 010+011 ejecutadas. PENDIENTE: redeploy Dokploy + OPENAI_API_KEY en env + test e2e
+- FacturaIA: system_config + admin config page (2026-04-25) — tabla system_config (key-value JSONB), página /admin/config con número global WhatsApp editable, migración 011 ejecutada
 - FacturaIA: plantillas de factura con PDF pixel-perfect (2026-04-25) — 4 plantillas (Tech, Corp, Freelance, Creativa), selección en Settings, preview HTML en tiempo real, descarga PDF via Puppeteer (`/api/render-pdf`) idéntico al preview. Soporte para tipo de documento (Factura/Presupuesto/Proforma/Abono). Browser singleton warm ~2.3s
 - FacturaIA: admin limits/storage fix (2026-04-25) — limits tab muestra "Ilimitado" para enterprise (no 99999), storage_mb calculado en tiempo real via Storage SDK (no columna estática), cache de limits se invalida al cambiar plan, conteos facturas+bandeja visibles en tab General
 - FacturaIA: UI improvements (2026-04-25) — filtros minimalistas con "Más filtros" colapsable, month rows compactos (-50% altura), sin_aprobar pinned arriba en recibidas, auto-logos proveedores (Google Favicon API con sentinel not_found), preview modal ajustada (max-height + fullscreen móvil), mobile responsive completo. Migración 008 (logo_url) ejecutada en Supabase Cloud.
