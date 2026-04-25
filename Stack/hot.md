@@ -13,6 +13,22 @@ Se lee PRIMERO antes de buscar en el resto del vault.
 
 ---
 
+## Re-auth con password para config sensible admin (2026-04-25)
+
+Para ediciones que afectan a todas las orgs (config global, WhatsApp compartido, API keys):
+
+1. Campos `disabled` por defecto + banner naranja de aviso
+2. Botón "Desbloquear" → modal pide contraseña
+3. Server verifica con `supabase.auth.signInWithPassword({ email: user.email, password })`
+4. Si OK → inputs editables. Al guardar/cancelar → bloquea de nuevo
+5. Estado `original` guardado para revert visual en cancelar
+
+Endpoint: `POST /api/admin/config/verify`. Aplicar a cualquier config multi-org.
+
+Ver [[re-autenticacion-con-password-para-acciones-sensibles-admin]]
+
+---
+
 ## Google Favicon API + auto-logo con sentinel not_found (2026-04-25)
 
 Patrón para auto-asignar logos a proveedores/clientes sin intervención:
