@@ -84,6 +84,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: plantillas de factura con PDF pixel-perfect (2026-04-25) — 4 plantillas (Tech, Corp, Freelance, Creativa), selección en Settings, preview HTML en tiempo real, descarga PDF via Puppeteer (`/api/render-pdf`) idéntico al preview. Soporte para tipo de documento (Factura/Presupuesto/Proforma/Abono). Browser singleton warm ~2.3s
 - FacturaIA: admin limits/storage fix (2026-04-25) — limits tab muestra "Ilimitado" para enterprise (no 99999), storage_mb calculado en tiempo real via Storage SDK (no columna estática), cache de limits se invalida al cambiar plan, conteos facturas+bandeja visibles en tab General
 - FacturaIA: UI improvements (2026-04-25) — filtros minimalistas con "Más filtros" colapsable, month rows compactos (-50% altura), sin_aprobar pinned arriba en recibidas, auto-logos proveedores (Google Favicon API con sentinel not_found), preview modal ajustada (max-height + fullscreen móvil), mobile responsive completo. Migración 008 (logo_url) ejecutada en Supabase Cloud.
 - Obsidian inbox procesado: 25→1 notas, 3 promocionadas a knowledge/, 2 tareas añadidas (2026-04-25)

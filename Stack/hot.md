@@ -150,6 +150,20 @@ Google Calendar `query` busca en summary + description, así que poner Lead ID e
 
 ---
 
+## FacturaIA — Puppeteer HTML→PDF pixel-perfect (2026-04-25)
+
+Patrón para PDFs idénticos al preview HTML: Puppeteer headless + `renderToStaticMarkup` + `page.setContent()`.
+
+1. **Browser singleton** con idle timeout 60s — cold ~10s, warm ~2.3s
+2. **Dynamic imports** obligatorios en Next.js 16 Route Handlers: `await import('react-dom/server')` (static import bloqueado)
+3. **Quitar `'use client'`** de componentes de plantilla para poder llamarlos con `createElement()` desde server (funcionan igual client-side si el padre tiene la directiva)
+4. **Fonts base64 inline** en `<style>` — per-template (2-3 fonts vs 10), cacheadas en `Map` a nivel módulo
+5. **`page.setContent()`** vs `page.goto()` — elimina round-trip al dev server
+
+API Route: `/api/render-pdf` (POST con `{ config, data }`). Excluir en `isServiceRoute` del middleware.
+
+Ver [[puppeteer-html-to-pdf-pixel-perfect-con-plantillas-react]]
+
 ## FacturaIA — pdf-lib para generar PDFs server-side (2026-04-20)
 
 PDFKit falla en Turbopack (ENOENT .afm). Usar pdf-lib: `PDFDocument.create()` + `StandardFonts`.
