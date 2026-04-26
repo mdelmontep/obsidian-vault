@@ -119,6 +119,14 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 5. `ENABLE_ACCOUNT_SIGNUP` — `false` = solo admin crea usuarios (producción recomendado)
 6. Passwords — ¿generar nuevos o reutilizar existentes?
 
+## Puppeteer en Alpine
+
+- `node:20-alpine` no trae Chrome — Puppeteer falla con "Could not find Chrome"
+- Solución: `apk add chromium nss freetype harfbuzz ca-certificates ttf-freefont`
+- Env vars: `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser` + `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true`
+- En código: `puppeteer.launch({ executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined })`
+- **No hacer fetch HTTP a tu propia API dentro del contenedor** — DNS interno no resuelve el dominio público. Extraer lógica a función compartida e importar directamente.
+
 ## Proyectos activos — mapa de infraestructura
 
 | Proyecto | Dominio n8n | Dominio Chatwoot | Servidor |

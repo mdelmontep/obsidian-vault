@@ -17,21 +17,49 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
+- **FacturaIA — Presupuestos, Proformas y Abonos completos (2026-04-26)**
+  - Ya existe: tabla `presupuestos` con estados propios (borrador/enviado/aceptado/rechazado/expirado/facturado), vista con KPIs, conversión a factura
+  - Ya existe: plantillas PDF soportan `tipo: 'factura' | 'presupuesto' | 'proforma' | 'abono'`, serie `P` para presupuestos
+  - **PENDIENTE — Fase 1: Presupuestos completos**
+    - Conectar formulario `generar-view` con tabla `presupuestos` (ahora solo genera facturas)
+    - Serie `P` funcional con `next_invoice_number`
+    - PDF de presupuesto descargable/enviable por email
+    - Conversión presupuesto → factura ya existe, verificar que copia líneas correctamente
+  - **PENDIENTE — Fase 2: Proformas**
+    - Nueva tabla `proformas` o campo `documento_tipo` en facturas (decidir)
+    - Serie nueva (ej: `F` proforma)
+    - Estados: borrador → enviada → pagada → convertida
+    - Conversión proforma → factura
+  - **PENDIENTE — Fase 3: Abonos (facturas rectificativas)**
+    - Campo `factura_origen_id` para vincular abono con factura original
+    - Serie `B` para abonos
+    - Importes negativos automáticos desde factura original
+    - Ajuste de saldo del cliente
+    - Cumplimiento fiscal: referencia obligatoria a factura rectificada
+  - **PENDIENTE — Fase 4: Vistas y métricas**
+    - Pestaña presupuestos conectada al formulario (crear desde ahí)
+    - Vistas para proformas y abonos (nuevas pestañas o filtros)
+    - Pipeline de ventas: presupuestos → proformas → facturas con trazabilidad
+    - Métricas: tasa de conversión, tiempo medio aceptación, importe en pipeline
+
 - **FacturaIA — Generador facturas por voz WhatsApp — SIMPLIFICADO (2026-04-26)**
   - ~~3 sub-workflows + Redis~~ → 1 workflow receptor v2 (`zYcHHa8jWXB6dY5i`) con AI Agent + Postgres Chat Memory
   - ~~`/api/voice/extract`~~ → eliminado, extracción la hace el AI Agent en n8n
   - Flujo e2e funciona: audio → Whisper → AI Agent (consulta catálogo + clientes) → resumen WhatsApp → botones → confirmar → factura creada + PDF generado + PDF enviado por WhatsApp
   - Fixes aplicados: Font.register con rutas absolutas, quitar 'use client' de InvoicePDF, series_numeracion query directa (bypass RLS), multipart formBinaryData para WhatsApp Media upload, template_config por org
+  - Fix aplicado (2026-04-26): `template_config: {}` causaba crash PDF para orgs nuevas → merge robusto con defaults en InvoicePDF + orgs nuevas se crean con config completa
   - **PENDIENTE CRÍTICO**:
-    1. Verificar que funciona para CADA org (no solo la de test) — org lookup, template_config, bucket Storage correcto
+    1. ~~Verificar que funciona para CADA org (no solo la de test)~~ ARREGLADO — template_config con deep merge + BD parcheada
     2. Comprobar que OCR facturas recibidas sigue funcionando con receptor v2 (rama imagen/documento NO testeada)
     3. Probar rama presupuestos (`tipo: 'presupuesto'`)
+    4. **Handler texto libre conectado con FacturaIA** — cuando el usuario escribe texto (ej: "Envíala", consultas, etc.), el bot responde genérico. Necesita: conectar AI assistant para responder consultas sobre facturas, estados, vencimientos, y entender comandos naturales como "envíamela"
   - **PENDIENTE**:
-    4. Mejorar textos mensajes WhatsApp (resumen, confirmación, error, caption PDF)
-    5. Probar corrección: pulsar "Corregir", enviar texto con cambio, verificar que actualiza y re-muestra botones
-    6. Probar cancelación: pulsar "Cancelar", verificar sesión borrada
-    7. Actualizar manuales usuario y admin con flujo de voz simplificado
-    8. Limpiar facturas duplicadas de testing en BD
+    5. ~~Mejorar textos mensajes WhatsApp~~ EN PROGRESO
+    6. **PDF por voz se deforma** — `@react-pdf/renderer` no replica el layout HTML de las plantillas. Investigar migrar a Puppeteer (`/api/render-pdf`) para consistencia
+    7. Probar corrección: pulsar "Corregir", enviar texto con cambio, verificar que actualiza y re-muestra botones
+    8. Probar cancelación: pulsar "Cancelar", verificar sesión borrada
+    9. Actualizar manuales usuario y admin con flujo de voz simplificado
+    10. Limpiar facturas duplicadas de testing en BD
 - **FacturaIA — Asistente IA conversacional multi-canal (VISIÓN)**
   - Conectar el AI assistant (Claude, ya existe en dashboard) al canal WhatsApp
   - Consultas por WhatsApp/email: facturas vencidas, resúmenes del mes/semana, pagos pendientes de cobro, datos de cuenta, listas, informes
@@ -79,8 +107,8 @@ tags: [home, prioridades]
   - ~~**PENDIENTE INMEDIATO**: probar en navegador~~ HECHO 2026-04-21 — admin orgs/features/plans carga OK tras fix Zod v3
   - ~~**PENDIENTE**: impersonate banner (`?impersonate=org_id`)~~ HECHO 2026-04-22 — full impersonation con proxy client, banner animado, todas las páginas migradas
   - ~~**PENDIENTE**: probar toggle features por org (override vs plan default), toggle features por plan, editar limites~~ HECHO 2026-04-25 — limits tab corregida (ilimitado, storage real, invalidación cache al cambiar plan)
-  - **PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`)
-  - **PENDIENTE**: verificar lazy expiration (billing state machine: trial → grace_period → expired)
+  - ~~**PENDIENTE**: verificar billing banner (trial/grace/expired), feature gates (`<Feature>`)~~ HECHO 2026-04-26 — banner rediseñado con 3 variantes (info/warn/danger), iconos SVG, OKLCH, responsive. FeatureLocked con badge + layout vertical
+  - ~~**PENDIENTE**: verificar lazy expiration (billing state machine: trial → grace_period → expired)~~ HECHO 2026-04-26 — código verificado (8 tests pasan), RPC validada, UI rediseñada
   - **PENDIENTE**: tests — no hay tests automatizados aun, considerar al menos tests para `orgHasFeature`, `getOrgBilling`, `isSuperadmin`
   - **NOTA**: `profiles` tabla vacia — superadmin funciona via `SUPERADMIN_EMAILS` env var. Cuando haya signup real, el trigger insertara en profiles
   - Archivos clave: `src/lib/admin.ts`, `src/lib/features.ts`, `src/lib/billing.ts`, `src/providers/feature-provider.tsx`, `src/providers/billing-provider.tsx`, `src/app/(admin)/`
@@ -115,6 +143,8 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: billing banner + feature-locked rediseñados (2026-04-26) — banner con 3 variantes (info/warn/danger), iconos SVG por estado, colores OKLCH, responsive (oculta detalle en mobile). FeatureLocked con badge icono + layout vertical + text link CTA. Lazy expiration verificada (8 tests, RPC validada)
+- FacturaIA: datos fiscales completos en clientes y proveedores (2026-04-26) — migración 013 añade cp, pais a clientes y telefono, ciudad, direccion, cp, pais a proveedores. Modal de edición funcional (antes decía "Próximamente"). Cards muestran dirección. Generar-view pasa dirección/cp al receptor del PDF. Voice: schema, insert y prompt del AI Agent actualizados para extraer y guardar datos fiscales del audio. Tool consultar_clientes devuelve 9 campos (antes 4). Manuales actualizados
 - FacturaIA: simplificación workflow voz WhatsApp (2026-04-26) — 3 sub-workflows + Redis → 1 AI Agent con Postgres Chat Memory. Eliminados: voice-process, voice-confirm, voice-correct, `/api/voice/extract`. Flujo e2e funciona: audio → Whisper → agente → resumen → botones → confirmar → factura + PDF por WhatsApp. Fixes: Font.register rutas absolutas, 'use client' eliminado de InvoicePDF, series bypass RLS, multipart formBinaryData, template_config por org. PENDIENTE: verificar multi-org, OCR, presupuestos, textos mensajes, manuales
 - FacturaIA: rediseño formulario nueva factura + envío email (2026-04-25) — formulario con tarjetas, catálogo con autocompletado por categoría, descripción separada en plantillas, guardar borrador vs guardar y enviar, email auto-send al cliente, campo email para clientes sin email (guarda en cliente), opción "Enviar por email" en menú 3 puntos de emitidas, filtros Borrador/Enviada, migración email_envio, API /api/email/send con Nodemailer SMTP, manuales actualizados
 - FacturaIA: generador facturas por voz — n8n workflows desplegados (2026-04-25) — 3 sub-workflows (voice-process, voice-confirm, voice-correct) importados y activos en n8n.agentesia.world, receptor actualizado con routing de voz (31 nodos), OpenAI GPT-4o para extracción, Whisper con credencial OpenAI. Migración 010+011 ejecutadas. PENDIENTE: redeploy Dokploy + OPENAI_API_KEY en env + test e2e

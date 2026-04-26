@@ -359,13 +359,20 @@ Nunca usar RPCs SQL para esto. Ver [[supabase-storage-objects-metadata-no-es-fia
 
 ---
 
-## @react-pdf/renderer en Next.js standalone Docker (2026-04-26)
+## @react-pdf/renderer → Puppeteer para PDFs por voz (2026-04-26)
 
-3 trampas al usar `@react-pdf/renderer` server-side en standalone:
+`@react-pdf/renderer` producía PDFs deformados (layout engine diferente a CSS). Migrado a Puppeteer compartido:
 
-1. **Font.register con rutas absolutas** — `'/fonts/X.ttf'` → ENOENT. Usar `path.join(process.cwd(), 'public', 'fonts', 'X.ttf')`
-2. **No `'use client'`** — standalone reemplaza el componente con null. Solo quitar si no hay consumidores client-side
-3. **`serverExternalPackages`** — añadir `'@react-pdf/renderer'` en next.config.ts para que yoga-layout y dependencias nativas se resuelvan correctamente
+1. **`src/lib/pdf-renderer.ts`** — `renderPdfBuffer(config, data)` con browser singleton, font cache, idle timeout. Lo usan `/api/render-pdf` y `/api/voice/generate`
+2. **Docker Alpine**: `apk add chromium nss freetype harfbuzz` + `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser`
+3. **No self-fetch** — fetch HTTP a tu propia API falla en Docker (DNS interno). Importar función directamente
+4. **`template_config: {}`** es truthy pero vacío — deep merge obligatorio: `{...DEFAULT, ...config, emisor: {...DEFAULT.emisor, ...config?.emisor}}`
+5. **Orgs nuevas** se crean con `DEFAULT_TEMPLATE_CONFIG` completo (nombre + NIF del emisor)
+
+Trampas legacy de `@react-pdf/renderer` (si se reutiliza en otro contexto):
+- Font.register con rutas absolutas — `path.join(process.cwd(), 'public', 'fonts', 'X.ttf')`
+- No `'use client'` — standalone reemplaza el componente con null
+- `serverExternalPackages` en next.config.ts
 
 Ver [[react-pdf-font-register-usa-rutas-filesystem-no-urls]], [[use-client-en-componente-server-only-devuelve-null-en-standalone]]
 
