@@ -17,15 +17,21 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
-- **FacturaIA — Probar generador facturas/presupuestos por voz WhatsApp (2026-04-25)**
-  - Workflows desplegados (voice-process, voice-confirm, voice-correct) en n8n.agentesia.world
-  - PENDIENTE:
-    1. Redeploy en Dokploy (código de /api/voice/extract y /api/voice/generate en prod)
-    2. Añadir OPENAI_API_KEY en env vars de Dokploy (Whisper la necesita)
-    3. Reload Traefik tras redeploy
-    4. Test e2e: enviar audio al +34 919 93 26 18 pidiendo factura ("Hazme una factura para X por Y de Z")
-    5. Verificar flujo completo: audio → transcripción → extracción → botones confirmar/corregir → PDF generado → PDF recibido por WhatsApp
-    6. Probar corrección: pulsar "Corregir", enviar texto con cambio, verificar que actualiza y re-muestra botones
+- **FacturaIA — Generador facturas por voz WhatsApp — SIMPLIFICADO (2026-04-26)**
+  - ~~3 sub-workflows + Redis~~ → 1 workflow receptor v2 (`zYcHHa8jWXB6dY5i`) con AI Agent + Postgres Chat Memory
+  - ~~`/api/voice/extract`~~ → eliminado, extracción la hace el AI Agent en n8n
+  - Flujo e2e funciona: audio → Whisper → AI Agent (consulta catálogo + clientes) → resumen WhatsApp → botones → confirmar → factura creada + PDF generado + PDF enviado por WhatsApp
+  - Fixes aplicados: Font.register con rutas absolutas, quitar 'use client' de InvoicePDF, series_numeracion query directa (bypass RLS), multipart formBinaryData para WhatsApp Media upload, template_config por org
+  - **PENDIENTE CRÍTICO**:
+    1. Verificar que funciona para CADA org (no solo la de test) — org lookup, template_config, bucket Storage correcto
+    2. Comprobar que OCR facturas recibidas sigue funcionando con receptor v2 (rama imagen/documento NO testeada)
+    3. Probar rama presupuestos (`tipo: 'presupuesto'`)
+  - **PENDIENTE**:
+    4. Mejorar textos mensajes WhatsApp (resumen, confirmación, error, caption PDF)
+    5. Probar corrección: pulsar "Corregir", enviar texto con cambio, verificar que actualiza y re-muestra botones
+    6. Probar cancelación: pulsar "Cancelar", verificar sesión borrada
+    7. Actualizar manuales usuario y admin con flujo de voz simplificado
+    8. Limpiar facturas duplicadas de testing en BD
 - **FacturaIA — Asistente IA conversacional multi-canal (VISIÓN)**
   - Conectar el AI assistant (Claude, ya existe en dashboard) al canal WhatsApp
   - Consultas por WhatsApp/email: facturas vencidas, resúmenes del mes/semana, pagos pendientes de cobro, datos de cuenta, listas, informes
@@ -109,6 +115,7 @@ tags: [home, prioridades]
 
 ## Completado reciente
 
+- FacturaIA: simplificación workflow voz WhatsApp (2026-04-26) — 3 sub-workflows + Redis → 1 AI Agent con Postgres Chat Memory. Eliminados: voice-process, voice-confirm, voice-correct, `/api/voice/extract`. Flujo e2e funciona: audio → Whisper → agente → resumen → botones → confirmar → factura + PDF por WhatsApp. Fixes: Font.register rutas absolutas, 'use client' eliminado de InvoicePDF, series bypass RLS, multipart formBinaryData, template_config por org. PENDIENTE: verificar multi-org, OCR, presupuestos, textos mensajes, manuales
 - FacturaIA: rediseño formulario nueva factura + envío email (2026-04-25) — formulario con tarjetas, catálogo con autocompletado por categoría, descripción separada en plantillas, guardar borrador vs guardar y enviar, email auto-send al cliente, campo email para clientes sin email (guarda en cliente), opción "Enviar por email" en menú 3 puntos de emitidas, filtros Borrador/Enviada, migración email_envio, API /api/email/send con Nodemailer SMTP, manuales actualizados
 - FacturaIA: generador facturas por voz — n8n workflows desplegados (2026-04-25) — 3 sub-workflows (voice-process, voice-confirm, voice-correct) importados y activos en n8n.agentesia.world, receptor actualizado con routing de voz (31 nodos), OpenAI GPT-4o para extracción, Whisper con credencial OpenAI. Migración 010+011 ejecutadas. PENDIENTE: redeploy Dokploy + OPENAI_API_KEY en env + test e2e
 - FacturaIA: system_config + admin config page (2026-04-25) — tabla system_config (key-value JSONB), página /admin/config con número global WhatsApp editable (protegido por re-auth con contraseña), migración 011 ejecutada

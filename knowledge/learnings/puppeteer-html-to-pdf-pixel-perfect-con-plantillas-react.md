@@ -30,7 +30,7 @@ React component → renderToStaticMarkup() → HTML string → page.setContent()
 ### Gotchas Next.js 16
 
 - **`renderToStaticMarkup` bloqueado como import estático** en Route Handlers. Error: "You're importing a component that imports react-dom/server". Fix: `await import('react-dom/server')` dinámico
-- **`'use client'` en componentes de plantilla** impide llamarlos desde server. Fix: quitar la directiva si son funciones puras sin hooks. Siguen funcionando client-side porque el padre tiene `'use client'`
+- **`'use client'` en componentes de plantilla** impide llamarlos desde server. Fix: quitar la directiva si son funciones puras sin hooks. Siguen funcionando client-side porque el padre tiene `'use client'`. En Next.js standalone el problema es peor: el componente se reemplaza por null → `TypeError: Cannot read properties of null (reading 'props')`. Ver [[use-client-en-componente-server-only-devuelve-null-en-standalone]]
 - **Middleware intercepta API routes** — excluir `/api/render-pdf` en `isServiceRoute`
 
 ### Performance

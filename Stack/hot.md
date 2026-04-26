@@ -83,6 +83,8 @@ Patrón para SaaS multi-tenant:
 3. Onboarding: `create_org_for_user(org_nombre)` crea org + inserta en org_members
 4. `next_invoice_number(serie)` para auto-numeración con bloqueo de fila
 
+> `get_user_org_id()` devuelve null con service_role key — no usar RPCs RLS desde API routes con `x-service-key`. Ver [[supabase-rpc-con-auth-uid-falla-con-service-role]]
+
 Ver [[rls-multi-tenant-supabase-con-security-definer]]
 
 ## AI Agent con reservas — 3 reglas anti-bug (2026-04-19)
@@ -354,6 +356,18 @@ const storageMb = Math.ceil(files?.reduce((sum, f) => sum + (f.metadata?.size ||
 ```
 
 Nunca usar RPCs SQL para esto. Ver [[supabase-storage-objects-metadata-no-es-fiable-para-size]]
+
+---
+
+## @react-pdf/renderer en Next.js standalone Docker (2026-04-26)
+
+3 trampas al usar `@react-pdf/renderer` server-side en standalone:
+
+1. **Font.register con rutas absolutas** — `'/fonts/X.ttf'` → ENOENT. Usar `path.join(process.cwd(), 'public', 'fonts', 'X.ttf')`
+2. **No `'use client'`** — standalone reemplaza el componente con null. Solo quitar si no hay consumidores client-side
+3. **`serverExternalPackages`** — añadir `'@react-pdf/renderer'` en next.config.ts para que yoga-layout y dependencias nativas se resuelvan correctamente
+
+Ver [[react-pdf-font-register-usa-rutas-filesystem-no-urls]], [[use-client-en-componente-server-only-devuelve-null-en-standalone]]
 
 ---
 

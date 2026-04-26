@@ -129,3 +129,23 @@ Cualquier otro campo (`createdAt`, `updatedAt`, `active`, `binaryMode` en settin
 - **`executeWorkflowTrigger` v1.1 requiere input schema** — sin `workflowInputs`, activar falla. Usar `typeVersion: 1.0` si no necesitas validación. Ver [[n8n-executeWorkflowTrigger-v1.1-requiere-input-schema]]
 - **Activar: POST, no PATCH** — `POST /api/v1/workflows/{id}/activate`. PATCH y PUT devuelven 405. Para actualizar nodos: `PUT /api/v1/workflows/{id}` (requiere campo `name`). Ver [[n8n-api-activate-es-POST-no-PATCH]]
 - **Parsear respuestas con `strict=False`** — las respuestas contienen control chars del jsCode. Usar `json.loads(raw, strict=False)` o grep para extraer campos
+
+## HTTP Request v4.2 — multipart con binary
+
+- **`binaryPropertyName` controla TAMBIÉN el nombre del campo en el form** — si el binary se llama `data` pero la API espera campo `file`, el upload falla con "parameter file is required". Fix: usar `parameterType: "formBinaryData"` dentro de `bodyParameters.parameters` con `name: "file"` y `inputDataFieldName: "data"` (nombre del binary en n8n). No usar `sendBinaryData: true` con `binaryPropertyName` para multipart
+- **`inputDataFieldName` a nivel de nodo solo aplica a `contentType: "binaryData"`**, no a multipart. Para multipart, el campo se controla dentro de bodyParameters
+
+## `N8N_BLOCK_ENV_ACCESS_IN_NODE` — variables de entorno bloqueadas
+
+- **Con esta variable activa, TODA referencia `$env.X` en cualquier nodo falla** con "access to env vars denied" — no solo Code nodes, también expresiones en HTTP Request (URLs, headers, body). Solución: hardcodear valores o mover a credenciales de n8n
+
+## `memoryPostgresChat` — formato LangChain en `n8n_chat_histories`
+
+- **No hay columna `role`** — la tabla tiene columnas `id`, `session_id`, `message` (jsonb). El mensaje es un objeto LangChain: `{type: "ai", content: "...", tool_calls: [], ...}`. Para leer la última respuesta del agente: `SELECT message FROM n8n_chat_histories WHERE session_id = $phone ORDER BY id DESC`, luego parsear `message.content` (no `message.data.content`)
+- **El campo `content` puede contener markdown** — el agente puede envolver JSON en ````json ... ``` `` `. Parsear con regex para extraer el JSON limpio
+
+## IF/Switch nodes — validación por MCP y API
+
+- **Todos los IF v2.2+ y Switch v3.2+ requieren `conditions.options.version: 2`** — sin este campo, el MCP rechaza el update. Añadir junto con `caseSensitive: true`, `leftValue: ""`, `typeValidation: "strict"`
+- **Operadores unarios (`notEmpty`, `empty`, `true`, `false`) requieren `singleValue: true`** y NO deben tener `rightValue`. Operadores binarios (`equals`, `contains`) NO deben tener `singleValue: true`
+- **`n8n_update_partial_workflow` valida contra el workflow LIVE en n8n**, no contra el JSON local — si el workflow live tiene nodos inválidos, el partial update falla aunque el cambio sea correcto. Solución: arreglar todos los nodos en el JSON local y hacer `PUT /api/v1/workflows/{id}` directo con curl
