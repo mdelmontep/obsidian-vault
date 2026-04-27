@@ -33,7 +33,7 @@ Suficiente para single-instance. Para multi-instance (horizontal scaling), migra
 
 ## Bugs encontrados en FacturaIA (2026-04-25)
 
-- `/api/render-pdf` — sin auth, sin whitelist de template ID
+- `/api/render-pdf` — sin auth, sin whitelist de template ID → RESUELTO 2026-04-27: acepta `x-service-key` (server-to-server) O sesión Supabase (browser). Patrón: if key → timingSafeEqual, else → getUser()
 - `/api/generate-pdfs` — `!==` en vez de `timingSafeEqual`
 - `/api/admin/impersonate/query` — aceptaba cualquier método Supabase sin whitelist, sin audit log
 - `/api/upload` — confiaba solo en MIME type del cliente
