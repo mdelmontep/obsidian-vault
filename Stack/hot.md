@@ -32,3 +32,5 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Dokploy reload** — redeploy deja Bad Gateway, Traefik reload manual obligatorio
 - **n8n Supabase `$json[0]` vs `$json`** — con `Prefer: return=representation`, PostgREST devuelve objeto directo, no array. En HTTP Request nodes, usar `$json.id` no `$json[0].id`. Sin esto: `factura_id: ""` → UUID parse error
 - **n8n Code Node `fetch` no existe** — sandbox task-runner no tiene `fetch`. Usar `this.helpers.httpRequest` siempre. Error: `ReferenceError: fetch is not defined`
+- **table-layout fixed %s** — porcentajes deben sumar 100% o hay gaps. Clase has-X por variante. Ver [[table-layout-fixed-columnas-porcentaje]]
+- **PRs encadenados GitHub** — merge no propaga a main, crear PR nuevo a main o merge local. Ver [[github-prs-encadenados-no-llegan-a-main]]
