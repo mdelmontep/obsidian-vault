@@ -13,3 +13,4 @@ tags: [claude-code, gotchas, github, plugins]
 - **Plugins settings.json** — nombre debe coincidir con `marketplace.json` del repo fuente.
 - **Claude Design handoff bundles son tar** — `tar xf`, no abrir como HTML. Contiene README.md + chats/ + project/. Leer chat transcripts primero para la intención.
 - **Zod `.strict()` bloquea campos no listados** — al añadir campos editables desde admin, añadirlos al schema Zod. Si no, PATCH devuelve 400 silenciosamente.
+- **Verificación obligatoria antes de commit (Next.js)** — `npm run lint → typecheck → build`. Los tres deben pasar. No silenciar con `@ts-ignore`/`eslint-disable`/`as any`.
