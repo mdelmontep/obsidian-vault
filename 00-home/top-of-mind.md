@@ -21,7 +21,7 @@ tags: [home, prioridades]
 - **Tecnocloud — WhatsApp en FacturaIA** — obtener phone_number_id de Meta, guardar en org, webhook override
 - **Simarro — workflow Recordatorios** — nueva API key n8n → actualizar `Oa1lSQuDgEZvZCNS` con salesbot IDs (87861/87863/87865/87871)
 - **Simarro — oportunidad monitor inmuebles** — sistema tipo StateFox: scraping Idealista/Fotocasa + alertas filtradas a clientes (precio/m²/zona). Apify igolaizola actors + n8n + Kommo. Pendiente: confirmar interés y presupuesto
-- **Clínica Zen — cancelar cita borra Calendar** — workflow `DkueIeGFWLKh8nTj` no borra evento. Añadir nodo
+- **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` `Update leads1` → 400 `NotSupportedChoice` (104115987 heredado de Gonzalo). Pedir ID correcto en pipeline 13495347
 - **Clínica Zen — configurar Retell en leads entrantes** — workflow `RN0wl8RaRmwLpnfQ`, verificar webhooks dominio CZ
 - Notificaciones tickets dashboard → Slack `#01-tickets-soporte`
 - Repo privado skill chatbot-chatwoot-replicator

@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- Clínica Zen: cancelar cita Retell — fix `$if(isExecuted)` en `Update leads1` + error handler con `JSON.stringify` y campos extra (description/http_code/details). Workflow `DkueIeGFWLKh8nTj` (2026-04-29)
 - FacturaIA: billing banner + feature-locked rediseñados (2026-04-26)
 - FacturaIA: datos fiscales completos clientes/proveedores (2026-04-26)
 - FacturaIA: simplificación workflow voz WhatsApp (2026-04-26)
