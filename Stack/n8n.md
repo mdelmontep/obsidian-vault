@@ -40,6 +40,7 @@ tags: [n8n, kommo, workflows, api]
 - Custom field names cambian entre cuentas — verificar al migrar
 - Task types NO se crean vía API — solo UI Kommo
 - Salesbots pueden mover leads sin n8n — revisar acciones GUI
+- **Salesbot IDs**: `/api/v2/salesbot` es privado (404 externo). Obtener IDs desde el navegador en la cuenta Kommo: `fetch('/ajax/v4/bots/?limit=100').then(r=>r.json()).then(d=>console.log(JSON.stringify(d,null,2)))`
 
 ### Migración entre clientes
 
@@ -77,3 +78,6 @@ Actualizar: sub-workflow IDs, pipeline_id, status_id, field_id, amojo_id, bot_id
 - Webhook síncrono: `responseMode: "responseNode"` + nodo `respondToWebhook`
 - IF/Switch v2.2+: requieren `conditions.options.version: 2`, `caseSensitive`, `typeValidation: "strict"`
 - Tests contra webhooks prod disparan acciones reales — usar datos que no activen side effects
+- **Button replies (interactive) = workflow run NUEVO** — al pulsar Confirmar/Corregir/Cancelar, n8n arranca otra ejecución con `msg_type='interactive'`. El estado del run anterior (audio/texto, JSON del agente, productos detectados...) se pierde. Si necesitas algo del run original (ej: caption "por voz" vs "por texto"), persistirlo en BD/sesión cuando arranca el flujo, leerlo en el run del button. `n8n_chat_histories` (Postgres Chat Memory) sirve si añades metadata, o crear tabla pequeña `voice_pending_sessions(phone, source, expires_at)`.
+- **`SUPABASE_SERVICE_ROLE_KEY` hardcodeado en Code nodes es leak silencioso** — cualquiera con login al UI de n8n.X.com ve el JWT en el source del node. Rotar la key no protege si sigue ahí (el patcher la actualiza pero queda visible). Patrón obligatorio: `const SUPABASE_KEY = $env.SUPABASE_SERVICE_ROLE_KEY`. Aplica a cualquier secret.
+- **Public API `PUT /workflows/{id}` solo acepta `name + nodes + connections + settings.executionOrder`** — si pasas el `settings` completo del GET (con `callerPolicy`, `availableInMCP`, `binaryMode`...) devuelve 400 `request/body/settings must NOT have additional properties`. Patrón: limpiar a `{ executionOrder: wf.settings?.executionOrder || 'v1' }` antes del PUT.

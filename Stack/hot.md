@@ -19,6 +19,7 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **RLS multi-tenant** — `get_user_org_id()` SECURITY DEFINER, falla con service_role. Ver [[rls-multi-tenant-supabase-con-security-definer]]
 - **AI Agent 3 reglas** — 0 eventos=libre, weekday number en Think, tool description con consecuencias. Ver learnings
 - **Kommo webhook status_lead** — dispara en TODOS los cambios, filtrar con IF. Ver [[kommo-webhook-status-lead-dispara-en-todos-los-cambios]]
+- **Kommo salesbot IDs** — endpoint real: `/ajax/v4/bots/` desde consola navegador. JSONs del Drive tienen datos CZ hardcodeados, adaptar antes de importar. Ver [[kommo-salesbot-ids-ajax-v4]] [[kommo-salesbot-json-adaptation]]
 - **n8n API import** — Python json.dump a /tmp, curl -d @file, activate es POST, executeWorkflowTrigger v1.0. Ver learnings
 - **OCR pipeline** — base64 en Next.js (no n8n sandbox), enviar org_nombre, Realtime para progreso
 - **Puppeteer PDF** — browser singleton, dynamic imports, no self-fetch en Docker, template_config deep merge. Ver [[puppeteer-html-to-pdf-pixel-perfect-con-plantillas-react]]
