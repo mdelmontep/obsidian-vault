@@ -7,6 +7,13 @@ tags: [docker, traefik, dokploy, infra]
 
 # Docker / Infraestructura
 
+## Dokploy — Compose vs UI Variables
+
+- Variables de la UI de Dokploy solo llegan al contenedor si el compose las referencia con `${VAR}`
+- **Secrets** (API keys, passwords) → UI de Dokploy + `${VAR}` en el compose
+- **Config estructural** (flags, URLs fijas, puertos) → hardcodeada en el compose
+- Si `env | grep VAR` en el contenedor devuelve vacío aunque esté en la UI → falta el `${VAR}` en el compose
+
 ## Reglas Traefik en Dokploy
 
 - **Solo el contenedor que Traefik enruta va en `dokploy-network`**. El resto de servicios usan red interna propia.

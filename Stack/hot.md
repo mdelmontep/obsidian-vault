@@ -30,6 +30,8 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Supabase Storage size** — SDK `list()` + metadata.size, no SQL
 - **toolWorkflow onError** — siempre `continueErrorOutput`, nunca `stopWorkflow`
 - **Dokploy reload** — redeploy deja Bad Gateway, Traefik reload manual obligatorio
+- **Supabase JWT vs sb_secret** — `sb_secret_*` no vale como Bearer HTTP directo, usar JWT legacy. Ver [[supabase-sb-secret-vs-jwt-http]]
+- **next/image PDF** — rompe en Puppeteer/server-side, usar `<img>` nativo en plantillas PDF. Ver [[next-image-server-side-pdf]]
 - **n8n Supabase `$json[0]` vs `$json`** — con `Prefer: return=representation`, PostgREST devuelve objeto directo, no array. En HTTP Request nodes, usar `$json.id` no `$json[0].id`. Sin esto: `factura_id: ""` → UUID parse error
 - **n8n Code Node `fetch` no existe** — sandbox task-runner no tiene `fetch`. Usar `this.helpers.httpRequest` siempre. Error: `ReferenceError: fetch is not defined`
 - **table-layout fixed %s** — porcentajes deben sumar 100% o hay gaps. Clase has-X por variante. Ver [[table-layout-fixed-columnas-porcentaje]]

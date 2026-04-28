@@ -9,6 +9,9 @@ tags: [n8n, kommo, workflows, api]
 
 ## Infra
 
+- `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` en compose para que `$env.VAR` funcione en Code nodes — sin esto, error `access to env vars denied`
+- Nunca hardcodear keys en jsCode — usar `$env.VAR_NAME`. Supabase: usar JWT legacy (`eyJ...`), no `sb_secret_*`
+- Filtrar workflows por prefijo de cliente antes de tocar nada en instancias multi-cliente
 - `N8N_ENCRYPTION_KEY` idéntica en migración — si cambia, credenciales inutilizables
 - Redis sin volumen (es caché). Dominio real antes de OAuth/webhooks Meta
 - `DB_POSTGRESDB_DATABASE` obligatorio en compose (n8n + worker)
