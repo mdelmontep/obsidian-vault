@@ -38,3 +38,8 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **n8n Code Node `fetch` no existe** — sandbox task-runner no tiene `fetch`. Usar `this.helpers.httpRequest` siempre. Error: `ReferenceError: fetch is not defined`
 - **table-layout fixed %s** — porcentajes deben sumar 100% o hay gaps. Clase has-X por variante. Ver [[table-layout-fixed-columnas-porcentaje]]
 - **PRs encadenados GitHub** — merge no propaga a main, crear PR nuevo a main o merge local. Ver [[github-prs-encadenados-no-llegan-a-main]]
+- **AI agent + entidad relacionada** — tool de lookup obligatoria (abono→factura), prompt fuerza uso, agente devuelve `{error}` si no encuentra. Ver [[agente-ia-genera-entidad-relacionada-necesita-tool-lookup-de-referencia]]
+- **Supabase invitations** — no depender del trigger, crear `org_member` directo + estado `'invitado'` que promueve a `'activo'` en primer login. Ver [[supabase-inviteuserbyemail-no-propaga-data-a-raw-user-meta-data]]
+- **Templates con tokens** — `replace()` deja literal lo desconocido. CHECK BD + API + UI, tres redes. Ver [[postgres-template-tokens-replace-simple-no-rechaza-desconocidos]]
+- **Popover en modal con overflow:hidden** — se corta. Inline disclosure es la opción simple. Ver [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]]
+- **Skill chain UI** — impeccable→polish→audit→critique→guidelines→baseline→typeset llevan componente de 16/20 a 20/20. Ver [[skill-chain-ui-impeccable-polish-audit-critique-baseline-typeset]]

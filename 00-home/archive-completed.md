@@ -6,6 +6,12 @@ tags: [home, archivo]
 
 # Completado
 
+- FacturaIA: modal series con builder arrastrable y picker inline (impeccable+polish+audit+critique+guidelines+baseline+typeset) (2026-04-28)
+- FacturaIA: validación formato series — mig 021 CHECK `is_valid_series_format` + API + UI con feedback (2026-04-28)
+- FacturaIA: invitaciones equipo — `org_member` directo tras inviteUserByEmail + promover invitado→activo en primer login (2026-04-28)
+- FacturaIA: fix workflow voz abono — tool `consultar_facturas` + prompt obliga validar factura origen + endpoint rechaza abono sin `factura_origen_id` (2026-04-28)
+- FacturaIA: limpieza BD mockup org de testing + serie A restaurada (2026-04-28)
+- FacturaIA: Sprint #6/#7 — proforma/abono BD+voz+toggles UI WhatsApp deployados (2026-04-28)
 - Clínica Zen: cancelar cita Retell — fix `$if(isExecuted)` en `Update leads1` + error handler con `JSON.stringify` y campos extra (description/http_code/details). Workflow `DkueIeGFWLKh8nTj` (2026-04-29)
 - FacturaIA: billing banner + feature-locked rediseñados (2026-04-26)
 - FacturaIA: datos fiscales completos clientes/proveedores (2026-04-26)

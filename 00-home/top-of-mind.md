@@ -12,8 +12,8 @@ tags: [home, prioridades]
 
 ## Prioridades esta semana
 
-- **FacturaIA — Presupuestos/Proformas/Abonos** — ~~Fase 1: presupuestos~~ HECHO (vista completa: filtros, agrupación mes, menú 3 puntos, detalle modal, edición modal con líneas, lazy expiration, funnel dashboard, KPIs, serie P en Generar, número readonly). Fase 2: proformas (tabla/campo, serie T). Fase 3: abonos (rectificativas, serie B, importes negativos). Fase 4: vistas pipeline y métricas
-- **FacturaIA — Voz WhatsApp pendientes** — ~~comprobar OCR~~ HECHO (OCR inline en receptor v2, workflow separado desactivado), probar presupuestos, handler texto libre (conectar AI assistant), ~~PDF deformado~~ HECHO (Puppeteer), probar corrección/cancelación, ~~actualizar manuales~~ HECHO
+- **FacturaIA — Presupuestos/Proformas/Abonos** — ~~backend voz proforma/abono~~ HECHO. Pendiente Bloque 1 form manual `generar-view.tsx`: SERIE_POR_TIPO mal (proforma=T, abono=A → debe ser F y B), no setea `tipo_documento` ni `factura_origen_id`, falta selector factura origen abono manual, GET `/api/render-pdf?tipo=&id=`, rama `presupuesto_id` en `/api/email/send`. Bloque 2 vistas separadas presupuesto/proforma + abonos en emitidas + estado `pagada`. Bloque 4 `/api/agent/query/*` queries naturales. Bloque 5 métricas tiempo medio + manuales con proforma/abono/modal series visibles
+- **FacturaIA — Voz WhatsApp pendientes** — Test 6 mensajes específicos en 403 toggles ("admin desactivó este canal", no error genérico). Probar invitación con novia tras deploy `98250b9`. Probar modal series tras deploy
 - **FacturaIA — Asistente IA multi-canal** — conectar AI assistant al canal WhatsApp para consultas (vencidas, resúmenes, pendientes). Extensiones: cobrador, predicción cashflow, auto-categorización, alertas, presupuestos por contexto, informe fiscal
 - **FacturaIA — Google OAuth email por org** — cada org envía desde su email via Gmail API. Token storage per org, template editor con variables
 - **FacturaIA — Canales Ingesta + Plan/Facturación (spec 2026-04-24)** — canales rediseño sin toggles, config expandible. Plan: página con planes reales, método pago, historial
@@ -37,3 +37,4 @@ _(ninguno activo)_
 Ver `00-home/archive-completed.md`
 
 - VeriFACTU integración completa (QR en PDFs todas las plantillas, toggle sincroniza BD, cron cada hora, migración aplicada, deploy prod) — 2026-04-27
+- FacturaIA Sprint #6/#7 + workflow voz abono + invitaciones equipo + validación formato series + modal series con builder arrastrable — 2026-04-28

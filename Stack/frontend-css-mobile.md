@@ -28,3 +28,7 @@ tags: [frontend, css, mobile, overflow]
 2. Buscar `flex items-center` sin `min-w-0` dentro de grid items → añadir `min-w-0` al grid item Y al flex container
 3. Buscar texto con `tracking-[N]` o `uppercase` dentro de flex → añadir `truncate`
 4. Añadir `overflow-x-hidden` a la sección que contiene el overflow, no solo al body/html
+
+## Modales y popovers
+
+- **Popover dentro de modal con `overflow: hidden` se corta** — el ancestro clipa al popover absoluto. Soluciones: portal con `position: fixed` + `getBoundingClientRect`, o disclosure inline (el popover es un `<div>` siguiente que empuja contenido). Inline es más simple y mejor en móvil. Ver [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]]
