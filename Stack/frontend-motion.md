@@ -37,6 +37,12 @@ tags: [frontend, motion, performance, framer]
 
 - **`viewBox` normalizado (`0 0 100 100`) + `preserveAspectRatio="none"` distorsiona `<circle>` y markers** — el radio escala con factores X≠Y y queda ovalado. `vector-effect="non-scaling-stroke"` solo preserva el grosor del stroke, no la geometría del elemento. Fix: medir el contenedor con `useLayoutEffect` + `ResizeObserver` síncrono antes del primer paint y usar coordenadas en píxeles reales en el viewBox para que todos los elementos compartan el mismo sistema de coordenadas.
 
+## CSS stagger animation sin JS
+
+- **Patrón**: asignar `animation-delay` por elemento vía selectores CSS directos. Cero JS, cero re-renders. Ejemplo: `.auth-card h1 { animation-delay: 0s }`, `.auth-card .subtitle { animation-delay: 0.07s }`, etc.
+- **`prefers-reduced-motion` debe listar cada selector animado explícitamente** — no basta con deshabilitar un keyframe global. Cada `animation` declarada en otro selector debe ser reseteada individualmente en el bloque `@media (prefers-reduced-motion: reduce)`.
+- **Easing recomendado**: `cubic-bezier(0.22,1,.36,1)` (ease-out-expo) a 450-550ms para entradas. Para pings/loops infinitos: `animation-iteration-count: infinite` animando solo `opacity` y `transform`.
+
 ## Auditoría rápida de una sección con jank
 
 1. Grep `repeat:\s*Infinity` y `filter:\s*["`]?blur` en los archivos de la sección

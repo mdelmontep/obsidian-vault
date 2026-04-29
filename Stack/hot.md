@@ -43,3 +43,5 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Templates con tokens** — `replace()` deja literal lo desconocido. CHECK BD + API + UI, tres redes. Ver [[postgres-template-tokens-replace-simple-no-rechaza-desconocidos]]
 - **Popover en modal con overflow:hidden** — se corta. Inline disclosure es la opción simple. Ver [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]]
 - **Skill chain UI** — impeccable→polish→audit→critique→guidelines→baseline→typeset llevan componente de 16/20 a 20/20. Ver [[skill-chain-ui-impeccable-polish-audit-critique-baseline-typeset]]
+- **iOS input zoom** — font-size ≥ 16px en inputs, touch targets 44px, safe-area-inset, inputMode tel. Ver Stack/frontend-css-mobile.md
+- **CSS stagger auth** — animation-delay por selector CSS, prefers-reduced-motion cubre cada selector. Ver Stack/frontend-motion.md
