@@ -19,6 +19,7 @@ tags: [home, prioridades]
 - **FacturaIA — Canales Ingesta + Plan/Facturación (spec 2026-04-24)** — canales rediseño sin toggles, config expandible. Plan: página con planes reales, método pago, historial
 - **FacturaIA — Conciliación bancaria IA (spec 2026-04-21)** — 5 tablas, pipeline Claude 2 fases, UI aprobación por lotes. Pendiente: plan de implementación
 - **Tecnocloud — WhatsApp en FacturaIA** — obtener phone_number_id de Meta, guardar en org, webhook override
+- **Simarro — preguntar a Ramón (pendiente llamada)** — (1) ¿Hacen alquiler? Bot y Retell lo mencionan, confirmar o quitar. (2) ¿Cómo funcionan las citas? ¿El bot reserva directamente en el inmueble o primero fecha provisional y luego el equipo confirma la visita? (3) ¿Cómo quieren usar Kommo? ¿Pipeline actual sirve o necesitan ajustes?
 - **Simarro — workflow Recordatorios** — nueva API key n8n → actualizar `Oa1lSQuDgEZvZCNS` con salesbot IDs (87861/87863/87865/87871)
 - **Simarro — oportunidad monitor inmuebles** — sistema tipo StateFox: scraping Idealista/Fotocasa + alertas filtradas a clientes (precio/m²/zona). Apify igolaizola actors + n8n + Kommo. Pendiente: confirmar interés y presupuesto
 - **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` `Update leads1` → 400 `NotSupportedChoice` (104115987 heredado de Gonzalo). Pedir ID correcto en pipeline 13495347
