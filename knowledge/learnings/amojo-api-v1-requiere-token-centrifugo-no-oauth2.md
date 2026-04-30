@@ -29,3 +29,5 @@ Respuesta relevante:
 **Requisito crítico**: el OAuth2 debe tener scope **"Chats"**. Sin ese scope, el endpoint devuelve 403.
 
 En el workflow, cada bloque de envío llama primero a este endpoint para obtener un token fresco → eliminando la expiración como problema.
+
+**Excepción WABA**: los canales WhatsApp Business API (origen "waba") devuelven 401 en amojo incluso con X-Auth-Token válido — restricción arquitectural de Kommo, no de credenciales. El scope "Chats" no se puede habilitar en integraciones privadas. Solución: usar el **patrón salesbot** (PATCH campo custom + POST `/api/v2/salesbot/run`).

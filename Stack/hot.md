@@ -21,6 +21,9 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **AI Agent 3 reglas** — 0 eventos=libre, weekday number en Think, tool description con consecuencias. Ver learnings
 - **Kommo webhook status_lead** — dispara en TODOS los cambios, filtrar con IF. Ver [[kommo-webhook-status-lead-dispara-en-todos-los-cambios]]
 - **Kommo salesbot IDs** — endpoint real: `/ajax/v4/bots/` desde consola navegador. JSONs del Drive tienen datos CZ hardcodeados, adaptar antes de importar. Ver [[kommo-salesbot-ids-ajax-v4]] [[kommo-salesbot-json-adaptation]]
+- **Kommo salesbot sin acciones** — `salesbot/run` devuelve success:true aunque el bot esté vacío. Necesita acción "Enviar WhatsApp" con `{{lead.cf.FIELD_ID}}` en editor Kommo. Ver [[kommo-salesbot-run-success-sin-acciones]]
+- **Kommo webhook tras update n8n** — PUT al workflow rompe el webhook de Kommo; borrar y volver a añadir en Ajustes → Webhooks. Ver [[kommo-webhook-deja-de-disparar-tras-update-n8n]]
+- **n8n predefinedCredentialType** — HTTP Request puede usar credenciales almacenadas sin hardcodear token. Ver [[n8n-http-request-predefinedcredentialtype]]
 - **n8n API import** — Python json.dump a /tmp, curl -d @file, activate es POST, executeWorkflowTrigger v1.0. Ver learnings
 - **OCR pipeline** — base64 en Next.js (no n8n sandbox), enviar org_nombre, Realtime para progreso
 - **Puppeteer PDF** — browser singleton, dynamic imports, no self-fetch en Docker, template_config deep merge. Ver [[puppeteer-html-to-pdf-pixel-perfect-con-plantillas-react]]
