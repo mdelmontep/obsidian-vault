@@ -26,6 +26,9 @@ tags: [n8n, kommo, workflows, api]
 - IF no permite AND/OR mixto — expresión JS en una sola condición
 - `$('Nodo')` falla si no se ejecutó — usar `$if($('Nodo').isExecuted, ..., fallback)`
 - Set node reemplaza `$json` — referenciar nodo fuente: `$('Webhook').first().json.body.args.X`
+- **Headers HTTP con `{{ $env.X }}` requieren `=` al inicio del valor** — sin el `=`, n8n manda literal `Bearer {{ $env.X }}` y la API rechaza con 401. El `jsonBody` ya lleva `=` por defecto, los headers no
+- **Redis GET node devuelve `$json.propertyName`, no `$json.value`** — IFs con `$json.value notEmpty` siempre dan FALSE pese a haber clave. Usar `$json.propertyName`
+- **Claves Redis cross-workflow: normalizar el phone igual en productor y consumidor** — uno guarda `aia_ob:617314938`, otro busca `aia_ob:34617314938` → mismatch silencioso. Centralizar normalización (siempre con prefijo país)
 
 ## Kommo
 
@@ -55,6 +58,7 @@ Actualizar: sub-workflow IDs, pipeline_id, status_id, field_id, amojo_id, bot_id
 - `executeWorkflowTrigger` v1.1 requiere input schema — usar v1.0 si no necesitas validación
 - HTTP multipart: `parameterType: "formBinaryData"` con `inputDataFieldName` dentro de bodyParameters
 - Binary filesystem: `getBinaryDataBuffer(0, 'data')`, nunca `$binary.data.data`
+- **HTTP Request 4xx NO marca ejecución en rojo** — n8n las pone success y mete el error en `data.main[0][0].json.error`. Para diagnosticar 401/404 mirar el output del nodo, no el status global de la ejecución
 
 ## AI Agents
 
@@ -84,3 +88,7 @@ Actualizar: sub-workflow IDs, pipeline_id, status_id, field_id, amojo_id, bot_id
 - **`SUPABASE_SERVICE_ROLE_KEY` hardcodeado en Code nodes es leak silencioso** — cualquiera con login al UI de n8n.X.com ve el JWT en el source del node. Rotar la key no protege si sigue ahí (el patcher la actualiza pero queda visible). Patrón obligatorio: `const SUPABASE_KEY = $env.SUPABASE_SERVICE_ROLE_KEY`. Aplica a cualquier secret.
 - **Public API `PUT /workflows/{id}` solo acepta `name + nodes + connections + settings.executionOrder`** — si pasas el `settings` completo del GET (con `callerPolicy`, `availableInMCP`, `binaryMode`...) devuelve 400 `request/body/settings must NOT have additional properties`. Patrón: limpiar a `{ executionOrder: wf.settings?.executionOrder || 'v1' }` antes del PUT.
 - **Agente que crea entidad relacionada (abono→factura) → tool de lookup OBLIGATORIA** — sin tool `consultar_X`, el agente inventa datos vacíos al referenciar entidades existentes. Patrón: tool de lookup + prompt que la fuerce + agente devuelve `{error}` si no encuentra + endpoint receptor rechaza explícitamente si falta el id origen. Ver [[agente-ia-genera-entidad-relacionada-necesita-tool-lookup-de-referencia]]
+
+## WhatsApp Cloud API
+
+- **Ventana 24h**: si el destinatario no ha escrito a la business en últimas 24h, solo se entregan templates pre-aprobados. Un `text` libre devuelve `wamid` exitoso pero NO llega al destinatario (Meta lo descarta sin error). Producción: crear template aprobado en Meta Business Manager y enviar `type: 'template'`. Para tests: que el destinatario escriba primero al número business para abrir la ventana
