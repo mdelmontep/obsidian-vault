@@ -13,6 +13,9 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 ---
 
 - **Apify Idealista/Fotocasa** — igolaizola actors, DataDome resuelto, ~$65-100/mes por cliente en barridos cada 2h. Ver [[scraping-idealista-fotocasa-produccion]]
+- **Replicar workflows n8n entre clientes** — diff nombres de nodo + vaciar IDs origen a placeholders. Ver [[replicar-cliente-n8n-vaciar-ids-cz-no-disfrazar]]
+- **n8n toolWorkflow tras clonar** — cachedResultName miente, validar value real. Ver [[n8n-toolworkflow-cachedresultname-puede-mentir]]
+- **Retell publish requerido** — cambios al LLM no afectan llamadas reales si agente está unpublished. Ver [[retell-llm-cambios-sin-publish-agente-no-afectan-llamadas]]
 - **Security API routes** — auth, rate limit, input whitelist, magic bytes, timingSafeEqual, sanitizar errores. Ver [[checklist-seguridad-api-routes-nextjs]]
 - **Re-auth password admin** — campos disabled + modal password + `signInWithPassword` para config multi-org. Ver [[re-autenticacion-con-password-para-acciones-sensibles-admin]]
 - **Auto-logo Google Favicon** — `google.com/s2/favicons?domain={slug}.es&sz=128`, filtro >750 bytes, sentinel `not_found`. Clearbit muerto. Ver [[google-favicon-api-patron-auto-logo]]

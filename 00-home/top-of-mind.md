@@ -8,6 +8,7 @@ tags: [home, prioridades]
 
 ## URGENTE
 
+- **Simarro — continuar 2026-05-02 paso a paso con tests e2e** — verificar IDs TODO (task_type, responsible_user, sheet_id, calendar Ramón, salesbots, Supabase). Tests por flujo: Retell reservar/cancelar, WhatsApp bot reservar/cancelar/derivar, Formulario web, Recordatorios. Publicar agente Retell solo cuando todo pase. Ver `simarro/CLAUDE.md` sección "Próxima sesión"
 - **Clinica Zen — Corregir email confirmación (2026-04-25)** — imágenes base64, verificar en Gmail/Apple Mail. Workflow `13Roz21TOBwy8gp8` nodo `Send Confirmation Email`
 
 ## Prioridades esta semana
@@ -19,9 +20,9 @@ tags: [home, prioridades]
 - **FacturaIA — Canales Ingesta + Plan/Facturación (spec 2026-04-24)** — canales rediseño sin toggles, config expandible. Plan: página con planes reales, método pago, historial
 - **FacturaIA — Conciliación bancaria IA (spec 2026-04-21)** — 5 tablas, pipeline Claude 2 fases, UI aprobación por lotes. Pendiente: plan de implementación
 - **Tecnocloud — WhatsApp en FacturaIA** — obtener phone_number_id de Meta, guardar en org, webhook override
-- **Simarro — preguntar a Ramón (pendiente llamada)** — (1) ¿Hacen alquiler? Bot y Retell lo mencionan, confirmar o quitar. (2) ¿Cómo funcionan las citas? ¿El bot reserva directamente en el inmueble o primero fecha provisional y luego el equipo confirma la visita? (3) ¿Cómo quieren usar Kommo? ¿Pipeline actual sirve o necesitan ajustes?
-- **Simarro — chatbot migrado a salesbot** — workflow `QLfRT9AWmV1HLMZs` usa bot `88183`. Pendiente: verificar que salesbot 88183 tiene acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
-- **Simarro — workflow Recordatorios** — actualizar `Oa1lSQuDgEZvZCNS` con salesbot IDs (87861/87863/87865/87871)
+- **Simarro — preguntar a Ramón (pendiente)** — (1) ¿Cómo funcionan las citas? ¿Bot reserva directo o primero fecha provisional? (2) ¿Pipeline Kommo actual vale o ajustes? (alquiler ya descartado, bot/voz limpios)
+- **Simarro — verificar salesbot 88183** — comprobar que tiene acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
+- **Simarro — IDs TODO en n8n** — `TASK_TYPE_ID_TODO`, `RESPONSIBLE_USER_ID_TODO`, `SHEET_ID_LEADS_WEB_TODO`, salesbots Recordatorios (87861/87863/87865/87871), calendar de Ramón (ahora `primary`), Supabase pending
 - **Simarro — oportunidad monitor inmuebles** — sistema tipo StateFox: scraping Idealista/Fotocasa + alertas filtradas a clientes (precio/m²/zona). Apify igolaizola actors + n8n + Kommo. Pendiente: confirmar interés y presupuesto
 - **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` `Update leads1` → 400 `NotSupportedChoice` (104115987 heredado de Gonzalo). Pedir ID correcto en pipeline 13495347
 - **Clínica Zen — configurar Retell en leads entrantes** — workflow `RN0wl8RaRmwLpnfQ`, verificar webhooks dominio CZ

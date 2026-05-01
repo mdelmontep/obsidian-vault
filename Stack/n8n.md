@@ -64,6 +64,8 @@ Actualizar: sub-workflow IDs, pipeline_id, status_id, field_id, amojo_id, bot_id
 - `toolHttpRequest` sin parámetros + GPT-4.1 = ignora tool-calling. Usar marcador textual + lógica determinista
 - Tool description write-tools: ~280 chars con consecuencias de no llamar
 - `toolWorkflow onError`: siempre `continueErrorOutput`
+- `toolWorkflow.workflowId.cachedResultName` puede mentir tras clonar — validar `value` contra workflows reales. Ver [[n8n-toolworkflow-cachedresultname-puede-mentir]]
+- Replicar entre clientes: diff por nombres de nodo + vaciar IDs origen a placeholders TODO. Ver [[replicar-cliente-n8n-vaciar-ids-cz-no-disfrazar]]
 - `onError: continueRegularOutput`: output es `{error: {message, name}}`, no `{statusCode, body}`
 - PGVector Embeddings: conexión `ai_embedding`, no `ai_vectorStore`
 - `$fromAI()` en toolCode puede fallar — usar variable global `query` y parser manual
