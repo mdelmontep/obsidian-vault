@@ -21,6 +21,8 @@ tags: [supabase, saas, facturaia]
 - **`signUp` con email existente devuelve UUID falso** — protección anti-enumeración. Crear usuarios server-side con `admin.auth.admin.createUser()` usando service_role.
 - **Invitaciones — no depender del trigger `handle_new_user`** — `inviteUserByEmail({data})` no siempre propaga `data` a `raw_user_meta_data`. Crear `org_member` directamente con upsert tras invitar (`estado: 'invitado'`), aceptar `'invitado'` en sesión y promover a `'activo'` en el primer login. Ver [[supabase-inviteuserbyemail-no-propaga-data-a-raw-user-meta-data]]
 - **Templates con tokens en PL/pgSQL** — `replace()` deja literal lo desconocido. Validar con CHECK + función `is_valid_*` en BD, en API (allowlist TS) y UI. Ver [[postgres-template-tokens-replace-simple-no-rechaza-desconocidos]]
+- **Sanitizar caracteres en `.or()` y `.ilike()`** — `%_,():.\\*"` son sintaxis PostgREST. Antes de pasar `q` del usuario: `q.replace(/[%_]/g, c => '\\' + c).replace(/[,():.\\*"]/g, ' ')`. Sin esto, comillas o paréntesis en search rompen la query o permiten inyección lógica.
+- **`NOTIFY pgrst, 'reload schema';` al final de migrations con columna nueva** — sin él PostgREST responde 404 `PGRST204` en INSERTs aunque SELECT lea bien. Ver [[postgrest-schema-cache-notify-tras-migration]]
 
 ## Migrations CLI
 

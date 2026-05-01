@@ -1,14 +1,30 @@
 ---
 title: FacturaIA ↔ agency-portal — Integración API v1 + Webhooks
-date: 2026-04-30
+date: 2026-05-01
 source: claude-code-session
 tags: [facturaia, agency-portal, api, webhooks, integracion, agentesia]
-estado: en-curso
+estado: review-pendiente
 ---
 
 # Integración FacturaIA ↔ agency-portal
 
-Sesión 30-abril-2026 con Claude Code. **3 de 7 PRs cerrados, 1 pendiente de validar reintentos antes de mergear.**
+Sesiones 30-abril a 1-mayo-2026 con Claude Code. **PRs portal P1-P7 listos para review de Borja. Auditoría completa con fixes commiteados. PR-A3 facturaia (#32) pendiente de cerrar.**
+
+## Update 2026-05-01 — Auditoría y fixes (Stripe-style sync pattern)
+
+Tras ejecutar 7 PRs apilados en agency-portal, auditoría completa identificó y corrigió 7 bugs sustantivos (commits dentro de cada PR para que Borja vea continuidad limpia):
+
+- **HMAC receiver**: distinguir transient (5xx/red) vs permanent (4xx) → DELETE log en transient. Ver [[webhook-idempotency-borrar-log-en-errores-transitorios]]
+- **Sombra duplicada**: UPSERT por `remote_id` (no por `id` local) en `auto-emit` y `emit-from-stripe`. Ver [[upsert-sombra-por-id-remoto-no-por-id-local]]
+- **Path traversal**: validar `path.charAt(36) === '/'` después del UUID en `/api/documents/file`. Ver [[checklist-seguridad-api-routes-nextjs]] item 11
+- **PostgREST cache**: `NOTIFY pgrst, 'reload schema';` al final de migration. Ver [[postgrest-schema-cache-notify-tras-migration]]
+- **Signed URL TTL**: endpoint proxy `/api/facturaia/pdf/[shadowId]` regenera on-demand. Ver [[signed-url-proxy-endpoint-vs-cached-en-bd]]
+- **PostgREST `.or()` injection**: sanitizar `%_,():.\\*"` antes de search.
+- **TS narrowing openapi-fetch ternary**: split if-else literal. Ver [[openapi-fetch-ternary-rompe-narrowing-typescript]]
+
+Arquitectura final: **Stripe-style bidirectional sync** = (1) webhook tiempo real, (2) cron reconciliación, (3) backfill manual. Tres capas para tolerancia a fallos.
+
+Slack draft creado en `#pro-portal-clientes` (channel_id `C0AV7NAEJDA`, draft_id `Dr0B110KG30S`) — pendiente de enviar manualmente por Manu.
 
 ## Por qué se hace
 

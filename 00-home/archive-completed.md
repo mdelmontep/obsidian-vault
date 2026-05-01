@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- FacturaIA ↔ agency-portal: integración completa — 7 PRs apilados (P1-P7) en portal + auditoría con 7 fixes commiteados (transient HMAC, UPSERT remote_id, path traversal, schema cache, signed URL proxy, PostgREST .or() injection, TS narrowing). Stripe-style sync (webhook + cron + backfill). PR-A3 facturaia #32 pendiente cerrar (2026-05-01)
 - FacturaIA: modal series con builder arrastrable y picker inline (impeccable+polish+audit+critique+guidelines+baseline+typeset) (2026-04-28)
 - FacturaIA: validación formato series — mig 021 CHECK `is_valid_series_format` + API + UI con feedback (2026-04-28)
 - FacturaIA: invitaciones equipo — `org_member` directo tras inviteUserByEmail + promover invitado→activo en primer login (2026-04-28)

@@ -19,6 +19,7 @@ Checklist consolidado de seguridad para API routes en Next.js (aplicado en Factu
 8. **Middleware bypass** — al añadir ruta a `isServiceRoute`, verificar que la ruta tiene su propia auth. Sin esto, el endpoint queda completamente abierto
 9. **Audit log** — para endpoints admin que ejecutan queries dinámicas (impersonate), loggear tabla, filtros y usuario
 10. **Method whitelist** — si un endpoint acepta nombres de métodos dinámicos (ej: filtros Supabase), crear `ALLOWED_METHODS` Set
+11. **Path traversal con prefix UUID** — al validar paths tipo `{orgId}/file.ext` no basta con `startsWith(orgId)`. Atacante puede pasar `{orgId}123/file` y bypass. Validar separador con `path.charAt(36) === '/'` después de `slice(0, 36)`. Aplica a cualquier endpoint que sirva archivos por path con prefix tenant.
 
 ## Rate limiter in-memory
 
