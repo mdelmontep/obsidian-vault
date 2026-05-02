@@ -133,6 +133,7 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 - Env vars: `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser` + `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true`
 - En código: `puppeteer.launch({ executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined })`
 - **No hacer fetch HTTP a tu propia API dentro del contenedor** — DNS interno no resuelve el dominio público. Extraer lógica a función compartida e importar directamente.
+- **Alpine sin bash/curl** — `node:*-alpine` no trae ninguno. Para crons Dokploy via `docker exec`: Shell Type `sh` + `apk add --no-cache curl` en Dockerfile. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 
 ## Proyectos activos — mapa de infraestructura
 

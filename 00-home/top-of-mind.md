@@ -14,7 +14,7 @@ tags: [home, prioridades]
 ## Prioridades esta semana
 
 - **FacturaIA — Presupuestos/Proformas/Abonos** — ~~backend voz proforma/abono~~ HECHO. Pendiente Bloque 1 form manual `generar-view.tsx`: SERIE_POR_TIPO mal (proforma=T, abono=A → debe ser F y B), no setea `tipo_documento` ni `factura_origen_id`, falta selector factura origen abono manual, GET `/api/render-pdf?tipo=&id=`, rama `presupuesto_id` en `/api/email/send`. Bloque 2 vistas separadas presupuesto/proforma + abonos en emitidas + estado `pagada`. Bloque 4 `/api/agent/query/*` queries naturales. Bloque 5 métricas tiempo medio + manuales con proforma/abono/modal series visibles
-- **FacturaIA + agency-portal** — esperar review Borja PRs P1-P7 (portal) + cerrar PR-A3 webhooks #32 (facturaia). Slack draft `#pro-portal-clientes` pendiente de enviar. Ver [[facturaia-integracion-api-v1-portal]]
+- **FacturaIA — rotar secrets que circularon en chat (2026-05-02)** — `fia_live_ZyuhX…` (API key) y `whsec_fia_q2x…` (webhook secret). Camino simple: crear nuevos en paralelo, sesión portal actualiza Dokploy, eliminar viejos. Ver [[webhook-delete-hibrido-hard-si-no-disparo-soft-si-tiene-historial]]
 - **FacturaIA — Voz WhatsApp pendientes** — Test 6 mensajes específicos en 403 toggles ("admin desactivó este canal", no error genérico). Probar invitación con novia tras deploy `98250b9`. Probar modal series tras deploy
 - **FacturaIA — Asistente IA multi-canal** — conectar AI assistant al canal WhatsApp para consultas (vencidas, resúmenes, pendientes). Extensiones: cobrador, predicción cashflow, auto-categorización, alertas, presupuestos por contexto, informe fiscal
 - **FacturaIA — Google OAuth email por org** — cada org envía desde su email via Gmail API. Token storage per org, template editor con variables
