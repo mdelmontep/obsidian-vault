@@ -56,3 +56,5 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Supabase RLS olvidado** — policies sin ENABLE RLS = tabla pública, alerta llega 24-48h tarde. Ver [[supabase-enable-rls-olvidado-tabla-publica]]
 - **iOS input zoom** — font-size ≥ 16px en inputs, touch targets 44px, safe-area-inset, inputMode tel. Ver Stack/frontend-css-mobile.md
 - **CSS stagger auth** — animation-delay por selector CSS, prefers-reduced-motion cubre cada selector. Ver Stack/frontend-motion.md
+- **Dokploy schedule comando** — preferir `curl -H "x-service-key: ${VAR}" URL` corto a `node -e "..."` largo; word-wrap UI mete espacios fantasma en literales. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]
+- **Supabase embed FK** — tipa array pero runtime devuelve objeto, cast defensivo `Array.isArray(x) ? x[0] : x`. Ver [[supabase-js-fk-embed-tipa-array-pero-runtime-objeto]]
