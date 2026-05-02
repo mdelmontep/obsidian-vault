@@ -43,6 +43,7 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Alpine sin bash/curl** — apk add en Dockerfile para crons Dokploy. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 - **Encryption key no rotable** — secrets cifrados en BD pierden acceso si cambias la key. Ver [[encryption-key-de-credenciales-en-bd-no-es-rotable-in-place]]
 - **Webhook delete híbrido** — hard si no disparó, soft si tiene historial. Ver [[webhook-delete-hibrido-hard-si-no-disparo-soft-si-tiene-historial]]
+- **PR grande con migración o bucket privado** — checklist (filas afectadas, consumidores externos, rollback) antes de mergear. Ver [[pr-grande-con-migracion-y-cambio-bucket-revisar-antes-de-mergear]]
 - **next/image PDF** — rompe en Puppeteer/server-side, usar `<img>` nativo en plantillas PDF. Ver [[next-image-server-side-pdf]]
 - **n8n Supabase `$json[0]` vs `$json`** — con `Prefer: return=representation`, PostgREST devuelve objeto directo, no array. En HTTP Request nodes, usar `$json.id` no `$json[0].id`. Sin esto: `factura_id: ""` → UUID parse error
 - **n8n Code Node `fetch` no existe** — sandbox task-runner no tiene `fetch`. Usar `this.helpers.httpRequest` siempre. Error: `ReferenceError: fetch is not defined`
