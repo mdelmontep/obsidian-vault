@@ -8,13 +8,12 @@ tags: [home, prioridades]
 
 ## URGENTE
 
-- **Simarro — continuar 2026-05-02 paso a paso con tests e2e** — verificar IDs TODO (task_type, responsible_user, sheet_id, calendar Ramón, salesbots, Supabase). Tests por flujo: Retell reservar/cancelar, WhatsApp bot reservar/cancelar/derivar, Formulario web, Recordatorios. Publicar agente Retell solo cuando todo pase. Ver `simarro/CLAUDE.md` sección "Próxima sesión"
-- **Simarro 2026-05-03 BLOQUEANTES (en orden)**:
+- **Simarro 2026-05-04 BLOQUEANTES (en orden)**:
   1. Pedir a Ramón que **re-autorice cred Google Calendar** en n8n (`d3uDK7X9ZflAoumq` da `Forbidden`). Sin esto, agente WhatsApp/voz no consulta calendario y agente asignado no crea evento
   2. **Crear cred SMTP Gmail** en n8n con App Password de `simarroproperties@gmail.com`. Sin esto, ningún email sale (cred fantasma `oKRmYFhljczyvzV8`). Pasarme el ID y reasigno los 5 nodos
-  3. **Confirmar que Borja metió `N8N_WEBHOOK_TOKEN`** en Vercel + mergeó PR #1 de simarro_web. Token: `simarro_Z2O40vQbqve2YZ3Ksn2JsEQCcJqAh6L8BO8mxvbqwTE`
-  4. **Test E2E chatbot WhatsApp** escribiendo a `+34 919 93 28 52` — verificar respuesta + Kommo + lógica fin-de-semana → Derivar_agente
-  5. **Test E2E voz Retell** llamando a `+34 919 93 28 52` (mismo número WhatsApp+voz). Antes publicar agente Retell (`is_published: true`)
+  3. **Confirmar que Borja metió `N8N_WEBHOOK_TOKEN`** en Vercel + mergeó PR #1 de simarro_web
+  4. **Test E2E chatbot WhatsApp** escribiendo a `+34 919 93 28 52` — chatbot YA responde en ~2s (arreglado 2026-05-04)
+  5. **Test E2E voz Retell** llamando a `+34 919 93 28 52`. Antes publicar agente Retell (`is_published: true`)
 - **Clinica Zen — Corregir email confirmación (2026-04-25)** — imágenes base64, verificar en Gmail/Apple Mail. Workflow `13Roz21TOBwy8gp8` nodo `Send Confirmation Email`
 - **FacturaIA — smoke tests pendientes tras deploy 2026-05-02** — ejecutar y verificar manualmente: (1) Webhook delete híbrido: crear webhook prueba → eliminar sin entregas (debe desaparecer), crear otro → emitir factura → eliminar (debe quedar revocado, oculto por defecto, visible con toggle). (2) Editar URL webhook desde UI con icono lápiz, secret se conserva. (3) `GET /v1/clientes?q=...&limit=10` con Bearer real, verificar paginación cursor + sanitización `q` con caracteres `,()`. (4) `GET /v1/clientes/{id}` con UUID válido (200) e inválido (422) y de otra org (404). (5) Webhook E2E: emitir factura, esperar ≤1min, verificar `webhook_deliveries.status='delivered'` + sombra en portal. (6) Cron dispatcher Dokploy logs cada minuto exit 0. Bloquea cierre de la integración como "estable"
 

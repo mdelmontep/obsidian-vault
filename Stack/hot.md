@@ -12,7 +12,7 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 
 ---
 
-- **n8n queue + Wait ~60s** — `QUEUE_RECOVERY_INTERVAL=5` workaround parcial al poll de 60s. Ver [[n8n-queue-mode-wait-nodes-poll-cada-60s]]
+- **n8n Wait vacío = webhook-type stuck** — `parameters:{}` → exec colgada para siempre. Fix: PUT con `resume:timeInterval`. Ver [[n8n-wait-node-vacio-webhook-type-stuck]]
 - **Webhook idempotency transient** — borrar `event_id` log en 5xx/timeout para que el retry no sea replay falso. Ver [[webhook-idempotency-borrar-log-en-errores-transitorios]]
 - **PostgREST schema reload** — `NOTIFY pgrst, 'reload schema';` al final de migration con columna nueva. Ver [[postgrest-schema-cache-notify-tras-migration]]
 - **UPSERT sombra por remote_id** — múltiples paths convergen sin duplicar. Ver [[upsert-sombra-por-id-remoto-no-por-id-local]]

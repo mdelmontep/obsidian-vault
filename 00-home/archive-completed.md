@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- Simarro — chatbot WhatsApp respuesta lenta arreglada (2026-05-04): Wait node debounce con `parameters:{}` era webhook-type → stuck. Fix: PUT REST API + Redis restaurado en compose. Chatbot vuelve a ~2s por mensaje
+
 - Integración FacturaIA ↔ agency-portal viva en prod — PRs A1-A3 mergeados, smoke test E2E OK, webhook con cliente_nombre poblado tras fix `cliente:clientes(...)` embed en GET singular. Cron Dokploy cada 1min. Pendiente: rotar secrets que circularon en chat (2026-05-02)
 - FacturaIA ↔ agency-portal: integración completa — 7 PRs apilados (P1-P7) en portal + auditoría con 7 fixes commiteados (transient HMAC, UPSERT remote_id, path traversal, schema cache, signed URL proxy, PostgREST .or() injection, TS narrowing). Stripe-style sync (webhook + cron + backfill). PR-A3 facturaia #32 pendiente cerrar (2026-05-01)
 - FacturaIA: modal series con builder arrastrable y picker inline (impeccable+polish+audit+critique+guidelines+baseline+typeset) (2026-04-28)
