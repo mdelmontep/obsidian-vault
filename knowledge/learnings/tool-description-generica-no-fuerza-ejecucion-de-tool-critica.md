@@ -26,3 +26,7 @@ Para toda tool que realice una **acción de escritura irreversible** (reservar, 
 3. Listar los parámetros requeridos
 
 Una descripción genérica de una línea no es suficiente — el LLM la trata como opcional.
+
+## Complemento (2026-05-03)
+
+Si la description ya es agresiva pero el agente sigue fabulando (ej. inventa slots de calendario sin llamar `Mirar_disponibilidad`): bajar `temperature` a `0`. Síntoma diagnóstico: ejecución con `intermediateSteps=0` cuando debería haber al menos 1 tool call.

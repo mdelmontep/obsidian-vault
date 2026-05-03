@@ -12,4 +12,6 @@ tags: [supabase, rag, pgvector, n8n]
 - Función `match_documents(query_embedding, match_count, filter)` — la que usa n8n para búsquedas por similitud coseno
 - Índice `ivfflat` con `lists = 100` para rendimiento en búsquedas vectoriales
 - En n8n se conecta vía nodo **Supabase Vector Store** (no Postgres directo) — necesita `SUPABASE_URL` (interno: `http://supabase-kong:8000`) + `SERVICE_ROLE_KEY`
+- **Default conexión n8n ↔ Supabase self-hosted: REST API + service_role key**, no Postgres directo. Probar nombres de Docker network entre stacks Dokploy es perder tiempo. Ver [[n8n-supabase-selfhosted-default-rest-api-no-postgres]]
+- **Búsqueda híbrida** (filtros SQL + ranking pgvector) en una sola RPC para catálogos. Ver [[busqueda-hibrida-sql-pgvector-supabase]]
 - **Google Service Accounts y política de org**: orgs Workspace modernas aplican `iam.disableServiceAccountKeyCreation` por defecto. Antes de proponer SA al cliente, verificar que tenemos rol `orgpolicy.policyAdmin` o que el cliente puede hacer el override. Si no, OAuth2 como fallback
