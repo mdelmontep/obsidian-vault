@@ -12,6 +12,7 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 
 ---
 
+- **n8n emailSend html dinámico** — Code node que devuelve `{ html }`, email usa `={{ $('Code').item.json.html }}`. Ver [[n8n-emailsend-html-no-evalua-expresiones]]
 - **n8n Wait vacío = webhook-type stuck** — `parameters:{}` → exec colgada para siempre. Fix: PUT con `resume:timeInterval`. Ver [[n8n-wait-node-vacio-webhook-type-stuck]]
 - **Webhook idempotency transient** — borrar `event_id` log en 5xx/timeout para que el retry no sea replay falso. Ver [[webhook-idempotency-borrar-log-en-errores-transitorios]]
 - **PostgREST schema reload** — `NOTIFY pgrst, 'reload schema';` al final de migration con columna nueva. Ver [[postgrest-schema-cache-notify-tras-migration]]

@@ -13,8 +13,8 @@ tags: [home, prioridades]
   2. **Crear cred SMTP Gmail** en n8n con App Password de `simarroproperties@gmail.com`. Sin esto, ningún email sale (cred fantasma `oKRmYFhljczyvzV8`). Pasarme el ID y reasigno los 5 nodos
   3. **Confirmar que Borja metió `N8N_WEBHOOK_TOKEN`** en Vercel + mergeó PR #1 de simarro_web
   4. **Test E2E chatbot WhatsApp** escribiendo a `+34 919 93 28 52` — chatbot YA responde en ~2s (arreglado 2026-05-04)
-  5. **Test E2E voz Retell** llamando a `+34 919 93 28 52`. Antes publicar agente Retell (`is_published: true`)
-- **Clinica Zen — Corregir email confirmación (2026-04-25)** — imágenes base64, verificar en Gmail/Apple Mail. Workflow `13Roz21TOBwy8gp8` nodo `Send Confirmation Email`
+  5. **Test E2E voz Retell** llamando a `+34 919 93 28 52`. Antes publicar agente Retell (`is_published: true`). Smoke test específico: pedir "*busco un piso en Las Rozas de 3 habitaciones por 600 mil*" → verificar que Ana ejecuta `Buscar_viviendas`, lee 1-2 opciones breves (zona + precio), y si pides detalles los saca sin re-llamar la tool. También verificar caso 0 resultados ("*busco un castillo en Marte*") → fallback hablable
+- **Clínica Zen — hero_overlay.jpg pendiente** — imagen con overlay 45% bakeado lista en `/tmp/hero_overlay.jpg`. Falta subir a `AgentesIAMadrid/email-assets/clinica-zen/` (PAT actual sin `Contents:write`). Cuando esté: `python3 /tmp/update_emails_v2.py`
 - **FacturaIA — smoke tests pendientes tras deploy 2026-05-02** — ejecutar y verificar manualmente: (1) Webhook delete híbrido: crear webhook prueba → eliminar sin entregas (debe desaparecer), crear otro → emitir factura → eliminar (debe quedar revocado, oculto por defecto, visible con toggle). (2) Editar URL webhook desde UI con icono lápiz, secret se conserva. (3) `GET /v1/clientes?q=...&limit=10` con Bearer real, verificar paginación cursor + sanitización `q` con caracteres `,()`. (4) `GET /v1/clientes/{id}` con UUID válido (200) e inválido (422) y de otra org (404). (5) Webhook E2E: emitir factura, esperar ≤1min, verificar `webhook_deliveries.status='delivered'` + sombra en portal. (6) Cron dispatcher Dokploy logs cada minuto exit 0. Bloquea cierre de la integración como "estable"
 
 ## Prioridades esta semana
@@ -30,7 +30,7 @@ tags: [home, prioridades]
 - **Tecnocloud — WhatsApp en FacturaIA** — obtener phone_number_id de Meta, guardar en org, webhook override
 - **Simarro — preguntar a Ramón (pendiente)** — (1) ¿Cómo funcionan las citas? ¿Bot reserva directo o primero fecha provisional? (2) ¿Pipeline Kommo actual vale o ajustes? (alquiler ya descartado, bot/voz limpios)
 - **Simarro — verificar salesbot 88183** — comprobar que tiene acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
-- **Simarro — IDs TODO en n8n** — `TASK_TYPE_ID_TODO`, `RESPONSIBLE_USER_ID_TODO`, `SHEET_ID_LEADS_WEB_TODO`, salesbots Recordatorios (87861/87863/87865/87871), calendar de Ramón (ahora `primary`), Supabase pending
+- **Simarro — IDs TODO en n8n** — `TASK_TYPE_ID_TODO`, `RESPONSIBLE_USER_ID_TODO`, `SHEET_ID_LEADS_WEB_TODO`, calendar de Ramón (ahora `primary`), Supabase pending. ~~salesbots Recordatorios~~ ya OK (87861=4h, 87871=24h, code arreglado para iterar Kommo tasks 2026-05-04)
 - **Simarro — oportunidad monitor inmuebles** — sistema tipo StateFox: scraping Idealista/Fotocasa + alertas filtradas a clientes (precio/m²/zona). Apify igolaizola actors + n8n + Kommo. Pendiente: confirmar interés y presupuesto
 - **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` `Update leads1` → 400 `NotSupportedChoice` (104115987 heredado de Gonzalo). Pedir ID correcto en pipeline 13495347
 - **Clínica Zen — configurar Retell en leads entrantes** — workflow `RN0wl8RaRmwLpnfQ`, verificar webhooks dominio CZ
@@ -47,5 +47,6 @@ _(ninguno activo)_
 
 Ver `00-home/archive-completed.md`
 
+- Clínica Zen — emails rediseñados (4 variantes), hero stripe, datos dinámicos vía Code node "Build Emails HTML" — 2026-05-04
 - VeriFACTU integración completa (QR en PDFs todas las plantillas, toggle sincroniza BD, cron cada hora, migración aplicada, deploy prod) — 2026-04-27
 - FacturaIA Sprint #6/#7 + workflow voz abono + invitaciones equipo + validación formato series + modal series con builder arrastrable — 2026-04-28

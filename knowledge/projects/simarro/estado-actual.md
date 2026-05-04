@@ -1,11 +1,11 @@
 ---
-title: Simarro Properties — Snapshot estado 2026-05-03
-date: 2026-05-03
+title: Simarro Properties — Snapshot estado 2026-05-04
+date: 2026-05-04
 source: sesion-claude-code
 tags: [simarro, n8n, kommo, retell, estado, snapshot]
 ---
 
-# Simarro Properties — Estado real al 2026-05-03
+# Simarro Properties — Estado real al 2026-05-04
 
 > Source of truth completo: `/Users/manueldelmonte/simarro/CLAUDE.md`. Este doc es snapshot resumen para retomar rápido.
 
@@ -35,12 +35,19 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
   - Kommo `/leads/complex` (lead+contact+CFs en 1 llamada)
   - Salesbot dinámico: `contacto_propiedad` → 87869 (Formulario), resto → 88575 (Solicitud_recibida)
   - IF Kommo OK → Postgres update `done` o `kommo_failed` (recovery hook)
+  - **Fix doble disparo WhatsApp (2026-05-04)**: Borja añadió 88575 como automation del status "Nuevo lead" de los 4 pipelines de form. El nodo `Salesbot Run` lo invocaba de nuevo via `/salesbot/run` → 2 plantillas idénticas. Solución quirúrgica: nodo `IF contacto_propiedad` entre `Update kommo_ok` y `Salesbot Run`. Solo `contacto_propiedad` (bot 87869, sin automation) sigue invocando el bot por API; los 5 con bot 88575 saltan al email final
+  - **Notas form simplificadas (2026-05-04)**: campo Notas en Kommo dejó de ser JSON crudo. Ahora solo `notasAdicionales` + extras útiles (`tipoIngresos`, `antiguedad`, `tipoCompra`, `propertySlug`) si tienen valor. Vacío si no hay nada. La traza técnica completa (UTM, IP, userAgent, timestamps) sigue en `form_submissions.envelope` jsonb
 - **Workflow `QLfRT9AWmV1HLMZs` Chatbot reescrito**:
   - Variable `clinica` renombrada a `mensaje` (5 sitios + grep pre/post para 0 residuos)
   - Think description completo Simarro (eliminado "Clínica Zen", horario L-V partido 10-14/17-20, lógica fin-de-semana → Derivar_agente)
   - Vector Store description corregida ("informacion de la clinica" → "Simarro Properties")
 - **Workflow `YGnefIXAKNJMZTw3` Agente Asignado**: Code JS búsqueda por `field_name == 'Día de visita'` (corrigió de "Dia preferencia cita"). Placeholders `TASK_TYPE_ID_TODO` → `2` (Meeting), `RESPONSIBLE_USER_ID_TODO` → `15113339` (user Simarro Properties / Ramón)
-- **Workflow `Oa1lSQuDgEZvZCNS` Recordatorios**: SALESBOT_ID_PLACEHOLDER reemplazados (87861 para 4h, 87871 para 24h)
+- **Workflow `0eVxjZJXPU8hj6qq` Voz_buscar_viviendas (creado 2026-05-04)**: wrapper webhook para que el agente Retell "Ana" use el catálogo de viviendas. Webhook `/webhook/voz_buscar_viviendas` (sin auth, mismo patrón que el resto de tools voz) → ExecuteWorkflow → `Buscar_viviendas_catalogo` (5NRXALN9lBVE9fTs, sub-workflow intacto, lo sigue usando el chatbot WhatsApp) → Format For Voice → Respond. Devuelve máximo 2 viviendas con mensaje breve hablable (solo zona + precio); detalles (habitaciones, m², descripción) van en `results` del context para que el LLM los lea bajo demanda. Mensaje fallback hablable cuando 0 resultados. `alwaysOutputData: true` en los nodos posteriores al ExecuteWorkflow (sin esto, RPC vacía → ningún output → body vacío al webhook)
+- **Retell LLM `llm_ee8778e55dc4eaf29b38b5110ae2` (Ana, agent `agent_7b02aa7680b8798ea033fab2c2`)**: tool `Buscar_viviendas` añadida (apunta a `/webhook/voz_buscar_viviendas`, params: `query` requerido + `municipality, max_price, min_rooms, min_size` opcionales, `speak_during_execution: "Déjame mirar el catálogo un momento"`). System prompt editado en 3 puntos quirúrgicos: bloque de instrucciones de la tool (lee TAL CUAL `message`, detalles bajo demanda desde `results` sin re-llamar), bullet en "Inferencias automáticas" (cliente con criterios concretos → ejecutar Buscar_viviendas en vez de saltar a cierre), reescrita la FAQ "Propiedades disponibles". Sigue `is_published: false`
+- **Workflow `Oa1lSQuDgEZvZCNS` Recordatorios**:
+  - SALESBOT_ID_PLACEHOLDER reemplazados (87861 para 4h, 87871 para 24h)
+  - **Fix TypeError cada 30min (2026-05-04)**: el nodo `Filtrar y evitar duplicados` estaba escrito para Google Calendar (`evento.start.dateTime`, regex sobre `summary`) pero recibía Kommo tasks (shape `_embedded.tasks[].complete_till`, `entity_id`, `task.id`). Code reescrito iterando `_embedded.tasks` con campos correctos. Bonus: limpieza automática `staticData.enviados` cada 48h (constante `LIMPIEZA_48H` declarada y nunca usada antes)
+  - **Auth profesional (2026-05-04)**: HTTP nodes "WhatsApp Recordatorio 24h/4h" tenían `Authorization: Bearer TOKEN_CZ`/`TOKEN_CY` literales (placeholders nunca sustituidos en la replicación inicial). Migrados a `predefinedCredentialType: kommoLongLivedApi` igual que el workflow Formulario
 - **Workflow `NsGM8vyXxV08cuoO` Buscar_base_de_datos**: field_id `355122` (CZ) reemplazado por `1330871` (Simarro)
 
 ### Web Simarro (`github.com/AgentesIA-MAdrid/simarro_web`)
@@ -69,6 +76,7 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 
 ## Pendientes no bloqueantes
 
+- **Caso 3 voz "lead pre-existente del formulario"**: cuando llaman al `+34 919 93 28 52` clientes que vienen de form `contacto_propiedad`, Ana saluda genérico aunque el lead ya tiene `property_ref` en Kommo. Solución diferida: workflow `Voz_lookup_lead` que matchea `from_number` → lead Kommo → devuelve dynamic variables (`{{nombre}}`, `{{property_interes}}`) que Retell inyecta en el prompt al inicio. Decisión Manu 2026-05-04: dejarlo para cuando Ramón vea volumen real de llamadas-formulario; ahora cubre el caso 1 (cliente describe vivienda con palabras → Buscar_viviendas la encuentra)
 - Migrar `Mirar_disponibilidad` GCAL → Kommo tasks (decisión 5C completa)
 - Crear sub-workflow `Solicitar_confirmacion_visita` (sustituir Opción 1 por Opción 2)
 - Desplegar Supabase en Dokploy (RAG chatbot — workflow `meter info rag` inactivo hasta entonces)
@@ -86,6 +94,7 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 | Webhook voz reservar | `/webhook/Reservar_crm` |
 | Webhook voz cancelar | `/webhook/cancelar_cita` |
 | Webhook voz derivar | `/webhook/derivar_humano` |
+| Webhook voz buscar viviendas | `/webhook/voz_buscar_viviendas` |
 | Kommo subdominio | `simarro.kommo.com` |
 | Kommo account_id | `36342583` |
 | Cred Kommo n8n | `xPvEqRp6NQwORUXi` |

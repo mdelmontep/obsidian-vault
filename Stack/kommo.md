@@ -43,6 +43,19 @@ tags: [kommo, crm, whatsapp, salesbots, api]
   - Template invitando a responder (ej. "cuéntanos más para ayudarte mejor") → solo para forms breves tipo `contacto_propiedad` donde el cliente dio poca info
   - Template solo confirmación (ej. "hemos recibido, te contactamos en 24-48h") → para forms largos cualificables (valoración, capacidad) donde pedir "más info" es insultante porque ya rellenaron 8 campos
 
+## Doble disparo salesbot — n8n + automation pipeline
+
+Si un workflow n8n llama a `/api/v2/salesbot/run` para invocar un bot, **Y** ese mismo bot está configurado como automation del status del pipeline donde n8n acaba de crear el lead, **se dispara dos veces casi simultáneamente**. Síntoma típico: cliente recibe la misma plantilla WhatsApp dos veces en el mismo segundo.
+
+Caso real Simarro 2026-05-04: Borja añadió bot 88575 ("Solicitud recibida") como automation del status "Nuevo lead" en los 4 pipelines de form web. El workflow `OFGGroWlifA88YFN` ya invocaba `/salesbot/run` con ese mismo bot tras crear el lead. Resultado: 2 plantillas idénticas a 0:41:00.
+
+**Detección**: la API de eventos del lead (`/api/v4/events?filter[entity_id]=...`) NO muestra ejecuciones de salesbot, así que un test E2E con timestamp idéntico es la única forma de pillarlo.
+
+**Patrón correcto**: elegir UNA fuente del envío.
+- Opción A: bot SOLO como automation del pipeline status. n8n crea el lead y ya está. Más limpio para futuros mantenedores (config en Kommo UI, no en código).
+- Opción B: bot SOLO invocado desde n8n. Útil cuando n8n necesita decidir qué bot usar (mapping dinámico por formType, etc.).
+- Mixto válido (ver Simarro): IF condicional en n8n que solo invoca `/salesbot/run` para los formTypes cuyo bot NO está como automation. Los demás dependen de la automation del pipeline.
+
 ## Patrón salesbot: PATCH lead + POST salesbot/run
 
 Para que el chatbot envíe un mensaje WhatsApp con texto dinámico, no se puede llamar directo a la API amojo. Usar:
