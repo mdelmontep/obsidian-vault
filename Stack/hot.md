@@ -65,3 +65,6 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Embedded select supabase-js no va sobre views** — vistas no propagan FKs. 2 queries + merge en cliente. Ver [[supabase-embedded-select-no-funciona-en-views]]
 - **Profile lookup cross-canal scoping obligatorio** — `org_members!inner` o cross-tenant impersonation. Ver [[supabase-profile-lookup-cross-canal-debe-scoping-org-members]]
 - **NOT NULL post-backfill misma migration** — ADD nullable → UPDATE → SET NOT NULL todo junto. Ver [[migration-add-column-backfill-not-null-misma-transaccion]]
+- **Zod ↔ OpenAPI doc** — refine de Zod no llega a clientes openapi-typescript. Tocar `openapi.json` en el mismo commit. Ver [[zod-vs-openapi-doc-contrato-real-de-clientes-generados]]
+- **PR review stale** — el reviewer puede haber pusheado fixes propios. `git log origin/<rama> -5` antes de actuar. Ver [[pr-review-ya-resuelta-por-el-reviewer-mismo]]
+- **Regen types.gen con PR abierto** — conflict garantizado. Esperar merge y consolidar regen + quitar `as never` + features en un PR. Ver [[regenerar-types-gen-conflict-con-pr-abierto]]
