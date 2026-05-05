@@ -243,6 +243,46 @@ Objetivo: registrar y despedir. ORDEN ESTRICTO:
 
 ---
 
+---
+
+## Patrón: agente de reservas (recepcionista)
+
+Validado con Laserys Las Rozas y Clínica Zen (2026-05). Estructura de prompt que funciona en producción.
+
+### Estructura de secciones (en este orden)
+```
+ROL → HORA ACTUAL → REGLAS INVIOLABLES → CÓMO HABLAR →
+CONTEXTO DEL CENTRO → FLUJO DE LLAMADA → CANCELACIÓN (si aplica) →
+HERRAMIENTAS (tabla) → COMPETENCIA → OBJECIONES → FINANCIACIÓN →
+RESPUESTAS RÁPIDAS → EJEMPLOS DE CONVERSACIÓN
+```
+
+### REGLAS INVIOLABLES — bloque obligatorio
+Sección al inicio con las reglas que el LLM no puede romper bajo ningún contexto. Formato: numeradas, negrita, consecuencia explícita.
+
+Reglas estándar para agente de reservas:
+- **Margen 48h**: nunca cita dentro de `hora_actual + 48h`. Si `Mirar_disponibilidad` devuelve huecos en ese margen, ignorarlos. Si el cliente pide hoy/mañana, redirigir sin explicar motivo: *"Uy, para esas fechas ya no nos queda hueco."*
+- **Fin de semana** (llamada sábado o domingo): primera opción siempre **martes 10:00**, nunca lunes. Sin explicar motivo.
+- **Horas solo `:00` o `:30`**: filtrar cualquier otro slot que devuelva el calendario.
+- **Festivos**: lista explícita en el prompt. Si el cliente pide uno, redirigir sin explicar: *"Ese día tenemos cerrado."*
+- **Consentimiento obligatorio** antes de ejecutar la herramienta de reserva.
+- **Nunca inventar horarios**: solo ofrecer lo que devuelva `Mirar_disponibilidad`.
+
+### Tabla de herramientas
+Más efectivo que párrafos. Columnas: `Herramienta | Cuándo usar | Qué decir antes | Qué hacer después`.
+
+### Teléfono con guiones
+Leer siempre en grupos de tres con guiones (no puntos suspensivos — el TTS los puede vocalizar):
+> "es el seis uno dos - tres cuatro cinco - seis siete ocho. ¿Es correcto?"
+
+### Ofrecer disponibilidad
+Siempre exactamente **2 opciones** concretas. Nunca decir "tengo todo libre" ni "cualquier hora". Si el calendario está vacío para ese día, ofrecer dos horas dentro de la franja pedida.
+
+### Nuevo vs. existente
+En clínicas/centros con historial de pacientes: preguntar siempre si es primera vez. Existente que llama a reservar → `transfer_call` inmediato (no gestionar tú).
+
+---
+
 ## Checklist antes de publicar
 
 - [ ] pronunciation_dictionary actualizado en config del agente
