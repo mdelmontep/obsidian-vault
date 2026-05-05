@@ -61,3 +61,7 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **CSS stagger auth** — animation-delay por selector CSS, prefers-reduced-motion cubre cada selector. Ver Stack/frontend-motion.md
 - **Dokploy schedule comando** — preferir `curl -H "x-service-key: ${VAR}" URL` corto a `node -e "..."` largo; word-wrap UI mete espacios fantasma en literales. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]
 - **Supabase embed FK** — tipa array pero runtime devuelve objeto, cast defensivo `Array.isArray(x) ? x[0] : x`. Ver [[supabase-js-fk-embed-tipa-array-pero-runtime-objeto]]
+- **CREATE OR REPLACE VIEW + ADD COLUMN** — `f.*` reordena, error 42P16. Fix: DROP + CREATE + reaplicar `security_invoker`. Ver [[supabase-create-or-replace-view-falla-tras-add-column]]
+- **Embedded select supabase-js no va sobre views** — vistas no propagan FKs. 2 queries + merge en cliente. Ver [[supabase-embedded-select-no-funciona-en-views]]
+- **Profile lookup cross-canal scoping obligatorio** — `org_members!inner` o cross-tenant impersonation. Ver [[supabase-profile-lookup-cross-canal-debe-scoping-org-members]]
+- **NOT NULL post-backfill misma migration** — ADD nullable → UPDATE → SET NOT NULL todo junto. Ver [[migration-add-column-backfill-not-null-misma-transaccion]]
