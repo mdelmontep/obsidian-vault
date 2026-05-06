@@ -1,0 +1,35 @@
+---
+title: agentesia
+date: 2026-05-07
+tags: [cliente, agentesia]
+---
+
+# Agentesia (interno)
+
+La empresa. agency-portal + ticketing chatbot + integración con FacturaIA + Slack canvases.
+
+## Estado
+
+- **agency-portal** (Borja como reviewer) — Next.js, integra con FacturaIA via API v1 (HMAC webhooks + outbox + Stripe-style sync)
+- **Chatbot ticketing** desplegado en `89B9QN23hOHDq6oP` n8n
+- **Slack workspace** activo, canvases por proyecto
+
+## Próximos hitos
+
+1. **agency-portal PR #54 + #55 pendientes pushear** (NOW) — #55 audit actor passthrough, #54 base lista. Tras merge: regen types.gen.ts + quitar 3 `as never` + migration `quotes.converted_facturaia_factura_id`
+2. **Test ticketing con cliente real** (NEXT) — pedir teléfono al cliente "Soporte técnico" + verificar respuestas TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
+
+## Bloqueos / esperando a terceros
+
+- Borja: review PR #54 y #55 cuando se pusheen
+
+## Links rápidos
+
+- [Github org](https://github.com/AgentesIA-MAdrid)
+- [agency-portal](https://github.com/AgentesIA-MAdrid/agency-portal)
+- Slack #pro-facturaia, #pro-agentesia
+- Canvas Panel FacturaIA: F0AV38CHYSJ
+
+## Histórico de hitos
+
+- 2026-05-02: integración API v1 ↔ agency-portal viva en prod (7 PRs apilados + 7 fixes auditoría)
