@@ -15,6 +15,12 @@ tags: [home, archivo]
 - 2026-05-07 FacturaIA secrets rotados — `fia_live_ZyuhX…` API key + `whsec_fia_q2x…` webhook secret reemplazados (nuevos en paralelo, portal actualiza Dokploy, viejos eliminados)
 - 2026-05-07 agency-portal PR #50 mergeado — fix detalle standalone para sombras `facturaia_direct`
 - 2026-05-07 agency-portal main local — 4 commits sin pushear resueltos con Borja
+- 2026-05-07 FacturaIA Presupuestos/Proformas/Abonos completos — emisión funcional desde form manual + voz (Bloques 1, 2 y abonos en emitidas con estado pagada). Pendiente solo: tests proformas + rectificativas
+- 2026-05-07 FacturaIA Voz WhatsApp en producción — 10 puntos verificados (e2e orgs, OCR receptor v2, presupuestos, textos WA, 403 toggles, invitación novia, modal series, duplicados BD, response limpio, sub-workflows archivados)
+- 2026-05-07 Notificaciones tickets dashboard → Slack `#01-tickets-soporte`
+- 2026-05-07 Repo privado skill chatbot-chatwoot-replicator
+- 2026-05-07 Tests FacturaIA `orgHasFeature` + `getOrgBilling` + `isSuperadmin` (incluidos en los 137 tests Vitest)
+- 2026-05-07 Deploy prod FacturaIA — push + Dokploy + test e2e OCR
 - Simarro — chatbot WhatsApp respuesta lenta arreglada (2026-05-04): Wait node debounce con `parameters:{}` era webhook-type → stuck. Fix: PUT REST API + Redis restaurado en compose. Chatbot vuelve a ~2s por mensaje
 
 - Integración FacturaIA ↔ agency-portal viva en prod — PRs A1-A3 mergeados, smoke test E2E OK, webhook con cliente_nombre poblado tras fix `cliente:clientes(...)` embed en GET singular. Cron Dokploy cada 1min. Pendiente: rotar secrets que circularon en chat (2026-05-02)
