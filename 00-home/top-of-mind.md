@@ -34,6 +34,10 @@ tags: [home, prioridades]
 - **FacturaIA — Google OAuth email por org** — cada org envía desde su email via Gmail API. Token storage per org, template editor con variables
 - **FacturaIA — Canales Ingesta + Plan/Facturación (spec 2026-04-24)** — canales rediseño sin toggles, config expandible. Plan: página con planes reales, método pago, historial
 - **FacturaIA — Conciliación bancaria IA (spec 2026-04-21)** — 5 tablas, pipeline Claude 2 fases, UI aprobación por lotes. Pendiente: plan de implementación
+- **FacturaIA — pestaña notificaciones por org** — inbox unificado: anomalías OCR + sugerencias IA + vencimientos + errores. Campana topbar + drawer feed cronológico. Base ya construida (`module_events`). Spec: `docs/MODULOS-PRODUCTO.md`. ~1-2 días
+- **FacturaIA — backends módulos pendientes** — Cobros (recordatorios escalados), Fiscal (modelos AEAT 303/111/115/347), Firma eIDAS, Cashflow IA forecast. ~21 opciones config con badge "Próximamente" hasta que se implementen. Cobros y Stripe los primeros (alta conversión)
+- **FacturaIA — Stripe en activación add-ons** — hoy CTA "Activar +XX€/mes" redirige a `/settings?tab=plan` sin cobro real. Conectar Stripe checkout para que el toggle = compra. Conciliación 19€/mes y Anti-fraude 9€/mes ya seedeados
+- **FacturaIA — conexión bancaria automática (Plaid/GoCardless/BBVA Open Banking)** — desbloquea Conciliación al 100%, hoy requiere import manual de `movimientos_bancarios`. Sin esto el módulo es infrautilizado
 - **Tecnocloud — WhatsApp en FacturaIA** — obtener phone_number_id de Meta, guardar en org, webhook override
 - **Simarro — preguntar a Ramón (pendiente)** — (1) ¿Cómo funcionan las citas? ¿Bot reserva directo o primero fecha provisional? (2) ¿Pipeline Kommo actual vale o ajustes? (alquiler ya descartado, bot/voz limpios)
 - **Simarro — verificar salesbot 88183** — comprobar que tiene acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo

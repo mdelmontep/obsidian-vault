@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-05-06 FacturaIA: sistema módulos premium completo (catálogo + plan/add-on + recomendador IA con 2 evaluators reales + activity feed + métricas conectadas + validación rangos + control admin total + 137 tests Vitest, 6 opciones config cableadas y verificadas; CLAUDE.md global con 5 reglas nuevas + 1 al proyecto)
+- 2026-05-06 FacturaIA: cron Dokploy del recomendador IA configurado y validado (1 sugerencia generada para AgentesiaLab: antifraud, ratio max/min 151x)
 - Simarro — chatbot WhatsApp respuesta lenta arreglada (2026-05-04): Wait node debounce con `parameters:{}` era webhook-type → stuck. Fix: PUT REST API + Redis restaurado en compose. Chatbot vuelve a ~2s por mensaje
 
 - Integración FacturaIA ↔ agency-portal viva en prod — PRs A1-A3 mergeados, smoke test E2E OK, webhook con cliente_nombre poblado tras fix `cliente:clientes(...)` embed en GET singular. Cron Dokploy cada 1min. Pendiente: rotar secrets que circularon en chat (2026-05-02)

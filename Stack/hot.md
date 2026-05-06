@@ -68,3 +68,7 @@ Resúmenes de 1-2 líneas con link al learning. Leer el learning completo solo s
 - **Zod ↔ OpenAPI doc** — refine de Zod no llega a clientes openapi-typescript. Tocar `openapi.json` en el mismo commit. Ver [[zod-vs-openapi-doc-contrato-real-de-clientes-generados]]
 - **PR review stale** — el reviewer puede haber pusheado fixes propios. `git log origin/<rama> -5` antes de actuar. Ver [[pr-review-ya-resuelta-por-el-reviewer-mismo]]
 - **Regen types.gen con PR abierto** — conflict garantizado. Esperar merge y consolidar regen + quitar `as never` + features en un PR. Ver [[regenerar-types-gen-conflict-con-pr-abierto]]
+- **React 19 derived state** — state mirror durante render evita setState en useEffect (lint bloquea). Ver [[react-19-strict-bloquea-setstate-en-useeffect]]
+- **Métricas tabla + events** — diseñar con tabla de dominio como fuente primaria, events como complemento. Ver [[metricas-fuente-fuerte-mas-event-log]]
+- **Cron Dokploy** — `bash -c "curl -sf -X POST URL -H x-service-key:$VAR"` + Run Now valida exit + response. Ver [[cron-dokploy-curl-service-key]]
+- **Impersonate por query** — `?org_id=` + isSuperadmin, no fiar cookie (middleware la borra). Ver [[endpoints-impersonate-por-query-no-cookie]]
