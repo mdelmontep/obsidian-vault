@@ -8,6 +8,13 @@ tags: [home, archivo]
 
 - 2026-05-06 FacturaIA: sistema módulos premium completo (catálogo + plan/add-on + recomendador IA con 2 evaluators reales + activity feed + métricas conectadas + validación rangos + control admin total + 137 tests Vitest, 6 opciones config cableadas y verificadas; CLAUDE.md global con 5 reglas nuevas + 1 al proyecto)
 - 2026-05-06 FacturaIA: cron Dokploy del recomendador IA configurado y validado (1 sugerencia generada para AgentesiaLab: antifraud, ratio max/min 151x)
+- 2026-05-07 Simarro BLOQUEANTES — re-auth GCal Ramón, SMTP cred, N8N_WEBHOOK_TOKEN Vercel + PR #1, smoke E2E chatbot WhatsApp y voz Retell
+- 2026-05-07 Clínica Zen — hero_overlay.jpg subida a `email-assets/clinica-zen/` y emails actualizados
+- 2026-05-07 FacturaIA smoke tests deploy 2026-05-02 — webhook delete híbrido, edit URL, GET clientes con paginación cursor + sanitización, GET clientes/[id] con UUID, webhook E2E delivered + sombra portal, cron dispatcher Dokploy
+- 2026-05-07 FacturaIA smoke tests audit creación deploy 2026-05-05 — factura dashboard, presupuesto WhatsApp, factura/presupuesto portal con actor, conversión presupuesto→factura
+- 2026-05-07 FacturaIA secrets rotados — `fia_live_ZyuhX…` API key + `whsec_fia_q2x…` webhook secret reemplazados (nuevos en paralelo, portal actualiza Dokploy, viejos eliminados)
+- 2026-05-07 agency-portal PR #50 mergeado — fix detalle standalone para sombras `facturaia_direct`
+- 2026-05-07 agency-portal main local — 4 commits sin pushear resueltos con Borja
 - Simarro — chatbot WhatsApp respuesta lenta arreglada (2026-05-04): Wait node debounce con `parameters:{}` era webhook-type → stuck. Fix: PUT REST API + Redis restaurado en compose. Chatbot vuelve a ~2s por mensaje
 
 - Integración FacturaIA ↔ agency-portal viva en prod — PRs A1-A3 mergeados, smoke test E2E OK, webhook con cliente_nombre poblado tras fix `cliente:clientes(...)` embed en GET singular. Cron Dokploy cada 1min. Pendiente: rotar secrets que circularon en chat (2026-05-02)
