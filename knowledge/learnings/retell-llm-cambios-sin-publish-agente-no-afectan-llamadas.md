@@ -17,3 +17,5 @@ curl -X PATCH https://api.retellai.com/update-agent/{agent_id} \
 ```
 
 Verificar con `GET /get-agent/{id}` → `is_published: true`. Cada nuevo PATCH al LLM o al agente puede requerir re-publicar (verificar comportamiento por versión de Retell).
+
+Complemento: los **phone numbers** anclan `inbound_agent_version` explícita en su config. `update-agent` crea versión draft pero las llamadas siguen usando la del phone hasta `update-phone-number/+34X` con `inbound_agent_version: <nueva>` (o `0` para "latest"). Cambio típico que olvidas: actualizas webhook/prompt, llamas al número, sigue sin efecto → phone está clavado en versión vieja.
