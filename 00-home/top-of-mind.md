@@ -12,7 +12,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **FacturaIA — pestaña notificaciones por org** — siguiente paso natural. Inbox unificado: anomalías OCR + sugerencias IA + vencimientos + errores. Campana topbar + drawer feed. Base ya construida (`module_events`). ~1-2 días. Spec: `docs/MODULOS-PRODUCTO.md`
 - **FacturaIA — smoke test post-deploy 2026-05-07** — pendiente: (1) anular factura emitida → ver abono ligado en banner rojo del modal + tab "Abonos" con count correcto; (2) crear presupuesto/proforma desde `/generar` (serie P/F + Ver PDF sin 404); (3) probar 3er botón "Emitir como pendiente" (Verifactu sí, email no, estado=`pendiente`); (4) dashboard KPIs no inflados con borradores; (5) menú 3 puntitos sin Editar/Eliminar en factura emitida, sin Anular en abono. Tests Vitest pendientes: proformas + abonos rectificativos
-- **agency-portal PR #54 + #55 pendientes de pushear** — #55 audit actor passthrough; #54 base lista. Tras merge #54: regen `types.gen.ts`, quitar 3 `as never`, migration `quotes.converted_facturaia_factura_id` + populate
+- **agency-portal PRs abiertos** — #54 quotes actions, #55 actor passthrough, #56 unificación facturas (hoy). Esperando review Borja. Tras merge #54: regen `types.gen.ts`, quitar 3 `as never`, migration `quotes.converted_facturaia_factura_id` + populate
 
 ## NEXT (próximas 2 semanas)
 
@@ -21,6 +21,8 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **FacturaIA — decidir cliente live vs congelado** — hoy snapshot fiscal al crear factura (datos cliente embebidos). Si editas cliente, PDFs viejos conservan datos antiguos (legalmente correcto, confunde UX). Decisión producto: ¿añadir botón "Re-emitir con datos actuales" o dejar congelado siempre?
 - **FacturaIA — manuales actualizar Bloque 1** — `manual-usuario.md` y `manual-admin.md` describen flujo viejo: 2 botones generar (no 3 con "Emitir como pendiente"), no mencionan anular ni tab Abonos ni los nuevos pills/badges
 - **FacturaIA — Daily Briefing trigger → escribe `00-home/daily-briefing.md`** — comando `/daily` listo. Falta cron Dokploy o trigger automático
+- **agency-portal #56 smoke test post-merge** — badge fiscal en row, redirect 301 `/agency/facturaia/*`, botones según estado/origen, modal motivo R1-R5 obligatorio, doble-click sin duplicar (Idempotency-Key)
+- **FacturaIA #47 smoke test prod** — verificar entries en `audit_log` tras marcar cobrada / reenviar email / anular / DELETE vía API v1
 - **Agentesia chatbot ticketing — test cliente real** — pedir teléfono al cliente "Soporte técnico" + verificar respuestas AI a TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
 - **Simarro — preguntar a Ramón** — (1) ¿Citas: bot reserva directo o fecha provisional? (2) ¿Pipeline Kommo actual vale o ajustes?
 - **Simarro — verificar salesbot 88183** — comprobar acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
