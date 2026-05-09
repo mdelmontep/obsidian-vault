@@ -93,3 +93,8 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Alpine sin bash/curl** — `apk add` en Dockerfile para crons. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 - **Dokploy schedule comando** — `curl -H` corto vs `node -e` largo, word-wrap UI mete espacios. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]
 - **Supabase JWT vs sb_secret** — `sb_secret_*` no vale Bearer directo, JWT legacy. Ver [[supabase-sb-secret-vs-jwt-http]]
+
+## 2026-05-10 — voz Retell + n8n + Kommo (sesión Simarro Ana)
+- [[retell/voice-config-inbound-castellano]] — config canónica voice agent inbound castellano (Flash v2.5, timeouts, fillers, triage de patinazos, compresión prompt 38%)
+- [[n8n#Gotchas Simarro voz]] — kommo `with` array, httpRequest responseFormat, settings allowed list, loop polling exit, TZ Madrid local, severar paths multi-trigger, respond temprano async branch
+- [[kommo#Gotchas Simarro voz]] — salesbot API privada, WhatsApp duplicado triage, lead lookup desambiguación por nombre, status IDs + custom fields Simarro

@@ -1,6 +1,6 @@
 ---
 title: top of mind
-date: 2026-05-07
+date: 2026-05-10
 tags: [home, prioridades]
 ---
 
@@ -16,6 +16,8 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **⭐ FacturaIA — WhatsApp convertir presupuesto a factura por intención** — usuario dice "hazme la factura del último presupuesto para Manuel" y el bot encuentra coincidencia, muestra `P2026-0042 · Manuel García · 1.200€ ¿confirmas?`, convierte usando lógica `convertir-factura` de API v1. Endpoint nuevo `/api/voice/find-presupuesto` con matching difuso por nombre + fecha + endpoint `/api/voice/convert-presupuesto`. Workflow n8n `zYcHHa8jWXB6dY5i` necesita reconocimiento de intención. Casos edge: múltiples presupuestos, ambiguos, cliente sin presupuestos. ~1-2 sprints
+- **⭐ FacturaIA — admin módulo Voz/WhatsApp** — panel `/admin/voice` o módulo IA en `/agentes` con: invocaciones día/semana, tasa éxito vs error, latencia media, errores recientes con stack, conversaciones que terminaron sin factura, top NIFs/clientes. Inspección y edición de prompts del AI Agent por org (aprovecha `module_metadata`). Playground de test de mensaje sin tocar BD. Configuración por org (tono, idioma, IBAN cobro embebido). ~2-3 sprints. Encaja como módulo IA en `/agentes` con tab config + métricas + actividad
 - **FacturaIA — Stripe en activación de add-ons** — hoy CTA "+XX€/mes" redirige a `/settings?tab=plan` sin cobro real. Conectar checkout para que el toggle = compra. Conciliación 19€ y Anti-fraude 9€ ya seedeados
 - **FacturaIA — Cobros backend** (módulo del recomendador IA) — recordatorios escalados configurables (3/10/25 días, tono, hora). 6 opciones config con badge Próximamente esperan
 - **FacturaIA — decidir cliente live vs congelado** — hoy snapshot fiscal al crear factura (datos cliente embebidos). Si editas cliente, PDFs viejos conservan datos antiguos (legalmente correcto, confunde UX). Decisión producto: ¿añadir botón "Re-emitir con datos actuales" o dejar congelado siempre?

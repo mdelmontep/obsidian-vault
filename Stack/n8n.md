@@ -174,3 +174,79 @@ for w in wfs:
 ## WhatsApp Cloud API
 
 - **Ventana 24h**: si el destinatario no ha escrito a la business en últimas 24h, solo se entregan templates pre-aprobados. Un `text` libre devuelve `wamid` exitoso pero NO llega al destinatario (Meta lo descarta sin error). Producción: crear template aprobado en Meta Business Manager y enviar `type: 'template'`. Para tests: que el destinatario escriba primero al número business para abrir la ventana
+
+---
+
+## Gotchas Simarro voz (mayo 2026)
+
+### Kommo node parámetro `with` requiere ARRAY no string
+```javascript
+// MAL — error críptico "options.with.join is not a function"
+"options": {"with": "leads"}
+// BIEN
+"options": {"with": ["leads"]}
+```
+
+### httpRequest devuelve `{data: "stringified..."}` por defecto
+Para que n8n parsee JSON automáticamente:
+```json
+"options": {"response": {"response": {"responseFormat": "json"}}}
+```
+Sin esto, downstream Code nodes ven `lead.data` como string y `lead.custom_fields_values` es undefined.
+
+### n8n public API — settings allowed list para PUT
+Solo estos campos pasan validación al hacer PUT `/api/v1/workflows/:id`:
+```
+executionOrder, timezone, saveExecutionProgress, saveManualExecutions,
+saveDataErrorExecution, saveDataSuccessExecution, executionTimeout,
+errorWorkflow, callerPolicy, callerIds
+```
+**No incluir**: `availableInMCP`, `binaryMode`, ni otros internos. Filtrar antes de PUT o devuelve 400 `"settings must NOT have additional properties"`.
+
+### Loop polling exit guard para tests
+Patrón: `Get a call → If [status==ended] → ...async... | Wait → loop`. En test playground el call nunca llega a `ended` → loop eterno (hasta cancelación manual).
+
+Fix: añadir OR al If con `combinator: 'or'`:
+```
+$json.call_status == 'ended'  OR
+$('Webhook1').item.json.body.call.call_type == 'web_call'
+```
+En test el web_call exit-ea al primer ciclo. En producción inbound (`phone_call`) sigue polling hasta end real.
+
+### Insert nodes con `onError: continueRegularOutput`
+Los nodos Postgres/Insert que dependen de datos del call de Retell fallan en test porque `Get a call` devuelve null. Para que el error no rompa el flow:
+```json
+{"onError": "continueRegularOutput"}
+```
+En producción funcionan normal (datos reales). En test el insert falla silently y el workflow termina success.
+
+### TZ parsing — Madrid local NUNCA reconvertir
+Si el input es `"YYYY-MM-DD HH:MM"` sin offset/Z, **ya viene en hora Madrid**. NO hacer:
+```javascript
+new Date("2026-05-12 13:30")  // V8 con TZ UTC interpreta como UTC
++ Intl.DateTimeFormat({timeZone:'Europe/Madrid'})  // suma +2h DST → 15:30
+```
+
+Patrón correcto — extraer componentes del string:
+```javascript
+const m = s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
+if(m) return {y:+m[1], mo:+m[2], d:+m[3], h:+m[4], mi:+m[5]};  // ya es Madrid
+```
+
+Para weekday usar `Date.UTC(y,mo-1,d).getUTCDay()` (NO timezone-shift, es matemática de calendario).
+
+### Severar paths multi-trigger
+Si dos triggers (HTTP voz + executeWorkflow chat) convergen en un mismo `Edit Fields`, los inputs difieren y ramas downstream corren con datos parciales/vacíos. Cada trigger su propio preprocessor; lógica común a sub-workflow.
+
+Caso real Simarro: `Webhook Retell` (voz) disparaba `Edit Fields` (chat preprocessor) además de `Edit Fields Retell`. La rama `Es cancelación?` del chat se ejecutaba con datos vacíos → ramas peligrosas (`Buscar Ainhoa/Carlos/Pedro/Ramon` con query=Lead_id vacío) borraban TODOS los eventos del calendario.
+
+### Respond temprano en webhook + async branch
+Para latencia baja con escritura externa (Kommo, Calendar, WA), patrón:
+- Webhook → Edit Fields → [paralelo: Componer FAST → Respond FAST] + [async: lookup → create lead → calendar → WA]
+- `responseMode: responseNode` responde con el PRIMER respond alcanzado → FAST gana siempre.
+- Resto se ejecuta en background.
+- Ahorro: 800-1500ms perceptibles vs esperar a creación.
+
+### Code node modo
+- `runOnceForAllItems`: permite `$input.first()`, `$input.all()`, `$('NodeName').item.json`. Default y más versátil.
+- `runOnceForEachItem`: NO permite `$input.first()` — error `Can't use .first() here`. Solo si necesitas iterar item-by-item con `$json` y poco más.
