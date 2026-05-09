@@ -1,0 +1,26 @@
+---
+title: Architecture Decision Records (ADRs)
+date: 2026-05-10
+tags: [decisions, adr, architecture]
+---
+
+# Decisiones
+
+Una decisión = un archivo `ADR-NNN-slug.md`. Cuando elijas A sobre B y la elección no sea obvia leyendo el código (porque B también funcionaría), regístrala aquí. Sin esto, en 6 meses no recuerdas por qué.
+
+## Cuándo crear ADR
+- Elegir librería/herramienta entre alternativas reales (no "uso fetch porque sí").
+- Schema de BD donde había 2+ formas válidas (single table vs split, FK vs JSON, etc.).
+- Patrón arquitectónico (monolito vs micro, queue vs sync, etc.).
+- Decisión que revertir luego costaría >1 día.
+
+## Cuándo NO crear ADR
+- Convenciones obvias del framework.
+- Cambios revertibles en <1h.
+- Bug fixes (van a `Stack/incidents.md`).
+
+## Formato
+Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente — resuélvelo antes.
+
+## Index
+<!-- añade aquí cada ADR como 1 línea: NNN · YYYY-MM-DD · título -->
