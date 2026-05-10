@@ -29,6 +29,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **Simarro — preguntar a Ramón** — (1) ¿Citas: bot reserva directo o fecha provisional? (2) ¿Pipeline Kommo actual vale o ajustes?
 - **Simarro — verificar salesbot 88183** — comprobar acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
 - **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` da 400 NotSupportedChoice. Pedir ID correcto pipeline 13495347
+- **Tecnocloud — PR #3 voice-webhook-tickets** pendiente review Dani — buildSubject 14 palabras + skip self-emails gmail-poll + audio Retell en UI ticket. Tras merge → smoke test E2E con llamada real
 
 ## LATER
 

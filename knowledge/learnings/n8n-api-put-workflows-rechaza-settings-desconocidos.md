@@ -9,6 +9,12 @@ Al hacer `PUT /api/v1/workflows/{id}`, solo enviar estos campos en `settings`:
 - `executionOrder`
 - `callerPolicy`
 - `errorWorkflow`
+- `saveExecutionProgress`
+- `saveManualExecutions`
+- `saveDataErrorExecution`
+- `saveDataSuccessExecution`
+- `executionTimeout`
+- `timezone`
 
 Campos como `binaryMode`, `availableInMCP`, `timeSavedMode` causan error:
 > "request/body/settings must NOT have additional properties"

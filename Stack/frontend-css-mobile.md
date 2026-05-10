@@ -40,3 +40,11 @@ tags: [frontend, css, mobile, overflow]
 - **Password-eye con padding en vez de size** — `padding: 12px` en el botón + `min-width/height: 44px`. Ajustar `padding-right` del input al nuevo tamaño del botón.
 - **`env(safe-area-inset-*)` en pantallas auth mobile** — `padding-bottom: env(safe-area-inset-bottom, 16px)` en el scroll container. Sin esto el contenido queda cortado bajo el home bar de iOS.
 - **`inputMode="tel"` en campos de teléfono** — abre teclado numérico en iOS/Android directamente, sin depender del `type="tel"`.
+
+## CSS Grid · trampas de layout en cards móvil
+
+- **2+ items con el mismo `grid-area` se solapan en la misma celda** — si tienes 2 `<td>` o `<div>` apuntando a `grid-area: footer`, el segundo se renderiza encima del primero, no debajo. Solución: usar `grid-column: 1 / -1` en cada uno y dejar que `grid-auto-flow: row` (default) los coloque en filas implícitas sucesivas. Caso real NotCaído mobile: `down-since` + `error chip` ambos con `grid-area: footer` → solapados invisibles. Fix: `grid-column: 1 / -1` en ambos.
+
+- **Columna `auto` toma el ancho del item más ancho de CUALQUIER fila** — `grid-template-columns: auto 1fr auto` con un dot 14px (col 1 row 1) y un toggle 48px (col 1 row 3) hace que la col 1 mida 48px en TODAS las filas. Resultado: el dot de la fila 1 queda con un hueco enorme a su derecha. Solución: usar más columnas + `grid-template-areas` con span (`"dot name name" / "dot probes probes" / "tog tog acts"`) para que la col del dot no comparta tamaño con la col del toggle.
+
+- **Cache-bust manual de CSS en Jinja/HTMX/Flask** — incrementar `?v=N` en `<link rel="stylesheet" href="/static/styles.css?v=N">` cada vez que cambias el CSS. Sin esto, deploys con caché agresivo (Cloudflare, Dokploy + Traefik con `Cache-Control: public, max-age=...`) no se ven en clientes que tengan la versión vieja. Caso real NotCaído: bumps `v=11→12→13→14` durante iteración móvil.

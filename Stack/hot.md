@@ -38,6 +38,8 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Retell webhook signing** — `HMAC-SHA256(api_key, body + timestamp)` concat sin separador. Header `v=<ts_ms>,d=<hex>`. Ver [[retell-webhook-firma-hmac-body-mas-timestamp]]
 - **Retell agent versioning + phone routing** — phone numbers anclan `inbound_agent_version`; `update-agent` no afecta hasta cambiar phone. Ver [[retell-llm-cambios-sin-publish-agente-no-afectan-llamadas]]
 - **Retell call_analyzed vs tool mid-call** — solo call_analyzed trae transcript final + recording + duration + summary. Args de tools en `transcript_with_tool_calls`. Ver [[retell-webhooks]]
+- **gmail-poll self-sender** — si panel + n8n comparten cuenta OAuth, filtrar `From === oauth_email` antes del lookup o ingestas tickets falsos con contact = la propia cuenta. Ver [[gmail-poll-debe-filtrar-self-sender]]
+- **n8n Gmail node sin headers custom** — no permite `X-*`; usar HTTP Request a Gmail API con MIME RAW o filtrar por From en el ingestor. Ver [[n8n-gmail-node-no-soporta-headers-custom]]
 - **SDK oficial como ground truth para verify webhook** — si tu impl falla con `digest_mismatch` y `Provider.verify()` dice true → bug tuyo. Ver [[webhook-impl-verificar-contra-sdk-oficial-del-provider]]
 - **`pnpm/action-setup@v4` vs packageManager** — declarar versión en UN sitio o "Multiple versions of pnpm specified". Quitar `with: version` del workflow. Ver [[pnpm-action-setup-v4-conflict-con-packageManager]]
 - **Next.js `unstable_cache` no invalida con escrituras directas a BD** — script externo cambia BD, cache sirve valor viejo. Reiniciar dev o `revalidateTag`. Ver [[nextjs-unstable-cache-no-invalida-con-escritura-directa-bd]]
