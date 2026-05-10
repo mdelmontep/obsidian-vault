@@ -21,6 +21,8 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 
 <!-- añade nuevas entradas aquí debajo -->
 
+- 2026-05-11 · FacturaIA · cron `storage-quota-check` fallando semanal en silencio → env `STORAGE_QUOTA_WARN_MB=""` + `Number("")=0` ≤ 0 → throw `invalid warn_mb` → fix helper `parseMb` con fallback null/empty/non-numeric → commit `5255547`. Destapado al primer run de tabla `cron_runs` (063). Ver [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]]
+
 ## Pre-2026 (referencias migradas desde CLAUDE.md)
 
 - **Simarro** · `Lead_id=null` en Google Calendar `getAll(query)` borraba todos los eventos del rango → guard IF "filtro no-vacío" antes de delete con query dinámico → CLAUDE.md

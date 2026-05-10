@@ -30,7 +30,11 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **Verificar persistencia post-PUT** — HTTP 200 ≠ aplicó. Grep marker único en re-fetch. Ver [[verificar-persistencia-tras-put-api-con-grep-marker-unico]]
 - **Métricas tabla + events** — diseñar con tabla de dominio como fuente primaria, events como complemento. Ver [[metricas-fuente-fuerte-mas-event-log]]
 - **Impersonate por query** — `?org_id=` + isSuperadmin check, no fiar cookie (middleware la borra). Ver [[endpoints-impersonate-por-query-no-cookie]]
-- **Cron Dokploy** — `bash -c "curl -sf -X POST URL -H x-service-key:$VAR"` + Run Now valida exit + response. Ver [[cron-dokploy-curl-service-key]]
+- **Cron Dokploy** — Command = solo `curl -sf -X POST URL -H "x-service-key: $VAR"` + Shell dropdown = bash. NO añadir `bash -c` (doble wrap rompe args). Ver [[cron-dokploy-curl-service-key]]
+- **Form defaults schema** — `value !== undefined ? value : default`. Nunca `!!value` ni `value || default`. Ver [[form-defaults-respetar-schema-no-bang-bang-config]]
+- **Overlays sobre cards** — `--bg-elev2` no `--panel`, sombra doble + `isolation: isolate`. Ver [[overlays-sobre-cards-usar-bg-elev2-no-panel]]
+- **3 agentes paralelos auditoría** — security/backend/frontend simultáneos antes de cambios grandes, ~50% falsos positivos esperados. Ver [[3-agentes-paralelos-auditoria-cambios-grandes]]
+- **Migrations por módulo** — si commits van por módulo, migrations separadas (`060_ocr_*`, `061_concilia_*`). Ver [[migrations-por-modulo-si-commits-van-por-modulo]]
 - **React 19 derived state** — state mirror durante render evita setState en useEffect (lint bloquea). Ver [[react-19-strict-bloquea-setstate-en-useeffect]]
 - **Zod ↔ OpenAPI doc** — refine de Zod no llega a clientes openapi-typescript. Tocar `openapi.json` en el mismo commit. Ver [[zod-vs-openapi-doc-contrato-real-de-clientes-generados]]
 - **PR review stale** — el reviewer puede haber pusheado fixes propios. `git log origin/<rama> -5` antes de actuar. Ver [[pr-review-ya-resuelta-por-el-reviewer-mismo]]
@@ -54,6 +58,8 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Next.js route handlers solo permiten exports estándar** — exportar helper desde `route.ts` rompe typecheck. Mover a archivo aparte o privado. Ver [[claude-code-gotchas]]
 
 ### FacturaIA / agency-portal
+- **Observabilidad destapa bugs viejos** — añadir `cron_runs` reveló `storage-quota-check` fallando hace meses. Ver [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]]
+- **Admin tooling no-técnico** — semáforo verde/ámbar/rojo + descripción español + ejemplo real + sin botones destructivos. Ver [[admin-tooling-para-no-tecnicos-read-only-semaforo-ejemplos]]
 - **Webhook delete híbrido** — hard si no disparó, soft si tiene historial. Ver [[webhook-delete-hibrido-hard-si-no-disparo-soft-si-tiene-historial]]
 - **Encryption key no rotable** — secrets cifrados en BD pierden acceso si cambias la key. Ver [[encryption-key-de-credenciales-en-bd-no-es-rotable-in-place]]
 - **PR grande con migración** — checklist (filas, consumidores, rollback) antes de merge. Ver [[pr-grande-con-migracion-y-cambio-bucket-revisar-antes-de-mergear]]
