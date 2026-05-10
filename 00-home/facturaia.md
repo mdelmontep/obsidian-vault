@@ -40,6 +40,20 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **🔴 IMPORTANTE — Deploy 2026-05-11 (módulos IA + observabilidad crons)** — tras redeploy con los últimos commits (`5255547` + `d4b7566` + `d43f80d` + `6442182`):
+  1. **Cron `cashflow-alerts`** — Run Now en Dokploy → debe responder ✅ (era ❌ por endpoint 404 antes del push). Verificar row `status=success` en tabla `cron_runs` y en `/admin/system/crons` semáforo verde
+  2. **Cron `storage-quota-check`** — Run Now → era ❌ con `invalid warn_mb` por env vacía. Tras fix `parseMb` (commit `5255547`) debe pasar a ✅. Verificar en `/admin/system/crons`
+  3. **Panel `/admin/system/crons`** en producción — los 6 crons listados con datos, semáforo correcto por cada uno (verde si corrió OK en su ventana, ámbar si excede 80% del intervalo, rojo si falló o lleva más del max). VerifACTU como gris/sin datos hasta que se active
+  4. **Tooltip de info** en cada card — hover sobre icono "i" muestra popover OPACO (no transparente) con título + descripción + bloque azul "Ejemplo real". Verificar contraste en dark mode y light mode
+  5. **Modal de detalle del cron** — click en card abre modal con bloque "Ejemplo real" antes de "¿Qué pasa si falla?" + tabla de últimas 10 ejecuciones
+  6. **OCR `auto_categorizar` trigger BD** — desactivar toggle en `/settings/modulos` para una org con OCR; subir factura recibida; verificar que `facturas.categoria` queda NULL aunque el LLM/n8n haya enviado categoría
+  7. **Conciliación `auto_marcar_cobradas` trigger BD** — con factura recibida en `sin_aprobar`/`pendiente` y movimiento bancario coincidente (mismo importe ±tolerancia, ±ventana_días), verificar transición automática a `estado='pagada'` + row en `module_events` tipo `factura_pagada_auto`
+  8. **Copiloto gate `orgHasFeature('copiloto')`** — con org Starter sin add-on activo: botón "Preguntar a IA" del topbar debe OCULTARSE; intentar abrir vía `window.dispatchEvent('open-ai-assistant')` desde consola NO debe abrir el chat; `POST /api/ai-assistant` debe devolver 403. Activar override `org_features` para esa org y verificar que vuelve a funcionar
+  9. **Copiloto `idioma` + `guardar_historial`** — cambiar idioma a `en` en `/settings/modulos`, mandar pregunta, verificar respuesta en inglés. Con `guardar_historial=true`, verificar rows en `copiloto_conversaciones` (user + assistant del mismo `thread_id`). Con `guardar_historial=false`, no debe persistir nada
+  10. **Cashflow `umbral_alerta_caja`** — configurar umbral alto (ej 50000€), forzar Run Now del cron `cashflow-alerts`, verificar notif `caja_baja` en campanita de org de control + row en `module_events`
+  11. **ModuloConfig defaults** — abrir modal de cualquier módulo con `org_module_config` vacío para esa org → toggles default-true (`auto_categorizar`, `auto_marcar_cobradas`, `incluir_recurrentes`, `guardar_historial`) deben mostrarse como ✅ "Activado" (NO "Desactivado" como antes del fix)
+  12. **Error handling save module config** — desconectar red, intentar guardar config → toast rojo de error (NO falso "✓ Guardado")
+  13. **Notif `cron_failed_<name>`** — provocar fallo intencional en un cron (ej desconfigurar URL en Dokploy temporalmente) → verificar notif en campanita de la org de control + entrada roja en panel `/admin/system/crons`
 - **Deploy 2026-05-07 (post)**:
   1. Anular factura emitida → ver abono ligado en banner rojo del modal + tab "Abonos" con count correcto
   2. Crear presupuesto/proforma desde `/generar` (serie P/F + Ver PDF sin 404)
