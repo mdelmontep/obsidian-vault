@@ -7,6 +7,38 @@ tags: [docker, traefik, dokploy, infra]
 
 # Docker / Infraestructura
 
+## Healthchecks en Alpine — `curl` no `wget`
+
+- `node:*-alpine` con `apk add curl` **no tiene `wget`**. Usar siempre `curl` en el test del healthcheck.
+- Correcto: `test: ["CMD", "curl", "-sf", "http://localhost:3000/api/health"]`
+- Incorrecto: `test: ["CMD", "wget", "-qO-", "..."]` → healthcheck falla silenciosamente, Docker nunca marca el contenedor healthy.
+
+## `depends_on: condition: service_healthy` solo para dependencias bloqueantes
+
+- Si el servicio tiene fallback (Redis → in-memory, BD externa → degraded), usar `depends_on: [redis]` sin condición.
+- Con `condition: service_healthy`, si Redis no levanta el app tampoco arranca → degraded se convierte en outage total.
+- Regla: `condition: service_healthy` solo cuando el servicio es literalmente imprescindible para que la app funcione (Postgres para n8n, sí. Redis para rate-limit con fallback, no).
+
+## Cloudflare DNS proxiado bloquea Let's Encrypt
+
+- Si el A record de un dominio tiene la nube naranja en Cloudflare (proxied), el ACME HTTP-01 challenge recibe `204` de Cloudflare en lugar del token → cert nunca emite.
+- Traefik logs: `invalid authorization: 403 ... Invalid response from http://dominio/.well-known/acme-challenge/...: 204`
+- Solución: poner el A record en **DNS only** (nube gris) ANTES de configurar Let's Encrypt. Una vez emitido el cert, se puede volver a proxiar si se quiere.
+- Caso real FacturaIA 2026-05-13: `tufacturaia.com` con DNS proxiado → cert bloqueado. Fix pendiente Dani.
+
+## GitHub App Dokploy — requiere owner de la org
+
+- La GitHub App de Dokploy debe crearse logueado con una cuenta que sea **owner** de la organización GitHub donde está el repo.
+- Si se crea con una cuenta personal sin ese rol, la org no aparece en la lista de instalación ("Install App").
+- Workaround si no tienes owner: usar Git + SSH deploy key en lugar de GitHub App (Dokploy → Git → `git@github.com:org/repo.git` → Add SSH Key → añadir public key en GitHub repo Settings → Deploy keys).
+- Caso real FacturaIA 2026-05-13: repo en `AgentesIA-MAdrid`, app creada con `mdelmontep` (no owner) → org no aparecía. Fix: crear app logueado como `AgentesIAMadrid` (owner de la org).
+
+## `NEXT_PUBLIC_*` vars en Dokploy requieren prefijo exacto
+
+- Son build args en docker-compose, no solo runtime envs. Sin el prefijo `NEXT_PUBLIC_` se inyectan como env runtime pero el bundle del browser las recibe vacías.
+- En Dokploy Environment Settings, la clave debe ser exactamente `NEXT_PUBLIC_SUPABASE_URL`, no `SUPABASE_URL`.
+- Síntoma: `env | grep SUPABASE` en el contenedor muestra `NEXT_PUBLIC_SUPABASE_URL=` (vacío) aunque en Dokploy UI esté con valor → el compose referencia `${NEXT_PUBLIC_SUPABASE_URL}` pero la UI tenía `SUPABASE_URL`.
+
 ## Dokploy — Compose vs UI Variables
 
 - Variables de la UI de Dokploy solo llegan al contenedor si el compose las referencia con `${VAR}`
@@ -135,6 +167,15 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 - **No hacer fetch HTTP a tu propia API dentro del contenedor** — DNS interno no resuelve el dominio público. Extraer lógica a función compartida e importar directamente.
 - **Alpine sin bash/curl** — `node:*-alpine` no trae ninguno. Para crons Dokploy via `docker exec`: Shell Type `sh` + `apk add --no-cache curl` en Dockerfile. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 
+## Dokploy AgentesIA — acceso SSH
+
+- **IP**: `185.47.13.166` · **Puerto**: `5251` (no 22)
+- **Usuario**: `root` · **Hostname**: `DOKPLOY-AGENTESIA`
+- **SO**: Ubuntu 5.15 · **Docker**: 29.4.0
+- **Key**: `~/.ssh/id_ed25519`
+- Comando: `ssh -p 5251 root@185.47.13.166`
+- Para autorizar la key de Claude: `ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 5251 root@185.47.13.166`
+
 ## Proyectos activos — mapa de infraestructura
 
 | Proyecto | Dominio n8n | Dominio Chatwoot | Servidor |
@@ -144,4 +185,5 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 | Tecnocloud | `n8n.tecnocloud.es` | `chatwoot.tecnocloud.es` | `185.47.13.165` |
 | Clinica Zen | `n8nclinicazen.agentesia.madrid` | — | `185.47.13.168` |
 | Simarro | `n8nsimarro.agentesia.madrid` | — | `185.47.13.168` |
-| FacturaIA | `n8n.agentesia.world` (compartido) | — | `185.99.186.76` |
+| FacturaIA (actual) | `n8n.agentesia.world` (compartido) | — | `185.99.186.76` |
+| FacturaIA-prod nuevo | (n8n se queda en `agentesia.world`) | — | `185.47.13.170` (VPS dedicado, Dokploy nuevo creado 2026-05-12, vacío al inicio) |

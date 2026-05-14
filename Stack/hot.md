@@ -104,6 +104,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Kommo webhook tras update n8n** — PUT al workflow rompe webhook, recrear. Ver [[kommo-webhook-deja-de-disparar-tras-update-n8n]]
 
 ### Infra (Dokploy / Docker)
+- **Dokploy AgentesIA SSH** — `ssh -p 5251 root@185.47.13.166` (no 22). Key `~/.ssh/id_ed25519`. Ver [[docker-infra]]
 - **Dokploy reload tras redeploy** — Bad Gateway hasta Traefik reload manual
 - **Alpine sin bash/curl** — `apk add` en Dockerfile para crons. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 - **Dokploy schedule comando** — `curl -H` corto vs `node -e` largo, word-wrap UI mete espacios. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]

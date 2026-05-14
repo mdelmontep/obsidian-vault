@@ -12,14 +12,43 @@ Plan estructurado en 9 fases. Calidad > velocidad. Cero atajos. Cada fase con ve
 ## Objetivos
 
 1. Mover FacturaIA del dominio `facturaia.agentesia.world` a `tufacturaia.com` (marca propia).
-2. Migrar a un contenedor Dokploy nuevo, aislado del actual.
-3. **Resolver 5 bugs estructurales de paso**:
+2. Migrar a un **VPS nuevo dedicado** (`185.47.13.170`, Dokploy fresh).
+3. **Migrar n8n también** a `n8n.tufacturaia.com` (en mismo Dokploy, proyecto separado).
+4. **Configurar Resend con dominio propio** desde el inicio (`tufacturaia.com` transaccional + `auth.tufacturaia.com` Supabase Auth).
+5. **Resolver 5 bugs estructurales de paso**:
    - Traefik reload manual tras cada redeploy (3 incidentes documentados en `Stack/docker-infra.md:48-59`).
    - Rate-limit in-memory (no escala multi-instancia).
    - Crons sin lock distribuido (race conditions con >1 réplica).
    - n8n SPOF (cae OCR, voz, email polling).
    - Puppeteer sin browser pool (browser nuevo por cada PDF).
-4. Aprovechar para subir nivel: Redis añadido, healthcheck real, GitHub auto-deploy webhook, observabilidad mínima.
+6. Aprovechar para subir nivel: Redis añadido, healthcheck real, GitHub auto-deploy webhook, observabilidad mínima.
+
+## Decisiones de arquitectura cerradas (2026-05-12)
+
+| Decisión | Valor |
+|---|---|
+| Host físico nuevo | ✅ VPS dedicado `185.47.13.170`, Dokploy creado limpio 2026-05-12 |
+| `api.tufacturaia.com` separado | ✅ Sí, desde día 1 |
+| Migrar n8n | ✅ Sí, mismo Dokploy nuevo, proyecto separado `n8n-prod` |
+| BD n8n | ✅ `pg_dump`/`pg_restore` + copiar `N8N_ENCRYPTION_KEY` para preservar credenciales |
+| Resend custom domain | ✅ Desde el inicio (no diferir a hardening) |
+| n8n.tufacturaia.com vs agentesia.world | ✅ Subdominio propio `n8n.tufacturaia.com` |
+
+## Layout final en Dokploy nuevo
+
+```
+Dokploy en 185.47.13.170
+├── Proyecto "facturaia-prod"
+│   ├── facturaia-app    → Host: tufacturaia.com
+│   ├── api-facturaia    → Host: api.tufacturaia.com (si separación física, sino router del mismo app)
+│   ├── pdf-renderer     → interno, red facturaia-internal
+│   └── redis            → interno, rate-limit + queue futuro
+└── Proyecto "n8n-prod"
+    ├── n8n              → Host: n8n.tufacturaia.com
+    └── postgres-n8n     → interno, red n8n-internal
+```
+
+Networks: `dokploy-network` (external) compartida entre proyectos para Traefik. Cada proyecto tiene además su propia red interna aislada.
 
 ## P0 previo — bloqueante antes de empezar
 
@@ -225,6 +254,44 @@ Antes de publicar: `wget http://localhost:3000/api/health` desde terminal Dokplo
 - Kill Redis → app degrada a in-memory rate-limit con warning, no rompe.
 
 **Salida F4**: staging validado E2E + caos, sin afectar prod viejo.
+
+---
+
+## Fase 5b — Flip atómico de n8n (paralelo o secuencial al flip app)
+
+n8n no soporta dos instancias activas procesando los mismos webhooks (duplicaría mensajes WhatsApp / Retell). El flip debe ser atómico.
+
+### Pre-requisitos
+- n8n-prod arrancado en Dokploy nuevo (Fase 3).
+- `N8N_ENCRYPTION_KEY` copiada literal del Dokploy viejo (sin esto, credenciales cifradas no descifran).
+- `pg_dump` del Postgres n8n viejo → `pg_restore` en Postgres n8n nuevo.
+- `n8n.tufacturaia.com` DNS publicado, Traefik enruta, Let's Encrypt OK.
+- Workflows cargados en n8n-prod pero **DESACTIVADOS** (paused) hasta el flip.
+
+### Validación previa al flip
+1. Acceder al editor n8n nuevo → confirmar que se ven los 7 workflows + sus credenciales (no aparecen como "broken credential").
+2. Ejecutar manualmente un workflow trivial (ej: `whatsapp-verify`) → confirma que Supabase/OpenAI credentials descifran y conectan.
+3. Verificar `voice_chat_bindings` y `voice_prompt_versions` se leen OK desde n8n nuevo.
+
+### Pasos del flip (5-15 min)
+1. **Pausar workflows en n8n viejo** (Settings → Workflows → Deactivate all).
+2. **Activar workflows en n8n nuevo** (Deactivate → Activate desde editor o API).
+3. **Meta WhatsApp dashboard**: webhook URL `n8n.agentesia.world/webhook/...` → `n8n.tufacturaia.com/webhook/...`. Verificar webhook con mensaje prueba inmediatamente.
+4. **Retell dashboard**: por cada agent_id en `voice_chat_bindings`, repuntar webhook URL al nuevo n8n.
+5. **agency-portal email forwarding** (si aplica): repuntar destino.
+6. **URLs internas en workflows**: env `FACTURAIA_APP_URL` en n8n-prod debe apuntar a `https://tufacturaia.com` (no al viejo). Verificar con `curl` desde dentro del contenedor.
+7. **Smoke E2E real**: enviar WhatsApp test al número público + grabar llamada Retell test → confirmar ambos procesan en n8n-prod (revisar Executions).
+
+### Rollback (<10 min si algo falla)
+1. Reactivar workflows en n8n viejo.
+2. Revertir Meta webhook al viejo URL.
+3. Revertir Retell webhook al viejo URL.
+4. Diagnóstico en n8n-prod sin presión.
+
+### Coexistencia post-flip (2 semanas como red)
+- n8n viejo permanece vivo con workflows pausados.
+- Cualquier mensaje que llegue por error al viejo NO se procesa (workflows desactivados) → mejor que duplicar.
+- Tras 2 semanas verde en el nuevo, apagar n8n viejo.
 
 ---
 
