@@ -250,3 +250,41 @@ Para latencia baja con escritura externa (Kommo, Calendar, WA), patrón:
 ### Code node modo
 - `runOnceForAllItems`: permite `$input.first()`, `$input.all()`, `$('NodeName').item.json`. Default y más versátil.
 - `runOnceForEachItem`: NO permite `$input.first()` — error `Can't use .first() here`. Solo si necesitas iterar item-by-item con `$json` y poco más.
+
+## Gotchas n8n LangChain 2.x (mayo 2026)
+
+### `@n8n/n8n-nodes-langchain.toolHttpRequest` typeVersion 1.1 — invocaciones secuenciales rotas
+Cuando el AI Agent invoca dos tools en la misma conversación con `jsonBody` que usa expressions tipo `={{ $('NodoX').first().json.Y }}`, el SEGUNDO tool peta con `The node "@n8n/n8n-nodes-langchain.toolHttpRequest" has a "supplyData" method but no "execute" method`. El primer tool funciona OK. El bug está en n8n-core `WorkflowExecute.runNode`: cae al fallback `execute()` cuando solo existe `supplyData`.
+
+Verificación: `grep -c "execute" .../ToolHttpRequest/ToolHttpRequest.node.js` → 0 (solo tiene `supplyData`).
+
+Workarounds:
+1. Esperar n8n 2.21+ con fix (typeVersion 1.2+).
+2. Migrar tools a `toolWorkflow` con sub-workflows (cada sub-workflow hace el HTTP con credential, devuelve JSON al agente). Más nodos pero estable.
+3. Mantener `toolCode` viejo (jsCode) con `$env.X` y aceptar `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` con threat model documentado. Pragmático.
+
+Caso real FacturaIA 2026-05-16: refactor para eliminar `$env.X` del workflow Receptor v2 reveló este bug. Rollback al estado pre-refactor + deuda documentada en hub.
+
+### `$fromAI()` en jsonBody requiere `placeholderDefinitions` o falla igual
+El error "supplyData but no execute" también lo dispara `$fromAI('param', 'desc', 'string')` en el body sin declarar el placeholder. Para que funcione: añadir `placeholderDefinitions.values` con cada param.
+
+### `N8N_BLOCK_ENV_ACCESS_IN_NODE=true` no sandboxea Code node contra `process.env`
+El flag solo bloquea `$env.X` en expressions. Un Code node puede hacer `process.env.X` o `require('child_process').execSync('env')` y leer todo igual. **No es medida de seguridad real ante RCE en n8n container** — solo protege contra "editor n8n con permisos limitados", escenario que NO existe en Community Edition single-admin.
+
+Documentar el flag como "defensa marginal" en threat model, no como bloqueante.
+
+### Envs en n8n Dokploy: doble registro obligatorio
+Para que el container lea una env:
+1. Pestaña **Environment** del proyecto Dokploy → añadir `VAR=valor`.
+2. Pestaña **Compose** → en `environment:` añadir `- VAR=${VAR}` (referencia, Dokploy sustituye al Deploy).
+
+Si solo está en Environment pero NO referenciado en compose, el container no la recibe. Diagnóstico: `docker exec <ct> printenv VAR` debe devolver el valor.
+
+### n8n Dokploy Deploy real vs Reload
+- **Deploy**: recrea el container con compose nuevo. Usar siempre tras editar Compose o Environment.
+- **Reload**: solo recarga el panel, NO toca containers.
+- **Diagnóstico post-Deploy**: `docker ps --format "{{.Names}} {{.Status}}"` debe mostrar "Up xxs/min" (recién creado). Si sigue "Up xxh", Deploy NO recreó (típicamente porque no se pulsó Save antes de Deploy, o no se editó realmente nada).
+
+### Bypass SSH a compose es temporal
+Modificar `/etc/dokploy/compose/<stack>/code/docker-compose.yml` via SSH funciona para el siguiente `docker compose up -d --force-recreate`, pero Dokploy regenera el archivo desde su BD interna en el siguiente Deploy del panel. Bypass solo de emergencia; el cambio permanente vive en el panel.
+

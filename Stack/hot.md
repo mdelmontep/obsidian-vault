@@ -84,6 +84,9 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Impersonation proxy** — cookie `impersonate_org`, `useOrgClient()` hook. Ver [[facturaia-impersonation-proxy-client]]
 - **Puppeteer PDF** — browser singleton, dynamic imports, no self-fetch en Docker. Ver [[puppeteer-html-to-pdf-pixel-perfect-con-plantillas-react]]
 - **openapi-fetch ternary** — TS no narrowea con cliente condicional. Ver [[openapi-fetch-ternary-rompe-narrowing-typescript]]
+- **Meta template language es_ES** — "Spanish (SPA)" se aprueba como es_ES, no es. Enviar exacto o 132001. Ver [[meta-whatsapp-template-language-spanish-es-es]]
+- **Observabilidad fallback** — conservar error del canal primario aunque el fallback rescate, o ceguera invisible. Ver [[observabilidad-fallback-conservar-error-canal-primario]]
+- **Next.js throw module-load** — `throw` en top-level de route.ts crashea build "Collecting page data". Lazy o fallback. Ver [[nextjs-throw-module-load-rompe-build-collecting-page-data]]
 
 ### n8n
 - **Wait vacío = stuck** — `parameters:{}` cuelga ejecución. PUT con `resume:timeInterval`. Ver [[n8n-wait-node-vacio-webhook-type-stuck]]
@@ -109,6 +112,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Alpine sin bash/curl** — `apk add` en Dockerfile para crons. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 - **Dokploy schedule comando** — `curl -H` corto vs `node -e` largo, word-wrap UI mete espacios. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]
 - **Supabase JWT vs sb_secret** — `sb_secret_*` no vale Bearer directo, JWT legacy. Ver [[supabase-sb-secret-vs-jwt-http]]
+- **Dokploy BuildKit cache invencible** — `COPY . .` cacheado aunque src/ cambie. Bump `package.json.version`. Ver [[dokploy-buildkit-cache-invencible-bump-package-json]]
 
 ## 2026-05-10 — voz Retell + n8n + Kommo (sesión Simarro Ana)
 - [[retell/voice-config-inbound-castellano]] — config canónica voice agent inbound castellano (Flash v2.5, timeouts, fillers, triage de patinazos, compresión prompt 38%)
