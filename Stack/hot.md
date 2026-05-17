@@ -107,7 +107,9 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Kommo webhook tras update n8n** — PUT al workflow rompe webhook, recrear. Ver [[kommo-webhook-deja-de-disparar-tras-update-n8n]]
 
 ### Infra (Dokploy / Docker)
-- **Dokploy AgentesIA SSH** — `ssh -p 5251 root@185.47.13.166` (no 22). Key `~/.ssh/id_ed25519`. Ver [[docker-infra]]
+- **Dokploy AgentesIA SSH** — `ssh -p 5251 root@185.47.13.166` (viejo) / `root@185.47.13.170` (nuevo FacturaIA). Key `~/.ssh/id_ed25519`. Ver [[docker-infra]]
+- **Dokploy pegar compose duplica líneas** — al pegar YAML completo el editor corrompe la inserción. Verificar archivo en disco tras Save. Ver [[dokploy-paste-compose-corruption]]
+- **`docker compose up -d` NO recrea container si solo cambia valor de `${VAR}`** — `--force-recreate` obligatorio. Ver [[docker-compose-env-not-recreate]]
 - **Dokploy reload tras redeploy** — Bad Gateway hasta Traefik reload manual
 - **Alpine sin bash/curl** — `apk add` en Dockerfile para crons. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 - **Dokploy schedule comando** — `curl -H` corto vs `node -e` largo, word-wrap UI mete espacios. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]

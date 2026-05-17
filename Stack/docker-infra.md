@@ -169,12 +169,15 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 
 ## Dokploy AgentesIA — acceso SSH
 
-- **IP**: `185.47.13.166` · **Puerto**: `5251` (no 22)
-- **Usuario**: `root` · **Hostname**: `DOKPLOY-AGENTESIA`
-- **SO**: Ubuntu 5.15 · **Docker**: 29.4.0
-- **Key**: `~/.ssh/id_ed25519`
-- Comando: `ssh -p 5251 root@185.47.13.166`
-- Para autorizar la key de Claude: `ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 5251 root@185.47.13.166`
+| Host | IP | Puerto SSH | Uso |
+|---|---|---|---|
+| Dokploy viejo | `185.47.13.166` | `5251` | n8n compartido, AgentesIA, Tecnocloud, Simarro |
+| Dokploy nuevo FacturaIA | `185.47.13.170` | `5251` | `app.tufacturaia.com`, `n8n.tufacturaia.com` (desde 2026-05-13) |
+
+- **Usuario**: `root` · **Key**: `~/.ssh/id_ed25519` (mismo en ambos)
+- Comando: `ssh -p 5251 root@<IP>`
+- Para autorizar la key: `ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 5251 root@<IP>`
+- Si puerto 22 da `Connection refused` → es porque SSH escucha en `5251`. NO port-scan (bloqueado por Claude classifier + ruidoso).
 
 ## Proyectos activos — mapa de infraestructura
 
