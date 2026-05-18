@@ -67,3 +67,7 @@ tags: [home, archivo]
 - FacturaIA: Fases 1-5 completadas
 - FacturaIA: rediseño visual completo
 - CLAUDE.md global optimizado
+
+## 2026-05-18
+
+- FacturaIA — smoke test post-deploy 2026-05-07 (5 puntos auditados OK + fix borrador anular + 7 E2E tests). Cubierto por sesión cumplimiento fiscal full.

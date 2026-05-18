@@ -10,7 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
-- **FacturaIA — smoke test post-deploy 2026-05-07** — pendiente: (1) anular factura emitida → ver abono ligado en banner rojo del modal + tab "Abonos" con count correcto; (2) crear presupuesto/proforma desde `/generar` (serie P/F + Ver PDF sin 404); (3) probar 3er botón "Emitir como pendiente" (Verifactu sí, email no, estado=`pendiente`); (4) dashboard KPIs no inflados con borradores; (5) menú 3 puntitos sin Editar/Eliminar en factura emitida, sin Anular en abono. Tests Vitest pendientes: proformas + abonos rectificativos
+- **Centro Elphis — nuevo cliente Agentesia (voz + chat + CRM + agenda)** — diseño cerrado en `/Users/manueldelmonte/elphis/CLAUDE.md`. Stack: Retell + ElevenLabs ES + Twilio · Chatwoot + 360dialog · Clientify único CRM · Google Calendar como agenda-service (Doctoralia sin API, ver [[ADR-001-doctoralia-google-calendar]]) · n8n + Postgres dedicados en Dokploy. Pendiente: confirmar 8 bloqueantes con Elphis ([[bloqueantes-elphis]]) + arrancar Fase 0 Dokploy. HUB: [[clientes/centro-elphis/index|Centro Elphis HUB]]
 - **agency-portal — verificar extracción onboarding en prod tras PR #67** — REO RAFTING en curso. Confirmar que "Progreso por sección" y "Respuestas extraídas" se rellenan tras cada turno con dato extraíble. Si aparece `activity_event.action='onboarding.extraction_failed'`, abrir issue
 
 ## NEXT (próximas 2 semanas)
@@ -55,7 +55,7 @@ _(ninguno activo)_
 
 ## Vistas por cliente
 
-- [[facturaia]] · [[agentesia]] · [[simarro]] · [[clinica-zen]] · [[tecnocloud]]
+- [[facturaia]] · [[agentesia]] · [[simarro]] · [[clinica-zen]] · [[tecnocloud]] · [[clientes/centro-elphis/index|centro-elphis]]
 
 ## Completado reciente
 
