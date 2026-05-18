@@ -23,6 +23,8 @@ tags: [supabase, saas, facturaia]
 - **Templates con tokens en PL/pgSQL** — `replace()` deja literal lo desconocido. Validar con CHECK + función `is_valid_*` en BD, en API (allowlist TS) y UI. Ver [[postgres-template-tokens-replace-simple-no-rechaza-desconocidos]]
 - **Sanitizar caracteres en `.or()` y `.ilike()`** — `%_,():.\\*"` son sintaxis PostgREST. Antes de pasar `q` del usuario: `q.replace(/[%_]/g, c => '\\' + c).replace(/[,():.\\*"]/g, ' ')`. Sin esto, comillas o paréntesis en search rompen la query o permiten inyección lógica.
 - **`NOTIFY pgrst, 'reload schema';` al final de migrations con columna nueva** — sin él PostgREST responde 404 `PGRST204` en INSERTs aunque SELECT lea bien. Ver [[postgrest-schema-cache-notify-tras-migration]]
+- **`.maybeSingle()` devuelve null sin throw visible si hay >1 filas** — solo seguro con constraint UNIQUE. Si la query puede tener múltiples matches, usar `.limit(1).order(...)` explícito. Ver [[supabase-maybesingle-devuelve-null-si-multiples-filas]]
+- **`.or()`/`.eq()` con `+` en el valor desde REST manual requiere `%2B`** — cliente JS lo encoda solo; curl/fetch directos no. Síntoma: query devuelve 0 filas aunque la fila exista. Ver [[postgrest-or-con-plus-url-encoding]]
 
 ## Migrations CLI
 

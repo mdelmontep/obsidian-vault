@@ -27,3 +27,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 001 · 2026-05-11 · [[ADR-001-cron-observability|Observabilidad de crons via tabla cron_runs + Dokploy externo]] (FacturaIA)
 - 002 · 2026-05-18 · [[ADR-002-bot-state-machine-postgres|State machine conversacional del bot WhatsApp en Postgres chat_state]] (FacturaIA)
 - 003 · 2026-05-18 · [[ADR-003-slot-resolver-determinista|Slot resolver determinista pre-LLM con regex en español]] (FacturaIA)
+- 004 · 2026-05-18 · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding|Tool calling con tool_choice forzado para extracción estructurada]] (agency-portal)

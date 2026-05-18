@@ -12,7 +12,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **FacturaIA — pestaña notificaciones por org** — siguiente paso natural. Inbox unificado: anomalías OCR + sugerencias IA + vencimientos + errores. Campana topbar + drawer feed. Base ya construida (`module_events`). ~1-2 días. Spec: `docs/MODULOS-PRODUCTO.md`
 - **FacturaIA — smoke test post-deploy 2026-05-07** — pendiente: (1) anular factura emitida → ver abono ligado en banner rojo del modal + tab "Abonos" con count correcto; (2) crear presupuesto/proforma desde `/generar` (serie P/F + Ver PDF sin 404); (3) probar 3er botón "Emitir como pendiente" (Verifactu sí, email no, estado=`pendiente`); (4) dashboard KPIs no inflados con borradores; (5) menú 3 puntitos sin Editar/Eliminar en factura emitida, sin Anular en abono. Tests Vitest pendientes: proformas + abonos rectificativos
-- **agency-portal PRs abiertos** — #54 quotes actions, #55 actor passthrough, #56 unificación facturas (hoy). Esperando review Borja. Tras merge #54: regen `types.gen.ts`, quitar 3 `as never`, migration `quotes.converted_facturaia_factura_id` + populate
+- **agency-portal — verificar extracción onboarding en prod tras PR #67** — REO RAFTING en curso. Confirmar que "Progreso por sección" y "Respuestas extraídas" se rellenan tras cada turno con dato extraíble. Si aparece `activity_event.action='onboarding.extraction_failed'`, abrir issue
 
 ## NEXT (próximas 2 semanas)
 
@@ -27,6 +27,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **FacturaIA OTP — copiar `docs/legal/privacy-otp-update.md`** a política privacidad pública (RGPD art 13)
 - **FacturaIA OTP — smoke tests restantes** — cambio teléfono re-auth, fallback forzado provider_degraded_until, banner grandfathering visual, superadmin impersonando bypass, lockout 15min
 - **FacturaIA — Daily Briefing trigger → escribe `00-home/daily-briefing.md`** — comando `/daily` listo. Falta cron Dokploy o trigger automático
+- **agency-portal — fix estructural n8n router consulta Supabase como source of truth** — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint nuevo `/api/onboarding/is-active-by-phone` + nodo HTTP en router del workflow `ChatBOT mejorado` antes del IF de Activo + Redis pasa a caché con re-seed si portal dice activa. Ver [[Stack/n8n]] + [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
 - **agency-portal #56 smoke test post-merge** — badge fiscal en row, redirect 301 `/agency/facturaia/*`, botones según estado/origen, modal motivo R1-R5 obligatorio, doble-click sin duplicar (Idempotency-Key)
 - **FacturaIA #47 smoke test prod** — verificar entries en `audit_log` tras marcar cobrada / reenviar email / anular / DELETE vía API v1
 - **Agentesia chatbot ticketing — test cliente real** — pedir teléfono al cliente "Soporte técnico" + verificar respuestas AI a TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`

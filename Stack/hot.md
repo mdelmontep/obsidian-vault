@@ -58,6 +58,9 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Next.js route handlers solo permiten exports estándar** — exportar helper desde `route.ts` rompe typecheck. Mover a archivo aparte o privado. Ver [[claude-code-gotchas]]
 
 ### FacturaIA / agency-portal
+- **Zod nullishOptional para webhooks n8n** — `.optional()` no admite `null` y n8n manda `null` para vacíos → 400. Helper `s.nullish().transform(v => v ?? undefined)`. Ver [[zod-optional-rechaza-null-en-webhooks-n8n]]
+- **Tool calling con tool_choice forzado para extracción LLM** — elimina silent fail vs regex sobre texto libre. `gpt-4o-2024-11-20` + Structured Outputs strict. Ver [[llm-tool-calling-elimina-silent-fail-extraccion-estructurada]]
+- **source_quote anti-alucinación** — exigir cita literal del usuario por campo extraído elimina invenciones. Ver [[llm-source-quote-anti-alucinacion-extraccion]]
 - **Observabilidad destapa bugs viejos** — añadir `cron_runs` reveló `storage-quota-check` fallando hace meses. Ver [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]]
 - **Admin tooling no-técnico** — semáforo verde/ámbar/rojo + descripción español + ejemplo real + sin botones destructivos. Ver [[admin-tooling-para-no-tecnicos-read-only-semaforo-ejemplos]]
 - **Webhook delete híbrido** — hard si no disparó, soft si tiene historial. Ver [[webhook-delete-hibrido-hard-si-no-disparo-soft-si-tiene-historial]]

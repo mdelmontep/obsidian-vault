@@ -29,6 +29,8 @@ tags: [n8n, kommo, workflows, api]
 - **Headers HTTP con `{{ $env.X }}` requieren `=` al inicio del valor** — sin el `=`, n8n manda literal `Bearer {{ $env.X }}` y la API rechaza con 401. El `jsonBody` ya lleva `=` por defecto, los headers no
 - **Redis GET node devuelve `$json.propertyName`, no `$json.value`** — IFs con `$json.value notEmpty` siempre dan FALSE pese a haber clave. Usar `$json.propertyName`
 - **Claves Redis cross-workflow: normalizar el phone igual en productor y consumidor** — uno guarda `aia_ob:617314938`, otro busca `aia_ob:34617314938` → mismatch silencioso. Centralizar normalización (siempre con prefijo país)
+- **`$json.foo || null` en jsonBody manda `null` literal al destino** — si el receptor usa Zod `.optional()` plano falla con 400. Usar `nullishOptional()` en el receptor o construir el body con `if (val) obj.key = val` para omitir clave. Ver [[zod-optional-rechaza-null-en-webhooks-n8n]]
+- **TTL Redis para flags cross-workflow ≠ ventana 24h Meta** — si el lifecycle del flag depende de respuesta del cliente (p. ej. `aia_ob:{phone}` para routing de onboarding), 24h se queda corto: cliente tarda más, expira, próximos mensajes ramifican al bot normal. Subir a 30d como tirita; fix estructural = consultar BD como source of truth, Redis como caché
 
 ## Kommo
 
