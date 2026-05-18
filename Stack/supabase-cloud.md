@@ -25,6 +25,7 @@ tags: [supabase, saas, facturaia]
 - **`NOTIFY pgrst, 'reload schema';` al final de migrations con columna nueva** — sin él PostgREST responde 404 `PGRST204` en INSERTs aunque SELECT lea bien. Ver [[postgrest-schema-cache-notify-tras-migration]]
 - **`.maybeSingle()` devuelve null sin throw visible si hay >1 filas** — solo seguro con constraint UNIQUE. Si la query puede tener múltiples matches, usar `.limit(1).order(...)` explícito. Ver [[supabase-maybesingle-devuelve-null-si-multiples-filas]]
 - **`.or()`/`.eq()` con `+` en el valor desde REST manual requiere `%2B`** — cliente JS lo encoda solo; curl/fetch directos no. Síntoma: query devuelve 0 filas aunque la fila exista. Ver [[postgrest-or-con-plus-url-encoding]]
+- **Leer credenciales cifradas en BD prod desde local sin pegarlas en chat** — helper Node carga `.env.local`, fetch a `platform_credentials` con `SUPABASE_SERVICE_ROLE_KEY`, descifra con `CREDENTIAL_ENCRYPTION_KEY` (AES-256-GCM, formato `v1:iv:tag:ct` base64url) y emite plaintext a stdout. Wrapper bash: `SECRET="$(node scripts/_get-secret.mjs)" bash smoke.sh`. Valor nunca pasa por chat ni stdout visible.
 
 ## Migrations CLI
 
