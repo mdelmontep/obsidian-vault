@@ -50,6 +50,21 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — toggle Verifactu fix (2026-05-19, PR #48)
+- **Duplicado columna ↔ JSON settings nunca dura** — `verifactu_activo` (columna) + `settings.fiscal.verifactu` (JSON) → bug clásico: lectura defensiva `!== false` reactiva el flag silenciosamente cuando el JSON no tiene la clave. Fuente única, siempre. Ver [[Stack/facturaia]] "Toggle Verifactu".
+- **Policy `org_member_update` permite UPDATE a CUALQUIER miembro** — sin distinguir rol. Para columnas regulatorias (Verifactu, entorno AEAT, etc.) el riesgo es real: cualquier becario apaga el envío a AEAT desde DevTools. Mitigación: trigger BEFORE UPDATE con guard de rol + API route con `requireRole`. Revisar otras columnas críticas (`regimen_iva`, `nif`, `iae`).
+- **Trigger SQL captura IP via `current_setting('request.headers')`** — Supabase inyecta los headers HTTP en el GUC de sesión cuando viene del PostgREST. En SQL directo (psql, cron, migrations) el GUC no existe → wrap en `BEGIN…EXCEPTION WHEN OTHERS THEN v_ip:=NULL; END`. Útil para auditoría regulatoria.
+- **Worktree desde `origin/main` cuando local diverge** — `git worktree add .worktrees/X origin/main -b fix/clean` evita arrastrar commits locales no pusheados al PR. Patrón canónico cuando hay sprint pre-cutover con commits acumulados.
+- **`gh auth switch -u AgentesIAMadrid`** antes de tocar repo FacturaIA via gh CLI. Default `mdelmonteagentesia` da 404.
+
+### facturaia / fiscal AEAT Sprint 3 audit
+- **RPC SQL atómico para multi-INSERT con triggers** — `admin.rpc()` con `SECURITY DEFINER` envuelve N INSERTs en 1 transacción; advisory_xact_lock sobrevive hasta COMMIT del RPC. Cierra race entre triggers BEFORE/AFTER. Ver [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]]
+- **UNIQUE INDEX CONCURRENTLY parcial anti-doble-create** — `WHERE col=valor` partial + catch SQLSTATE 23505 → idempotente a nivel BD. Smoke previo crítico para evitar INVALID. Ver [[unique-index-concurrently-parcial-para-idempotencia-bd]]
+- **LLM error categorizar antes que loggear** — buckets accionables (timeout/rate_limit/auth_error/provider_unreachable/unknown) + log estructurado con propiedades primitivas. NUNCA `console.error('...', err)` con objeto crudo. Ver [[llm-error-categorizar-no-exponer-crudo-a-logs]]
+
+### claude-code workflow
+- **Sesiones paralelas mismo repo causan colisiones git** — verificar `git branch --show-current` + `ls migrations/0XX*` antes de cada commit/Write; stage explícito por path, nunca `-A`. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]
+
 ### facturaia / mobile a11y
 - **vh → dvh cascada doble declaración**, no `min()` atómico — Safari <15.4 descarta `min()` entero si no soporta `dvh`. Ver [[mobile-vh-dvh-cascade-vs-min-atomic-safari-15]]
 - **`inert` + `aria-hidden` complementarios** en main cuando drawer mobile abierto — `inert` no funciona en iOS 15.0-15.4. Ver [[mobile-inert-plus-aria-hidden-ios-15-fallback]]

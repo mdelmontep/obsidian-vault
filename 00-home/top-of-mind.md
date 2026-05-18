@@ -22,13 +22,15 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **FacturaIA — decidir cliente live vs congelado** — hoy snapshot fiscal al crear factura (datos cliente embebidos). Si editas cliente, PDFs viejos conservan datos antiguos (legalmente correcto, confunde UX). Decisión producto: ¿añadir botón "Re-emitir con datos actuales" o dejar congelado siempre?
 - **FacturaIA — manuales actualizar Bloque 1** — `manual-usuario.md` y `manual-admin.md` describen flujo viejo: 2 botones generar (no 3 con "Emitir como pendiente"), no mencionan anular ni tab Abonos ni los nuevos pills/badges
 - **FacturaIA OTP — patch n8n delivery status** — generar key nueva en `n8n.tufacturaia.com/Settings/API` y ejecutar `python3 ops/n8n-patches/apply-delivery-status.py` (~5min)
-- **FacturaIA OTP — quitar dominio viejo `facturaia.agentesia.world`** Dokploy Domains + DNS IONOS (causa confusión testing, mismo prod)
+- **FacturaIA — quitar dominio viejo `facturaia.agentesia.world` de DNS/Dokploy** — **confirmado 2026-05-18: ya devuelve 404** (no sirve nada, misma BD que el nuevo). Sigue en DNS IONOS y como entrada Dokploy. Limpiar para evitar confusión futura
 - **FacturaIA OTP — copiar `docs/legal/privacy-otp-update.md`** a política privacidad pública (RGPD art 13)
 - **FacturaIA OTP — smoke tests restantes** — cambio teléfono re-auth, fallback forzado provider_degraded_until, banner grandfathering visual, superadmin impersonando bypass, lockout 15min
 - **FacturaIA — Daily Briefing trigger → escribe `00-home/daily-briefing.md`** — comando `/daily` listo. Falta cron Dokploy o trigger automático
 - **agency-portal — fix estructural n8n router consulta Supabase como source of truth** — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint nuevo `/api/onboarding/is-active-by-phone` + nodo HTTP en router del workflow `ChatBOT mejorado` antes del IF de Activo + Redis pasa a caché con re-seed si portal dice activa. Ver [[Stack/n8n]] + [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
 - **agency-portal #56 smoke test post-merge** — badge fiscal en row, redirect 301 `/agency/facturaia/*`, botones según estado/origen, modal motivo R1-R5 obligatorio, doble-click sin duplicar (Idempotency-Key)
 - **FacturaIA #47 smoke test prod** — verificar entries en `audit_log` tras marcar cobrada / reenviar email / anular / DELETE vía API v1
+- **FacturaIA #48 smoke test prod** (mergeado 2026-05-19, mig 095 aplicada) — (1) Settings → Fiscal → toggle Verifactu off → confirm dialog → Guardar → recargar → persiste. (2) Con usuario rol `solo_lectura`/`comercial`: PUT `/api/settings/verifactu` → 403. (3) Cambio deja fila en `audit_log` con `accion='verifactu_settings_changed'`, `user_id`, `ip`, `user_agent`, `detalles.{verifactu_activo,entorno_verifactu}.{old,new}`
+- **FacturaIA — auditar otras columnas regulatorias con misma vulnerabilidad que Verifactu tenía** — `org_member_update` policy permite UPDATE a cualquier miembro. Candidatos a proteger con trigger guard de rol + auditoría: `regimen_iva`, `nif`, `iae`, `verifactu_num_instalacion`, `entorno_verifactu`. Ver [[Stack/facturaia]] "Vulnerabilidad latente"
 - **Agentesia chatbot ticketing — test cliente real** — pedir teléfono al cliente "Soporte técnico" + verificar respuestas AI a TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
 - **Simarro — preguntar a Ramón** — (1) ¿Citas: bot reserva directo o fecha provisional? (2) ¿Pipeline Kommo actual vale o ajustes?
 - **Simarro — verificar salesbot 88183** — comprobar acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
@@ -43,7 +45,6 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **FacturaIA — Google OAuth email por org** — cada org envía desde su email via Gmail API
 - **FacturaIA — Canales Ingesta + Plan/Facturación** (spec 2026-04-24) — rediseño canales sin toggles, página planes reales con método pago e historial
 - **FacturaIA — Conciliación bancaria IA** (spec 2026-04-21) — 5 tablas, pipeline Claude 2 fases, UI aprobación por lotes
-- **FacturaIA cleanup mockup AgentesiaLab** — plan SQL elaborado, retomar cuando quieras. Org `ea201784-...`
 - **Tecnocloud — WhatsApp en FacturaIA** — phone_number_id de Meta + webhook override
 - **Simarro — IDs TODO en n8n** — TASK_TYPE_ID, RESPONSIBLE_USER_ID, SHEET_ID_LEADS_WEB, calendar de Ramón, Supabase pending
 - **Simarro — oportunidad monitor inmuebles** (StateFox) — scraping Idealista/Fotocasa + alertas precio/m²/zona. Confirmar interés y presupuesto
