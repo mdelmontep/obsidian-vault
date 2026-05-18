@@ -43,10 +43,18 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **PR review stale** — el reviewer puede haber pusheado fixes propios. `git log origin/<rama> -5` antes de actuar. Ver [[pr-review-ya-resuelta-por-el-reviewer-mismo]]
 - **Enum fiscal hardcoded en UI** — botón hardcodea R5 = falsifica motivos R1-R5 en Verifactu. Modal select obligatorio. Ver [[enum-legal-hardcodeado-en-ui-falsifica-motivos]]
 - **Estado fiscal con sombra externa** — cuando hay shadow emitida, acciones de estado van vía sistema externo, no local. Ver [[acciones-de-estado-fiscal-vs-sombra-en-sistema-externo]]
+- **Validar input antes de RPC atómico** — validación post-RPC que falla quema contador atómico y deja hueco no recuperable (fiscal AEAT). Orden: input → reads-que-niegan → RPC → INSERT. Ver [[validar-input-antes-de-rpc-atomico-e-insert]]
+- **Mock Supabase fail-fast** — terminales sin respuesta devuelven error explícito, no `{data:null,error:null}`. Fuerza encolar en orden, evita falsos positivos. Ver [[mock-supabase-fail-fast-default-en-tests-vitest]]
 
 ## 🔥 Últimas 2 semanas
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
+
+### facturaia / mobile a11y
+- **vh → dvh cascada doble declaración**, no `min()` atómico — Safari <15.4 descarta `min()` entero si no soporta `dvh`. Ver [[mobile-vh-dvh-cascade-vs-min-atomic-safari-15]]
+- **`inert` + `aria-hidden` complementarios** en main cuando drawer mobile abierto — `inert` no funciona en iOS 15.0-15.4. Ver [[mobile-inert-plus-aria-hidden-ios-15-fallback]]
+- **Restore-focus tras `inert` necesita `requestAnimationFrame`** — WebKit descarta `.focus()` sobre elemento aún inert. Ver [[mobile-restore-focus-after-inert-needs-raf]]
+- **Tablas scroll-x necesitan `role="region" tabIndex={0} aria-label`** — WCAG 2.1.1 keyboard. Clase reusable `.set-table-wrap`. Ver [[mobile-table-scroll-x-needs-region-tabindex-wcag-2-1-1]]
 
 ### panel-tecnocloud / Retell
 - **Retell webhook signing** — `HMAC-SHA256(api_key, body + timestamp)` concat sin separador. Header `v=<ts_ms>,d=<hex>`. Ver [[retell-webhook-firma-hmac-body-mas-timestamp]]

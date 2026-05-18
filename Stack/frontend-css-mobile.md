@@ -33,6 +33,35 @@ tags: [frontend, css, mobile, overflow]
 
 - **Popover dentro de modal con `overflow: hidden` se corta** — el ancestro clipa al popover absoluto. Soluciones: portal con `position: fixed` + `getBoundingClientRect`, o disclosure inline (el popover es un `<div>` siguiente que empuja contenido). Inline es más simple y mejor en móvil. Ver [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]]
 
+## `dvh` y viewports dinámicos iOS
+
+- **Cascada doble declaración `vh` → `dvh`, NUNCA `min(vh, dvh)` atómico**. Safari <15.4 no soporta `dvh`; si va dentro de `min()` la función entera se descarta y la propiedad queda sin valor. Patrón seguro:
+  ```css
+  max-height: calc(100vh - 240px);     /* fallback */
+  max-height: calc(100dvh - 240px);    /* gana donde haya soporte */
+  ```
+  Si el valor vive en `style={{...}}` inline (React) no se puede declarar dos veces → mover a clase CSS. Caso real: `voz-variables-form.tsx` con `min(calc(100vh-240px), calc(100dvh-240px))` → rompía el modal entero en Safari 15.0-15.3. Ver [[mobile-vh-dvh-cascade-vs-min-atomic-safari-15]].
+
+## Drawer mobile a11y — `inert` + `aria-hidden` + restore-focus
+
+- **`inert` + `aria-hidden` complementarios**. `inert` (Safari 15.5+, Chrome 102+) bloquea Tab + interacción puntero, pero iOS 15.0-15.4 lo ignora. Añadir `aria-hidden={open || undefined}` en paralelo cubre VoiceOver en esa franja:
+  ```jsx
+  <main inert={open || undefined} aria-hidden={open || undefined}>
+  ```
+- **Restore-focus tras `inert` debe ir en `requestAnimationFrame`**. WebKit descarta silenciosamente `.focus()` sobre un elemento aún `inert`. Si haces `setOpen(false)` + `trigger.focus()` en el mismo tick, React aún no ha re-renderizado → focus se pierde. Patrón: `useRef` previo + `useEffect` con `requestAnimationFrame` para focusear tras el re-render. Ver [[mobile-restore-focus-after-inert-needs-raf]].
+- **Focus trap real**: al abrir drawer, focus al primer interactivo (X de cerrar). Listener `keydown` en el aside que cicla Tab/Shift+Tab entre primer y último focusable (`querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')`). Sin trap el foco escapa al body cuando llega al último link.
+
+## Tablas con scroll horizontal y WCAG 2.1.1
+
+- **Wrapper `<div role="region" tabIndex={0} aria-label="...">`** alrededor de `<table>` con `overflow-x: auto`. Sin `tabIndex={0}` el usuario de teclado no puede hacer scroll horizontal — falla WCAG 2.1.1 (Keyboard). El `<table>` mantiene su role implícito intacto. Patrón:
+  ```jsx
+  <div className="set-table-wrap" role="region" tabIndex={0} aria-label="Tabla de usuarios">
+    <table style={{ minWidth: 600 }}>...</table>
+  </div>
+  ```
+  CSS: `.set-table-wrap { overflow-x: auto; border-radius: inherit; } .set-table-wrap:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }`. Una clase reusable evita el patrón de 5 inline-styles duplicados. Ver [[mobile-table-scroll-x-needs-region-tabindex-wcag-2-1-1]].
+- **`WebkitOverflowScrolling: 'touch'`** es legacy (iOS 13+ default). No daña pero contamina — eliminar.
+
 ## Mobile Auth — Inputs y touch targets
 
 - **iOS zoom = `font-size < 16px` en inputs** — Safari auto-hace zoom cuando el input enfocado tiene font-size < 16px. Fix definitivo: `font-size: 16px` en todos los `input`, `select`, `textarea` en la hoja global.

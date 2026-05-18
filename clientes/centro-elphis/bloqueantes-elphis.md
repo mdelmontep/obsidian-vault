@@ -1,23 +1,48 @@
 ---
-title: Centro Elphis — Bloqueantes pendientes
+title: Centro Elphis — Estado de bloqueantes
 date: 2026-05-18
-source: síntesis tras diseño completo
-tags: [elphis, bloqueantes, todo]
+source: tras envío de propuesta a Borja y Dani
+tags: [elphis, bloqueantes, todo, decisiones]
 ---
 
-# Bloqueantes a confirmar con Centro Elphis
+# Estado de bloqueantes · Centro Elphis
 
-Sin esto no se puede arrancar fases técnicas más allá de Fase 0 (infra Dokploy).
+## Resueltos por el onboarding firmado o por decisión Manu
 
-1. **Horario del centro** — L-V, S, festivos locales Madrid. Define modo "fuera de horario" del bot.
-2. **Modalidades/servicios y duraciones** — listado oficial (valoración inicial gratuita, terapia individual, grupal, familiar, online…) para mapear a slots Google Calendar.
-3. **Cuenta Clientify** — ¿ya contratada? Plan con API habilitada, API key, lista de custom fields permitidos.
-4. **Google Calendar del profesional** — ¿OAuth sobre el calendar existente vinculado a Doctoralia, o creamos `agenda-elphis@agentesia.madrid` dedicado y lo enlazamos a Doctoralia?
-5. **DPA / RGPD art. 9** — encargado de tratamiento firmado con Retell, OpenAI y 360dialog. Texto legal de grabación a reproducir al inicio de la llamada.
-6. **Número WhatsApp** — ¿dedicado nuevo o portar uno existente? Nombre display, dueño del Business Manager Meta.
-7. **Plantillas HSM** — redacción final de las 5 plantillas (recordatorio 24h, confirmación, post-visita, reactivación, presupuesto) para aprobación en Meta.
-8. **Protocolo de crisis** — palabras-trigger (suicidio, abstinencia aguda, recaída grave) y procedimiento exacto de transferencia al 659 877 708 (¿warm transfer con whisper? ¿buzón si nadie atiende? ¿escalado a psiquiatra colaborador?).
+- Horario del centro: L-V 9-21, S 9-15, cerrado dom + festivos. Atención 24h solo pacientes en proceso.
+- Servicios y precios (KB del bot): completos en el onboarding §2. Ver [[propuesta-pdf-elphis]] §3.
+- Persona contacto operativo: Alba Orgaz.
+- Firmante: Enrique Sanz, administrador KISAMU S.L.
+- Número WhatsApp público: 659 877 708 (mismo que voz).
+- Nombre y tono del agente: Laura, tuteo respetuoso, empático y cálido.
+- Modelo handoff: WhatsApp interno al equipo + transferencia SIP a recepción cuando piden humano en horario.
+- Agenda: Google Calendar de Enrique como puente con Doctoralia (su API está cerrada a clínicas individuales). Ver [[ADR-001-doctoralia-google-calendar]].
+- Protocolo de crisis: Teléfono de la Esperanza (717 003 717) como derivación principal. Ver [[protocolo-crisis-elphis]].
+- Clientify: API key + pipeline IDs descubiertos. Ver [[clientify-discovery-elphis]].
+- Meta WhatsApp: arrancamos con número de pruebas Agentesia, migramos al 659 877 708 cuando esté validado.
+- Google Calendar: arrancamos con calendar propio Agentesia, conectamos el de Enrique en go-live.
+- Doctoralia API: descartada por ahora.
+
+## Bloqueante real (decide el arranque)
+
+**Chatwoot self-hosted en Dokploy como inbox WhatsApp + handoff humano**. ¿OK o preferimos otra solución? Pendiente respuesta de Borja y Dani tras lectura de [[propuesta-pdf-elphis]].
+
+## Pendiente con Alba (no bloquea Fase 0)
+
+1. **Spiroox**: dos admins externos (Laura Spiroox, Pepe Framis) con acceso completo a Clientify. ¿Tienen automatizaciones activas que no debamos pisar? Confirmar antes de crear custom fields o tocar pipeline.
+2. **Número directo de la recepcionista**: el onboarding dice «ella tiene número propio» pero no lo escribe. Es el destino del WhatsApp interno cuando el bot deriva caso no-ingreso.
+3. **Formulario web**: ¿la web `centroelphis.com` tiene formulario activo hoy? ¿A dónde llegan los datos? ¿Quieren además widget de chat embebido?
+4. **Meta Business Manager**: ¿cuenta API ya creada? ¿negocio verificado? (campos vacíos en onboarding §4).
+5. **Custom fields Clientify**: confirmar que podemos crear los necesarios sin pisar nada. Lista mínima en [[clientify-discovery-elphis]].
+
+## Pre go-live con Enrique (no bloquea desarrollo)
+
+1. **Lista cerrada de triggers de crisis**: frases ambiguas tipo «estoy harto», abstinencia aguda con riesgo médico real (delirium tremens, retirada benzo), quién revisa post-llamada los disparos. Sesión 30 min antes del go-live. Ver [[protocolo-crisis-elphis]].
+2. **DPAs RGPD**: Retell, OpenAI, Meta. Los gestiono yo (templates, revisión), firma Enrique como administrador KISAMU S.L. Bloquea poner pacientes reales, no desarrollo. Ver [[dpas-rgpd]].
+3. **Plantillas HSM WhatsApp**: redacción final de las 6 plantillas Elphis, validar copy con Alba antes de subir a Meta. Lista en [[propuesta-pdf-elphis]] §7.
 
 ## Relacionado
 
 - [[index|Centro Elphis HUB]]
+- [[propuesta-pdf-elphis]]
+- [[arquitectura-elphis]]

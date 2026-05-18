@@ -1,46 +1,70 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-source: investigación 10 agentes + decisiones Manu
+source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
 
-# Centro Elphis
+# Centro Elphis · HUB
 
-Centro de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete voz + chat + CRM + agenda.
+Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Datos del cliente
+## Estado actual · 2026-05-18
+
+- **Diseño técnico cerrado.** Documentado en `/Users/manueldelmonte/elphis/CLAUDE.md` y reflejado en este vault.
+- **Propuesta PDF enviada** a Borja y Dani para validar arquitectura antes de Fase 0. Ver [[propuesta-pdf-elphis]].
+- **Bloqueante único activo**: confirmación de Chatwoot como inbox WhatsApp y handoff humano. Ver [[bloqueantes-elphis]].
+- Credenciales Clientify en memory: [clientify-elphis-api](~/.claude/projects/-Users-manueldelmonte/memory/clientify-elphis-api.md).
+
+## Datos clave del cliente
 
 - Web: https://centroelphis.com
 - Sede: C/ O'Donnell 32, Bajo C, 28009 Madrid
-- Teléfono público 24h: **659 877 708**
+- Teléfono público: **659 877 708** (mismo voz y WhatsApp)
 - Doctoralia: https://www.doctoralia.es/clinicas/centro-elphis (52 reseñas, 5.0)
-- Instagram: @centroelphis (1.1k, muy activa)
-- Modalidades: ambulatorio · centro de día · residencial (partners) · online
-- Adicciones cubiertas: alcohol, cocaína, benzo, ludopatía, compras, sexo, trabajo
-- Equipo: terapeuta + psicóloga + psiquiatra colaborador externo
-- Conversión clave: **primera cita gratuita** (CTA recurrente)
-- Audiencia: ~50% paciente, ~50% familiar (el bot debe distinguir y adaptar)
-- Posible nicho LGTBI+ (mencionado en listados terceros como loottis.com)
+- Instagram: @centroelphis
+- Razón social: KISAMU S.L., CIF B88269022, reg. sanitario CS16658
+- Director y firmante: **Enrique Sanz** («Kike» en Clientify)
+- Contacto operativo: **Alba Orgaz**, +34 687 448 210, alba.orgaz@centroelphis.com
+- AgentesIA owner: **Borja Chivite**, bgchivite@agentesia.madrid
 
-## Documentos
+## Conversión y audiencia
 
-- [[contexto-cliente-elphis]] — perfil, tono, audiencia, datos para personalizar bots
-- [[arquitectura-elphis]] — stack completo, single source of truth por entidad, diagrama
-- [[agente-voz-elphis]] — diseño Retell, tools, anti-alucinación, edge cases
-- [[chatbot-whatsapp-elphis]] — Chatwoot + 360dialog + handoff humano + plantillas HSM
-- [[workflows-n8n-elphis]] — catálogo workflows + Postgres auxiliar + smoke tests
-- [[dokploy-deploy-elphis]] — stacks, orden, rollback, coste
-- [[bloqueantes-elphis]] — 8 inputs pendientes con el cliente
-- [[ADR-001-doctoralia-google-calendar]] — por qué GCal y no API Doctoralia
+- Conversión clave: agendar **primera visita informativa gratuita** (30 min, con Enrique Sanz).
+- ~50% de quien contacta es un familiar, no el paciente. El bot pregunta pronto: «¿La consulta es para ti, o para un familiar o conocido?».
 
-## Estado actual (2026-05-18)
+## Documentos del proyecto
 
-- Fase de **diseño + arquitectura cerrada**.
-- Repo local: `/Users/manueldelmonte/elphis/` con `CLAUDE.md` operativo.
-- Pendiente: confirmar 8 bloqueantes + arrancar Fase 0 Dokploy.
+- [[contexto-cliente-elphis]] · perfil, tono, audiencia, datos para personalizar el bot
+- [[arquitectura-elphis]] · stack completo, diagrama lógico, SoT por entidad, riesgos
+- [[clientify-discovery-elphis]] · auditoría del CRM existente: pipeline IDs, users, limitaciones técnicas
+- [[propuesta-pdf-elphis]] · entregable PDF para Borja y Dani, identidad visual, polish aplicado
+- [[protocolo-crisis-elphis]] · Teléfono de la Esperanza como derivación principal, triggers, sesgos
+- [[bloqueantes-elphis]] · estado completo: resueltos, bloqueante real, pendientes Alba, pendientes Enrique
+- [[dpas-rgpd]] · DPAs pendientes con Retell, OpenAI, Meta (parking hasta cerca del go-live)
+- [[ADR-001-doctoralia-google-calendar]] · decisión arquitectónica: GCal como puente, no API Doctoralia
+
+## Stack en una línea
+
+Clientify (CRM) · Chatwoot self-hosted (inbox + handoff) · Meta Cloud API (WhatsApp) · Retell + ElevenLabs castellano (voz) · n8n + Supabase dedicados en Dokploy actual · Google Calendar de Enrique como puente con Doctoralia.
+
+## Protocolo de crisis · resumen
+
+Ideación suicida → transferencia directa al **Teléfono de la Esperanza (717 003 717)**. WhatsApp: plantilla `elphis_aviso_crisis` reproduciendo el texto firmado del onboarding (717, 024, 112, urgencias). Ver [[protocolo-crisis-elphis]] para detalle.
+
+## Plan de fases
+
+0. Infra Dokploy (stacks `n8n-elphis`, `supabase-elphis`, cuenta Chatwoot Elphis).
+1. agenda-service sobre Google Calendar.
+2. clientify-service (upsert por phone E.164).
+3. Chatbot WhatsApp MVP con número de pruebas Agentesia.
+4. Agente de voz Laura (Retell + tools + post-call webhook + transfer Teléfono de la Esperanza).
+5. Sync inverso, recordatorios, formulario web.
+6. Hardening, DPAs firmados, validación Enrique, migración al 659 877 708 real.
+
+Estimación: 3-4 semanas entre arranque y go-live.
 
 ## Relacionado
 
-- [[clinica-zen]] — patrón replicable previo (Retell + Kommo + n8n). Aquí cambia: Clientify en vez de Kommo + Chatwoot + GCal.
-- [[agentesia]] — agencia.
+- [[clinica-zen]] · patrón replicable previo (Retell + Kommo + n8n). Aquí cambia el CRM y se añade Chatwoot.
+- [[agentesia]] · agencia.
