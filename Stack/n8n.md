@@ -299,3 +299,6 @@ Workflow normaliza `34617314938` (solo dígitos). Endpoint Zod `regex(/^\+[1-9]\
 ### HTTP node `responseFormat: 'json'` revienta con 404 HTML de Traefik
 Durante ventanas de redeploy Dokploy, Traefik devuelve `404 page not found\n` (text/plain) brevemente. El parser JSON tira antes de aplicar `neverError`. Fire-and-forget → `responseFormat: 'text'` + `neverError: true`. Crítico → `options.retry: { tries: 3, waitBetweenTries: 1500 }`. Ver [[n8n-http-responseformat-json-rompe-con-404-traefik]]
 
+### Persist con merge shallow deja cruft entre contextos
+Endpoints state machine que UPSERT con `{...existing, ...incoming}` contaminan al cambiar contexto: campos viejos coexisten con nuevos en el JSONB. Mandar `field: null` explícito desde el cliente para los que deben morir. Simétrico: al guardar draft, nullear last_listado. Ver [[persist-merge-shallow-deja-cruft-entre-contextos]]
+

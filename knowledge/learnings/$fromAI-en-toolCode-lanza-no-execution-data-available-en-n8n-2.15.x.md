@@ -57,3 +57,16 @@ Resultado: `$input.item.json.value` contiene el mensaje original del usuario, `q
 ## Cuándo aplica
 
 Cualquier toolCode con `$fromAI()` en n8n 2.15.x. Verificar en versiones posteriores si se ha corregido.
+
+## Alternativa cuando los args vienen de state (no del LLM)
+
+Si el arg que ibas a pasar por `$fromAI` viene de un `last_listado` ya resuelto deterministicamente server-side (slot resolver pre-LLM), elimina `$fromAI()` completamente. Lee el slot directo desde un nodo upstream:
+
+```
+const pia = $('Preparar Input Agente').first().json;
+const stateJson = typeof pia.previous_state_json === 'string'
+  ? JSON.parse(pia.previous_state_json) : pia.previous_state_json;
+const presupuestoId = stateJson?.resolved_slot?.id;
+```
+
+Más limpio que el workaround `query`, elimina la clase entera de bugs (LLM no decide UUIDs) y resuelve también referencias en lenguaje natural ("el más caro", "del 18 de mayo"). Aplicado en FacturaIA bot WhatsApp 2026-05-18. Ver [[slot-resolver-deterministic-pre-llm-nlu-regex-espanol]] · [[ADR-003-slot-resolver-determinista]]
