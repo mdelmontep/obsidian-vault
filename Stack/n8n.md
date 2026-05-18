@@ -288,3 +288,14 @@ Si solo está en Environment pero NO referenciado en compose, el container no la
 ### Bypass SSH a compose es temporal
 Modificar `/etc/dokploy/compose/<stack>/code/docker-compose.yml` via SSH funciona para el siguiente `docker compose up -d --force-recreate`, pero Dokploy regenera el archivo desde su BD interna en el siguiente Deploy del panel. Bypass solo de emergencia; el cambio permanente vive en el panel.
 
+## Gotchas Code node + HTTP node (mayo 2026)
+
+### Code sandbox sin `URLSearchParams` ni `URL`
+Tira `URLSearchParams is not defined`. Si está dentro de try/catch fail-open queda silente. Usar concat manual con `encodeURIComponent`. Ver [[n8n-code-sandbox-no-tiene-urlsearchparams]]
+
+### `sessionId` viene sin `+` — endpoints E.164 estrictos lo rechazan
+Workflow normaliza `34617314938` (solo dígitos). Endpoint Zod `regex(/^\+[1-9]\d{7,14}$/)` devuelve 400. Combinado con fail-open → persist nunca ocurre, sin alerta. Normalizar a `+34...` antes del POST. Ver [[n8n-sessionid-sin-plus-vs-endpoint-e164]]
+
+### HTTP node `responseFormat: 'json'` revienta con 404 HTML de Traefik
+Durante ventanas de redeploy Dokploy, Traefik devuelve `404 page not found\n` (text/plain) brevemente. El parser JSON tira antes de aplicar `neverError`. Fire-and-forget → `responseFormat: 'text'` + `neverError: true`. Crítico → `options.retry: { tries: 3, waitBetweenTries: 1500 }`. Ver [[n8n-http-responseformat-json-rompe-con-404-traefik]]
+

@@ -25,3 +25,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 ## Index
 <!-- añade aquí cada ADR como 1 línea: NNN · YYYY-MM-DD · título -->
 - 001 · 2026-05-11 · [[ADR-001-cron-observability|Observabilidad de crons via tabla cron_runs + Dokploy externo]] (FacturaIA)
+- 002 · 2026-05-18 · [[ADR-002-bot-state-machine-postgres|State machine conversacional del bot WhatsApp en Postgres chat_state]] (FacturaIA)

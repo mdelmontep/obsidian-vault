@@ -89,6 +89,9 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Next.js throw module-load** — `throw` en top-level de route.ts crashea build "Collecting page data". Lazy o fallback. Ver [[nextjs-throw-module-load-rompe-build-collecting-page-data]]
 
 ### n8n
+- **Code sandbox sin URLSearchParams** — encodeURIComponent + concat manual. fail-open lo enmascara. Ver [[n8n-code-sandbox-no-tiene-urlsearchparams]]
+- **sessionId sin `+` vs E.164** — workflow envía solo dígitos, endpoint Zod regex E.164 da 400 silente. Normalizar antes del POST. Ver [[n8n-sessionid-sin-plus-vs-endpoint-e164]]
+- **HTTP json + 404 Traefik redeploy** — responseFormat=text + neverError, o retry x3 si crítico. Ver [[n8n-http-responseformat-json-rompe-con-404-traefik]]
 - **Wait vacío = stuck** — `parameters:{}` cuelga ejecución. PUT con `resume:timeInterval`. Ver [[n8n-wait-node-vacio-webhook-type-stuck]]
 - **emailSend html dinámico** — Code node devuelve `{html}`, email usa `={{$('Code').item.json.html}}`. Ver [[n8n-emailsend-html-no-evalua-expresiones]]
 - **Replicar workflows entre clientes** — diff nombres + vaciar IDs origen a placeholders. Ver [[replicar-cliente-n8n-vaciar-ids-cz-no-disfrazar]]
