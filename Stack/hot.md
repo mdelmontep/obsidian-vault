@@ -55,6 +55,13 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — Multi-org real + Equipo + Bot WhatsApp (2026-05-20, PRs #54-#63)
+- **`.limit(1)` sin ORDER BY en multi-tenant = bug latente** — patrón canónico Postgres/Supabase. Ver [[rls-multi-tenant-limit-1-sin-order-bug-latente]]
+- **Supabase `signOut` solo invalida refresh, NO access JWT** — access vive ~1h tras signOut. Necesita fallback `/sin-acceso`. Ver [[signOut-solo-invalida-refresh-no-access-token]] + [[ADR-007-sin-acceso-fallback-vs-loop-redirect]]
+- **Matriz permisos rol-aware: SQL `user_can_write_in_org` + espejo TS `role-matrix.ts`** — single source of truth, defense-in-depth real. Ver [[matriz-permisos-rol-aware-bd-mas-espejo-ts]] + [[ADR-008-matriz-permisos-rol-aware-bd]]
+- **`createUser` + trigger `handle_new_user` race** — orden estricto + rollback `deleteUser` ante fallo email. Ver [[supabase-createuser-race-trigger-handle-new-user]]
+- **Audits per-PR pasan pero cross-PR detecta bugs por composición** — patrón de process para subsistemas con 4+ PRs encadenados. Ver [[audits-cross-pr-vs-per-pr]]
+
 ### supabase CLI (2026-05-20)
 - **Migration con prefijo no-numérico (`107b`) se skipea silente** — el SQL nunca corre en fresh setup. Renombrar a número >max actual, NO usar prefijos parecidos al existente (`1071` rompe parser). Ver [[supabase-cli-skipea-migrations-con-prefijo-no-puramente-numerico]]
 

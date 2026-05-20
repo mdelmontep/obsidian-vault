@@ -30,3 +30,5 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 004 · 2026-05-18 · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding|Tool calling con tool_choice forzado para extracción estructurada]] (agency-portal)
 - 005 · 2026-05-18 · [[ADR-005-exencion-codigo-per-linea|Código exención IVA per-línea en lineas_factura.exencion_codigo]] (FacturaIA)
 - 006 · 2026-05-20 · [[ADR-006-defense-in-depth-superadmin-impersonation|Override vs union semantics en impersonación de superadmin]] (FacturaIA)
+- 007 · 2026-05-20 · [[ADR-007-sin-acceso-fallback-vs-loop-redirect|Página /sin-acceso para JWT vivo sin org operable]] (FacturaIA)
+- 008 · 2026-05-20 · [[ADR-008-matriz-permisos-rol-aware-bd|Matriz canónica user_can_write_in_org BD + espejo TS]] (FacturaIA)
