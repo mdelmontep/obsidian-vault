@@ -15,6 +15,8 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **FacturaIA Copiloto — desbloquear LLM** — OpenAI 429 quota exceeded en prod + Anthropic key inválida desde PR-A1.6. Recargar saldo OpenAI o rotar Anthropic key y switch en `/admin/llm`. Sin esto el Copiloto v2 ya desplegado no responde
+- **FacturaIA Copiloto — PR-A3.1 (3 tools movimientos)** tras desbloqueo LLM — `suggest_note`, `explain_movimiento`, `analyze_movimiento` para contexto conciliación
 - **FacturaIA — crear cron Dokploy `cashflow-alerts`** (`30 7 * * *`, curl con `$FACTURAIA_SERVICE_KEY`) tras deploy. Smoke test: ver `/admin/system/crons` con los 6 crons en verde a las 24h
 - **FacturaIA — decidir VerifACTU worker en Dokploy** (hoy Disabled). Si va a quedar off, eliminar entrada. Si se activa, hacer Run Now y verificar facturas pendiente_envio → aceptada
 - **FacturaIA — Stripe en activación de add-ons** — hoy CTA "+XX€/mes" redirige a `/settings?tab=plan` sin cobro real. Conectar checkout para que el toggle = compra. Conciliación 19€ y Anti-fraude 9€ ya seedeados

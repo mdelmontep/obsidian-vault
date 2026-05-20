@@ -26,6 +26,7 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **AI Agent contrato real antes de modificar** — leer system prompt + tools vía API; JSON-out vs conversational es contrato distinto. Ver [[leer-system-prompt-y-tools-actuales-antes-de-modificar-ai-agent]]
 - **useEffectEvent NO desde setTimeout** — patrón debounce reactivo va con useCallback + deps. Ver [[useeffectevent-react19-no-se-llama-desde-settimeout]]
 - **LLM ambiguity con voz** — devolver lista numerada de candidatos + memoria conversacional, nunca "dime el número exacto". Ver [[llm-ambiguity-lista-candidatos-numerados-y-memoria-conversacional]]
+- **LLM tool-use multi-turno replay** — persistir calls+results juntos OK, pero emit role:'tool' por call_id en orden; skip huérfanos. Ver [[llm-tool-use-multi-turno-replay-tool-calls-y-results-emparejados]]
 - **Tipo nuevo en agente JSON-out** — parchear downstream o lookup recurso real (mejor lookup). Ver [[extender-tipo-en-agente-json-out-parchear-downstream-o-lookup-recurso]]
 - **Verificar persistencia post-PUT** — HTTP 200 ≠ aplicó. Grep marker único en re-fetch. Ver [[verificar-persistencia-tras-put-api-con-grep-marker-unico]]
 - **Métricas tabla + events** — diseñar con tabla de dominio como fuente primaria, events como complemento. Ver [[metricas-fuente-fuerte-mas-event-log]]
@@ -49,6 +50,13 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 ## 🔥 Últimas 2 semanas
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
+
+### facturaia — Conciliación F4 reembolso + audit 4 agentes (2026-05-20)
+- **Trigger recursivo cuando revertir estado deja "candidato libre"** — revertir factura a pendiente liberó el +100€ original que otro trigger inmediatamente re-matcheó → stack overflow. Fix: marcar candidato como neutralizado (`devolucion_de_movimiento_id`) ANTES del UPDATE estado + predicado `NOT EXISTS` en trigger competidor. `pg_trigger_depth()` solo cura síntoma. Ver [[trigger-recursivo-revertir-estado-deja-candidato-libre-que-otro-trigger-rematchea]]
+- **CREATE FUNCTION es lazy** — referencias a columnas no se validan en CREATE; binding deferred a runtime. `information_schema.columns` ANTES de reescribir trigger. Ver [[postgres-asumir-columna-existente-en-trigger-rewrite-verifica-information-schema]]
+- **fecha_cobro/fecha_pago = mb.fecha NUNCA CURRENT_DATE** — criterio caja AEAT IVA exige fecha del movimiento, no de la inserción del registro. Mig 111 fix retroactivo a 4 triggers.
+- **UI lista no filtraba `deleted_at`** — comentario decía "defensivo por mig 106 no aplicada", llevaba semanas aplicada. Coste: movs soft-deleted seguían apareciendo. Auditar comentarios "defensivos" caducados al deployar la mig que cubren.
+- **CSV import `imported:0` con error oculto en UI** — log warn en endpoint cuando `parsed.movimientos.length === 0` o errors no vacíos. UI muestra solo 3 campos; warnings se perdían. Defense: console.warn server-side + Network preview DevTools.
 
 ### facturaia — toggle Verifactu fix (2026-05-19, PR #48)
 - **Duplicado columna ↔ JSON settings nunca dura** — `verifactu_activo` (columna) + `settings.fiscal.verifactu` (JSON) → bug clásico: lectura defensiva `!== false` reactiva el flag silenciosamente cuando el JSON no tiene la clave. Fuente única, siempre. Ver [[Stack/facturaia]] "Toggle Verifactu".
