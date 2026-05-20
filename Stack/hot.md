@@ -51,6 +51,11 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — descripcion en líneas API v1 (2026-05-20, PR #49)
+- **Verifactu huella NO incluye conceptos/descripciones** — solo NIF+Num+Fecha+TipoFactura+CuotaTotal+ImporteTotal+Huella_ant (mig 091:122-128). Añadir/quitar campos textuales a `lineas_factura` es seguro retroactivamente, no rompe cadena AEAT.
+- **`.strict()` Zod rechaza con 400, no ignora** — si un integrador externo afirma "vuestra API tolera campo extra", grep el schema antes de creerle. Caso real: Borja decía ignorar, devolvía `400 unrecognized_keys`. Ver [[verificar-comportamiento-real-api-antes-de-creer-al-integrador]].
+- **Recrear RPC entero al añadir campo a INSERT con columnas explícitas** — `CREATE OR REPLACE` reemplaza la función completa, no parchea. Copiar versión vigente byte-a-byte + insertar campo nuevo.
+
 ### facturaia — Conciliación F4 reembolso + audit 4 agentes (2026-05-20)
 - **Trigger recursivo cuando revertir estado deja "candidato libre"** — revertir factura a pendiente liberó el +100€ original que otro trigger inmediatamente re-matcheó → stack overflow. Fix: marcar candidato como neutralizado (`devolucion_de_movimiento_id`) ANTES del UPDATE estado + predicado `NOT EXISTS` en trigger competidor. `pg_trigger_depth()` solo cura síntoma. Ver [[trigger-recursivo-revertir-estado-deja-candidato-libre-que-otro-trigger-rematchea]]
 - **CREATE FUNCTION es lazy** — referencias a columnas no se validan en CREATE; binding deferred a runtime. `information_schema.columns` ANTES de reescribir trigger. Ver [[postgres-asumir-columna-existente-en-trigger-rewrite-verifica-information-schema]]

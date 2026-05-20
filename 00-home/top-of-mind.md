@@ -24,7 +24,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **FacturaIA — decidir cliente live vs congelado** — hoy snapshot fiscal al crear factura (datos cliente embebidos). Si editas cliente, PDFs viejos conservan datos antiguos (legalmente correcto, confunde UX). Decisión producto: ¿añadir botón "Re-emitir con datos actuales" o dejar congelado siempre?
 - **FacturaIA — manuales actualizar Bloque 1** — `manual-usuario.md` y `manual-admin.md` describen flujo viejo: 2 botones generar (no 3 con "Emitir como pendiente"), no mencionan anular ni tab Abonos ni los nuevos pills/badges
 - **FacturaIA OTP — patch n8n delivery status** — generar key nueva en `n8n.tufacturaia.com/Settings/API` y ejecutar `python3 ops/n8n-patches/apply-delivery-status.py` (~5min)
-- **FacturaIA — quitar dominio viejo `facturaia.agentesia.world` de DNS/Dokploy** — **confirmado 2026-05-18: ya devuelve 404** (no sirve nada, misma BD que el nuevo). Sigue en DNS IONOS y como entrada Dokploy. Limpiar para evitar confusión futura
+- **FacturaIA — quitar dominio viejo `facturaia.agentesia.world` de IONOS + Dokploy** — repo y `.env.local` ya limpios (2026-05-20). Queda solo infra externa: DNS IONOS + entrada stack Dokploy. Limpiar para evitar confusión futura
 - **FacturaIA OTP — copiar `docs/legal/privacy-otp-update.md`** a política privacidad pública (RGPD art 13)
 - **FacturaIA OTP — smoke tests restantes** — cambio teléfono re-auth, fallback forzado provider_degraded_until, banner grandfathering visual, superadmin impersonando bypass, lockout 15min
 - **FacturaIA — Daily Briefing trigger → escribe `00-home/daily-briefing.md`** — comando `/daily` listo. Falta cron Dokploy o trigger automático
