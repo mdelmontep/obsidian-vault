@@ -44,10 +44,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
         - `/sin-acceso`: crear usuario test con 1 sola membresía, eliminarla via DELETE team. Su próxima request → `/sin-acceso` (no loop). Click logout → /login limpio.
     - **Pendientes externos al código** (acción manual del operador, NO commit):
         - **Workflow n8n `pqSWkDIHqmSVHotB`**: añadir branch ante `reason='multi_org_pendiente'` del endpoint `/api/internal/whatsapp/resolve-context` → enviar WhatsApp list message con `candidate_orgs` → al recibir reply → POST a `/api/internal/whatsapp/select-org` con `{ phone, selected_org_id }` → re-invocar resolve-context. Sin esto el bot multi-org no funciona end-to-end (el backend está listo pero el frontend del bot es n8n). Telemetría `[whatsapp-resolve] multi_pending` lo detectará en logs Dokploy.
-        - **Dokploy crons nuevos**: configurar 2 schedulers en el panel Dokploy:
-            1. `team-expire-invites`: `15 3 * * *` (03:15 diario) → curl POST `$BASE/api/internal/team/expire-invites` con `x-service-key: $FACTURAIA_SERVICE_KEY`.
-            2. `whatsapp-purge-stale-selections`: `45 3 * * *` (03:45 diario) → curl POST `$BASE/api/internal/whatsapp/purge-stale-selections` con `x-service-key: $FACTURAIA_SERVICE_KEY`.
-            Sin estos cron, las invitaciones nunca expiran y la tabla `whatsapp_org_selection` crece con filas zombie. Patrón documentado en `docs/architecture/cobros-runbook.md` §"Dokploy cron".
+        - ✅ **Dokploy crons nuevos creados 2026-05-20**: `team-expire-invites` (`15 3 * * *`) + `whatsapp-purge-stale-selections` (`45 3 * * *`). Pegar comandos SIN `| jq .` (Alpine runner no lo trae). Runbook `docs/runbooks/team-and-whatsapp-crons.md`. Pendiente smoke E2E (crear invitación con `expires_at < now()` + fila stale `whatsapp_org_selection` y validar `summary.expired`/`deleted ≥ 1`).
         - **Manual admin** (`docs/manuals/manual-admin.md`): actualizar con flow rediseñado de Equipo (modal invite + reenvío + reactivación propietario-only + menú ⋯). El usuario lo recibió actualizado pero falta el admin.
     - **NICE_TO_HAVE remanentes (futuro, no bloqueantes)**:
         - Refetch del rol activo on `team.role_changed` notif (BroadcastChannel intra-org) — hoy el rol actualizado solo se ve tras router.refresh manual.
