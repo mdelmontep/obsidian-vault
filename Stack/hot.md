@@ -71,6 +71,8 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Recrear RPC entero al añadir campo a INSERT con columnas explícitas** — `CREATE OR REPLACE` reemplaza la función completa, no parchea. Copiar versión vigente byte-a-byte + insertar campo nuevo.
 
 ### facturaia — Conciliación F4 reembolso + audit 4 agentes (2026-05-20)
+- **Guard per-transición no persiste si otro trigger re-UPDATEa** — `IF OLD.estado='X' AND NEW='Y'` falla cuando recompute chain hace otro UPDATE con OLD ya='Y'. Fix: columna timestamp `last_revert_at` + filtro `< NOW() - INTERVAL '30d'`. Mig 128. Ver [[postgres-guard-transition-no-persiste-en-recompute-chain]]
+- **Smoke fixtures en repo, no en ~/Desktop** — `docs/runbooks/smokes/<área>/` con CSV/SQL/README. Entre sesiones Claude `~/Desktop` se evapora. Ver [[smoke-fixtures-en-repo-no-en-desktop]]
 - **Trigger recursivo cuando revertir estado deja "candidato libre"** — revertir factura a pendiente liberó el +100€ original que otro trigger inmediatamente re-matcheó → stack overflow. Fix: marcar candidato como neutralizado (`devolucion_de_movimiento_id`) ANTES del UPDATE estado + predicado `NOT EXISTS` en trigger competidor. `pg_trigger_depth()` solo cura síntoma. Ver [[trigger-recursivo-revertir-estado-deja-candidato-libre-que-otro-trigger-rematchea]]
 - **CREATE FUNCTION es lazy** — referencias a columnas no se validan en CREATE; binding deferred a runtime. `information_schema.columns` ANTES de reescribir trigger. Ver [[postgres-asumir-columna-existente-en-trigger-rewrite-verifica-information-schema]]
 - **fecha_cobro/fecha_pago = mb.fecha NUNCA CURRENT_DATE** — criterio caja AEAT IVA exige fecha del movimiento, no de la inserción del registro. Mig 111 fix retroactivo a 4 triggers.

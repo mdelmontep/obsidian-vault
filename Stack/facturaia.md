@@ -104,6 +104,7 @@ Orden por FK (ver [[2026-05-18-facturaia-reset-agentesia]]):
 - `guard_verifactu_settings()` (mig 095) — BEFORE UPDATE organizations, rechaza cambio Verifactu/entorno si rol insuficiente.
 - `audit_verifactu_settings_change()` (mig 095) — AFTER UPDATE organizations, escribe a `audit_log` con `request.headers` para IP/UA.
 - `create_factura_with_lineas` RPC (mig 094, work-in-progress 2026-05-18) — INSERT atómico factura+líneas para cerrar race A-fiscal.
+- **Guard revert persistente** (mig 128, 2026-05-20) — `facturas.last_revert_at TIMESTAMPTZ` seteado por `detect_reembolso_for_cobro` (117) y `detect_reembolso_movimiento` (112) en el UPDATE de revert. Filtrado `IS NULL OR < NOW() - INTERVAL '30 days'` en 4 funciones de auto-match (`auto_mark_cobradas_on_movimiento_emitidas` 114, `auto_mark_pagadas_on_movimiento` 112, `auto_mark_cobrada_on_bank_match` 117, `auto_mark_pagada_on_bank_match` 111). Sin esto un +mov casual del mismo importe re-cobraba silenciosamente tras devolución (caso real bug fiscal: [[postgres-guard-transition-no-persiste-en-recompute-chain]]).
 
 ## Multi-org canónico (mig 120-127, 2026-05-20)
 

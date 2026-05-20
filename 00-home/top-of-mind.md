@@ -12,6 +12,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **Centro Elphis — nuevo cliente Agentesia (voz + chat + CRM + agenda)** — diseño cerrado en `/Users/manueldelmonte/elphis/CLAUDE.md`. Stack: Retell + ElevenLabs ES + Twilio · Chatwoot + 360dialog · Clientify único CRM · Google Calendar como agenda-service (Doctoralia sin API, ver [[ADR-001-doctoralia-google-calendar]]) · n8n + Postgres dedicados en Dokploy. Pendiente: confirmar 8 bloqueantes con Elphis ([[bloqueantes-elphis]]) + arrancar Fase 0 Dokploy. HUB: [[clientes/centro-elphis/index|Centro Elphis HUB]]
 - **agency-portal — verificar extracción onboarding en prod tras PR #67** — REO RAFTING en curso. Confirmar que "Progreso por sección" y "Respuestas extraídas" se rellenan tras cada turno con dato extraíble. Si aparece `activity_event.action='onboarding.extraction_failed'`, abrir issue
+- **agency-portal — smoke PR #72 onboarding sync+md+web** — tras merge: nuevo onboarding real (o el siguiente cliente) y verificar (a) botón Sincronizar puebla `clients.description`/`primary_contact_phone`/`website`/`assistant_name`/etc, (b) `.md` final incluye sección "Transcripción completa de WhatsApp", (c) si la nota del operador menciona web → bot pregunta dominio/colores/referencias/CTA antes de cerrar, (d) bot hace repaso `[N]` agrupado antes de `is_complete=true`. Ver [[Stack/onboarding-whatsapp]]
 
 ## NEXT (próximas 2 semanas)
 
