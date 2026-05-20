@@ -19,3 +19,7 @@ El archivo viejo sigue funcionando con warning en build.
 export async function proxy(request: NextRequest) { ... }
 export const config = { matcher: [...] }
 ```
+
+## ⚠️ NO revertir a `middleware.ts`
+
+**Caso real 2026-05-20**: ante un Forbidden en endpoint que dependía de cookie `impersonate_org`, asumí erróneamente que Next.js 16 había dejado de invocar `proxy.ts` y reverté el rename. **Falso**: `proxy.ts` es la convención correcta v16; `middleware.ts` solo sigue activo por backcompat con deprecation warning. La causa real era otra (override semantics + cookie con maxAge 1h). Ver [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]].

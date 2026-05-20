@@ -10,11 +10,14 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **FacturaIA — verificar cookie `impersonate_org` se borra tras navegación sin query param** (urgente, prep PR follow-up) — `proxy.ts` debería borrarla en navegaciones sin `?impersonate=`. Si funciona → revertir PR #51 (re-rename middleware.ts → proxy.ts). Si no → bug aparte del rename. Ver [[nextjs16-middleware-to-proxy]] + [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]]
 - **Centro Elphis — nuevo cliente Agentesia (voz + chat + CRM + agenda)** — diseño cerrado en `/Users/manueldelmonte/elphis/CLAUDE.md`. Stack: Retell + ElevenLabs ES + Twilio · Chatwoot + 360dialog · Clientify único CRM · Google Calendar como agenda-service (Doctoralia sin API, ver [[ADR-001-doctoralia-google-calendar]]) · n8n + Postgres dedicados en Dokploy. Pendiente: confirmar 8 bloqueantes con Elphis ([[bloqueantes-elphis]]) + arrancar Fase 0 Dokploy. HUB: [[clientes/centro-elphis/index|Centro Elphis HUB]]
 - **agency-portal — verificar extracción onboarding en prod tras PR #67** — REO RAFTING en curso. Confirmar que "Progreso por sección" y "Respuestas extraídas" se rellenan tras cada turno con dato extraíble. Si aparece `activity_event.action='onboarding.extraction_failed'`, abrir issue
 
 ## NEXT (próximas 2 semanas)
 
+- **FacturaIA — test e2e middleware/proxy activo** (~1-2h) — disparado por incidente 2026-05-20 donde se creyó (erróneamente) que `proxy.ts` no se ejecutaba durante 3 semanas. Smoke test que verifica que `impersonate_org` cookie behavior end-to-end. Detalle en hub Ideas crudas
+- **agency-portal — extraer `extractError` a helper compartido** (~1h) — hoy lo arreglé en 3 sitios con copy-paste (auto-emit, pdf/[shadowId], handler manual fetch). Extraer a `lib/facturaia/extract-error.ts` + tests + reemplazar las 3 copias
 - **FacturaIA Copiloto — desbloquear LLM** — OpenAI 429 quota exceeded en prod + Anthropic key inválida desde PR-A1.6. Recargar saldo OpenAI o rotar Anthropic key y switch en `/admin/llm`. Sin esto el Copiloto v2 ya desplegado no responde
 - **FacturaIA Copiloto — PR-A3.1 (3 tools movimientos)** tras desbloqueo LLM — `suggest_note`, `explain_movimiento`, `analyze_movimiento` para contexto conciliación
 - **FacturaIA — crear cron Dokploy `cashflow-alerts`** (`30 7 * * *`, curl con `$FACTURAIA_SERVICE_KEY`) tras deploy. Smoke test: ver `/admin/system/crons` con los 6 crons en verde a las 24h
@@ -29,7 +32,6 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **FacturaIA OTP — smoke tests restantes** — cambio teléfono re-auth, fallback forzado provider_degraded_until, banner grandfathering visual, superadmin impersonando bypass, lockout 15min
 - **FacturaIA — Daily Briefing trigger → escribe `00-home/daily-briefing.md`** — comando `/daily` listo. Falta cron Dokploy o trigger automático
 - **agency-portal — fix estructural n8n router consulta Supabase como source of truth** — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint nuevo `/api/onboarding/is-active-by-phone` + nodo HTTP en router del workflow `ChatBOT mejorado` antes del IF de Activo + Redis pasa a caché con re-seed si portal dice activa. Ver [[Stack/n8n]] + [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
-- **agency-portal #56 smoke test post-merge** — badge fiscal en row, redirect 301 `/agency/facturaia/*`, botones según estado/origen, modal motivo R1-R5 obligatorio, doble-click sin duplicar (Idempotency-Key)
 - **FacturaIA #47 smoke test prod** — verificar entries en `audit_log` tras marcar cobrada / reenviar email / anular / DELETE vía API v1
 - **FacturaIA #48 smoke test prod** (mergeado 2026-05-19, mig 095 aplicada) — (1) Settings → Fiscal → toggle Verifactu off → confirm dialog → Guardar → recargar → persiste. (2) Con usuario rol `solo_lectura`/`comercial`: PUT `/api/settings/verifactu` → 403. (3) Cambio deja fila en `audit_log` con `accion='verifactu_settings_changed'`, `user_id`, `ip`, `user_agent`, `detalles.{verifactu_activo,entorno_verifactu}.{old,new}`
 - **FacturaIA — auditar otras columnas regulatorias con misma vulnerabilidad que Verifactu tenía** — `org_member_update` policy permite UPDATE a cualquier miembro. Candidatos a proteger con trigger guard de rol + auditoría: `regimen_iva`, `nif`, `iae`, `verifactu_num_instalacion`, `entorno_verifactu`. Ver [[Stack/facturaia]] "Vulnerabilidad latente"

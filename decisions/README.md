@@ -29,3 +29,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 003 · 2026-05-18 · [[ADR-003-slot-resolver-determinista|Slot resolver determinista pre-LLM con regex en español]] (FacturaIA)
 - 004 · 2026-05-18 · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding|Tool calling con tool_choice forzado para extracción estructurada]] (agency-portal)
 - 005 · 2026-05-18 · [[ADR-005-exencion-codigo-per-linea|Código exención IVA per-línea en lineas_factura.exencion_codigo]] (FacturaIA)
+- 006 · 2026-05-20 · [[ADR-006-defense-in-depth-superadmin-impersonation|Override vs union semantics en impersonación de superadmin]] (FacturaIA)
