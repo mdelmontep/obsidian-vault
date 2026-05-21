@@ -66,6 +66,10 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### meta-ops (2026-05-21)
+- **GitHub Actions free tier engaña** — "payments have failed" es "se agotaron los 2000 min/mes", no cobro fallido. Ver [[github-actions-org-private-free-tier-2000-min]]
+- **Dokploy deploya pese a CI rojo** — webhook independiente de Actions. Ver [[dokploy-webhook-independiente-del-ci-status]]
+
 ### facturaia — Conciliación hardening audit (2026-05-21 tarde, PR #65/#66/#67/#69/#70)
 - **Helper SQL con chain triggers: setear guard ANTES del UPDATE source** — sin orden correcto, chain loop infinito + bug fiscal reentra. Ver [[helper-sql-orden-last-revert-at-antes-de-update-mfa]]
 - **fmtDate(null) tumba página entera React** — formatters compartidos requieren guard null defensivo desde día 1. Ver [[fmtdate-null-tumba-pagina-entera-react]]
