@@ -55,6 +55,10 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — Phase 1 bot multi-org (2026-05-21)
+- **`n8n_chat_histories` vive en Postgres local n8n, no en Supabase** — gotcha smoke + limpieza memoria LLM. Ver [[n8n-chat-histories-en-postgres-local-no-supabase]]
+- **Smoke multi-org WhatsApp limpia 3 tablas + no abrir web** — sticky/active_org_id/n8n_chat_histories. Ver [[smoke-multi-org-whatsapp-clean-state]]
+
 ### facturaia — Multi-org real + Equipo + Bot WhatsApp (2026-05-20, PRs #54-#63)
 - **`.limit(1)` sin ORDER BY en multi-tenant = bug latente** — patrón canónico Postgres/Supabase. Ver [[rls-multi-tenant-limit-1-sin-order-bug-latente]]
 - **Supabase `signOut` solo invalida refresh, NO access JWT** — access vive ~1h tras signOut. Necesita fallback `/sin-acceso`. Ver [[signOut-solo-invalida-refresh-no-access-token]] + [[ADR-007-sin-acceso-fallback-vs-loop-redirect]]
