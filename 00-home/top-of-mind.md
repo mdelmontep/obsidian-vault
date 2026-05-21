@@ -18,8 +18,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **FacturaIA — test e2e middleware/proxy activo** (~1-2h) — disparado por incidente 2026-05-20 donde se creyó (erróneamente) que `proxy.ts` no se ejecutaba durante 3 semanas. Smoke test que verifica que `impersonate_org` cookie behavior end-to-end. Detalle en hub Ideas crudas
 - **agency-portal — extraer `extractError` a helper compartido** (~1h) — hoy lo arreglé en 3 sitios con copy-paste (auto-emit, pdf/[shadowId], handler manual fetch). Extraer a `lib/facturaia/extract-error.ts` + tests + reemplazar las 3 copias
-- **FacturaIA — rotar OpenAI key (higiene, expuesta en transcript 2026-05-21) + fix typo `ssk-ant-` → `sk-ant-` en env Anthropic Dokploy** (~5min, P2) — no bloquea nada hoy (OpenAI funciona, Anthropic no se usa); higiene + tener fallback
-- **FacturaIA Copiloto — PR-A3.1 (3 tools movimientos)** — `suggest_note`, `explain_movimiento`, `analyze_movimiento` para contexto conciliación. LLM desbloqueado 2026-05-21 ✓ (ya no bloqueante)
+- **FacturaIA Copiloto — PR-A3.1 (3 tools movimientos)** — `suggest_note`, `explain_movimiento`, `analyze_movimiento` para contexto conciliación
 - **FacturaIA — smokes E2E post-PR Conciliación #73/#74** — filtros chip URL `?filter=`, bulk-confirm toast undo (8s), drawer confirm dialog del sistema, iOS no-zoom inputs drawer, primer cron `anomaly-batch` automático verde 2026-05-21 18:00. Pendiente validar en `app.tufacturaia.com` con cuenta real (multi-org)
 - **FacturaIA — crear cron Dokploy `cashflow-alerts`** (`30 7 * * *`, curl con `$FACTURAIA_SERVICE_KEY`) tras deploy. Smoke test: ver `/admin/system/crons` con los 6 crons en verde a las 24h
 - **FacturaIA — decidir VerifACTU worker en Dokploy** (hoy Disabled). Si va a quedar off, eliminar entrada. Si se activa, hacer Run Now y verificar facturas pendiente_envio → aceptada

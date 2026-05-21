@@ -94,6 +94,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 ### supabase CLI (2026-05-20)
 - **Migration con prefijo no-numérico (`107b`) se skipea silente** — el SQL nunca corre en fresh setup. Renombrar a número >max actual, NO usar prefijos parecidos al existente (`1071` rompe parser). Ver [[supabase-cli-skipea-migrations-con-prefijo-no-puramente-numerico]]
+- **Postgres `CREATE OR REPLACE FUNCTION` no toca overloads con signature distinta** — refactor de firma deja la vieja huérfana. DROP explícito en la misma migración + assert post-drop. Ver [[create-or-replace-function-no-toca-overloads-distinta-signature]]
 
 ### facturaia — descripcion en líneas API v1 (2026-05-20, PR #49)
 - **Verifactu huella NO incluye conceptos/descripciones** — solo NIF+Num+Fecha+TipoFactura+CuotaTotal+ImporteTotal+Huella_ant (mig 091:122-128). Añadir/quitar campos textuales a `lineas_factura` es seguro retroactivamente, no rompe cadena AEAT.

@@ -16,3 +16,5 @@ SELECT relrowsecurity FROM pg_class WHERE relname='T';
 ```
 
 Implicación: re-aplicar una migration idempotente (IF NOT EXISTS / ON CONFLICT) en prod es no-op aunque schema_migrations no la trackee. La tabla solo es fiable si todo el equipo aplica vía CLI.
+
+**Escape cuando `supabase db push` falla por drift**: `supabase db query --linked -f <file.sql>` ejecuta SQL directo contra remoto sin tocar el tracking. Útil cuando los timestamps remote (formato `YYYYMMDDHHMMSS` aplicados via Studio) no coinciden con los nombres locales `NNN_*.sql` y `db push --dry-run` rechaza por "Remote migration versions not found in local". Caso real FacturaIA 2026-05-21: aplicar mig 142 con 13 migs remote no trackeadas; `db query --linked -f` la ejecutó limpia (transacción + assert pasaron) sin necesidad de `migration repair` previo.
