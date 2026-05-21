@@ -66,6 +66,15 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **`createUser` + trigger `handle_new_user` race** — orden estricto + rollback `deleteUser` ante fallo email. Ver [[supabase-createuser-race-trigger-handle-new-user]]
 - **Audits per-PR pasan pero cross-PR detecta bugs por composición** — patrón de process para subsistemas con 4+ PRs encadenados. Ver [[audits-cross-pr-vs-per-pr]]
 
+### facturaia — Modelo invitación consent-explícito (2026-05-21)
+- **Toda invitación = `estado='invitado'` + accept endpoint** — modelo SaaS multi-org estándar. Ver [[ADR-009-invitacion-consent-explicito-vs-activo-directo]]
+- **Trigger `handle_new_user` con rama legacy choca con INSERT explícito** — duplicate key UNIQUE. Auditar triggers al cambiar modelo. Ver [[trigger-handle_new_user-rama-legacy-choca-con-insert-explicito]]
+- **Cookie de scope estrecho (impersonate) leak fuera de su path** — `request.cookies.delete()` ANTES del handler, no solo response. Ver [[cookie-impersonate-leak-fuera-de-admin]]
+- **Hash del magic link Supabase requiere `setSession` explícito** — `getUser()` antes devuelve null. Ver [[hash-magic-link-supabase-requiere-setsession-explicito]]
+- **RLS `org_members_select` debe OR `user_id = auth.uid()`** — sin esto, invitado no puede leer su propia fila pending. Ver [[rls-org-members-select-debe-incluir-own-memberships]]
+- **`useSearchParams` requiere Suspense en Next.js 15+ prerender** — wrapping pattern estándar. Ver [[usesearchparams-requiere-suspense-en-next15-prerender]]
+- **`NEXT_PUBLIC_*` Dokploy no siempre propagan al runtime** — fallback con headers `x-forwarded-host`. Ver [[next-public-envs-dokploy-runtime-fallback-headers]]
+
 ### supabase CLI (2026-05-20)
 - **Migration con prefijo no-numérico (`107b`) se skipea silente** — el SQL nunca corre en fresh setup. Renombrar a número >max actual, NO usar prefijos parecidos al existente (`1071` rompe parser). Ver [[supabase-cli-skipea-migrations-con-prefijo-no-puramente-numerico]]
 

@@ -112,7 +112,17 @@ Orden por FK (ver [[2026-05-18-facturaia-reset-agentesia]]):
 - **Matriz permisos rol-aware**: función SQL `user_can_write_in_org(p_org_id, p_resource)` (mig 121+123+127) — single source of truth. Espejo TS `src/lib/auth/role-matrix.ts`. Aplicada en RLS de 14 tablas core + `withApiAuth.requireWrite`. **Modificar = tocar AMBOS** (SQL + TS) + test vitest. Ver [[matriz-permisos-rol-aware-bd-mas-espejo-ts]] + [[ADR-008-matriz-permisos-rol-aware-bd]].
 - **`/sin-acceso` fallback**: user con JWT vivo sin org operable (revocado/expirado) → página con mensaje + logout limpio. NO redirigir a `/login` (loop con middleware). Ver [[ADR-007-sin-acceso-fallback-vs-loop-redirect]] + [[signOut-solo-invalida-refresh-no-access-token]].
 - **Bot WhatsApp sticky multi-org** (mig 125): `whatsapp_org_selection` PK user_id, TTL 6h sliding (24h si source=`web_switch`). Resolver: N=1 directo · sticky viva · `active_org_id` + upsert · sino `multi_org_pendiente` con candidates para workflow n8n.
-- **Lifecycle equipo**: invitar = `createUser` → INSERT membership → `generateLink` → email Resend → rollback (`deleteUser` + delete membership) si falla. Ver [[supabase-createuser-race-trigger-handle-new-user]]. Soft delete (`estado='revocado'` + `revoked_at` + `signOut('global')` + limpiar sticky). Cron `team-expire-invites` pasa `invitado→expirado` tras 30d.
+- **Lifecycle equipo**: invitar = `createUser` → INSERT membership → `generateLink` → email Resend → rollback (`deleteUser` + delete membership) si falla. Ver [[supabase-createuser-race-trigger-handle-new-user]]. Soft delete (`estado='revocado'` + `revoked_at` + `signOut('global')` + limpiar sticky). Cron `team-expire-invites` pasa `invitado→expirado` tras 30d (con `revoked_at=now()` para CHECK mig 126).
+
+## Modelo invitación consent-explícito (mig 129/130, 2026-05-21)
+
+- **TODA invitación = `estado='invitado'`** (no más rama "existing user → activo directo"). Email único `team-invite-email` con link "Aceptar invitación a [Org]". Ver [[ADR-009-invitacion-consent-explicito-vs-activo-directo]].
+- **Endpoint `POST /api/team/invitations/accept`** — el invitado promueve su propia membership `invitado → activo`. Bypass OTP gate (acepto antes de verificar phone). Limpia `revoked_at + expires_at` por CHECK mig 126.
+- **Page `/invitacion`** — público en middleware (path `isAuthPage` + bypass redirect-si-autenticado). Bifurcada por edad del user: <60s → set password + auto-accept, >60s → botón Aceptar. Detecta hash `#error=otp_expired` para UX claro. Ver [[hash-magic-link-supabase-requiere-setsession-explicito]].
+- **Mig 129** — RLS `org_members_select` ampliada `OR user_id = auth.uid()`: invitado puede leer su propia fila pending en orgs distintas a su `active_org_id`. Ver [[rls-org-members-select-debe-incluir-own-memberships]].
+- **Mig 130** — trigger `handle_new_user` perdió rama legacy `invited_to_org_id`. Antes duplicaba el INSERT del endpoint con `estado='activo'` → UNIQUE violation. Ver [[trigger-handle_new_user-rama-legacy-choca-con-insert-explicito]].
+- **Cookie `impersonate_org` confinada a `/admin/*`** — fuera de ese path el proxy borra del `request.cookies` (no solo response) para que handlers no resuelvan orgId al valor impersonado. Ver [[cookie-impersonate-leak-fuera-de-admin]].
+- **`siteUrl` con fallback header** — endpoints accept/invite aceptan `NEXT_PUBLIC_SITE_URL || NEXT_PUBLIC_APP_URL || x-forwarded-host` (Dokploy a veces no propaga envs runtime). Ver [[next-public-envs-dokploy-runtime-fallback-headers]].
 
 ## Links
 
