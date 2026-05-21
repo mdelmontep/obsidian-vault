@@ -28,7 +28,7 @@ Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas 
 | Retell KB | `knowledge_base_34f85cf8295d3369` — 11 chunks info taller |
 | Chatwoot inbox | **compartido** AgentesIA `https://chatwoot.agentesia.madrid` acct=1 ([[ADR-012-ecobox-sin-crm-vs-chatwoot-vs-kommo]]). Bot `ChatBOT EcoBox` id=2 |
 | Pipeline | 5 labels `ecobox-{nuevo,cita-agendada,peritaje-hecho,entregado,cancelado}` |
-| Custom attrs | 15 conversation-scoped con prefijo `ecobox_*` (matrícula DEDUPE KEY, marca, daño, seguro, sustitución, recogida, fecha cita, gcal_event_id…) |
+| Custom attrs | 14 conversation-scoped con prefijo `ecobox_*` (matrícula DEDUPE KEY, marca, daño, seguro, sustitución, recogida, fecha cita, gcal_event_id…). `ecobox_drive_folder` borrado 2026-05-22 — no aplica al flujo final |
 | WhatsApp Cloud | **pendiente número + WABA** en portfolio EcoBox `1011127821491282` |
 | Email SMTP | placeholder `notificaciones@ecobox360.es` — pendiente app-password |
 | 1Password vault | "EcoBox" en agentesialab — 9 items con todas las creds |
@@ -39,7 +39,7 @@ Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas 
 |---|---|---|
 | Chatwoot Bot Alex | `lv7pee2XAU5OngOB` | **ACTIVO** (v1 sin tools n8n aún) |
 | Mirar_disponibilidad | `iO9m2aSifPYY9LuA` | inactivo · necesita GCal OAuth |
-| Reservar_cita | `bJwoFHSBO6BK7gUe` | inactivo · idempotency Redis + Calendar event_id sha1 ([[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]]) + envía emails cliente+Cristian |
+| Reservar_cita | `bJwoFHSBO6BK7gUe` | inactivo · idempotency Redis + Calendar event_id sha1 ([[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]]) + envía emails cliente+Cristian + **append Google Sheet `EcoBox - Leads`** (log universal voz+chat) |
 | Buscar_reserva | `HHryz8eDv3GOxZMF` | inactivo |
 | Cancelar_cita | `L2W64JNIQmd0IJLV` | inactivo |
 | Recordatorios cron 48h+24h | `QVPf25PZyLv0UHII` | inactivo · pendiente decisión cliente (sólo confirmación + alert por ahora) |
@@ -71,7 +71,7 @@ START → Welcome → Extract DV (intent) → Branch classifier
 1. Comprar número telefónico provider AgentesIA habitual
 2. Crear WABA en portfolio `1011127821491282` + registrar número + generar Permanent Access Token Meta
 3. Crear plantilla HSM `confirmacion_cita` (categoría **Utility**, no Marketing — ahorra 7×)
-4. Crear Google Calendar dedicado "EcoBox - Peritajes" + compartir con cuenta n8n
+4. Crear Google Calendar dedicado "EcoBox - Peritajes" + Google Sheet "EcoBox - Leads" (importar `ecobox_leads_template.csv` con 17 columnas). Compartir ambos con cuenta OAuth n8n
 5. App-password Gmail `notificaciones@ecobox360.es` para SMTP
 6. Logo PNG público + color marca hex confirmados (defaults `#0F1B2D` + `#E76F51`)
 7. URL Google Maps corta de Rotterdam 3
