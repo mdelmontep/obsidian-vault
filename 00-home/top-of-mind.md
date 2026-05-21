@@ -18,14 +18,13 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **FacturaIA — test e2e middleware/proxy activo** (~1-2h) — disparado por incidente 2026-05-20 donde se creyó (erróneamente) que `proxy.ts` no se ejecutaba durante 3 semanas. Smoke test que verifica que `impersonate_org` cookie behavior end-to-end. Detalle en hub Ideas crudas
 - **agency-portal — extraer `extractError` a helper compartido** (~1h) — hoy lo arreglé en 3 sitios con copy-paste (auto-emit, pdf/[shadowId], handler manual fetch). Extraer a `lib/facturaia/extract-error.ts` + tests + reemplazar las 3 copias
-- **FacturaIA Copiloto — desbloquear LLM** — OpenAI 429 quota exceeded en prod + Anthropic key inválida desde PR-A1.6. Recargar saldo OpenAI o rotar Anthropic key y switch en `/admin/llm`. Sin esto el Copiloto v2 ya desplegado no responde
-- **FacturaIA Copiloto — PR-A3.1 (3 tools movimientos)** tras desbloqueo LLM — `suggest_note`, `explain_movimiento`, `analyze_movimiento` para contexto conciliación
+- **FacturaIA — rotar OpenAI key (higiene, expuesta en transcript 2026-05-21) + fix typo `ssk-ant-` → `sk-ant-` en env Anthropic Dokploy** (~5min, P2) — no bloquea nada hoy (OpenAI funciona, Anthropic no se usa); higiene + tener fallback
+- **FacturaIA Copiloto — PR-A3.1 (3 tools movimientos)** — `suggest_note`, `explain_movimiento`, `analyze_movimiento` para contexto conciliación
 - **FacturaIA — crear cron Dokploy `cashflow-alerts`** (`30 7 * * *`, curl con `$FACTURAIA_SERVICE_KEY`) tras deploy. Smoke test: ver `/admin/system/crons` con los 6 crons en verde a las 24h
 - **FacturaIA — decidir VerifACTU worker en Dokploy** (hoy Disabled). Si va a quedar off, eliminar entrada. Si se activa, hacer Run Now y verificar facturas pendiente_envio → aceptada
 - **FacturaIA — Stripe en activación de add-ons** — hoy CTA "+XX€/mes" redirige a `/settings?tab=plan` sin cobro real. Conectar checkout para que el toggle = compra. Conciliación 19€ y Anti-fraude 9€ ya seedeados
 - **FacturaIA — Cobros backend** (módulo del recomendador IA) — recordatorios escalados configurables (3/10/25 días, tono, hora). 6 opciones config con badge Próximamente esperan
 - **FacturaIA — decidir cliente live vs congelado** — hoy snapshot fiscal al crear factura (datos cliente embebidos). Si editas cliente, PDFs viejos conservan datos antiguos (legalmente correcto, confunde UX). Decisión producto: ¿añadir botón "Re-emitir con datos actuales" o dejar congelado siempre?
-- **FacturaIA — Bot WhatsApp rediseño conversacional (3 sub-PRs)** — detección first-time + tono colega contable + Phase 2 Interactive Lists + sticky-aware. Bloqueado por LLM `/admin/llm`. Ver [[facturaia-bot-conversational-redesign]]
 - **FacturaIA OTP — patch n8n delivery status** — generar key nueva en `n8n.tufacturaia.com/Settings/API` y ejecutar `python3 ops/n8n-patches/apply-delivery-status.py` (~5min)
 - **FacturaIA — quitar dominio viejo `facturaia.agentesia.world` de IONOS + Dokploy** — repo y `.env.local` ya limpios (2026-05-20). Queda solo infra externa: DNS IONOS + entrada stack Dokploy. Limpiar para evitar confusión futura
 - **FacturaIA OTP — copiar `docs/legal/privacy-otp-update.md`** a política privacidad pública (RGPD art 13)

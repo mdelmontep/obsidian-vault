@@ -50,6 +50,11 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **Estado fiscal con sombra externa** — cuando hay shadow emitida, acciones de estado van vía sistema externo, no local. Ver [[acciones-de-estado-fiscal-vs-sombra-en-sistema-externo]]
 - **Validar input antes de RPC atómico** — validación post-RPC que falla quema contador atómico y deja hueco no recuperable (fiscal AEAT). Orden: input → reads-que-niegan → RPC → INSERT. Ver [[validar-input-antes-de-rpc-atomico-e-insert]]
 - **Mock Supabase fail-fast** — terminales sin respuesta devuelven error explícito, no `{data:null,error:null}`. Fuerza encolar en orden, evita falsos positivos. Ver [[mock-supabase-fail-fast-default-en-tests-vitest]]
+- **Defensa en código vs prompt LLM** — invariantes de dominio (precio>0, NIF presente) NO se defienden con regla del prompt; el LLM se las salta. Validar en code node downstream y devolver conversacional. Ver [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]]
+- **n8n Set node output ≠ input** — expressions usan `$json.X` del input pero el output solo lleva assignments. Si downstream necesita X, añadir assignment. Ver [[n8n-set-node-output-solo-lleva-assignments-explicitos]]
+- **n8n $json post-HTTP es la respuesta, no el item** — tras httpRequest, $json downstream es la response. Para el item upstream usar `$('NodeName').first().json.X`. Ver [[n8n-dollar-json-tras-http-es-respuesta-http-no-item-original]]
+- **NIF España paraguas DNI/NIE/CIF** — desde RD 1065/2007 unificado bajo "NIF"; aceptar 3 algoritmos bajo misma función. Ver [[nif-espana-paraguas-dni-nie-cif-desde-rd-1065-2007]]
+- **WhatsApp Interactive List límites** — max 10 rows, title 24, button 20, id 200 (patrón `tipo:UUID` + regex switch). Ver [[whatsapp-interactive-list-limites-y-row-id-pattern]]
 
 ## 🔥 Últimas 2 semanas
 

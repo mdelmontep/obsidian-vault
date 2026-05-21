@@ -124,6 +124,19 @@ Orden por FK (ver [[2026-05-18-facturaia-reset-agentesia]]):
 - **Cookie `impersonate_org` confinada a `/admin/*`** — fuera de ese path el proxy borra del `request.cookies` (no solo response) para que handlers no resuelvan orgId al valor impersonado. Ver [[cookie-impersonate-leak-fuera-de-admin]].
 - **`siteUrl` con fallback header** — endpoints accept/invite aceptan `NEXT_PUBLIC_SITE_URL || NEXT_PUBLIC_APP_URL || x-forwarded-host` (Dokploy a veces no propaga envs runtime). Ver [[next-public-envs-dokploy-runtime-fallback-headers]].
 
+## Bot WhatsApp conversacional + cambio org (PR-Bot-1.x/2.x, 2026-05-21)
+
+- Workflow n8n `pqSWkDIHqmSVHotB` (`n8n.tufacturaia.com`). 10 patches encadenados idempotentes en `n8n/patches/apply-pr-bot-*.py` con markers `PR_BOT_1` → `PR_BOT_2_5`. Snapshots staged en `n8n/workflows/staged/`.
+- Tono colega contable + tipo `conversacion` para small_talk → texto plano sin 🧾. Bloque `<context>` en chatInput: `IS_FIRST_TIME`, `STICKY_ORG_NAME`, `HAS_MULTI_ORG`, `CANDIDATE_ORGS`.
+- Cambio org desde chat: agente devuelve `cambio_org_solicitado` con `target_org_id` (si match inequívoco → bypass lista; si ambiguo → WhatsApp Interactive List nativa). Router temprano `Es Org Select?` + POST `select-org` + reply "Cambiado a X. Repite tu mensaje". v1 dos turnos sin reprocesado, ver [[ADR-011-bot-whatsapp-org-switch-v1-dos-turnos-vs-reprocesado]].
+- Defensa en código en `Parsear y Calcular Totales`: invariantes (precio>0, NIF presente en factura) validados aquí, no en prompt. Ver [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]].
+
+## Validación NIF (`src/lib/validation/spanish-tax-id.ts`)
+
+- `validateSpanishTaxId()` cubre los 3 algoritmos (DNI módulo 23, NIE con sustitución X/Y/Z, CIF suma pares+impares según letra inicial). 17 tests vitest. Ver [[nif-espana-paraguas-dni-nie-cif-desde-rd-1065-2007]].
+- **Helper REPLICADO en n8n** (Code node de `Parsear y Calcular Totales`). Si cambias el algoritmo aquí, refleja allí (no hay import).
+- Copy en mensajes mantenido como "NIF" genérico (cubre los 3). "CIF/NIF" si B2B explícito.
+
 ## Links
 
 - Reset 2026-05-18: ver memoria `agentesia-org-reset-2026-05-18` (auto-memory agency-portal)

@@ -34,3 +34,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 008 · 2026-05-20 · [[ADR-008-matriz-permisos-rol-aware-bd|Matriz canónica user_can_write_in_org BD + espejo TS]] (FacturaIA)
 - 009 · 2026-05-21 · [[ADR-009-invitacion-consent-explicito-vs-activo-directo|Invitaciones consent explícito (toda invite = pending hasta aceptar)]] (FacturaIA)
 - 010 · 2026-05-21 · [[ADR-010-helper-sql-atomico-vs-endpoint-encadenado|Helper SQL atómico para acciones con chain de triggers fiscales]] (FacturaIA)
+- 011 · 2026-05-21 · [[ADR-011-bot-whatsapp-org-switch-v1-dos-turnos-vs-reprocesado|Bot WhatsApp org switch — v1 dos turnos vs reprocesado automático]] (FacturaIA)
