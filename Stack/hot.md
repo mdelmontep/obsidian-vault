@@ -55,6 +55,13 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — Conciliación hardening audit (2026-05-21 tarde, PR #65/#66/#67/#69/#70)
+- **Helper SQL con chain triggers: setear guard ANTES del UPDATE source** — sin orden correcto, chain loop infinito + bug fiscal reentra. Ver [[helper-sql-orden-last-revert-at-antes-de-update-mfa]]
+- **fmtDate(null) tumba página entera React** — formatters compartidos requieren guard null defensivo desde día 1. Ver [[fmtdate-null-tumba-pagina-entera-react]]
+- **Audit feed nueva source requiere shape snapshot/diff** — sin snapshot, columna detalle queda vacía → promesa "queda en auditoría" rota. Ver [[audit-feed-multi-source-snapshot-vs-diff-shape]]
+- **PG RETURNS TABLE con SELECT INTO → prefijo out_** — evita ambiguity + alinear archivo migración con prod tras hotfix. Ver [[pg-returns-table-prefijo-out-para-evitar-ambiguity]]
+- **4 agentes paralelos en worktrees + cherry-pick combinado a 1 PR** — verificar scope archivo-disjoint ANTES de delegar. Ver [[cherry-pick-4-worktrees-agentes-paralelos]]
+
 ### facturaia — Phase 1 bot multi-org (2026-05-21)
 - **`n8n_chat_histories` vive en Postgres local n8n, no en Supabase** — gotcha smoke + limpieza memoria LLM. Ver [[n8n-chat-histories-en-postgres-local-no-supabase]]
 - **Smoke multi-org WhatsApp limpia 3 tablas + no abrir web** — sticky/active_org_id/n8n_chat_histories. Ver [[smoke-multi-org-whatsapp-clean-state]]
