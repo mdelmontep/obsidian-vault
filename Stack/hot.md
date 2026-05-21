@@ -12,6 +12,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 Patrones que aplican siempre, no expiran. Lo más reusado.
 
+- **LLM tool-use con cards visuales** — instruir explícito en system prompt a NO duplicar la lista del card en texto. Ver [[llm-tool-use-card-visual-instruir-no-duplicar-lista]]
 - **Next.js 16 = `proxy.ts` no `middleware.ts`** — NO revertir el rename. `middleware.ts` solo sigue por backcompat con warning. Ver [[nextjs16-middleware-to-proxy]]
 - **Cookie impersonación pegada ≠ middleware caído** — primero override-vs-union en `resolveAllowedOrgIds`, después middleware. Ver [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]]
 - **extractError objeto anidado** — `String(body.error)` colapsa a `[object Object]`. APIs modernas devuelven `{error:{message,...}}`. Ver [[extract-error-objeto-anidado-en-apis-modernas]]
