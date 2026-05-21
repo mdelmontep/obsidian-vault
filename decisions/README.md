@@ -37,3 +37,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 011 · 2026-05-21 · [[ADR-011-bot-whatsapp-org-switch-v1-dos-turnos-vs-reprocesado|Bot WhatsApp org switch — v1 dos turnos vs reprocesado automático]] (FacturaIA)
 - 012 · 2026-05-22 · [[ADR-012-ecobox-sin-crm-vs-chatwoot-vs-kommo|EcoBox sin CRM tradicional — Chatwoot compartido AgentesIA]] (EcoBox)
 - 013 · 2026-05-22 · [[ADR-013-retell-conversation-flow-rigid-vs-flex-mode|EcoBox Retell Conversation Flow en Rigid Mode]] (EcoBox)
+- 014 · 2026-05-22 · [[ADR-014-ecobox-log-universal-sheet-vs-chatwoot-voice-conversation|EcoBox log universal de leads en Google Sheet, no Chatwoot conversation]] (EcoBox)

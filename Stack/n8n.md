@@ -313,3 +313,6 @@ Schema buggy: `useDynamicClientRegistration` controla if/else en allOf pero no e
 
 ### Compose con networks external:true falla en Dokploy nuevos
 Dokploy AgentesIA pre-crea la network; Dokploys nuevos en Stackscale (Docker no-Swarm) no. Container queda `state=created` con error "network not found". Fix: quitar `external: true`. Ver [[n8n-network-external-true-falla-en-dokploy-sin-pre-create]]
+
+### Fan-out post-create paralelo (log + side effects no críticos)
+Tras crear entidad principal (Calendar event, fila DB, etc.), abrir N salidas paralelas: respond webhook rápido + emails + Sheet/Log append. Cada salida con `onError: continueRegularOutput` para que side effects opcionales no rompan flow primario. Ej. EcoBox `Reservar_cita`: GCal → [Email cliente, Email Cristian, Respond Retell, Sheet append]. Ver [[ADR-014-ecobox-log-universal-sheet-vs-chatwoot-voice-conversation]]
