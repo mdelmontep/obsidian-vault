@@ -83,6 +83,12 @@ tags: [home, archivo]
 - FacturaIA: rediseño visual completo
 - CLAUDE.md global optimizado
 
+## 2026-05-21
+
+- FacturaIA — UX anular factura desde menú ⋯ de fila `/emitidas` (commit `270d110`, componente reutilizable `anular-confirm-modal.tsx`)
+- FacturaIA — mig 142 drop overload legacy `convertir_presupuesto_a_factura(uuid,uuid)` (commit `dad200a`, aplicada en prod vía `supabase db query --linked`)
+- FacturaIA — rotar OpenAI key + Anthropic key nueva en Dokploy nuevo (smokes verdes, desbloquea PR-A3.1)
+
 ## 2026-05-18
 
 - FacturaIA — smoke test post-deploy 2026-05-07 (5 puntos auditados OK + fix borrador anular + 7 E2E tests). Cubierto por sesión cumplimiento fiscal full.
