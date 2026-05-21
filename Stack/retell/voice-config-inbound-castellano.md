@@ -161,3 +161,18 @@ Dynamic solo si necesitas:
 - `voicemail_detection_enabled: true` en inbound → falsos positivos con mayores que tardan en saludar.
 - `enable_dynamic_responsiveness: true` para castellano → muletillas confunden al detector.
 - LLM componiendo fecha/dirección/ID en respuesta TTS → alucinaciones impredecibles.
+
+## Flex vs Rigid Mode — coste por minuto
+
+Conversation Flow tiene 2 modos compilación. Flex compila TODO (nodos + edges + KB + tools) en UN prompt enorme. Si supera 3.500 tokens → Retell aplica **token-scaling multiplier x2-5** sobre el LLM. Rigid sólo manda el nodo activo + global_prompt.
+
+| Config | Coste/min castellano |
+|---|---|
+| Flex + gpt-4.1 cascading high_priority + KB | €0.20-0.35 |
+| Flex + gpt-4.1 sin high_priority | €0.18-0.28 |
+| **Rigid + gpt-4.1 cascading SIN high_priority** | **€0.135** ← sweet spot |
+| Rigid + gpt-4o-mini todo | €0.115 (perdida calidad voice) |
+
+**Regla**: por defecto Rigid. Flex solo si necesitas context-switching real entre tareas Y has medido token count en simulator Retell (<3.000 para tener margen).
+
+Ver [[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]]

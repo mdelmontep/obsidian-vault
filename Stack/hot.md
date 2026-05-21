@@ -10,6 +10,9 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Retell Flex vs Rigid coste** — Flex compila TODO (nodos+KB+tools), token-scaling x2-5 si >3500 tokens. Rigid + gpt-4.1 sin high_priority = €0.135/min. Default Rigid. Ver [[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]]
+- **Calendar idempotency sha1(phone+slot)** — eventId determinista pasado al create. Si ya existe → 409 nativo, no duplica. Sin estado externo. Ver [[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]]
+
 Patrones que aplican siempre, no expiran. Lo más reusado.
 
 - **LLM tool-use con cards visuales** — instruir explícito en system prompt a NO duplicar la lista del card en texto. Ver [[llm-tool-use-card-visual-instruir-no-duplicar-lista]]

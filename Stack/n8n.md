@@ -304,3 +304,12 @@ Durante ventanas de redeploy Dokploy, Traefik devuelve `404 page not found\n` (t
 ### Persist con merge shallow deja cruft entre contextos
 Endpoints state machine que UPSERT con `{...existing, ...incoming}` contaminan al cambiar contexto: campos viejos coexisten con nuevos en el JSONB. Mandar `field: null` explícito desde el cliente para los que deben morir. Simétrico: al guardar draft, nullear last_listado. Ver [[persist-merge-shallow-deja-cruft-entre-contextos]]
 
+
+### Google OAuth credentials NO se pueden crear via Public API
+Schema buggy: `useDynamicClientRegistration` controla if/else en allOf pero no está en `properties` (`additionalProperties: false`). Workaround: crear cred OAuth en n8n UI (browser, requiere OAuth dance anyway). Vía API solo `openAiApi`, `postgres`, `redis`, `smtp`, `httpHeaderAuth`, `telegramApi`. Ver [[n8n-public-api-google-oauth-schema-buggy-crear-en-ui]]
+
+### Postgres node con responseMode lastNode solo devuelve primer row
+`SELECT` que retorna N filas + webhook `lastNode` → solo primera fila en respuesta HTTP. Engaña pensando que las queries no corrieron. Fix: agregar con `array_agg()` o `json_agg()`, o usar `responseNode` con JSON.stringify($items()). Ver [[n8n-postgres-webhook-lastnode-solo-devuelve-primer-row]]
+
+### Compose con networks external:true falla en Dokploy nuevos
+Dokploy AgentesIA pre-crea la network; Dokploys nuevos en Stackscale (Docker no-Swarm) no. Container queda `state=created` con error "network not found". Fix: quitar `external: true`. Ver [[n8n-network-external-true-falla-en-dokploy-sin-pre-create]]

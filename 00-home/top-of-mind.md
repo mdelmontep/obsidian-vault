@@ -16,6 +16,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **EcoBox — nuevo cliente AgentesIA (taller chapa+pintura Las Rozas)** — voz Retell + chat Chatwoot compartido + emails confirmación+alert. Todo desplegado y enchufado en `n8necobox.agentesialabs.com`. Pendiente Cristian: número provider, WABA en portfolio `1011127821491282`, plantilla HSM `confirmacion_cita` Utility, GCal compartido, app-password SMTP, logo+color. Pendiente Manu: OAuth Google en n8n UI. HUB: [[clientes/ecobox/index|EcoBox HUB]] · [[ADR-012-ecobox-sin-crm-vs-chatwoot-vs-kommo]] · [[ADR-013-retell-conversation-flow-rigid-vs-flex-mode]]
 - **FacturaIA Copiloto — PR-A3.1 smoke E2E prod** — desplegado 2026-05-21. Probar multi-turno encadenado (`searchMovimientos` → `explainMovimiento` → `analyzeMovimientoPattern`) con cuenta multi-org. Ver card visual no JSON, y mensaje LLM resumen no enumeración. Commits 5d10cdf + 26a0f2a
 - **FacturaIA — UI fiscal-panel mostrar aeat_health derivado** (~30 líneas) — endpoint `/api/admin/config/fiscal` ahora devuelve health derivado (verde/ámbar/rojo/gris) + last_10 pero panel sigue mostrando solo HealthRow certs. Añadir segundo HealthRow + lista compacta. Commit b6014de
 - **FacturaIA — Email_log Fase B** — webhook Resend (delivered/bounced/complained/opened) + UI panel listado + reenvío 1-click + cablear OTP/team_invite/team_added/team_removed/team_role_changed (kinds ya en CHECK constraint mig 143). Fase A en prod commit 7861b0d

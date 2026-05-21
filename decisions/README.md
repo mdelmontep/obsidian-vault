@@ -35,3 +35,5 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 009 · 2026-05-21 · [[ADR-009-invitacion-consent-explicito-vs-activo-directo|Invitaciones consent explícito (toda invite = pending hasta aceptar)]] (FacturaIA)
 - 010 · 2026-05-21 · [[ADR-010-helper-sql-atomico-vs-endpoint-encadenado|Helper SQL atómico para acciones con chain de triggers fiscales]] (FacturaIA)
 - 011 · 2026-05-21 · [[ADR-011-bot-whatsapp-org-switch-v1-dos-turnos-vs-reprocesado|Bot WhatsApp org switch — v1 dos turnos vs reprocesado automático]] (FacturaIA)
+- 012 · 2026-05-22 · [[ADR-012-ecobox-sin-crm-vs-chatwoot-vs-kommo|EcoBox sin CRM tradicional — Chatwoot compartido AgentesIA]] (EcoBox)
+- 013 · 2026-05-22 · [[ADR-013-retell-conversation-flow-rigid-vs-flex-mode|EcoBox Retell Conversation Flow en Rigid Mode]] (EcoBox)
