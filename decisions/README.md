@@ -38,3 +38,6 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 012 · 2026-05-22 · [[ADR-012-ecobox-sin-crm-vs-chatwoot-vs-kommo|EcoBox sin CRM tradicional — Chatwoot compartido AgentesIA]] (EcoBox)
 - 013 · 2026-05-22 · [[ADR-013-retell-conversation-flow-rigid-vs-flex-mode|EcoBox Retell Conversation Flow en Rigid Mode]] (EcoBox)
 - 014 · 2026-05-22 · [[ADR-014-ecobox-log-universal-sheet-vs-chatwoot-voice-conversation|EcoBox log universal de leads en Google Sheet, no Chatwoot conversation]] (EcoBox)
+- 015 · 2026-05-22 · [[ADR-015-centro-fiscal-mvp-vs-roadmap-completo|Centro Fiscal IA arranca como MVP 4 semanas, no roadmap 11 semanas]] (FacturaIA)
+- 016 · 2026-05-22 · [[ADR-016-centro-fiscal-pricing-14-90|Centro Fiscal IA pricing 14,90€/mes (149€/año), no 9€ spec original]] (FacturaIA)
+- 017 · 2026-05-22 · [[ADR-017-centro-fiscal-no-presenta-v1|Centro Fiscal IA v1 NO presenta telemáticamente, convenio AEAT diferido]] (FacturaIA)

@@ -45,10 +45,11 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **Simarro — verificar salesbot 88183** — comprobar acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo
 - **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` da 400 NotSupportedChoice. Pedir ID correcto pipeline 13495347
 - **Tecnocloud — PR #3 voice-webhook-tickets** pendiente review Dani — buildSubject 14 palabras + skip self-emails gmail-poll + audio Retell en UI ticket. Tras merge → smoke test E2E con llamada real
+- **FacturaIA Centro Fiscal IA — pendientes externos pre-beta** — MVP dev cerrado 2026-05-22 (4 migs SQL 146/147/148/149, ~50 archivos TS, 129 tests pass). Pendiente Manu operativo: (1) aplicar migs en Supabase prod; (2) contratar Backblaze B2 EU + bucket Object Lock Compliance 6a+1m; (3) FNMT TS@ vía CERES + cert X.509 a `/etc/secrets/`; (4) seguro RC Tech E&O 1M€ Hiscox/AXA (~600-1.200€/año); (5) abogado IT — Términos B2B/B2C + DPA art 28 + Runbook brecha (3-5k€); (6) ZDR OpenAI+Anthropic por ticket; (7) Stripe price IDs (14,90€ mensual / 149€ anual); (8) auditoría externa pre-beta REAF+abogado+pentest (10-15k€). Pricing 14,90€ validado vs mercado (research 42 fuentes). Manual: `docs/architecture/centro-fiscal-ia-manual.md`
 
 ## LATER
 
-- **FacturaIA — backends módulos pendientes** — Fiscal (modelos AEAT 303/111/115/347), Firma eIDAS, Cashflow IA forecast. ~21 opciones config con badge Próximamente
+- **FacturaIA — backends módulos pendientes** — Firma eIDAS, Cashflow IA forecast (Fiscal MVP cerrado 2026-05-22, ver NEXT). ~14 opciones config con badge Próximamente
 - **FacturaIA — conexión bancaria automática** (Plaid/GoCardless/BBVA Open Banking) — desbloquea Conciliación al 100%
 - **FacturaIA — Asistente IA multi-canal** — copiloto WhatsApp para consultas (vencidas, resúmenes, cobrador, predicción cashflow, auto-categorización, alertas, presupuestos por contexto, informe fiscal). Spec `[[facturaia-bloque-4-agent-query-spec]]`
 - **FacturaIA — Google OAuth email por org** — cada org envía desde su email via Gmail API
