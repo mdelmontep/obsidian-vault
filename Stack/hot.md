@@ -16,6 +16,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 Patrones que aplican siempre, no expiran. Lo más reusado.
 
 - **LLM tool-use con cards visuales** — instruir explícito en system prompt a NO duplicar la lista del card en texto. Ver [[llm-tool-use-card-visual-instruir-no-duplicar-lista]]
+- **LLM safety-critical = 1 tool, no cascada** — bajo presión el LLM puede invertir el orden de 2 tools. Side-effects al post-evento. Ver [[llm-safety-critical-un-tool-no-cascada-de-tools]]
+- **Retell transfer_call built-in es el único que transfiere SIP** — custom function solo pasa datos al LLM, la línea sigue activa. Ver [[retell-transfer-call-builtin-vs-custom-function-para-sip]]
+- **n8n executeWorkflowTrigger filtra campos no declarados** — añadir `dry_run`/nuevos campos al `workflowInputs.values` del trigger en TODOS los sub-workflows. Ver [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]]
+- **Whitelist ≠ dry-run** — añadir flag explícito `dry_run:true` con cortocircuito a IDs sintéticos si quieres seguridad en smokes. Ver [[whitelist-no-es-dry-run-añadir-flag-explicito]]
 - **Next.js 16 = `proxy.ts` no `middleware.ts`** — NO revertir el rename. `middleware.ts` solo sigue por backcompat con warning. Ver [[nextjs16-middleware-to-proxy]]
 - **Cookie impersonación pegada ≠ middleware caído** — primero override-vs-union en `resolveAllowedOrgIds`, después middleware. Ver [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]]
 - **extractError objeto anidado** — `String(body.error)` colapsa a `[object Object]`. APIs modernas devuelven `{error:{message,...}}`. Ver [[extract-error-objeto-anidado-en-apis-modernas]]

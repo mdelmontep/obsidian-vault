@@ -253,6 +253,12 @@ Para latencia baja con escritura externa (Kommo, Calendar, WA), patrón:
 - `runOnceForAllItems`: permite `$input.first()`, `$input.all()`, `$('NodeName').item.json`. Default y más versátil.
 - `runOnceForEachItem`: NO permite `$input.first()` — error `Can't use .first() here`. Solo si necesitas iterar item-by-item con `$json` y poco más.
 
+## Gotchas Code + If (mayo 2026)
+
+- **`If` v2 strict — `null != 0` ⇒ TRUE**. Rompe detección "este id existe?" con `notEquals 0`. Patrón seguro: emitir flag booleano `_has_X = !!X` en el Code anterior, If `boolean.true` sobre el flag. Ver [[n8n-if-strict-null-not-equals-0-evalua-true]].
+- **Final response que lee `$('NodeX').first().json` crashea si NodeX no se ejecutó** (rama de cortocircuito, validation fail, dry_run). Patrón: chequear `$input.first().json._short_circuit === true` primero, passthrough. Lookup específico siempre envuelto en try/catch. Ver [[n8n-code-final-response-leer-input-no-nodo-concreto-si-hay-branches]].
+- **`executeWorkflowTrigger` con `inputSource:"workflowInputs"` filtra campos no declarados**. Añadir nuevos campos al schema del trigger en TODOS los sub-workflows downstream (cascade). Ver [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]].
+
 ## Gotchas n8n LangChain 2.x (mayo 2026)
 
 ### `@n8n/n8n-nodes-langchain.toolHttpRequest` typeVersion 1.1 — invocaciones secuenciales rotas
