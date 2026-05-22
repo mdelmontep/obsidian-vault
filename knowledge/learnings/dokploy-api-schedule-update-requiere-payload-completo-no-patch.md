@@ -18,6 +18,8 @@ tags: [dokploy, api, trpc, gotcha]
 
 **Caso real FacturaIA 2026-05-22**: activar 2 crons `fiscal-avisos` + `fiscal-recalcular-borrador` requirió mandar `name, description, cronExpression, command, shellType:'bash', scheduleType:'compose', composeId, serviceName, enabled:true` cada vez.
 
-**Aplicable**: a otros endpoints tRPC Dokploy con suffix `.update` (mismo patrón en `compose.update`, `application.update`, `environment.update`, etc.). Comportamiento estándar tRPC con schemas Zod estrictos en backend.
+**Aplicable**: a otros endpoints tRPC Dokploy con suffix `.update` (mismo patrón en `application.update`, `environment.update`, etc.). Comportamiento estándar tRPC con schemas Zod estrictos en backend.
+
+**OJO contradicción descubierta 2026-05-23**: `compose.update` SÍ admite payload parcial (verificado con `{composeId, env}` → HTTP 200). No es regla universal Dokploy — probar por endpoint primero parcial, si falla pasar a completo. Ver [[dokploy-api-compose-update-admite-payload-parcial-vs-schedule-update-no]].
 
 **Workaround alternativo**: si tu integración modifica schedules con frecuencia, hacer un helper `updateScheduleField(scheduleId, field, value)` que internamente hace GET + spread + POST. Evita duplicar el re-send en cada llamada.
