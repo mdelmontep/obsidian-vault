@@ -19,3 +19,5 @@ tags: [eidas, fnmt, criptografia, integracion]
 **Implementación TS**: `node-rfc3161-timestamp` o construir `TimeStampReq` con `asn1.js`. Verifica nonce anti-replay (8 bytes random en req, debe coincidir en resp). Cliente HTTPS con `https.Agent({ cert, key, requestCert: true, rejectUnauthorized: true })`. Cert path desde env, nunca hardcoded.
 
 Aplicable a cualquier integración eIDAS QTSP (Uanataca, Logalty, Camerfirma también RFC 3161).
+
+**Gotcha proceso 2026**: NO existe sandbox FNMT TSA público. Para probar el servicio en CUALQUIER capacidad (incluso dev) hay que firmar convenio bilateral con CERES → 2-6 semanas (formularios + acuerdo + emisión cert X.509 admitido + whitelist IP origen). No se puede testear en local antes de tener convenio. Alternativa con alta más rápida: **Uanataca** (otro QTSP cualificado UE en Trusted List ES) alta 2-3 semanas + API REST moderna + ~0,03€/sello vs ~0,002€ FNMT. **Migración FNMT↔Uanataca = cambio env vars URL + cert** (código TS RFC 3161 estándar funciona con ambos sin cambios). Plantilla email solicitud convenio FNMT: ver `docs/runbooks/fnmt-tsa-email-solicitud-convenio.md` repo facturaia.

@@ -41,3 +41,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 015 · 2026-05-22 · [[ADR-015-centro-fiscal-mvp-vs-roadmap-completo|Centro Fiscal IA arranca como MVP 4 semanas, no roadmap 11 semanas]] (FacturaIA)
 - 016 · 2026-05-22 · [[ADR-016-centro-fiscal-pricing-14-90|Centro Fiscal IA pricing 14,90€/mes (149€/año), no 9€ spec original]] (FacturaIA)
 - 017 · 2026-05-22 · [[ADR-017-centro-fiscal-no-presenta-v1|Centro Fiscal IA v1 NO presenta telemáticamente, convenio AEAT diferido]] (FacturaIA)
+- 018 · 2026-05-22 · [[ADR-018-centro-fiscal-stripe-scope-3-tiers-plus-addon|Centro Fiscal IA Stripe scope = 3 tiers FacturaIA + add-on, no solo add-on]] (FacturaIA)

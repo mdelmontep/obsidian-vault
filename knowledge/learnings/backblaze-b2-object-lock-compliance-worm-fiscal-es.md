@@ -22,3 +22,5 @@ tags: [worm, backblaze, fiscal, compliance, storage]
 **Alternativa soberanía FR**: Scaleway Paris Multi-AZ €0,0146/GB/mes (más caro pero misma capacidad legal). Evitar OVH 2026 (Object Lock aún no GA).
 
 Aplicable a cualquier obligación de inmutabilidad legal: fiscal, sanitaria, gambling, financiera.
+
+**Gotcha crítico**: Object Lock se activa SOLO al crear el bucket (checkbox "Enable Object Lock"). Es **irreversible**: no se puede activar después en un bucket existente. Si lo olvidas, hay que borrar bucket + recrear (perdiendo datos si los hubiera). Default Retention (modo + plazo) sí se ajusta dentro del bucket una vez Object Lock ya está enabled. Verificar siempre con `b2_get_bucket_info` antes del primer upload productivo. Checklist pre-primer-upload: (a) Object Lock = Enabled, (b) Default Retention = Compliance + 2222 días, (c) Region eu-central-003, (d) App Key sin `deleteFiles`.
