@@ -42,3 +42,5 @@ SELECT factura_origen_id, COUNT(*) FROM facturas
 Si hay filas violando el constraint, `CREATE INDEX CONCURRENTLY` falla dejando índice INVALID que hay que `DROP` antes de reintentar.
 
 Caso real FacturaIA: mig 097 + `anularFactura` resolver SQLSTATE 23505. Cierra A-fiscal #8 (race concurrente dos POST a `/api/facturas/[id]/anular`). Complementa [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] que cierra el race en path normal.
+
+**Variante "cron idempotente vía 23505"** (Centro Fiscal mig 150): el cron `fiscal-avisos` insertaba `(declaracion_id, tipo)` esperando el conflict para skip silencioso, **pero el UNIQUE no existía** → duplicados activos. Patrón obligatorio en cualquier cron que escribe filas idempotentes: el cron asume el constraint, el constraint DEBE existir. Auditar con `\d+ tabla` en psql que el índice está antes de confiar en el catch 23505.
