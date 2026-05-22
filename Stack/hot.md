@@ -73,6 +73,10 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### smoke / supabase (2026-05-22)
+- **PostgREST hint revela signature RPC** — probe con args incompletos → 404 con hint enumera params reales. Verifica mig aplicada sin psql. Ver [[postgrest-rpc-hint-revela-signature-aplicada-en-prod]]
+- **CHECK constraint: validar invariante con REST count=0** — query con la NEGACIÓN del invariante + `count=exact` + `Range: 0-0`. Sin tocar filas reales. Ver [[verificar-check-constraint-sin-tocar-prod-con-count-exacto-rest]]
+
 ### meta-ops (2026-05-21)
 - **GitHub Actions free tier engaña** — "payments have failed" es "se agotaron los 2000 min/mes", no cobro fallido. Ver [[github-actions-org-private-free-tier-2000-min]]
 - **Dokploy deploya pese a CI rojo** — webhook independiente de Actions. Ver [[dokploy-webhook-independiente-del-ci-status]]
