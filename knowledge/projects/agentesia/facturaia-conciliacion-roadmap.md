@@ -15,11 +15,11 @@ Si tocas el módulo: actualiza estado + fase actual + backlog al cerrar la sesi�
 
 ## Estado actual (2026-05-22)
 
-**PR-PSD2-1 + 1.1 + 2 + 2.1 + 3.1 HARDENING completos** — conexión bancaria PSD2 vía Tink/TrueLayer funcional end-to-end + security/compliance production-grade. Smoke contra Tink Demo Bank ES verde con 6 movimientos importados. PR-PSD2-3.2 BONITO (UI logo + IBAN + saldo + picker) pendiente como próximo paso.
+**PR-PSD2-1 + 1.1 + 2 + 2.1 + 3.1 HARDENING + 3.2 BONITO completos (2026-05-23)** — conexión bancaria PSD2 vía Tink/TrueLayer funcional end-to-end + security/compliance production-grade + UI Holded-style con 8 logos oficiales Wikimedia + saldo + IBAN parcial + picker modal + menú ⋯ Portal. Smoke contra Tink Demo Bank ES verde con 6 movimientos importados. **Sandbox al 100%**.
 
-Migraciones aplicadas en prod Supabase: 105 · 106 · 107 · 107b · 108 · 109 · 111 · 112 · 113 · 114 · 115 · 116 · 117 · 128 · 131 · **144** · **145** · **146**.
+Migraciones aplicadas en prod Supabase: 105 · 106 · 107 · 107b · 108 · 109 · 111 · 112 · 113 · 114 · 115 · 116 · 117 · 128 · 131 · 144 · 145 · 146 · **147**.
 
-Próximo paso recomendado: (1) smoke desconectar+reconectar Tink para validar state_nonce single-use; (2) PR-PSD2-3.2 BONITO; (3) compliance legal con Dani antes de cutover live (DPA Tink + Privacy Notice + DPIA + pentest + app live Tink).
+Próximo paso recomendado: (1) compliance legal con Dani antes de cutover live (DPA Tink + Privacy Notice mencionando PSD2 + DPIA art 35 + ADR-002 review + pentest); (2) solicitar app live Tink en console.tink.com (self-service standard tier); (3) opcional: cuando user descargue isotipos puros sin wordmark de Santander/CaixaBank/Sabadell de seeklogo/worldvectorlogo, reemplazar SVGs en `/public/banks/`.
 
 ---
 
@@ -141,22 +141,37 @@ Envs nuevas opcionales en Dokploy:
 
 ---
 
-## Pendiente PR-PSD2-3.2 BONITO (~4h) — siguiente
+### PR-PSD2-3.2 BONITO + polish 3.2.1/3.2.2/3.2.3 — UI Holded-style (2026-05-23)
 
-UI a nivel Holded/Quipu/Sage tras hardening completo:
-1. Mig nueva añade `financial_institution_id TEXT` + `display_name TEXT` + `last_known_balance_cents BIGINT[]` a `bank_consents`. Índice UNIQUE PARCIAL `(org_id, provider, financial_institution_id) WHERE status='active'` (anti-duplicados al renovar consent).
-2. `TinkProvider.exchangeCallback` extrae `financialInstitutionId` del primer `account` (NO call extra — el campo viene en `/data/v2/accounts`).
-3. Self-host `/public/banks/{bbva,caixa,santander,sabadell,bankinter,ing,abanca,kutxabank}.svg`. Hardcoded mapping `src/lib/conciliacion/spanish-banks.ts` con `as const`. Drift test CI contra `/providers` Tink.
-4. Card reescrito: un card por banco con sub-filas por account, logo 48×48 con fallback monograma → fallback `<Icon name="bank">`, IBAN parcial `ES** **** **** **** 1234` (mascarado por A5), saldo, currency badge.
-5. Banner full-width caducidad <7d arriba del módulo (no solo pill).
-6. Pill granular: 0-2d rojo "Caducada"/"Caduca mañana", 3-7d amarillo "Caduca en N días", 8d+ verde "Activa".
-7. Modal `<Modal>` confirm desconectar con `autoFocus` en Cancelar + microcopy con números reales ("3 cuentas, 1.247 movimientos").
-8. Picker modal grid 4×2 SVG locales + buscador + botón "Ver todos" → Tink Link redirect (NO iframe, X-Frame-Options DENY).
-9. Empty state trust signals "✓ PSD2 AISP regulado · ✓ Solo lectura · ✓ Bancos españoles".
-10. Sync feedback inline (border-top progress 2px en card, no toast bloqueante).
-11. Badge fuente 12-14px tenue en tabla movs con tooltip "Importado desde BBVA · Tink".
+6 commits (`7deb0cd` → `bbaad46`) sobre la base PR-3.1. Mig 147 aplicada (`bank_consents.financial_institution_id` + `display_name` + `last_known_balance_cents BIGINT[]` + UNIQUE PARCIAL `(org_id, provider, fi_id) WHERE status='active'`).
 
-Falsos positivos descartados: WCAG AA pill contraste OK (7-8:1 verificado), 5+ bancos no rompe lista (media Holded 1.4), iframe Tink Link bloqueado X-Frame-Options DENY.
+Backend:
+- `Psd2Account` interface extiende con `financialInstitutionId?` + `balanceCents?`.
+- `TinkProvider.exchangeCallback` extrae `financialInstitutionId` y `balances.booked.amount` del response `/data/v2/accounts` (formato escalado v2 normalizado a céntimos via helper `tinkAmountToCents`). No call extra a `/api/v1/credentials` (no existe en Data v2).
+- callback persiste `fi_id + display_name (derivado del catálogo si matchea, sino raw) + balances array paralelo a accounts[]`.
+- `GET /banks` devuelve los 3 campos nuevos al frontend.
+
+Frontend:
+- `src/lib/conciliacion/spanish-banks.ts` con `as const` para top 8 ES (BBVA, CaixaBank, Santander, Sabadell, Bankinter, ING, Abanca, Kutxabank). Mapping a `tinkProviderId` + `financialInstitutionId` + `brandColor` + `logoPath`. Helper `findSpanishBankByFI()`.
+- `/public/banks/*.svg` — **8 logos oficiales Wikimedia Commons descargados** (5 via curl con User-Agent Mozilla, 3 que cayeron por rate-limit 429 los descargó el user manualmente). README documenta política uso de marca + URLs canon.
+- `bank-connections-card.tsx` reescrito (~600 líneas): un card por consent con sub-filas por account, logo 56×56 con 3 fallbacks (SVG → monograma color marca → `<Icon name="bank">`), IBAN parcial `ES** **** **** **** XXXX` (mascarado por A5 backend), saldo formateado `Intl.NumberFormat('es-ES', { currency })`, currency badge si !=EUR. Pill granular asimétrico (rojo "Caducada"/"Caduca hoy"/"Caduca mañana" 0-2d, amarillo "Caduca en N días" 3-7d, verde "Activa" 8d+, gris pending/revoked, rojo "Error sync"). Banner full-width caducidad <7d arriba del módulo con CTA "Renovar conexión" (patrón Anfix, no solo pill). Sync feedback inline: shimmer animado 2px border-top en el card durante sync (no toast bloqueante; toast solo al terminar con N movs). `DisconnectConfirmModal` usa `<Modal>` con `autoFocus` en Cancelar + microcopy con números reales ("3 cuentas, 1.247 movimientos") fetcheados async via endpoint `/access-report`. `EmptyState` mejorado con icono escudo + "Conecta en 30 segundos" + trust signals "✓ PSD2 AISP regulado · ✓ Solo lectura · ✓ Bancos españoles".
+- `bank-picker-modal.tsx` reescrito: grid auto-fit minmax 160px, tiles 96×64 rectangulares (acomoda logos wordmark wide tipo Santander 238×41 sin reducirlos), buscador con filtro tiempo real, botón "Ver todos los bancos" → Tink Link sin `provider_id` (catálogo completo). Footer: 🔒 PSD2 (Tink) · Solo lectura · No guardamos credenciales.
+- React 19 compliance: helper `useNowMs()` con `setInterval(60_000)` reemplaza `Date.now()` inline (rule `react-hooks/purity`).
+
+Polish 3.2.1 — `743772a`:
+- Botón "Conectar otra cuenta" plano border negro → **"Añadir cuenta"** con icono `+` (catálogo añade `plus` + `refresh`) + colores azul soft (bg `#eff6ff`, fg `#3D7BF5`, border `#dbe9ff`) + hover transición a azul fuerte.
+- Sincronizar/Desconectar inline → **menú dropdown `⋯`** vía `ActionsMenu`. Cierra con Esc / click fuera. Items: "Sincronizar ahora" (icon refresh, solo si status active) + "Desconectar banco" (icon trash, hover background rojo soft).
+
+Polish 3.2.2 — `fa0f914`:
+- Crítica user "logos se ven lejanos". Wikimedia NO tiene isotipos sueltos para Santander/CaixaBank/Sabadell (verificado por auditor exhaustivo: SVG en Commons siempre incluyen wordmark). Worldvectorlogo bloquea descarga automática.
+- Fix: tile picker 60×60 cuadrado → **96×64 rectangular** (logos wordmark wide caben sin reducir). Card avatar 48 → 56 con padding 4. Border tenue `#f0f0f0` reemplaza box-shadow. Grid minmax 140 → 160.
+
+Polish 3.2.3 — `bbaad46`:
+- Bug: "Desconectar banco" cortado a media altura porque `overflow:hidden` del card padre (necesario para shimmer top + border-radius) recortaba el dropdown absolute-positioned.
+- Fix: `ActionsMenu` usa `createPortal(..., document.body)` con `position:fixed` calculado runtime via `getBoundingClientRect()` del trigger button. El menú escapa del clip del card.
+- Focus visible: `outline: none` en trigger + `:focus-visible { box-shadow: 0 0 0 2px rgba(61,123,245,0.35) }` — ring sutil teclado-only (commit `8a3bc1c`).
+
+Estado: 20/20 tests verde. Lint + typecheck + build limpios. **PR-PSD2 cerrado al 100% en sandbox**.
 
 ---
 

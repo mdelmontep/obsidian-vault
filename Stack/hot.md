@@ -150,6 +150,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 ### claude-code workflow
 - **Sesiones paralelas mismo repo causan colisiones git** — verificar `git branch --show-current` + `ls migrations/0XX*` antes de cada commit/Write; stage explícito por path, nunca `-A`. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]
+- **Agentes `isolation: worktree` — 3 failure modes** (muere sin commit dejando unstaged, forka de main desfasado con diff masivo, dos agentes pisan archivo "junk drawer"). Verificar siempre `git log <worktree-branch>` + `git status` + `git diff --stat`. Merge selectivo `git checkout <branch> -- <paths>`, no merge entero. Ver [[claude-code-agentes-worktree-failure-modes]]
 
 ### facturaia / mobile a11y
 - **vh → dvh cascada doble declaración**, no `min()` atómico — Safari <15.4 descarta `min()` entero si no soporta `dvh`. Ver [[mobile-vh-dvh-cascade-vs-min-atomic-safari-15]]
