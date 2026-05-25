@@ -86,6 +86,12 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — Source-of-truth + RLS multi-org + IRPF perfil-driven (2026-05-25)
+- **Triggers BD de sincronización = anti-patrón** — 6 razones (silent fail, race, recursión, audit ciego, code review ciego, mig masiva). Sync explícito en código. Ver [[triggers-bd-sync-son-antipatron]] + [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas]]
+- **NUMERIC(X,2) drift bruto↔neto IVA** — 10€ bruto IVA 21% → guarda 8.26 → reconstruye 9.99. Necesita NUMERIC(14,6) o redondeo desde total bruto. Ver [[numeric-precision-drift-bruto-neto-iva]]
+- **RPC CREATE OR REPLACE firma idéntica obligatoria** — distinta deja función huérfana, callers fallan. PL/pgSQL lazy compile. Ver [[postgres-rpc-firma-identica-create-replace]]
+- **RLS multi-org `get_user_org_id()` no `IN (SELECT org_members)`** — el segundo permite leer de TODAS las orgs del user, no solo la activa. Caso real: 16 tablas FacturaIA fixeadas en mig 163. Ver [[rls-multi-org-active-vs-membership]]
+
 ### smoke / supabase (2026-05-22)
 - **PostgREST hint revela signature RPC** — probe con args incompletos → 404 con hint enumera params reales. Verifica mig aplicada sin psql. Ver [[postgrest-rpc-hint-revela-signature-aplicada-en-prod]]
 - **CHECK constraint: validar invariante con REST count=0** — query con la NEGACIÓN del invariante + `count=exact` + `Range: 0-0`. Sin tocar filas reales. Ver [[verificar-check-constraint-sin-tocar-prod-con-count-exacto-rest]]

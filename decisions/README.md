@@ -43,3 +43,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 017 · 2026-05-22 · [[ADR-017-centro-fiscal-no-presenta-v1|Centro Fiscal IA v1 NO presenta telemáticamente, convenio AEAT diferido]] (FacturaIA)
 - 018 · 2026-05-22 · [[ADR-018-centro-fiscal-stripe-scope-3-tiers-plus-addon|Centro Fiscal IA Stripe scope = 3 tiers FacturaIA + add-on, no solo add-on]] (FacturaIA)
 - 019 · 2026-05-24 · [[ADR-019-precio-inclusive-iva-storage-canonico-vs-columna-precio-modo|Precio "con IVA incluido" en form: storage canónico base + toggle UX-only]] (FacturaIA)
+- 020 · 2026-05-25 · [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas|Datos emisor: template_config.emisor JSON único, columnas legacy deprecadas, sync explícito en código]] (FacturaIA)
