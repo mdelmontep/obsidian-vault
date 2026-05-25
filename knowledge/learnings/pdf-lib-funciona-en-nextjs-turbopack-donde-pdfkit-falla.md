@@ -22,4 +22,4 @@ page.drawText('FACTURA', { x: 50, y: 780, size: 22, font: helveticaBold })
 const pdfBytes = await doc.save() // Uint8Array, listo para subir a Storage
 ```
 
-Descubierto en FacturaIA al intentar generar 60 PDFs de facturas seed. pdfkit falló en los 60; pdf-lib generó los 60 sin errores.
+Descubierto en TuFacturaIA al intentar generar 60 PDFs de facturas seed. pdfkit falló en los 60; pdf-lib generó los 60 sin errores.

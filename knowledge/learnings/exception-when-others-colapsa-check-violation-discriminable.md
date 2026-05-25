@@ -30,4 +30,4 @@ Endpoint mapea `overpayment`/`tipo_invalido` → 409 con detalle claro.
 La convención `RAISE EXCEPTION '<error_code>: ...'` con prefijo
 greppable hace el pattern match estable.
 
-Caso real: FacturaIA RPC `confirmar_sugerencia` mig 141.
+Caso real: TuFacturaIA RPC `confirmar_sugerencia` mig 141.

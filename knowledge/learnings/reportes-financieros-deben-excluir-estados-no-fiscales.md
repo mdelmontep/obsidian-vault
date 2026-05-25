@@ -12,7 +12,7 @@ Regla: cualquier query agregada (sum, count) sobre facturas debe filtrar:
 ```sql
 -- emitidas
 WHERE estado NOT IN ('borrador', 'anulada')
--- recibidas (FacturaIA)
+-- recibidas (TuFacturaIA)
 WHERE estado NOT IN ('sin_aprobar', 'disputada')
 ```
 

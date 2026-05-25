@@ -18,6 +18,6 @@ CUANDO HAY TOOL RESULT VISUAL:
 - Si truncated=true menciona que hay más y ofrece refinar.
 ```
 
-Detectado en FacturaIA Copiloto PR-A3.1: `searchMovimientos` devolvía 8 movs, card mostraba todos, LLM además enumeraba "1. … 2. …". Tras la regla el LLM responde tipo "Tienes 8 pendientes: 4 cobros y 3 gastos. ¿Cuál quieres explorar?".
+Detectado en TuFacturaIA Copiloto PR-A3.1: `searchMovimientos` devolvía 8 movs, card mostraba todos, LLM además enumeraba "1. … 2. …". Tras la regla el LLM responde tipo "Tienes 8 pendientes: 4 cobros y 3 gastos. ¿Cuál quieres explorar?".
 
 Relacionado: [[llm-tool-use-multi-turno-replay-tool-calls-y-results-emparejados]].

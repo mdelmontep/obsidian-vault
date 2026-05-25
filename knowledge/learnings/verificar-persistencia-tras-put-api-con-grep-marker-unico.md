@@ -28,4 +28,4 @@ def patch(msg):
     return msg.replace(OLD_BLOCK, NEW_BLOCK)
 ```
 
-Caso real FacturaIA: idempotency con `OLD_BLOCK[:80] == NEW_BLOCK[:80]` (ambos arrancaban "CONVERTIR_PRESUPUESTO - REGLAS CRITICAS") → patch reportó OK sin aplicar → bot seguía con prompt viejo. Detectado solo al hacer grep del marker en el GET post-PUT.
+Caso real TuFacturaIA: idempotency con `OLD_BLOCK[:80] == NEW_BLOCK[:80]` (ambos arrancaban "CONVERTIR_PRESUPUESTO - REGLAS CRITICAS") → patch reportó OK sin aplicar → bot seguía con prompt viejo. Detectado solo al hacer grep del marker en el GET post-PUT.

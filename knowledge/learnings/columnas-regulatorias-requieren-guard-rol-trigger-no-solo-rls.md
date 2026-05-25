@@ -14,4 +14,4 @@ RLS basada en membership no protege columnas con efecto regulatorio (Verifactu, 
 
 **Trampa típica**: depender solo de RLS confiando en "el cliente solo expone el toggle a admins". Cualquier user autenticado puede saltarse la UI con `curl` + cookie de sesión.
 
-Caso real: FacturaIA mig 095 (PR #48) — `verifactu_activo` + `entorno_verifactu`. Mismo patrón aplicable a `regimen_iva`, `nif`, `iae`, `verifactu_num_instalacion`.
+Caso real: TuFacturaIA mig 095 (PR #48) — `verifactu_activo` + `entorno_verifactu`. Mismo patrón aplicable a `regimen_iva`, `nif`, `iae`, `verifactu_num_instalacion`.

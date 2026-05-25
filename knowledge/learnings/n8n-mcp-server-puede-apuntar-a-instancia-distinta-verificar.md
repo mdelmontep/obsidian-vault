@@ -5,7 +5,7 @@ source: claude-code-session
 tags: [n8n, mcp, infra]
 ---
 
-Dos MCP servers `n8n-tecnocloud` y `n8n-simarro` configurados en Claude Code apuntaban a `n8n.agentesia.world` (instancia vieja). El workflow `pqSWkDIHqmSVHotB` (FacturaIA) vivía en `n8n.tufacturaia.com` (instancia nueva). Ambos MCPs devolvieron 404 `Workflow not found or you don't have permission`, lo que parece error de permisos pero es de instancia.
+Dos MCP servers `n8n-tecnocloud` y `n8n-simarro` configurados en Claude Code apuntaban a `n8n.agentesia.world` (instancia vieja). El workflow `pqSWkDIHqmSVHotB` (TuFacturaIA) vivía en `n8n.tufacturaia.com` (instancia nueva). Ambos MCPs devolvieron 404 `Workflow not found or you don't have permission`, lo que parece error de permisos pero es de instancia.
 
 **Verificar antes de operar**:
 - Mirar config del MCP server (URL real) o `search_workflows` con query del workflow esperado — si no aparece, probable que el MCP apunte a otra instancia.

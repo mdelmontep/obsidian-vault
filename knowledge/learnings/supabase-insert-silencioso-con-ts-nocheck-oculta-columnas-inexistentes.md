@@ -9,7 +9,7 @@ Con `// @ts-nocheck`, un `.insert({ campo_inexistente: 0 })` devuelve error de P
 
 Si el código no verifica `{ error }` del resultado, parece que el insert funcionó pero no insertó nada.
 
-Caso real: seed de FacturaIA insertaba `{ ...cliente, facturado: 0, pendiente: 0 }` en tabla `clientes`. Los campos `facturado` y `pendiente` son calculados en runtime, no existen como columnas. El seed reportaba `clientes: 0` sin error visible.
+Caso real: seed de TuFacturaIA insertaba `{ ...cliente, facturado: 0, pendiente: 0 }` en tabla `clientes`. Los campos `facturado` y `pendiente` son calculados en runtime, no existen como columnas. El seed reportaba `clientes: 0` sin error visible.
 
 **Regla**: en seeds y scripts con `@ts-nocheck`, siempre verificar `{ data, error }` y retornar el error explícitamente:
 

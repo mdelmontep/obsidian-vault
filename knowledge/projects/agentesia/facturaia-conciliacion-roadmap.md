@@ -1,5 +1,5 @@
 ---
-title: FacturaIA — Conciliación bancaria · Roadmap maestro
+title: TuFacturaIA — Conciliación bancaria · Roadmap maestro
 date: 2026-05-20
 source: sesiones 2026-05-18→2026-05-20 + spec docs/architecture/conciliacion-copiloto-spec.md
 tags: [facturaia, conciliacion, roadmap, ia]

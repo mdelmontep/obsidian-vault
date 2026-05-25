@@ -16,7 +16,7 @@ tags: [dokploy, api, trpc, gotcha]
 4. POST /api/schedule.update con el objeto completo modificado
 ```
 
-**Caso real FacturaIA 2026-05-22**: activar 2 crons `fiscal-avisos` + `fiscal-recalcular-borrador` requirió mandar `name, description, cronExpression, command, shellType:'bash', scheduleType:'compose', composeId, serviceName, enabled:true` cada vez.
+**Caso real TuFacturaIA 2026-05-22**: activar 2 crons `fiscal-avisos` + `fiscal-recalcular-borrador` requirió mandar `name, description, cronExpression, command, shellType:'bash', scheduleType:'compose', composeId, serviceName, enabled:true` cada vez.
 
 **Aplicable**: a otros endpoints tRPC Dokploy con suffix `.update` (mismo patrón en `application.update`, `environment.update`, etc.). Comportamiento estándar tRPC con schemas Zod estrictos en backend.
 

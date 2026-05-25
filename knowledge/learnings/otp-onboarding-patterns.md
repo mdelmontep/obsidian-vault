@@ -1,5 +1,5 @@
 ---
-title: Patrones OTP teléfono onboarding (FacturaIA 2026-05-16)
+title: Patrones OTP teléfono onboarding (TuFacturaIA 2026-05-16)
 date: 2026-05-16
 source: facturaia/docs/manuals/manual-admin.md §26
 tags: [otp, whatsapp, meta-cloud-api, onboarding, security, facturaia]

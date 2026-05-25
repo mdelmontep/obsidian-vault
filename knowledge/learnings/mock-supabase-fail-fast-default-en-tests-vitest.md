@@ -18,5 +18,5 @@ Implementación: `vi.hoisted` con ref mutable + builder polimórfico + cola FIFO
 por tabla + `setDefaultResponse` opcional. Tipos TS estrictos en API pública
 (`any` solo interno por la naturaleza polimórfica del chain de Supabase).
 
-Referencia FacturaIA: `src/lib/documents/__tests__/__fixtures__/mock-admin-client.ts`
+Referencia TuFacturaIA: `src/lib/documents/__tests__/__fixtures__/mock-admin-client.ts`
 (97 tests Vitest construidos sobre este patrón, 0 falsos positivos).

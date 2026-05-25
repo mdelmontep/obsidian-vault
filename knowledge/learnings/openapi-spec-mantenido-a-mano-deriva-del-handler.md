@@ -9,7 +9,7 @@ Cuando el `openapi.json` de tu API se escribe a mano (no autogenerado del runtim
 
 Síntoma: un consumidor que genera SDK desde la spec (`openapi-typescript`) ve `data.cliente?.id = undefined` aunque la spec lo declare como objeto. Ningún error, solo campos que llegan null.
 
-Caso real (FacturaIA): `GET /v1/facturas/{id}` declaraba `cliente: { id, nombre }` en spec pero el handler devolvía solo `cliente_id: string`. El portal sincronizaba sombras sin nombre de cliente. Fix: JOIN en el handler para alinear con la spec (commit `debd55e`).
+Caso real (TuFacturaIA): `GET /v1/facturas/{id}` declaraba `cliente: { id, nombre }` en spec pero el handler devolvía solo `cliente_id: string`. El portal sincronizaba sombras sin nombre de cliente. Fix: JOIN en el handler para alinear con la spec (commit `debd55e`).
 
 Reglas:
 - Cuando añadas/cambies un endpoint, abre el `openapi.json` lado a lado y compáralo línea por línea con el response real.

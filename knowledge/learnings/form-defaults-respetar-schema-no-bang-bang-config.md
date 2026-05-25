@@ -22,6 +22,6 @@ value={String(effective ?? '')}
 
 Distingue `false`/`0` explícito de `undefined` (no guardado).
 
-**Caso real FacturaIA**: `ModuloConfig` mostraba `auto_categorizar`, `auto_marcar_cobradas`, `incluir_recurrentes`, `guardar_historial` como "Desactivado" en la primera carga aunque su default fuera `true`. Causa: `!!config[key]` con `config={}` → `false`. Fix: fallback al `f.default` del schema.
+**Caso real TuFacturaIA**: `ModuloConfig` mostraba `auto_categorizar`, `auto_marcar_cobradas`, `incluir_recurrentes`, `guardar_historial` como "Desactivado" en la primera carga aunque su default fuera `true`. Causa: `!!config[key]` con `config={}` → `false`. Fix: fallback al `f.default` del schema.
 
 Aplica a cualquier UI que reabra un form con valores parcialmente guardados (settings, módulos, perfiles, edición).

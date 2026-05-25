@@ -1,13 +1,13 @@
 ---
 title: Setting en /agentes vs inline — cuándo elegir cuál
 date: 2026-05-24
-source: FacturaIA Cashflow v2.2 commit fbd3a37
+source: TuFacturaIA Cashflow v2.2 commit fbd3a37
 tags: [facturaia, ux, settings-pattern]
 ---
 
 # Setting en `/agentes` vs inline — cuándo elegir cuál
 
-FacturaIA tiene un patrón de "settings de módulo" en `/agentes` (modal `ModuloConfig` que renderiza dinámicamente cualquier campo del `configSchemaDefault`). Es tentador meter ahí cualquier opción nueva — "es el sitio canónico, allá va".
+TuFacturaIA tiene un patrón de "settings de módulo" en `/agentes` (modal `ModuloConfig` que renderiza dinámicamente cualquier campo del `configSchemaDefault`). Es tentador meter ahí cualquier opción nueva — "es el sitio canónico, allá va".
 
 Pero tiene un coste: lo que vive en `/agentes` se configura **una vez** y se olvida. Si el dato necesita mantenerse al día, ahí muere.
 

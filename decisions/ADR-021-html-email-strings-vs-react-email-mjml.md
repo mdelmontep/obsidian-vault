@@ -1,5 +1,5 @@
 ---
-title: ADR-021 — HTML strings tipados para 6 templates email FacturaIA (vs React Email / MJML)
+title: ADR-021 — HTML strings tipados para 6 templates email TuFacturaIA (vs React Email / MJML)
 date: 2026-05-25
 status: accepted
 tags: [adr, facturaia, email, arquitectura]
@@ -20,7 +20,7 @@ Sprint 2026-05-25 Nivel 1+2 refactoriza 6 templates email transaccional (factura
 **C**, porque:
 
 1. Solo 6 templates, simples (header + body + CTA + footer). Abstracción (A/B) no amortiza.
-2. Stack FacturaIA con Dokploy/Alpine/Puppeteer ya tiene fricción Docker — menos deps = menos surface area de fallo en build.
+2. Stack TuFacturaIA con Dokploy/Alpine/Puppeteer ya tiene fricción Docker — menos deps = menos surface area de fallo en build.
 3. Hacks email obligatorios (MSO conditional `<v:roundrect>`, VML buttons, dark-mode `[data-ogsc]` Gmail iOS, tablas Outlook, inline CSS forzado) son más fáciles directo en string que peleando con abstracción.
 4. Snapshots vitest diffan output crudo legible en PR review.
 5. Helpers `escapeHtml/escapeAttr/escapeUrl` + `buildAppUrl` con host pinning aplican universalmente, no dependientes de framework.

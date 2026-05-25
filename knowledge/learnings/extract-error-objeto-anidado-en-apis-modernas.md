@@ -6,7 +6,7 @@ tags: [error-handling, http, api-clients]
 ---
 
 ## Patrón
-APIs modernas (Stripe, FacturaIA, OpenAI) devuelven errores con shape:
+APIs modernas (Stripe, TuFacturaIA, OpenAI) devuelven errores con shape:
 ```json
 { "error": { "type": "validation_error", "message": "...", "param": "...", "request_id": "..." } }
 ```

@@ -1,7 +1,7 @@
 ---
 title: Defense-in-depth — chequear estado='activo' explícito cuando admin client bypasea RLS
 date: 2026-05-24
-source: FacturaIA audit conciliación v3 mig 157
+source: TuFacturaIA audit conciliación v3 mig 157
 tags: [supabase, rls, security, multi-tenant]
 ---
 

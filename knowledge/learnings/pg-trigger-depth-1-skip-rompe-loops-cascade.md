@@ -23,7 +23,7 @@ factura/mov) pero no en cascadas (UPDATE estado por recompute).
 Más limpio que flags de sesión (`current_setting('app.in_chain')`) y
 no requiere refactor de funciones llamantes. Aplicar a TODOS los
 triggers de la cadena por defensa-en-profundidad — no basta cerrar
-una rama si hay otras (caso FacturaIA mig 140: 2 de 4 triggers
+una rama si hay otras (caso TuFacturaIA mig 140: 2 de 4 triggers
 auto-mark protegidos, los otros 2 quedaron expuestos hasta mig 141).
 
 Complementa [[trigger-recursivo-revertir-estado-deja-candidato-libre-que-otro-trigger-rematchea]]: ese learning describe el síntoma, este es la solución estructural.

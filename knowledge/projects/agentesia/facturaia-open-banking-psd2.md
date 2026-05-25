@@ -5,7 +5,7 @@ source: claude-code-session
 tags: [facturaia, open-banking, psd2, conciliacion, spec]
 ---
 
-# Integraciones bancarias para FacturaIA
+# Integraciones bancarias para TuFacturaIA
 
 Cómo llevar la conciliación bancaria de "movimientos vacíos" (estado actual) a "facturas pagadas/cobradas automáticamente sin intervención del usuario".
 
@@ -29,7 +29,7 @@ Cómo llevar la conciliación bancaria de "movimientos vacíos" (estado actual) 
 
 ### Opción A — Agregador PSD2 (recomendado a medio plazo)
 
-FacturaIA no es TPP autorizado por Banco de España. Usa un agregador que sí lo es y te expone REST sobre 2.000+ bancos europeos.
+TuFacturaIA no es TPP autorizado por Banco de España. Usa un agregador que sí lo es y te expone REST sobre 2.000+ bancos europeos.
 
 | Proveedor | Pros | Contras |
 |---|---|---|
@@ -104,7 +104,7 @@ Sin pasar por extracto bancario. **Módulo separado** ("pasarelas de cobro"), no
 ## Riesgos y decisiones pendientes
 
 - **Almacenar consent_id PSD2** — cifrado obligatorio. Robar consent = leer extracto bancario del cliente. Usar `CREDENTIAL_ENCRYPTION_KEY` ya existente o key separada `BANK_CONSENT_ENCRYPTION_KEY` para rotación independiente.
-- **Compliance** — GoCardless BAD es licencia PSD2 AIS suya, no necesitas pasporte. Pero el T&C de FacturaIA debe declarar el procesado de datos bancarios y el consentimiento. Revisar con Dani.
+- **Compliance** — GoCardless BAD es licencia PSD2 AIS suya, no necesitas pasporte. Pero el T&C de TuFacturaIA debe declarar el procesado de datos bancarios y el consentimiento. Revisar con Dani.
 - **Match 1:1 limitación** — clientes con cobros fraccionados o transferencias agrupadas necesitarán manual override. Trigger 061 actual sólo pilla el caso simple. Para módulo "pro pro" → IA Claude para sugerir matches multi-line (queda en `LATER`).
 - **Conciliación de facturas emitidas vs estado portal** — agency-portal puede mostrar `cobrada` de un sistema externo (Stripe). Coherencia trigger BD vs estado portal → ver regla "shadow doc" del CLAUDE.md.
 

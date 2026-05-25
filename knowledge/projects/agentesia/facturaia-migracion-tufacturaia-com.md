@@ -5,13 +5,13 @@ source: claude-code-session
 tags: [facturaia, infra, migracion, dokploy, dns, traefik, spec]
 ---
 
-# Migración FacturaIA → `tufacturaia.com` + Dokploy nuevo
+# Migración TuFacturaIA → `tufacturaia.com` + Dokploy nuevo
 
 Plan estructurado en 9 fases. Calidad > velocidad. Cero atajos. Cada fase con verificación + rollback documentado.
 
 ## Objetivos
 
-1. Mover FacturaIA del dominio `facturaia.agentesia.world` a `tufacturaia.com` (marca propia).
+1. Mover TuFacturaIA del dominio `facturaia.agentesia.world` a `tufacturaia.com` (marca propia).
 2. Migrar a un **VPS nuevo dedicado** (`185.47.13.170`, Dokploy fresh).
 3. **Migrar n8n también** a `n8n.tufacturaia.com` (en mismo Dokploy, proyecto separado).
 4. **Configurar Resend con dominio propio** desde el inicio (`tufacturaia.com` transaccional + `auth.tufacturaia.com` Supabase Auth).
@@ -182,7 +182,7 @@ Si falla, NO migrar. Limpiar deuda primero.
 | Tema | Decisión |
 |---|---|
 | n8n separado | **SÍ** — proyecto Dokploy propio. Resuelve bug Traefik. |
-| Host físico | Confirmar contigo: ¿mismo VPS o nuevo? Si nuevo, n8n queda en `185.99.186.76` y FacturaIA va a host limpio. |
+| Host físico | Confirmar contigo: ¿mismo VPS o nuevo? Si nuevo, n8n queda en `185.99.186.76` y TuFacturaIA va a host limpio. |
 | Networking | `dokploy-network` (external) + `facturaia-internal` (bridge isolated). |
 | Traefik labels | Router único `facturaia-app`, `traefik.docker.network=dokploy-network` explícito, `priority=10`. |
 | Replicas | 1 inicialmente, compose listo para 2+. |
@@ -228,7 +228,7 @@ Antes de publicar: `wget http://localhost:3000/api/health` desde terminal Dokplo
 ## Fase 4 — Staging público + validación E2E
 
 ### 4.1 Dominios staging
-- DNS `staging.tufacturaia.com` → contenedor FacturaIA-nuevo.
+- DNS `staging.tufacturaia.com` → contenedor TuFacturaIA-nuevo.
 - DNS `n8n-staging.tufacturaia.com` → n8n-nuevo.
 - Traefik labels activas. Let's Encrypt emite certs.
 
@@ -314,7 +314,7 @@ Orden estricto:
 13. **Avisar a clientes API v1** (agency-portal, integraciones) → regenerar SDKs.
 
 ### Comunicación
-- Slack canvas Panel FacturaIA: entrada con fecha + URL nueva.
+- Slack canvas Panel TuFacturaIA: entrada con fecha + URL nueva.
 - Email a usuarios activos.
 - PR en agency-portal: env `FACTURAIA_API_BASE`.
 

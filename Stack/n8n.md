@@ -271,7 +271,7 @@ Workarounds:
 2. Migrar tools a `toolWorkflow` con sub-workflows (cada sub-workflow hace el HTTP con credential, devuelve JSON al agente). Más nodos pero estable.
 3. Mantener `toolCode` viejo (jsCode) con `$env.X` y aceptar `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` con threat model documentado. Pragmático.
 
-Caso real FacturaIA 2026-05-16: refactor para eliminar `$env.X` del workflow Receptor v2 reveló este bug. Rollback al estado pre-refactor + deuda documentada en hub.
+Caso real TuFacturaIA 2026-05-16: refactor para eliminar `$env.X` del workflow Receptor v2 reveló este bug. Rollback al estado pre-refactor + deuda documentada en hub.
 
 ### `$fromAI()` en jsonBody requiere `placeholderDefinitions` o falla igual
 El error "supplyData but no execute" también lo dispara `$fromAI('param', 'desc', 'string')` en el body sin declarar el placeholder. Para que funcione: añadir `placeholderDefinitions.values` con cada param.

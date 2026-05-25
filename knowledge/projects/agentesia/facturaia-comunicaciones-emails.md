@@ -5,7 +5,7 @@ source: sesión Claude Code (5 agentes review + síntesis)
 tags: [facturaia, spec, comunicaciones, emails, resend, auth, plan]
 ---
 
-# FacturaIA — Sistema de comunicaciones por email
+# TuFacturaIA — Sistema de comunicaciones por email
 
 Spec consolidada tras revisión por 5 agentes paralelos (codebase audit, security, architecture/scale, UX product, UI consistency). Reemplaza al plan original de 60 días / 8 sprints / ~30 tablas que duplicaba sistemas existentes.
 
@@ -138,9 +138,9 @@ Per-org NO es pestaña: filtro `?org_id=` en Operaciones + override desde detall
 - Empty state: `Aún no hay envíos.`
 
 **Whitelabel**:
-- **Free**: header con logo FacturaIA + nombre org pequeño debajo. Footer `Enviado con FacturaIA · facturaia.com` linkado.
-- **Pro Standard**: header solo logo de la org + nombre. Footer con dirección fiscal de la org + línea 10px gris `Powered by FacturaIA`.
-- **Pro Plus**: sin marca FacturaIA en absoluto. Diferenciador comercial real.
+- **Free**: header con logo TuFacturaIA + nombre org pequeño debajo. Footer `Enviado con TuFacturaIA · facturaia.com` linkado.
+- **Pro Standard**: header solo logo de la org + nombre. Footer con dirección fiscal de la org + línea 10px gris `Powered by TuFacturaIA`.
+- **Pro Plus**: sin marca TuFacturaIA en absoluto. Diferenciador comercial real.
 - From: `facturas@dominio-cliente.com` con DKIM/SPF firmados.
 
 ---
@@ -291,7 +291,7 @@ Esperar 10-30 min. Click Verify en Resend para cada dominio hasta verde.
 - Project → Authentication → SMTP Settings:
   - Enable Custom SMTP: **ON**
   - Sender email: `auth@auth.facturaia.agentesia.world`
-  - Sender name: `FacturaIA`
+  - Sender name: `TuFacturaIA`
   - Host: `smtp.resend.com`
   - Port: `465`
   - Username: `resend`
@@ -307,7 +307,7 @@ Esperar 10-30 min. Click Verify en Resend para cada dominio hasta verde.
 RESEND_API_KEY=re_xxx
 RESEND_WEBHOOK_SECRET=whsec_xxx
 EMAIL_FROM_ADDRESS=facturas@mail.facturaia.agentesia.world
-EMAIL_FROM_NAME=FacturaIA
+EMAIL_FROM_NAME=TuFacturaIA
 EMAIL_REPLY_TO_DEFAULT=hola@agentesia.world
 EMAIL_AUTH_FROM_ADDRESS=auth@auth.facturaia.agentesia.world
 EMAIL_WORKER_BATCH_SIZE=100
@@ -349,7 +349,7 @@ Resto bajo demanda fase 2+.
 RESEND_API_KEY=re_xxx
 RESEND_WEBHOOK_SECRET=whsec_xxx
 EMAIL_FROM_ADDRESS=facturas@mail.facturaia.agentesia.world
-EMAIL_FROM_NAME=FacturaIA
+EMAIL_FROM_NAME=TuFacturaIA
 EMAIL_REPLY_TO_DEFAULT=hola@agentesia.world
 EMAIL_AUTH_FROM_ADDRESS=auth@auth.facturaia.agentesia.world
 EMAIL_WORKER_BATCH_SIZE=100

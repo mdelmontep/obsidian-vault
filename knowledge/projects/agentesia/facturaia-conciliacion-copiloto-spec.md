@@ -1,5 +1,5 @@
 ---
-title: FacturaIA — Conciliación bancaria + Copiloto v2 (spec definitiva)
+title: TuFacturaIA — Conciliación bancaria + Copiloto v2 (spec definitiva)
 date: 2026-05-19
 source: docs/architecture/conciliacion-copiloto-spec.md (repo)
 tags: [facturaia, conciliacion, copiloto, ia, psd2, gocardless, claude-sonnet-4-6]

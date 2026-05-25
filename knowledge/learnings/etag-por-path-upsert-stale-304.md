@@ -11,4 +11,4 @@ Síntomas: el usuario "regenera X" y dice que no cambia nada. Curl con `If-None-
 
 **Fix**: ETag fuerte = `"sha256-<base64(slice 22)>"` del buffer real + `Cache-Control: private, no-cache`. El navegador siempre revalida, el ETag permite 304 cuando el hash coincide y 200 cuando cambia. Coste: download del blob siempre, hash trivial (μs).
 
-Caso real FacturaIA 2026-05-26: `/api/documents/file/route.ts` servía PDFs de facturas con ETag `W/"${path}"`. "Regenerar PDF" hacía upsert sobre `${orgId}/factura/${num}.pdf`. Storage actualizado, BD actualizada, browser servía el PDF viejo. Commit fix `87d08e7`. Ver [[cache-invalidation-artifacts-emitidos]] y [[pdf-adjunto-email-vs-link-frozen-blob]].
+Caso real TuFacturaIA 2026-05-26: `/api/documents/file/route.ts` servía PDFs de facturas con ETag `W/"${path}"`. "Regenerar PDF" hacía upsert sobre `${orgId}/factura/${num}.pdf`. Storage actualizado, BD actualizada, browser servía el PDF viejo. Commit fix `87d08e7`. Ver [[cache-invalidation-artifacts-emitidos]] y [[pdf-adjunto-email-vs-link-frozen-blob]].

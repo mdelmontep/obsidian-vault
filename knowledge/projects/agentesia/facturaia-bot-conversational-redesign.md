@@ -1,5 +1,5 @@
 ---
-title: FacturaIA — Bot WhatsApp rediseño conversacional
+title: TuFacturaIA — Bot WhatsApp rediseño conversacional
 date: 2026-05-21
 source: sesión Phase 1 multi-org branch + feedback Manu
 tags: [facturaia, bot, whatsapp, ux, n8n, copiloto, agente-facturador, conversational]
@@ -36,7 +36,7 @@ Bot conversacional tipo colega contable: saluda corto, pregunta una cosa a la ve
 ```
 [User] factura
 [Bot]  ¿Para qué empresa?           ← solo si multi-org sin sticky
-       [📋] AgentesiaLab · FacturaIA Sandbox
+       [📋] AgentesiaLab · TuFacturaIA Sandbox
 
 [User] (elige AgentesiaLab)
 [Bot]  Ok. Cliente, concepto y precio.

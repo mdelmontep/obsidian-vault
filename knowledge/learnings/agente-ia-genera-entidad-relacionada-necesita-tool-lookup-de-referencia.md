@@ -7,7 +7,7 @@ tags: [n8n, ai-agent, tool-calling, design]
 
 Cuando un AI agent crea una entidad que **referencia a otra existente** (abono → factura, reembolso → pago, rectificativa → original), debe tener una tool de lookup de la entidad origen y el prompt debe forzar su uso.
 
-## Caso real (FacturaIA)
+## Caso real (TuFacturaIA)
 
 Agente generaba abono con `total: 0` y `factura_origen_id: null` cuando el usuario decía "abono de la factura A2026-0005". No tenía tool `consultar_facturas`, así que inventaba líneas vacías.
 

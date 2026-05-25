@@ -1,11 +1,11 @@
 ---
-title: FacturaIA — stack, gotchas y operación
+title: TuFacturaIA — stack, gotchas y operación
 date: 2026-05-19
 source: claude-code-session
 tags: [facturaia, stack, supabase, verifactu, aeat]
 ---
 
-# FacturaIA
+# TuFacturaIA
 
 SaaS de facturación con envío a AEAT vía Verifactu. Repo: `/Users/manueldelmonte/facturaia/` · remote `git@github.com:AgentesIA-MAdrid/facturaia.git`.
 
@@ -57,9 +57,9 @@ Pendiente: Fase 3 UX (dirty pill, disabled sin cert .p12, warning con facturas e
 
 Si se borran facturas/presupuestos en `cuenta a 0`, las idempotency keys en `api_idempotency` siguen apuntando a IDs ya borrados. Reutilizar la misma `Idempotency-Key` devuelve la respuesta cacheada (24h TTL). **Limpiar antes de re-emitir**: `DELETE FROM api_idempotency WHERE org_id='…'`.
 
-### Tres cuentas gh CLI — switch antes de tocar FacturaIA
+### Tres cuentas gh CLI — switch antes de tocar TuFacturaIA
 
-`gh` está logueado con `mdelmonteagentesia` (default), `AgentesIAMadrid` y `mdelmontep`. La default NO tiene acceso al repo FacturaIA → `gh api repos/AgentesIA-MAdrid/facturaia` da 404. Antes de PR/merge:
+`gh` está logueado con `mdelmonteagentesia` (default), `AgentesIAMadrid` y `mdelmontep`. La default NO tiene acceso al repo TuFacturaIA → `gh api repos/AgentesIA-MAdrid/facturaia` da 404. Antes de PR/merge:
 ```bash
 gh auth switch -u AgentesIAMadrid
 ```

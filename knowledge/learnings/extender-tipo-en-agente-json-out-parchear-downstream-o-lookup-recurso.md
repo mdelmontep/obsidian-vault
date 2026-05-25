@@ -15,4 +15,4 @@ Si un agente JSON-out tiene contrato `{tipo, cliente, lineas[], totales}` y aña
 
 **Recomendación**: (b) cuando el recurso tiene fuente de verdad clara (BD propia). (a) cuando es agregación pura.
 
-Caso real FacturaIA: agente para `tipo='convertir_presupuesto'` devuelve solo `presupuesto_id` (sin lineas — las copia el backend al convertir). `Parsear y Calcular Totales` iteraba data.lineas → resumen WhatsApp con base/IVA/total a 0,00€. Fix con (b): branch que llama Supabase REST con `presupuesto_id+org_id` para totales reales y construye el resumen.
+Caso real TuFacturaIA: agente para `tipo='convertir_presupuesto'` devuelve solo `presupuesto_id` (sin lineas — las copia el backend al convertir). `Parsear y Calcular Totales` iteraba data.lineas → resumen WhatsApp con base/IVA/total a 0,00€. Fix con (b): branch que llama Supabase REST con `presupuesto_id+org_id` para totales reales y construye el resumen.

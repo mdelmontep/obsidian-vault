@@ -9,7 +9,7 @@ Cada redeploy de una app en Dokploy deja **Bad Gateway** hasta hacer reload manu
 
 **Ruta**: Dokploy → Settings → Web Server → **Reload**
 
-Ocurrió 3 veces en la misma sesión con FacturaIA. El contenedor arranca correctamente (Next.js escucha en 0.0.0.0:3000, verificable con `netstat -tlnp`), pero Traefik no re-descubre la ruta al contenedor nuevo.
+Ocurrió 3 veces en la misma sesión con TuFacturaIA. El contenedor arranca correctamente (Next.js escucha en 0.0.0.0:3000, verificable con `netstat -tlnp`), pero Traefik no re-descubre la ruta al contenedor nuevo.
 
 **Diagnóstico rápido**: si Bad Gateway después de redeploy, antes de investigar logs:
 1. Verificar que el contenedor está running (Dokploy → app → Docker Terminal → `ps aux`)

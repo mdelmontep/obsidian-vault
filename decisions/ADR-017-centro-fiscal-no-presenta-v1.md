@@ -6,10 +6,10 @@ tags: [adr, facturaia, fiscal, legal, aeat]
 ---
 
 ## Contexto
-Presentar telemáticamente modelos AEAT exige una de 3 vías: (a) cliente firma con cert/Cl@ve PIN, (b) SII (solo grandes >6M€), (c) convenio Colaborador Social RD 1065/2007 (FacturaIA presenta con SU cert empresa previo apoderamiento del cliente). Pure-play SaaS contable ES (Quipu/Holded/Anfix/Contasimple) no presentan; Declarando sí porque tiene asesores humanos en plantilla.
+Presentar telemáticamente modelos AEAT exige una de 3 vías: (a) cliente firma con cert/Cl@ve PIN, (b) SII (solo grandes >6M€), (c) convenio Colaborador Social RD 1065/2007 (TuFacturaIA presenta con SU cert empresa previo apoderamiento del cliente). Pure-play SaaS contable ES (Quipu/Holded/Anfix/Contasimple) no presentan; Declarando sí porque tiene asesores humanos en plantilla.
 
 ## Opciones consideradas
-- **A — Presentar v1 vía Colaborador Social**: requiere convenio AEAT 3-6 meses + RC obligatorio (~1.500-3.000€/año) + responsabilidad solidaria art 92 LGT (sanción cae sobre cliente Y FacturaIA) + apoderamiento individual de cada cliente (UX cuello de botella). Sin clientes pagando todavía.
+- **A — Presentar v1 vía Colaborador Social**: requiere convenio AEAT 3-6 meses + RC obligatorio (~1.500-3.000€/año) + responsabilidad solidaria art 92 LGT (sanción cae sobre cliente Y TuFacturaIA) + apoderamiento individual de cada cliente (UX cuello de botella). Sin clientes pagando todavía.
 - **B — Modelo Declarando**: gestoría online con asesores humanos en plantilla. Modelo de negocio distinto (asesoría + software), no SaaS puro escalable.
 - **C — NO presentar v1, diferir convenio a 50 clientes pagando**: paridad con Quipu/Holded/Anfix. Marketing honesto "te genero el fichero y te guío clic a clic en sede AEAT". Arrancar gestión convenio cuando haya base validada.
 

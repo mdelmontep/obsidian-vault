@@ -1,7 +1,7 @@
 ---
 title: Postgres pg_trgm — word_similarity vs similarity para needle in haystack
 date: 2026-05-24
-source: FacturaIA mig 156 conciliacion fuzzy
+source: TuFacturaIA mig 156 conciliacion fuzzy
 tags: [postgres, pg_trgm, fuzzy-matching]
 ---
 

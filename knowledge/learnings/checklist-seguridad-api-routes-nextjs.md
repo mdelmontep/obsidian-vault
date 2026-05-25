@@ -5,7 +5,7 @@ source: claude-code-session
 tags: [seguridad, nextjs, api, checklist]
 ---
 
-Checklist consolidado de seguridad para API routes en Next.js (aplicado en FacturaIA 2026-04-25).
+Checklist consolidado de seguridad para API routes en Next.js (aplicado en TuFacturaIA 2026-04-25).
 
 ## Por cada endpoint nuevo
 
@@ -32,7 +32,7 @@ rateLimit(`upload:${user.id}`, 20, 60_000)
 
 Suficiente para single-instance. Para multi-instance (horizontal scaling), migrar a Redis.
 
-## Bugs encontrados en FacturaIA (2026-04-25)
+## Bugs encontrados en TuFacturaIA (2026-04-25)
 
 - `/api/render-pdf` — sin auth, sin whitelist de template ID → RESUELTO 2026-04-27: acepta `x-service-key` (server-to-server) O sesión Supabase (browser). Patrón: if key → timingSafeEqual, else → getUser()
 - `/api/generate-pdfs` — `!==` en vez de `timingSafeEqual`

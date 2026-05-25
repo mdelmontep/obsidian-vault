@@ -1,5 +1,5 @@
 ---
-title: FacturaIA — Centro fiscal IA (módulo Pro add-on)
+title: TuFacturaIA — Centro fiscal IA (módulo Pro add-on)
 date: 2026-05-19
 source: chat análisis + 4 agentes revisión (arquitectura/legal/producto/research AEAT)
 tags: [facturaia, fiscal, aeat, modelo-303, verifactu, roadmap, next]
@@ -22,7 +22,7 @@ NO presentamos telemáticamente en v1. AEAT no expone API pública para 303/111/
 |---|---|---|
 | **v1 — Cuadre + Export** | "Llegas al portal AEAT con todo cuadrado" | TXT BOE pre-relleno + PDF justificativo + libro registro IVA XLSX + export A3/Holded asesor |
 | **v2 — Pre-validación** | "Te avisamos si algo no cuadra" | Validación contra PRE-Exteriores AEAT + diagnóstico IA del rechazo (patrón `ai-validate.ts` Verifactu) |
-| **v3 — Presentación con cert** | "Presentamos por ti" | Colaborador social RD 1065/2007 con cert FacturaIA + apoderamiento del cliente |
+| **v3 — Presentación con cert** | "Presentamos por ti" | Colaborador social RD 1065/2007 con cert TuFacturaIA + apoderamiento del cliente |
 | **v4 — SII** | Grandes empresas | Aprovechar infra Verifactu + envío SII (extensión natural) |
 
 **Renombrado** "Agente fiscal" → "Centro fiscal IA" en v1. Razón: "agente" induce a esperar que presente, lo cual NO hacemos hasta v3. Volver a "Agente fiscal" cuando v3 esté activa.
@@ -304,9 +304,9 @@ Cron diario 08:00 Madrid emite avisos a 30/15/7/2/1 días del plazo:
 
 **Decisión congelada**: colaborador social RD 1065/2007 arts. 79-81.
 
-- Convenio FacturaIA ↔ AEAT (contacto `comunicacion.sepri@correo.aeat.es`).
+- Convenio TuFacturaIA ↔ AEAT (contacto `comunicacion.sepri@correo.aeat.es`).
 - Cliente otorga apoderamiento en registro AEAT (vía Cl@ve PIN o cert).
-- FacturaIA presenta con SU certificado en nombre del cliente.
+- TuFacturaIA presenta con SU certificado en nombre del cliente.
 - Es la vía estándar de Quipu, Declarando, Holded Asesor, A3.
 - **Tiempo estimado**: 2-4 meses convenio activo. **Coste**: 0€ + cert empresa FNMT ~50€/año (ya lo tenéis para Verifactu).
 - **Acción pendiente**: arrancar gestión convenio en paralelo al desarrollo v1, no se puede empezar v3 sin convenio activo.
@@ -319,21 +319,21 @@ Cron diario 08:00 Madrid emite avisos a 30/15/7/2/1 días del plazo:
 
 - ✅ Disclaimer "no es asesoramiento fiscal" en footer PDF y cabecera TXT (texto en §Texto legal).
 - ✅ Conservación 6 años inmutable (WORM + sello eIDAS).
-- ⚠️ **DPA específico para datos fiscales de terceros** (NIFs proveedores/profesionales/arrendadores en 347/180/190 que NO son clientes de FacturaIA). Contrato encargado de tratamiento art 28 RGPD actualizado listando subencargados (Supabase, Hetzner, OpenAI). **Bloqueante antes de GA.**
+- ⚠️ **DPA específico para datos fiscales de terceros** (NIFs proveedores/profesionales/arrendadores en 347/180/190 que NO son clientes de TuFacturaIA). Contrato encargado de tratamiento art 28 RGPD actualizado listando subencargados (Supabase, Hetzner, OpenAI). **Bloqueante antes de GA.**
 - ⚠️ **OpenAI/LLM en cálculos**: LLM solo para explicación/copiloto, NO para los números que van al BOE. Confirmar DPA OpenAI vigente.
 - ⚠️ **Contrato de servicio** con cláusula limitación responsabilidad (tope = importe anual pagado, exclusión lucro cesante y sanciones AEAT). Revisado por abogado. Cláusulas abusivas B2C nulas (TRLGDCU art 86).
 - ✅ Plazos AEAT en tabla actualizable + festivos CCAA del domicilio fiscal.
-- ⚠️ **Beta privada 2 trimestres** con 20-30 orgs voluntarias antes de GA. Bug en TXT = thread Twitter "FacturaIA me hizo presentar mal el 303".
+- ⚠️ **Beta privada 2 trimestres** con 20-30 orgs voluntarias antes de GA. Bug en TXT = thread Twitter "TuFacturaIA me hizo presentar mal el 303".
 - ⚠️ **Auditoría fiscal externa** ~2k€ antes de GA (asesor fiscal colegiado valida cálculos contra casos reales).
 
 ## Texto legal mínimo (para outputs)
 
 **Footer PDF (cada página)**:
-> Documento generado automáticamente por FacturaIA a partir de los datos registrados por el usuario. No constituye asesoramiento fiscal ni declaración presentada ante la AEAT. La responsabilidad sobre la veracidad, integridad y presentación de la declaración corresponde exclusivamente al obligado tributario (art. 179 LGT). Se recomienda revisión por asesor fiscal colegiado antes de su presentación. Hash de cálculo: {sha256} · Generado: {ts UTC} · Versión motor: {v}
+> Documento generado automáticamente por TuFacturaIA a partir de los datos registrados por el usuario. No constituye asesoramiento fiscal ni declaración presentada ante la AEAT. La responsabilidad sobre la veracidad, integridad y presentación de la declaración corresponde exclusivamente al obligado tributario (art. 179 LGT). Se recomienda revisión por asesor fiscal colegiado antes de su presentación. Hash de cálculo: {sha256} · Generado: {ts UTC} · Versión motor: {v}
 
 **Cabecera TXT export**:
 ```
-; FacturaIA v{x.y} - Modelo {NNN} ejercicio {YYYY} periodo {PP}
+; TuFacturaIA v{x.y} - Modelo {NNN} ejercicio {YYYY} periodo {PP}
 ; Generado {ISO8601} - Hash {sha256}
 ; Documento de apoyo NO presentado. Validar en sede.agenciatributaria.gob.es antes de envío.
 ```

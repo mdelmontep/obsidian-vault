@@ -10,7 +10,7 @@ Si un trigger BEFORE hace skip de validación basado en un valor de input
 UPDATE puede setear ese valor manualmente vía supabase-js cliente
 directo y evadir todas las validaciones siguientes.
 
-Caso real: mig 138 FacturaIA skipeó `mfa_no_overpayment` para
+Caso real: mig 138 TuFacturaIA skipeó `mfa_no_overpayment` para
 `metodo='automatico'` (mirror trigger creaba mfa que excedía total
 fiscalmente OK). Vector evasión inmediato: user con role escritura
 hace `UPDATE mfa SET importe=99999, metodo='automatico'` → bypass.

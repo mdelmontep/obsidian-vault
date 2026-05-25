@@ -115,4 +115,4 @@ Las tablas admin (plans, features, org_features, etc.) tienen policies con check
 
 ---
 
-*Usado en: [[FacturaIA]] — 25 tablas con este patrón (17 originales + 8 admin/feature flags)*
+*Usado en: [[TuFacturaIA]] — 25 tablas con este patrón (17 originales + 8 admin/feature flags)*

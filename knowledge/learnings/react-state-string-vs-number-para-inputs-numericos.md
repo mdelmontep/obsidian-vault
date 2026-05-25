@@ -19,4 +19,4 @@ const [p, setP] = useState<string>('')   // no number
 const valor = parseNumeroEs(p)            // parser robusto (ver [[parser-numero-es-bug-con-input-html5-number-punto-como-decimal-no-millares]])
 ```
 
-`step="any"` evita que el browser flagee `12,50` como inválido vs `step={1}`. Aplica a cualquier campo monetario/cantidad de form React. Caso real FacturaIA sprint formulario facturas 2026-05-24 — bugs 3+4 cerrados con este patrón.
+`step="any"` evita que el browser flagee `12,50` como inválido vs `step={1}`. Aplica a cualquier campo monetario/cantidad de form React. Caso real TuFacturaIA sprint formulario facturas 2026-05-24 — bugs 3+4 cerrados con este patrón.

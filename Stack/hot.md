@@ -105,7 +105,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Triggers BD de sincronización = anti-patrón** — 6 razones (silent fail, race, recursión, audit ciego, code review ciego, mig masiva). Sync explícito en código. Ver [[triggers-bd-sync-son-antipatron]] + [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas]]
 - **NUMERIC(X,2) drift bruto↔neto IVA** — 10€ bruto IVA 21% → guarda 8.26 → reconstruye 9.99. Necesita NUMERIC(14,6) o redondeo desde total bruto. Ver [[numeric-precision-drift-bruto-neto-iva]]
 - **RPC CREATE OR REPLACE firma idéntica obligatoria** — distinta deja función huérfana, callers fallan. PL/pgSQL lazy compile. Ver [[postgres-rpc-firma-identica-create-replace]]
-- **RLS multi-org `get_user_org_id()` no `IN (SELECT org_members)`** — el segundo permite leer de TODAS las orgs del user, no solo la activa. Caso real: 16 tablas FacturaIA fixeadas en mig 163. Ver [[rls-multi-org-active-vs-membership]]
+- **RLS multi-org `get_user_org_id()` no `IN (SELECT org_members)`** — el segundo permite leer de TODAS las orgs del user, no solo la activa. Caso real: 16 tablas TuFacturaIA fixeadas en mig 163. Ver [[rls-multi-org-active-vs-membership]]
 
 ### smoke / supabase (2026-05-22)
 - **PostgREST hint revela signature RPC** — probe con args incompletos → 404 con hint enumera params reales. Verifica mig aplicada sin psql. Ver [[postgrest-rpc-hint-revela-signature-aplicada-en-prod]]
@@ -165,7 +165,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Policy `org_member_update` permite UPDATE a CUALQUIER miembro** — sin distinguir rol. Para columnas regulatorias (Verifactu, entorno AEAT, etc.) el riesgo es real: cualquier becario apaga el envío a AEAT desde DevTools. Mitigación: trigger BEFORE UPDATE con guard de rol + API route con `requireRole`. Revisar otras columnas críticas (`regimen_iva`, `nif`, `iae`).
 - **Trigger SQL captura IP via `current_setting('request.headers')`** — Supabase inyecta los headers HTTP en el GUC de sesión cuando viene del PostgREST. En SQL directo (psql, cron, migrations) el GUC no existe → wrap en `BEGIN…EXCEPTION WHEN OTHERS THEN v_ip:=NULL; END`. Útil para auditoría regulatoria.
 - **Worktree desde `origin/main` cuando local diverge** — `git worktree add .worktrees/X origin/main -b fix/clean` evita arrastrar commits locales no pusheados al PR. Patrón canónico cuando hay sprint pre-cutover con commits acumulados.
-- **`gh auth switch -u AgentesIAMadrid`** antes de tocar repo FacturaIA via gh CLI. Default `mdelmonteagentesia` da 404.
+- **`gh auth switch -u AgentesIAMadrid`** antes de tocar repo TuFacturaIA via gh CLI. Default `mdelmonteagentesia` da 404.
 
 ### facturaia / fiscal AEAT Sprint 3 audit
 - **RPC SQL atómico para multi-INSERT con triggers** — `admin.rpc()` con `SECURITY DEFINER` envuelve N INSERTs en 1 transacción; advisory_xact_lock sobrevive hasta COMMIT del RPC. Cierra race entre triggers BEFORE/AFTER. Ver [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]]
@@ -194,7 +194,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Cloudflared quick tunnel** — `cloudflared tunnel --url http://localhost:PORT --no-autoupdate`. URL temporal trycloudflare.com sin login para webhooks E2E. Ver [[claude-code-gotchas]]
 - **Next.js route handlers solo permiten exports estándar** — exportar helper desde `route.ts` rompe typecheck. Mover a archivo aparte o privado. Ver [[claude-code-gotchas]]
 
-### FacturaIA / agency-portal
+### TuFacturaIA / agency-portal
 - **pg_trgm word_similarity vs similarity** — para buscar nombre corto en descripción larga usa `word_similarity(needle, haystack)`, NO `similarity`. Threshold 0.50 ES OK para bancarios. Ver [[postgres-word-similarity-vs-similarity-para-needle-in-haystack]]
 - **Defense-in-depth estado='activo'** — RLS sola no basta cuando endpoint usa `createAdminClient()` (service-role bypasa RLS). Añadir check explícito de membership activa antes de mutar. Ver [[defense-in-depth-estado-activo-cuando-admin-client-bypasa-rls]]
 - **UPSERT atómico con RPC** — `.upsert()` Supabase no incrementa contador en colisión (sobrescribe). Para counters usa RPC plpgsql con `ON CONFLICT DO UPDATE SET col = tabla.col + 1`. Ver [[upsert-atomico-rpc-vs-check-then-act-evita-lost-update]]
@@ -270,7 +270,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Kommo webhook tras update n8n** — PUT al workflow rompe webhook, recrear. Ver [[kommo-webhook-deja-de-disparar-tras-update-n8n]]
 
 ### Infra (Dokploy / Docker)
-- **Dokploy AgentesIA SSH** — `ssh -p 5251 root@185.47.13.166` (viejo) / `root@185.47.13.170` (nuevo FacturaIA). Key `~/.ssh/id_ed25519`. Ver [[docker-infra]]
+- **Dokploy AgentesIA SSH** — `ssh -p 5251 root@185.47.13.166` (viejo) / `root@185.47.13.170` (nuevo TuFacturaIA). Key `~/.ssh/id_ed25519`. Ver [[docker-infra]]
 - **Dokploy pegar compose duplica líneas** — al pegar YAML completo el editor corrompe la inserción. Verificar archivo en disco tras Save. Ver [[dokploy-paste-compose-corruption]]
 - **`docker compose up -d` NO recrea container si solo cambia valor de `${VAR}`** — `--force-recreate` obligatorio. Ver [[docker-compose-env-not-recreate]]
 - **Dokploy reload tras redeploy** — Bad Gateway hasta Traefik reload manual

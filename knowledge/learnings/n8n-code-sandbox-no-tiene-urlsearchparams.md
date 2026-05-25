@@ -13,4 +13,4 @@ Fix: concatenar con `encodeURIComponent`:
 const qs = 'k=' + encodeURIComponent(v) + '&k2=' + encodeURIComponent(v2);
 ```
 
-`this.helpers.httpRequest` sí está disponible. `fetch` no. Detectado en state machine bot WhatsApp FacturaIA (2026-05-18). Ver [[n8n]] · [[n8n-sessionid-sin-plus-vs-endpoint-e164]]
+`this.helpers.httpRequest` sí está disponible. `fetch` no. Detectado en state machine bot WhatsApp TuFacturaIA (2026-05-18). Ver [[n8n]] · [[n8n-sessionid-sin-plus-vs-endpoint-e164]]

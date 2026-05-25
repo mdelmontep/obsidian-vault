@@ -1,7 +1,7 @@
 ---
 title: Audit con 3 agentes paralelos detecta vulnerabilidades cross-sprint
 date: 2026-05-24
-source: FacturaIA audit conciliación v3 (Sprints A-E + cashflow v2.2)
+source: TuFacturaIA audit conciliación v3 (Sprints A-E + cashflow v2.2)
 tags: [meta, audit, multi-agent]
 ---
 

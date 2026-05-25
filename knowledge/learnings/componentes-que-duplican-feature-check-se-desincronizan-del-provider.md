@@ -17,7 +17,7 @@ El componente hace N llamadas RPC individuales a `org_has_feature()` en vez de c
 
 ## Caso real
 
-`CanalesIngesta` en FacturaIA hacía 4 RPCs individuales por canal. Con plan Enterprise (todos los features habilitados), las tarjetas aparecían bloqueadas. Fix: reemplazar RPCs por `useFeatures()` del `FeatureProvider` existente.
+`CanalesIngesta` en TuFacturaIA hacía 4 RPCs individuales por canal. Con plan Enterprise (todos los features habilitados), las tarjetas aparecían bloqueadas. Fix: reemplazar RPCs por `useFeatures()` del `FeatureProvider` existente.
 
 ## Regla
 

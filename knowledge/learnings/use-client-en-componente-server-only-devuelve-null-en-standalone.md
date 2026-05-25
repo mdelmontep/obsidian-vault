@@ -11,7 +11,7 @@ Cuando un componente tiene `'use client'` pero solo se importa desde API routes 
 
 **Síntoma**: `TypeError: Cannot read properties of null (reading 'props')` al pasar el componente a `renderToBuffer()` o `createElement()`.
 
-**Caso real**: `InvoicePDF` en FacturaIA tenía `'use client'` porque originalmente se usaba en preview del browser. Al moverlo a solo server-side (API route `/api/voice/generate`), el standalone lo anulaba.
+**Caso real**: `InvoicePDF` en TuFacturaIA tenía `'use client'` porque originalmente se usaba en preview del browser. Al moverlo a solo server-side (API route `/api/voice/generate`), el standalone lo anulaba.
 
 **Fix**: quitar `'use client'` si no hay consumidores client-side. Si hay consumidores de ambos lados, extraer la lógica pura a un archivo sin directiva e importar desde ambos.
 

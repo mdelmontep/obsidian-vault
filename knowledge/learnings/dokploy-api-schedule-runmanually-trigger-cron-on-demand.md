@@ -69,5 +69,5 @@ Disparo manual desde la API:
 ## Cross-ref
 
 - Reference `reference-dokploy-facturaia` en memory del agente — añadir esta sección al endpoint list.
-- `src/lib/cron/track.ts:withCronTracking` — patrón canónico FacturaIA para crons.
+- `src/lib/cron/track.ts:withCronTracking` — patrón canónico TuFacturaIA para crons.
 - Botón Run Now en `/admin/system?tab=crons` hace lo mismo via `loadHandler` interno + Request sintético (no sale a Dokploy API).

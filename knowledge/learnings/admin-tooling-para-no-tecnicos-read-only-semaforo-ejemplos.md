@@ -13,6 +13,6 @@ Panel admin que va a usar un dueño no-ingeniero (no devops, no SRE) debe seguir
 4. **Ejemplo real concreto** (tooltip o modal) — "Pepe crea una factura, esto pasa, esto se actualiza". El owner entiende la utilidad sin leer código.
 5. **Notif automática al fallar** en la campanita interna — el owner no abre el panel a diario, hay que avisarle.
 
-**Caso real FacturaIA**: panel `/admin/system/crons` con esta receta. Mantenido deliberadamente sin "Run Now" pese a que técnicamente trivial — el riesgo de owner disparando manualmente un cron que muta BD supera el beneficio.
+**Caso real TuFacturaIA**: panel `/admin/system/crons` con esta receta. Mantenido deliberadamente sin "Run Now" pese a que técnicamente trivial — el riesgo de owner disparando manualmente un cron que muta BD supera el beneficio.
 
 **Extensión**: si el panel acaba teniendo acciones (raras), envolverlas en confirmación + log + reversibilidad.

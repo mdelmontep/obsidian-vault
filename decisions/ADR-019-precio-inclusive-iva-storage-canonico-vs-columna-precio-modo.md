@@ -1,5 +1,5 @@
 ---
-title: ADR-019 — precio "con IVA incluido" (Holded-style) en form FacturaIA: storage canónico vs columna precio_modo vs doble columna
+title: ADR-019 — precio "con IVA incluido" (Holded-style) en form TuFacturaIA: storage canónico vs columna precio_modo vs doble columna
 date: 2026-05-24
 status: accepted
 tags: [adr, facturaia, fiscal, ux-vs-storage]

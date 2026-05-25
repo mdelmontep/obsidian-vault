@@ -15,4 +15,4 @@ Función PL/pgSQL que sustituye tokens (`{CODIGO}`, `{AAAA}`, `{NNNN}`...) con `
 
 Mantener las tres listas sincronizadas — allowlist en SQL, TS y picker UI. Si añades token nuevo, los 3 sitios.
 
-Mig 021 de FacturaIA: `is_valid_series_format` + `ALTER TABLE ... ADD CONSTRAINT ... CHECK`.
+Mig 021 de TuFacturaIA: `is_valid_series_format` + `ALTER TABLE ... ADD CONSTRAINT ... CHECK`.

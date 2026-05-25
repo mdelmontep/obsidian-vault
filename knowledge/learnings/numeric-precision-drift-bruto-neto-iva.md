@@ -5,7 +5,7 @@ source: claude-code-session
 tags: [postgres, fiscal, redondeo, numeric]
 ---
 
-Caso real FacturaIA 2026-05-25: user pone 10€ bruto con IVA 21%. Sistema persiste precio_unitario neto = 10/1.21 = 8.264462... → guarda 8.26 en NUMERIC(12,2) → al reconstruir total muestra 8.26 × 1.21 = 9.9946 ≈ **9.99€**. Imposible cuadrar a 10.00 con solo 2 decimales — ningún valor de 2 dec (8.26 ni 8.27) da exactamente 10.
+Caso real TuFacturaIA 2026-05-25: user pone 10€ bruto con IVA 21%. Sistema persiste precio_unitario neto = 10/1.21 = 8.264462... → guarda 8.26 en NUMERIC(12,2) → al reconstruir total muestra 8.26 × 1.21 = 9.9946 ≈ **9.99€**. Imposible cuadrar a 10.00 con solo 2 decimales — ningún valor de 2 dec (8.26 ni 8.27) da exactamente 10.
 
 **Fix**: ampliar a NUMERIC(14,6) (mig 164). Permite persistir 8.264463 → total reconstruido = 10.0000003 ≈ 10.00. Cast `NUMERIC(12,2) → NUMERIC(14,6)` es ampliación sin pérdida (datos existentes intactos).
 

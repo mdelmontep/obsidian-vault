@@ -29,6 +29,6 @@ Envolver una `<table>` ancha en `<div style={{overflowX:'auto'}}>` para móvil *
 - `role="region"` + `aria-label` único por tabla anuncia la región al SR.
 - `tabIndex={0}` hace el div focusable para que el usuario pueda Tab → flechas para scroll.
 - El `<table>` mantiene su role implícito intacto al envolverlo en el div.
-- Una clase reusable evita el patrón de inline-style duplicado ×N. Caso FacturaIA: ×5 en settings + api-keys.
+- Una clase reusable evita el patrón de inline-style duplicado ×N. Caso TuFacturaIA: ×5 en settings + api-keys.
 
 `WebkitOverflowScrolling: 'touch'` es legacy (iOS 13+ default) — no añadir.

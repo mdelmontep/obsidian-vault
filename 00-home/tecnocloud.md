@@ -7,19 +7,19 @@ tags: [cliente, tecnocloud, retell, voice]
 
 # Tecnocloud
 
-Cliente de FacturaIA (Enterprise). Quiere su propio número WhatsApp para ingesta.
+Cliente de TuFacturaIA (Enterprise). Quiere su propio número WhatsApp para ingesta.
 También tiene agente de voz Retell propio (Laura) para soporte técnico inbound.
 
 ## Estado
 
-- **Org** activa en FacturaIA con plan Enterprise
+- **Org** activa en TuFacturaIA con plan Enterprise
 - **15 facturas** emitidas en últimos 90d, 5 pendientes (33%)
 - 0 proveedores con varianza alta (no recibe sugerencia antifraud)
 - **Agente de voz Laura** (Retell) en producción para soporte L1, inbound al +34919935205
 
 ## Próximos hitos
 
-1. **WhatsApp en FacturaIA** (LATER) — obtener `phone_number_id` de Meta Business → guardar en `organizations.settings.whatsapp.phone_number_id` → webhook override en n8n receptor v2
+1. **WhatsApp en TuFacturaIA** (LATER) — obtener `phone_number_id` de Meta Business → guardar en `organizations.settings.whatsapp.phone_number_id` → webhook override en n8n receptor v2
 
 ## Agente de voz Laura — Retell
 

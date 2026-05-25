@@ -1,12 +1,12 @@
 ---
-title: FacturaIA ↔ agency-portal — Integración API v1 + Webhooks
+title: TuFacturaIA ↔ agency-portal — Integración API v1 + Webhooks
 date: 2026-05-01
 source: claude-code-session
 tags: [facturaia, agency-portal, api, webhooks, integracion, agentesia]
 estado: review-pendiente
 ---
 
-# Integración FacturaIA ↔ agency-portal
+# Integración TuFacturaIA ↔ agency-portal
 
 Sesiones 30-abril a 1-mayo-2026 con Claude Code. **PRs portal P1-P7 listos para review de Borja. Auditoría completa con fixes commiteados. PR-A3 facturaia (#32) pendiente de cerrar.**
 
@@ -32,15 +32,15 @@ El portal `agency-portal` (Next.js, multi-tenant para Agentesia) necesita emitir
 
 **Modelo decidido (A — replicación)**:
 - Lo comercial vive en el portal (quote → contract → agency_invoice)
-- Lo fiscal se replica en FacturaIA vía API REST cuando se "emite oficialmente"
-- FacturaIA es source of truth de numeración + Verifactu + PDF oficial
-- El portal guarda `facturaia_documents.remote_id` y muestra el PDF de FacturaIA
+- Lo fiscal se replica en TuFacturaIA vía API REST cuando se "emite oficialmente"
+- TuFacturaIA es source of truth de numeración + Verifactu + PDF oficial
+- El portal guarda `facturaia_documents.remote_id` y muestra el PDF de TuFacturaIA
 
-Razón: el cliente final solo ve UN documento (el de FacturaIA), cero duplicación de números fiscales, AEAT solo conoce un emisor.
+Razón: el cliente final solo ve UN documento (el de TuFacturaIA), cero duplicación de números fiscales, AEAT solo conoce un emisor.
 
 ## Plan de PRs (7 total)
 
-### FacturaIA (lado servidor — 3 PRs)
+### TuFacturaIA (lado servidor — 3 PRs)
 
 | PR | Estado | URL | Qué hace |
 |---|---|---|---|
@@ -52,7 +52,7 @@ Razón: el cliente final solo ve UN documento (el de FacturaIA), cero duplicaci�
 ### agency-portal (lado cliente — 4 PRs, todos pendientes)
 
 - PR-P1 — SDK autogenerado de OpenAPI (`openapi-typescript`) + cliente HTTP `openapi-fetch` + tabla `facturaia_documents` (id, type, remote_id, num, pdf_url, estado, sync_at, agency_invoice_id?, quote_id?, billing_invoice_id?) + receiver `/api/webhooks/facturaia` con HMAC verify + env vars `FACTURAIA_*`
-- PR-P2 — Server actions `emitAgencyInvoiceFiscally`, `emitQuoteFiscally`. Botón "Emitir oficialmente" en UI. PDF interno pasa a borrador, oficial es el de FacturaIA
+- PR-P2 — Server actions `emitAgencyInvoiceFiscally`, `emitQuoteFiscally`. Botón "Emitir oficialmente" en UI. PDF interno pasa a borrador, oficial es el de TuFacturaIA
 - PR-P3 — Stripe webhook `invoice.paid` → `POST /v1/facturas` automático. Idempotency-Key derivada de `stripe_invoice_id`
 - PR-P4 — Hardening: monitoreo de `webhook_deliveries`, rotación API key documentada, E2E manual
 
@@ -64,12 +64,12 @@ Razón: el cliente final solo ve UN documento (el de FacturaIA), cero duplicaci�
 - ✅ POST `/api/v1/facturas` real con curl → 201 + factura `A2026-0006` creada con PDF y Verifactu encolado
 - ✅ Trigger BD insertó evento en `outbox_events` + delivery en `webhook_deliveries`
 - ✅ Dispatcher (`POST /api/internal/webhook-dispatcher` con `x-service-key`) firmó HMAC y entregó
-- ✅ webhook.site recibió POST con headers `X-FacturaIA-Event-Id`, `X-FacturaIA-Event-Type: factura.created`, `X-FacturaIA-Signature: t=<unix>,v1=<hmac>`, `X-FacturaIA-Delivery-Attempt`, body envelope `{id, type, created_at, org_id, data}`
+- ✅ webhook.site recibió POST con headers `X-TuFacturaIA-Event-Id`, `X-TuFacturaIA-Event-Type: factura.created`, `X-FacturaIA-Signature: t=<unix>,v1=<hmac>`, `X-TuFacturaIA-Delivery-Attempt`, body envelope `{id, type, created_at, org_id, data}`
 - ✅ Validador SSRF: 11 casos pasados directamente (privadas, loopback, IPv6, .local, .internal, localhost rechazados; webhook.site y dominios reales aceptados)
 
 ### Bugs detectados durante validación (todos arreglados en branch, pendientes de commit)
 1. **Middleware `src/proxy.ts` → `updateSession()` interceptaba `/api/v1/*` y `/api/internal/*`** redirigiendo a `/login`. Hacía toda la API pública inutilizable para consumers externos. Fix: añadidas a `isServiceRoute` en `src/lib/supabase/middleware.ts:75-86`
-2. **`X-FacturaIA-Delivery-Attempt` off-by-one**: enviaba "attempt=2" en el primer intento. Fix: `String(attempt)` en lugar de `String(attempt + 1)` en `src/lib/webhooks/dispatcher.ts`
+2. **`X-TuFacturaIA-Delivery-Attempt` off-by-one**: enviaba "attempt=2" en el primer intento. Fix: `String(attempt)` en lugar de `String(attempt + 1)` en `src/lib/webhooks/dispatcher.ts`
 
 ### Qué NO se validó manualmente (no son blockers)
 - Reintentos con backoff exponencial cuando recv da 5xx (httpstat.us/500)
@@ -90,7 +90,7 @@ Output esperado: `✅ retry registrado correctamente`. Si pasa → commit + merg
 
 ## Configuración necesaria para producción (cuando se mergee PR-A3)
 
-**Env vars en Dokploy (FacturaIA)**:
+**Env vars en Dokploy (TuFacturaIA)**:
 ```
 WEBHOOK_SIGNING_KEY=<32+ chars hex>      # AES-256-GCM para cifrar secrets
 FACTURAIA_SERVICE_KEY=<existing>          # Reusable del que ya hay
@@ -126,7 +126,7 @@ FACTURAIA_SERVICE_KEY=<existing>          # Reusable del que ya hay
 ```
 Next.js 16.2.1, React 19.2.3, TypeScript strict
 Supabase SSR, Tailwind 4 + shadcn (base-nova)
-Zod v4 (ojo: FacturaIA usa Zod v3 forzado)
+Zod v4 (ojo: TuFacturaIA usa Zod v3 forzado)
 @react-pdf/renderer, Stripe v22, OpenAI, Retell SDK
 ```
 
@@ -141,4 +141,4 @@ Hierarchy: **Agency → Client → Project**. Cookie `agency_portal_active_tenan
 
 Frase para arrancar (después de reiniciar Mac):
 
-> "Retomamos integración FacturaIA ↔ agency-portal. Lee /Users/manueldelmonte/Obsidian/Manu/knowledge/projects/agentesia/facturaia-integracion-api-v1-portal.md para contexto. Estábamos en PR-A3 webhooks, parcialmente validado, pendiente de un script Node que pruebe reintentos sin depender del dev server local. Después de eso commit + merge PR-A3, luego empezamos PR-P1 en agency-portal."
+> "Retomamos integración TuFacturaIA ↔ agency-portal. Lee /Users/manueldelmonte/Obsidian/Manu/knowledge/projects/agentesia/facturaia-integracion-api-v1-portal.md para contexto. Estábamos en PR-A3 webhooks, parcialmente validado, pendiente de un script Node que pruebe reintentos sin depender del dev server local. Después de eso commit + merge PR-A3, luego empezamos PR-P1 en agency-portal."

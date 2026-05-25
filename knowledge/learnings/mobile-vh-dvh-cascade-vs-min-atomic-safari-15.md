@@ -18,6 +18,6 @@ max-height: calc(100dvh - 240px);
 max-height: min(calc(100vh - 240px), calc(100dvh - 240px));
 ```
 
-Si el valor está en `style={{...}}` inline de React no se puede declarar la propiedad dos veces — mover a clase CSS. Caso real FacturaIA: `voz-variables-form.tsx:790` con `min()` atómico → preview de prompt sin scroll en iOS 15.0-15.3.
+Si el valor está en `style={{...}}` inline de React no se puede declarar la propiedad dos veces — mover a clase CSS. Caso real TuFacturaIA: `voz-variables-form.tsx:790` con `min()` atómico → preview de prompt sin scroll en iOS 15.0-15.3.
 
 Ver [[mobile-restore-focus-after-inert-needs-raf]] · [[mobile-inert-plus-aria-hidden-ios-15-fallback]].

@@ -1,7 +1,7 @@
 ---
 title: Conciliación bancaria — match multi-señal vs importe bruto (falsos positivos)
 date: 2026-05-24
-source: FacturaIA mig 155 + Sprint conciliación v3
+source: TuFacturaIA mig 155 + Sprint conciliación v3
 tags: [facturaia, conciliacion, matching, scoring]
 ---
 

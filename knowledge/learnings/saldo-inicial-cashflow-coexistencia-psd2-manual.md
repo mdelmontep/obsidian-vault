@@ -1,7 +1,7 @@
 ---
 title: Saldo inicial cashflow — coexistencia PSD2 + manual sin conflicto
 date: 2026-05-24
-source: FacturaIA Cashflow v2.2 commit fbd3a37
+source: TuFacturaIA Cashflow v2.2 commit fbd3a37
 tags: [facturaia, cashflow, ux, multi-source-data]
 ---
 

@@ -6,7 +6,7 @@ tags: [adr, facturaia, observability, crons]
 ---
 
 ## Contexto
-FacturaIA tenía 5 crons en Dokploy (`webhook-dispatcher`, `check-vencimientos`, `verifactu-process`, `storage-quota-check`, `run-module-suggestions`) sin observabilidad: si fallaban en silencio, nadie se enteraba hasta que un cliente reportaba algo roto. Necesitamos saber en qué estado están sin entrar a logs de Dokploy.
+TuFacturaIA tenía 5 crons en Dokploy (`webhook-dispatcher`, `check-vencimientos`, `verifactu-process`, `storage-quota-check`, `run-module-suggestions`) sin observabilidad: si fallaban en silencio, nadie se enteraba hasta que un cliente reportaba algo roto. Necesitamos saber en qué estado están sin entrar a logs de Dokploy.
 
 ## Opciones consideradas
 - **A** — `setInterval` dentro de Next.js: rápido pero se reinicia con cada deploy, no persiste hora, múltiples instancias = N ejecuciones.

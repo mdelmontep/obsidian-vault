@@ -1,7 +1,7 @@
 ---
 title: Reglas aprendidas de confirmación manual — cierre del loop de aprendizaje
 date: 2026-05-24
-source: FacturaIA mig 155 + Sprint C conciliación v3
+source: TuFacturaIA mig 155 + Sprint C conciliación v3
 tags: [facturaia, learning-loops, ux, matching]
 ---
 

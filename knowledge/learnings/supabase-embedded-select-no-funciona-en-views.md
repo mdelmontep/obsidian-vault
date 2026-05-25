@@ -20,4 +20,4 @@ const map = new Map(joinedRes.data.map(r => [r.id, r]))
 const merged = rowsRes.data.map(r => ({ ...r, ...map.get(r.id) }))
 ```
 
-Caso real FacturaIA: `facturas_con_autor` (vista con LEFT JOIN profiles + api_keys) no permite embed de `clientes/proveedores`. La tabla `facturas` sí. Hago las dos queries y mergeo.
+Caso real TuFacturaIA: `facturas_con_autor` (vista con LEFT JOIN profiles + api_keys) no permite embed de `clientes/proveedores`. La tabla `facturas` sí. Hago las dos queries y mergeo.

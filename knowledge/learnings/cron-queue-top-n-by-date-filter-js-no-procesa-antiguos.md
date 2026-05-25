@@ -32,4 +32,4 @@ ORDER BY fecha DESC LIMIT $2
 PostgREST embed da problemas con N FKs ambiguas → mejor RPC
 `get_pending_*(p_limit, p_version)` callable via `admin.rpc(...)`.
 
-Caso real: FacturaIA cron `anomaly-batch` mig 141.
+Caso real: TuFacturaIA cron `anomaly-batch` mig 141.

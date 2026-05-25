@@ -15,4 +15,4 @@ tags: [supabase, migrations, cli, deploy]
 
 **Verificar** post-fix: `supabase migration list --linked` muestra las 146-150 con check en columna remoto.
 
-Caso real FacturaIA 2026-05-22: 13 timestamps remotos huérfanos bloqueaban deploy migs 146-150. Aplicación quirúrgica + repair selectivo desbloqueó deploy en 5 minutos sin tocar `supabase_migrations.schema_migrations` manualmente.
+Caso real TuFacturaIA 2026-05-22: 13 timestamps remotos huérfanos bloqueaban deploy migs 146-150. Aplicación quirúrgica + repair selectivo desbloqueó deploy en 5 minutos sin tocar `supabase_migrations.schema_migrations` manualmente.

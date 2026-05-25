@@ -7,7 +7,7 @@ tags: [testing, integration, backfill]
 
 Un endpoint que pasa lint+typecheck+build y nunca se llamó en producción tiene probabilidad alta de fallar al primer uso real. Los errores típicos:
 
-- Columna referenciada que no existe en la tabla (copy-paste desde un endpoint hermano sin verificar schema). Caso real FacturaIA: `getPresupuesto` pedía `documento_url` que solo existe en `facturas`. Postgres devolvía 42703.
+- Columna referenciada que no existe en la tabla (copy-paste desde un endpoint hermano sin verificar schema). Caso real TuFacturaIA: `getPresupuesto` pedía `documento_url` que solo existe en `facturas`. Postgres devolvía 42703.
 - Field name distinto entre tablas similares (`vto` vs `vence`).
 - Validación cliente-side cubre casos que en server fallan distinto.
 

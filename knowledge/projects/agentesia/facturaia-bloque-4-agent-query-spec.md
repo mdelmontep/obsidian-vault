@@ -25,6 +25,6 @@ Endpoint nuevo para consultas naturales por WhatsApp que el AI Agent del workflo
 
 ## Pre-requisitos
 
-NO empezar antes de cerrar Bloques 1+2 de FacturaIA (form manual + vistas separadas). Es sesión grande con Opus + plan mode aparte.
+NO empezar antes de cerrar Bloques 1+2 de TuFacturaIA (form manual + vistas separadas). Es sesión grande con Opus + plan mode aparte.
 
 Relacionado: [[agency-portal-n8n]]

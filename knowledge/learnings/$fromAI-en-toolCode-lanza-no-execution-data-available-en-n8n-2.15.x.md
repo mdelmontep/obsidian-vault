@@ -69,4 +69,4 @@ const stateJson = typeof pia.previous_state_json === 'string'
 const presupuestoId = stateJson?.resolved_slot?.id;
 ```
 
-Más limpio que el workaround `query`, elimina la clase entera de bugs (LLM no decide UUIDs) y resuelve también referencias en lenguaje natural ("el más caro", "del 18 de mayo"). Aplicado en FacturaIA bot WhatsApp 2026-05-18. Ver [[slot-resolver-deterministic-pre-llm-nlu-regex-espanol]] · [[ADR-003-slot-resolver-determinista]]
+Más limpio que el workaround `query`, elimina la clase entera de bugs (LLM no decide UUIDs) y resuelve también referencias en lenguaje natural ("el más caro", "del 18 de mayo"). Aplicado en TuFacturaIA bot WhatsApp 2026-05-18. Ver [[slot-resolver-deterministic-pre-llm-nlu-regex-espanol]] · [[ADR-003-slot-resolver-determinista]]

@@ -26,4 +26,4 @@ IF TG_OP = 'INSERT' AND EXISTS (
 
 Detectado por smoke E2E tras 4 horas de smokes verdes — los triggers
 unitarios pasaron, la composición trigger+mirror+ON CONFLICT falló.
-Caso real: FacturaIA mig 137 (Conciliación).
+Caso real: TuFacturaIA mig 137 (Conciliación).

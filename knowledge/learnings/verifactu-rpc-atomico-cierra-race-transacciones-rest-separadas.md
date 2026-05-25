@@ -35,4 +35,4 @@ TS: `admin.rpc('create_x_with_y', { p_x: {...}, p_y: [...] })`.
 
 Tests: mockear `admin.rpc.mockResolvedValueOnce({ data: {...}, error: null })` en lugar de 2 `queueResponse` separados.
 
-Caso real FacturaIA: mig 094 cerró race A-fiscal #2 entre INSERT facturas (huella `total-base`) e INSERT lineas (recálculo huella con Σ). Ver [[unique-index-concurrently-parcial-para-idempotencia-bd]] para el patrón hermano que blinda race a nivel de constraint.
+Caso real TuFacturaIA: mig 094 cerró race A-fiscal #2 entre INSERT facturas (huella `total-base`) e INSERT lineas (recálculo huella con Σ). Ver [[unique-index-concurrently-parcial-para-idempotencia-bd]] para el patrón hermano que blinda race a nivel de constraint.

@@ -18,6 +18,6 @@ Límites Meta Cloud API para `interactive.type='list'`:
 
 Patrón para `row.id` cuando el router downstream debe diferenciar tipo de selección: usar prefijo `tipo:datos`, ej. `org_select:b5f86e8f-4c44-4a44-89d0-acccd8d4530e`. El switch n8n filtra con regex `^org_select:` y extrae el UUID con `.replace("org_select:", "")`.
 
-Defense in depth: el backend revalida que el UUID extraído sea legítimo para ese user antes de actuar (no fiar de `list_reply.id` — un cliente WhatsApp manipulado puede enviar cualquier valor). Caso real FacturaIA 2026-05-21: select-org endpoint revalida `org_members.estado='activo'`.
+Defense in depth: el backend revalida que el UUID extraído sea legítimo para ese user antes de actuar (no fiar de `list_reply.id` — un cliente WhatsApp manipulado puede enviar cualquier valor). Caso real TuFacturaIA 2026-05-21: select-org endpoint revalida `org_members.estado='activo'`.
 
 Truncado de title: nombres >24 chars cortar con `.slice(0,24)`. Si colisionan tras truncado (ej. "Grupo Agentesia Madrid" y "Grupo Agentesia Barcelona"), añadir descripción.

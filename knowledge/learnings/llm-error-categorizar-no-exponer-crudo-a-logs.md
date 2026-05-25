@@ -41,4 +41,4 @@ Beneficios:
 3. **Cache invalidation**: TTL distinto por kind. Auth_error nunca se cachea (rotar key debe surtir efecto inmediato). Rate_limit/timeout cachean 30s (no martillear provider).
 4. **Métricas accionables**: count por kind muestra qué provider está degradado.
 
-Caso real FacturaIA: `ai-validate.ts` validación VeriFACTU pre-emisión. Antes: modal "No se pudo ejecutar la validación asistida" genérico + reintentos idénticos llamaban al provider. Ahora: cache LRU sha256 hash + mensaje específico por kind + log estructurado.
+Caso real TuFacturaIA: `ai-validate.ts` validación VeriFACTU pre-emisión. Antes: modal "No se pudo ejecutar la validación asistida" genérico + reintentos idénticos llamaban al provider. Ahora: cache LRU sha256 hash + mensaje específico por kind + log estructurado.

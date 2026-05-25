@@ -20,6 +20,6 @@ Si N commits cubren N módulos independientes (OCR, Conciliación, Copiloto…),
 - Atribución limpia: `git blame` apunta al commit del módulo correcto
 - Aplica orden: si una falla a mitad, Supabase deja claro en cuál se paró
 
-**Caso real FacturaIA**: arranqué con `060_module_triggers.sql` todo junto, lo reseparé en 060+061 antes de commitear porque iba a hacer 4 commits per-módulo. Hubiera sido caótico.
+**Caso real TuFacturaIA**: arranqué con `060_module_triggers.sql` todo junto, lo reseparé en 060+061 antes de commitear porque iba a hacer 4 commits per-módulo. Hubiera sido caótico.
 
 **Coste**: marginal — separar archivos es 30 segundos. Mucho menos que el coste futuro de un rollback parcial mal hecho.

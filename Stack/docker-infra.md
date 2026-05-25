@@ -24,14 +24,14 @@ tags: [docker, traefik, dokploy, infra]
 - Si el A record de un dominio tiene la nube naranja en Cloudflare (proxied), el ACME HTTP-01 challenge recibe `204` de Cloudflare en lugar del token → cert nunca emite.
 - Traefik logs: `invalid authorization: 403 ... Invalid response from http://dominio/.well-known/acme-challenge/...: 204`
 - Solución: poner el A record en **DNS only** (nube gris) ANTES de configurar Let's Encrypt. Una vez emitido el cert, se puede volver a proxiar si se quiere.
-- Caso real FacturaIA 2026-05-13: `tufacturaia.com` con DNS proxiado → cert bloqueado. Fix pendiente Dani.
+- Caso real TuFacturaIA 2026-05-13: `tufacturaia.com` con DNS proxiado → cert bloqueado. Fix pendiente Dani.
 
 ## GitHub App Dokploy — requiere owner de la org
 
 - La GitHub App de Dokploy debe crearse logueado con una cuenta que sea **owner** de la organización GitHub donde está el repo.
 - Si se crea con una cuenta personal sin ese rol, la org no aparece en la lista de instalación ("Install App").
 - Workaround si no tienes owner: usar Git + SSH deploy key en lugar de GitHub App (Dokploy → Git → `git@github.com:org/repo.git` → Add SSH Key → añadir public key en GitHub repo Settings → Deploy keys).
-- Caso real FacturaIA 2026-05-13: repo en `AgentesIA-MAdrid`, app creada con `mdelmontep` (no owner) → org no aparecía. Fix: crear app logueado como `AgentesIAMadrid` (owner de la org).
+- Caso real TuFacturaIA 2026-05-13: repo en `AgentesIA-MAdrid`, app creada con `mdelmontep` (no owner) → org no aparecía. Fix: crear app logueado como `AgentesIAMadrid` (owner de la org).
 
 ## `NEXT_PUBLIC_*` vars en Dokploy requieren prefijo exacto
 
@@ -88,7 +88,7 @@ Diagnóstico rápido si Bad Gateway post-redeploy:
 2. Hacer reload de Traefik
 3. Si sigue, entonces mirar logs del build
 
-Ocurrió 3 veces seguidas con FacturaIA. No hay auto-reload. Pendiente investigar webhook GitHub → Dokploy para deploy automático.
+Ocurrió 3 veces seguidas con TuFacturaIA. No hay auto-reload. Pendiente investigar webhook GitHub → Dokploy para deploy automático.
 
 ## n8n en producción — anti-caídas
 
@@ -172,7 +172,7 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 | Host | IP | Puerto SSH | Uso |
 |---|---|---|---|
 | Dokploy viejo | `185.47.13.166` | `5251` | n8n compartido, AgentesIA, Tecnocloud, Simarro |
-| Dokploy nuevo FacturaIA | `185.47.13.170` | `5251` | `app.tufacturaia.com`, `n8n.tufacturaia.com` (desde 2026-05-13) |
+| Dokploy nuevo TuFacturaIA | `185.47.13.170` | `5251` | `app.tufacturaia.com`, `n8n.tufacturaia.com` (desde 2026-05-13) |
 
 - **Usuario**: `root` · **Key**: `~/.ssh/id_ed25519` (mismo en ambos)
 - Comando: `ssh -p 5251 root@<IP>`
@@ -188,5 +188,5 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 | Tecnocloud | `n8n.tecnocloud.es` | `chatwoot.tecnocloud.es` | `185.47.13.165` |
 | Clinica Zen | `n8nclinicazen.agentesia.madrid` | — | `185.47.13.168` |
 | Simarro | `n8nsimarro.agentesia.madrid` | — | `185.47.13.168` |
-| FacturaIA (actual) | `n8n.agentesia.world` (compartido) | — | `185.99.186.76` |
-| FacturaIA-prod nuevo | (n8n se queda en `agentesia.world`) | — | `185.47.13.170` (VPS dedicado, Dokploy nuevo creado 2026-05-12, vacío al inicio) |
+| TuFacturaIA (actual) | `n8n.agentesia.world` (compartido) | — | `185.99.186.76` |
+| TuFacturaIA-prod nuevo | (n8n se queda en `agentesia.world`) | — | `185.47.13.170` (VPS dedicado, Dokploy nuevo creado 2026-05-12, vacío al inicio) |

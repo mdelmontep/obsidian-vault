@@ -17,7 +17,7 @@ Para lo reciente (< 2 semanas), ver [[hot]].
 
 - [[n8n]] — workflows, Kommo, AI Agents, API, migraciones
 - [[chatwoot]] — deploy, automation rules, teams, WhatsApp Cloud
-- [[supabase-cloud]] — proyectos SaaS (FacturaIA), psql, connection pooler, RLS
+- [[supabase-cloud]] — proyectos SaaS (TuFacturaIA), psql, connection pooler, RLS
 - [[supabase-selfhosted]] — vector store para RAG, pgvector, LangChain schema
 
 ## Voice / Retell

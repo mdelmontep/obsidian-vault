@@ -20,4 +20,4 @@ Patrón seguro:
 
 Si no hay match: NUNCA fallback a profile sin scoping. Mejor guardar el dato crudo (`actor_name=phone`, `actor_email=sender`) y dejar `user_id=null`.
 
-Aplica a: webhook receivers, agentes voz/email, cualquier audit donde resuelves "quién creó esto" desde dato externo. En FacturaIA migration 039 lo apliqué para `created_by_user_id` en `/api/voice/generate` y `email/process-attachments`.
+Aplica a: webhook receivers, agentes voz/email, cualquier audit donde resuelves "quién creó esto" desde dato externo. En TuFacturaIA migration 039 lo apliqué para `created_by_user_id` en `/api/voice/generate` y `email/process-attachments`.

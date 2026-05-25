@@ -21,4 +21,4 @@ Dos sesiones Claude Code corriendo simultáneas en el mismo repositorio causan c
 - Stage SIEMPRE explícito: `git add file1 file2 file3`, nunca `-A` / `.`.
 - Si un commit "desaparece" tras notificación: verificar con `git log --all --oneline | grep '<keyword>'`. Si está en `origin/<otra-rama>`, ya está; si no, re-commit.
 
-Caso real FacturaIA Sprint 3: 3 colisiones git en una sola sesión (commits en `fix/verifactu-toggle-unify` necesitando cherry-pick a main; renumeración 092 → 093/094/096/097 evitando colisión con `092_verifactu_settings_unify.sql` paralela; commit `d360731` mobile polish desaparecido tras hook, re-commiteado como `1a95e47`).
+Caso real TuFacturaIA Sprint 3: 3 colisiones git en una sola sesión (commits en `fix/verifactu-toggle-unify` necesitando cherry-pick a main; renumeración 092 → 093/094/096/097 evitando colisión con `092_verifactu_settings_unify.sql` paralela; commit `d360731` mobile polish desaparecido tras hook, re-commiteado como `1a95e47`).

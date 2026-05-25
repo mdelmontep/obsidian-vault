@@ -28,4 +28,4 @@ El `BEGIN…EXCEPTION` envuelve porque en SQL directo (psql, cron, migrations) e
 
 Combinar con `auth.uid()` para user_id y `coalesce(v_user_id IS NULL → 'service_role_or_migration')` como changed_via. Cubre auditoría regulatoria (AEAT, GDPR) sin tocar capa app.
 
-Caso real: FacturaIA mig 095 — toggle Verifactu, trigger AFTER UPDATE en `organizations`.
+Caso real: TuFacturaIA mig 095 — toggle Verifactu, trigger AFTER UPDATE en `organizations`.

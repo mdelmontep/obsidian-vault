@@ -1,7 +1,7 @@
 ---
 title: UPSERT atómico con RPC vs check-then-act para counters compartidos
 date: 2026-05-24
-source: FacturaIA mig 158 conciliacion_reglas_upsert
+source: TuFacturaIA mig 158 conciliacion_reglas_upsert
 tags: [postgres, concurrency, race-conditions]
 ---
 

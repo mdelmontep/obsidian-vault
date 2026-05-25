@@ -15,4 +15,4 @@ Para "modos de entrada" UX (precios con IVA incluido, fechas en otro formato, di
 
 Razones: Verifactu/AEAT 303/libro IVA leen base. Si guardas "total inclusive" hay que recalcular base con redondeo cada lectura → drift acumulado, hash inestable, divergencia entre reportador SQL y endpoint. La columna `precio_modo` además duplica fuentes de verdad en 4 RPCs + calculador 303 (cada sitio ramifica).
 
-Aplica a cualquier "input ≠ storage" en apps fiscales. Caso real FacturaIA mig 161 + sprint formulario 2026-05-24. Ver [[ADR-019-precio-inclusive-iva-storage-canonico-vs-columna-precio-modo]].
+Aplica a cualquier "input ≠ storage" en apps fiscales. Caso real TuFacturaIA mig 161 + sprint formulario 2026-05-24. Ver [[ADR-019-precio-inclusive-iva-storage-canonico-vs-columna-precio-modo]].

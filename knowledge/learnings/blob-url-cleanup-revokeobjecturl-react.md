@@ -21,6 +21,6 @@ tags: [react, browser-api, memory-leak]
 
 3. **Unmount**: `useEffect(() => { return () => { if (url) URL.revokeObjectURL(url) } }, [])` con deps vacías + eslint-disable consciente (no quieres re-correr el effect cada vez que url cambia, solo limpiar al unmount).
 
-Caso real FacturaIA 2026-05-25: modal vista previa PDF en `/generar`. Cada click "Vista previa" creaba blob URL nuevo de ~200 KB. Sin revoke, después de 50 previews → 10 MB perdidos hasta refresh.
+Caso real TuFacturaIA 2026-05-25: modal vista previa PDF en `/generar`. Cada click "Vista previa" creaba blob URL nuevo de ~200 KB. Sin revoke, después de 50 previews → 10 MB perdidos hasta refresh.
 
 **No aplica** a blob URLs de corta vida (`a.click(); URL.revokeObjectURL(url)` inmediato) — la revocación inline antes del unmount/cierre del componente ya cubre.

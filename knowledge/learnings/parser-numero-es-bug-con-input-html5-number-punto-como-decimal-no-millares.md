@@ -13,4 +13,4 @@ Parser ES típico (`s.replace(/\./g, '').replace(',', '.')`) elimina el `.` asum
 
 Aplica a cualquier React form ES con `type=number` que use parser propio. NO usar parsers ES "genéricos" sin validar el origen del input. Si el control es de teclado libre con coma admitida, ambos formatos deben funcionar.
 
-Caso real FacturaIA `src/lib/documents/precio-helpers.ts` 2026-05-24: tests vitest detectaron el bug (`expected 45 to be 44995.5`) tras refactor a state string. Fix añadió ramificación + test específico `'1.234,56' → 1234.56` y `'1234.56' → 1234.56`.
+Caso real TuFacturaIA `src/lib/documents/precio-helpers.ts` 2026-05-24: tests vitest detectaron el bug (`expected 45 to be 44995.5`) tras refactor a state string. Fix añadió ramificación + test específico `'1.234,56' → 1234.56` y `'1234.56' → 1234.56`.

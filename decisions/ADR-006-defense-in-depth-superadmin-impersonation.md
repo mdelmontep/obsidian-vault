@@ -6,7 +6,7 @@ tags: [adr, facturaia, auth, multi-tenant]
 ---
 
 ## Contexto
-FacturaIA permite a superadmins impersonar otra org vía cookie `impersonate_org` (set por `?impersonate=`, TTL 1h). 4 sitios consumen esta cookie y la semántica correcta no es la misma en todos.
+TuFacturaIA permite a superadmins impersonar otra org vía cookie `impersonate_org` (set por `?impersonate=`, TTL 1h). 4 sitios consumen esta cookie y la semántica correcta no es la misma en todos.
 
 ## Opciones consideradas
 - **Override en todo** — la cookie reemplaza siempre la org propia. Simple, pero superadmin pierde acceso a sus propios recursos hasta que la cookie expire (causa del Forbidden 2026-05-20).

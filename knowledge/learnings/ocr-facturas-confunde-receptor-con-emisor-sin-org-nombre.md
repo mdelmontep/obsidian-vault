@@ -16,6 +16,6 @@ El proveedor/emisor es la OTRA empresa que aparece en el documento.
 No confundas receptor con emisor.
 ```
 
-En FacturaIA, el API route `/api/upload` consulta `organizations.nombre` y lo envía como `org_nombre` en el body del webhook a n8n. El Code Node lo inyecta al inicio del prompt.
+En TuFacturaIA, el API route `/api/upload` consulta `organizations.nombre` y lo envía como `org_nombre` en el body del webhook a n8n. El Code Node lo inyecta al inicio del prompt.
 
 **Aplica a**: cualquier pipeline de OCR de facturas donde el usuario sube sus propias facturas recibidas.

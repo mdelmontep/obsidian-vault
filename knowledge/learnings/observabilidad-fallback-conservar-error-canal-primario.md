@@ -35,4 +35,4 @@ if (!r.ok) {
 audit.insert({ error_code: finalError ?? primaryError })
 ```
 
-**Caso real FacturaIA**: OTP WhatsApp fallaba 132001 todas las veces, email Resend rescataba, audit marcaba `start ok` con `meta_error_code: null` → invisible 3h hasta que el agente añadió `primaryChannelError`.
+**Caso real TuFacturaIA**: OTP WhatsApp fallaba 132001 todas las veces, email Resend rescataba, audit marcaba `start ok` con `meta_error_code: null` → invisible 3h hasta que el agente añadió `primaryChannelError`.

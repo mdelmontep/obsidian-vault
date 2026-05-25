@@ -18,7 +18,7 @@ A/B/P/F) los huecos requieren justificación documental.
 3. RPC atómico (`next_invoice_number_for_org`).
 4. INSERT(s).
 
-Caso real FacturaIA: `create-document.ts` validaba `exencion_codigo` ⇔ `iva_pct=0`
+Caso real TuFacturaIA: `create-document.ts` validaba `exencion_codigo` ⇔ `iva_pct=0`
 en bloque post-INSERT → row huérfana + num quemado. Fix commit `0e94de4`. Para
 errores INSERT residuales (constraints, RLS), ver ADR-001 en repo. Ver
 [[incidents]].

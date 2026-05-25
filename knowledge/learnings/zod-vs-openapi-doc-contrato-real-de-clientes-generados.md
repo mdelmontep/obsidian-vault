@@ -11,4 +11,4 @@ El contrato real para clientes generados es el OpenAPI doc, NO el refine de Zod.
 
 **Regla**: todo cambio en Zod del API público debe replicarse en el handler `openapi.json` en el MISMO commit. Si añades un campo opcional (ej. `actor`), añade el `$ref` en CreateXRequest + define el componente en `components.schemas`.
 
-Caso: FacturaIA `actor: { email, name }` aceptado por Zod desde el sprint audit, pero faltaba en `openapi.json` → agency-portal arrastró `as never` durante días sin que se notase en lint/typecheck.
+Caso: TuFacturaIA `actor: { email, name }` aceptado por Zod desde el sprint audit, pero faltaba en `openapi.json` → agency-portal arrastró `as never` durante días sin que se notase en lint/typecheck.

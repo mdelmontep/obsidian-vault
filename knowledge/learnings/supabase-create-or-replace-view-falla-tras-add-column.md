@@ -11,4 +11,4 @@ Causa: `*` se expande en orden posicional. Las columnas nuevas de la tabla cambi
 
 Fix: `DROP VIEW IF EXISTS X` antes de `CREATE VIEW X`. Tras `CREATE`, reaplicar `ALTER VIEW X SET (security_invoker = true)` (Postgres 15+) — sin esto la vista bypassea RLS del caller.
 
-Caso real FacturaIA migration 039: añadí `created_by_actor_email/name` a `facturas` y `presupuestos`, vistas `*_con_autor` con `f.*` rompieron en CREATE OR REPLACE. Cambio a DROP+CREATE en mismo migration: limpio.
+Caso real TuFacturaIA migration 039: añadí `created_by_actor_email/name` a `facturas` y `presupuestos`, vistas `*_con_autor` con `f.*` rompieron en CREATE OR REPLACE. Cambio a DROP+CREATE en mismo migration: limpio.

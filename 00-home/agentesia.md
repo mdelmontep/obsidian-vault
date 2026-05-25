@@ -6,11 +6,11 @@ tags: [cliente, agentesia]
 
 # Agentesia (interno)
 
-La empresa. agency-portal + ticketing chatbot + integración con FacturaIA + Slack canvases.
+La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + Slack canvases.
 
 ## Estado
 
-- **agency-portal** (Borja como reviewer) — Next.js, integra con FacturaIA via API v1 (HMAC webhooks + outbox + Stripe-style sync)
+- **agency-portal** (Borja como reviewer) — Next.js, integra con TuFacturaIA via API v1 (HMAC webhooks + outbox + Stripe-style sync)
 - **Chatbot ticketing** desplegado en `89B9QN23hOHDq6oP` n8n
 - **Slack workspace** activo, canvases por proyecto
 
@@ -30,7 +30,7 @@ La empresa. agency-portal + ticketing chatbot + integración con FacturaIA + Sla
 - [Github org](https://github.com/AgentesIA-MAdrid)
 - [agency-portal](https://github.com/AgentesIA-MAdrid/agency-portal)
 - Slack #pro-facturaia, #pro-agentesia
-- Canvas Panel FacturaIA: F0AV38CHYSJ
+- Canvas Panel TuFacturaIA: F0AV38CHYSJ
 
 ## Histórico de hitos
 

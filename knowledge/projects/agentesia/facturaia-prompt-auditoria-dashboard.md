@@ -1,5 +1,5 @@
 ---
-title: Prompt — Auditoría integral del dashboard de FacturaIA
+title: Prompt — Auditoría integral del dashboard de TuFacturaIA
 date: 2026-05-13
 source: sesión claude code
 tags: [facturaia, auditoria, dashboard, prompt-reutilizable, ia, benchmarking]
@@ -15,9 +15,9 @@ Relacionado: [[facturaia]] · [[facturaia-integracion-api-v1-portal]]
 
 # Prompt
 
-**Auditoría integral del dashboard de FacturaIA: exactitud numérica + oportunidades de mejora + arquitectura escalable + benchmarking competitivo (con foco en diferenciación por IA)**
+**Auditoría integral del dashboard de TuFacturaIA: exactitud numérica + oportunidades de mejora + arquitectura escalable + benchmarking competitivo (con foco en diferenciación por IA)**
 
-Quiero una revisión profunda en cuatro dimensiones del dashboard de FacturaIA (vistas de cliente Y panel de admin/superadmin). FacturaIA se diferencia de la competencia (Holded, Quaderno, Contasimple, Sage…) **explotando IA como capa principal del producto, no como feature aislado**: agentes conversacionales por WhatsApp/voz, OCR inteligente, predicciones, auto-categorización, sugerencias proactivas, asistente IA en cada vista. Todo el análisis debe leerse bajo esa óptica — dónde la IA puede convertir un número estático en una acción, una alerta o una recomendación.
+Quiero una revisión profunda en cuatro dimensiones del dashboard de TuFacturaIA (vistas de cliente Y panel de admin/superadmin). TuFacturaIA se diferencia de la competencia (Holded, Quaderno, Contasimple, Sage…) **explotando IA como capa principal del producto, no como feature aislado**: agentes conversacionales por WhatsApp/voz, OCR inteligente, predicciones, auto-categorización, sugerencias proactivas, asistente IA en cada vista. Todo el análisis debe leerse bajo esa óptica — dónde la IA puede convertir un número estático en una acción, una alerta o una recomendación.
 
 Las cuatro dimensiones:
 
@@ -203,7 +203,7 @@ Análisis comparativo centrado en dashboard, métricas y diferenciación IA. Inv
 
 ### Tabla comparativa final
 
-| Dimensión | FacturaIA hoy | Holded | Quaderno | Gap / Oportunidad |
+| Dimensión | TuFacturaIA hoy | Holded | Quaderno | Gap / Oportunidad |
 |---|---|---|---|---|
 | KPIs en dashboard | ... | ... | ... | ... |
 | Cashflow predictivo | ... | ... | ... | ... |

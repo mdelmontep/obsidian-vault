@@ -5,7 +5,7 @@ source: claude-code-session
 tags: [supabase, rls, postgres, multi-org]
 ---
 
-Bug FacturaIA 2026-05-25: en `/conciliacion` el user veía movimientos de TODAS sus orgs en lugar de solo la org activa. Causa: 16 tablas con RLS escrita así:
+Bug TuFacturaIA 2026-05-25: en `/conciliacion` el user veía movimientos de TODAS sus orgs en lugar de solo la org activa. Causa: 16 tablas con RLS escrita así:
 
 ```sql
 CREATE POLICY x ON tabla FOR SELECT USING (

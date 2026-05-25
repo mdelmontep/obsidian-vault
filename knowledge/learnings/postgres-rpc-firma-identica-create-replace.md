@@ -7,7 +7,7 @@ tags: [postgres, plpgsql, supabase, rpc]
 
 `CREATE OR REPLACE FUNCTION nombre(args) RETURNS X` reemplaza la función SOLO si `(nombre, args)` matchea exactamente. Si cambias firma — añades/quitas un arg, cambias tipo, cambias return — Postgres crea una función NUEVA y deja la vieja huérfana. Resultado: callers que invocan la firma antigua siguen ejecutando la vieja; los que usan la nueva ejecutan la nueva. División silenciosa.
 
-PL/pgSQL compila el body en lazy (al primer EXECUTE), no en CREATE FUNCTION. Por eso una mig que referencia `OLD.columna_que_no_existe` se aplica sin error y solo falla en runtime al ejecutar el trigger/func (caso real FacturaIA mig 095 → mig 162: `OLD.entorno_verifactu` cuando la columna real era `verifactu_entorno`).
+PL/pgSQL compila el body en lazy (al primer EXECUTE), no en CREATE FUNCTION. Por eso una mig que referencia `OLD.columna_que_no_existe` se aplica sin error y solo falla en runtime al ejecutar el trigger/func (caso real TuFacturaIA mig 095 → mig 162: `OLD.entorno_verifactu` cuando la columna real era `verifactu_entorno`).
 
 **Patrón seguro**:
 1. Antes de recrear un RPC, `\df nombre` o grep migraciones para encontrar la firma exacta vigente.

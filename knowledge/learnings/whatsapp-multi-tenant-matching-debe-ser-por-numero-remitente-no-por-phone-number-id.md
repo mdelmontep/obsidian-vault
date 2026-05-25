@@ -5,7 +5,7 @@ source: claude-code-session
 tags: [n8n, facturaia, whatsapp, multi-tenant]
 ---
 
-El `phone_number_id` de Meta es el ID interno del número **receptor** (el de FacturaIA: `1180494911802950`). Es el mismo para todas las orgs porque todas comparten el mismo número de WhatsApp Business.
+El `phone_number_id` de Meta es el ID interno del número **receptor** (el de TuFacturaIA: `1180494911802950`). Es el mismo para todas las orgs porque todas comparten el mismo número de WhatsApp Business.
 
 Para multi-tenant, el matching debe comparar el número del **remitente** (`msg.from`, normalizado sin prefijo 34) contra `settings.whatsapp.phone_number` de cada org en Supabase.
 

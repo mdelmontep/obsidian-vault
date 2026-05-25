@@ -6,7 +6,7 @@ tags: [adr, facturaia, team, multi-org]
 ---
 
 ## Contexto
-FacturaIA es SaaS multi-org: un user puede pertenecer a varias orgs (gestor externo, contable freelance). Modelo viejo: si el invitado YA tenía cuenta FacturaIA, el admin podía añadirlo `estado='activo'` directo sin que él aceptase. Solo recibía email "te han añadido". Bug latente: estados `'invitado'` nunca se promovían a `'activo'` (no había endpoint accept), aunque `withApiAuth` los aceptaba.
+TuFacturaIA es SaaS multi-org: un user puede pertenecer a varias orgs (gestor externo, contable freelance). Modelo viejo: si el invitado YA tenía cuenta TuFacturaIA, el admin podía añadirlo `estado='activo'` directo sin que él aceptase. Solo recibía email "te han añadido". Bug latente: estados `'invitado'` nunca se promovían a `'activo'` (no había endpoint accept), aunque `withApiAuth` los aceptaba.
 
 ## Opciones consideradas
 - **A — Activo directo para existing users** — rápido, sin fricción. Contra: el invitado no consciente; un admin de cualquier org podía meterte sin tu OK. Mal en B2B multi-org.

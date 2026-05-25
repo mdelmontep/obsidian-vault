@@ -7,7 +7,7 @@ tags: [debugging, observabilidad, asset-pipeline]
 
 Pipeline típico: bucket → render on-the-fly → cache. Si cada paso retorna `Buffer | null`, cuando el final es `null` se ha perdido la razón crítica (404 / sign url expired / puppeteer crash / red / cuota provider). El consumidor no puede decidir entre reintento, fallback alternativo o aviso al user.
 
-Caso real FacturaIA 2026-05-25: email factura sin PDF adjunto. `downloadPdfFromStorage` retornaba `null` indistinguible para 4 causas: path migrado post-mig 026, sign url firmada expirada, http 5xx del storage, fetch threw. `renderPdfFallback` igual: factura no encontrada, org no encontrada, puppeteer no arranca en Alpine. Email se enviaba sin adjunto y sin warning — bug invisible durante semanas.
+Caso real TuFacturaIA 2026-05-25: email factura sin PDF adjunto. `downloadPdfFromStorage` retornaba `null` indistinguible para 4 causas: path migrado post-mig 026, sign url firmada expirada, http 5xx del storage, fetch threw. `renderPdfFallback` igual: factura no encontrada, org no encontrada, puppeteer no arranca en Alpine. Email se enviaba sin adjunto y sin warning — bug invisible durante semanas.
 
 **Patrón fix**:
 

@@ -16,4 +16,4 @@ Popover con `position: absolute` dentro de un modal con `overflow: hidden` (típ
 
 Inline empuja contenido (puede saltar el preview o el footer del modal). Si el contenido del popover es grande, esto es preferible — entras en modo "configurar" sin distracciones flotantes. Si es pequeño (1-2 items), portal es más natural.
 
-FacturaIA usó inline para el picker de tokens del builder de series.
+TuFacturaIA usó inline para el picker de tokens del builder de series.

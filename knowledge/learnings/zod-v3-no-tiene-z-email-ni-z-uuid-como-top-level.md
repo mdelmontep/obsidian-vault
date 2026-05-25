@@ -15,6 +15,6 @@ Zod v3 (la versión más comúnmente instalada en proyectos) no expone `z.email(
 
 El error es en **runtime**, no en compilación — TypeScript no lo atrapa. Resultado: `TypeError: z.email is not a function`, que rompe TODAS las API routes que importan el schema afectado.
 
-Caso real: en FacturaIA, `schemas.ts` usaba sintaxis v4, rompiendo `/api/admin/orgs`, `/api/admin/features` y todas las rutas que importaban los schemas. El admin panel entero dejó de funcionar.
+Caso real: en TuFacturaIA, `schemas.ts` usaba sintaxis v4, rompiendo `/api/admin/orgs`, `/api/admin/features` y todas las rutas que importaban los schemas. El admin panel entero dejó de funcionar.
 
 **Regla**: antes de escribir schemas Zod, verificar la versión instalada (`package.json` o `node_modules/zod/package.json`).

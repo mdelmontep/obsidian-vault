@@ -14,4 +14,4 @@ Patrón:
 2. Inspeccionar nodo del agente: `parameters.options.systemMessage`, tools conectadas via `ai_tool` connections.
 3. Si el contrato real difiere de tu diseño → realinear ANTES de PUT.
 
-Aplica a cualquier integración con LLM agent existente (n8n, LangChain, custom). Caso real FacturaIA: el sistema híbrido del prompt asumió tools `find_presupuesto`/`convert_presupuesto` que no existían en el workflow — había `consultar_facturas`/`consultar_clientes`/`consultar_catalogo` y formato JSON estricto.
+Aplica a cualquier integración con LLM agent existente (n8n, LangChain, custom). Caso real TuFacturaIA: el sistema híbrido del prompt asumió tools `find_presupuesto`/`convert_presupuesto` que no existían en el workflow — había `consultar_facturas`/`consultar_clientes`/`consultar_catalogo` y formato JSON estricto.

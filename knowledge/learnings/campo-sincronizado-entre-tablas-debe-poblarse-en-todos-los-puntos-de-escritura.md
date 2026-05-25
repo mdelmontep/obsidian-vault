@@ -16,4 +16,4 @@ Si falta alguno, el campo derivado queda vacío y los consumidores (n8n workflow
 
 No añadir fallbacks en el consumidor (ej: buscar también por `org.telefono` si no hay `settings.whatsapp.phone_number`). La fuente de verdad debe ser una sola; los fallbacks enmascaran el problema real y diluyen la arquitectura.
 
-Caso real: FacturaIA WhatsApp ingesta — Borja tenía `telefono: "659834983"` pero `settings.whatsapp` solo tenía `phone_number_id: ""` (campo viejo). El nodo n8n no encontró match y la factura no se procesó.
+Caso real: TuFacturaIA WhatsApp ingesta — Borja tenía `telefono: "659834983"` pero `settings.whatsapp` solo tenía `phone_number_id: ""` (campo viejo). El nodo n8n no encontró match y la factura no se procesó.

@@ -7,7 +7,7 @@ tags: [ux, info-arch, tables]
 
 Anti-patrón frecuente en tablas con multi-filter: un valor del enum **estado** se "promueve" a TAB de tipo de documento. Resultado: el user ve "Borrador" en DOS sitios (chip filtro estado + tab tipo doc), no sabe cuál seleccionar, las dos pueden contradecirse.
 
-Caso real FacturaIA `/emitidas` 2026-05-25:
+Caso real TuFacturaIA `/emitidas` 2026-05-25:
 - Chips estado fiscal: `Sin filtrar / Borrador / Enviada / Pendiente / Cobrada / Vencida`.
 - Tabs tipo doc: `Facturas (3) / Borradores (1) / Todos (4)`.
 

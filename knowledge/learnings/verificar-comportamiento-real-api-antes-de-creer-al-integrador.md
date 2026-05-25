@@ -8,7 +8,7 @@ tags: [api, integraciones, debugging, zod]
 Cuando un equipo externo dice "vuestra API hace X" (acepta, ignora, valida), no
 tomarlo como hecho.
 
-Caso real PR #49 FacturaIA (2026-05-20): el portal (Borja) afirmó "la API ignora
+Caso real PR #49 TuFacturaIA (2026-05-20): el portal (Borja) afirmó "la API ignora
 el campo extra `descripcion` sin romper". El Zod `lineaSchema` tenía `.strict()`
 → estaba devolviendo `400 unrecognized_keys` en cada request. Comían 400s
 silenciosos o no habían llegado a probar.

@@ -22,4 +22,4 @@ services:
 
 Regla: cuando añades `process.env.NUEVA_VAR` en código, también añadirla a `docker-compose.yml`. Y a `.env.example` para que el siguiente dev sepa que existe.
 
-**Caso real FacturaIA 2026-05-16**: módulo Cobros no enviaba WhatsApp en prod desde 12-mayo silente — `META_WHATSAPP_*` y `RESEND_API_KEY` estaban en Dokploy panel pero NO en `docker-compose.yml environment:`. El OTP onboarding lo destapó al fallar Meta en todos los envíos.
+**Caso real TuFacturaIA 2026-05-16**: módulo Cobros no enviaba WhatsApp en prod desde 12-mayo silente — `META_WHATSAPP_*` y `RESEND_API_KEY` estaban en Dokploy panel pero NO en `docker-compose.yml environment:`. El OTP onboarding lo destapó al fallar Meta en todos los envíos.
