@@ -93,6 +93,13 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 - **Prefill server→client form** — page.tsx carga detalle entero pero pasa subset al form → campos opcionales (fiscal, dirección, teléfono) salen vacíos. Caso PR #73 factura nueva. Revisar mismo patrón en `/agency/quotes/new` y `/agency/contracts/new`. Ver [[agency-portal-forms-prefill]]
 
+### facturaia — Sprint email Nivel 1+2 + UX form + /emitidas (2026-05-25 noche)
+- **Pipeline asset con fallback debe devolver razón** — `Buffer|null` pierde causa (404/sign expired/puppeteer crash). Patrón `{ buffer, diag: { reason, http_status, error } }` + log + warning visible al user. Ver [[pdf-fallback-pipeline-devolver-razon-no-null]]
+- **XSS en email se subestima** — Gmail web/Outlook.com renderizan HTML parser completo. TODO valor BD interpolado pasa por `escapeHtml`. Allowlist protocolo en `escapeUrl`. Ver [[xss-en-email-html-interpolado-de-bd]]
+- **HTML strings tipados ganan a React Email/MJML para 5-10 templates** — 250KB deps no se justifica, control byte-a-byte cross-client (Outlook MSO, dark mode, tablas). Umbral cambio: 30+ templates. Ver [[html-email-strings-tipados-vs-react-email-mjml]] + [[ADR-021-html-email-strings-vs-react-email-mjml]]
+- **UX duplicación filtros estado vs tipo doc** — si un valor del enum estado aparece como chip Y como tab tipo doc → simplificar. Backend dice qué es realmente. Ver [[ux-duplicacion-filtros-estado-vs-tipo-doc]]
+- **createObjectURL en React sin revoke = memory leak silencioso** — patrón cleanup: setter functional revoke prev + closeHandler revoke + useEffect return revoke en unmount. Ver [[blob-url-cleanup-revokeobjecturl-react]]
+
 ### facturaia — Source-of-truth + RLS multi-org + IRPF perfil-driven (2026-05-25)
 - **Artifacts emitidos no se regeneran al cambiar dato fuente** — PDF de factura ya emitida conserva el logo viejo. Pattern aplica a emails enviados, SSG, thumbnails, PDFs firmados. Ofrecer botón regenerar. Ver [[cache-invalidation-artifacts-emitidos]]
 - **Triggers BD de sincronización = anti-patrón** — 6 razones (silent fail, race, recursión, audit ciego, code review ciego, mig masiva). Sync explícito en código. Ver [[triggers-bd-sync-son-antipatron]] + [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas]]
