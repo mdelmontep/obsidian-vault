@@ -271,6 +271,9 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Dokploy schedule comando** — `curl -H` corto vs `node -e` largo, word-wrap UI mete espacios. Ver [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]]
 - **Supabase JWT vs sb_secret** — `sb_secret_*` no vale Bearer directo, JWT legacy. Ver [[supabase-sb-secret-vs-jwt-http]]
 - **Dokploy BuildKit cache invencible** — `COPY . .` cacheado aunque src/ cambie. Bump `package.json.version`. Ver [[dokploy-buildkit-cache-invencible-bump-package-json]]
+- **Supabase Site URL = fallback silencioso** — si `redirectTo` no está en Redirect URLs allowlist, Supabase usa Site URL (dev `0.0.0.0:3000` olvidado rompe prod). Ver [[supabase-site-url-fallback-rompe-redirecturl-fuera-de-allowlist]]
+- **IP cliente bajo Traefik/Dokploy** — `x-real-ip` primero, último XFF de fallback (no primero — spoofeable). Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]]
+- **Bypass plantillas Auth Supabase** — `admin.generateLink` + Resend propio + plantilla castellano. Ver [[supabase-bypassear-plantilla-auth-con-admin-generatelink]]
 
 ## 2026-05-10 — voz Retell + n8n + Kommo (sesión Simarro Ana)
 - [[retell/voice-config-inbound-castellano]] — config canónica voice agent inbound castellano (Flash v2.5, timeouts, fillers, triage de patinazos, compresión prompt 38%)
