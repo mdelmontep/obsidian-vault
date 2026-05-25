@@ -235,9 +235,14 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Supabase `$json[0]` vs `$json`** — con `Prefer: return=representation` PostgREST devuelve objeto. Usar `$json.id`
 - **toolWorkflow onError** — siempre `continueErrorOutput`, nunca `stopWorkflow`
 - **AI Agent 3 reglas** — 0 eventos=libre, weekday number en Think, tool description con consecuencias
+- **n8n web UI paste convierte `'` ASCII a `'` Unicode** — SyntaxError críptico al ejecutar Code node, línea visualmente idéntica. Retypear quotes a mano o usar `$env.VAR`. Ver [[n8n-web-ui-paste-convierte-comillas-a-smart-quotes-syntaxerror]]
 
 ### Kommo / Retell
 - **Retell publish requerido** — cambios LLM no afectan llamadas si agente unpublished. Ver [[retell-llm-cambios-sin-publish-agente-no-afectan-llamadas]]
+- **Tool description > prompt para evitar fire temprano** — precondiciones en `description` del tool + `tool_call_strict_mode: true`. El "PROHIBIDO" del system prompt el LLM lo ignora. Ver [[llm-tool-description-precondiciones-pesa-mas-que-prompt]]
+- **Voice agent confunde persona-interna con cliente** — si menciona "quiero hablar con Dani", el LLM mete "Dani" como nombre_cliente. Aclarar en description del campo. Ver [[voice-agent-confunde-persona-interna-con-nombre-cliente]]
+- **`execution_message_description` no debe comprometer acción** — neutro ("dame un segundo"), nunca "voy a derivarte" — el LLM lo verbaliza antes de saber qué pasa. Ver [[retell-execution-message-description-no-comprometer-accion]]
+- **`call_summary` (transcript completo) > `args.intencion` para email post-llamada** — args.intencion truncado por el prompt; regenerar en n8n con gpt-4.1-mini desde transcript completo (5 puntos, max_tokens 700). Ver [[retell-call-summary-vs-tool-args-intencion-para-resumen-email]]
 - **Kommo webhook status_lead** — dispara en TODOS los cambios, filtrar con IF. Ver [[kommo-webhook-status-lead-dispara-en-todos-los-cambios]]
 - **Kommo salesbot IDs** — endpoint `/ajax/v4/bots/` desde consola. Ver [[kommo-salesbot-ids-ajax-v4]]
 - **Kommo salesbot vacío** — `salesbot/run` devuelve success aunque vacío. Acción "Enviar WhatsApp" requerida. Ver [[kommo-salesbot-run-success-sin-acciones]]
