@@ -18,7 +18,8 @@ La empresa. agency-portal + ticketing chatbot + integración con FacturaIA + Sla
 
 1. **agency-portal PR #54 + #55 pendientes pushear** (NOW) — #55 audit actor passthrough, #54 base lista. Tras merge: regen types.gen.ts + quitar 3 `as never` + migration `quotes.converted_facturaia_factura_id`
 2. **agency-portal PR #72 onboarding sync+md+web — smoke pendiente** (NOW) — primer onboarding WhatsApp cerrado (ecobox) destapó tres bugs: sync no escribía nada, `.md` perdía info, bot no preguntaba web pese a estar en notas. Fix en rama `fix/onboarding-sync-and-md-fidelity`. Smoke en próximo cliente real. Detalle [[Stack/onboarding-whatsapp]]
-3. **Test ticketing con cliente real** (NEXT) — pedir teléfono al cliente "Soporte técnico" + verificar respuestas TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
+3. **agency-portal PR #73 factura nueva prerellena fiscal del cliente — smoke pendiente** (NOW) — al crear factura desde detalle de cliente o vía combobox de destinatario, el bloque "Datos fiscales · Destinatario" salía vacío aunque el cliente tenía los 6 campos guardados (razón social, NIF/CIF, dirección, ciudad, CP, país). `page.tsx` cargaba `getAgencyClientDetail` pero sólo pasaba name/email al form; combobox tampoco copiaba `recipient.fiscal` aunque venía cargado. Fix: pasar `FiscalData` y phone vía `defaultRecipient`, inicializar `recipientFiscal` desde ahí, y en `handleRecipientChange` copiar fiscal + abrir collapsible. Detalle [[Stack/agency-portal-forms-prefill]]
+4. **Test ticketing con cliente real** (NEXT) — pedir teléfono al cliente "Soporte técnico" + verificar respuestas TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
 
 ## Bloqueos / esperando a terceros
 

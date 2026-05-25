@@ -86,6 +86,10 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### agency-portal — Prefill server→client form (2026-05-25)
+
+- **Prefill server→client form** — page.tsx carga detalle entero pero pasa subset al form → campos opcionales (fiscal, dirección, teléfono) salen vacíos. Caso PR #73 factura nueva. Revisar mismo patrón en `/agency/quotes/new` y `/agency/contracts/new`. Ver [[agency-portal-forms-prefill]]
+
 ### facturaia — Source-of-truth + RLS multi-org + IRPF perfil-driven (2026-05-25)
 - **Artifacts emitidos no se regeneran al cambiar dato fuente** — PDF de factura ya emitida conserva el logo viejo. Pattern aplica a emails enviados, SSG, thumbnails, PDFs firmados. Ofrecer botón regenerar. Ver [[cache-invalidation-artifacts-emitidos]]
 - **Triggers BD de sincronización = anti-patrón** — 6 razones (silent fail, race, recursión, audit ciego, code review ciego, mig masiva). Sync explícito en código. Ver [[triggers-bd-sync-son-antipatron]] + [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas]]
