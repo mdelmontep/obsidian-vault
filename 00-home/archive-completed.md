@@ -105,3 +105,8 @@ tags: [home, archivo]
 ## 2026-05-18
 
 - TuFacturaIA — smoke test post-deploy 2026-05-07 (5 puntos auditados OK + fix borrador anular + 7 E2E tests). Cubierto por sesión cumplimiento fiscal full.
+
+## 2026-05-26
+
+- TuFacturaIA — aplicar 3 scripts n8n WA Boost v1 (prompt + tools + branches) + 2 fixes cascada bug `$fromAI` (parser query + specifyInputSchema). Solo queda smoke #2 #7 end-to-end.
+- TuFacturaIA — plataforma de integraciones + cut-over OCR Google legacy a tokens cifrados (commit `9ce3760`, ADR-007, mig 170, 4 learnings nuevos). Reconnect del user pendiente como acción única.

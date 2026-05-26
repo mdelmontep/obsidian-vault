@@ -18,6 +18,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **PR externa sobre modelo sunsetado** — portar al modelo nuevo antes de mergear, no después. Caso: PR76 iCloud sobre settings.email → PR77 sobre plataforma. Ver [[pr-externa-sobre-modelo-sunsetado-portar-no-mergear]]
 - **IMAP attachment selectivo** — bodyStructure → download(partId), no client.download(uid) completo. Evita OOM proporcional al RFC822. Ver [[imap-attachment-selectivo-bodystructure-evita-oom]]
 - **n8n toolCode post-`$fromAI`** — `specifyInputSchema: true + schemaType:'manual' + inputSchema` JSON Schema obliga al LLM a mandar JSON en `query`. Sin schema, el LLM envía texto crudo. Ver [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]]
+- **Integración crítica en JSONB pierde observabilidad** — sin schema/FKs/enum status, errores van a logs efímeros y nadie se entera. Tabla dedicada con `status` enum + tabla de eventos. Ver [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]]
+- **Monitor deploy con señal de comportamiento** — 404/401/307→login coinciden en versión vieja y nueva → falso positivo. Usar endpoint cuyo body/redirect SÍ cambia entre versiones. Ver [[monitor-deploy-usar-senal-comportamiento-no-existencia]]
+- **MCP n8n no cubre todas las instancias** — si `get_workflow_details` falla en TODOS los MCP, REST API `/api/v1/workflows?active=true` con `X-N8N-API-KEY` localiza el real. Ver [[mcp-n8n-no-tiene-todos-los-workflows-fallback-rest-api]]
+- **`import 'server-only'` bloquea scripts CLI** — split primitivas a `crypto-primitives.ts` (sin guard) + re-export con guard. Misma implementación, sin duplicar. Ver [[crypto-modulo-server-only-bloquea-scripts-cli-extraer-primitivas]]
 
 Patrones que aplican siempre, no expiran. Lo más reusado.
 
