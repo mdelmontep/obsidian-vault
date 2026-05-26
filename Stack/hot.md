@@ -89,6 +89,24 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### EcoBox / Retell voz E2E (2026-05-25/26)
+
+- **n8n `require('crypto')` bloqueado en task-runner** — Code node falla "Module disallowed". Hash puro JS FNV-1a × 3 seeds, charset `[0-9a-v]` válido GCal eventId. Ver [[n8n-crypto-module-bloqueado-task-runner-usar-fnv-puro]]
+- **n8n public API no permite UPDATE credentials** — solo POST/DELETE. Recrear + repuntar workflows que la usan. Ver [[n8n-public-api-no-permite-update-credentials-recrear-y-repuntar]]
+- **n8n respondToWebhook JSON expression** — `={ ... }` rompe "Invalid JSON". Sintaxis `={{ ({ key: val }) }}` con paréntesis. Ver [[n8n-respondtoWebhook-json-formato-expresion-objeto]]
+- **n8n GCal getAll vacío no propaga** — calendar sin eventos rompe Code downstream. `alwaysOutputData: true` + filter `.filter(e => e.json?.start)`. Ver [[n8n-gcal-getall-empty-no-propaga-downstream]]
+- **n8n GCal description `\\n` → literal** — almacenado doble-escaped, llega literal a Calendar UI. Usar `\n` single backslash. Ver [[n8n-gcal-additionalFields-newlines-no-double-escape]]
+- **n8n emailSend onError continueRegularOutput** — skip si recipiente vacío sin romper workflow. Para campos opcionales tipo email cliente. Ver [[n8n-emailsend-onerror-continue-skip-sin-destinatario]]
+- **Retell `{{from_number}}` NO auto-sustituye en tool args** — Retell + Zadarma SIP no rellena la dynamic var; LLM pasa el literal. Fallback en backend `body.call.from_number`. Ver [[retell-from_number-no-auto-sustituye-en-tool-args]]
+- **Retell custom voice label ≠ audio real** — "Borja - Clever and Credible" sonaba femenina (mis-mapped underlying ElevenLabs). Verificar preview MP3 antes de confiar. Ver [[retell-custom-voice-label-no-garantiza-audio-real]]
+- **Retell `tool_call_strict_mode` NO fuerza ejecutar tool** — solo valida args. Para forzar uso = prompt OBLIGATORIO + transition_condition que exija output del tool. Ver [[retell-tool-call-strict-mode-no-fuerza-ejecutar-solo-valida-args]]
+- **LLM voz inventa fecha si no la sabe** — gpt-4o → año 2024 sin contexto temporal. `retell_llm_dynamic_variables.fecha_hoy` + global_prompt + guard backend año fuera de rango. Ver [[llm-current-date-debe-inyectarse-explicito-evita-alucinar-anyo]]
+- **Retell boosted_keywords letras españolas** — "zeta, efe, eñe, doble uve, hache" + dígitos mejora STT al deletrear matrículas/emails. Ver [[retell-boosted-keywords-letras-españolas-stt]]
+- **Chatwoot `/contacts/search` no autorizado para bot token** — "Access not authorized for bots". Admin cred o buscar en sistema source. Ver [[chatwoot-search-contact-api-requires-admin-token-no-bot]]
+- **GCal q-search no fiable post-create** — eventual consistency. Delete by `event_id` determinista (devuelto por Buscar) en vez de search-by-phone. Ver [[gcal-q-search-no-encuentra-recien-creados-usar-event_id-deterministic]]
+- **GCal eventId charset `[a-v0-9]`** — base32hex subset, 5-1024 chars. Hash FNV → `.toString(32)` válido directo. Ver [[gcal-eventid-charset-restriction-a-v0-9-base32hex]]
+- **Retell subagent default = transfer** — sin instrucción "NO transfieras en CASO X" el LLM deriva al humano al recoger datos. Default semántico inseguro. Ver [[retell-subagent-default-transfer-debe-bloquearse-explicito-por-caso]]
+
 ### facturaia — Cashflow chart unificado (2026-05-26)
 
 - **Toggle entre vistas relacionadas = síntoma UX** — antes de añadir toggle, preguntarse si las dos vistas son lectura única. Ver [[toggle-vistas-relacionadas-es-sintoma-mal-diseno-ux]]
