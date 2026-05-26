@@ -114,3 +114,19 @@ Línea 575: también pasa `data={cashflow}` al chart. Decisión: ¿el dashboard 
 4. Integrar en `dashboard-view.tsx` (modo saldo sin toggle).
 5. Lint + typecheck + build.
 6. Smoke con Tink demo. Iterar visual si el eje Y no funciona.
+
+## Resultado final (2026-05-26)
+
+**Iteración 1** (commit `d810e31`) implementó la spec tal cual: prop `mode='saldo'|'flujo'` + toggle segmentado. Funcional pero el user lo encontró "tosko" — el toggle era fricción innecesaria y dividía la lectura ("¿cuándo miro saldo, cuándo miro flujo?").
+
+**Iteración 2** (commit `26cb553`) rediseñó a UN solo chart con dos bandas verticales (estilo TradingView price+volume):
+
+- **Banda superior (72%)**: línea de saldo Catmull-Rom → Bézier (no quebradiza), tramo real `--fg` sólido + tramo previsto `--brand` punteado, área con gradient brand 22%→0%, banda roja sutil bajo 0, dot pulsante en mes "hoy", pin animado en peor mes con su saldo en €, anotaciones (máx 3) de eventos puntuales como ticks discretos sobre la línea.
+- **Banda inferior (volume-style)**: mini-barras pareadas ingresos arriba (gradient brand) + gastos abajo (gradient slate), previstas a 45-55% opacidad. Eje 0 común con tick `±maxFlow` en JetBrains Mono.
+- **Interacción**: hover line vertical + tooltip HTML flotante (saldo cierre · ingresos · gastos · neto coloreado), barras no-hovered al 55% para foco, animación entrada 120ms.
+- **Compat sin saldo**: si no hay saldoInicial, banda flujo a altura completa, sin banda saldo. Layout no se rompe.
+- Toggle eliminado, prop `mode` eliminada. Un chart, dos preguntas resueltas.
+
+Lint clean (errores pre-existentes en `integrations-section.tsx` untracked NO míos), typecheck 0, build success.
+
+**Aprendizaje meta**: cuando la UX exige al usuario elegir entre dos modos para ver datos relacionados, suele significar que el diseño debería integrarlos en una lectura única. La iteración 1 era correcta funcionalmente pero el toggle era el síntoma de la fricción real (dividir lo que el cerebro lee a la vez).

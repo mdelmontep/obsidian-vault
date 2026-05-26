@@ -89,6 +89,11 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — Cashflow chart unificado (2026-05-26)
+
+- **Toggle entre vistas relacionadas = síntoma UX** — antes de añadir toggle, preguntarse si las dos vistas son lectura única. Ver [[toggle-vistas-relacionadas-es-sintoma-mal-diseno-ux]]
+- **Dos escalas en un chart → bandas verticales** — saldo arriba + flujo abajo estilo TradingView volume, nunca dual-axis. Ver [[dataviz-dos-escalas-bandas-verticales-no-dual-axis]]
+
 ### agency-portal — Prefill server→client form (2026-05-25)
 
 - **Prefill server→client form** — page.tsx carga detalle entero pero pasa subset al form → campos opcionales (fiscal, dirección, teléfono) salen vacíos. Caso PR #73 factura nueva. Revisar mismo patrón en `/agency/quotes/new` y `/agency/contracts/new`. Ver [[agency-portal-forms-prefill]]
