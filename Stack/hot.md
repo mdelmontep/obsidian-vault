@@ -11,6 +11,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 ## ⭐ Permanentes (cross-proyecto)
 
 - **ETag por path + upsert mutable** — 304 indefinido tras regen blob. ETag fuerte = hash del buffer + `no-cache`. Ver [[etag-por-path-upsert-stale-304]]
+- **WhatsApp Cloud API exclusivo con número** — no coexiste con app Business móvil. Ver [[whatsapp-cloud-api-vs-business-app-numero-exclusivo]]
 - **PDF adjunto email** — congelado en inbox cliente; reenviar para refrescar. Link = siempre actualizado. Ver [[pdf-adjunto-email-vs-link-frozen-blob]]
 - **Retell Flex vs Rigid coste** — Flex compila TODO (nodos+KB+tools), token-scaling x2-5 si >3500 tokens. Rigid + gpt-4.1 sin high_priority = €0.135/min. Default Rigid. Ver [[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]]
 - **Calendar idempotency sha1(phone+slot)** — eventId determinista pasado al create. Si ya existe → 409 nativo, no duplica. Sin estado externo. Ver [[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]]
