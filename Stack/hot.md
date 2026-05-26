@@ -14,6 +14,9 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **PDF adjunto email** — congelado en inbox cliente; reenviar para refrescar. Link = siempre actualizado. Ver [[pdf-adjunto-email-vs-link-frozen-blob]]
 - **Retell Flex vs Rigid coste** — Flex compila TODO (nodos+KB+tools), token-scaling x2-5 si >3500 tokens. Rigid + gpt-4.1 sin high_priority = €0.135/min. Default Rigid. Ver [[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]]
 - **Calendar idempotency sha1(phone+slot)** — eventId determinista pasado al create. Si ya existe → 409 nativo, no duplica. Sin estado externo. Ver [[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]]
+- **PR externa sobre modelo sunsetado** — portar al modelo nuevo antes de mergear, no después. Caso: PR76 iCloud sobre settings.email → PR77 sobre plataforma. Ver [[pr-externa-sobre-modelo-sunsetado-portar-no-mergear]]
+- **IMAP attachment selectivo** — bodyStructure → download(partId), no client.download(uid) completo. Evita OOM proporcional al RFC822. Ver [[imap-attachment-selectivo-bodystructure-evita-oom]]
+- **n8n toolCode post-`$fromAI`** — `specifyInputSchema: true + schemaType:'manual' + inputSchema` JSON Schema obliga al LLM a mandar JSON en `query`. Sin schema, el LLM envía texto crudo. Ver [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]]
 
 Patrones que aplican siempre, no expiran. Lo más reusado.
 

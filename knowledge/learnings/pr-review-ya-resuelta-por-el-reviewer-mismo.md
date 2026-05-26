@@ -1,16 +1,17 @@
 ---
-title: review de PR puede estar stale si el reviewer pusheó fixes propios
+title: confirmar estado real del PR antes de invertir en review
 date: 2026-05-05
 source: claude-code-session
 tags: [git, github, workflow, code-review]
 ---
 
-Antes de "actuar" sobre items bloqueantes de una review, hacer `git log origin/<rama-pr> -5`. El reviewer puede haber aplicado los fixes él mismo en un commit posterior y la review quedó stale.
+Antes de actuar sobre items de una review, confirmar (a) que el PR sigue abierto y (b) que el head no ha cambiado desde el review submit. `gh pr view <n> --json state,mergedAt,headRefOid` + `git log origin/<rama> -5`. Mapear cada item ↔ commit antes de tocar nada — reactuar sobre items ya resueltos = revertir trabajo y arrastrar conflictos al rebase.
 
-Mapear cada item ↔ commit antes de empezar a tocar nada. Reactuar sobre items ya resueltos = revertir trabajo del reviewer y arrastrar conflictos al rebase.
+Señales de stale:
+- Reviewer dice en chat "lo arreglé yo" pero GitHub aún muestra "Changes requested"
+- Commits del reviewer en la rama posteriores al review submit
+- `gh pr list --state open` cachea: un PR mergeado puede seguir apareciendo OPEN minutos/horas
 
-Caso: PR #54 agency-portal — Borja posteó review con 4 bloqueantes, luego los aplicó él mismo en commit `58e0ef0` y cambió la base de la rama. La review siguió visible pero solo quedaba pendiente confirmar 1 cosa nuestra (PDF empresa/nombre).
+Caso 1 (PR #54 agency-portal, 2026-05-05): Borja posteó 4 bloqueantes, los aplicó él mismo en `58e0ef0` y cambió la base. Review siguió visible, solo quedaba 1 cosa nuestra.
 
-Señales de que la review está stale:
-- El reviewer dice en chat "lo arreglé yo en X" pero la UI de GitHub aún muestra "Changes requested"
-- Hay commits del reviewer en la rama del PR posteriores al review submit
+Caso 2 (PR #75 TuFacturaIA, 2026-05-26): `gh pr list --state open` devolvió cacheado un PR ya mergeado hace 3h. Hice review completa, hallé "regresión bloqueante en bancos-section" → al verificar contra `git show <merge-commit>` resulta que el rebase manual del propio user ya lo había arreglado. Comment quedó posteado en PR cerrado, inútil.

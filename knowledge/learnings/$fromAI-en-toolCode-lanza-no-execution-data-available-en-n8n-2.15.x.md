@@ -70,3 +70,15 @@ const presupuestoId = stateJson?.resolved_slot?.id;
 ```
 
 Más limpio que el workaround `query`, elimina la clase entera de bugs (LLM no decide UUIDs) y resuelve también referencias en lenguaje natural ("el más caro", "del 18 de mayo"). Aplicado en TuFacturaIA bot WhatsApp 2026-05-18. Ver [[slot-resolver-deterministic-pre-llm-nlu-regex-espanol]] · [[ADR-003-slot-resolver-determinista]]
+
+## Por qué el parser `query` solo no basta cuando los args vienen del LLM
+
+Sin `$fromAI`, el toolCode tampoco declara schema al LLM. Resultado: el LLM mete el turno crudo del usuario en `query` ("45€ de gasolina") y el parser no encuentra estructura → `params={}` → `importe=undefined`. La pareja completa post-`$fromAI` para args generados por el LLM es:
+
+```
+specifyInputSchema: true
+schemaType: 'manual'
+inputSchema: <JSON Schema con required + description por campo>
+```
+
+Con eso n8n inyecta el schema al tool-calling del LLM y `query` llega como JSON estructurado. `JSON.parse(query)` del parser cubre el caso. Verificado contra MCP n8n SDK reference v1.3 de `@n8n/n8n-nodes-langchain.toolCode`. Aplicado en TuFacturaIA WA Boost v1 2026-05-26 (`registrar_gasto_rapido`, `analizar_compra`) tras smoke real que reveló que sin schema el LLM enviaba lenguaje natural.

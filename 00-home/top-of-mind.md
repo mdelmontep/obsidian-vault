@@ -10,6 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **🔴 TuFacturaIA — reconectar Google Workspace en `/settings → integraciones`** — tras cut-over OCR (commit `9ce3760`) la connection migrada quedó `status=expired` con refresh_token muerto. Acción única ~30s: pinchar **Conectar** y autorizar. Cron OCR `TJ8wDqH4ok6LHUrB` se reanuda solo en el próximo tick (≤30 min). Sin esto, ingesta de adjuntos Gmail no procesa.
 - **Centro Elphis — esperando datos cliente para activar prod** — Fases 0-4 cerradas (n8n + Chatwoot + Clientify + GCal + agente voz Retell `agent_543dcfc82ed751c131bf720075` + puentes Meta WA). Pendiente solo: (1) Dokploy env vars `META_PHONE_NUMBER_ID` + `N8N_BLOCK_ENV_ACCESS_IN_NODE=false`; (2) token Meta real en cred n8n `meta-wa-elphis`; (3) webhook Meta Business Manager; (4) SIP trunk Twilio → Retell; (5) DPAs Enrique. HUB: `/Users/manueldelmonte/elphis/CLAUDE.md`
 - **agency-portal — verificar extracción onboarding en prod tras PR #67** — REO RAFTING en curso. Confirmar que "Progreso por sección" y "Respuestas extraídas" se rellenan tras cada turno con dato extraíble. Si aparece `activity_event.action='onboarding.extraction_failed'`, abrir issue
 - **agency-portal — smoke PR #72 onboarding sync+md+web** — tras merge: nuevo onboarding real (o el siguiente cliente) y verificar (a) botón Sincronizar puebla `clients.description`/`primary_contact_phone`/`website`/`assistant_name`/etc, (b) `.md` final incluye sección "Transcripción completa de WhatsApp", (c) si la nota del operador menciona web → bot pregunta dominio/colores/referencias/CTA antes de cerrar, (d) bot hace repaso `[N]` agrupado antes de `is_complete=true`. Ver [[Stack/onboarding-whatsapp]]
@@ -17,7 +18,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
-- **🔴 TuFacturaIA — Aplicar 3 scripts n8n del Sprint WA Boost v1** (post-deploy 2026-05-26 02:30, commit `21a6ed6`) — Backend 100% funcional con 99/99 tests vitest, pero bot WA todavía no usa las 6 mejoras hasta aplicar manualmente: `export N8N_API_KEY='...' && python3 ops/n8n-patches/apply-wa-boost-v1-{prompt,tools,branches}.py` en orden (dry-run primero). Detalle exacto en hub `facturaia.md` §Smoke tests pendientes. Tras aplicar → smoke 16 sub-items + auditoría cross-sprint con 3 agentes auditores. Hasta entonces el bot opera como antes — los endpoints están en prod listos pero el agente n8n no los invoca.
+- **TuFacturaIA — smokes #2 #7 WA Boost v1 tras fix `specifyInputSchema`** — "apunta 45€ gasolina" debe registrar en `cashflow_events`, "¿puedo permitirme 2.300€?" debe analizar saldo proyectado. Backend + 4 scripts n8n aplicados 12:24, falta probar end-to-end. Detalle en hub `facturaia.md`.
 
 - **EcoBox — voz E2E LIVE en `+34919932797`** (Pablo Fernández custom). 4 workflows GCal activos contra `ecobox360taller@gmail.com`, SMTP Gmail funcional, transfer humano `+34617314938`, cancelar limpio by event_id. Pendiente Cristian: WhatsApp Cloud Meta (WABA + token + Phone Number ID + plantillas HSM), logo PNG + color marca. Pendiente Manu: cleanup ~8 eventos smoke en GCal. HUB: [[clientes/ecobox/index|EcoBox HUB]]
 - **TuFacturaIA Copiloto — PR-A3.1 smoke E2E prod** — desplegado 2026-05-21. Script smoke listo en `tests/smoke/copiloto-a3-1.mjs` (encadena `searchMovimientos` → `explainMovimiento` → `analyzeMovimientoPattern`). Bloqueado por storageState/OTP headless; backend + vitest 10/10 verificados 2026-05-22. Commits 5d10cdf + 26a0f2a
@@ -58,7 +59,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **TuFacturaIA — backends módulos pendientes** — Firma eIDAS, Cashflow IA forecast (Fiscal MVP cerrado 2026-05-22, ver NEXT). ~14 opciones config con badge Próximamente
 - **TuFacturaIA — Asistente IA multi-canal** — copiloto WhatsApp para consultas (vencidas, resúmenes, cobrador, predicción cashflow, auto-categorización, alertas, presupuestos por contexto, informe fiscal). Spec `[[facturaia-bloque-4-agent-query-spec]]`
-- **TuFacturaIA — Google OAuth email por org** — cada org envía desde su email via Gmail API
+- **TuFacturaIA — cablear `sendEmail` del provider google-workspace a envío de facturas** — infraestructura ya hecha (plataforma de integraciones + `src/lib/integrations/providers/google-workspace/actions.ts:sendEmail`). Hoy se manda por Resend; falta toggle por org + wiring en `src/lib/email/send.ts`. Cada org podrá enviar desde su Gmail conectado.
 - **TuFacturaIA — Canales Ingesta + Plan/Facturación** (spec 2026-04-24) — rediseño canales sin toggles, página planes reales con método pago e historial
 - **TuFacturaIA — Conciliación bancaria IA** (spec 2026-04-21) — 5 tablas, pipeline Claude 2 fases, UI aprobación por lotes
 - **Tecnocloud — WhatsApp en TuFacturaIA** — phone_number_id de Meta + webhook override
