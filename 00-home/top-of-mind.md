@@ -18,6 +18,8 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **🟢 TuFacturaIA — smoke iCloud Mail provider PR #77** (post-deploy 2026-05-26 commit `817aa8e`, mig 171 aplicada) — Generar app-password en appleid.apple.com (2FA) → `/agentes` → botón iCloud → introducir credenciales → verificar `integration_connections.access_token_enc` cifrado + `external_account` lowercase + email con PDF → bandeja_ingesta. Cron `/api/email/poll` debe procesar Google + iCloud en mismo ciclo (cursores `gmail_last_checked` / `icloud_last_checked` independientes). Desconectar → fila borrada. App-password inválida → `auth_failed` inline. Detalle hub `facturaia.md` §Smoke pendientes 🟢.
+
 - **TuFacturaIA — smokes #2 #7 WA Boost v1 tras fix `specifyInputSchema`** — "apunta 45€ gasolina" debe registrar en `cashflow_events`, "¿puedo permitirme 2.300€?" debe analizar saldo proyectado. Backend + 4 scripts n8n aplicados 12:24, falta probar end-to-end. Detalle en hub `facturaia.md`.
 
 - **EcoBox — voz E2E LIVE en `+34919932797`** (Pablo Fernández custom). 4 workflows GCal activos contra `ecobox360taller@gmail.com`, SMTP Gmail funcional, transfer humano `+34617314938`, cancelar limpio by event_id. Pendiente Cristian: WhatsApp Cloud Meta (WABA + token + Phone Number ID + plantillas HSM), logo PNG + color marca. Pendiente Manu: cleanup ~8 eventos smoke en GCal. HUB: [[clientes/ecobox/index|EcoBox HUB]]
