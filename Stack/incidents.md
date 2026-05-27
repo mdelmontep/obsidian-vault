@@ -20,6 +20,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 ## 2026
 
 <!-- añade nuevas entradas aquí debajo -->
+- 2026-05-27 · TuFacturaIA · PDF manual (`Invoice-S0PTJL9S-0001.pdf`) atascado en `procesando/progreso:0` 3h → `N8N_WEBHOOK_URL` no seteada en Dokploy prod → `void triggerOcrWebhook` salta silencioso → OCR nunca disparado → fix inmediato: script Python directo OpenAI→Supabase; fix logging: `console.error` cuando falta env var (commit `68cf674`); acción pendiente: setear `N8N_WEBHOOK_URL=https://n8n.tufacturaia.com` en Dokploy.
 - 2026-05-27 · TuFacturaIA · OCR fallos dejaban bandeja `procesando` indefinidamente → catch en `Disparar OCR`/`Procesar Ingesta Pendiente` no actualizaba estado → PATCH `estado='revisar'` + `requires_human_review=true` + `review_reasons:['ocr_error']` antes de re-lanzar (`apply-ocr-failure-visible.py`).
 - 2026-05-27 · TuFacturaIA · `Disparar OCR` crasheaba con `Module 'crypto' is disallowed` (n8n 2.20.9 task-runner sandbox) → `require('crypto')` → cyrb53 puro-JS (`apply-ocr-crypto-sandbox-fix.py`). Ver [[n8n-crypto-module-bloqueado-task-runner-usar-fnv-puro]].
 - 2026-05-27 · TuFacturaIA · `Subir a Storage` 400 `Invalid Compact JWS` → `sb_secret_*` en `Authorization: Bearer` sin header `apikey` → añadir `apikey: SUPABASE_KEY` en el nodo HTTP Request (`apply-storage-apikey-header.py`). Ver [[supabase-sb-secret-vs-jwt-http]].
