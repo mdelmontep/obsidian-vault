@@ -16,6 +16,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **Magic link 1-uso lo pre-consumen escáneres de email** — TTL no basta; usar token-landing + POST, y reenvío self-service. Ver [[magic-link-un-solo-uso-lo-preconsumen-escaneres-email]]
 - **Gate de rol en endpoint debe contemplar superadmin** — superadmin trae `role=null` (salta lookup); `role !== X` lo bloquea. Usa `isSuperadmin || role in [...]`. Ver [[role-gate-endpoint-debe-contemplar-superadmin]]
 - **Cifras en capa nueva (IA/copiloto/export) reusan el filtro canónico** — no reimplementar; divergencia = bug de confianza. Ver [[cifras-derivadas-en-capa-ia-reusan-filtro-canonico]]
+- **Equivalente derivado siempre coherente → columna GENERATED STORED** — no trigger de sync ni cálculo en app; ningún insert puede desincronizar. Ver [[columna-generada-stored-para-equivalente-derivado]]
 - **Anthropic prompt cache es por prefijo** — campo variable en `system` invalida también el cache de `tools`. Ver [[anthropic-prompt-cache-prefijo-system-tools]]
 - **Toggle optimista sin check de error miente** — revertir al fallar; mejor por endpoint. Ver [[toggle-optimista-sin-rollback-miente-al-usuario]]
 - **ETag por path + upsert mutable** — 304 indefinido tras regen blob. ETag fuerte = hash del buffer + `no-cache`. Ver [[etag-por-path-upsert-stale-304]]
