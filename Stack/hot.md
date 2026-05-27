@@ -10,6 +10,9 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Cifras en capa nueva (IA/copiloto/export) reusan el filtro canónico** — no reimplementar; divergencia = bug de confianza. Ver [[cifras-derivadas-en-capa-ia-reusan-filtro-canonico]]
+- **Anthropic prompt cache es por prefijo** — campo variable en `system` invalida también el cache de `tools`. Ver [[anthropic-prompt-cache-prefijo-system-tools]]
+- **Toggle optimista sin check de error miente** — revertir al fallar; mejor por endpoint. Ver [[toggle-optimista-sin-rollback-miente-al-usuario]]
 - **ETag por path + upsert mutable** — 304 indefinido tras regen blob. ETag fuerte = hash del buffer + `no-cache`. Ver [[etag-por-path-upsert-stale-304]]
 - **WhatsApp Cloud API exclusivo con número** — no coexiste con app Business móvil. Ver [[whatsapp-cloud-api-vs-business-app-numero-exclusivo]]
 - **PDF adjunto email** — congelado en inbox cliente; reenviar para refrescar. Link = siempre actualizado. Ver [[pdf-adjunto-email-vs-link-frozen-blob]]
@@ -22,6 +25,9 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **Monitor deploy con señal de comportamiento** — 404/401/307→login coinciden en versión vieja y nueva → falso positivo. Usar endpoint cuyo body/redirect SÍ cambia entre versiones. Ver [[monitor-deploy-usar-senal-comportamiento-no-existencia]]
 - **MCP n8n no cubre todas las instancias** — si `get_workflow_details` falla en TODOS los MCP, REST API `/api/v1/workflows?active=true` con `X-N8N-API-KEY` localiza el real. Ver [[mcp-n8n-no-tiene-todos-los-workflows-fallback-rest-api]]
 - **`import 'server-only'` bloquea scripts CLI** — split primitivas a `crypto-primitives.ts` (sin guard) + re-export con guard. Misma implementación, sin duplicar. Ver [[crypto-modulo-server-only-bloquea-scripts-cli-extraer-primitivas]]
+- **Saldo-actual + serie histórica = doble conteo** — no pasar saldo-de-hoy como `saldoInicial` a un forecast que acumula desde meses pasados; sumar saldo real + solo neto futuro. Ver [[cashflow-saldo-actual-mas-serie-historica-doble-conteo]]
+- **Tool conversacional en agente "solo JSON"** — envolver la respuesta en el `{tipo}` que el parser enruta (`conversacion`) o el parser revienta; distinguir tools lectura/acción para `ok=true`. Ver [[agente-llm-json-estricto-tool-conversacional-envolver-en-tipo]]
+- **Mock de función compartida = falso verde** — el test del consumidor no ve si la llama con el arg equivocado. Test de integración o aserción sobre los args. Ver [[mock-funcion-compartida-en-test-endpoint-falso-verde-composicion]]
 
 Patrones que aplican siempre, no expiran. Lo más reusado.
 
