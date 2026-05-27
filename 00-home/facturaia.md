@@ -255,6 +255,15 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **🟡 Invitar miembro nuevo → aceptar → entrar** (fixes desplegados 2026-05-27 14:01, E2E aún SIN confirmar por user). Enviar invitación desde panel equipo → el email debe llevar enlace a `app.tufacturaia.com` (NO `0.0.0.0:3000`) → al pulsar "Aceptar invitación" debe entrar al dashboard, NO "Unauthorized: no org". Cubre los 2 bugs: env Dokploy `:`→`=` + `allowNoOrg`.
+- **🟢 Subir foto/PDF al bot WhatsApp → Storage + bandeja + OCR + multi-org** (4 fixes 2026-05-27 en receptor v2 `pqSWkDIHqmSVHotB`, todos vía patches `ops/n8n-patches/` con backup):
+  - **media_id** (`apply-fix-media-id-ref-imagen.py`): `Obtener URL del Archivo` leía `$json.media_id` vacío → ref explícita a `Parsear Mensaje`. Aplicado (exec 1094→1099).
+  - **Storage `apikey`** (`apply-storage-apikey-header.py`): `Subir a Storage` solo mandaba `Authorization: Bearer` → con claves `sb_secret_*` (no JWT) Supabase daba `400 Invalid Compact JWS` (exec 1099). Fix = header `apikey`. Verificado contra prod (apikey→200, Bearer-solo→400).
+  - **crypto sandbox** (`apply-ocr-crypto-sandbox-fix.py`): `Disparar OCR` hacía `require('crypto')` → n8n 2.20.9 task-runner lo bloquea. Fix = sha256→`cyrb53` puro-JS (prompt_hash es free-form en el backend). Bug latente que el fix de Storage destapó.
+  - **multi-org** (`apply-ingesta-multiorg-selector.py`): `Preparar Datos Ingesta` cogía `orgs[0]` → ingería a org equivocada en multi-org. Fix = resolve-context (single source of truth) + nodos `Es Multi-Org Ingesta?` + `Enviar Lista Multi-Org Ingesta`. 1 org → ingiere directo; 2+ sin org activa → manda lista de empresas, el usuario elige (setea sticky vía handler existente) y **reenvía** la foto.
+  - OCR validado E2E con key recargada (foto image_url + PDF file extraen prov/nif/nº/fecha/base/iva/total, respeta receptor). ~37k tokens/img en gpt-4o-mini.
+  - **Smoke (solo tú)**: (a) **mono-org** → foto → bandeja `listo` con `datos_extraidos`; (b) **multi-org sin org activa** → debe aparecer la lista de empresas → eliges → reenvías la foto → va a la elegida; (c) confirmar que `OPENAI_API_KEY` y `FACTURAIA_SERVICE_KEY` del **contenedor n8n** son las correctas (no verificables desde local: mis keys difieren de prod; pero `FACTURAIA_SERVICE_KEY` ya la usa la rama texto en prod y funciona). Gotcha Storage en `docs/architecture/gotchas.md §Storage`.
+
 - **🔴 PRÓXIMO PASO USER — Aplicar patch prompt n8n WA Boost + smoke conversacional** (desbloquea #2/#7 por WhatsApp; el backend ya está verde y mergeado en PR #78). El fix del contrato JSON conversacional vive en el workflow n8n vivo, no se aplica solo:
   - `export N8N_API_KEY=…` (o `op signin` → el script lee `op://Private/n8n-tufacturaia/credential`) y ejecutar `python3 ops/n8n-patches/apply-wa-boost-v1-fix-cashflow-contract.py` (`--dry-run` primero). Idempotente + backup automático.
   - **Smoke E2E por WhatsApp** (no automatizable, solo tú): "¿cómo voy de caja?" → respuesta conversacional 3 líneas (NO "el agente no devolvió JSON") · "¿puedo permitirme 1.500€?" → veredicto ok/apretado/no_recomendado · "apunta 40€ gasolina" → confirma + "súbeme la factura para deducirlo".
@@ -497,6 +506,7 @@ Reglas para el motor de conflictos:
 - Cuando una entrada llegue a `[hecho]` y sea hito relevante → mover a `## Histórico de hitos` con fecha + 1 línea.
 
 <!-- nuevas entradas debajo, lo más reciente arriba -->
+- 2026-05-27 14:01 · `[hecho · 2 commits a main · deploy Dokploy]` · **Miembro invitado no podía acceder — 2 bugs encadenados arreglados y desplegados.** (1) Enlace de invitación caía a `https://0.0.0.0:3000` ("no se puede acceder al servidor"): causa raíz = env Dokploy `tufacturaia-app` tenía `NEXT_PUBLIC_SITE_URL:`/`NEXT_PUBLIC_APP_URL:` con **dos puntos** en vez de `=` → Docker no las definía → el código derivaba la URL del host interno del contenedor. Fix: env corregido vía API Dokploy (`compose.update`) + guard `resolvePublicBaseUrl` que descarta `0.0.0.0` y falla con 500 visible en vez de emailar link roto (`110375e`, usado en `team/members` POST + resend). (2) Al aceptar daba "Unauthorized: no org": `withApiAuth` exige org activa que el invitado-a-1ª-org aún no tiene (membresía `invitado`) → opción `allowNoOrg` activada en `team/invitations/accept` (`8b900a9`). Gate verde (lint/typecheck/build/tests). API key Dokploy había rotado (memoria del agente actualizada). PENDIENTE: smoke E2E del user + decidir rotar `SUPABASE_SERVICE_ROLE_KEY` (se vio en transcript). Ver [[dokploy-env-clave-dos-puntos-no-se-parsea]] + [[auth-org-gate-bloquea-aceptar-primera-invitacion]].
 - 2026-05-27 (cont. catálogo · iteración con feedback en prod) · `[hecho · MERGEADO a main · deploy Dokploy]` · **3 fixes del Catálogo tras probarlo el user en prod (3 pushes directos a main, gate verde cada uno).**
     - **`dd99af7`** — UX secciones/huérfanos: (a) productos con `categoria` nula/no reconocida quedaban **contados pero invisibles** ("2 activos, veo 1" → no podías quitarlos) → ahora caen en sección **"Otros"** (accesible, borrable, auto-oculta al vaciarse); (b) **secciones built-in vacías se ocultan** (Planes mensuales/Onboarding/Addons… son categorías del propio SaaS, dejan de imponerse); (c) **selector "Sección"** en el detalle del producto para mover entre secciones o asignar huérfanos.
     - **`1272282`** (sobre-corrección, superada por la siguiente) — quité el gate de hard-delete del todo. Mal: el user quiere mantener propietario/admin.
@@ -940,6 +950,8 @@ _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda 
 
 ## Bloqueos / esperando a terceros
 
+- **🟡 [Acción Manu] Confirmar que el contenedor n8n usa la key OpenAI recargada + smoke real foto** (2026-05-27). OpenAI ya recargado: el contrato OCR está **verificado** con la key funded — smoke local con el prompt/modelo exactos del nodo `Disparar OCR` (`gpt-4o-mini`) extrae bien tanto **foto** (image_url) como **PDF** (file): Vodafone → prov/nif/num/fecha/base/iva/total correctos, respeta contexto receptor. (Nota: cada imagen consume ~37k tokens en gpt-4o-mini por su multiplicador de visión — coste ~0,006€/img, ok.) **Pendiente**: (a) la key recargada es `sk-proj-PDamEPzf…` en `.env.local` (app); confirmar que el `OPENAI_API_KEY` del **contenedor n8n** (Dokploy) es esa misma o también está con crédito — no he podido leer el env de n8n; (b) verificar `APP_URL` en n8n (solo afecta al POST de auditoría OCR, no a la extracción); (c) **smoke real**: enviar foto al bot y ver `pqSWkDIHqmSVHotB` completar hasta `Disparar OCR` + bandeja `listo` con `datos_extraidos`. El flujo foto→OCR nunca se completó E2E en el histórico (execs 870–1099: solo delivery-status; las 2 de imagen murieron en media_id y Storage).
+
 - **[Acción Manu] Configurar Supabase Auth URL Configuration** — Dashboard → Authentication → URL Configuration: Site URL = `https://app.tufacturaia.com`, Redirect URLs add `https://app.tufacturaia.com/**` + `http://localhost:3000/**`. Defense in depth aunque el flujo password reset ya no use plantillas Supabase (genera link propio con `admin.generateLink`). Sin esto, si algún flujo nativo llama a `resetPasswordForEmail` desde otro punto, el enlace cae a Site URL actual = `0.0.0.0:3000`. (2026-05-26)
 
 - **[IMPORTANTE PSD2 — pre-cutover live] Compliance legal con Dani antes de abrir conexión bancaria al público**:
@@ -988,6 +1000,7 @@ _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda 
 - CSP headers más estrictos
 - Métricas de uso de API IA (consumo OpenAI/Anthropic por org)
 - Pen-test anual cuando se llegue a >100 clientes
+- Rotar `SUPABASE_SERVICE_ROLE_KEY` — se vio su valor en el transcript de la sesión Claude del 2026-05-27 (al leer el env vía API Dokploy). Exposición local, no a terceros; riesgo bajo pero es service-role (salta RLS). Decidir rotar vs aceptar.
 
 ---
 

@@ -10,6 +10,8 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Dokploy env `CLAVE:valor` no se parsea** — el `:` en vez de `=` deja la var ausente en runtime (silencioso). Verificar con API/`docker exec env`, no el panel. Ver [[dokploy-env-clave-dos-puntos-no-se-parsea]]
+- **Org-gate bloquea aceptar la 1ª invitación** — middleware que exige org activa rompe el onboarding pre-org (invitado sin org aún). Bypass explícito tipo `allowNoOrg`. Ver [[auth-org-gate-bloquea-aceptar-primera-invitacion]]
 - **Gate de rol en endpoint debe contemplar superadmin** — superadmin trae `role=null` (salta lookup); `role !== X` lo bloquea. Usa `isSuperadmin || role in [...]`. Ver [[role-gate-endpoint-debe-contemplar-superadmin]]
 - **Cifras en capa nueva (IA/copiloto/export) reusan el filtro canónico** — no reimplementar; divergencia = bug de confianza. Ver [[cifras-derivadas-en-capa-ia-reusan-filtro-canonico]]
 - **Anthropic prompt cache es por prefijo** — campo variable en `system` invalida también el cache de `tools`. Ver [[anthropic-prompt-cache-prefijo-system-tools]]
