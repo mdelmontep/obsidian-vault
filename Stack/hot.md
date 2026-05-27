@@ -10,6 +10,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Gate de rol en endpoint debe contemplar superadmin** — superadmin trae `role=null` (salta lookup); `role !== X` lo bloquea. Usa `isSuperadmin || role in [...]`. Ver [[role-gate-endpoint-debe-contemplar-superadmin]]
 - **Cifras en capa nueva (IA/copiloto/export) reusan el filtro canónico** — no reimplementar; divergencia = bug de confianza. Ver [[cifras-derivadas-en-capa-ia-reusan-filtro-canonico]]
 - **Anthropic prompt cache es por prefijo** — campo variable en `system` invalida también el cache de `tools`. Ver [[anthropic-prompt-cache-prefijo-system-tools]]
 - **Toggle optimista sin check de error miente** — revertir al fallar; mejor por endpoint. Ver [[toggle-optimista-sin-rollback-miente-al-usuario]]
