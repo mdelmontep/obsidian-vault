@@ -15,7 +15,11 @@ aplicarse como gate de acceso a TODOS los usuarios con sesión. Hacerlo:
 - Es ajeno al estándar (Holded/Stripe/Xero: invitar→aceptar→contraseña; 2FA
   opcional/por-política, casi siempre TOTP, nunca gate por-miembro de login).
 
-Correcto: el gate alcanza solo a quien posee/usa el canal (rol `propietario`).
-`propietario` es señal fiable: invitar rechaza ese rol. Helper único compartido
-por middleware + guard de API + banner. Caso 2026-05-27, incidente invitación.
+Correcto (diseño final): NINGÚN gate de teléfono en el login. La verificación es
+on-demand, en el punto donde el canal se ACTIVA — en FacturaIA, conectar
+WhatsApp en Canales: el bot solo resuelve números verificados, así que la
+tarjeta muestra "Verificar mi número" si no lo está. El owner que no usa
+WhatsApp no verifica nada; el que lo activa, verifica en ese momento. (1ª
+iteración fue "gate solo-propietario" — descartada por seguir siendo fricción
+innecesaria al entrar.) Caso 2026-05-27, incidente invitación.
 Ver [[rls-org-members-select-debe-incluir-own-memberships]].
