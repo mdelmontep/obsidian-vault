@@ -10,6 +10,8 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Invitar a crear org sin saber email → token propio** — Supabase magic-link ata link al email. Tabla `*_signup_invites` + landing + consumo en callback (no en trigger SQL). Ver [[signup-invite-token-propio-vs-magic-link-supabase]]
+- **vi.fn(() => ...) sin rest param** — spread (...args) rompe con TS2556. Declarar `(..._args: unknown[])` en el spy. Ver [[vitest-vi-fn-sin-params-rompe-spread-args]]
 - **Bandeja staging ↔ tabla real con FK RESTRICT** — borrar de un lado debe sincronizar el otro o queda huérfano + blob bloat. Ver [[bandeja-staging-tabla-real-fk-restrict-borrar-sincroniza-ambos-lados]]
 - **Dokploy env `CLAVE:valor` no se parsea** — el `:` en vez de `=` deja la var ausente en runtime (silencioso). Verificar con API/`docker exec env`, no el panel. Ver [[dokploy-env-clave-dos-puntos-no-se-parsea]]
 - **Org-gate bloquea aceptar la 1ª invitación** — middleware que exige org activa rompe el onboarding pre-org (invitado sin org aún). Bypass explícito tipo `allowNoOrg`. Ver [[auth-org-gate-bloquea-aceptar-primera-invitacion]]

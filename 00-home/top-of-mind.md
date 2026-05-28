@@ -18,6 +18,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — smoke invitaciones de alta superadmin** (mig 175 aplicada 2026-05-28, código local sin commitear, ~5min). Generar link desde `/admin/orgs` → registro en incógnito → confirmar plan+trial aplicados + tabla refleja consumido + revocar funciona. Detalle hub `facturaia.md` §Smoke 🟢 2026-05-28.
 - **IET — web nueva lista: commit+push + formulario + HTTPS** — rediseño completo de iet.es en Astro (15 páginas, build limpio, repo `mdelmontep/IET` privado sin commitear). Pendiente: (1) commit+push (espera OK), (2) Access Key Web3Forms con `administracion@iet.es` → `.env`, (3) certificado TLS en su Apache, (4) fotos reales de obra. HUB [[iet|IET]] · detalle [[clientes/iet/web-iet|Web IET]]
 - **TuFacturaIA — deploy + smoke multidivisa** (commits `19f2cb1`+`b5b2b33` en main, mig 173 aplicada a prod por psql). Tras deploy Dokploy: factura USD real → PDF equivalencia EUR, 303/Dashboard suman EUR, tipo de cambio BCE autorrellena en `/generar`. Detalle hub `facturaia.md` §Smoke. Ver [[ADR-022-multidivisa-facturas-equivalente-eur-congelado]]. **OJO**: migs 172 (`copiloto_usage_increment`) y 173 (`multidivisa`) ausentes de `schema_migrations` remoto — reconciliar antes de `db push` limpio.
 - **TuFacturaIA — smoke foto WhatsApp** — mono-org + multi-org (selector interactivo → carga directa). Commit `dcc3a1a` deployado ✅ 2026-05-28. **Pendiente: smoke manual** — enviar foto WA con 2 orgs y confirmar que pregunta empresa.
