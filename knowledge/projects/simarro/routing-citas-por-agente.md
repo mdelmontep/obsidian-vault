@@ -27,6 +27,9 @@ tags: [simarro, n8n, retell, supabase, calendar, routing, citas]
 - **Cred Postgres del catálogo**: `properties` NO está en la base `n8n` (cred `NbSEPfQRe9htaaYm` = host `postgres`/db `n8n`), ni en `kg8smgEwoRUgZZrz` (borrada). DDL del catálogo → **Supabase Studio** (`supabase-simarro.agentesia.madrid`), no hay cred Postgres directa viva. El sync escribe por PostgREST/Kong.
 - **Transcripción de calendar_ids**: el ID de Pedro venía con un char de más (65 vs 64). Fuente de verdad: `calendarList` API de la cuenta (todos `accessRole: owner`).
 - **Composición voz vs WhatsApp**: el chatbot tenía su propio `Mirar_disponibilidad` (googleCalendarTool, `primary` fijo) → ofertaba en primary pero reservaba en el agente. Reemplazado por `toolHttpRequest` al webhook agent-aware. Lección: [[audits-cross-pr-vs-per-pr]] — el bug solo aparece en la COMPOSICIÓN de los dos canales, no en cada uno aislado.
+- **LLM omite `idealista_id` en `Mirar_disponibilidad`** (bug detectado 2026-05-28): el LLM tenía el `idealista_id` del resultado de `Buscar_viviendas` pero no lo pasaba a `Mirar_disponibilidad` → RPC devolvía `source=fallback` → disponibilidad consultada en calendario general → slots del agente aparecían libres → double booking. La REGLA CRÍTICA en `tools_gating` no era suficiente; añadida también en el nodo BUSCANDO del state machine con "CRÍTICO: sin idealista_id el sistema consulta el calendario equivocado". Ver [[audits-cross-pr-vs-per-pr]].
+- **Teléfono voz sin E.164 → WA no llega** (bug detectado 2026-05-28): `from_number` de Retell llega como "+34617314938" pero el workflow lo strip a "617314938" antes de guardar en Kommo. Kommo/Meta necesita E.164 para identificar la cuenta WA del contacto nuevo → 3108 silencioso. Fix: `Create new contacts1` en `iMoTKZWxYLymGuHF` normaliza ahora el teléfono a `+34XXXXXXXXX`. Afecta solo a contactos NUEVOS (primera llamada); contactos creados por WA ya tienen E.164 de Kommo.
+- **LLM hallucina preguntas RGPD** (bug detectado 2026-05-28): step "Consentimiento WhatsApp" sin freno → el LLM improvisa "¿Quieres que te mande la información legal de protección de datos?". Fix: añadido PROHIBIDO explícito con lista de términos vetados (RGPD, privacidad, legal, información legal).
 
 ## Cómo se hizo (n8n por API REST, sin MCP)
 - API key en `~/simarro/.claude/settings.local.json`. Workflows leídos/editados con `PUT /api/v1/workflows/{id}` (settings: solo claves permitidas por el schema público; n8n preserva las que no envías).
@@ -34,10 +37,21 @@ tags: [simarro, n8n, retell, supabase, calendar, routing, citas]
 - Cambios Retell y revisión final con **subagentes** (filtrando outputs).
 
 ## Pendiente go-live
-1. Ramón añade `agente:` a las descripciones de Idealista.
-2. Correr el sync para poblar `properties.agent`.
-3. Test E2E real de creación de evento en calendario del agente (vivienda `110751938` sembrada con `carlos`; revertir luego con `UPDATE properties SET agent=NULL WHERE idealista_id='110751938';`).
-4. Publicar agente Retell (`is_published:true`).
-5. Verificar carga completa del catálogo (ojo `desiredResults:10` en el actor Apify — puede estar capando el nº de propiedades).
+
+### Bloqueante — depende de Ramón
+1. Ramón añade `agente:` a las descripciones de Idealista (actualmente `properties.agent = NULL` en todas → fallback siempre al calendario general).
+2. Correr el sync (`Lanzar scrape Simarro (manual)`, workflow `3zBDpPwBYLZgMink`) para poblar `properties.agent`.
+3. Test E2E real: llamada voz → vivienda con agente → `Mirar_disponibilidad` devuelve `source=agent` en n8n log → cita en calendario del agente.
+
+### Técnico pendiente
+4. Revertir vivienda de test: `UPDATE properties SET agent=NULL WHERE idealista_id='110751938';`
+5. Limpiar eventos de test en Google Calendar (Julián 12:00, Juan 12:00 del 29 mayo).
+6. Publicar agente Retell: `PATCH /update-agent/agent_7b02aa7680b8798ea033fab2c2` con `is_published: true`.
+
+### Verificado ✓ (tests 2026-05-28)
+- WA confirmación llega para contactos nuevos de voz ✓
+- Ana no pregunta "mañana o tarde" si el cliente ya dio hora ✓
+- Ana no improvisa preguntas RGPD ✓
+- `Mirar_disponibilidad` pasará el `idealista_id` al calendario correcto (fix aplicado, pendiente E2E con propiedad con agente real)
 
 Ver también [[estado-actual]].

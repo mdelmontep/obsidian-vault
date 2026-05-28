@@ -1,11 +1,11 @@
 ---
-title: Simarro Properties — Snapshot estado 2026-05-04
-date: 2026-05-04
+title: Simarro Properties — Snapshot estado 2026-05-28
+date: 2026-05-28
 source: sesion-claude-code
 tags: [simarro, n8n, kommo, retell, estado, snapshot]
 ---
 
-# Simarro Properties — Estado real al 2026-05-04
+# Simarro Properties — Estado real al 2026-05-28
 
 > Source of truth completo: `/Users/manueldelmonte/simarro/CLAUDE.md`. Este doc es snapshot resumen para retomar rápido.
 
@@ -65,14 +65,25 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 - **Opción 1 (atajo) para fin-de-semana**: chatbot ejecuta `Derivar_agente` (apaga IA) cuando cliente pide visita fuera horario oficina o fin de semana. Limitación: bot deja de responder otras consultas. Mejora futura `Solicitud_confirmacion_visita` documentada en canvas Slack F0B088P9P5K (POSIBLES AMPLIACIONES)
 - **Mirar_disponibilidad sigue Google Calendar (decisión 5C híbrida aplazada)**: migración a Kommo tasks como source of truth + GCAL espejo aplazada al canvas. Es trabajo grande (~45 min en 2 workflows) y tiene sentido hacer cuando Ramón tenga GCAL re-autorizado
 
+## Hecho desde 2026-05-04 ✓ (sesión 2026-05-28)
+
+### Routing por agente + E2E voz
+- **Google Calendar re-autorizado**: flujo de citas funcional (cred `d3uDK7X9ZflAoumq`).
+- **Routing por agente implementado y testeado**: `resolve_property_calendar(idealista_id)` → calendario del agente. Migraciones SQL `003` y `004` aplicadas en Supabase.
+- **WA confirmación de cita funciona para voz** ✓: mecanismo = Digital Pipeline Kommo bot 87865 al entrar en Lead Caliente. Fix: teléfono de contactos voz ahora se guarda en E.164 (`+34XXXXXXXXX`) en `Create new contacts1`.
+- **Bugs Retell corregidos**:
+  - Ana no pregunta "¿mañana o tarde?" si el cliente ya dio hora concreta
+  - Ana no improvisa preguntas RGPD en el step de consentimiento
+  - `Mirar_disponibilidad` ahora recibe `idealista_id` → consulta el calendario del agente correcto (fix en state machine BUSCANDO del prompt)
+
 ## Pendientes bloqueantes (orden)
 
-1. **Ramón re-autoriza cred Google Calendar** (`d3uDK7X9ZflAoumq`) — actualmente da `Forbidden`. Sin esto, todo flujo de citas roto en silencio
-2. **Crear cred SMTP Gmail** en n8n con App Password de `simarroproperties@gmail.com`. Cred actual `oKRmYFhljczyvzV8` es fantasma → cero emails enviados
-3. **Borja**: meter `N8N_WEBHOOK_TOKEN=simarro_Z2O40vQbqve2YZ3Ksn2JsEQCcJqAh6L8BO8mxvbqwTE` en env Vercel + mergear PR #1
-4. **Test E2E chatbot WhatsApp** al `+34 919 93 28 52`
-5. **Publicar agente Retell** + test E2E voz al mismo número
-6. **Limpiar leads test Kommo** (IDs `28211029`, `28211091`, `28211167`, `28211469-77`) — DELETE no permitido vía API, mover a "Closed lost" desde UI
+1. **Ramón añade `agente:` a descripciones de Idealista** — actualmente `properties.agent = NULL` en TODAS las viviendas → el routing por agente siempre cae a fallback (calendario general). Sin esto, las citas van al calendario equivocado.
+2. **Correr sync tras punto 1**: `Lanzar scrape Simarro (manual)` (workflow `3zBDpPwBYLZgMink`) → poblar `properties.agent`.
+3. **Test E2E routing**: llamada voz → vivienda con agente real → verificar en n8n que `RPC Cal Disp source=agent` y evento en calendario del agente.
+4. **Publicar agente Retell**: `PATCH /update-agent/agent_7b02aa7680b8798ea033fab2c2` `{"is_published": true}` — pendiente desde inicio, nunca se publicó.
+5. **Crear cred SMTP Gmail** en n8n con App Password de `simarroproperties@gmail.com`. Cred actual `oKRmYFhljczyvzV8` es fantasma → cero emails enviados.
+6. **Limpiar restos de test**: eventos calendario (Julián 12:00, Juan 12:00 del 29 mayo) + leads test Kommo (IDs `28211029`, `28211091`, `28211167`) desde UI.
 
 ## Pendientes no bloqueantes
 

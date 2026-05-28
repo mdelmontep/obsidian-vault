@@ -67,6 +67,8 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **LLM ambiguity con voz** — devolver lista numerada de candidatos + memoria conversacional, nunca "dime el número exacto". Ver [[llm-ambiguity-lista-candidatos-numerados-y-memoria-conversacional]]
 - **LLM tool-use multi-turno replay** — persistir calls+results juntos OK, pero emit role:'tool' por call_id en orden; skip huérfanos. Ver [[llm-tool-use-multi-turno-replay-tool-calls-y-results-emparejados]]
 - **Tipo nuevo en agente JSON-out** — parchear downstream o lookup recurso real (mejor lookup). Ver [[extender-tipo-en-agente-json-out-parchear-downstream-o-lookup-recurso]]
+- **OpenAI Chat Completions PDF → `image_url`** — `type:'file'` es Responses API, causa 400. Usar `image_url` con data URI + guard b64 + normalizar MIME. Ver [[openai-chatcompletions-pdf-usar-image-url-no-file]]
+- **Bot multi-org: sticky silencia ingesta** — `active_org_id` sync conveniente en chat, pero cada foto es decisión independiente → siempre preguntar empresa si ≥2 orgs. Ver [[bot-multi-accion-fallback-activo-silencia-routing]]
 - **Verificar persistencia post-PUT** — HTTP 200 ≠ aplicó. Grep marker único en re-fetch. Ver [[verificar-persistencia-tras-put-api-con-grep-marker-unico]]
 - **Métricas tabla + events** — diseñar con tabla de dominio como fuente primaria, events como complemento. Ver [[metricas-fuente-fuerte-mas-event-log]]
 - **Parser ES vs HTML input number** — input type=number siempre punto US como decimal; parser ES naïve rompe '33.33' → '3333' (×100 silencioso). Ver [[parser-numero-es-bug-con-input-html5-number-punto-como-decimal-no-millares]]

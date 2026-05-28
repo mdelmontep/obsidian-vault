@@ -100,19 +100,72 @@ n-welcome ("Hola, soy Alex de EcoBox, ¿en qué te puedo ayudar hoy?")
 - **Modelo flow**: `gpt-4o` (más rápido que gpt-4.1, suficiente para Rigid)
 - **Latencia**: `responsiveness=1.0`, `enable_backchannel=true` con "ajá/vale/claro", `begin_message_delay_ms=500`
 
-## Bloqueadores externos (Cristian / Meta)
+## Meta WhatsApp Cloud API (LIVE 2026-05-28)
 
-1. Comprar número telefónico provider AgentesIA (si quiere WhatsApp) — el `+34910054813` no está en cuenta Retell, no es importable sin BYO SIP
-2. Crear WABA en portfolio `1011127821491282` + Permanent Access Token Meta
-3. Crear plantilla HSM `confirmacion_cita` (Utility, no Marketing)
-4. Migración WhatsApp +34636521315 a Cloud (cliente puede pedir mantenerlo personal)
-5. Logo PNG público + color marca hex (defaults `#0F1B2D` + `#E76F51`) + firma email
-6. URL Google Maps corta de Rotterdam 3
-7. Confirmar definitivamente cómo gestionar "cómo va mi reparación" — Alex finge consulta hoy
+Número `+34 910 05 48 13` (provider Netelip) llegó CONNECTED + CLOUD_API + VERIFIED tras 3h de iteración:
+1. WABA original (`1277706597676685`) + Phone original (`1124445220757479`) quedaron huérfanos cuando Cristian desvinculó el número de la app móvil WhatsApp Business (Meta hizo auto-cleanup que invalidó las referencias — el token retuvo validez pero perdió acceso a esos objects).
+2. User recreó WABA + Phone vía API en mismo Portfolio — IDs nuevos abajo.
+3. PIN 2FA custom seteado vía `POST /register`.
+4. 3 plantillas HSM creadas (PENDING review Meta).
+
+| Activo | ID |
+|---|---|
+| Portfolio empresarial | `1011127821491282` |
+| **WABA actual** (Ecobox 360) | `1488289103073845` |
+| **Phone Number ID actual** | `1136826222847102` (`+34 910 05 48 13`, CLOUD_API, CONNECTED, VERIFIED) |
+| WABA huérfana (legacy) | ~~`1277706597676685`~~ |
+| Phone huérfano (legacy) | ~~`1124445220757479`~~ |
+| Message template namespace | `7049d1fc_3cb6_4dd5_b2fa_168acb7376ef` |
+| System User `ecobox-api` (control total) | `61590397051384` |
+| App Meta `Ecobox360` | App ID `1643186026903792` |
+| **Token permanente + PIN 2FA** | `Ecobox/.credentials.local` (`META_PERMANENT_TOKEN`, `META_PHONE_PIN`). Pendiente espejar a 1P EcoBox cuando sesión `op` se reabra. |
+| Plantillas HSM (PENDING review) | confirmacion_cita_ecobox `980688254703968` · recordatorio_48h_ecobox `2117110505903801` · recordatorio_24h_ecobox `2156080465190409` |
+| App Secret / Verify Token webhook | NO entregados — solo bloquean INBOUND (cliente WhatsApp → bot). Outbound (recordatorios + confirmaciones) ya funcional. |
+
+## Bloqueadores externos restantes
+
+1. ✅ ~~Crear WABA + Permanent Access Token Meta~~ — hecho 2026-05-28.
+2. ✅ ~~Migrar +34910054813 a Cloud API + verificación~~ — DONE 2026-05-28 (vía recreación WABA + Phone tras desvincular app móvil).
+3. ⏳ **Esperar aprobación HSM Meta** — 3 plantillas en PENDING desde 2026-05-28 (UTILITY suele aprobar <1h). Cuando aprueben, activar workflows `Recordatorios cron` (`QVPf25PZyLv0UHII`) y `Meta token health check` (`Jbf5rZepHYM21MPQ`) tras actualizar cred n8n `dczhQTAKaeGVe1gr` con el token.
+4. ⏳ Regenerar API key n8n (la del `.credentials.local` devuelve 401 desde el PUT bot v2). Sin esto no puedo actualizar la cred Meta Bearer ni validar bot v2 E2E.
+5. ⏳ App Secret + Verify Token webhook Meta — solo necesario cuando activemos inbound (cliente WhatsApp → bot Chatwoot). Outbound ya operativo.
+6. ⏳ Conectar inbox Chatwoot al Phone Number ID `1136826222847102` (Chatwoot Cloud channel WhatsApp). Sin esto, ningún mensaje cliente llega al bot.
+7. ⏳ Logo PNG público + color marca hex (defaults `#0F1B2D` + `#E76F51`) + firma email.
+8. ⏳ URL Google Maps corta de Rotterdam 3.
+9. ⏳ Confirmar definitivamente cómo gestionar "cómo va mi reparación" — Alex finge consulta hoy.
+
+## Learning capturado 2026-05-28
+
+- [[meta-waba-orfana-tras-desvincular-app-movil-recrear-via-api]] (NUEVO) — al eliminar la cuenta WhatsApp Business app, Meta puede dejar la WABA + Phone Number en estado huérfano (token válido pero `Object does not exist` en Graph API). Solución: recrear via API directamente, no esperar a que Meta libere los IDs antiguos.
+- [[whatsapp-cloud-api-vs-business-app-numero-exclusivo]] ya confirmado con caso real: un número en app móvil aparece como `platform_type=ON_PREMISE + status=DISCONNECTED` aunque no esté en On-Premise legacy real.
+
+## Bot Chatwoot v2 con tools (2026-05-28)
+
+Workflow `lv7pee2XAU5OngOB` actualizado: 17 nodos = 13 originales + 4 `toolHttpRequest` (`mirar_disponibilidad`, `reservar_cita`, `buscar_reserva`, `cancelar_cita`) reusando los mismos webhooks que la voz Retell. System prompt v2 enseña al LLM cuándo usar / cuándo no usar cada tool. Text del agente inyecta `[ctx phone=… name=…]` dinámico desde Edit Fields para que el bot no pida el phone al cliente. Verificado via API (nueva key n8n regenerada): 17 nodos activos + 4 conexiones `ai_tool`. Falta smoke E2E con mensaje real cuando Meta termine handshake webhook.
+
+## Chatwoot WhatsApp Cloud inbox (LIVE 2026-05-28)
+
+| Activo | Valor |
+|---|---|
+| Inbox ID | `2` (Channel::Whatsapp, provider=whatsapp_cloud) |
+| Phone | `+34 910 05 48 13` apuntando a Meta phone_number_id `1136826222847102` |
+| Callback URL (la que va en Meta App → Webhooks UI) | `https://chatecobox.agentesialabs.com/webhooks/whatsapp/+34910054813` |
+| Verify token (debe coincidir con Meta UI) | guardado en `.credentials.local` `CW_INBOX_WHATSAPP_VERIFY_TOKEN` |
+| Account webhook (Chatwoot → n8n bot) | id=1, only `message_created`, HMAC secret guardado |
+| Meta app suscrita a WABA | `POST /v18.0/1488289103073845/subscribed_apps` OK 2026-05-28 |
+| Plantillas HSM importadas auto al crear inbox | 3 PENDING (confirmacion_cita, recordatorio_48h, recordatorio_24h) |
+
+Webhook Meta UI (Manu) configurado 2026-05-28. Field `messages` suscrito. App en dev mode aún — entrega solo a WhatsApp de usuarios con rol app o en lista de recipients (campo "A" del use case). Por eso mensajes reales del user no llegaron hasta que confirmó número (+34617314938 era el suyo, no de Cristian — error de mi memoria, hub corregido).
+
+**Pipeline E2E verificado**: POST simulado `FIX_1779984161` (2026-05-28 18:02) → conv id 6 creada en Chatwoot → bot Alex respondió "Parece que no tengo tu nombre completo. ¿Cómo te llamas?" (LLM funcionando con system prompt v2).
+
+**Bug Chatwoot 3.x descubierto durante el debug**: `Webhooks::WhatsappEventsJob#get_channel_from_wb_payload` siempre concatena `"+"` al `display_phone_number` del payload (`"+#{metadata.display_phone_number}"`). Si el payload viene con `+` (como mis simulaciones curl), construye `"++34..."` → no encuentra channel → `channel.blank?` → return early silencioso. Meta real envía sin `+` según spec oficial, no afecta producción. Mover este learning a [[chatwoot-3x-whatsapp-cloud-display-phone-number-bug-doble-plus]] en próximo /obsidian-1.
 
 ## Bugs conocidos / cleanup pendiente
 
-- **Eventos smoke acumulados en GCal `ecobox360taller@gmail.com`** que requieren borrado manual: matrículas `5555ZZZ`, `5556ZZZ`, `4444RRR`, `3333FFF`, `7777BBB`, `8888XYZ`, `9999XYZ`, `1234ABC` (de 2024-06-13, ese es del primer test de voz que escapó al guard). El de Julián Fernández `2413AZF` ya borrado vía smoke Cancelar.
+- ✅ ~~Eventos smoke acumulados en GCal `ecobox360taller@gmail.com`~~ — 5 borrados 2026-05-28 vía workflow oneshot `_cleanup_smoke_gcal` (1 en junio 2024 + 4 en mayo 2026). Re-run idempotente devuelve 0. Workflow oneshot eliminado tras éxito.
+- ⏳ API key n8n empezó a devolver 401 tras PUT del bot v2 — healthz OK, webhooks OK, sólo `/api/v1/*` rechaza. JWT sin `exp` → probable rotación externa o restart del contenedor. Regenerar en `n8necobox.agentesialabs.com → Settings → API` y actualizar `.credentials.local` `N8N_API_KEY`.
+- ⏳ Retell flow audit hallazgo menor: `global_prompt` y nodo `n-collect-date` tienen "2026" hardcoded — debería usar `{{ano_actual}}` (como ya hace `n-confirm-cita`). No bloqueante.
 
 ## Archivos locales
 
