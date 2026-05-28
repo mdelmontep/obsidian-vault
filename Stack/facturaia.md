@@ -22,6 +22,8 @@ SaaS de facturación con envío a AEAT vía Verifactu. Repo: `/Users/manueldelmo
 
 El cliente HTTP del portal añade `/api/v1` automáticamente (`src/lib/facturaia/client.ts:43`). En `.env.local` poner solo el host: `FACTURAIA_API_URL=https://app.tufacturaia.com`.
 
+**Mapping client portal ↔ cliente_remote_id FacturaIA** vive en `agency-portal/src/lib/facturaia/tenant-cliente-mapping.ts` (`resolveTenantClienteRemoteIds`). Dos fuentes: `prospects.facturaia_cliente_id` + `cliente_remote_id` de sombras enlazadas a `agency_invoices`/`invoices`/`quotes` del tenant. Consumido por listado tenant y por proxy PDF (single source of truth). Ver [[ADR-023-mapping-client-portal-cliente-remote-id-facturaia]].
+
 ## Convenciones del repo
 
 - App Router (Next.js). Route Handlers, **no** Server Actions para mutaciones.

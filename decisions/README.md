@@ -46,3 +46,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 020 · 2026-05-25 · [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas|Datos emisor: template_config.emisor JSON único, columnas legacy deprecadas, sync explícito en código]] (TuFacturaIA)
 - 021 · 2026-05-25 · [[ADR-021-html-email-strings-vs-react-email-mjml|HTML strings tipados para 6 templates email vs React Email/MJML]] (TuFacturaIA)
 - 022 · 2026-05-27 · [[ADR-022-multidivisa-facturas-equivalente-eur-congelado|Facturas en divisa: equivalente EUR congelado + agregar siempre en EUR, VeriFACTU diferido]] (TuFacturaIA)
+- 023 · 2026-05-28 · [[ADR-023-mapping-client-portal-cliente-remote-id-facturaia|Mapping client portal ↔ cliente_remote_id FacturaIA via union de fuentes, sin migration]] (agency-portal)
