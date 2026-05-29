@@ -10,6 +10,9 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Outbox para integraciones externas (Drive sync, futuros)** — triggers BD AFTER UPDATE para cubrir múltiples entry points + hash de contenido para idempotencia + SKIP LOCKED para race + cascade revoke por external_id en OAuth. Ver [[outbox-trigger-bd-vs-hook-js-multiples-entry-points]] [[outbox-idempotencia-por-hash-contenido]] [[select-for-update-skip-locked-via-rpc-security-definer]] [[oauth-cascade-revoke-por-external-id-multi-org]]
+- **`supabase migration new` rompe la secuencia NNN_** — registra timestamp huérfano en schema_migrations. SQL aplicado a mano tampoco se registra. Reconciliar con `migration repair --status reverted/applied`, NO con `db pull`. Hook pre-push lo previene. Ver [[supabase-migration-new-rompe-secuencia-nnn-name]]
+
 - **Invitar a crear org sin saber email → token propio** — Supabase magic-link ata link al email. Tabla `*_signup_invites` + landing + consumo en callback (no en trigger SQL). Ver [[signup-invite-token-propio-vs-magic-link-supabase]]
 - **vi.fn(() => ...) sin rest param** — spread (...args) rompe con TS2556. Declarar `(..._args: unknown[])` en el spy. Ver [[vitest-vi-fn-sin-params-rompe-spread-args]]
 - **Bandeja staging ↔ tabla real con FK RESTRICT** — borrar de un lado debe sincronizar el otro o queda huérfano + blob bloat. Ver [[bandeja-staging-tabla-real-fk-restrict-borrar-sincroniza-ambos-lados]]

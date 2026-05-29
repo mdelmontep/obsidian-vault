@@ -47,3 +47,5 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 021 · 2026-05-25 · [[ADR-021-html-email-strings-vs-react-email-mjml|HTML strings tipados para 6 templates email vs React Email/MJML]] (TuFacturaIA)
 - 022 · 2026-05-27 · [[ADR-022-multidivisa-facturas-equivalente-eur-congelado|Facturas en divisa: equivalente EUR congelado + agregar siempre en EUR, VeriFACTU diferido]] (TuFacturaIA)
 - 023 · 2026-05-28 · [[ADR-023-mapping-client-portal-cliente-remote-id-facturaia|Mapping client portal ↔ cliente_remote_id FacturaIA via union de fuentes, sin migration]] (agency-portal)
+- 024 · 2026-05-29 · [[ADR-024-multidivisa-facturas-recibidas|Multidivisa facturas recibidas: FX en bandeja_ingesta congelado al aprobar]] (TuFacturaIA)
+- 025 · 2026-05-29 · [[ADR-025-drive-sync-outbox-vs-fire-and-forget|Drive sync de PDFs facturas usa outbox + worker, no fire-and-forget post-response]] (TuFacturaIA)
