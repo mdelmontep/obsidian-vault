@@ -293,6 +293,13 @@ Sesión 2026-05-29 cerró 5 PRs Drive sync (#85, #86, #87, #88) y reconcilió mi
 
 ## Smoke tests pendientes
 
+- **🔴 SMOKE plan-facturacion + admin/plans precio_anual (post PR #110 `9762eb6`, 2026-05-30, mig 189 PENDIENTE aplicar)**:
+  1. `supabase db push --linked` desde main limpio para aplicar mig 189 (añade `plans.precio_anual` con seed starter 24 / pro 65 / enterprise 165 €/mes).
+  2. Recargar `/settings?tab=facturacion` — debe renderizar la grid completa de 3 tarjetas con "Plan actual" pill en la del usuario + botón "Activar anual ({precio_anual}€/mes)" arriba si la org no tiene suscripción anual.
+  3. Texto cabecera muestra `Estas en el plan **Enterprise**` (mayúscula del campo `nombre`, no `enterprise` minúscula = señal del bug original).
+  4. `/admin/plans` — cada card con 2 inputs: Mensual y Anual + badge verde `−X%` calculado en vivo al editar. Cambiar precio anual de Pro a 70 → admin lo persiste → ver UI cliente actualizada. Vaciar input Anual → NULL en BD → botón "Activar anual" desaparece en cliente.
+  5. Auditoría parejas: 0 campos huérfanos adicionales encontrados en billing/admin/orgs por agente Explore 2026-05-30. Ver [[campo-huerfano-shape-sin-migracion-paralela]] para detección futura.
+
 - **🟢 Crear cliente vía WhatsApp E2E** (post-deploy PR #109 2026-05-30) — pedir al bot del receptor `pqSWkDIHqmSVHotB` "añade cliente Test SL NIF B12345674". Verificar respuesta conversacional con nombre + status. Repetir mismo NIF → debe responder "ya existía". Endpoint logs muestran `nif_prefix=B12,status=created` y luego `existing`. Rate limit dispara a 21ª llamada en mismo minuto (20/60s).
 
 - **🔴 SMOKE Stripe E2E post-deploy 2026-05-30** — sistema SaaS Fases 1-2.14 mergeado a main (PRs #91-#105) y migs 181-186 aplicadas. **Bloqueado en operacional fuera del repo**:
