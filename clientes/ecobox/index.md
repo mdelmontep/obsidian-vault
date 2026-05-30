@@ -138,6 +138,61 @@ Número `+34 910 05 48 13` (provider Netelip) llegó CONNECTED + CLOUD_API + VER
 
 - [[meta-waba-orfana-tras-desvincular-app-movil-recrear-via-api]] (NUEVO) — al eliminar la cuenta WhatsApp Business app, Meta puede dejar la WABA + Phone Number en estado huérfano (token válido pero `Object does not exist` en Graph API). Solución: recrear via API directamente, no esperar a que Meta libere los IDs antiguos.
 - [[whatsapp-cloud-api-vs-business-app-numero-exclusivo]] ya confirmado con caso real: un número en app móvil aparece como `platform_type=ON_PREMISE + status=DISCONNECTED` aunque no esté en On-Premise legacy real.
+- [[chatwoot-3x-whatsapp-cloud-display-phone-number-bug-doble-plus]] — Chatwoot 3.x `Webhooks::WhatsappEventsJob#get_channel_from_wb_payload` concatena `"+"` siempre al `display_phone_number`. Meta real envía sin `+` así que no afecta producción, pero rompe simulaciones curl con `+` literal.
+
+## Fixes 2026-05-29 — Smokes chat tool calls
+
+**Bug 1 — Bot Chatwoot llama tools con args NULL** (4 agentes en consenso). Causa raíz: `parameters.jsonBody` envuelto en `={{ JSON.stringify({...}) }}` global con todos los `$fromAI()` dentro. n8n langchain 1.9 NO puede extraer schema individual desde esa sintaxis. El LLM ve la tool como `query: {}` opaco → llama con objeto vacío. Retell funciona porque define JSON Schema explícito con `required:[...]`. **Fix aplicado**: los 4 `toolHttpRequest` (`mirar_disponibilidad`, `reservar_cita`, `buscar_reserva`, `cancelar_cita`) ahora tienen `jsonBody` literal JSON con `"={{ $fromAI('field', 'desc', 'type') }}"` por valor. Learning para vault: [[n8n-langchain-toolhttprequest-jsonbody-no-envolver-en-jsonstringify-global]].
+
+**Bug 2 — Workflow Reservar_cita acepta args null y miente al bot**. Cuando args null: Edit Fields colapsa todo a null, GCal create falla con "Bad request" pero `onError: continueRegularOutput` deja seguir, Respond OK devuelve `"Listo, . Te llega un WhatsApp"` con coma huérfana, emails se envían con basura. **Fix aplicado**: nuevo nodo `Validate input` después de Edit Fields con 3 conditions AND (name notEmpty, matricula notEmpty, preferred_date startsWith "2026"). Si rechaza → `Respond ValidateError` con `confirmation_text` instructivo que el bot lee al cliente. Learning para vault: [[n8n-workflow-validate-input-guard-evita-mentir-cuando-bot-manda-null]].
+
+**Bug 3 — Edit Fields sin optional chaining colapsa todo a null cuando body no tiene `args` wrapper**. Las expresiones usaban `$json.body.args.name || $json.body.name || 'Cliente'`. Cuando el bot chat manda directo `body.name` (sin `args` wrapper), `body.args.name` lanza `TypeError: Cannot read property 'name' of undefined` y n8n silently devuelve null. Por eso voz Retell (que sí wrapea `body.args`) funcionaba, chat no. **Fix aplicado**: cambiadas todas las expresiones de Edit Fields a `$json.body?.args?.name || $json.body?.name || 'Cliente'` con optional chaining. Learning para vault: [[n8n-expressions-optional-chaining-obligatorio-cuando-body-args-puede-faltar]].
+
+**Smokes pasados tras los 3 fixes** (2026-05-29):
+- Args null → workflow rechaza con `confirmation_text: "No pude reservar porque faltan datos..."` ✓
+- Args válidos test mode (`matricula=ZZZ0000`) → entra a Respond TEST sin tocar GCal ✓
+- Pendiente: smoke real desde Chatwoot bot con cliente final → debe crear evento GCal en `ecobox360taller@gmail.com` + enviar email
+
+## E2E multi-perspectiva 2026-05-29 — verificación post-fixes
+
+**4 agentes paralelos** (happy path chat, edge cases chat, voz Retell simulada via webhooks, auditor estado). Hallazgos:
+
+- ✅ **Voz Retell funciona al 100%** — 6 tests webhook con formato `body.args + body.call` pasan + 2 citas reales creadas hoy en producción + flujo cancel E2E OK
+- 🔴 **Bot Chatwoot rompía** — bot llamaba tool con `query:{}` y alucinaba "cita confirmada". Causa raíz: el `jsonBody` con expresiones `={{ JSON.stringify(...) }}` o `"={{ $fromAI }}"` o `"{{ $fromAI }}"` no se interpolaba — n8n mandaba el body LITERAL con las expresiones como strings al webhook. **Fix definitivo** (fix6): cambiar a `specifyBody: "keypair"` con `parametersBody.values[]` declarados uno por uno con `valueProvider: modelRequired/modelOptional`. Tras fix6, exec 197 confirmada con args reales + GCal event creado + emails HTML generados.
+
+Learning para vault: [[n8n-langchain-toolhttprequest-specifybody-keypair-es-el-formato-correcto-para-fromai]] — solo `specifyBody: "keypair"` permite a n8n declarar el schema correcto al LLM. Las formas `json` con `JSON.stringify` o expresiones inline NO funcionan porque n8n no parsea las expresiones dentro del jsonBody string a menos que TODO el campo empiece con `=` (lo cual rompe el JSON literal).
+
+Bonus de la auditoría: **plantillas HSM Meta ya APROBADAS** las 3 (`confirmacion_cita_ecobox_2`, `recordatorio_24h_ecobox`, `recordatorio_48h_ecobox`).
+
+## Pendientes (al cierre 2026-05-29, post 6 fixes encadenados)
+
+1. **Smoke real bot chat E2E del user** — conversación turn-by-turn desde WhatsApp `+34617314938`. El sistema YA está verificado E2E con POST simulado pero aún no con WhatsApp real (formato Meta entregando webhook completo). El POST simulado y el webhook real son idénticos en estructura, pero conviene confirmar.
+2. **Smokes funcionales adicionales chat**:
+   - Buscar reserva existente ("ver mi cita")
+   - Cancelar cita ("cancela mi cita")
+   - Info rápida ("a qué hora abrís", "dónde estáis")
+   - Handoff humano ("quiero hablar con persona") → label `humano` aplicado
+   - Pregunta fuera de scope ("hacéis ITV") → derivación
+3. **Cron diario actualizar fecha en Retell flow**: el `global_prompt` tiene `"HOY es viernes, 29 de mayo de 2026"` hardcoded. Crear workflow n8n cron diario 00:00 Madrid que PATCH al flow Retell con fecha del día (formato `dddd, D de MMMM de YYYY` en español) + recordatorio de fin de semana cerrado si aplica.
+4. **Recordatorios cron** (`QVPf25PZyLv0UHII`) tiene nodos `noOp` TODO send HSM. Implementar `httpRequest` POST a Meta Cloud API `/messages` con template `confirmacion_cita_ecobox_2` + nodo `postgres` que update `reminders_sent`. Activar cuando plantillas HSM aprueben.
+5. **Plantillas HSM**: las 3 siguen PENDING review Meta desde 2026-05-28. Revisar cada hora. UTILITY simples suelen aprobar <24h.
+6. **Meta health check** workflow (`Jbf5rZepHYM21MPQ`) tiene bug en nodo `IF error` ("Conversion error: string '' can't be converted to object"). El endpoint Meta /me responde 200 OK. El bug es del workflow, no del token. Cosmético — no urgente.
+7. **App Meta en dev mode**: solo recipients autorizados (Manu `+34617314938`). Para clientes reales → publicar app (necesita URL privacidad → necesita web).
+8. **App Secret + Verify Token Meta** para validar firma `X-Hub-Signature-256`. Chatwoot tolera sin esto pero es buena práctica. Añadir cuando haya web.
+9. **Logo PNG + color marca hex + firma email + URL Maps Rotterdam 3** (Cristian).
+10. **Decisión definitiva "¿cómo va mi reparación?"** — Alex finge consulta hoy.
+
+## Cambios infra reciente
+
+| Pieza | Antes | Después (2026-05-29) |
+|---|---|---|
+| LLM bot Chatwoot | gpt-4o-mini | **gpt-4o** (mismo que voz) |
+| jsonBody tools bot | `JSON.stringify({...})` global | literal con `$fromAI` por valor |
+| Edit Fields Reservar_cita | `body.args.X || body.X` (sin `?.`) | `body?.args?.X || body?.X` (optional chaining) |
+| Reservar_cita workflow | sin validate input | + nodo `Validate input` + `Respond ValidateError` |
+| Retell global_prompt | "HOY es lunes 25 de mayo" hardcoded | "viernes 29 de mayo" hardcoded (TODO: cron diario) |
+| Retell n-confirm-cita | "PASO 4 — Reservar_cita" suave | "PASO 4 ← TOOL OBLIGATORIA NO TERMINES SIN EJECUTARLA" |
+| Backup workflows pre-fix | — | `Ecobox/wf_bot_backup_pre_fix4.json` + `Ecobox/wf_reservar_backup_pre_fix4.json` + `Ecobox/retell_flow_backup_2026-05-29_pre_fix.json` |
 
 ## Bot Chatwoot v2 con tools (2026-05-28)
 
