@@ -138,6 +138,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 - **Visor PDF en Next** — iframe nativo = cromo feo (barra/miniaturas/gris); usar react-pdf (pdf.js) + `next/dynamic ssr:false` (DOMMatrix en SSR). Ver [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]]
 - **Pie PDF al fondo A4** — raíz flex column + `min-height:1122` + spacer `flex-grow` antes del pie. Ver [[anclar-pie-pdf-al-fondo-pagina-puppeteer-html]]
+- **Smoke con agent-browser (Vercel)** — en forms React: `click` no submite (usar `form.requestSubmit()`), `fill` no dispara onChange (keyboard type / setter+input), Mac select-all `Meta+a`. Ver [[agent-browser-cdp-formularios-react-requestsubmit]]
 
 ### TuFacturaIA Fase 2.15 HMAC v2 (2026-05-30)
 
