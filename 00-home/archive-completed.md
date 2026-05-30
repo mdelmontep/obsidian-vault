@@ -115,3 +115,4 @@ tags: [home, archivo]
 
 - TuFacturaIA — aplicar 3 scripts n8n WA Boost v1 (prompt + tools + branches) + 2 fixes cascada bug `$fromAI` (parser query + specifyInputSchema). Solo queda smoke #2 #7 end-to-end.
 - TuFacturaIA — plataforma de integraciones + cut-over OCR Google legacy a tokens cifrados (commit `9ce3760`, ADR-007, mig 170, 4 learnings nuevos). Reconnect del user pendiente como acción única.
+- 2026-05-30 · TuFacturaIA Stripe tiers integration — Fases 1-2.15 cerradas (14 PRs #91-#112), 42 callers n8n firmando HMAC v2 end-to-end, audit cross-PR con 4 agentes aplicado (P0 subscription.deleted plan_base + P0 change-plan orden + P1 cancel_at_period_end + P1 webhook idempotency + 2 P2). 1599/1599 tests verde. Setup Dokploy via API (FACTURAIA_SIGNING_SECRET + SIGNING_LEGACY_UNTIL=2026-07-30Z + NODE_FUNCTION_ALLOW_BUILTIN=crypto). Ver hub facturaia.md §Progreso 2026-05-30 + ADR-026.

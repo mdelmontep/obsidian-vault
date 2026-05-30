@@ -129,6 +129,14 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### TuFacturaIA Fase 2.15 HMAC v2 (2026-05-30)
+
+- **Dokploy compose pasa al container solo lo listado en YAML, no panel** — añadir env por panel sin tocar `composeFile` NO la inyecta. Editar ambos. Ver [[n8n-compose-env-vars-yaml-y-panel]]
+- **n8n task-runner sandbox sin `URL` global** — `new URL()` lanza, aunque `crypto` esté permitido. Regex inline para path+search. Ver [[n8n-task-runner-sandbox-sin-url-global]]
+- **n8n PUT workflow rechaza settings extra** — `callerPolicy`/`binaryMode` del GET previo dan 400. Filtrar a solo `executionOrder`. Ver [[n8n-public-api-put-workflow-settings-keys]]
+- **Inventario auth n8n: filtrar `.code` deja fuera toolCode + HTTP** — usar `'x-service-key' in json.dumps(parameters).lower()` en todos los tipos. Ver [[n8n-inventario-auth-incluye-toolcode-y-httprequest]]
+- **Stripe `subscription.deleted` por sub.id, no por kind** — handler que solo cubre `kind=fiscal_addon` ignora cancelaciones plan base → orgs en estado fantasma. Ver [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]]
+
 ### EcoBox / Retell voz E2E (2026-05-25/26)
 
 - **n8n `require('crypto')` bloqueado en task-runner** — Code node falla "Module disallowed". Hash puro JS FNV-1a × 3 seeds, charset `[0-9a-v]` válido GCal eventId. Ver [[n8n-crypto-module-bloqueado-task-runner-usar-fnv-puro]]

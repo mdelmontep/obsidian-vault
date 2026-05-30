@@ -10,6 +10,8 @@ tags: [n8n, kommo, workflows, api]
 ## Infra
 
 - `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` en compose para que `$env.VAR` funcione en Code nodes — sin esto, error `access to env vars denied`
+- **Dokploy: env nueva = editar panel Y composeFile YAML**. `compose.environment:` es la lista exacta que se exporta al container; panel solo aporta valores. Ver [[n8n-compose-env-vars-yaml-y-panel]]
+- `NODE_FUNCTION_ALLOW_BUILTIN=crypto` para `require('crypto')` en Code nodes. NO añade `URL` global — para parsear URLs usar regex inline. Ver [[n8n-task-runner-sandbox-sin-url-global]]
 - Nunca hardcodear keys en jsCode — usar `$env.VAR_NAME`. Supabase: usar JWT legacy (`eyJ...`), no `sb_secret_*`
 - Filtrar workflows por prefijo de cliente antes de tocar nada en instancias multi-cliente
 - `N8N_ENCRYPTION_KEY` idéntica en migración — si cambia, credenciales inutilizables
@@ -25,6 +27,8 @@ tags: [n8n, kommo, workflows, api]
 - `&&` en campo URL inline se rompe — usar editor de expresión completo o nodo Set previo
 - IF no permite AND/OR mixto — expresión JS en una sola condición
 - `$('Nodo')` falla si no se ejecutó — usar `$if($('Nodo').isExecuted, ..., fallback)`
+- **Public API `PUT /workflows/:id` rechaza `settings` con keys extra** (`callerPolicy`, `binaryMode` que vienen del GET). Filtrar a solo `executionOrder`; n8n re-aplica resto del estado anterior. Ver [[n8n-public-api-put-workflow-settings-keys]]
+- **Inventario callers auth: `endswith('.code')` deja fuera `toolCode` y `httpRequest`** — al migrar headers `x-service-key` o similar, inspeccionar `parameters` JSON-serializado en TODOS los tipos. Ver [[n8n-inventario-auth-incluye-toolcode-y-httprequest]]
 - Set node reemplaza `$json` — referenciar nodo fuente: `$('Webhook').first().json.body.args.X`
 - **Headers HTTP con `{{ $env.X }}` requieren `=` al inicio del valor** — sin el `=`, n8n manda literal `Bearer {{ $env.X }}` y la API rechaza con 401. El `jsonBody` ya lleva `=` por defecto, los headers no
 - **Redis GET node devuelve `$json.propertyName`, no `$json.value`** — IFs con `$json.value notEmpty` siempre dan FALSE pese a haber clave. Usar `$json.propertyName`
