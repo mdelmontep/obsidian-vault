@@ -19,7 +19,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
-- **TuFacturaIA — smoke modal detalle + ingesta (PR #121)** — rediseño modal Holded (split + pdf.js + DocumentLightbox zoom + Historial audit_log + marcar cobrada/email/forma-pago inline + foco conciliación `?movimiento=`) + pie PDF anclado en 4 plantillas + visor pdf.js en ingesta. Tras merge: PDF llena sin gris, clic→lightbox, regenerar PDF y ver pie al fondo, **verificar lightbox de imagen** (sin scan de prueba en org test). Ver [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]]
+- **TuFacturaIA — 2 smokes manuales del modal (PR #121/#122)** — ya verificado E2E con agent-browser: visor pdf.js sin gris, lightbox+zoom, Historial, marcar cobrada (propaga), forma de pago (persiste + propaga tras fix #122), foco conciliación. **Falta solo por mano:** (1) lightbox de **imagen** (subir un scan .jpg/.png a la bandeja, no había en org test); (2) **envío real de email** (no disparado para no spamear). Ver [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]]
 - **TuFacturaIA — 🟢 smoke WA multi-org crear cliente/proveedor (PR #118, endpoints vivos 2026-05-30)** — smoke E2E real WA pendiente (ver hub §Smoke).
 - **TuFacturaIA — smoke centro de incidencias + burbuja admin post-deploy** (commit `73c15bf` en main, migs 192/193 aplicadas) — forzar `cron_runs` error → burbuja roja en `/admin`; verificar NO falso positivo verifactu (orgs activas=0). Ver hub `facturaia.md` §Smoke.
 - **TuFacturaIA — smoke PR #116 admin invite email post-deploy** — reenviar bgchivite@agentesia.madrid desde admin panel + confirmar Resend delivered.
