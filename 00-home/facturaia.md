@@ -293,6 +293,74 @@ Sesión 2026-05-29 cerró 5 PRs Drive sync (#85, #86, #87, #88) y reconcilió mi
 
 ## Smoke tests pendientes
 
+- **🟡 SMOKE Email logs panel — body preview + override reenvío (PR #119 `fed6595`, 2026-05-30, mig 191 aplicada vía Dashboard SQL editor por pooler Supabase caído)** — deploy Dokploy `composeStatus: done` 17:16 CEST · cron `vB-YMtwpTGlZUesUFhEci` enabled · endpoint `/api/internal/email-bodies-retention-sweep` responde 401 sin firma (vivo). **Lo nuevo**: tabla `email_log_bodies` (1:1, 90d) guarda HTML/text/from/reply-to · drawer admin con preview iframe sandbox · búsqueda libre · filtros en URL · métricas health 7d · reenvío con override `to` · auditoría `resent_by_email` + `resent_to_override` · ESC/click-fuera cierran drawer · password_reset filtrable · eventos webhook expandibles.
+
+  **1) Body se persiste al enviar** (cualquier email nuevo crea fila en `email_log_bodies`):
+  - Disparar email: pedir OTP de login (`/login` → mete tu email → recibe código).
+  - Dashboard SQL editor: `SELECT count(*) FROM email_log_bodies;` → debe pasar de 0 a ≥1.
+  - `SELECT outbox_id, size_bytes, from_addr, reply_to_addr, recipient_at_send FROM email_log_bodies ORDER BY created_at DESC LIMIT 1;` → `size_bytes > 0`, `from_addr` = `verificacion@tufacturaia.com` (kind=otp) o `noreply@tufacturaia.com`.
+  - Si count NO sube: revisar logs container (`[email:send] body persist failed` aparece en warn si BD rechaza). El email igual se envía (never-throws); solo se pierde la preview.
+
+  **2) Drawer admin muestra el HTML renderizado**:
+  - `https://app.tufacturaia.com/admin/system?tab=email-logs` → click la fila del OTP recién enviado.
+  - Drawer abre por la derecha (640px). Header: subject del email.
+  - Campos visibles: Destinatario, Tipo (`otp`), Estado (`sent` o `delivered`), Provider, Org (con nombre si la fila tiene `org_id`), Creado (timestamp + "hace X min"), Resend ID, From, Reply-To si lo hay.
+  - Sección "Cuerpo del email": tamaño en KB visible arriba a la derecha, botón "Ver HTML renderizado" → al click, iframe sandbox 420px muestra el HTML real. **Esto es lo nuevo** — antes era ciego.
+  - "Ver texto plano" colapsable → muestra `<pre>` con el body_text.
+  - Cerrar drawer: con la X, con ESC, o click fuera. Los 3 deben funcionar.
+
+  **3) Filtros se reflejan en URL (bookmarkeable)**:
+  - En `/admin/system?tab=email-logs` cambiar dropdown Tipo → `otp`. URL pasa a `…?tab=email-logs&kind=otp`.
+  - Cambiar Estado → `sent`. URL → `…&kind=otp&status=sent`.
+  - Escribir en búsqueda libre → URL añade `&q=…`.
+  - Refrescar página (F5) → los 3 filtros se mantienen, no se pierden.
+  - Botón "Limpiar filtros" aparece cuando hay alguno activo → click vacía todos y limpia URL.
+
+  **4) Reenvío con override de destinatario**:
+  - Click una fila reenviable (kinds: `factura_enviada`, `presupuesto_enviado`, `team_invite`, `cobro_reminder`, `cobro_overdue`, `colleague_phone_change`, `notify_quota`, `generic`). NO `otp` (efímero, no reenviable).
+  - Si no hay ninguna a mano: enviar una factura test desde `/emitidas` a un cliente cualquiera.
+  - En el drawer hay caja "Reenviar" con input opcional "Destinatario (override)". Dejarlo vacío reenvía al `recipient` original.
+  - Meter un email distinto válido → click Reenviar → `confirm()` browser → "Reenvío encolado".
+  - Listado se refresca, aparece fila hija nueva. Click la hija → drawer muestra "Reenviado por: m.delmonte.p@agentesia.madrid" y "To override: ese-email-de-prueba@…".
+  - SQL: `SELECT id, recipient, payload_meta->>'resent_by_email' AS resent_by, payload_meta->>'resent_to_override' AS to_override, parent_outbox_id FROM email_log ORDER BY created_at DESC LIMIT 3;` → la fila reenviada debe tener los 3 campos rellenos y `parent_outbox_id` apuntando al original.
+  - Validación: meter email malformado en el input → no se envía, mensaje "Email inválido" en rojo bajo el input, botón Reenviar deshabilitado.
+
+  **5) Búsqueda libre — 5 ejes**:
+  - Por asunto: escribir parte del subject → muestra solo coincidencias.
+  - Por `resend_id`: copiar de una fila → buscar → encuentra esa fila exacta.
+  - Por `factura_id` (UUID): coger de SQL `SELECT id FROM facturas LIMIT 1;` → buscar → muestra todos los emails de esa factura.
+  - Por `presupuesto_id` (UUID): igual.
+  - Por número de factura: copiar `F-2026-001` o similar de `/emitidas` → buscar → muestra el email asociado.
+
+  **6) Métricas health_7d (arriba del listado)**:
+  - 4 tiles: Total 7d, Entrega, Bounce, Failed.
+  - Entrega = (delivered+opened+clicked)/total_no_pending → debe pintar verde si ≥90%, naranja si <90%.
+  - Bounce/Failed pintan rojo si >2%/1% respectivamente.
+  - Con pocos envíos (N<20) los porcentajes son ruido — verificar solo que el cálculo no da NaN ni se muestra "—" cuando hay datos.
+
+  **7) Eventos webhook expandibles**:
+  - Click una fila `delivered` o `bounced` (Resend envía webhooks varios segundos tras `sent`).
+  - Sección "Eventos Resend (N)" lista los `event_type` (sent, delivery, opened, bounced…) con timestamp.
+  - Click un evento → expande mostrando el payload completo del webhook (útil para depurar bounces: `payload.bounce.type` / `payload.bounce.subType`).
+  - Si está vacío: el webhook no llegó todavía o `RESEND_WEBHOOK_SECRET` no está bien configurado (revisar env compose).
+
+  **8) Cron retención 90d** (no hay nada que limpiar todavía):
+  - Panel Dokploy → Schedules → `email-bodies-retention-sweep`.
+  - Primera corrida automática: 03:30 UTC siguiente (mañana 2026-05-31).
+  - Tras la corrida, logs deben mostrar `{"ok":true,"summary":{"deleted":0,"retention_days":90}}` (vacío porque ningún cuerpo tiene >90d aún).
+  - Para forzar manual: panel Dokploy → click "Run now" en el cron.
+  - Verificar `summary.retention_days = 90` (sanity check no se cambió el valor).
+
+  **9) Acceso solo superadmin**:
+  - Loggearse con cuenta NO superadmin → `/admin/system?tab=email-logs` debe redirigir o devolver 403/404.
+  - `requireAdmin()` ya gating estaba antes de este PR, solo verificar que no se rompió.
+
+  **Recovery si algo falla**:
+  - Body no aparece en drawer → revisar `email_log_bodies` tiene la fila. Si no, ver logs container con `[email:send] body persist failed`.
+  - Iframe en blanco → el HTML está mal formado (CSS estricto del sandbox). Ver `SELECT body_html FROM email_log_bodies WHERE outbox_id='…'` para inspeccionar.
+  - Filtros no respetan URL al refrescar → SSR mismatch; revisar `readFiltersFromUrl` está en `useEffect` con Promise.resolve (no en initialState).
+  - Reenvío 422 `cannot_resend_legacy_row` → fila pre-mig 152 sin `factura_id` en meta. Esperado para filas antiguas, no es bug nuevo.
+
 - **🔴 SMOKE plan-facturacion + admin/plans precio_anual (post PR #110 `9762eb6`, 2026-05-30, mig 189 PENDIENTE aplicar)**:
   1. `supabase db push --linked` desde main limpio para aplicar mig 189 (añade `plans.precio_anual` con seed starter 24 / pro 65 / enterprise 165 €/mes).
   2. Recargar `/settings?tab=facturacion` — debe renderizar la grid completa de 3 tarjetas con "Plan actual" pill en la del usuario + botón "Activar anual ({precio_anual}€/mes)" arriba si la org no tiene suscripción anual.
@@ -594,6 +662,17 @@ Reglas para el motor de conflictos:
 - Cuando una entrada llegue a `[hecho]` y sea hito relevante → mover a `## Histórico de hitos` con fecha + 1 línea.
 
 <!-- nuevas entradas debajo, lo más reciente arriba -->
+- 2026-05-30 (noche · fix panel `/admin/ia-ops` "Coste total IA $0.00") · `[hecho · main · 2 archivos + test actualizado · lint+typecheck+build+tests verde]` · **Panel "Observabilidad IA" mostraba todo el coste a $0.00 aunque había actividad copiloto/enrich registrada.** Tres causas independientes diagnosticadas, dos arregladas:
+  - **Causa 1 (BUG REAL — columna nullable nunca escrita)**: el agregado `getCopilotoSummary` en `src/lib/admin/ia-ops/queries.ts:271` sumaba `cost += t.cost_usd` desde `copiloto_tool_calls`, pero el INSERT en `src/app/api/copiloto/message/route.ts:188-203` solo pasaba `tool_name, params_hash, destructive, confirmed_*, success, error, duration_ms` — `cost_usd, tokens_in, tokens_out` quedaban NULL. Auditado contra BD: 4 filas últimos 7d, `n_cost_set=0`. **Fix**: derivar coste al vuelo desde `copiloto_mensajes` (rol=assistant, modelo, tokens — sí se persisten) con `estimateCostUsd(modelo, in, out)` ya existente en `src/lib/conciliacion/ai-enrich.ts:281`. Fuente única, sin migración BD. La columna `cost_usd` de tool_calls queda informativa-no-load-bearing. **Antes del fix**: $0.00. **Después**: $0.0396 (3 msgs asistente gpt-4o, 14.656 in + 292 out).
+  - **Causa 2 (cosmético — formateador aplastaba sub-centavo)**: `fmtUsd` en `ia-kpi-strip.tsx:11` devolvía `'$0.00'` para cualquier `v < 0.01`. El único enrich run real costó `$0.000476` (medio milidólar) → mostraba "$0.00" indistinguible de gasto cero. **Fix**: `$0.00` solo si `=== 0`; sub-centavo con 4 decimales (`$0.0005`); 4 decimales hasta $10; 2 decimales >$10.
+  - **Causa 3 (no era bug)**: tab "Crons IA" sin badge numérico en mi pegado del panel. BD confirma 5 crons IA del registry con actividad reciente (enrich-batch 1586 runs/30-05, anomaly-batch 426, bot-error-backfill 737, run-module-suggestions 24, recompute-sugerencias 8). `Tabs.tsx:104` renderiza count si `> 0`. Probable corte de copy/paste — el badge debe aparecer al recargar.
+  - **Patrón generalizable**: si un panel agrega columna nullable que requiere writer separado, riesgo alto de "agregado siempre 0". Auditoría 60s: `select count(*), count(col) from tabla where created_at > now()-Xd`. Si `count(col) << count(*)`, hay bug. Preferir derivar de columnas que ya se escriben. Ver [[coste-derivado-de-tokens-mensaje-vs-columna-tool-calls-vacia]]. Aplicable a futuras métricas de observabilidad.
+  - **Archivos tocados**: `src/lib/admin/ia-ops/queries.ts` (import + lógica suma desde msgs) · `src/app/(admin)/admin/ia-ops/components/ia-kpi-strip.tsx` (fmtUsd) · `src/lib/admin/ia-ops/__tests__/queries.test.ts` (test "agrega coste total enrich + copiloto" actualizado: tool_call con `cost_usd:null`, msg asistente con `modelo:'gpt-4o-mini', tokens_out:50000` para coste teórico $0.03).
+  - **Validación**: vitest 14/14 verde (2 suites), lint clean (eslint), typecheck clean (post-build cache válido), build clean.
+  - **NO commiteado aún** — cambios en working tree. Esperar OK del user para PR.
+
+- 2026-05-30 (noche · fix panel admin storage "Umbral 0 MB") · `[hecho · PR #120 en main · helper compartido + 8 tests]` · **Panel `/admin/system?tab=storage` mostraba "Umbral aviso 0 MB" y TODAS las orgs en rojo.** Causa raíz clásica del `??` nullish coalescing con env declarada vacía: `null ?? "" === ""` (no nullish) → `Number("") === 0` → `bytes > 0` para cualquier org. Env `STORAGE_QUOTA_WARN_MB=""` heredado de `.env.example` y propagado a Dokploy. **Fix** PR #120: helper compartido `src/lib/storage/parse-warn-mb.ts` (rechaza `null/undefined/""/NaN/Infinity/≤0`, devuelve null → fallback) reutilizado en los 3 callers: `/api/admin/storage` (panel — bug visible), `/api/admin/alerts` (otra pestaña con misma pinta), `/api/internal/storage-quota-check` (cron — refactor, ya tenía guard inline). 8 tests vitest. Aplicable a cualquier env var numérica con `??`: el patrón `??` cubre `null/undefined` pero NO `""`, y `Number("") === 0` rompe lógicas tipo "umbral", "ttl", "retry count". Ver [[env-vacia-rompe-default-con-nullish-coalescing-numeric]] + incidente.
+
 - 2026-05-30 (tarde-noche · alta + archivar clientes WhatsApp E2E) · `[hecho · 4 PRs en main · migs 188+190 aplicadas · tool n8n crear_cliente productiva]` · **Alta de cliente por WhatsApp + soft-delete (archivar) end-to-end.** Sprint completo en una sesión: backend + UI + tool n8n + audit + bugfix iterativo en producción real.
   - **PR #109** Alta cliente UI + endpoint internal — botón "+ Nuevo cliente/proveedor" en `clientes-view.tsx` (modal create reutiliza el de edit + validación NIF inline) + `POST /api/internal/voice/clientes/crear` con HMAC + rate limit 20/60s + idempotencia `(org_id, lower(nif))` + retry 23505. Helper canónico `src/lib/fiscal/nif.ts` extendido a discriminated union `{ok,tipo,normalized}|{ok:false,reason}` (12/12 tests). 4 agentes paralelos (DB+Backend+Frontend+Auditor cross-PR). **Mig 188** UNIQUE INDEX parcial `(org_id, lower(nif))` en clientes y proveedores. Tool n8n `crear_cliente` instalada en receptor `pqSWkDIHqmSVHotB` (ID real, CLAUDE.md tenía obsoleto `zYcHHa8jWXB6dY5i` — corregido más abajo) con `specifyInputSchema` + system prompt patcheado.
   - **PR #114** endpoint devuelve datos del cliente — bug detectado en prod: NIF B42802611 ya existía como `sansee` (test legacy 2026-05-28) pero el bot decía solo "ya existía" sin nombre. Endpoint ahora devuelve `cliente:{id,nombre,nif,empresa,email,telefono,direccion,cp,ciudad,pais}` en `created` / `existing` / `restored`. System prompt actualizado para formatear *"En `<org>` ya hay un cliente con NIF X registrado como `<nombre>`. ¿Es el mismo o quieres editarlo?"*.

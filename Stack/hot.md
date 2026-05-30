@@ -54,6 +54,8 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **Saldo-actual + serie histórica = doble conteo** — no pasar saldo-de-hoy como `saldoInicial` a un forecast que acumula desde meses pasados; sumar saldo real + solo neto futuro. Ver [[cashflow-saldo-actual-mas-serie-historica-doble-conteo]]
 - **Tool conversacional en agente "solo JSON"** — envolver la respuesta en el `{tipo}` que el parser enruta (`conversacion`) o el parser revienta; distinguir tools lectura/acción para `ok=true`. Ver [[agente-llm-json-estricto-tool-conversacional-envolver-en-tipo]]
 - **Mock de función compartida = falso verde** — el test del consumidor no ve si la llama con el arg equivocado. Test de integración o aserción sobre los args. Ver [[mock-funcion-compartida-en-test-endpoint-falso-verde-composicion]]
+- **Panel suma columna que ningún writer rellena → siempre 0** — INSERT olvida `cost_usd/tokens_in/out` aunque la columna exista. Auditoría: `select count(*), count(col)` — si `col << *` y el panel suma `col`, hay bug. Preferir derivar al vuelo desde columnas que ya se escriben. Ver [[coste-derivado-de-tokens-mensaje-vs-columna-tool-calls-vacia]]
+- **Formateador `< $0.01 → "$0.00"` esconde gasto real** — copy "$0.00" es indistinguible de gasto cero vs sub-centavo. Mostrar 4 decimales en sub-centavo (`$0.0005`) o `<$0.01`. Reservar `$0.00` para `=== 0` exacto. Ver [[coste-derivado-de-tokens-mensaje-vs-columna-tool-calls-vacia]]
 
 Patrones que aplican siempre, no expiran. Lo más reusado.
 
