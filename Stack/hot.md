@@ -134,6 +134,11 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — visor PDF + modal detalle Holded (2026-05-30, PR #121)
+
+- **Visor PDF en Next** — iframe nativo = cromo feo (barra/miniaturas/gris); usar react-pdf (pdf.js) + `next/dynamic ssr:false` (DOMMatrix en SSR). Ver [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]]
+- **Pie PDF al fondo A4** — raíz flex column + `min-height:1122` + spacer `flex-grow` antes del pie. Ver [[anclar-pie-pdf-al-fondo-pagina-puppeteer-html]]
+
 ### TuFacturaIA Fase 2.15 HMAC v2 (2026-05-30)
 
 - **Dokploy compose pasa al container solo lo listado en YAML, no panel** — añadir env por panel sin tocar `composeFile` NO la inyecta. Editar ambos. Ver [[n8n-compose-env-vars-yaml-y-panel]]
