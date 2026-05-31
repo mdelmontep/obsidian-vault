@@ -19,7 +19,7 @@ tags: [simarro, n8n, retell, supabase, calendar, routing, citas]
 - **Single source of truth del mapeo = tabla `agents`** (`agent_key, display_name, calendar_id, active`), 8 agentes. NO se persiste el agente resuelto en `properties` (solo el texto crudo normalizado); la resolución se hace al vuelo.
 - **RPC `resolve_property_calendar(idealista_id)`** (SQL, match por subconjunto de tokens) devuelve el `calendar_id` o fallback. La usan las 3 ramas (voz/WhatsApp/disponibilidad) → lógica en un solo sitio.
 - **Fallback = `consultingsimarroproperties@gmail.com`** (id real). El literal `'primary'` NO vale en GoogleCalendar `mode:'id'` (bug encontrado y corregido).
-- **Buffer solo en disponibilidad** (no al crear evento) — es donde importa que no se ofrezcan horas que solapen.
+- **Buffer en disponibilidad + recheck fail-open en reserva** (desde 2026-05-31): el cálculo va en `Mirar_disponibilidad`; además `Reservar_crm` re-valida antes de crear el evento (anti-doble-booking). Fail-open: solo bloquea con `motivo='slot_ocupado'` explícito.
 
 ## Gotchas encontrados
 - **PostgREST `Accept: application/vnd.pgrst.object+json`** → n8n no lo auto-parsea, mete el JSON como **string bajo `.data`**. La expresión del calendario lo parsea defensivamente (`typeof r.data==='string' ? JSON.parse(r.data) : r`) y cae al fallback ante cualquier error.
@@ -45,13 +45,22 @@ tags: [simarro, n8n, retell, supabase, calendar, routing, citas]
 
 ### Técnico pendiente
 4. Revertir vivienda de test: `UPDATE properties SET agent=NULL WHERE idealista_id='110751938';`
-5. Limpiar eventos de test en Google Calendar (Julián 12:00, Juan 12:00 del 29 mayo).
-6. Publicar agente Retell: `PATCH /update-agent/agent_7b02aa7680b8798ea033fab2c2` con `is_published: true`.
+5. ✅ Agente Retell **PUBLICADO** (v29, 2026-05-31). Método correcto: `POST /publish-agent-version/{id}` `{version}` — NO `PATCH update-agent is_published` (obsoleto). Ver [[retell-llm-cambios-sin-publish-agente-no-afectan-llamadas]].
 
 ### Verificado ✓ (tests 2026-05-28)
 - WA confirmación llega para contactos nuevos de voz ✓
 - Ana no pregunta "mañana o tarde" si el cliente ya dio hora ✓
 - Ana no improvisa preguntas RGPD ✓
-- `Mirar_disponibilidad` pasará el `idealista_id` al calendario correcto (fix aplicado, pendiente E2E con propiedad con agente real)
+- `Mirar_disponibilidad` pasa el `idealista_id` al calendario correcto ✓
+
+## Fix slots + go-live (2026-05-31)
+Bug: el LLM ofrecía horas que invadían el buffer (recibía el rango bloqueado en prosa y no descontaba la visita de 1h). Fix integral:
+- **`Mirar_disponibilidad` devuelve `slots`** (lista de horas en punto YA filtradas por buffer), no prosa. El LLM solo elige; prompt reescrito (state machine + tools_gating + chatbot WA). Ver [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]].
+- **Sub-workflow `Calc_Disponibilidad`** (`kSgDVB8miWnvQFOJ`) = single source of truth del cálculo de buffer (modos `listar`/`validar`), invocado por disponibilidad y por la reserva. En esta n8n los sub-workflows referenciados deben estar **publicados/activos**.
+- **Ventana de lectura GCal ampliada al día completo** (antes ±30 min perdía citas colindantes cuyo buffer invade la franja).
+- **Recheck fail-open en `Reservar_crm`** (ambas rutas voz + WhatsApp) antes de crear el evento.
+- **Ana exige nombre y apellido** antes de reservar; prohibido `name` vacío o genérico ("cliente"/"usuario"). Retell v29.
+- **E2E verificado**: llamada simulada (sin mock) → lead Kommo (Lead Caliente) + evento en Google Calendar. Ver [[retell-simulation-test-tool-mocks-y-sin-mock-e2e-real]].
+- Gotcha: la rama de voz responde "confirmado" con respond-fast ANTES de crear el evento (timeout 6s) → el recheck solo evita el doble-booking físico, no cambia la respuesta al cliente.
 
 Ver también [[estado-actual]].

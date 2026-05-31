@@ -5,17 +5,16 @@ source: claude-code-session
 tags: [retell, voz, gotcha]
 ---
 
-`PATCH /update-retell-llm/{id}` actualiza `general_prompt` y `general_tools` del LLM. Pero si el agente que lo usa tiene `is_published: false`, los cambios solo se aplican al **playground** (test web), NO a llamadas reales del número asignado.
+`PATCH /update-retell-llm/{id}` actualiza `general_prompt` y `general_tools`. Pero si el agente tiene `is_published: false`, los cambios solo se aplican al **playground**, NO a llamadas reales del número asignado.
 
-Síntoma: cambias el prompt, pruebas en playground (funciona), llamas al número (sigue con el comportamiento viejo).
+Síntoma: cambias el prompt, funciona en playground, llamas al número → comportamiento viejo.
 
-Fix tras cambios sustanciales:
-```bash
-curl -X PATCH https://api.retellai.com/update-agent/{agent_id} \
-  -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
-  -d '{"is_published": true}'
-```
+**Publish correcto (instancias con versioning, 2026-05+):**
+`POST /publish-agent-version/{agent_id}` con `{"version": N}`. El antiguo `PATCH /update-agent {is_published:true}` ya **no** publica ahí.
 
-Verificar con `GET /get-agent/{id}` → `is_published: true`. Cada nuevo PATCH al LLM o al agente puede requerir re-publicar (verificar comportamiento por versión de Retell).
+**El LLM publicado es inmutable** → para editarlo:
+1. `POST /create-agent-version/{agent_id}` con `{"base_version": N}` → crea draft N+1 (LLM también v N+1).
+2. `PATCH /update-retell-llm/{id}?version=N+1` con los cambios.
+3. `POST /publish-agent-version/{agent_id}` `{"version": N+1}`.
 
-Complemento: los **phone numbers** anclan `inbound_agent_version` explícita en su config. `update-agent` crea versión draft pero las llamadas siguen usando la del phone hasta `update-phone-number/+34X` con `inbound_agent_version: <nueva>` (o `0` para "latest"). Cambio típico que olvidas: actualizas webhook/prompt, llamas al número, sigue sin efecto → phone está clavado en versión vieja.
+Verificar `GET /get-agent/{id}` → `is_published:true` + `version`/`response_engine.version` correctos. Probar comportamiento con [[retell-simulation-test-tool-mocks-y-sin-mock-e2e-real]].

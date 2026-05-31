@@ -81,9 +81,15 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 1. **Ramón añade `agente:` a descripciones de Idealista** — actualmente `properties.agent = NULL` en TODAS las viviendas → el routing por agente siempre cae a fallback (calendario general). Sin esto, las citas van al calendario equivocado.
 2. **Correr sync tras punto 1**: `Lanzar scrape Simarro (manual)` (workflow `3zBDpPwBYLZgMink`) → poblar `properties.agent`.
 3. **Test E2E routing**: llamada voz → vivienda con agente real → verificar en n8n que `RPC Cal Disp source=agent` y evento en calendario del agente.
-4. **Publicar agente Retell**: `PATCH /update-agent/agent_7b02aa7680b8798ea033fab2c2` `{"is_published": true}` — pendiente desde inicio, nunca se publicó.
+4. ✅ **Agente Retell PUBLICADO** (v29, 2026-05-31). Método correcto = `POST /publish-agent-version/{id}` `{version}` (el `PATCH update-agent is_published` anotado antes era OBSOLETO, no funciona en esta instancia con versioning).
 5. **Crear cred SMTP Gmail** en n8n con App Password de `simarroproperties@gmail.com`. Cred actual `oKRmYFhljczyvzV8` es fantasma → cero emails enviados.
-6. **Limpiar restos de test**: eventos calendario (Julián 12:00, Juan 12:00 del 29 mayo) + leads test Kommo (IDs `28211029`, `28211091`, `28211167`) desde UI.
+6. **Limpiar restos de test**: leads test Kommo de la sesión 2026-05-31 (`32260874` "Lead voz" + `32260174`/`32260184`/`32260262`/`32260290`/`32260318`/`32260370` "TEST…BORRAR" + el de "Ramon Demo" tel 600999888) desde UI; más legacy `28211029`/`28211091`/`28211167`.
+
+## Sesión 2026-05-31 — disponibilidad con buffer real + go-live voz
+- **Bug del buffer resuelto**: el LLM ofrecía horas que invadían el margen entre visitas. Causa: `Mirar_disponibilidad` devolvía prosa y delegaba el cálculo al LLM. Fix: el webhook devuelve `slots` (lista pre-computada), sub-workflow `Calc_Disponibilidad` (`kSgDVB8miWnvQFOJ`) single source of truth, ventana de lectura GCal al día completo, recheck fail-open en `Reservar_crm`. Ana exige nombre completo. Detalle en [[routing-citas-por-agente]].
+- **Ana Retell publicada v29.** Chatbot WhatsApp actualizado al formato `slots`.
+- **E2E verificado** (simulación sin mock → flujo real): lead Kommo + evento Google Calendar. Confirmado por Ramón viendo la reserva en `consultingsimarroproperties@gmail.com`.
+- **Bloqueante real para routing por-agente sigue siendo**: Ramón añade `agente:` en Idealista (mientras tanto TODO cae en el calendario general).
 
 ## Pendientes no bloqueantes
 

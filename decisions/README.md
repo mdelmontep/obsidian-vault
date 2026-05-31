@@ -49,3 +49,5 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 023 · 2026-05-28 · [[ADR-023-mapping-client-portal-cliente-remote-id-facturaia|Mapping client portal ↔ cliente_remote_id FacturaIA via union de fuentes, sin migration]] (agency-portal)
 - 024 · 2026-05-29 · [[ADR-024-multidivisa-facturas-recibidas|Multidivisa facturas recibidas: FX en bandeja_ingesta congelado al aprobar]] (TuFacturaIA)
 - 025 · 2026-05-29 · [[ADR-025-drive-sync-outbox-vs-fire-and-forget|Drive sync de PDFs facturas usa outbox + worker, no fire-and-forget post-response]] (TuFacturaIA)
+- 026 · 2026-05-29 · [[ADR-026-saas-billing-stripe-hmac-fases-1-2|SaaS billing Stripe + HMAC fases 1-2]] (TuFacturaIA)
+- 027 · 2026-05-31 · [[ADR-027-disponibilidad-slots-precomputados-vs-calculo-en-llm|Disponibilidad de citas: backend devuelve slots pre-computados, el LLM no calcula]] (Simarro)
