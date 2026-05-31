@@ -43,30 +43,15 @@ Sesión 2026-05-31 implementó la pestaña Ajustes → **Seguridad** completa (a
 - Pre-commit verde (lint/typecheck/build). 1 circular preexistente ajeno (`lib/integrations/*`).
 - Aprendizaje técnico → [[supabase-mfa-totp-integracion-gotchas]].
 
-**Pasos para cerrar (próxima sesión):**
-1. `git commit` del working tree (rama actual `feat/factura-detail-split-modal` — valorar rama propia `feat/seguridad-2fa`).
-2. **Aplicar mig 196** a prod: `supabase db push --linked` desde main limpio (sin ella el 2FA falla en runtime). Verificar `schema_migrations` 196 + tablas + RPCs.
-3. **Reiniciar `npm run dev`** (Turbopack no recarga middleware).
-4. Actualizar manuales: `manual-usuario.md` (activar 2FA + recuperación) + `manual-admin.md` (política org).
-5. **Smoke 2FA E2E**: activar 2FA (QR Google Authenticator → código → guardar recovery) → logout → login pide TOTP → recovery code desactiva factor → enforcement org (activar require_2fa, user sin 2FA bloqueado tras gracia) → inactividad cierra sesión.
+**✅ CERRADO 2026-05-31** — código en main (`642a203`), mig 196 aplicada y verificada en prod (tablas `mfa_recovery_codes` + `org_security_policies` + RPCs), manuales actualizados (`b28f4ea`), **smoke E2E agent-browser verde** (activar TOTP con código real → login pide código → 8 recovery codes → relogin OK → enforcement toggle visible; cuenta dejada limpia vía service-role). Residual menor: probar recovery-code + inactividad (no automatizables) + badge `/admin/plans` (superadmin).
 
-**P0 — DRIVE SYNC — completar wiring final (sesión 2026-05-29 dejó 95% hecho, falta 5% operativo):**
+**P0 — DRIVE SYNC — ✅ INFRA ACTIVADA 2026-05-31:**
 
-Sesión 2026-05-29 cerró 5 PRs Drive sync (#85, #86, #87, #88) y reconcilió migraciones (172, 173, 176 registry + 177, 178, 179 nuevas aplicadas). Workflow n8n creado pero **inactivo** (ID `TwDd1OkMqr3nhSso`) porque smoke directo del endpoint `/api/internal/drive-sync-dispatcher` devolvió **401** con la `FACTURAIA_SERVICE_KEY` del `.env.local`. Lo mismo con `webhook-dispatcher`. Hipótesis: la key de prod fue rotada y `.env.local` quedó con la vieja. Sin resolver esto, NINGÚN cron interno con `withCronTracking` funciona.
+Workflow n8n `Drive Sync - FacturaIA` (`TwDd1OkMqr3nhSso`) **activado y verificado** (2 ejecuciones `success` → auth n8n→`drive-sync-dispatcher` prod OK). **El bloqueo "mismatch FACTURAIA_SERVICE_KEY" NO existía**: la key de prod-app == n8n (confirmado en panel Dokploy). El 401 de 2026-05-29 era porque el `.env.local` difería de prod (irrelevante: el flujo real corre en prod, no en local). Solo faltaba activar el workflow. El nodo HTTP apunta a `app.tufacturaia.com/api/internal/drive-sync-dispatcher` con header `x-service-key: $env.FACTURAIA_SERVICE_KEY` (legacy aceptado: `SIGNING_LEGACY_UNTIL` no vencido). Ver [[dokploy-api-env-vive-en-composefile-no-en-campo-env]].
 
-**Pasos exactos para la próxima sesión (~10 min):**
+**Residual (acción user, smoke E2E con factura real):** `/settings?tab=integraciones` → conectar Google Drive (OAuth) → emitir factura → al minuto siguiente verla en Drive jerarquía `año / tipo / mes / <num> <cliente>.pdf` + `drive_sync_queue.status='synced'` con `drive_file_id` poblado. (PRs base #85/#87/#88; arquitectura en §Progreso "DRIVE SYNC ARCHITECTURE 2026-05-29".)
 
-1. **Verificar `FACTURAIA_SERVICE_KEY` en Dokploy** — panel `https://dokploy.tufacturaia.com/` → proyecto `tufacturaia-prod` → compose `tufacturaia-app` (`56B2b1ypWx3Xzdr06eYtG`) → Environment Variables → buscar `FACTURAIA_SERVICE_KEY`.
-   - Si EXISTE: copiar valor → reemplazar en `/Users/manueldelmonte/facturaia/.env.local` → `curl POST /api/internal/drive-sync-dispatcher -H 'x-service-key: $FACTURAIA_SERVICE_KEY'` debe devolver 200 con `{claimed:0, synced:0, ...}`.
-   - Si NO EXISTE: `openssl rand -hex 32` → añadir al compose `tufacturaia-app` Y al compose n8n con MISMO valor → Deploy (no Restart). 5 min redeploy.
-2. **Confirmar en n8n** que la env `FACTURAIA_SERVICE_KEY` está disponible en el container (usar misma técnica que email-poll legacy con `SUPABASE_SERVICE_ROLE_KEY`).
-3. **Activar workflow `Drive Sync - FacturaIA`** (ID `TwDd1OkMqr3nhSso`): `curl -X POST 'https://n8n.tufacturaia.com/api/v1/workflows/TwDd1OkMqr3nhSso/activate' -H 'X-N8N-API-KEY: ...'`.
-4. **Smoke end-to-end Drive sync** (acción user en navegador): `/settings?tab=integraciones` → card Google "Conectado" → bajo email aparece "Archivar en Drive: sin configurar · **Configurar**" → click → modal wizard. (a) Default "Crear carpeta nueva" con nombre editable. (b) Click "Activar archivo en Drive" → carpeta creada en raíz Drive del user. (c) Card actualiza a "Archivando en *Facturas TuFacturaIA* · Pausar · Cambiar". (d) Emitir factura nueva → al minuto siguiente verla en `Facturas TuFacturaIA / 2026 / Facturas emitidas / 05-mayo / 2026-05-29 F-A-0023 Cliente.pdf`. (e) Verificar `drive_sync_queue` row con `status='synced'` y `drive_file_id` poblado.
-5. **Bonus follow-up (1h, opcional)**: cron admin semanal que alerte si alguna `integration_connections.status IN ('error','expired')` lleva >7d así (cierra modo "cron muerto silenciosamente" del cut-over OCR 2026-05-26 + cierra observabilidad Drive si refresh token muere).
-
-**Documentación de referencia para arrancar la sesión:**
-- Spec arquitectura: este hub §"DRIVE SYNC ARCHITECTURE 2026-05-29" (Progreso en vivo más abajo).
-- PRs mergeados Drive sync: #85 backbone, #87 wizard, #88 subcarpetas.
+**Bonus follow-up (1h, opcional):** cron admin semanal que alerte si alguna `integration_connections.status IN ('error','expired')` lleva >7d (cierra el modo "cron muerto silenciosamente" del cut-over OCR 2026-05-26).
 - Migraciones aplicadas: 177 (tabla + RPC SKIP LOCKED), 178 (cols source_date + cliente_proveedor_nombre + trigger actualizado), 179 (RPC con nuevas cols en RETURNS).
 - Workflow n8n inactivo: `TwDd1OkMqr3nhSso` "Drive Sync - FacturaIA".
 
@@ -159,6 +144,11 @@ _Pasos detallados de smokes ya verificados → [[facturaia-historico-detallado]]
 Log cronológico de cada cosa que se trabaja. **Antes de empezar** algo nuevo, Claude busca aquí (+ NOW + Histórico) para detectar conflictos, solapes o trabajo previo. **Al avanzar/cerrar** algo, Claude añade entrada.
 
 Formato: `YYYY-MM-DD HH:MM · estado · qué · ref (commit/PR/file)`. Estados: `[empezado]` / `[en progreso]` / `[bloqueado: razón]` / `[hecho]` / `[descartado: razón]`.
+
+- 2026-05-31 · [hecho] · **2FA TOTP a prod** — cherry-pick `d87d2bc`→`642a203` sobre main limpio (el resto de la rama `feat/factura-detail-split-modal` ya estaba en main vía otra línea con otro hash; solo el 2FA era único). Mig 196 aplicada+verificada en prod. Manuales (`b28f4ea`). Smoke E2E agent-browser verde (TOTP real, recovery codes, relogin, enforcement; cuenta limpiada vía service-role `deleteFactor`). Google OAuth login ya operativo (provider habilitado en Supabase, confirmado). Ref: commits `642a203`/`b28f4ea`.
+- 2026-05-31 · [hecho] · **Migraciones 131b/131c→197/198** — renumeradas a formato canónico `NNN_` (el sufijo de letra hacía que el CLI las saltara y nunca entraran al ledger pese a estar aplicadas). `migration repair --status applied 197 198` registró en ledger sin re-ejecutar SQL. Ref: commits `c06fb8e`/`62ae1f5`.
+- 2026-05-31 · [hecho] · **Drive sync — workflow activado** — `TwDd1OkMqr3nhSso` activo, 2 ejecuciones success (auth n8n→dispatcher prod OK). El "mismatch FACTURAIA_SERVICE_KEY" era falso (key prod==n8n). Residual: smoke E2E con factura+OAuth (acción user). Ver [[dokploy-api-env-vive-en-composefile-no-en-campo-env]].
+- 2026-05-31 · [hecho] · **Plan anual UI verificado** — vista usuario `/settings?tab=plan` correcta (115,20/220,80/470,40 €/año · ahorra 20%). Residual: badge `/admin/plans` (superadmin) + Stripe `interval=year`.
 
 Reglas para el motor de conflictos:
 - Idea nueva → grep en este log + NOW + LATER + Histórico ANTES de añadir. Si match → avisar "ya existe / ya se hizo / ya está en progreso por X" y proponer fusionar.
