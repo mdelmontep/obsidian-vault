@@ -135,6 +135,10 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
+### facturaia — Pestaña Seguridad + 2FA TOTP + política org (2026-05-31, WIP sin commit)
+
+- **Supabase MFA TOTP** — step-up obligatorio (signIn deja aal1 aunque haya factor), OAuth via middleware `/verificar-2fa`, recovery codes a mano, session timeout solo client-side. Ver [[supabase-mfa-totp-integracion-gotchas]]
+
 ### facturaia — visor PDF + modal detalle Holded (2026-05-30, PR #121)
 
 - **Visor PDF en Next** — iframe nativo = cromo feo (barra/miniaturas/gris); usar react-pdf (pdf.js) + `next/dynamic ssr:false` (DOMMatrix en SSR). Ver [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]]
