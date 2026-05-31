@@ -11,6 +11,8 @@ Fix: renombrar a número libre. **Cuidado con prefijos similares**: `1071_*` col
 
 Regla: usar número estrictamente >max actual (ej. `122` si el último es 121). Documentar en header del archivo que el orden cronológico real fue otro. El SQL debe ser idempotente (`IF NOT EXISTS`) por si un fresh setup lo ejecuta fuera del orden histórico.
 
+Si el contenido del archivo skipeado **ya está aplicado en prod** (no solo pendiente): tras renombrar, `supabase migration repair --status applied <N>` lo registra en el ledger sin re-ejecutar el SQL (no hace DROP/CREATE). Caso 131b/131c→197/198 (2026-05-31).
+
 Detectar antes de commit:
 ```bash
 ls supabase/migrations/ | grep -vE '^[0-9]+_[^/]+\.sql$'
