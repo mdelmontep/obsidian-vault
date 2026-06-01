@@ -128,12 +128,20 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **Defensa en código vs prompt LLM** — invariantes de dominio (precio>0, NIF presente) NO se defienden con regla del prompt; el LLM se las salta. Validar en code node downstream y devolver conversacional. Ver [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]]
 - **n8n Set node output ≠ input** — expressions usan `$json.X` del input pero el output solo lleva assignments. Si downstream necesita X, añadir assignment. Ver [[n8n-set-node-output-solo-lleva-assignments-explicitos]]
 - **n8n $json post-HTTP es la respuesta, no el item** — tras httpRequest, $json downstream es la response. Para el item upstream usar `$('NodeName').first().json.X`. Ver [[n8n-dollar-json-tras-http-es-respuesta-http-no-item-original]]
+- **n8n Code node NO interpola `{{ }}`** — al migrar HTTP→Code, el `jsonBody` va como objeto JS, no como string literal `={...{{ }}...}` (se manda crudo → JSON inválido → 400 silencioso). Caso: rompió toda la selección multi-org del bot ~2 sem. Ver [[n8n-code-node-no-interpola-llaves-dobles]]
 - **NIF España paraguas DNI/NIE/CIF** — desde RD 1065/2007 unificado bajo "NIF"; aceptar 3 algoritmos bajo misma función. Ver [[nif-espana-paraguas-dni-nie-cif-desde-rd-1065-2007]]
 - **WhatsApp Interactive List límites** — max 10 rows, title 24, button 20, id 200 (patrón `tipo:UUID` + regex switch). Ver [[whatsapp-interactive-list-limites-y-row-id-pattern]]
 
 ## 🔥 Últimas 2 semanas
 
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
+
+### facturaia — Observabilidad WhatsApp en /admin/ia-ops (2026-06-01)
+
+- **Tab WhatsApp** (5º módulo IA): consumo (mensajes/tokens/coste) desde nueva `voice_usage` (mig 202), errores reales desde `bot_error_log`, invocaciones desde `voice_invocations`. n8n reporta uso por turno vía `POST /api/voice/usage` (nodo "Reportar Uso WhatsApp" en `pqSWkDIHqmSVHotB`).
+- **Coste WhatsApp = estimación suelo**: el LLM corre en n8n, no expone tokens reales → se estiman del texto (chars/3.5 in, /3 out, como `estimateTokens`). Mensajes exactos. El copiloto web sí lleva tokens reales (corre en backend).
+- **Tokens CSS admin sin definir** (`--panel`/`--border`/`--text`) → todo el admin plano + modal invisible. Ver [[facturaia-tokens-admin-sin-definir]].
+- **`bot_error_log` no es un error log limpio**: el backfill clasifica toda ejecución n8n como `validation_error/warn` por defecto. Filtrar a severity error/fatal/critical para errores reales.
 
 ### facturaia — Pestaña Seguridad + 2FA TOTP + política org (2026-05-31, WIP sin commit)
 
