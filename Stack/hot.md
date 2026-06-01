@@ -10,6 +10,8 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## ⭐ Permanentes (cross-proyecto)
 
+- **Kommo CF + emoji 4-byte (🏡)** — Kommo descarta el valor en silencio (200) y el CF queda vacío (utf8 no utf8mb4); si alimenta una plantilla, Meta manda el ejemplo. Ver [[kommo-custom-field-rechaza-emoji-4-byte]]
+- **Plantilla WhatsApp: variables sin `\n`/tab/>4 espacios** — Meta rechaza con #132018; salesbot/run da 200 pero el envío no llega (rechazo async). Texto multi-item en una línea. Ver [[whatsapp-template-variable-no-admite-saltos-de-linea]]
 - **Stripe "precio + IVA": `tax_behavior=exclusive` + registro UE con `place_of_supply_scheme`** — checkout con `automatic_tax`+`billing_address_collection=required`+`customer_update[address]=auto`+`tax_id_collection`; `tax/registrations` UE exige `country_options[es][standard][place_of_supply_scheme]=standard`. `curl` sin `-f` da falso OK en 4xx. Ver [[stripe-tax-registro-ue-via-api]]
 - **Filtros URL bookmarkeables: hidratar antes de sincronizar** — el efecto estado→URL borra los query params si corre antes de leer la URL al montar; flag `hydrated`. Ver [[useeffect-sync-estado-a-url-pisa-query-params-si-corre-antes-de-hidratar]]
 - **Outbox para integraciones externas (Drive sync, futuros)** — triggers BD AFTER UPDATE para cubrir múltiples entry points + hash de contenido para idempotencia + SKIP LOCKED para race + cascade revoke por external_id en OAuth. Ver [[outbox-trigger-bd-vs-hook-js-multiples-entry-points]] [[outbox-idempotencia-por-hash-contenido]] [[select-for-update-skip-locked-via-rpc-security-definer]] [[oauth-cascade-revoke-por-external-id-multi-org]]
