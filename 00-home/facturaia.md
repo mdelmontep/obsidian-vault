@@ -23,7 +23,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Stack**: Next 16 + Supabase (proyecto `lahqlyaxvobqjgdiftag`) + n8n + OpenAI Vision + Anthropic Claude
 - **Plan comercial**: Starter 19€ · Pro 49€ · Enterprise 99€ /mes (SIN IVA, Stripe Tax +21%; anual −20% = 182,40/470,40/950,40) + add-on Centro fiscal IA 14,90€. **Stripe LIVE operativo desde 2026-06-01** (8 price IDs `tax_behavior=exclusive` + webhook 5 eventos + Customer Portal + Stripe Tax registro ES). Add-ons Conciliación 19€/Anti-fraude 9€ seedeados (toggles aún sin checkout). Precios anteriores 12/23/49 → subida consciente (mig 204).
 - **Orgs activas en prod**: AgentesiaLab (Enterprise, **reseteada a 0 el 2026-05-18** — ver Histórico), tecnocloud (Enterprise), Borja Galván (Enterprise), AgenteIA PRUEBA (Starter). Las 5 en `billing_status=active` SIN suscripción Stripe (comp'd) → la subida de precios 2026-06-01 NO las afecta (precio nuevo solo en futuras activaciones vía checkout).
-- **Migraciones**: última en repo/prod = **204** (`204_plans_precios_competitivos`, precios 19/49/99 + trial 14d). 196 (2FA) / 197-198 (desvincular) / 199 (`whatsapp_pending_mensaje`) / 200 (gating+cuota WhatsApp por plan) / 201-202 (onboarding nudge / voice_usage) / 203 / 204 todas aplicadas+verificadas en prod. Conflicto mig 190 resuelto (`whatsapp_pending_action` → `192_*`).
+- **Migraciones**: última en repo/prod = **204** (`204_plans_precios_competitivos`, precios 19/49/99 + trial 14d). **Rama `feat/stock` tiene 205-211 (stock 205-210 + fix series 211) — NO aplicadas a prod, solo en proyecto test cloud. Ver [[facturaia-modulo-stock]].** 196 (2FA) / 197-198 (desvincular) / 199 (`whatsapp_pending_mensaje`) / 200 (gating+cuota WhatsApp por plan) / 201-202 (onboarding nudge / voice_usage) / 203 / 204 todas aplicadas+verificadas en prod. Conflicto mig 190 resuelto (`whatsapp_pending_action` → `192_*`).
 - **Última deploy mayor**: 2026-06-01 — gating WhatsApp por plan + cuota `whatsapp_docs_mes` (mig 200/203, editable en `/admin/plans`) · selector multi-org **case-1** (pregunta empresa → lista interactiva → reinyecta el texto original, sin pedir repetir) · **fix P0** (la selección multi-org estaba muerta desde 30-05) · system prompt del bot **−38%** + memoria 10→8 (alivio rate-limit OpenAI). *(30-05: backdrop blur admin + PR #119 email logs + PR #118 WA multi-org selector.)* **Historial completo → [[facturaia-historico-detallado]]**.
 - **Tests Vitest**: **1599/1599 verde** (146 archivos, 6 skipped justificados — incluye 75 tests SaaS Fase 1-2.15 + 27 precio-helpers + 10 catalogo/productos + cashflow/conciliación previos. 4 RLS cross-org requieren `supabase start` local, 2 PDF Puppeteer pesado en CI). Cero regresiones tras 14 PRs SaaS Stripe + HMAC v2 cierre.
 - **Smoke E2E Playwright**: 9/9 verde cashflow v2 en prod 2026-05-23 18:30 (commit `622c24c`, `tests/e2e/smoke/cashflow-v2.spec.ts`). Confirmado en prod real con org TuFacturaIA Sandbox: saldo proyectado -727€ peor mes Jul, pill rojo "Mes crítico" en gráfica, badge "IA" en headline, narrative "Jul mejora 291 € vs Jun porque: IVA 2T 2026 (estimado) -147 €" (el `incluir_fiscal=true` proyecta IVA trimestral correctamente), recurrente trimestral expone "Primer mes del ciclo" (gap UX cerrado), ESC cierra modal con focus trap, confirm modal brand-coherente reemplaza `confirm()` nativo, `cuota_autonomos` select con presets RETA visible.
@@ -31,6 +31,13 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 
 ## PRIORIDADES PRÓXIMA SESIÓN
+
+**🟡 MÓDULO STOCK/INVENTARIO — rama `feat/stock` (NO en main/prod) — 2026-06-01:**
+
+Módulo de inventario add-on (12,90€). Fases A-C **construidas + auditadas (3 agentes composición, 6 bugs corregidos) + smoke validado end-to-end** en proyecto Supabase de pruebas cloud `vtovkkrcybstlzpgqsaq` (alta→venta→anulación→ajuste, ledger=cache cuadra). Migs **205-210** (extiende `catalogo_servicios` + ledger `stock_movimientos` + triggers + RPC). Verde lint/typecheck/build. **Detalle completo + cómo retomar el entorno test → [[facturaia-modulo-stock]]**.
+- Commits `feat/stock`: `d5ff1ed` (módulo) + `e8858aa` (merge main) pusheados; `2d972ff` (mig 211 fix series B/F) **SIN pushear**.
+- **Pendiente**: (1) push `2d972ff`; (2) merge a main + `db push` prod (incl. 211) + smoke prod; (3) **Fase D** compras+IA (requiere sprint OCR líneas estructuradas; matching fuzzy pg_trgm, NO pgvector); (4) Fase E openapi v1; (5) UX: CTA inventario lleva a catálogo sin campos de stock + validador teléfono.
+- **Fix colateral incluido (mig 211)**: onboarding creaba series A,R,P,T pero no B (abonos)/F (proformas) → clientes NUEVOS no podían anular ni hacer proformas. Trigger AFTER INSERT organizations + backfill. Ver [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]]. **Aplica también a prod tras merge.**
 
 **P0 — SEGURIDAD/2FA — cerrar sprint (2026-05-31, código en working tree SIN commit/deploy):**
 
@@ -123,6 +130,7 @@ _Lo cerrado vive en [[facturaia-historico-detallado]]. Detalle de cada tarea en 
 
 - **Sprint Seguridad/2FA** — working tree sin commit (2026-05-31). Pestaña Ajustes→Seguridad completa + 2FA TOTP + política org. Falta commit + aplicar mig 196 + smoke. Ver §PRIORIDADES P0 + §WIP.
 - **Drive sync wiring final** — workflow n8n inactivo, bloqueado por `FACTURAIA_SERVICE_KEY`. Ver §PRIORIDADES P0.
+- **Módulo Stock/Inventario** — rama `feat/stock`, Fases A-C hechas+auditadas+smoke verde en proyecto test cloud. Falta push mig 211 + merge a main + db push prod + Fase D (compras+IA). Detalle [[facturaia-modulo-stock]].
 
 ## Smoke tests pendientes
 

@@ -18,13 +18,17 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **Kommo** integrado (pipeline `13546071` + 4 pipelines forms web), salesbots recordatorio.
 - **Catálogo Idealista** en Supabase (`properties`), sync diario vía Apify. Ramón YA empezó a poner `agente:` (el dúplex de Pozuelo resuelve a Carlos).
 
-## Pendiente — tests E2E reales (lo crítico ahora)
+## ⚠ PENDIENTE BLOQUEANTE — reorden recheck en VOZ (no tocar a ciegas)
 
-Todo lo de abajo es de cambios recientes ya aplicados pero **sin probar en vivo**:
-1. **WhatsApp reserva**: que caiga en el calendario del agente (red backend anclaje idealista) y no en el general.
-2. **Cambio de cita**: nuevo evento en calendario del agente, 30 min, y borra el viejo.
+**Bug del orden (confirma antes de validar)**: el flujo de reserva confirmaba la cita (salesbot Kommo + respuesta al cliente) ANTES del recheck de disponibilidad → con buffer 60 confirma slots ocupados y NO crea el evento. **WhatsApp YA arreglado** (2026-06-01: recheck antes de `Update leads`/crear evento; solo confirma si libre). **VOZ PENDIENTE**: el respond-fast (`Respond FAST`, atado al timeout 6s de Retell) confirma de inmediato, y `Create new leads3/2` crea el lead en **Lead Caliente (105137095)** → salesbot dispara al crear, antes del recheck. Arreglarlo = (1) crear lead en status neutro y mover a Lead Caliente solo en rama libre, (2) recheck antes del respond-fast. NO hacer PUT a ciegas: toca automations de Kommo no inspeccionables + timeout Retell; **requiere test de llamada real tras el cambio**.
+
+## Pendiente — tests E2E reales
+
+Cambios aplicados sin probar en vivo:
+1. **WhatsApp reserva**: cae en calendario del agente (red backend anclaje idealista) y, tras el reorden, NO confirma si el slot está ocupado.
+2. **Cambio de cita**: nuevo evento en calendario del agente, 30 min, borra el viejo.
 3. **Buffer**: misma casa pegadas (10:00–10:30 / 10:30–11:00); casa distinta → 60 min margen (no antes de 11:30).
-4. **Voz**: reserva crea lead + evento; latencia (voz `turbo_v2_5`, `responsiveness 0.85` que no corte).
+4. **Voz**: latencia (voz `turbo_v2_5`, `responsiveness 0.85` que no corte) — independiente del reorden pendiente de arriba.
 5. **Subir tier OpenAI** (chatbot WA gpt-4o, hoy 30k TPM → rate limits).
 
 ## Otros pendientes
@@ -41,7 +45,7 @@ Todo lo de abajo es de cambios recientes ya aplicados pero **sin probar en vivo*
 
 ## Histórico de hitos
 
-- 2026-06-01: visitas a 30 min + buffer 0/60 (todos los workflows) · bug voz "no reservaba" (nodo silencioso `n_confirmar_tel`) corregido · cambio de cita alineado con reserva (30min + calendario del agente) · WhatsApp `Mirar_disponibilidad`→toolWorkflow · red backend anclaje `idealista_id` · ajustes latencia voz · descubierto que el agente productivo es el Flow (no el retell-llm)
+- 2026-06-01: visitas a 30 min + buffer 0/60 (todos los workflows) · bug voz "no reservaba" (nodo silencioso `n_confirmar_tel`) corregido · cambio de cita alineado con reserva (30min + calendario del agente) · WhatsApp `Mirar_disponibilidad`→toolWorkflow · red backend anclaje `idealista_id` · **reserva WhatsApp: validar ANTES de confirmar** (antes confirmaba en Kommo aunque el slot estuviera ocupado; voz PENDIENTE) · ajustes latencia voz · descubierto que el agente productivo es el Flow (no el retell-llm)
 - 2026-05-31: Ana voz publicada + disponibilidad con buffer (slots) + recheck + E2E · plantillas Meta aprobadas · leads limpios
 - 2026-05-28: routing por agente + WA confirmación voz + bugs Retell
 - 2026-05-04: chatbot lentitud arreglada · salesbots recordatorios
