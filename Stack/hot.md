@@ -12,6 +12,12 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Frontend mobile — marquee + iOS overlay (2026-06-02)
+
+- **Marquee seamless** — wrapper único `w-max` animado + `loading="eager"` en imgs. Sin `w-max` el `-50%` se calcula sobre el viewport → logos desaparecen. Ver [[marquee-css-seamless-loop-w-max-eager]]
+- **iOS scroll lock** — `position:fixed + top:-scrollY + width:100%`; `overflow:hidden` no funciona en Safari. Ver [[ios-safari-body-scroll-lock-position-fixed]]
+- **Overlay iOS** — `h-[100dvh]` no `inset-0`; el dynamic viewport height respeta el chrome del browser. Ver [[css-fixed-overlay-100dvh-ios]]
+
 Patrones recientes de proyectos activos. Mover a sección permanente o eliminar tras 2 semanas.
 
 ### facturaia — Observabilidad WhatsApp en /admin/ia-ops (2026-06-01)
