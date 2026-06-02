@@ -37,3 +37,16 @@ if (item.error) {
 ```
 
 Esto vale incluso con `fullResponse: true` — el wrapper de error no cambia.
+
+## Corolario: convertir HTTP node → Code node pierde el manejo de error tipado
+
+Al convertir un HTTP Request node (con Never Error/Full Response) a **Code node**
+(p.ej. para firmar HMAC), hay que **re-implementar** la captura del body de error.
+Si el Code llama `this.helpers.httpRequest` y deja que lance en non-2xx, la salida
+de error solo lleva `{error: "status code XXX"}` — sin `error_code`/`message` del
+backend. Las ramas IF downstream que leen `$json.error_code` quedan **muertas** y
+todo cae al mensaje genérico. Caso 2026-06-02 (TuFacturaIA, mismo refactor Fase
+2.15 que [[n8n-code-node-no-interpola-llaves-dobles]]): nodo devuelve el body con
+`neverError: true` (`returnFullResponse` + chequear `statusCode>=400` sin relanzar)
+y "Generacion OK?" (`success===true`) enruta a las ramas tipadas.
+
