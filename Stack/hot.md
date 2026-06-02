@@ -35,6 +35,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **vi.fn(() => ...) sin rest param** — spread (...args) rompe con TS2556. Declarar `(..._args: unknown[])` en el spy. Ver [[vitest-vi-fn-sin-params-rompe-spread-args]]
 - **Bandeja staging ↔ tabla real con FK RESTRICT** — borrar de un lado debe sincronizar el otro o queda huérfano + blob bloat. Ver [[bandeja-staging-tabla-real-fk-restrict-borrar-sincroniza-ambos-lados]]
 - **Dokploy env `CLAVE:valor` no se parsea** — el `:` en vez de `=` deja la var ausente en runtime (silencioso). Verificar con API/`docker exec env`, no el panel. Ver [[dokploy-env-clave-dos-puntos-no-se-parsea]]
+- **Dokploy env custom → compose + panel** — var en panel no basta; necesita línea `- VAR=${VAR}` en `environment:` del compose + Deploy. Ver [[dokploy-env-compose-section-necesaria-para-variables-custom]]
 - **Org-gate bloquea aceptar la 1ª invitación** — middleware que exige org activa rompe el onboarding pre-org (invitado sin org aún). Bypass explícito tipo `allowNoOrg`. Ver [[auth-org-gate-bloquea-aceptar-primera-invitacion]]
 - **2FA/teléfono diferido a la activación del canal, NUNCA gate de login** — verificar on-demand al activar WhatsApp, no al entrar; gate global atrapa invitados (coste + callejón). Ver [[2fa-telefono-solo-para-canal-que-lo-usa-no-gate-global]]
 - **Magic link 1-uso lo pre-consumen escáneres de email** — TTL no basta; usar token-landing + POST, y reenvío self-service. Ver [[magic-link-un-solo-uso-lo-preconsumen-escaneres-email]]

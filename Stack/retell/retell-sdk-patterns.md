@@ -7,6 +7,8 @@ tags: [retell, voice, sdk, webhooks]
 
 # Stack Retell / Voice SDK
 
+- **Conversation Flow API — sin prefijo de versión** — `GET /get-conversation-flow/{id}` y `PATCH /update-conversation-flow/{id}`. Los paths `/v1/` o `/v2/` dan 404. El PATCH acepta solo el campo a cambiar (e.g. `{"global_prompt": "..."}`), no el objeto completo del flow.
+
 - **`RetellWebClient` extiende `eventemitter3`** — tiene `.off(event, handler)`. Los listeners registrados en `useEffect` se acumulan entre remounts (HMR en dev o Strict Mode) si no los limpias. Guardar handlers como referencias con nombre y llamar `client.off(...)` en el cleanup:
   ```tsx
   const onStarted = () => { ... }
