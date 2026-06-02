@@ -144,3 +144,11 @@ Orden por FK (ver [[2026-05-18-facturaia-reset-agentesia]]):
 - Reset 2026-05-18: ver memoria `agentesia-org-reset-2026-05-18` (auto-memory agency-portal)
 - Decisión particular FACT-2026-0001: ver memoria `fact-2026-0001-particular`
 - Infra recap: ver memoria `facturaia-infra`
+
+## Rescatados de hot.md (poda 2026-06-02)
+
+- **Verifactu huella NO incluye conceptos/descripciones** — solo NIF+Num+Fecha+TipoFactura+CuotaTotal+ImporteTotal+Huella_ant (mig 091:122-128). Añadir/quitar campos textuales a `lineas_factura` es seguro retroactivamente, no rompe cadena AEAT.
+- **Recrear RPC entero al añadir campo a INSERT con columnas explícitas** — `CREATE OR REPLACE` reemplaza la función completa, no parchea. Copiar versión vigente byte-a-byte + insertar campo nuevo.
+- **fecha_cobro/fecha_pago = mb.fecha NUNCA CURRENT_DATE** — criterio caja AEAT IVA exige fecha del movimiento, no de la inserción del registro. Mig 111 fix retroactivo a 4 triggers.
+- **UI lista no filtraba `deleted_at`** — comentario decía "defensivo por mig 106 no aplicada", llevaba semanas aplicada. Coste: movs soft-deleted seguían apareciendo. Auditar comentarios "defensivos" caducados al deployar la mig que cubren.
+- **CSV import `imported:0` con error oculto en UI** — log warn en endpoint cuando `parsed.movimientos.length === 0` o errors no vacíos. UI muestra solo 3 campos; warnings se perdían. Defense: console.warn server-side + Network preview DevTools.
