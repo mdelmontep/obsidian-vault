@@ -24,7 +24,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **`supabase migration new` rompe la secuencia NNN_** — registra timestamp huérfano en schema_migrations. SQL aplicado a mano tampoco se registra. Reconciliar con `migration repair --status reverted/applied`, NO con `db pull`. Hook pre-push lo previene. Ver [[supabase-migration-new-rompe-secuencia-nnn-name]]
 - **`db push` no ejecuta migraciones cuyo NNN ya existe en remoto (rama stale)** — numeras 197-202 pero prod ya tiene 197-204 de otra rama → push las da por aplicadas SIN error. `migration list --linked` ANTES de push; renumerar al hueco real. Ver [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]
 - **Feature con recurso por-org: actualizar onboarding, no solo backfill** — migración que da el recurso (serie B/F) a orgs existentes pero olvida la función de alta → clientes NUEVOS sin el recurso, falla en prod. Trigger AFTER INSERT org idempotente. Ver [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]]
-- **n8n API PUT settings whitelist** — campos extras en settings (binaryMode, etc.) hacen 400 aunque el panel los guarde. Strip antes de PUT. Ver [[n8n-api-put-workflow-rechaza-settings-binaryMode]]
+- **n8n API PUT settings whitelist** — campos extras en settings (binaryMode, etc.) hacen 400 aunque el panel los guarde. Strip antes de PUT + re-activar con POST /activate. Ver [[n8n-api-put-workflows-rechaza-settings-desconocidos]]
 - **Validador de invariante en módulo único front+back** — discriminated union `{ok,reason}|{ok,normalized}` importable por UI y endpoint. Sin esto, divergencia al 1er edge case. Ver [[helper-validacion-canonico-front-back-evita-divergencia]]
 - **n8n langchain toolCode con schema → args en `query` como objeto (no string)** — `JSON.parse(query)` lanza/devuelve {}. Usar `if (typeof query === 'object') params = query`. `$fromAI(name, descr, type)` con descripción NO vacía también funciona. Ver [[n8n-langchain-toolcode-args-en-input-no-en-query]]
 - **AI Agent con chat memory no re-llama tool tras bugfix** — el LLM "recuerda" turnos de error previos y deja de invocar la tool. Purgar `n8n_chat_histories WHERE session_id=<hash>` para validar fix. Ver [[n8n-chat-memory-contamina-tool-retry-tras-bugfix]]
@@ -163,9 +163,15 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 - **Dokploy compose pasa al container solo lo listado en YAML, no panel** — añadir env por panel sin tocar `composeFile` NO la inyecta. Editar ambos. Ver [[n8n-compose-env-vars-yaml-y-panel]]
 - **n8n task-runner sandbox sin `URL` global** — `new URL()` lanza, aunque `crypto` esté permitido. Regex inline para path+search. Ver [[n8n-task-runner-sandbox-sin-url-global]]
-- **n8n PUT workflow rechaza settings extra** — `callerPolicy`/`binaryMode` del GET previo dan 400. Filtrar a solo `executionOrder`. Ver [[n8n-public-api-put-workflow-settings-keys]]
+- **n8n PUT workflow rechaza settings extra** — `callerPolicy`/`binaryMode` del GET previo dan 400. Filtrar a solo `executionOrder`. Ver [[n8n-api-put-workflows-rechaza-settings-desconocidos]]
 - **Inventario auth n8n: filtrar `.code` deja fuera toolCode + HTTP** — usar `'x-service-key' in json.dumps(parameters).lower()` en todos los tipos. Ver [[n8n-inventario-auth-incluye-toolcode-y-httprequest]]
 - **Stripe `subscription.deleted` por sub.id, no por kind** — handler que solo cubre `kind=fiscal_addon` ignora cancelaciones plan base → orgs en estado fantasma. Ver [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]]
+
+### EcoBox — chat WhatsApp E2E (2026-06-01)
+
+- **n8n tool-webhook no debe mentir** — Respond hardcodeado a éxito + nodo de acción con onError:continue = el bot confirma reservas/cancelaciones que no ocurrieron. Gatear efectos y Respond en `!$json.error`. Ver [[n8n-webhook-tool-respond-no-hardcodear-exito-gatear-en-error-nodo]]
+- **Chatwoot audio → Whisper inline** — nota de voz llega con content null + audio en attachments; transcribir vía HTTP a OpenAI /v1/audio/transcriptions. Ver [[chatwoot-nota-voz-content-null-audio-en-attachments-transcribir-whisper]]
+- **Edit Fields: optional chaining body.args vs body plano** — chat manda body plano, voz lo envuelve en args; `body.args.X` sin `?.` revienta → null silencioso. Aplica a TODOS los tools, no solo al primero. Ver [[n8n-edit-fields-optional-chaining-body-args-plano-vs-wrapped]]
 
 ### EcoBox / Retell voz E2E (2026-05-25/26)
 

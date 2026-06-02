@@ -6,7 +6,31 @@ tags: [cliente, ecobox, hub]
 
 # EcoBox 360 — HUB
 
-Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas (Madrid). Onboarding 2026-05-20, despliegue 21-22, voz E2E funcional 2026-05-25.
+Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas (Madrid). Onboarding 2026-05-20, despliegue 21-22, voz E2E funcional 2026-05-25, **chat WhatsApp E2E real funcional 2026-06-01**.
+
+## Sesión 2026-06-01 — Chat WhatsApp E2E real + 6 fixes workflows + cleanup GCal
+
+Primer test real de Cristian/Manu por WhatsApp (Chatwoot inbox 2 → bot Alex). Destapó 3 síntomas → 6 bugs reales arreglados sobre ejecuciones de producción (no simuladas). API key n8n del `.credentials.local` **volvió a funcionar** (los PUT/activate fueron 200 todo el día — el 401 del 05-29 era restart de contenedor, ya no aplica). Backups frescos en `Ecobox/wf_{bot,reservar,buscar,cancelar,mirar}_backup_2026-06-01_*.json`.
+
+**Fix A — Audio ignorado.** `Chatwoot Bot Alex`: `IF mensaje cliente` exigía `body.content` notEmpty → las notas de voz llegan con `content=null` + audio en `attachments[0]` (file_type=audio, .ogg/opus) → el bot ni arrancaba. Fix: IF acepta content **o** audio; rama nueva `IF audio → Download audio (HTTP GET data_url, response=file) → Transcribe (HTTP a OpenAI /v1/audio/transcriptions whisper-1, cred predefinida openAiApi) → Edit Fields`. `message = content || $json.text`.
+
+**Fix B — Bot reservaba en pasado / sin hora.** El chatbot NO tenía `fecha_hoy` (solo lo tenía Retell voz) → calculaba un "miércoles" arbitrario (reservó 2026-03-11 08:00). Fix: inyectada `fecha_hoy` en el `text` del AI Agent (`[ctx fecha_hoy=YYYY-MM-DD (díasemana) …]` vía `$now` Luxon) + system prompt: fecha siempre futura desde fecha_hoy + OBLIGATORIO hora HH:MM concreta (prohibido "por la mañana").
+
+**Fix C — No se enviaba plantilla WhatsApp.** `Reservar_cita` NO tenía nodo de envío (solo GCal + emails). Fix: nodo `WhatsApp confirmacion` (HTTP Graph `/{PHONE_NUMBER_ID}/messages`, template `confirmacion_cita_ecobox_2`, {{1}}=name {{2}}=fecha natural Luxon es-ES, cred Meta `AXKaZLlt5xzkjukL`). **Verificado**: enviado y `accepted` por Meta al +34617314938. `Email al cliente` → `onError:continue` (leads WhatsApp no traen email).
+
+**Fix D — Guard fecha pasada.** `Validate input` ahora rechaza `preferred_date < hoy` (boolean `DateTime.fromISO(preferred_date) >= $now.startOf('day')`). Antes solo validaba `startsWith "2026"`.
+
+**Fix E — buscar/cancelar/mirar parseaban null** (el `.args.` sin `?.` — el 05-29 SOLO se arregló en Reservar_cita, estos tres quedaron pendientes). Los tools del chat mandan body PLANO (`{phone}`, `{event_id}`, `{After,Before}`); sin `args`, `.args.X` revienta → null. Síntomas: `buscar` searcheaba `+34` y matcheaba un evento ajeno; **`mirar` con After/Before null → GCal getAll sin ventana → devolvía TODOS los eventos de otros días → "está ocupado" siempre** (causa del "no hay nada el miércoles pero dice ocupado"). Fix: optional chaining `body?.args?.X || body?.X` en los 3 + `Format slots` de mirar filtra ocupados a la ventana [After,Before]. Verificado: 3-jun mañana→count 0 libre; 2-jun→solo eventos del 2-jun.
+
+**Fix F — Respond hardcodeado a éxito (reserva/cancelación fantasma).** `reservar.Respond OK` y `cancelar.Respond` devolvían SIEMPRE "Listo, te he agendado/cancelado", y GCal create/delete tienen `onError:continue` → el error de Google se ignoraba y el bot mentía. Fix reservar: nodo `IF created ok` (`!$json.error`) tras GCal create → true→Build Emails+WhatsApp; false→`Respond reservar error` (`status:error`, SIN WhatsApp). Fix cancelar: `Respond` ternario sobre `$('GCal delete').item.json.error` → `status:ok/error`. Prompt bot: regla "HONESTIDAD DE TOOLS" (prohibido confirmar sin `status:ok`; cancelar debe pasar el event_id EXACTO `ecXXXX`, nunca la matrícula).
+
+**Colisión id determinista**: re-reservar el MISMO slot → mismo `event_id` (FNV de phone+preferred_date) → GCal 400 → ahora cae limpio en rama error (no doble-booking, no falsa confirmación). Latente: re-reservar tras cancelar puede colisionar con id borrado (Google retiene ids un tiempo).
+
+**Cleanup GCal**: 5 eventos de test borrados por event_id explícito vía `cancelar_cita` (4356ADA, SAB123, 7777FIX, CONC123, 6094HTX) — el borrado en bloque lo bloqueó el classifier (destructivo sobre calendario compartido), lo ejecutó Manu con comando preparado. Agenda limpia.
+
+**Pendiente real**: smoke E2E chat de un hueco NUEVO (cancelar + reservar miércoles 9:00) confirmando que cancela de verdad, no choca y llega plantilla. Inbound de clientes reales aún requiere publicar la app Meta (dev mode) + logo/color/firma de Cristian.
+
+Learnings nuevos para vault (ver /obsidian-1): IF mensaje cliente debe aceptar audio; transcripción Whisper inline en n8n vía HTTP cred predefinida; `mirar` con ventana null devuelve calendario entero; Respond hardcodeado a éxito + onError:continue = bot miente; optional chaining pendiente en buscar/cancelar/mirar (no solo reservar); n8n PUT API rechaza `settings` no-whitelisted (binaryMode) con 400.
 
 ## Identidad
 
@@ -127,7 +151,7 @@ Número `+34 910 05 48 13` (provider Netelip) llegó CONNECTED + CLOUD_API + VER
 1. ✅ ~~Crear WABA + Permanent Access Token Meta~~ — hecho 2026-05-28.
 2. ✅ ~~Migrar +34910054813 a Cloud API + verificación~~ — DONE 2026-05-28 (vía recreación WABA + Phone tras desvincular app móvil).
 3. ⏳ **Esperar aprobación HSM Meta** — 3 plantillas en PENDING desde 2026-05-28 (UTILITY suele aprobar <1h). Cuando aprueben, activar workflows `Recordatorios cron` (`QVPf25PZyLv0UHII`) y `Meta token health check` (`Jbf5rZepHYM21MPQ`) tras actualizar cred n8n `dczhQTAKaeGVe1gr` con el token.
-4. ⏳ Regenerar API key n8n (la del `.credentials.local` devuelve 401 desde el PUT bot v2). Sin esto no puedo actualizar la cred Meta Bearer ni validar bot v2 E2E.
+4. ✅ ~~Regenerar API key n8n (401 desde PUT bot v2)~~ — la key del `.credentials.local` volvió a funcionar 2026-06-01 (todos los PUT/activate 200). Era restart de contenedor, no rotación.
 5. ⏳ App Secret + Verify Token webhook Meta — solo necesario cuando activemos inbound (cliente WhatsApp → bot Chatwoot). Outbound ya operativo.
 6. ⏳ Conectar inbox Chatwoot al Phone Number ID `1136826222847102` (Chatwoot Cloud channel WhatsApp). Sin esto, ningún mensaje cliente llega al bot.
 7. ⏳ Logo PNG público + color marca hex (defaults `#0F1B2D` + `#E76F51`) + firma email.
@@ -219,7 +243,7 @@ Webhook Meta UI (Manu) configurado 2026-05-28. Field `messages` suscrito. App en
 ## Bugs conocidos / cleanup pendiente
 
 - ✅ ~~Eventos smoke acumulados en GCal `ecobox360taller@gmail.com`~~ — 5 borrados 2026-05-28 vía workflow oneshot `_cleanup_smoke_gcal` (1 en junio 2024 + 4 en mayo 2026). Re-run idempotente devuelve 0. Workflow oneshot eliminado tras éxito.
-- ⏳ API key n8n empezó a devolver 401 tras PUT del bot v2 — healthz OK, webhooks OK, sólo `/api/v1/*` rechaza. JWT sin `exp` → probable rotación externa o restart del contenedor. Regenerar en `n8necobox.agentesialabs.com → Settings → API` y actualizar `.credentials.local` `N8N_API_KEY`.
+- ✅ ~~API key n8n 401 tras PUT del bot v2~~ — RESUELTO 2026-06-01: la misma key vuelve a aceptar `/api/v1/*` (era restart del contenedor, no rotación). Sin cambios en `.credentials.local`.
 - ⏳ Retell flow audit hallazgo menor: `global_prompt` y nodo `n-collect-date` tienen "2026" hardcoded — debería usar `{{ano_actual}}` (como ya hace `n-confirm-cita`). No bloqueante.
 
 ## Archivos locales

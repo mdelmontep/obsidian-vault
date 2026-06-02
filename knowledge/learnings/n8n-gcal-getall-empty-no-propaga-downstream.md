@@ -16,3 +16,5 @@ const events = $input.all().filter(e => e.json && e.json.start);
 Sin el filter, `e.json.start.dateTime` crashea con TypeError porque `e.json.start` es undefined en el placeholder.
 
 Caso real: EcoBox `Mirar_disponibilidad` 2026-05-25 — el primer fix `alwaysOutputData` solo no era suficiente; necesitaba el filter en `Format slots`.
+
+Corolario (2026-06-01): si `timeMin`/`timeMax` llegan vacíos o null, getAll NO acota → devuelve el calendario ENTERO (eventos de otros días) → falsos "está ocupado". Validar que la ventana llega no-null antes del getAll y filtrar `Format slots` a [After,Before]. Causa de origen: [[n8n-edit-fields-optional-chaining-body-args-plano-vs-wrapped]].
