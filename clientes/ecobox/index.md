@@ -8,6 +8,17 @@ tags: [cliente, ecobox, hub]
 
 Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas (Madrid). Onboarding 2026-05-20, despliegue 21-22, voz E2E funcional 2026-05-25, **chat WhatsApp E2E real funcional 2026-06-01**.
 
+## Sesión 2026-06-02 — 2ª ronda test E2E (voz): transfer, doble-booking, fecha, sustitución
+
+Tras checklist E2E (chat A1-A12 OK; voz B1-B3 OK) salieron 3 fallos en voz, todos corregidos y verificados:
+
+1. **No transfería** — `n-transfer-human` estaba en `warm_transfer` (espera descuelgue + detección humano 30s) **y** el nº destino `+34617314938` es el del propio caller (Manu) → marca su línea ocupada → falla siempre. Fix: `transfer_option` → `cold_transfer` (reenvío directo). Nº mantenido (probar desde OTRO móvil). Flow v10, número usa `inbound_agent_version:None` = latest, ya live. Ver [[retell-cold-vs-warm-transfer-y-numero-distinto-del-caller]].
+2. **Doble-booking** — voz reservó sobre un evento ya existente a las 17:00. El `event_id` determinista solo bloquea mismo phone+slot, no a otro cliente. Fix: guard server-side en `Reservar_cita` (`Check overlap` GCal getAll ventana [hora,hora+30m] → `Eval overlap` → `IF slot libre` → si ocupado `Respond slot ocupado` status:error, sin crear ni WhatsApp). Verificado: hueco ocupado rechaza, libre crea. Ver [[n8n-reservar-overlap-guard-server-side-anti-doble-booking]].
+3. **Fecha hardcodeada** (`global_prompt`: "HOY es viernes 29 de mayo") — reemplazada por las variables de sistema de Retell `{{current_time_Europe/Madrid}}` + `{{current_calendar_Europe/Madrid}}` (rellenadas por llamada, calendario 14 días con "(Today)"). Sin cron. También quitada la fecha hardcodeada de `n-confirm-cita`. Ver [[retell-current-time-y-current-calendar-dynamic-vars-evitan-fecha-hardcodeada]].
+4. **Sustitución/recogida por voz** — reforzada la prohibición en global #5 y `n-collect-damage` con la pregunta concreta vetada.
+
+Hallazgo menor: `buscar_reserva` no encuentra una cita creada segundos antes (lag q-search GCal) → solo afecta "reservar+cancelar en la misma llamada". Backups `retell_flow_backup_2026-06-01_*_pre_coldtransfer.json`, `wf_reservar_backup_2026-06-01_*_pre_overlap.json`.
+
 ## Sesión 2026-06-01 — Chat WhatsApp E2E real + 6 fixes workflows + cleanup GCal
 
 Primer test real de Cristian/Manu por WhatsApp (Chatwoot inbox 2 → bot Alex). Destapó 3 síntomas → 6 bugs reales arreglados sobre ejecuciones de producción (no simuladas). API key n8n del `.credentials.local` **volvió a funcionar** (los PUT/activate fueron 200 todo el día — el 401 del 05-29 era restart de contenedor, ya no aplica). Backups frescos en `Ecobox/wf_{bot,reservar,buscar,cancelar,mirar}_backup_2026-06-01_*.json`.
@@ -197,7 +208,7 @@ Bonus de la auditoría: **plantillas HSM Meta ya APROBADAS** las 3 (`confirmacio
    - Info rápida ("a qué hora abrís", "dónde estáis")
    - Handoff humano ("quiero hablar con persona") → label `humano` aplicado
    - Pregunta fuera de scope ("hacéis ITV") → derivación
-3. **Cron diario actualizar fecha en Retell flow**: el `global_prompt` tiene `"HOY es viernes, 29 de mayo de 2026"` hardcoded. Crear workflow n8n cron diario 00:00 Madrid que PATCH al flow Retell con fecha del día (formato `dddd, D de MMMM de YYYY` en español) + recordatorio de fin de semana cerrado si aplica.
+3. ✅ ~~Cron diario actualizar fecha en Retell flow~~ — RESUELTO 2026-06-02 sin cron: `global_prompt` usa `{{current_time_Europe/Madrid}}` + `{{current_calendar_Europe/Madrid}}` (variables de sistema Retell rellenadas por llamada). Ver [[retell-current-time-y-current-calendar-dynamic-vars-evitan-fecha-hardcodeada]].
 4. **Recordatorios cron** (`QVPf25PZyLv0UHII`) tiene nodos `noOp` TODO send HSM. Implementar `httpRequest` POST a Meta Cloud API `/messages` con template `confirmacion_cita_ecobox_2` + nodo `postgres` que update `reminders_sent`. Activar cuando plantillas HSM aprueben.
 5. **Plantillas HSM**: las 3 siguen PENDING review Meta desde 2026-05-28. Revisar cada hora. UTILITY simples suelen aprobar <24h.
 6. **Meta health check** workflow (`Jbf5rZepHYM21MPQ`) tiene bug en nodo `IF error` ("Conversion error: string '' can't be converted to object"). El endpoint Meta /me responde 200 OK. El bug es del workflow, no del token. Cosmético — no urgente.

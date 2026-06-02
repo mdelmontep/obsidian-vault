@@ -167,6 +167,12 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Inventario auth n8n: filtrar `.code` deja fuera toolCode + HTTP** — usar `'x-service-key' in json.dumps(parameters).lower()` en todos los tipos. Ver [[n8n-inventario-auth-incluye-toolcode-y-httprequest]]
 - **Stripe `subscription.deleted` por sub.id, no por kind** — handler que solo cubre `kind=fiscal_addon` ignora cancelaciones plan base → orgs en estado fantasma. Ver [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]]
 
+### EcoBox — voz 2ª ronda test (2026-06-02)
+
+- **Anti-doble-booking = check overlap server-side** — el event_id determinista solo bloquea mismo phone+slot, no a otro cliente a la misma hora. GCal getAll en la ventana antes de crear. Ver [[n8n-reservar-overlap-guard-server-side-anti-doble-booking]]
+- **Retell fecha sin hardcodear ni cron** — `{{current_time_Europe/Madrid}}` + `{{current_calendar_Europe/Madrid}}` (vars de sistema por llamada). Ver [[retell-current-time-y-current-calendar-dynamic-vars-evitan-fecha-hardcodeada]]
+- **Retell transfer: cold vs warm + nº ≠ caller** — warm espera descuelgue+detección humano (frágil); cold reenvía directo; el nº destino no puede ser el del que llama. Ver [[retell-cold-vs-warm-transfer-y-numero-distinto-del-caller]]
+
 ### EcoBox — chat WhatsApp E2E (2026-06-01)
 
 - **n8n tool-webhook no debe mentir** — Respond hardcodeado a éxito + nodo de acción con onError:continue = el bot confirma reservas/cancelaciones que no ocurrieron. Gatear efectos y Respond en `!$json.error`. Ver [[n8n-webhook-tool-respond-no-hardcodear-exito-gatear-en-error-nodo]]
