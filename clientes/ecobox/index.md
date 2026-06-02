@@ -19,6 +19,27 @@ Tras checklist E2E (chat A1-A12 OK; voz B1-B3 OK) salieron 3 fallos en voz, todo
 
 Hallazgo menor: `buscar_reserva` no encuentra una cita creada segundos antes (lag q-search GCal) → solo afecta "reservar+cancelar en la misma llamada". Backups `retell_flow_backup_2026-06-01_*_pre_coldtransfer.json`, `wf_reservar_backup_2026-06-01_*_pre_overlap.json`.
 
+### Transfer voz — fix definitivo (routing)
+El cold_transfer no bastaba: el transcript mostró que Alex decía "te paso con un compañero" pero NUNCA disparaba el nodo. Causa real: el cliente pedía humano **dentro de un subagente** (`n-collect-damage`/date/confirm/info) y esos nodos **no tenían edge a `n-transfer-human`** (solo `n-classifier` y `n-gestionar`). Fix: añadido edge "pide humano/se enfada → n-transfer-human" a los 4 subagentes. `n-transfer-human` no es global (`global_node_setting:null`). Número transfer `+34617314938` (= nº de Manu; al probar, llamar desde OTRO móvil). Flow v10, número usa `inbound_agent_version:null` = latest → live sin publish. Ver [[retell-subagente-sin-edge-a-transfer-no-puede-derivar]].
+
+## Sesión 2026-06-02 (cont.) — Email rebrand + doc cliente + observabilidad
+
+### Email rediseñado (marca EcoBox 360)
+Nodo `Build Emails HTML` de `Reservar_cita` reescrito: cabecera carbón #1E2429 + **logo real** (banner blanco), bloque fecha en carbón, botón "Cómo llegar", pasos honestos. **Sin** sustitución/recogida (el cliente confirmó que NO ofrece esos servicios — pendiente quitarlos también de prompts voz+chat, KB y FAQs si se confirma del todo). **Sin** "un compañero te llamará" (la cita ya se cierra con hora concreta). Email cliente + interno rebrandeados. Previews navegables en `Ecobox/email_previews/{cliente,interno}_ecobox360.html`. Test enviado OK.
+- **Logo hospedado** en n8n: workflow `ASSET — logo EcoBox360 PNG` (id `aSjTWzxmfdb2glCz`) sirve el PNG en `https://n8necobox.agentesialabs.com/webhook/ecobox-logo` (1200×300, base64 embebido). Fuente: `Ecobox/assets/ecobox360-logo-1200.png` (extraído del PDF de marca AAFF). Cuando Cristian dé un PNG oficial hospedado, swap en la var `LOGO`.
+- Email interno sigue a `m.delmonte.p@agentesia.madrid` (pendiente cambiar a `cristian@ecobox360.es`). Sale por voz Y por WhatsApp (mismo workflow).
+
+### Documento entregable "Cómo funciona" (cliente)
+`Ecobox/docs/EcoBox360_como_funciona.pdf` (10 pág, A4, autocontenido) + `.html`. Logos EcoBox + AgentesIA (`~/Downloads/aia.svg`). Pantallazos **reales**: WhatsApp (mock), 2 emails, y Chatwoot real (inbox, handoff conv 18, alta de agente). Generado con Playwright (`/tmp/pw`, chromium 1223). Capturas sueltas en `docs/*.png`.
+
+### Observabilidad — Error Handler (NUEVO, lo que faltaba)
+Antes: CERO alertas si un workflow fallaba (te enterabas por queja del cliente). Ahora:
+- Workflow **`Error Handler — EcoBox`** (id `z2EWXyATOsj6qtAW`): Error Trigger → Set contexto → **Slack #01-incidencias** (`C0ASNEXM2N4`) + **Email a `info@agentesialabs.com` + `m.delmonte.p@agentesia.madrid`**.
+- `errorWorkflow=z2EWXyATOsj6qtAW` enlazado en los 7 críticos (Reservar, Cancelar, Buscar, Mirar, Bot, Recordatorios, Meta health).
+- Slack vía bot token: cred `slackApi` `hFSlkCZGERfTE0Ll` (bot `n8n_aia_bot`, workspace Agentesia Lab). **Hubo que unir el bot al canal** (`conversations.join`, no era miembro) si no daba `not_in_channel`.
+- **Gotchas**: (a) el handler DEBE estar `active` para que `errorWorkflow` lo invoque, y n8n **no activa** si un nodo tiene credencial requerida ausente → el nodo Slack bloqueaba; resuelto creando la cred. (b) `errorWorkflow` SÍ se puede setear por public API (está en la whitelist de settings). (c) credencial `slackApi` por API exige enviar también `signatureSecret` y `notice` (vacíos) aunque `required` solo liste `accessToken`. Ver [[n8n-error-trigger-handler-debe-estar-activo-y-sin-cred-faltante]].
+- Verificado E2E: fallo forzado en `Mirar_disponibilidad` → Slack `ok:True` + email a los 2. **Pendiente opcional**: cron de salud diario (token Meta/OAuth GCal/Chatwoot a punto de caducar).
+
 ## Sesión 2026-06-01 — Chat WhatsApp E2E real + 6 fixes workflows + cleanup GCal
 
 Primer test real de Cristian/Manu por WhatsApp (Chatwoot inbox 2 → bot Alex). Destapó 3 síntomas → 6 bugs reales arreglados sobre ejecuciones de producción (no simuladas). API key n8n del `.credentials.local` **volvió a funcionar** (los PUT/activate fueron 200 todo el día — el 401 del 05-29 era restart de contenedor, ya no aplica). Backups frescos en `Ecobox/wf_{bot,reservar,buscar,cancelar,mirar}_backup_2026-06-01_*.json`.
