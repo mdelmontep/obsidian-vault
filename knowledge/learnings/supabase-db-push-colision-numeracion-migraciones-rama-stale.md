@@ -18,8 +18,11 @@ siguiente hueco real (`git mv` + `sed` en headers, refs cruzadas en comentarios 
 código). Luego `db push` aplica solo las nuevas, limpio.
 
 Ojo: en repos muy activos la colisión REAPARECE si otra rama mergea ENTRE tu PR y tu
-merge (caso 2026-06-04: stock chocó 2× — billing 213-218 y luego fase3 219). Tras
-renumerar, mergear RÁPIDO y verificar en main post-merge que no hay duplicados:
-`git ls-files supabase/migrations | grep -oE '[0-9]{3}_' | sort | uniq -d`.
+merge (2026-06-04/05: stock chocó **3×** — billing 213-218, fase3 219, multiempresa
+227 → renumerado 213-216→219-222→223-226 y beta 227→228). Tras renumerar, mergear
+RÁPIDO y verificar en main post-merge que no hay duplicados:
+`git ls-files supabase/migrations | grep -oE '/[0-9]{3}_' | sort | uniq -d` (con la
+`/` inicial; sin ella, `e164` en `066_...e164...` da falso positivo "164"). Regla ya
+en el CLAUDE.md del proyecto TuFacturaIA: **numerar al ABRIR el PR, no al crear la rama**.
 
 Relacionado: [[supabase-migration-new-rompe-secuencia-nnn-name]].
