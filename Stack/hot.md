@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### OCR — consumidor lee claves fantasma (2026-06-05)
+
+- **Consumidor lee claves que el productor no emite** — JSONB sin tipo compartido = falla silenciosa + tests verdes si prueban el shape equivocado. Ver [[consumidor-lee-claves-que-productor-no-emite]]
+
 ### Email/BD — enum código sin CHECK (2026-06-04)
 
 - **Enum nuevo en código sin ampliar el CHECK de BD = insert muere mudo** — outbox-first aborta el envío entero (recover-password no enviaba a NADIE); el 200 anti-enum del endpoint lo oculta. Ver [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]]
