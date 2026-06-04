@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Email/BD — enum código sin CHECK (2026-06-04)
+
+- **Enum nuevo en código sin ampliar el CHECK de BD = insert muere mudo** — outbox-first aborta el envío entero (recover-password no enviaba a NADIE); el 200 anti-enum del endpoint lo oculta. Ver [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]]
+
 ### Seguridad Supabase — RPC grants (2026-06-04)
 
 - **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas: Postgres concede EXECUTE a PUBLIC por defecto → anon/authenticated invocables con el anon key público. Bypass de pago/IDOR si reciben org_id sin validar. Fix: REVOKE FROM PUBLIC, anon. Ver [[supabase-rpc-security-definer-execute-public]]
