@@ -59,6 +59,14 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Retell fecha sin hardcodear ni cron** — `{{current_time_Europe/Madrid}}` + `{{current_calendar_Europe/Madrid}}` (vars de sistema por llamada). Ver [[retell-current-time-y-current-calendar-dynamic-vars-evitan-fecha-hardcodeada]]
 - **Retell transfer: cold vs warm + nº ≠ caller** — warm espera descuelgue+detección humano (frágil); cold reenvía directo; el nº destino no puede ser el del que llama. Ver [[retell-cold-vs-warm-transfer-y-numero-distinto-del-caller]]
 
+
+### Centro Elphis — Retell v4 + n8n (2026-06-04)
+
+- **Function node instruction = cómo construye ISO** — sin ella LLM inventa año 2024. Ver [[retell-function-node-instruction-construye-iso-params]]
+- **Published flow → 400 → crear flow nuevo** — PATCH bloqueado, crear + reasignar agente. Ver [[retell-published-flow-400-crear-nuevo-y-reasignar]]
+- **Map args no ignorar fechas LLM** — snap-forward, no override total. Ver [[n8n-retell-webhook-map-args-snap-forward-no-override-total]]
+- **Chatwoot labels: GET + merge antes de POST** — POST reemplaza todo. Ver [[chatwoot-labels-post-replace-all-get-merge-pattern]]
+
 ### EcoBox — chat WhatsApp E2E (2026-06-01)
 
 - **n8n tool-webhook no debe mentir** — Respond hardcodeado a éxito + nodo de acción con onError:continue = el bot confirma reservas/cancelaciones que no ocurrieron. Gatear efectos y Respond en `!$json.error`. Ver [[n8n-webhook-tool-respond-no-hardcodear-exito-gatear-en-error-nodo]]
