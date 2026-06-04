@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Seguridad Supabase — RPC grants (2026-06-04)
+
+- **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas: Postgres concede EXECUTE a PUBLIC por defecto → anon/authenticated invocables con el anon key público. Bypass de pago/IDOR si reciben org_id sin validar. Fix: REVOKE FROM PUBLIC, anon. Ver [[supabase-rpc-security-definer-execute-public]]
+
 ### Frontend mobile — marquee + iOS overlay (2026-06-02)
 
 - **Marquee seamless** — wrapper único `w-max` animado + `loading="eager"` en imgs. Sin `w-max` el `-50%` se calcula sobre el viewport → logos desaparecen. Ver [[marquee-css-seamless-loop-w-max-eager]]

@@ -327,6 +327,12 @@ _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda 
 
 ## Seguridad
 
+### Auditoría de seguridad 2026-06-04 (6 agentes + red team activo)
+- **C1 (crítico) RESUELTO en prod** — RPCs SECURITY DEFINER ejecutables por anon/authenticated vía PostgREST con anon key público (bypass de pago `change_billing_status`, IDOR, DoS numeración, abuso OTP). Mig 213 REVOKE EXECUTE FROM PUBLIC/anon/authenticated en verbos admin-only. Validado desde fuera: anon→401, authenticated→403. Ver [[supabase-rpc-security-definer-execute-public]].
+- **PR #131 mergeado a main** (SSRF render-pdf+webhooks via `src/lib/security/ssrf.ts`, security headers anti-clickjacking en `next.config.ts`, signout CSRF, voice/generate guard phone↔org, periodo/file.name/email-outbox/idempotency). ⚠️ **FALTA desplegar a prod (Dokploy)** — esos fixes de código no están en prod hasta el deploy; solo la mig 213 está aplicada.
+- **Confirmado seguro (red team):** RLS multi-tenant sin fuga cross-org, superficie sin-auth (v1/admin/internal/voice bloquean), billing sin bypass, XSS escapado por React, escalada admin imposible para no-superadmin.
+- **Config pendiente (acción user, no código):** bucket `logos` listing off; leaked-password protection on (Auth); `SIGNING_LEGACY_UNTIL` en Dokploy (cierra x-service-key legacy); cuenta E2E (`.env.test`) sin rol superadmin de plataforma.
+
 ### Deudas P0/P1 con threshold claro (priorizadas)
 
 🔴 **P0 — ANTES de primer cliente facturando con dinero real**:
