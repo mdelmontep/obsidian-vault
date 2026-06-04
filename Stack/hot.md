@@ -52,6 +52,7 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **n8n PUT workflow rechaza settings extra** — `callerPolicy`/`binaryMode` del GET previo dan 400. Filtrar a solo `executionOrder`. Ver [[n8n-api-put-workflows-rechaza-settings-desconocidos]]
 - **Inventario auth n8n: filtrar `.code` deja fuera toolCode + HTTP** — usar `'x-service-key' in json.dumps(parameters).lower()` en todos los tipos. Ver [[n8n-inventario-auth-incluye-toolcode-y-httprequest]]
 - **Stripe `subscription.deleted` por sub.id, no por kind** — handler que solo cubre `kind=fiscal_addon` ignora cancelaciones plan base → orgs en estado fantasma. Ver [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]]
+- **Stripe sub multi-item** — resolver item por price.id, no items[0]; sync quantity del add-on. Ver [[stripe-subscription-multi-item-resolver-por-price-no-indice]]
 
 ### EcoBox — voz 2ª ronda test (2026-06-02)
 
