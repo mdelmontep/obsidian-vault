@@ -14,13 +14,14 @@ Fix: un helper único (`getModuleAccess(orgId, featureId): 'allow'|'upsell'|'red
 como single source of truth de la matriz, y todas las páginas lo llaman. Si una
 regla de acceso vive en >1 sitio, asume que ya divergió.
 
-Trampa del flag global "beta/lanzamiento": un estado de disponibilidad global
-(visible+usable sin add-on) activa el sidebar y el gating de la página propia, pero
-NO las **integraciones embebidas del módulo en OTRAS páginas** si esas usan
-`hasFeature(id)` (que el flag global no toca). Caso real: en beta `/inventario` se
-veía pero la sección de líneas de stock en `/ingesta` (gateada por `hasFeature('stock')`)
-no aparecía. Fix: helper `moduleEnabled(id) = disponibilidad==='beta' || hasFeature(id)`
-y usarlo en los gating de UI que deciden mostrar/usar un módulo (no en sub-features).
+Trampa del flag global "beta": debe respetarse en las TRES capas — página
+(`getModuleAccess`), UI embebida (`moduleEnabled`, no `hasFeature`) y **endpoint**
+(`checkFeatureGate`/`orgHasFeature`). Olvidar una rompe el módulo en beta de forma
+SILENCIOSA: en una auditoría, beta activaba UI+página pero `/api/stock/*` daba 403,
+oculto por `if(!res.ok) return` en el `useEffect` → catálogo vacío sin error.
+Helpers: `moduleEnabled(id)=disponibilidad==='beta'||hasFeature(id)` (UI) + espejo en
+el gate de endpoint. Cobertura: un smoke con el add-on DADO no valida beta puro —
+prueba el estado real del flag, no un proxy.
 
 Patrón hermano (vista admin): cuando el superadmin debe VER todo pero también
 previsualizar como cliente, no cambies el default — añade un toggle

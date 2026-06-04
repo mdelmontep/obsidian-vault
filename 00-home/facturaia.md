@@ -132,7 +132,8 @@ Workflow n8n `Drive Sync - FacturaIA` (`TwDd1OkMqr3nhSso`) **activado y verifica
 _Lo cerrado vive en [[facturaia-historico-detallado]]. Detalle de cada tarea en §PRIORIDADES._
 
 - **Sprint Seguridad/2FA** — working tree sin commit (2026-05-31). Pestaña Ajustes→Seguridad completa + 2FA TOTP + política org. Falta commit + aplicar mig 196 + smoke. Ver §PRIORIDADES P0 + §WIP.
-- **Drive sync wiring final** — workflow n8n inactivo, bloqueado por `FACTURAIA_SERVICE_KEY`. Ver §PRIORIDADES P0.
+- **🔑 Seguridad/crons — cortar legacy `x-service-key`** (último 5%, 2026-06-05) — 24 crons + Drive Sync YA en HMAC v2 (Drive Sync migrado n8n→cron Dokploy, workflow `TwDd1OkMqr3nhSso` DESACTIVADO). Falta: migrar workflow n8n **WhatsApp Receptor** `pqSWkDIHqmSVHotB` (4 nodos inline + `Hash Session`) a firma v2 **+ smoke E2E del bot WA** → luego `SIGNING_LEGACY_UNTIL` en pasado. Patrón listo (Build HMAC Request). Detalle completo en §Seguridad → "Migración crons HMAC v2". Ver [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]].
+- ~~**Drive sync wiring final** — workflow n8n inactivo~~ → CERRADO: migrado a Dokploy v2 (ver entrada de arriba).
 - **Módulo Stock/Inventario — COMPLETO EN PROD** (A-C PR #130 + Fase D PR #137+#139, migs `223-226` aplicadas 2026-06-04). D1-n8n OCR WhatsApp→SSOT validado mono+multi-org, D5 RPC validado E2E (demo 12→15 PMP 7.00), UX crear producto. Sigue `proximamente` (invisible). Residual: E2E browser UI pre-activación. Detalle [[facturaia-modulo-stock]].
 
 ## Smoke tests pendientes
