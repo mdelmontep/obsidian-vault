@@ -17,4 +17,9 @@ Fix: reconciliar con `git merge origin/main` + **renumerar** tus migraciones al
 siguiente hueco real (`git mv` + `sed` en headers, refs cruzadas en comentarios y
 código). Luego `db push` aplica solo las nuevas, limpio.
 
+Ojo: en repos muy activos la colisión REAPARECE si otra rama mergea ENTRE tu PR y tu
+merge (caso 2026-06-04: stock chocó 2× — billing 213-218 y luego fase3 219). Tras
+renumerar, mergear RÁPIDO y verificar en main post-merge que no hay duplicados:
+`git ls-files supabase/migrations | grep -oE '[0-9]{3}_' | sort | uniq -d`.
+
 Relacionado: [[supabase-migration-new-rompe-secuencia-nnn-name]].

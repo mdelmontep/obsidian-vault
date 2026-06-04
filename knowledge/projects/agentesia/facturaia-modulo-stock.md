@@ -20,9 +20,9 @@ Add-on de pago (12,90€/mes). Extiende `catalogo_servicios` (NO tabla nueva) + 
 - **Para ACTIVAR a un cliente**: `/admin/modules` → stock → "Activo" + dar el add-on a su org (`org_features`).
 - Auditado en composición (3 agentes, 6 bugs corregidos; 2 bloqueantes: anulación no reponía stock por catalogo_id no propagado; escritura cross-org por join sin org_id). Smoke ventas A-C validado en test cloud.
 
-## Fase D (rama feat/stock-compras) — commits y estado
-Commits (pusheados): `694817f` D2+D3 · `5012795` D1-repo · `45285fa` D4+D5 · `b57a0c7` mig 216 drift.
-**Migs en rama NO en prod: 213, 214, 215, 216.**
+## Fase D — EN MAIN (2026-06-04), falta `db push`
+Mergeada vía **PR #137** (`feat/stock-compras`→main) + **PR #139** fix renumber. + UX crear producto (commit `949ed4e`).
+**Migs renumeradas 213-216 → `223-226`** (colisión: billing mergeó 213-218, fase3 mergeó 219). En main, **NO aplicadas a prod** (red del dev filtra puertos Postgres → `db push` pendiente desde red con acceso PG). 223=compras+PMP · 224=matching · 225=aprobar_recibida_con_lineas · 226=bandeja_factura_id.
 
 - **D2 · mig 213** motor compras: recibida factura→ENTRADA + PMP incremental `(stock·pmp + qty·coste_eur)/(stock+qty)`; recibida abono→salida; trigger ampliado a `sin_aprobar→pendiente`. ✅ **VALIDADO** test (compra 5@8 sobre 7@5 → 12@6.25 exacto).
 - **D3 · mig 214** matching: índice gin trigram + RPC `sugerir_productos_por_descripcion` (`word_similarity(proveedor_normalizado(nombre), proveedor_normalizado(desc))` + operador `nombre <% desc`). ✅ **VALIDADO**.
@@ -37,10 +37,10 @@ Commits (pusheados): `694817f` D2+D3 · `5012795` D1-repo · `45285fa` D4+D5 · 
 - `created_via` es NOT NULL en facturas (enum web|voice|api|email|ocr|portal; en psql hay que pasarlo, la app lo rellena por contexto auth).
 
 ## Pendiente Fase D
-1. ~~**D1-n8n**~~ ✅ **HECHO 2026-06-04** (vía API n8n, PUT workflow). Recableados **DOS** nodos OCR inline del workflow WhatsApp `pqSWkDIHqmSVHotB` al webhook SSOT `factura-ocr` (responseMode lastNode → firma HMAC → `ocr-process`): (a) `Disparar OCR` single-org → ahora `httpRequest` con retry×3; (b) `Procesar Ingesta Pendiente` multi-org → orquestación (storage+factura+bandeja) preservada, solo el bloque OCR delegado al webhook. Eliminado prompt inline duplicado + `OPENAI_API_KEY` de ambos (solo queda en `Transcribir Whisper`, voz). Backup pre-cambio en `n8n-backups/facturaia/pqSWkDIHqmSVHotB_..._pre-D1ocr_2026-06-04.json`. **active=true, 144 nodos, settings y conexiones intactas.** Validación previa: sintaxis JS async OK, HMAC helper con backticks reales (atrapé un bug de escaping antes del PUT). **SMOKE MANUAL PENDIENTE (usuario)**: enviar foto de factura por WhatsApp (single-org y multi-org) → ver `bandeja_ingesta.datos_extraidos.lineas` poblado + factura con datos. Residual: `binaryMode` se conservó pese a no enviarlo (n8n preserva internos).
-2. **Validación end-to-end UI** de D4/D5: imposible hasta desplegar D1 + tener recibida con líneas OCR reales (el motor SQL ya está validado).
-3. **UX**: "crear producto nuevo" desde el selector de línea (hoy solo asigna a existentes + "sin asignar"; mientras, el user crea en /inventario y reabre).
-4. **Merge `feat/stock-compras`→main + `db push` 213-216 a prod** SOLO tras validar end-to-end.
+1. ~~**D1-n8n**~~ ✅ **HECHO 2026-06-04** (vía API n8n, PUT workflow). Recableados **DOS** nodos OCR inline del workflow WhatsApp `pqSWkDIHqmSVHotB` al webhook SSOT `factura-ocr` (responseMode lastNode → firma HMAC → `ocr-process`): (a) `Disparar OCR` single-org → ahora `httpRequest` con retry×3; (b) `Procesar Ingesta Pendiente` multi-org → orquestación (storage+factura+bandeja) preservada, solo el bloque OCR delegado al webhook. Eliminado prompt inline duplicado + `OPENAI_API_KEY` de ambos (solo queda en `Transcribir Whisper`, voz). Backup pre-cambio en `n8n-backups/facturaia/pqSWkDIHqmSVHotB_..._pre-D1ocr_2026-06-04.json`. **active=true, 144 nodos, settings/conexiones intactas.** ✅ **VALIDADO EN VIVO 2026-06-04** mono-org y multi-org (ejecuciones webhook OCR `success`). Incidente previo: rompí prod ~10 min (`return` usaba var `bandeja` eliminada → ReferenceError); revert al backup + harness de runtime con mocks + re-deploy. Lección → [[n8n-code-node-validar-runtime-con-mocks-no-solo-sintaxis]].
+2. ~~Validación E2E UI D4/D5~~ motor validado E2E (demo real: stock 12→15, PMP 7.00). E2E browser de la UI de stock = **gate pre-activación** (módulo `proximamente`, nadie lo ve aún).
+3. ~~UX crear producto desde selector~~ ✅ **HECHO** (commit `949ed4e`): opción "+ Crear producto nuevo" reutiliza `POST /api/catalogo/productos` + auto-asigna.
+4. ~~Merge + db push~~ Merge ✅ (en main). **`db push` 223-226 a prod PENDIENTE** desde red con acceso Postgres: `cd ~/facturaia && git checkout main && git pull && supabase db push --linked` (aplica solo 223-226; prod ya tiene 218+219).
 5. Fase E openapi/docs `/api/v1/stock/*`. Limitaciones previas: presupuesto→factura y voz no propagan catalogo_id; `auto_descontar` implemented:false.
 
 ## Drift de esquema detectado + fix (2026-06-02)
