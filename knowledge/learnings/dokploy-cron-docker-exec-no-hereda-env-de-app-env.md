@@ -17,3 +17,11 @@ Hallazgos imagen `node:20-alpine`: openssl NO está; node SÍ en `/usr/local/bin
 Fix: el script de cron lee el secret de `/app/.env` con node (`fs.readFileSync` + regex)
 si no está en env, y firma con node (no openssl). `compose.deploy` por API NO recrea
 el container (no refresca env). Ver [[supabase-rpc-security-definer-execute-public]].
+
+ADENDA (migración crons HMAC v2): un cron cuyo command legacy mandaba `-d '{}'`
+(cosmético — el legacy x-service-key NO firma el body) falla con 401 bad_signature
+al migrar a firma v2 si firmas sha256('{}'): el endpoint pasa body vacío a
+requireServiceAuth. Fix: migrar SIN body (firma sha256('')). Validar cada cron
+con body por separado al migrar. Crons inocuos (purgas/sweeps) ejecutables
+manualmente vía firma para validar; los de notificación (cobros-reminders,
+*-alerts, fiscal-avisos) NO dispararlos a mano (envían a clientes) — validar en ciclo.
