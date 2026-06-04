@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Seguridad — SSRF pinning de IP (2026-06-05)
+
+- **Validar la IP no basta sin pinar el fetch** — fetch por hostname re-resuelve DNS (rebinding TOCTOU); pinear con undici Agent `connect.lookup` a la IP validada, manteniendo hostname para SNI. Ver [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]]
+
 ### Git / CI — gotchas (2026-06-05)
 
 - **rebase --onto sobre upstream movido suelta tu commit** — "Successfully rebased" miente; verifica `git log origin/main..HEAD` antes de push, recupera con reflog+cherry-pick. Ver [[git-rebase-onto-upstream-movido-suelta-commit-reflog-recupera]]

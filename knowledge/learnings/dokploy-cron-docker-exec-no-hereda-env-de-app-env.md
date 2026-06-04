@@ -25,3 +25,9 @@ requireServiceAuth. Fix: migrar SIN body (firma sha256('')). Validar cada cron
 con body por separado al migrar. Crons inocuos (purgas/sweeps) ejecutables
 manualmente vía firma para validar; los de notificación (cobros-reminders,
 *-alerts, fiscal-avisos) NO dispararlos a mano (envían a clientes) — validar en ciclo.
+
+ADENDA 2 (auditoría post-migración): al migrar crons a HMAC v2 (`sign-call.sh`) NO asumir
+que TODOS los endpoints `/api/internal/*` usan `requireServiceAuth`. `verifactu/process`
+tiene authCheck CUSTOM (`x-service-key === SUPABASE_SERVICE_ROLE_KEY`, no la firma ni el
+FACTURAIA_SERVICE_KEY normal). Migrar su cron a sign-call.sh (firma v2) lo dejó dando 401
+(estaba disabled, no rompió). Verificar el authCheck del endpoint ANTES de migrar su cron.
