@@ -12,6 +12,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Git / CI — gotchas (2026-06-05)
+
+- **rebase --onto sobre upstream movido suelta tu commit** — "Successfully rebased" miente; verifica `git log origin/main..HEAD` antes de push, recupera con reflog+cherry-pick. Ver [[git-rebase-onto-upstream-movido-suelta-commit-reflog-recupera]]
+- **build no corre vitest** — registry/enum con test de conteo rompe en CI al añadir entrada; corre `npx vitest run` antes de push. Ver [[pre-commit-build-no-corre-tests-registry-conteo-rompe-ci]]
+
 ### OCR — consumidor lee claves fantasma (2026-06-05)
 
 - **Consumidor lee claves que el productor no emite** — JSONB sin tipo compartido = falla silenciosa + tests verdes si prueban el shape equivocado. Ver [[consumidor-lee-claves-que-productor-no-emite]]

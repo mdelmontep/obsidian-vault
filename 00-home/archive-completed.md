@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-05 TuFacturaIA — **Módulo Multi-empresa completo en prod (PR #150)**. El módulo estaba en el catálogo pero hueco. Ahora: Métricas custom (empresas usadas/incluidas/extra + facturación agregada de la cuenta), Actividad (`module_events` empresa_creada/empresa_extra_comprada), Configuración real = selector de **empresa por defecto** por-usuario (`profiles.default_org_id` mig 229, cableada en `resolveActiveOrg`), y Copiloto IA tool `compararEmpresas` (compara KPIs entre empresas de la cuenta). Manuales usuario §3+§8.9 y admin §7. Squash `97acbcf`. Incidente git (rebase soltó commit → reflog/cherry-pick) y CI (registry test 8→9 tools) resueltos. Ver [[git-rebase-onto-upstream-movido-suelta-commit-reflog-recupera]] + [[pre-commit-build-no-corre-tests-registry-conteo-rompe-ci]].
+
 - 2026-06-05 TuFacturaIA — **Multiempresa F1+F2+F3+F3b COMPLETO en prod**. Modelo "1 cuenta, N empresas": `billing_accounts` fuente única de plan/billing_status/customer/subscription (dual-write a `organizations` en transición), Pro=2/Enterprise=5 empresas incluidas, empresa extra +12€/mes vía Stripe subscription item con quantity (mismo ciclo, proration `always_invoice`). Migs 215-219+227. PRs #132/#134/#136/#140 (F1-F3) + #144 (F3b) mergeados y desplegados (autoDeploy). Auditado por 7 agentes + UI `impeccable`. Sin validación E2E del cobro (todas las orgs son complimentary → 409 `no_active_subscription`). Ver [[stripe-subscription-multi-item-resolver-por-price-no-indice]].
 - 2026-06-05 TuFacturaIA — mig 214 `email_log_kind_password_reset` registrada en ledger (prod=main=227); recover-password operativo. Cierra la tarea "registrar mig 214".
 
