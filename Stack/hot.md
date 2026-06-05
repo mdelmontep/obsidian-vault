@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Multiempresa SaaS — 3 ejes (2026-06-05)
+
+- **Navegar=membresía · agregar=propiedad · cobrar=cuenta** — no mezclar: agregar por membresía cruda suma datos de clientes que gestionas (bug + RGPD). Ver [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]] · [[ADR-028-multiempresa-scope-navegar-agregar-cobrar]]
+
 ### Seguridad — SSRF pinning de IP (2026-06-05)
 
 - **Validar la IP no basta sin pinar el fetch** — fetch por hostname re-resuelve DNS (rebinding TOCTOU); pinear con undici Agent `connect.lookup` a la IP validada, manteniendo hostname para SNI. Ver [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]]
