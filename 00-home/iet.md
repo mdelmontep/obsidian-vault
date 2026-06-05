@@ -1,63 +1,69 @@
 ---
 title: iet
-date: 2026-06-02
+date: 2026-06-05
 tags: [cliente, iet, hub]
 ---
 
 # IET — Instalaciones Eléctricas y de Telecomunicación
 
-Empresa de instalaciones eléctricas y telecomunicaciones, Madrid, fundada en 1989. Proyecto actual: **rediseño completo de su web** (la antigua era WordPress 4.9 con HTTPS roto). Web nueva en Astro estática, en preview en surge.sh.
+Empresa de instalaciones eléctricas y telecomunicaciones, Madrid, fundada en 1989. Proyecto actual: **rediseño completo de su web** (la antigua era WordPress 4.9). Web nueva en Astro estática, **en producción en iet.es** con HTTPS activo.
 
-## Estado
+## Estado actual
 
-- **Web v3 EN PREVIEW** — `https://iet-preview.surge.sh` (surge.sh, build automático tras cada cambio desde Claude Code)
-- **Repo GitHub**: github.com/mdelmontep/IET (privado, rama `main`, último commit `b43d35e`)
-- **Formulario Web3Forms**: key `b81370cc` configurada, recipient `administracion@iet.es` añadido en el dashboard de Web3Forms. Funciona — OJO: si el email sigue llegando a Gmail, crear una key nueva en web3forms.com directamente con `administracion@iet.es`.
-- **Deploy definitivo pendiente**: subir `dist/` al Apache de iet.es via FTP/SFTP + activar TLS (Let's Encrypt).
+- **PRODUCCIÓN ACTIVA** — `https://iet.es` (SFTP sobre servidor IONOS/1&1, SSL Let's Encrypt activo)
+- **Preview**: `https://iet-preview.surge.sh`
+- **Repo GitHub**: github.com/mdelmontep/IET (privado, rama `main`, último commit `7e9e4ad`)
+- **WordPress original**: renombrado a `_index.php.bak` en el servidor — intacto pero no sirve
+- **SFTP**: `home311542229.1and1-data.host` · puerto 22 · usuario `acc1570798660` (cred en 1Password)
 
-## Lo que está hecho en esta sesión (2026-06-02)
+## Flujo de deploy
+
+1. Cambios en `/Users/manueldelmonte/IET/src/`
+2. `npm run build` → genera `dist/`
+3. Subir archivos afectados vía sftp + nuevo CSS hash + `chmod 644` archivos + `chmod 755` directorios
+4. `git push origin main`
+
+OJO: cada build puede cambiar el hash del CSS (`_astro/Layout.XXXX.css`). Subir siempre el nuevo CSS o la página se ve sin estilos.
+
+## Hecho en sesión 2026-06-02 / 2026-06-05
 
 ### Contenido
-- Obras: filtros eliminados, h1 y descripción actualizados
-- Nuevas tecnologías: "control de clima / calefacción" → **control de accesos / sistema KNX**
-- Años en obras destacadas: Merz 2024, Nielsen 2020, WeWork 2019, Zeppelin 2018
-- Clientes/referencias: clientsAll actualizado (Flulle, Korus, Lymet, Plasfoc, CBRE, Savills, STG Group, Sutega, Unen añadidos; Setel eliminado)
+- Obras: filtros eliminados, h1 y descripción actualizados; "Tetris · Amadeus" → "Amadeus"
+- Nuevas tecnologías: tagline "Automatización de Edificios y Optimización Energética"; texto intro revisado por cliente (Natalia)
+- Quiénes somos: "radioenlaces" → "soluciones de movilidad eléctrica, instalaciones fotovoltaicas y gestión inteligente de edificios"
+- Certificados: card de fabricantes eliminada; grid 2-col → 1-col; foto técnico IET añadida a la derecha con duotono + hover color
+- Servicios: "subcontratar" eliminado de descripción; `seoTitle` por servicio
+- Aviso legal: emails → `lopd@iet.es` (antes `administracion@iet.es`)
+- Imágenes: hospital y datacenter reemplazadas por versiones de mayor calidad
 
-### Logos marquee (15, todos reales)
-Tetris · Savills · CBRE · Indra · IFEMA · Prosegur · Ericsson · Jones Lang LaSalle · Lledó Iluminación · Plasfoc · Sutega · STG Group · Grupo Lymet · Unen · INSS
+### UX / Mobile
+- Header: `.btn` movido a `@layer components` (fix overflow horizontal en iOS)
+- Header: CTA solo en `lg:` (desktop), móvil solo logo + hamburger
+- Hero image: `aspect-[3/2]` → `aspect-square` en móvil; h1 `clamp(1.75rem,7.5vw,2.25rem)` fluido
+- Marquee: `-webkit-mask-image` añadido (logos invisibles en iOS Safari sin prefijo)
+- IntersectionObserver: threshold `0.15` → `0.05`, rootMargin `0px` (reveals en móvil)
+- Hover duotono: todas las imágenes con overlay rojizo revelan color en 500ms al hacer hover
 
-### SEO completo
-- JSON-LD `LocalBusiness`+`ElectricalContractor`: añadidos `openingHours`, `geo` (coordenadas aprox. 28039), `hasMap`, `logo`
-- Títulos de servicio con keywords: "Instalaciones Eléctricas para Empresas en Madrid y toda España · IET Instalaciones", etc.
-- `Service` schema + `FAQPage` schema en cada `/servicios/[slug]/`
-- Sitemap: `lastmod`, `changefreq`, `priority` por tipo de página
-- `llms.txt` creado en `/public/llms.txt` para rastreadores de IA
-- Audit técnico: score 81/100. Pendientes solo en producción (HTTP→HTTPS, security headers)
+### SEO / Legal
+- JSON-LD expandido, sitemap con lastmod, llms.txt, Service+FAQ schema por servicio
+- Banner cookies RGPD: tarjeta flotante `.tray` con Aceptar/Rechazar + localStorage
 
-### Mobile / Header
-- Menú móvil iOS: body-lock con `position: fixed + top: -scrollY` (fix definitivo para Safari)
-- Overlay: `h-[100dvh]` para cobertura correcta al hacer scroll
-- Formulario contacto primero en mobile
-- Hero aspect-ratio mobile corregido
+### Deploy
+- Subida completa a producción vía lftp + sftp
+- Permisos corregidos: `chmod 755` directorios, `chmod 644` archivos (IONOS crea dirs con 700)
+- HTTPS activo: SSL activado desde panel IONOS; redirección HTTP→HTTPS en `.htaccess`
 
-### Marquee
-- Estructura refactorizada: div único `.marquee-inner` animado (antes dos `<ul>` independientes → salto visible)
-- `w-max` en el inner div para cálculo correcto del `-50%`
-- `loading="eager"` en todas las imágenes del marquee (antes `lazy` → logos desaparecían)
-- Duración: 20s loop continuo y seamless
+## Pendientes
 
-## Próximos hitos
-
-1. **Deploy a iet.es** — `npm run build` → subir `dist/` al Apache por FTP/SFTP + TLS
-2. **HTTP→HTTPS redirect + security headers** — configurar en Nginx/Apache/Cloudflare al desplegar
-3. **Verificar coordenadas geo** — JSON-LD tiene aprox. 40.459, -3.703 (zona 28039). Verificar en Google Maps con dirección exacta C/ Armenteros 15.
-4. **Fotos reales de obra** — sustituir stock de `public/images/` por fotos reales (mismo nombre de archivo, mismo duotono)
-5. **Web3Forms**: si email sigue llegando a Gmail → crear key nueva con `administracion@iet.es`
+1. **Verificar coordenadas geo** — JSON-LD tiene aprox. 40.459, -3.703 (C/ Armenteros 15, 28039)
+2. **Web3Forms**: si email de contacto sigue llegando a Gmail → crear key nueva con `administracion@iet.es`
+3. **Security headers** — Content-Security-Policy, HSTS, X-Frame-Options (requiere acceso a config Apache en IONOS)
+4. **Fotos reales de obra** — sustituir stock de `public/images/` por fotos reales del cliente
 
 ## Links rápidos
 
+- Producción: https://iet.es
 - Preview: https://iet-preview.surge.sh
 - Repo: github.com/mdelmontep/IET
-- Local: `/Users/manueldelmonte/IET` · `npm run dev` (4321) · build: `npm run build && npx surge dist/ iet-preview.surge.sh`
-- Web vieja: http://www.iet.es (WordPress 4.9, solo HTTP)
-- Detalle técnico: [[clientes/iet/web-iet|Web IET — stack, diseño, despliegue]]
+- Local: `/Users/manueldelmonte/IET` · `npm run dev` (4321) · build: `npm run build`
+- Formulario Web3Forms: key `b81370cc`, recipient `administracion@iet.es`
