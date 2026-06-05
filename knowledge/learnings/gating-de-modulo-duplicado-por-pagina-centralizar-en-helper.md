@@ -14,14 +14,15 @@ Fix: un helper único (`getModuleAccess(orgId, featureId): 'allow'|'upsell'|'red
 como single source of truth de la matriz, y todas las páginas lo llaman. Si una
 regla de acceso vive en >1 sitio, asume que ya divergió.
 
-Trampa del flag global "beta": debe respetarse en las TRES capas — página
-(`getModuleAccess`), UI embebida (`moduleEnabled`, no `hasFeature`) y **endpoint**
-(`checkFeatureGate`/`orgHasFeature`). Olvidar una rompe el módulo en beta de forma
-SILENCIOSA: en una auditoría, beta activaba UI+página pero `/api/stock/*` daba 403,
-oculto por `if(!res.ok) return` en el `useEffect` → catálogo vacío sin error.
-Helpers: `moduleEnabled(id)=disponibilidad==='beta'||hasFeature(id)` (UI) + espejo en
-el gate de endpoint. Cobertura: un smoke con el add-on DADO no valida beta puro —
-prueba el estado real del flag, no un proxy.
+Trampa del flag global "beta": debe respetarse en las CUATRO capas — página
+(`getModuleAccess`), UI embebida (`moduleEnabled`, no `hasFeature`), **endpoint**
+(`checkFeatureGate`) y **tools del copiloto** (`registry.ts`, otra superficie de la
+feature). Olvidar una rompe el módulo en beta de forma SILENCIOSA: beta activaba
+UI+página pero `/api/stock/*` daba 403 (oculto por `if(!res.ok) return` en el
+`useEffect`); y el copiloto usaba `orgHasFeature` crudo → daría 403 en beta. Fix:
+helper boolean único `orgCanUseFeature(orgId,featureId)=disponibilidad==='beta'||
+orgHasFeature` compartido por endpoint + copiloto (+ `moduleEnabled` espeja en UI).
+Cobertura: un smoke con el add-on DADO no valida beta puro — prueba el flag real.
 
 Patrón hermano (vista admin): cuando el superadmin debe VER todo pero también
 previsualizar como cliente, no cambies el default — añade un toggle

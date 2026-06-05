@@ -18,3 +18,6 @@ El módulo Multi-empresa mostraba "1 empresa" a usuarios que gestionan 2. El sch
 
 ## Consecuencias
 Orgs de clientes que solo gestionas (gestor/contable) NO se agregan (correcto RGPD/fiscal). Pricing intacto ("1 incluida +12€/extra", diferenciador vs Holded/Xero). NO se consolidan los legacy (cada org su cuenta; consolidar caso a caso vía runbook futuro cuando un cliente pida factura conjunta). Pendiente futuro: panel asesor ("empresas que gestiono", listar sin agregar) + guard `is_account_owner` para billing. Regla transferible en [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]].
+
+## Actualización 2026-06-05 (PR #157, audit cross-PR)
+Corolario de pricing del eje "agregar=propiedad": la feature `multiempresa` se **alineó con la cuota** → incluida en **Pro** (mig 230), no enterprise-only. Motivo: Pro ya tiene cuota de 2 empresas y recibía **403** al intentar consolidarlas. Frontera: cuota > 1 empresa → tiene el módulo; Enterprise se diferencia por volumen (5). Source of truth del eje propiedad extraído a helper `getOwnedOrgs`/`getOwnedOrgIds` (`src/lib/auth/owned-orgs.ts`). Smoke E2E Pro verde. Regla de pricing en [[feature-atada-a-capacidad-del-plan-no-se-cobra-aparte]].
