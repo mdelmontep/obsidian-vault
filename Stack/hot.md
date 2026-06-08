@@ -12,6 +12,12 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — Design system + CSS theming (2026-06-09)
+
+- **`--pill-*` vars con fallback = theming scoped sin tocar tokens globales** — `[data-pill-theme="pastel"]` redefine solo `--pill-*`; el UI global no cambia. Preview en la UI de settings aplica el atributo en su propio div. Ver [[css-scoped-theming-pill-vars]]
+- **Playwright `filter({ has: locator })` puede timeout** — en páginas con transiciones activas o fuentes cargando, el locator filtrado por heading no resuelve; pasar a `fullPage: true` en `toHaveScreenshot`. Ver [[playwright-section-locator-filter-timeout]]
+- **Baselines Playwright son OS-dependientes** — `darwin` ≠ `jammy`; para CI estable regenerar dentro del container `mcr.microsoft.com/playwright:vX-jammy`.
+
 ### Postgres — contador serie + INSERT = misma TX (2026-06-08)
 
 - **Split-TX quema números de serie** — `next_invoice_number_for_org` en TX1, INSERT en TX2: si TX2 falla el contador ya commitió → hueco. Fix: `SELECT FOR UPDATE` + `UPDATE contador` + INSERT dentro del mismo RPC. Ver [[postgres-split-tx-counter-burn-serie-numeracion]]
