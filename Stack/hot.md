@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### Postgres — contador serie + INSERT = misma TX (2026-06-08)
+
+- **Split-TX quema números de serie** — `next_invoice_number_for_org` en TX1, INSERT en TX2: si TX2 falla el contador ya commitió → hueco. Fix: `SELECT FOR UPDATE` + `UPDATE contador` + INSERT dentro del mismo RPC. Ver [[postgres-split-tx-counter-burn-serie-numeracion]]
+
 ### Multiempresa SaaS — 3 ejes (2026-06-05)
 
 - **Navegar=membresía · agregar=propiedad · cobrar=cuenta** — no mezclar: agregar por membresía cruda suma datos de clientes que gestionas (bug + RGPD). Ver [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]] · [[ADR-028-multiempresa-scope-navegar-agregar-cobrar]]

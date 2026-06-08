@@ -1,6 +1,6 @@
 ---
-title: Simarro Properties — Snapshot estado 2026-05-28
-date: 2026-05-28
+title: Simarro Properties — Snapshot estado 2026-06-08
+date: 2026-06-08
 source: sesion-claude-code
 tags: [simarro, n8n, kommo, retell, estado, snapshot]
 ---
@@ -91,6 +91,38 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 - **E2E verificado** (simulación sin mock → flujo real): lead Kommo + evento Google Calendar. Confirmado por Ramón viendo la reserva en `consultingsimarroproperties@gmail.com`.
 - **Bloqueante real para routing por-agente sigue siendo**: Ramón añade `agente:` en Idealista (mientras tanto TODO cae en el calendario general).
 
+## Sesión 2026-06-08 — Automatizaciones P4/P5 + email post-visita
+
+### Kommo — nuevos stages en "Embudo de ventas" (`13546071`)
+- **`Post-visita`** (`107269815`, verde) — el lead entra aquí automáticamente 48h después de la visita
+- **`En seguimiento`** (`107269819`, amarillo) — para uso manual cuando se activa una alerta de inactividad
+
+### P4 — Seguimiento post-visita 48h (HECHO)
+- **`Oa1lSQuDgEZvZCNS` Recordatorios modificado**: añadido tercer caso al switch — detecta tareas Meeting cuyo `complete_till` fue hace ~48h (ventana ±15min). Dispara:
+  1. Salesbot 87873 (plantilla `valoracion_servicio`, botones WA ¡Muy buena / No muy buena)
+  2. Email HTML post-visita a `info@simarroproperties.com` si el lead tiene email en CF `1372575`
+  3. Mueve lead a etapa **Post-visita** (`107269815`)
+- Email post-visita diseñado: fondo `#0F1715`, bloques verdes, dos botones mitad/mitad — verde ♥ "Ha ido genial → Google Reviews" y oscuro ✉ "Podría mejorar → Cuéntanos". **PENDIENTE**: meter URL real de Google Reviews de Simarro (placeholder `GOOGLE_REVIEWS_URL_PLACEHOLDER` en el nodo `Build email post-visita` de Recordatorios).
+
+### P5 — Alertas inactividad (HECHO)
+- **Nuevo workflow `Alertas_inactividad`** (`Xh2miozB7LvwQKia`) — activo, schedule diario 08:30 + webhook `POST /webhook/alertas_inactividad`.
+- Detecta leads sin actividad según umbral: Post-visita → 3d, Lead Caliente → 2d, Buscando vivienda (3 pools) → 14d.
+- Crea tarea Follow-up (`task_type_id:1`) al `responsible_user_id` del lead: *"Sin actividad hace X días — revisar lead"*, fecha límite mañana.
+- Dedupe 7 días vía `staticData.alertados`.
+- Stage "En seguimiento" (`107269819`) disponible para mover manualmente.
+
+### Workflow Especialista Asignado — DESACTIVADO
+- `YGnefIXAKNJMZTw3` desactivado 2026-06-08. El agente ya se asigna solo vía campo `agente:` en Idealista. Salesbot 87867 y plantilla `agente_asignado` (72401) sin uso.
+
+### Automatizaciones y Emails — estado (sobre los 5 requisitos originales)
+| # | Requisito | Estado |
+|---|---|---|
+| P1 | Confirmación al cliente al enviar formulario | ✅ HECHO (WA + email desde `OFGGroWlifA88YFN`) |
+| P2 | Confirmación visita por WA + email | ✅ HECHO (salesbot 87865 + email `iMoTKZWxYLymGuHF`) |
+| P3 | Aviso interno al equipo (visita agendada) | ⏳ PREPARADO, SIN ACTIVAR — espera emails reales de 8 agentes |
+| P4 | Seguimiento post-visita 48h | ✅ HECHO (Recordatorios + email post-visita) |
+| P5 | Alertas por inactividad | ✅ HECHO (`Alertas_inactividad`) |
+
 ## Pendientes no bloqueantes
 
 - **Caso 3 voz "lead pre-existente del formulario"**: cuando llaman al `+34 919 93 28 52` clientes que vienen de form `contacto_propiedad`, Ana saluda genérico aunque el lead ya tiene `property_ref` en Kommo. Solución diferida: workflow `Voz_lookup_lead` que matchea `from_number` → lead Kommo → devuelve dynamic variables (`{{nombre}}`, `{{property_interes}}`) que Retell inyecta en el prompt al inicio. Decisión Manu 2026-05-04: dejarlo para cuando Ramón vea volumen real de llamadas-formulario; ahora cubre el caso 1 (cliente describe vivienda con palabras → Buscar_viviendas la encuentra)
@@ -98,6 +130,9 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 - Crear sub-workflow `Solicitar_confirmacion_visita` (sustituir Opción 1 por Opción 2)
 - Desplegar Supabase en Dokploy (RAG chatbot — workflow `meter info rag` inactivo hasta entonces)
 - Templates email personalizados al cliente por formType (cuando SMTP funcione)
+- **URL Google Reviews** de Simarro → meter en nodo `Build email post-visita` (Recordatorios) reemplazando `GOOGLE_REVIEWS_URL_PLACEHOLDER`
+- **Emails reales de 8 agentes** → para activar P3 (aviso interno de visita). SQL: `UPDATE agents SET email='...' WHERE agent_key='...';` + cambiar fallback RPC a email de Ramón + activar nodos `disabled:true` en `iMoTKZWxYLymGuHF`
+- **Llamadas outbound** — pendiente respuesta de Ramón (opciones B post-visita voz 4-6h y C reactivación leads fríos). Plataforma: Retell ya activo, `POST /v2/create-phone-call`
 
 ## IDs y números clave
 
