@@ -144,8 +144,9 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Artifacts emitidos no se regeneran al cambiar dato fuente** — PDF de factura ya emitida conserva el logo viejo. Pattern aplica a emails enviados, SSG, thumbnails, PDFs firmados. Ofrecer botón regenerar. Ver [[cache-invalidation-artifacts-emitidos]]
 - **Triggers BD de sincronización = anti-patrón** — 6 razones (silent fail, race, recursión, audit ciego, code review ciego, mig masiva). Sync explícito en código. Ver [[triggers-bd-sync-son-antipatron]] + [[ADR-020-source-of-truth-datos-emisor-template-config-vs-columnas]]
 - **NUMERIC(X,2) drift bruto↔neto IVA** — 10€ bruto IVA 21% → guarda 8.26 → reconstruye 9.99. Necesita NUMERIC(14,6) o redondeo desde total bruto. Ver [[numeric-precision-drift-bruto-neto-iva]]
-- **RPC CREATE OR REPLACE firma idéntica obligatoria** — distinta deja función huérfana, callers fallan. PL/pgSQL lazy compile. Ver [[postgres-rpc-firma-identica-create-replace]]
+- **RPC CREATE OR REPLACE firma idéntica obligatoria** — distinta deja función huérfana; cambiar RETURNS TABLE lanza hard error 42P13 (DROP IF EXISTS primero). PL/pgSQL lazy compile. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **RLS multi-org `get_user_org_id()` no `IN (SELECT org_members)`** — el segundo permite leer de TODAS las orgs del user, no solo la activa. Caso real: 16 tablas TuFacturaIA fixeadas en mig 163. Ver [[rls-multi-org-active-vs-membership]]
 
 
 > Entradas anteriores a 2026-05-25 podadas (viven en sus learnings). Permanentes en [[patterns-cross-proyecto]].
+- **supabase-js .in() UUID col puede devolver vacío** — aunque psql+service_role funciona, el cliente JS puede no encontrar filas; mover JOIN a SQL/RPC es el fix fiable. Ver [[supabase-js-in-uuid-column-text-empty]]

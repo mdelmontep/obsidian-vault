@@ -15,3 +15,5 @@ PL/pgSQL compila el body en lazy (al primer EXECUTE), no en CREATE FUNCTION. Por
 3. Si el body referencia columnas nuevas/renombradas, ejecuta `SELECT nombre(test_args)` en la propia mig como verificación post-creación.
 
 Aplica también a triggers (`OLD.X` / `NEW.X`) y a constraints CHECK.
+
+**Caso especial — cambiar `RETURNS TABLE`**: PostgreSQL lanza hard error `42P13` ("cannot change return type of existing function") en lugar de crear función huérfana silenciosa. `DROP FUNCTION IF EXISTS` antes del `CREATE` es obligatorio, no opcional. Caso real: mig 236 TuFacturaIA añadió `org_nombre` a `storage_usage_by_org()` → fallo en `db push` hasta añadir el DROP.
