@@ -12,6 +12,14 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — Overflow móvil: layout viewport + grid span (2026-06-10)
+
+- **Un `overflow-x:auto` con contenido más ancho que su caja expande el LAYOUT VIEWPORT móvil** (`innerWidth` crece, la página "encoge"); ni `overflow:clip` en ancestros lo arregla → `contain:layout` en el scrollable. Y `grid-column:span N` en grid colapsado a 1 col crea columna implícita → `1 / -1`. Diagnóstico: `pageScrollX=0` pero `innerWidth>vw` = viewport expandido, ≠ scroll de página (medir, no a ojo). Ver [[mobile-overflow-layout-viewport-contain-y-grid-span]]
+
+### facturaia — Modal sin portal atrapado por sidebar sticky (2026-06-09)
+
+- **Modal `position:fixed z:1000` sin `createPortal` montado en ancestro con stacking context queda por debajo de otro subárbol** — el feedback widget cuelga del `<aside sticky>`; su backdrop z:1000 quedaba scoped en el sidebar y `<main>` (KPI cards dashboard) se pintaba encima → botones no clicables. `position:sticky` crea stacking context (igual que transform/opacity<1/will-change/isolation). Fix: `Modal` → `createPortal(document.body)` + guard `mounted` SSR. Antes de portar un primitivo compartido: grep que ningún consumidor tenga `<form>` envolviendo al `<Modal>`. Ver [[modal-portal-stacking-sticky-sidebar]]
+
 ### facturaia — Admin panel CSS gotchas (2026-06-09)
 
 - **Turbopack no convierte kebab-case → camelCase en CSS Modules** — `.kpi-grid` en CSS + `s.kpiGrid` en TSX = `undefined` silencioso, el layout desaparece sin error. Usar camelCase directo en `.module.css`. Detectar: `grep -E "^\.[a-z]+-[a-z]" *.module.css`. Ver [[css-module-camelcase-turbopack]]

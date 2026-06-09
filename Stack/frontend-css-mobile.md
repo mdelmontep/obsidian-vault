@@ -17,6 +17,10 @@ tags: [frontend, css, mobile, overflow]
 
 - **`tracking-[N]` uppercase en flex container puede desbordar en pantallas < 375px** — textos con letter-spacing alto miden más de lo esperado. Siempre añadir `min-w-0` + `truncate` a spans dentro de flex containers con letter-spacing alto.
 
+- **`grid-column: span N` en un grid colapsado a 1 col (mobile) crea una columna implícita** y ensancha el grid fuera del viewport. Fix: `grid-column: 1 / -1` (ancho completo en 1 y 2 cols, sin track implícito). Caso facturaia `/generar` (PR #161).
+
+- **Un `overflow-x:auto` cuyo contenido excede su scroll-box expande el LAYOUT VIEWPORT móvil** (`innerWidth` crece, todo "encoge para caber"); `overflow:clip`/`hidden` en ancestros NO lo arregla. Fix: `contain: layout` en el contenedor scrollable (aísla el subárbol; el scroll interno sigue; overlays por `createPortal`). Caso facturaia tablas `has-vf`/`has-origen`. Ver [[mobile-overflow-layout-viewport-contain-y-grid-span]]
+
 ## Sticky headers y contenido en scenes móvil
 
 - **Padding-top extra obligatorio cuando hay barra sticky flotante** — si una sección tiene una pill/nav sticky (ej: indicador de paso) que flota sobre el contenido, el primer scene necesita al menos 36-40px de padding-top en móvil. 18px no es suficiente y el título se solapa con la pill.
@@ -28,6 +32,7 @@ tags: [frontend, css, mobile, overflow]
 2. Buscar `flex items-center` sin `min-w-0` dentro de grid items → añadir `min-w-0` al grid item Y al flex container
 3. Buscar texto con `tracking-[N]` o `uppercase` dentro de flex → añadir `truncate`
 4. Añadir `overflow-x-hidden` a la sección que contiene el overflow, no solo al body/html
+5. Medir en browser `window.innerWidth` vs `body.scrollWidth` vs `window.scrollX`, no fiarse del ojo ni de screenshots `fullPage`: si `pageScrollX=0` pero `innerWidth>vw`, es el viewport de layout expandido (scroll container interno) → `contain:layout`, no overflow de página
 
 ## Modales y popovers
 
