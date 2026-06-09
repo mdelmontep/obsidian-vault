@@ -12,6 +12,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — Admin panel CSS gotchas (2026-06-09)
+
+- **Turbopack no convierte kebab-case → camelCase en CSS Modules** — `.kpi-grid` en CSS + `s.kpiGrid` en TSX = `undefined` silencioso, el layout desaparece sin error. Usar camelCase directo en `.module.css`. Detectar: `grep -E "^\.[a-z]+-[a-z]" *.module.css`. Ver [[css-module-camelcase-turbopack]]
+- **Tokens D3 `--panel/--border/--text` no están definidos** — solo existen los alias canónicos `--bg-elev/--line/--fg`. Cualquier CSS Module que use los D3 queda transparente/sin borde/sin texto visible. Ver [[facturaia-tokens-admin-sin-definir]]
+
 ### facturaia — Design system + CSS theming (2026-06-09)
 
 - **`--pill-*` vars con fallback = theming scoped sin tocar tokens globales** — `[data-pill-theme="pastel"]` redefine solo `--pill-*`; el UI global no cambia. Preview en la UI de settings aplica el atributo en su propio div. Ver [[css-scoped-theming-pill-vars]]
