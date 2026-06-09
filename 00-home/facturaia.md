@@ -139,6 +139,7 @@ _Lo cerrado vive en [[facturaia-historico-detallado]]. Detalle de cada tarea en 
 - **Módulo Stock/Inventario — COMPLETO EN PROD** (A-C PR #130 + Fase D PR #137+#139, migs `223-226` aplicadas 2026-06-04). D1-n8n OCR WhatsApp→SSOT validado mono+multi-org, D5 RPC validado E2E (demo 12→15 PMP 7.00), UX crear producto. Sigue `proximamente` (invisible). Residual: E2E browser UI pre-activación. Detalle [[facturaia-modulo-stock]].
 
 ## Smoke tests pendientes
+- **Overflow móvil en dispositivo físico** (PR #161, 2026-06-10) — abrir en TU móvil real `/generar`, `/emitidas`, `/recibidas` (y de paso `/presupuestos`): la página NO debe scrollear en horizontal ni verse "encogida/descuadrada"; el formulario de Nueva factura ocupa el ancho; las tablas de listas scrollean DENTRO de su tarjeta. Validado a 390/360px con emulación; falta confirmar en hardware real (era la queja original).
 - **Outlook / Microsoft 365** — `app.tufacturaia.com/settings?tab=integraciones` → card "Microsoft 365" visible (sin "Próximamente") → Conectar → pantalla login Microsoft muestra "TuFacturaIA" → autorizar → vuelve a settings con estado conectado → "Revisar ahora" → mandar email con PDF a la cuenta conectada → comprobar bandeja ingesta.
 
 _Pasos detallados de smokes ya verificados → [[facturaia-historico-detallado]]. Aquí solo los pendientes reales:_
