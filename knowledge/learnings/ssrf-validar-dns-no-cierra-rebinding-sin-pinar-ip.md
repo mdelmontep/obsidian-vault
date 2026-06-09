@@ -16,3 +16,5 @@ https://<ip>: rompe SNI + verificación de cert). Cerrar el Agent tras el fetch 
 se puede pinear fácil → residual; mitigar con JS off + CSP default-src none + solo type=image.
 El comentario del helper no debe prometer mitigación que el caller no implementa.
 Caso TuFacturaIA webhooks dispatcher PR #153. Ver [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]].
+
+**undici v7 gotcha (verificado 2026-06-09, undici 7.25.0):** undici llama al `connect.lookup` con `options = { all: true, hints: 1024 }`. Con `all: true`, Node.js `dns.lookup` llama al callback con `(null, [{address, family}])` (array de objetos). Si el callback usa el formato single-value `cb(null, address, family)` (válido para `all: false` y undici <6), undici v7 falla con `fetch failed | Invalid IP address: undefined` — extrae `addresses.address` sobre el string y obtiene `undefined`. Solución: callback siempre en formato array: `cb(null, [{ address: pinnedIp, family: pinnedFamily }])`.

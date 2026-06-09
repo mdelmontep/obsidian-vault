@@ -35,6 +35,13 @@ El cliente HTTP del portal añade `/api/v1` automáticamente (`src/lib/facturaia
 
 ## Gotchas operativos
 
+### Estados válidos por tabla (constraint check)
+
+`facturas`: `borrador`, `pendiente`, `enviada`, `cobrada`, `vencida`, `anulada`.
+`presupuestos`: `borrador`, `enviado`, `aceptado`, `rechazado`, `expirado`, `facturado`, `cancelado`.
+**`pendiente` NO existe en `presupuestos`** — `presupuestos_estado_check` lo rechaza con constraint violation.
+Al crear un presupuesto vía API/RPC, el estado inicial correcto es `borrador`. El portal lo actualiza a `enviado` al enviar, etc. Confundir los estados da error críptico "No se pudo crear el presupuesto" que oculta el constraint real.
+
 ### Toggle Verifactu — PR #48 (mig 095)
 
 El toggle "Verifactu" en Settings → Fiscal vivía en `settings.fiscal.verifactu` (JSON) Y en `organizations.verifactu_activo` (columna). El JSON era huérfano — todo el sistema (worker, triggers, gating módulo, PDFs, voz) leía la columna. UI escribía ambos pero con bug: si el JSON no tenía la clave (`undefined`) y la columna era `false`, el siguiente "Guardar" reactivaba silenciosamente Verifactu.

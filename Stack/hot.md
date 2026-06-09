@@ -33,7 +33,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ### Seguridad — SSRF pinning de IP (2026-06-05)
 
-- **Validar la IP no basta sin pinar el fetch** — fetch por hostname re-resuelve DNS (rebinding TOCTOU); pinear con undici Agent `connect.lookup` a la IP validada, manteniendo hostname para SNI. Ver [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]]
+- **Validar la IP no basta sin pinar el fetch** — fetch por hostname re-resuelve DNS (rebinding TOCTOU); pinear con undici Agent `connect.lookup` a la IP validada, manteniendo hostname para SNI. Callback en undici v7 DEBE ser array `cb(null,[{address,family}])`, NO `cb(null,addr,fam)` → "Invalid IP address: undefined". Ver [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]]
 
 ### Git / CI — gotchas (2026-06-05)
 

@@ -119,7 +119,7 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 |---|---|---|
 | P1 | Confirmación al cliente al enviar formulario | ✅ HECHO (WA + email desde `OFGGroWlifA88YFN`) |
 | P2 | Confirmación visita por WA + email | ✅ HECHO (salesbot 87865 + email `iMoTKZWxYLymGuHF`) |
-| P3 | Aviso interno al equipo (visita agendada) | ⏳ PREPARADO, SIN ACTIVAR — espera emails reales de 8 agentes |
+| P3 | Aviso interno al equipo (visita agendada) | ✅ HECHO (2026-06-09) — nodos WA + Retell activos, 8 emails reales en BD |
 | P4 | Seguimiento post-visita 48h | ✅ HECHO (Recordatorios + email post-visita) |
 | P5 | Alertas por inactividad | ✅ HECHO (`Alertas_inactividad`) |
 
@@ -131,7 +131,7 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 - Desplegar Supabase en Dokploy (RAG chatbot — workflow `meter info rag` inactivo hasta entonces)
 - Templates email personalizados al cliente por formType (cuando SMTP funcione)
 - **URL Google Reviews** de Simarro → meter en nodo `Build email post-visita` (Recordatorios) reemplazando `GOOGLE_REVIEWS_URL_PLACEHOLDER`
-- **Emails reales de 8 agentes** → para activar P3 (aviso interno de visita). SQL: `UPDATE agents SET email='...' WHERE agent_key='...';` + cambiar fallback RPC a email de Ramón + activar nodos `disabled:true` en `iMoTKZWxYLymGuHF`
+- **URL Google Reviews** de Simarro → meter en nodo `Build email post-visita` (workflow `Oa1lSQuDgEZvZCNS`) reemplazando `GOOGLE_REVIEWS_URL_PLACEHOLDER`
 - **Llamadas outbound** — pendiente respuesta de Ramón (opciones B post-visita voz 4-6h y C reactivación leads fríos). Plataforma: Retell ya activo, `POST /v2/create-phone-call`
 
 ## IDs y números clave
