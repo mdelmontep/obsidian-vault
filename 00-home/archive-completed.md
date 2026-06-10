@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-10 TuFacturaIA — **Fiscal y AEAT Fase 1 + aliases OCR + merge duplicados** (PR #163): migs 241-245 en prod, cron Dokploy `fiscal-generar-borradores`, CI verde (1751 tests), cashflow-v2 smoke 9/9.
 - 2026-06-09 TuFacturaIA — **Design system sprint completo**: tipografía Filson/Switzer/JetBrains, primitives, dashboard capas A-H, settings polish, D3 burndown 189→29, avatar (mig 235), tooling visual regression + tokens deprecados, topbar responsive móvil, OtpBoxes, fix dashboard (#160). Commits `e214f87`→`9a55964`.
 - 2026-06-09 TuFacturaIA — **Catálogo crons reconciliado** (PR #147 + Drive Sync PR #149): CRON_REGISTRY completo, drive-sync→Dokploy, workflow n8n `TwDd1OkMqr3nhSso` desactivado.
 - 2026-06-05 TuFacturaIA — **Multiempresa: modelo "tus empresas" RESUELTO (por propiedad)**. Tras mostrar "1 empresa" a usuarios con 2, análisis multi-agente (arquitectura/pricing/UX/fiscal) → 3 ejes: navegar=membresía · agregar=propiedad(`rol propietario/admin`) · cobrar=cuenta. Métricas + copiloto `compararEmpresas` excluyen orgs de clientes que solo gestionas (RGPD). WhatsApp verificado (selector por membresía, ignora billing_account → pregunta igual con 2 cuentas o 1 cuenta/2 orgs). PRs #155 (membresía, por timing) → #156 (`489c690`, propiedad). No consolidar legacy. Manuales §8.9/§7. Ver [[ADR-028-multiempresa-scope-navegar-agregar-cobrar]] · [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]].

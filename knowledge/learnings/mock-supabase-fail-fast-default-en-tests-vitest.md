@@ -20,3 +20,8 @@ por tabla + `setDefaultResponse` opcional. Tipos TS estrictos en API pública
 
 Referencia TuFacturaIA: `src/lib/documents/__tests__/__fixtures__/mock-admin-client.ts`
 (97 tests Vitest construidos sobre este patrón, 0 falsos positivos).
+
+**Gotcha añadido 2026-06-10**: cuando `route.ts` llama `admin.rpc('fn', args)`, el mock
+de `createAdminClient` DEBE incluir `rpc: vi.fn(async () => ({ data: [], error: null }))`.
+Sin él: `TypeError: admin.rpc is not a function` en todos los tests del handler.
+Aplica a cualquier endpoint que use RPCs vía admin client (no solo `.from()`).

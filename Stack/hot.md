@@ -12,6 +12,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — CI: mock admin.rpc + Playwright getByText en hidden details (2026-06-10)
+
+- **`admin.rpc()` en mock `createAdminClient` necesita declararse explícitamente** — sin él `TypeError: admin.rpc is not a function` rompe todos los tests del handler. Ver [[mock-supabase-fail-fast-default-en-tests-vitest]]
+- **`getByText(x).first()` puede caer en elemento dentro de `<details>` cerrado** — scopear siempre al contenedor visible: `page.locator('.lista').getByText(x)`. Ver [[playwright-getbytext-first-hidden-details-element]]
+
 ### facturaia — Form parcial + UPSERT fila completa = pérdida silenciosa (2026-06-10)
 
 - **Form que edita un subconjunto + endpoint que UPSERTea la fila entera defaulteando ausentes = borra columnas no mostradas** en cada guardado (caso perfil_fiscal: recargo/vivienda/rendimiento se reseteaban → cálculo 303/130 mal). Fix: mapper preserva `payload.x ?? existing.x ?? default` (lee fila antes del upsert; `??` no cae en `false` explícito). Ver [[form-parcial-upsert-fila-completa-borra-columnas-no-enviadas]]
@@ -171,3 +176,5 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 > Entradas anteriores a 2026-05-25 podadas (viven en sus learnings). Permanentes en [[patterns-cross-proyecto]].
 - **supabase-js .in() UUID col puede devolver vacío** — aunque psql+service_role funciona, el cliente JS puede no encontrar filas; mover JOIN a SQL/RPC es el fix fiable. Ver [[supabase-js-in-uuid-column-text-empty]]
+
+- **Aliases proveedor: trigger captura rename + resolve_proveedor RPC** — OCR dedup correcto aunque usuario renombre. GIN array_ops no acelera lower+unnest (seq scan OK <1000 rows). Ver [[proveedor-aliases-ocr-dedup]]
