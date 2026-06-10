@@ -12,6 +12,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — audit 349: normalización en group-by + .catch() muerto en supabase-js (2026-06-10)
+
+- **Group-by sobre campo texto libre (nif_iva) exige normalizar en write path + migración de saneo** — una sola pata no basta. Ver [[agrupacion-por-campo-texto-libre-exige-normalizacion-en-write-path]]
+- **supabase-js: `.catch()` sobre un query es código muerto** — los errores van en `{error}`; destructurar y throw. Ver [[supabase-js-catch-sobre-query-es-codigo-muerto]]
+
 ### facturaia — CI: mock admin.rpc + Playwright getByText en hidden details (2026-06-10)
 
 - **`admin.rpc()` en mock `createAdminClient` necesita declararse explícitamente** — sin él `TypeError: admin.rpc is not a function` rompe todos los tests del handler. Ver [[mock-supabase-fail-fast-default-en-tests-vitest]]
@@ -181,3 +186,6 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Aliases proveedor: trigger captura rename + resolve_proveedor RPC** — OCR dedup correcto aunque usuario renombre. GIN array_ops no acelera lower+unnest (seq scan OK <1000 rows). Ver [[proveedor-aliases-ocr-dedup]]
 
 - **Worktree facturaia: `node_modules` real para `next build` + copiar `supabase/.temp`** — symlink de node_modules vale para typecheck/vitest pero rompe el build de Turbopack; el link de Supabase no está en el worktree. Ver [[worktree-facturaia-build-supabase]]
+
+- **backdrop-filter no renderiza con Next 16/lightningcss** si escribes `-webkit-` a mano (lo deja solo, Chrome lo ignora) → solo `backdrop-filter`; tokens de blur en `:root` base. Ver [[frontend-css-mobile]]
+- **Subagente runaway no se mata con TaskStop** (completed cada ciclo) → aislar trabajo grande en worktree; corte = Esc del humano. Ver [[claude-code-gotchas]]

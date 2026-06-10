@@ -1,6 +1,6 @@
 ---
 title: simarro
-date: 2026-06-01
+date: 2026-06-10
 tags: [cliente, simarro]
 ---
 
@@ -10,7 +10,13 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 
 > Source of truth técnico: `/Users/manueldelmonte/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 
-## Estado (2026-06-02)
+## Estado (2026-06-10)
+
+- **Audit 2026-06-10**: BD sana — 12 viviendas activas (8 con `agente:`, 4 sin → fallback Ramón), tabla `agents` completa (8 agentes, emails reales), `match_pairs` verificado con los 2 leads activos (case-insensitive OK). **Fix aplicado**: la anulación de citas (`om8iBm8ovENIgaxv`) no miraba los calendarios de Elisa, Javier, Mónica ni Ramón Simarro — añadidos los 4 pares Buscar/Eliminar (backup `om8iBm8ovENIgaxv-cambio-pre-calendarios-faltantes-20260610.json`).
+- **Notificaciones P1-P5 HECHAS** (2026-06-02→09): confirmación cliente formulario, confirmación visita, aviso interno visita a Ramón+agente (emails reales en BD), seguimiento post-visita 48h (salesbot 87873 + etapa Post-visita), alertas inactividad (`Xh2miozB7LvwQKia`, diario 08:30).
+- **Recordatorios** solo reaccionan a tareas Meeting (type 2) creadas por la reserva; matching usa Follow-up (1). ~~Especialista Asignado~~ desactivado 2026-06-08 (el agente va por `agente:` de Idealista).
+- **Subsistema contratos Docuseal** activo: 4 workflows `contratos-*` (generar borrador, enviar firma, firmado, spawn). OJO: `contratos-enviar-firma` lleva un `TODO producción: cambiar a la cuenta real` en Build Recipients.
+- **SMTP RESUELTO** (2026-06-02): `SMTP LEADS Simarro` (leads/visitas) + `SMTP Simarro` (contratos), ambas funcionales. Emails HTML rediseñados Gmail-safe.
 
 - **Voz Ana — el agente PRODUCTIVO es el Conversation Flow** `agent_0df7f123e7e3c24d99c9152358` (`conversation_flow_19ca70e19b3f`, gpt-4.1 cascading). ⚠️ El `agent_7b02aa...` (retell-llm) está **EN DESUSO**. Llama a `+34 919 93 28 52`. Busca, mira disponibilidad, reserva (pide nombre + consentimiento), cancela/cambia, deriva.
 - **Visitas de 30 min** (solicitud Simarro 2026-06-01; antes 1h). Buffer mismo agente: **0 min misma vivienda, 60 min (1h margen) distinta**. Slots :00 y :30 → **10:00–13:30 y 17:00–19:30**. SSOT: `Calc_Disponibilidad` (`kSgDVB8miWnvQFOJ`), compartida voz+WhatsApp.
@@ -32,13 +38,23 @@ Cambios aplicados sin probar en vivo:
 3. **Buffer**: misma casa pegadas (10:00–10:30 / 10:30–11:00); casa distinta → 60 min margen (no antes de 11:30).
 4. **Voz**: latencia (voz `turbo_v2_5`, `responsiveness 0.85` que no corte) — independiente del reorden pendiente de arriba.
 5. **Subir tier OpenAI** (chatbot WA gpt-4o, hoy 30k TPM → rate limits).
+6. **Plantilla `Día de visita`**: verificar que el CF `1330871` se inyecta con fecha legible en la plantilla WA (test real).
+7. **Reconcile `Build rows`**: probar con lead real con tipos/extras rellenos — los diccionarios usan etiquetas con acentos (`'Ático'`, `'Jardín'`); si Kommo envía otro encoding, la preferencia se descarta en silencio (no rompe matching, pero la ignora).
 
 ## Otros pendientes
 
-- Confirmar cobertura de `properties.agent` poblado en TODAS las viviendas (Ramón).
-- **Cred SMTP Gmail** en n8n (`oKRmYFhljczyvzV8` fantasma → 0 emails). App Password de `simarroproperties@gmail.com`.
-- Limpiar leads test Kommo.
+- **4 viviendas activas sin `agente:`** (Ramón debe añadirlo en Idealista): `111460118` (Chalet La Chopera), `111607600` (Pareado Los Satélites), `111668433` (Piso Coto Blanco), `111708032` (Local Primo de Rivera). Mientras, fallback = calendario general `consultingsimarroproperties@gmail.com`: la visita se agenda ahí, el aviso interno va solo a `rss@` (sin agente en copia) y el buffer de 60 min se calcula contra esa agenda. La cita no se pierde, pero sin routing por agente. Se autocorrige con el sync de las 8:00 al añadir `agente: <nombre>` en la descripción de Idealista.
+- Verificar que el bot `88575` (formularios no-contacto) tiene plantilla WA aprobada (`Solicitud_recibida` 72645) — solo comprobable en Kommo UI.
+- Borrar embudo vacío `13862727` ("Compradores en búsqueda") en Kommo UI.
+- Rotar key Supabase (cred `Wm7JL1tsxiWyElqt` usa la demo de self-hosted) a producción.
+- `contratos-enviar-firma`: cambiar cuenta Documenso de prueba a la real (TODO en Build Recipients).
+- Meter leads al pool "Buscando vivienda" desde chatbot/voz tras opt-in (hoy lo mueve el agente a mano en Kommo).
+- Crear salesbot para plantilla `72645` Solicitud_recibida (resto de formTypes del formulario web; relacionado con la verificación del bot `88575` de arriba).
+- Latencia voz opcional: quitar embedding de `Buscar_viviendas` + `begin_message_delay_ms` 1000→400.
+- Consolidar creds (opcional, no urgente): 2 creds `kommoLongLivedApi` con el mismo token → una; 2 SMTP → reasignar los 7 nodos de contratos a `SMTP LEADS Simarro`.
 - **LATER**: `meter info rag` cerrado (no se usa, sin documentos); monitor inmuebles tipo StateFox.
+
+✓ Resueltos: SMTP (2026-06-02) · leads test limpiados (2026-05-31) · `desiredResults` Apify ya en 50 · sin restos de `Próxima cita` en Code JS (verificado 2026-06-10) · calendarios faltantes en anulación (2026-06-10).
 
 ## Links rápidos
 
@@ -47,7 +63,9 @@ Cambios aplicados sin probar en vivo:
 
 ## Histórico de hitos
 
-- 2026-06-02: matching en 3 embudos (multi-pool) · recordatorios de visita anclados a tarea Meeting (mata el falso positivo del matching + habilita recordatorios reales) · matching task → Follow-up
+- 2026-06-10: audit completo (BD + 34 workflows) · fix anulación: añadidos calendarios Elisa/Javier/Mónica/Ramón Simarro (antes una visita en esos calendarios no se podía anular) · cobertura `agente:` 8/12 · hub actualizado
+- 2026-06-08/09: P3 aviso interno visita (emails reales agentes, sql/015-016) · P4 post-visita 48h · P5 alertas inactividad · Especialista Asignado desactivado
+- 2026-06-02: matching en 3 embudos (multi-pool) · recordatorios de visita anclados a tarea Meeting (mata el falso positivo del matching + habilita recordatorios reales) · matching task → Follow-up · emails HTML rediseñados Gmail-safe · SMTP verificado
 - 2026-06-01: visitas a 30 min + buffer 0/60 (todos los workflows) · bug voz "no reservaba" (nodo silencioso `n_confirmar_tel`) corregido · cambio de cita alineado con reserva (30min + calendario del agente) · WhatsApp `Mirar_disponibilidad`→toolWorkflow · red backend anclaje `idealista_id` · **reserva WhatsApp: validar ANTES de confirmar** (antes confirmaba en Kommo aunque el slot estuviera ocupado; voz PENDIENTE) · ajustes latencia voz · descubierto que el agente productivo es el Flow (no el retell-llm)
 - 2026-05-31: Ana voz publicada + disponibilidad con buffer (slots) + recheck + E2E · plantillas Meta aprobadas · leads limpios
 - 2026-05-28: routing por agente + WA confirmación voz + bugs Retell

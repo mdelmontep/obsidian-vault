@@ -24,6 +24,11 @@ helper boolean único `orgCanUseFeature(orgId,featureId)=disponibilidad==='beta'
 orgHasFeature` compartido por endpoint + copiloto (+ `moduleEnabled` espeja en UI).
 Cobertura: un smoke con el add-on DADO no valida beta puro — prueba el flag real.
 
+Update 2026-06-10 (audit 349): apareció una 5ª capa olvidada — `/api/fiscal/*`
+sin `requireFeature` (cualquier sesión llamaba al cálculo sin el módulo). Y el
+smoke del 403 es IMPOSIBLE con cuenta superadmin: `withApiAuth` bypasea el gate
+→ hace falta cuenta E2E sin `is_superadmin`.
+
 Patrón hermano (vista admin): cuando el superadmin debe VER todo pero también
 previsualizar como cliente, no cambies el default — añade un toggle
 `effectiveIsAdmin = isAdmin && !previewAsCustomer` (solo presentación, localStorage;
