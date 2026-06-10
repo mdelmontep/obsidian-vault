@@ -16,6 +16,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 - **3 formas de presentar un modelo AEAT** — (2) fichero oficial importable + el cliente firma; (3b) presentas con el cert del propio cliente (modelo Holded) → esquiva colaborador social; (3) colaborador social RD 1065/2007 = figura gestoría con RC obligatorio. 3b reaprovecha cert+firma de Verifactu. Ver [[aeat-formas-presentacion-fichero-vs-conducto-vs-colaborador-social]]
 
+### facturaia — RLS: policy que subconsulta su tabla → recursión 42P17 (2026-06-10)
+
+- **Anti-escalada en RLS sin recursión** — una policy con `SELECT FROM <tabla>` sobre la propia tabla protegida lanza `42P17`; usar función `SECURITY DEFINER` que bypasa RLS y comparar contra ella. Ver [[rls-policy-recursion-42P17-subquery-misma-tabla]]
+- **PostgREST `.single()` → 406 con RLS multi-fila** — confiar en que la RLS devuelva 1 fila es frágil (p.ej. `profiles_select_same_org` expone N perfiles); filtrar por PK + `.maybeSingle()`. Ver [[supabase-maybesingle-devuelve-null-si-multiples-filas]]
+
 ### facturaia — Overflow móvil: layout viewport + grid span (2026-06-10)
 
 - **Un `overflow-x:auto` con contenido más ancho que su caja expande el LAYOUT VIEWPORT móvil** (`innerWidth` crece, la página "encoge"); ni `overflow:clip` en ancestros lo arregla → `contain:layout` en el scrollable. Y `grid-column:span N` en grid colapsado a 1 col crea columna implícita → `1 / -1`. Diagnóstico: `pageScrollX=0` pero `innerWidth>vw` = viewport expandido, ≠ scroll de página (medir, no a ojo). Ver [[mobile-overflow-layout-viewport-contain-y-grid-span]]
