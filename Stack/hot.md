@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — Form parcial + UPSERT fila completa = pérdida silenciosa (2026-06-10)
+
+- **Form que edita un subconjunto + endpoint que UPSERTea la fila entera defaulteando ausentes = borra columnas no mostradas** en cada guardado (caso perfil_fiscal: recargo/vivienda/rendimiento se reseteaban → cálculo 303/130 mal). Fix: mapper preserva `payload.x ?? existing.x ?? default` (lee fila antes del upsert; `??` no cae en `false` explícito). Ver [[form-parcial-upsert-fila-completa-borra-columnas-no-enviadas]]
+
 ### facturaia — Presentar modelos AEAT: fichero / conducto / colaborador social (2026-06-10)
 
 - **3 formas de presentar un modelo AEAT** — (2) fichero oficial importable + el cliente firma; (3b) presentas con el cert del propio cliente (modelo Holded) → esquiva colaborador social; (3) colaborador social RD 1065/2007 = figura gestoría con RC obligatorio. 3b reaprovecha cert+firma de Verifactu. Ver [[aeat-formas-presentacion-fichero-vs-conducto-vs-colaborador-social]]
