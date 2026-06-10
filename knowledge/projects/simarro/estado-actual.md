@@ -123,16 +123,44 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 | P4 | Seguimiento post-visita 48h | ✅ HECHO (Recordatorios + email post-visita) |
 | P5 | Alertas por inactividad | ✅ HECHO (`Alertas_inactividad`) |
 
-## Pendientes no bloqueantes
+## Pendientes — sesión 2026-06-09/10
 
-- **Caso 3 voz "lead pre-existente del formulario"**: cuando llaman al `+34 919 93 28 52` clientes que vienen de form `contacto_propiedad`, Ana saluda genérico aunque el lead ya tiene `property_ref` en Kommo. Solución diferida: workflow `Voz_lookup_lead` que matchea `from_number` → lead Kommo → devuelve dynamic variables (`{{nombre}}`, `{{property_interes}}`) que Retell inyecta en el prompt al inicio. Decisión Manu 2026-05-04: dejarlo para cuando Ramón vea volumen real de llamadas-formulario; ahora cubre el caso 1 (cliente describe vivienda con palabras → Buscar_viviendas la encuentra)
-- Migrar `Mirar_disponibilidad` GCAL → Kommo tasks (decisión 5C completa)
-- Crear sub-workflow `Solicitar_confirmacion_visita` (sustituir Opción 1 por Opción 2)
-- Desplegar Supabase en Dokploy (RAG chatbot — workflow `meter info rag` inactivo hasta entonces)
-- Templates email personalizados al cliente por formType (cuando SMTP funcione)
-- **URL Google Reviews** de Simarro → meter en nodo `Build email post-visita` (Recordatorios) reemplazando `GOOGLE_REVIEWS_URL_PLACEHOLDER`
-- **URL Google Reviews** de Simarro → meter en nodo `Build email post-visita` (workflow `Oa1lSQuDgEZvZCNS`) reemplazando `GOOGLE_REVIEWS_URL_PLACEHOLDER`
-- **Llamadas outbound** — pendiente respuesta de Ramón (opciones B post-visita voz 4-6h y C reactivación leads fríos). Plataforma: Retell ya activo, `POST /v2/create-phone-call`
+### 🔴 Requieren dato externo (Ramón / Borja)
+
+| # | Qué | Quién | Dónde aplicar |
+|---|---|---|---|
+| 1 | **URL Google Reviews** de Simarro | Ramón | Reemplazar `GOOGLE_REVIEWS_URL_PLACEHOLDER` en nodo `Build email post-visita` del workflow `Oa1lSQuDgEZvZCNS` (Recordatorios) |
+| 2 | **Env var web formulario** `N8N_WEBHOOK_TOKEN=simarro_Z2O40vQbqve2YZ3Ksn2JsEQCcJqAh6L8BO8mxvbqwTE` | Borja | Vercel o Dokploy del proyecto web Astro |
+| 3 | **Salesbot `Solicitud_recibida`** crear en Kommo | Ramón / Manu | Plantilla `72645` ya aprobada, falta crear el bot. Afecta a leads de forms `valoracion`, `capacidad`, `personal_shopper`, `inversion` — hoy no reciben WA de acuse |
+| 4 | **Llamadas outbound** — decisión de Ramón sobre llamadas salientes de reactivación | Ramón | Análisis técnico listo (informe 8 agentes 2026-06-09). Requiere: (a) consentimiento explícito en hoja de visita o form, (b) nuevo agente Retell outbound, (c) workflow `Llamadas_outbound` |
+
+### 🟡 Tests E2E pendientes (no probados en real)
+
+| # | Test | Qué verificar |
+|---|---|---|
+| 5 | **Voz T1 — reserva normal** | `tool_call_invocation:Reservar` en logs Retell + lead creado en Kommo + evento Calendar + tarea Meeting |
+| 6 | **Voz T2 — lead anónimo** | Ana pide teléfono en nodo `n_consentimiento`, se crea contacto con E.164 |
+| 7 | **Voz T3 — rechaza consentimiento** | Escala a Ramón, no crea lead |
+| 8 | **Voz — calidad turbo_v2_5** | ¿Suena bien? ¿`responsiveness: 0.85` corta frases? |
+| 9 | **WA — disponibilidad con :30** | `toolWorkflow Disponibilidad` pasa `idealista_id` + franja centrada correctamente |
+| 10 | **Matching semanal** | Cron lunes 09:00: ¿llega WA a leads en "Buscando vivienda"? Verificar con lead real en pool + vivienda que encaje |
+
+### 🟢 Mejoras técnicas (no urgentes)
+
+| # | Qué | Dónde |
+|---|---|---|
+| 11 | **Auditar nodo `Build rows`** del Reconcile (`UQHBaQxeVsutlLWX`) | Verificar que parsea multiselects Kommo → arrays `["piso","atico"...]` normalizados. Es el punto más frágil del matching |
+| 12 | **Mapeo `agent_key` → `kommo_user_id`** | Cron de matching (`RGu1FLq9l3PKaX2B`) asigna la task siempre a Ramón (`15113339`). Para que vaya al agente real hay que montar tabla de mapeo |
+| 13 | **Borrar embudo vacío `13862727`** | Kommo UI — cosmético |
+| 14 | **`Subir desiredResults`** task Apify a 50 por defecto | Hoy la task diaria usa el default; el launcher manual ya fuerza 50. Cambiar en Apify UI |
+
+### ✅ Resuelto esta sesión (2026-06-09/10)
+
+- P1-P5 automatizaciones emails: todos activos
+- P3 aviso interno visita: nodos WA + Retell activos, 8 emails reales en `agents` BD
+- HTML estructura emails generado (`/Users/manueldelmonte/simarro/docs/emails-estructura.html`)
+- Informe técnico outbound calls (8 agentes, pros/contras, plan implementación)
+- `sql/015_agent_emails_real.sql` aplicado — emails reales + fallback RPC → `rss@simarroproperties.com`
 
 ## IDs y números clave
 

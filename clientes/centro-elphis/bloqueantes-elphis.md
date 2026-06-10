@@ -31,9 +31,10 @@ tags: [elphis, bloqueantes, todo, decisiones]
 
 1. **Spiroox**: dos admins externos (Laura Spiroox, Pepe Framis) con acceso completo a Clientify. ¿Tienen automatizaciones activas que no debamos pisar? Confirmar antes de crear custom fields o tocar pipeline.
 2. **Número directo de la recepcionista**: el onboarding dice «ella tiene número propio» pero no lo escribe. Es el destino del WhatsApp interno cuando el bot deriva caso no-ingreso.
-3. **Formulario web**: ¿la web `centroelphis.com` tiene formulario activo hoy? ¿A dónde llegan los datos? ¿Quieren además widget de chat embebido?
-4. **Meta Business Manager**: ¿cuenta API ya creada? ¿negocio verificado? (campos vacíos en onboarding §4).
-5. **Custom fields Clientify**: confirmar que podemos crear los necesarios sin pisar nada. Lista mínima en [[clientify-discovery-elphis]].
+3. **IMAP `info@centroelphis.com`**: NO es cuenta Google — es email de dominio propio. Necesito host IMAP del hosting (probar `mail.centroelphis.com`), puerto y contraseña real. La que pasó Alba (`psw`) no conecta. Mientras, `doctoralia-email-sync` (n8n `3mykMD5qzQLUHDC1`) está importado pero desactivado.
+4. **Formulario web**: ¿la web `centroelphis.com` tiene formulario activo hoy? ¿A dónde llegan los datos? ¿Quieren además widget de chat embebido?
+5. **Meta Business Manager**: ¿cuenta API ya creada? ¿negocio verificado? (campos vacíos en onboarding §4).
+6. **Custom fields Clientify**: confirmar que podemos crear los necesarios sin pisar nada. Lista mínima en [[clientify-discovery-elphis]].
 
 ## Pre go-live con Enrique (no bloquea desarrollo)
 
