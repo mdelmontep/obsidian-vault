@@ -12,6 +12,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — glass: cascada de clase decorativa + AA compuesto (2026-06-10)
+
+- **Clase decorativa compartida (solo `background-image`) = 2 trampas de cascada** — shorthand `background:` posterior la pisa (usar `background-color:`); guards de fallback al FINAL del archivo o quedan muertos. Ver [[css-clase-decorativa-compartida-trampas-cascada]]
+- **AA sobre glass se verifica componiendo capas alpha en script** (peor fondo→scrim→panel→velo), no contra un color. Ver [[verificar-aa-sobre-glass-componer-capas-alpha]]
+
 ### facturaia — audit 349: normalización en group-by + .catch() muerto en supabase-js (2026-06-10)
 
 - **Group-by sobre campo texto libre (nif_iva) exige normalizar en write path + migración de saneo** — una sola pata no basta. Ver [[agrupacion-por-campo-texto-libre-exige-normalizacion-en-write-path]]

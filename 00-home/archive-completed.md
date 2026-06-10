@@ -6,6 +6,10 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-10 TuFacturaIA — **PRs #170 (research fundamentos diseño) + #171 (sistema glass en superficies flotantes) mergeadas** (squash `342deba`+`cb015a2`); gotcha lightningcss/backdrop-filter documentado en `gotchas.md §Frontend`.
+- 2026-06-09 TuFacturaIA — **Beta Feedback Widget COMPLETO y activado en prod**: 8 issues, migs 237-238, panel admin, emails resolución, smoke 3/3 verde vía `email_log`. Fix colateral Modal→createPortal (`c3998c5`).
+- 2026-06-09 TuFacturaIA — **Legacy `x-service-key` cortado**: WhatsApp Receptor migrado a HMAC v2 (6 nodos, `pqSWkDIHqmSVHotB`) + `SIGNING_LEGACY_UNTIL` a fecha pasada vía Dokploy. Smoke WA verde.
+- 2026-06-08 TuFacturaIA — **Auth Capa I (login/registro) implementada** (variante elegida, ver `docs/design/ESTADO.md` §Decisiones).
 - 2026-06-10 TuFacturaIA — **Fiscal y AEAT Fase 1 + aliases OCR + merge duplicados** (PR #163): migs 241-245 en prod, cron Dokploy `fiscal-generar-borradores`, CI verde (1751 tests), cashflow-v2 smoke 9/9.
 - 2026-06-09 TuFacturaIA — **Design system sprint completo**: tipografía Filson/Switzer/JetBrains, primitives, dashboard capas A-H, settings polish, D3 burndown 189→29, avatar (mig 235), tooling visual regression + tokens deprecados, topbar responsive móvil, OtpBoxes, fix dashboard (#160). Commits `e214f87`→`9a55964`.
 - 2026-06-09 TuFacturaIA — **Catálogo crons reconciliado** (PR #147 + Drive Sync PR #149): CRON_REGISTRY completo, drive-sync→Dokploy, workflow n8n `TwDd1OkMqr3nhSso` desactivado.
