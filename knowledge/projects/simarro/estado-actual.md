@@ -149,18 +149,21 @@ tags: [simarro, n8n, kommo, retell, estado, snapshot]
 
 | # | Qué | Dónde |
 |---|---|---|
-| 11 | **Auditar nodo `Build rows`** del Reconcile (`UQHBaQxeVsutlLWX`) | Verificar que parsea multiselects Kommo → arrays `["piso","atico"...]` normalizados. Es el punto más frágil del matching |
-| 12 | **Mapeo `agent_key` → `kommo_user_id`** | Cron de matching (`RGu1FLq9l3PKaX2B`) asigna la task siempre a Ramón (`15113339`). Para que vaya al agente real hay que montar tabla de mapeo |
-| 13 | **Borrar embudo vacío `13862727`** | Kommo UI — cosmético |
-| 14 | **`Subir desiredResults`** task Apify a 50 por defecto | Hoy la task diaria usa el default; el launcher manual ya fuerza 50. Cambiar en Apify UI |
+| 11 | **Verificar encoding `Build rows`** (parcial) | Motor verificado E2E (exec 4590): 2 leads en pool, `municipios` parseado bien, `fetch_ok=True`. `tipos`/`extras`/`estados` = `[]` en todos porque nadie ha rellenado esos CFs en Kommo — encoding de acentos sin verificar hasta que haya un lead real con multiselects rellenos |
+| 12 | ~~**Mapeo `agent_key` → `kommo_user_id`**~~ | **DESCARTADO** — Kommo solo tiene 2 usuarios. Viable solo si Ramón crea cuentas individuales por agente |
+| 13 | **Borrar embudo "Compradores en búsqueda" `13862727`** | Kommo UI → Ajustes → Embudos de venta |
+| 14 | ~~**`Subir desiredResults`** Apify~~ | **YA HECHO** |
 
-### ✅ Resuelto esta sesión (2026-06-09/10)
+### ✅ Resuelto sesiones 2026-06-09/10
 
 - P1-P5 automatizaciones emails: todos activos
-- P3 aviso interno visita: nodos WA + Retell activos, 8 emails reales en `agents` BD
-- HTML estructura emails generado (`/Users/manueldelmonte/simarro/docs/emails-estructura.html`)
-- Informe técnico outbound calls (8 agentes, pros/contras, plan implementación)
-- `sql/015_agent_emails_real.sql` aplicado — emails reales + fallback RPC → `rss@simarroproperties.com`
+- P3 aviso interno visita: nodos WA + Retell activos en `iMoTKZWxYLymGuHF`
+- `sql/015` aplicado — 7 emails reales en `agents` + fallback RPC → `rss@simarroproperties.com`
+- `sql/016` aplicado — `ramon santiago` → `rss@simarroproperties.com`. **8 agentes, todos con email real.**
+- Informe técnico outbound calls listo (decisión pendiente de Ramón)
+- **Embudo vacío identificado**: `13862727` = "Compradores en búsqueda" — borrar en Kommo UI → Ajustes → Embudos
+- **Mapeo `agent_key` → `kommo_user_id` descartado**: Kommo solo tiene 2 usuarios (Ramón + Agentesia). Revisitar si Ramón crea cuentas individuales
+- **Audit `Build rows`**: motor OK (exec 4590, 2 leads procesados). Punto frágil pendiente de verificar: encoding de acentos en TIPO/EXTRA/ESTADO cuando haya leads con multiselects rellenos
 
 ## IDs y números clave
 

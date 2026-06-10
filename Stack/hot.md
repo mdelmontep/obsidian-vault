@@ -73,6 +73,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 ### Email/BD — enum código sin CHECK (2026-06-04)
 
 - **Enum nuevo en código sin ampliar el CHECK de BD = insert muere mudo** — outbox-first aborta el envío entero (recover-password no enviaba a NADIE); el 200 anti-enum del endpoint lo oculta. Ver [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]]
+- **Extender enum con `ALTER TYPE ADD VALUE IF NOT EXISTS`** — idempotente; el valor nuevo NO es usable hasta commit → ponlos sueltos al inicio del archivo (no en el `BEGIN` que lo use). Ver [[alter-type-add-value-en-migracion-supabase]]
 
 ### Seguridad Supabase — RPC grants (2026-06-04)
 
@@ -178,3 +179,5 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **supabase-js .in() UUID col puede devolver vacío** — aunque psql+service_role funciona, el cliente JS puede no encontrar filas; mover JOIN a SQL/RPC es el fix fiable. Ver [[supabase-js-in-uuid-column-text-empty]]
 
 - **Aliases proveedor: trigger captura rename + resolve_proveedor RPC** — OCR dedup correcto aunque usuario renombre. GIN array_ops no acelera lower+unnest (seq scan OK <1000 rows). Ver [[proveedor-aliases-ocr-dedup]]
+
+- **Worktree facturaia: `node_modules` real para `next build` + copiar `supabase/.temp`** — symlink de node_modules vale para typecheck/vitest pero rompe el build de Turbopack; el link de Supabase no está en el worktree. Ver [[worktree-facturaia-build-supabase]]
