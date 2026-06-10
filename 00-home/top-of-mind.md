@@ -77,6 +77,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **Clínica Zen — status_id Kommo 'Cita cancelada'** — workflow `DkueIeGFWLKh8nTj` da 400 NotSupportedChoice. Pedir ID correcto pipeline 13495347
 - **Tecnocloud — PR #3 voice-webhook-tickets** pendiente review Dani — buildSubject 14 palabras + skip self-emails gmail-poll + audio Retell en UI ticket. Tras merge → smoke test E2E con llamada real
 - **TuFacturaIA Centro Fiscal IA — operativa legal/comercial pre-beta** — Backend + Stripe en prod (Fases 1-2.15 cerradas 2026-05-30, 14 PRs mergeados, 42 callers HMAC v2, audit cross-PR aplicado). Pendiente NO técnico: (1) email a `comercial.ceres@fnmt.es` (plantilla en runbook `fnmt-tsa-email-solicitud-convenio.md`, 5 huecos); (2) seguro RC Tech E&O 1M€ Hiscox/AXA (~600-1.200€/año); (3) abogado IT Términos B2B/B2C + DPA + Runbook brecha (3-5k€); (4) ZDR OpenAI+Anthropic por ticket. Smoke E2E Stripe pendiente — ver hub `facturaia.md` §SMOKE Stripe E2E post-deploy.
+- **TuFacturaIA — Fiscal y AEAT reconexión (Ola 6 decidida 2026-06-10)** — pestaña Settings decorativa + perfil duplicado. 1ª entrega: Fase 0 (tabla `perfil_fiscal` única + pestaña honesta con form compartido + SII informativo + quitar ejercicio) → fichero oficial real 303/130 → IA "explícame"; 390 fast-follow. Presentación nivel 2 ahora / 3b (cert cliente) faseado tras seguro+legal. Plan `docs/plans/fiscal-aeat/`, decisiones `centro-fiscal-ia-manual.md §16-quinquies`. Diferidas: base legal 3b + seguro RC; 111 solo profesionales (no nóminas).
 
 ## LATER
 
