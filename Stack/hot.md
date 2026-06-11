@@ -15,6 +15,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 ### git — sesiones paralelas mismo repo (2026-06-12)
 
 - **Working tree compartido sucio → ship via worktree + diff-0** — worktree desde origin/main; archivo con `git diff origin/main HEAD` = 0 se copia wholesale; la sesión paralela puede commitear tu trabajo uncommitted. Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]]
+- **Colisiones git en merge** — `Unable to write index` / `MERGE_HEAD` perdido a mitad / push bloqueado por `next build` lock; salida = worktree desde origin/main + cherry-pick aislado → PR. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]
 
 ### facturaia — Supabase: JWT de usuario sin password para smokes (2026-06-11)
 
