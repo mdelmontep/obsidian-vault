@@ -26,6 +26,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude)** — en main+prod (`0b64502`, mig 254). Checklist 4 puntos en hub §Smoke.
 - **TuFacturaIA — smoke prod integraciones/plan/módulos (#193-196)** — verificado en LOCAL light+dark (riel C1 categorías, cards losa, badges T3 Gota); falta confirmar en `app.tufacturaia.com`. Bandeja + modales presupuesto ya smoke'd en prod 2026-06-11.
 - **TuFacturaIA — n8n voz `zYcHHa8jWXB6dY5i`: mapear `catalogo_id`** — el AI Agent ya recibe ids de `consultar_catalogo` pero no los pasa a las líneas de `/api/voice/generate` (el endpoint ya los acepta desde PR #199). Sesión dedicada en prod con backup del workflow.
 - **TuFacturaIA — smoke E2E cobro empresa extra (F3b)** — código en prod (PR #144). Requiere cuenta de pago real o Stripe test clock: comprar empresa extra → verificar subscription item con quantity correcto + proración en factura + webhook sincroniza `billing_accounts.empresas_extra`. Hoy 409 `no_active_subscription` para todas las orgs (complimentary). Ver [[stripe-subscription-multi-item-resolver-por-price-no-indice]]

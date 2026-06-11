@@ -12,6 +12,14 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### git — sesiones paralelas mismo repo (2026-06-12)
+
+- **Working tree compartido sucio → ship via worktree + diff-0** — worktree desde origin/main; archivo con `git diff origin/main HEAD` = 0 se copia wholesale; la sesión paralela puede commitear tu trabajo uncommitted. Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]]
+
+### facturaia — Supabase: JWT de usuario sin password para smokes (2026-06-11)
+
+- **`generate_link` magiclink (service role) + `/auth/v1/verify` (anon)** → `access_token` real del usuario sin conocer ni resetear su password. Ver [[supabase-mint-access-token-sin-password-via-generate-link]]
+
 ### facturaia — output LLM: Zod + audit en BD (2026-06-11)
 
 - **Output LLM nunca con cast ciego** — safeParse Zod + parse failure a tabla de auditoría queryable antes del 5xx; obligatorios omitidos → default conservador que dispare revisión. Ver [[output-llm-validar-zod-y-auditar-parse-failures-en-bd]]
