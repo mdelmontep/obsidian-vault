@@ -97,7 +97,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ### Seguridad Supabase — RPC grants (2026-06-04)
 
-- **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas: Postgres concede EXECUTE a PUBLIC por defecto → anon/authenticated invocables con el anon key público. Bypass de pago/IDOR si reciben org_id sin validar. Fix: REVOKE FROM PUBLIC, anon. Ver [[supabase-rpc-security-definer-execute-public]]
+- **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas: Postgres concede EXECUTE a PUBLIC por defecto → anon/authenticated invocables con el anon key público. Bypass de pago/IDOR si reciben org_id sin validar. Fix: REVOKE FROM PUBLIC, anon. Ver [[supabase-rpc-security-definer-execute-public]]. OJO: `REVOKE FROM PUBLIC` solo NO basta si anon/authenticated tienen grant individual — revocarlos explícitamente. Ver [[postgres-revoke-public-no-elimina-grants-individuales]]
 
 ### Frontend mobile — marquee + iOS overlay (2026-06-02)
 
@@ -210,3 +210,4 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 ### retell — outbound Simarro (2026-06-11)
 - **Conversation Flow: LLM alucina args de tool** (teléfono inexistente en el flow), **stall de promesas** ("dame un momento" sin transitar) e **IDs fijados a dynamic var** que rompen la selección → reglas literales "EXACTAMENTE {{var}}" + edge directo a la tool + "el de la elegida". Naturalidad: empatía enlatada = delator nº1; turbo_v2_5 robótica en ES → multilingual_v2 temp 1.1. Outbound: no re-ofrecer lo descartado, preguntar motivo y pivotar a matching. Ver [[conversation-flow-outbound-gotchas]]
 - **Clientify GET /v1/deals/?contact=ID no filtra** → devuelve todo el pipeline; filtrar con `.endsWith('/contact_id/')`. Ver [[clientify]]
+- **Playwright `page.request` respeta caché HTTP del browser** — endpoint 200 sin `Cache-Control: no-store` → lecturas stale tras mutación; cache-buster en test + header en el endpoint. Ver [[playwright-page-request-respeta-cache-http-del-browser]]
