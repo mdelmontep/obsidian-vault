@@ -200,3 +200,5 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 - **backdrop-filter no renderiza con Next 16/lightningcss** si escribes `-webkit-` a mano (lo deja solo, Chrome lo ignora) → solo `backdrop-filter`; tokens de blur en `:root` base. Ver [[frontend-css-mobile]]
 - **Subagente runaway no se mata con TaskStop** (completed cada ciclo) → aislar trabajo grande en worktree; corte = Esc del humano. Ver [[claude-code-gotchas]]
+- **Subagente de diseño = receta CSS literal en el prompt** (no descripción) o inventa genérico; y agentes custom con error `thinking.type.disabled` → `model: "sonnet"`. Ver [[claude-code-gotchas]]
+- **APCA gate en script Node sobre tokens.css** — umbrales por uso (90/60/30/15), muted dark a 60 no 75, texto semántico via `*-fg`. Ver [[apca-gate-script-tokens]]

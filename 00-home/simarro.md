@@ -12,7 +12,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 
 ## Estado (2026-06-11)
 
-- **Outbound reactivación (Opción C) IMPLEMENTADO 2026-06-11** — llamadas IA a leads fríos cada ≥10 días (L-V 10:30, finde → lunes), cap 3 intentos, gate = CF consentimiento `1376604` marcado a mano. Agente Retell `agent_042b9fbc990838ae4117315440` + flow `conversation_flow_29839e6fd152`; lanzador `2LqwDgLecHwjgIQl` (INACTIVO hasta test real) + handler `flhsvOskRZiHrcKu` (activo). **Falta**: aplicar `sql/017` (sin exec_sql — necesita psql en contenedor) + test de llamada real + marcar consentimientos. Lista Robinson documentada, no se usa aún. Detalle: [[llamadas-outbound-reactivacion]].
+- **Outbound reactivación (Opción C) VALIDADO E2E 2026-06-11** — llamadas IA a leads fríos cada ≥10 días (L-V 10:30, finde → lunes), cap 3 intentos, gate = CF consentimiento `1376604` marcado a mano. Agente Retell `agent_042b9fbc990838ae4117315440` (voz `eleven_multilingual_v2` temp 1.1) + flow `conversation_flow_29839e6fd152` **v2 (17 nodos, tool Buscar_viviendas + reglas de naturalidad)**; lanzador `2LqwDgLecHwjgIQl` (INACTIVO, **integra `match_pairs`**: pivote vivienda-original→motivo→alternativa del matching) + handler `flhsvOskRZiHrcKu` (activo). `sql/017` aplicada. 4 llamadas test al móvil de Manu; la 4ª completó el camino entero: motivo descarte → alternativa → búsqueda en cartera → visita agendada con `idealista_id` correcto. **Falta**: marcar consentimientos (Ramón) + activar lanzador. Lista Robinson documentada, no se usa aún. Doc presentación: `simarro/docs/entrega-fase2-simarro.html`. Detalle: [[llamadas-outbound-reactivacion]].
 - **Audit 2026-06-10**: BD sana — 12 viviendas activas (8 con `agente:`, 4 sin → fallback Ramón), tabla `agents` completa (8 agentes, emails reales), `match_pairs` verificado con los 2 leads activos (case-insensitive OK). **Fix aplicado**: la anulación de citas (`om8iBm8ovENIgaxv`) no miraba los calendarios de Elisa, Javier, Mónica ni Ramón Simarro — añadidos los 4 pares Buscar/Eliminar (backup `om8iBm8ovENIgaxv-cambio-pre-calendarios-faltantes-20260610.json`).
 - **Notificaciones P1-P5 HECHAS** (2026-06-02→09): confirmación cliente formulario, confirmación visita, aviso interno visita a Ramón+agente (emails reales en BD), seguimiento post-visita 48h (salesbot 87873 + etapa Post-visita), alertas inactividad (`Xh2miozB7LvwQKia`, diario 08:30).
 - **Recordatorios** solo reaccionan a tareas Meeting (type 2) creadas por la reserva; matching usa Follow-up (1). ~~Especialista Asignado~~ desactivado 2026-06-08 (el agente va por `agente:` de Idealista).
@@ -44,7 +44,8 @@ Cambios aplicados sin probar en vivo:
 
 ## Otros pendientes
 
-- **Outbound go-live** (orden): aplicar `sql/017` (psql en contenedor — falta vía de acceso o autorización SSH) → test llamada real al móvil de Manu → marcar consentimiento `1376604` en leads autorizados por Ramón → activar `2LqwDgLecHwjgIQl`.
+- **Outbound go-live** (solo queda): marcar consentimiento `1376604` en leads autorizados por Ramón → activar `2LqwDgLecHwjgIQl`.
+- **Limpieza test outbound 2026-06-11 (Manu, en Kommo UI)**: borrar lead `32662576` + contacto `36417752` (la API no permite delete). El WA de confirmación de ese test le llegó al móvil de Ramón (629127816) — avisarle. Evento Calendar ya borrado, sin tarea Meeting.
 - **4 viviendas activas sin `agente:`** (Ramón debe añadirlo en Idealista): `111460118` (Chalet La Chopera), `111607600` (Pareado Los Satélites), `111668433` (Piso Coto Blanco), `111708032` (Local Primo de Rivera). Mientras, fallback = calendario general `consultingsimarroproperties@gmail.com`: la visita se agenda ahí, el aviso interno va solo a `rss@` (sin agente en copia) y el buffer de 60 min se calcula contra esa agenda. La cita no se pierde, pero sin routing por agente. Se autocorrige con el sync de las 8:00 al añadir `agente: <nombre>` en la descripción de Idealista.
 - Verificar que el bot `88575` (formularios no-contacto) tiene plantilla WA aprobada (`Solicitud_recibida` 72645) — solo comprobable en Kommo UI.
 - Borrar embudo vacío `13862727` ("Compradores en búsqueda") en Kommo UI.
@@ -65,6 +66,7 @@ Cambios aplicados sin probar en vivo:
 
 ## Histórico de hitos
 
+- 2026-06-11: outbound validado E2E (4 llamadas test) · flow v2 (17 nodos: tool búsqueda, pivote con matching, anti-stall, naturalidad sin empatía enlatada) · voz multilingual_v2 · lanzador integra `match_pairs` (alternativa personalizada por lead) · fix `idealista_id` dinámico en n_mirar/n_reservar (antes reservaba siempre contra la vivienda original) · fix phone alucinado en Reservar (regla EXACTAMENTE `{{telefono_lead}}`) · sql/017 aplicada · doc entrega Fase 2 HTML
 - 2026-06-10: audit completo (BD + 34 workflows) · fix anulación: añadidos calendarios Elisa/Javier/Mónica/Ramón Simarro (antes una visita en esos calendarios no se podía anular) · cobertura `agente:` 8/12 · hub actualizado
 - 2026-06-08/09: P3 aviso interno visita (emails reales agentes, sql/015-016) · P4 post-visita 48h · P5 alertas inactividad · Especialista Asignado desactivado
 - 2026-06-02: matching en 3 embudos (multi-pool) · recordatorios de visita anclados a tarea Meeting (mata el falso positivo del matching + habilita recordatorios reales) · matching task → Follow-up · emails HTML rediseñados Gmail-safe · SMTP verificado
