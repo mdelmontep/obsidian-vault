@@ -12,7 +12,7 @@ tags: [kommo, crm, whatsapp, salesbots, api]
 - **Long Lived Token**: integraciones privadas → Keys and scopes. Hasta 5 años sin refresh
 - **Subdominio cuenta**, NO `api-c.kommo.com` (aunque el JWT diga lo contrario en `api_domain`)
 - `amojo_id` por cuenta — distinto al `account_id`. Sacar con `GET /api/v4/account?with=amojo_id`
-- DELETE de leads NO permitido vía API (devuelve 405). Para "borrar" hay que mover a status `Closed - lost` (id `143` global)
+- DELETE de leads NO permitido vía API (devuelve 405). Tampoco contactos ni tareas. Para "borrar" hay que mover a status `Closed - lost` (id `143` global) o eliminar a mano en la UI. Implicación tests E2E: todo lead/contacto creado en un test real requiere limpieza manual en UI — anotar IDs durante el test
 - Status terminales globales por account: `Closed - won` (`142`), `Closed - lost` (`143`). Aparecen en CADA pipeline automáticamente
 - Pipeline POST requiere campos `is_main`, `is_unsorted_on`, `sort` o devuelve 400
 - Pipeline al crearse genera además un status `Incoming leads` (type=1) que normalmente no se usa en flujos n8n

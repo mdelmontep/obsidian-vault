@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-11 TuFacturaIA — **Batch de 8 smokes prod cerrados con agent-browser** (sandbox): glass light/dark · Fiscal Fase 1 (perfil round-trip preserva flags ocultos + explícame grounded + cron vía `cron_runs` 12 borradores/0 errores) · VIES (IE válido persiste, DE inválido no guarda) · factura intracom persiste clave · wizard <520px por proxy (Settings 390px, mismas clases globales) · multidivisa USD A2026-0104 con PDF equivalencia EUR (RD 1619/2012) · plan anual −20% exacto settings+admin · recover-password `email_log` delivered 4s · 349 gate 403 cerrado por tests (`feature-gate.test.ts` 8/8; E2E inviable sin cuenta no-superadmin con credenciales). Detalle hub [[facturaia]] §Smoke.
+- 2026-06-11 TuFacturaIA — **PR #175 `feat/glass-sheen` MERGED** (2026-06-10 21:41) + look glass verificado en prod light/dark.
 - 2026-06-10 TuFacturaIA — **PRs #170 (research fundamentos diseño) + #171 (sistema glass en superficies flotantes) mergeadas** (squash `342deba`+`cb015a2`); gotcha lightningcss/backdrop-filter documentado en `gotchas.md §Frontend`.
 - 2026-06-09 TuFacturaIA — **Beta Feedback Widget COMPLETO y activado en prod**: 8 issues, migs 237-238, panel admin, emails resolución, smoke 3/3 verde vía `email_log`. Fix colateral Modal→createPortal (`c3998c5`).
 - 2026-06-09 TuFacturaIA — **Legacy `x-service-key` cortado**: WhatsApp Receptor migrado a HMAC v2 (6 nodos, `pqSWkDIHqmSVHotB`) + `SIGNING_LEGACY_UNTIL` a fecha pasada vía Dokploy. Smoke WA verde.

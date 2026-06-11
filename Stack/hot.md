@@ -202,3 +202,6 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Subagente runaway no se mata con TaskStop** (completed cada ciclo) → aislar trabajo grande en worktree; corte = Esc del humano. Ver [[claude-code-gotchas]]
 - **Subagente de diseño = receta CSS literal en el prompt** (no descripción) o inventa genérico; y agentes custom con error `thinking.type.disabled` → `model: "sonnet"`. Ver [[claude-code-gotchas]]
 - **APCA gate en script Node sobre tokens.css** — umbrales por uso (90/60/30/15), muted dark a 60 no 75, texto semántico via `*-fg`. Ver [[apca-gate-script-tokens]]
+
+### retell — outbound Simarro (2026-06-11)
+- **Conversation Flow: LLM alucina args de tool** (teléfono inexistente en el flow), **stall de promesas** ("dame un momento" sin transitar) e **IDs fijados a dynamic var** que rompen la selección → reglas literales "EXACTAMENTE {{var}}" + edge directo a la tool + "el de la elegida". Naturalidad: empatía enlatada = delator nº1; turbo_v2_5 robótica en ES → multilingual_v2 temp 1.1. Outbound: no re-ofrecer lo descartado, preguntar motivo y pivotar a matching. Ver [[conversation-flow-outbound-gotchas]]
