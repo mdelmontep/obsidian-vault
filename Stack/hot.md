@@ -22,6 +22,12 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **Group-by sobre campo texto libre (nif_iva) exige normalizar en write path + migración de saneo** — una sola pata no basta. Ver [[agrupacion-por-campo-texto-libre-exige-normalizacion-en-write-path]]
 - **supabase-js: `.catch()` sobre un query es código muerto** — los errores van en `{error}`; destructurar y throw. Ver [[supabase-js-catch-sobre-query-es-codigo-muerto]]
 
+### facturaia — pulido UX 303/349 post-smoke visual (2026-06-10)
+
+- **CSS Grid: `1fr` a secas = `minmax(auto,1fr)` y desborda si el min-content gana** — usar `minmax(0,1fr)` + `overflow-x:auto` interno. Ver [[css-grid-1fr-desborda-usa-minmax-0-1fr]]
+- **Código de error de dominio (422 `sin_facturas`) = estado de producto** — mapear a estado vacío guiado, nunca volcar JSON crudo al banner. Ver [[codigo-error-de-dominio-es-estado-de-producto-no-error]]
+- **Cada aviso una sola superficie** — panel de avisos solo accionables; lo informativo a badge/banner único. Ver [[cada-aviso-una-sola-superficie]]
+
 ### facturaia — CI: mock admin.rpc + Playwright getByText en hidden details (2026-06-10)
 
 - **`admin.rpc()` en mock `createAdminClient` necesita declararse explícitamente** — sin él `TypeError: admin.rpc is not a function` rompe todos los tests del handler. Ver [[mock-supabase-fail-fast-default-en-tests-vitest]]
