@@ -10,8 +10,9 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 
 > Source of truth técnico: `/Users/manueldelmonte/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 
-## Estado (2026-06-10)
+## Estado (2026-06-11)
 
+- **Outbound reactivación (Opción C) IMPLEMENTADO 2026-06-11** — llamadas IA a leads fríos cada ≥10 días (L-V 10:30, finde → lunes), cap 3 intentos, gate = CF consentimiento `1376604` marcado a mano. Agente Retell `agent_042b9fbc990838ae4117315440` + flow `conversation_flow_29839e6fd152`; lanzador `2LqwDgLecHwjgIQl` (INACTIVO hasta test real) + handler `flhsvOskRZiHrcKu` (activo). **Falta**: aplicar `sql/017` (sin exec_sql — necesita psql en contenedor) + test de llamada real + marcar consentimientos. Lista Robinson documentada, no se usa aún. Detalle: [[llamadas-outbound-reactivacion]].
 - **Audit 2026-06-10**: BD sana — 12 viviendas activas (8 con `agente:`, 4 sin → fallback Ramón), tabla `agents` completa (8 agentes, emails reales), `match_pairs` verificado con los 2 leads activos (case-insensitive OK). **Fix aplicado**: la anulación de citas (`om8iBm8ovENIgaxv`) no miraba los calendarios de Elisa, Javier, Mónica ni Ramón Simarro — añadidos los 4 pares Buscar/Eliminar (backup `om8iBm8ovENIgaxv-cambio-pre-calendarios-faltantes-20260610.json`).
 - **Notificaciones P1-P5 HECHAS** (2026-06-02→09): confirmación cliente formulario, confirmación visita, aviso interno visita a Ramón+agente (emails reales en BD), seguimiento post-visita 48h (salesbot 87873 + etapa Post-visita), alertas inactividad (`Xh2miozB7LvwQKia`, diario 08:30).
 - **Recordatorios** solo reaccionan a tareas Meeting (type 2) creadas por la reserva; matching usa Follow-up (1). ~~Especialista Asignado~~ desactivado 2026-06-08 (el agente va por `agente:` de Idealista).
@@ -43,6 +44,7 @@ Cambios aplicados sin probar en vivo:
 
 ## Otros pendientes
 
+- **Outbound go-live** (orden): aplicar `sql/017` (psql en contenedor — falta vía de acceso o autorización SSH) → test llamada real al móvil de Manu → marcar consentimiento `1376604` en leads autorizados por Ramón → activar `2LqwDgLecHwjgIQl`.
 - **4 viviendas activas sin `agente:`** (Ramón debe añadirlo en Idealista): `111460118` (Chalet La Chopera), `111607600` (Pareado Los Satélites), `111668433` (Piso Coto Blanco), `111708032` (Local Primo de Rivera). Mientras, fallback = calendario general `consultingsimarroproperties@gmail.com`: la visita se agenda ahí, el aviso interno va solo a `rss@` (sin agente en copia) y el buffer de 60 min se calcula contra esa agenda. La cita no se pierde, pero sin routing por agente. Se autocorrige con el sync de las 8:00 al añadir `agente: <nombre>` en la descripción de Idealista.
 - Verificar que el bot `88575` (formularios no-contacto) tiene plantilla WA aprobada (`Solicitud_recibida` 72645) — solo comprobable en Kommo UI.
 - Borrar embudo vacío `13862727` ("Compradores en búsqueda") en Kommo UI.
