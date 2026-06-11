@@ -10,6 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **TuFacturaIA — mergear PR #197 (robustez LLM) + smoke copiloto/OCR post-deploy** — checklist 11 puntos en hub §Smoke. Incluye bump copiloto a Sonnet 4.6. CI rojo por billing → verificado en local.
 - **TuFacturaIA — porteo UI kit glass a prod (6 PRs)** — familias decididas 2026-06-11 (PR #176). Orden: tokens APCA → pills+drawer → KPI losa → tabs riel → botones+modales → topbar+feedback. Detalle `docs/design/ESTADO.md`.
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.
 - **🟢 TuFacturaIA — SOLO falta smoke manual: OCR anomalías post-fix (PR #148+#152, 2026-06-05)** — TODO cerrado salvo el smoke: fix mergeado a main (`5d280a9`) + **deploy Dokploy `done` (live)**; backfill prod aplicado y verificado (13 ingestas, 12→`listo`, 1 conserva `missing_nif_emisor` real; 0 falsos positivos restantes); gotcha shape canónico documentado (PR #152 mergeado, `gotchas.md §OCR`). **Smoke pendiente (tú)**: subir factura nueva por WhatsApp con NIF/nombre/total legibles → debe quedar en "Listo para revisar", NO en "Requiere revisión" con "falta NIF/nombre/total". Control: ticket SIN NIF visible → solo debe saltar "falta NIF". Ver [[consumidor-lee-claves-que-productor-no-emite]]

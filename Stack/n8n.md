@@ -326,3 +326,15 @@ Dokploy AgentesIA pre-crea la network; Dokploys nuevos en Stackscale (Docker no-
 
 ### Fan-out post-create paralelo (log + side effects no críticos)
 Tras crear entidad principal (Calendar event, fila DB, etc.), abrir N salidas paralelas: respond webhook rápido + emails + Sheet/Log append. Cada salida con `onError: continueRegularOutput` para que side effects opcionales no rompan flow primario. Ej. EcoBox `Reservar_cita`: GCal → [Email cliente, Email Cristian, Respond Retell, Sheet append]. Ver [[ADR-014-ecobox-log-universal-sheet-vs-chatwoot-voice-conversation]]
+
+### emailReadImap v2: `from` es objeto, no string
+`$json.from` en typeVersion 2 devuelve `{value:[{address,name}], text}`. Hacer `.toLowerCase()` directamente tira `is not a function`. Normalizar: `const raw = $json.from; const from = (typeof raw === 'string' ? raw : (raw?.text || raw?.value?.[0]?.address || '')).toLowerCase();`
+
+### Code node después de Postgres `alwaysOutputData:true` recibe el `{}` del Postgres, no el dato del trigger
+`$input.first()` sube un solo nivel. Si hay un nodo Postgres entre el IMAP trigger y el Code con `alwaysOutputData:true`, el Code lee `{}` en silencio. Fix: referenciar el nodo fuente por nombre: `$('IMAP Trigger').first().json`.
+
+### `executeWorkflow` workflowInputs: IIFE `(function(){...})()` falla con "invalid syntax"
+Las expresiones en `workflowInputs` no admiten IIFEs. Si la expresión es compleja, calcular en un Code node previo y pasar como `$json.campo`.
+
+### IMAP trigger deja de hacer polling tras ciclos repetidos deactivate/activate
+`staticData` queda en estado corrompido (`{}`). No llega ninguna ejecución aunque la cred y los filtros sean correctos. Diagnóstico: leer `staticData` del workflow via API. Fix: **reiniciar el contenedor n8n** desde Dokploy (no basta con desactivar/activar el workflow). Ver [[elphis-doctoralia-email-sync-2026-06-11]]

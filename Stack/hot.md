@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — output LLM: Zod + audit en BD (2026-06-11)
+
+- **Output LLM nunca con cast ciego** — safeParse Zod + parse failure a tabla de auditoría queryable antes del 5xx; obligatorios omitidos → default conservador que dispare revisión. Ver [[output-llm-validar-zod-y-auditar-parse-failures-en-bd]]
+
 ### facturaia — glass: cascada de clase decorativa + AA compuesto (2026-06-10)
 
 - **Clase decorativa compartida (solo `background-image`) = 2 trampas de cascada** — shorthand `background:` posterior la pisa (usar `background-color:`); guards de fallback al FINAL del archivo o quedan muertos. Ver [[css-clase-decorativa-compartida-trampas-cascada]]
@@ -205,3 +209,4 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 
 ### retell — outbound Simarro (2026-06-11)
 - **Conversation Flow: LLM alucina args de tool** (teléfono inexistente en el flow), **stall de promesas** ("dame un momento" sin transitar) e **IDs fijados a dynamic var** que rompen la selección → reglas literales "EXACTAMENTE {{var}}" + edge directo a la tool + "el de la elegida". Naturalidad: empatía enlatada = delator nº1; turbo_v2_5 robótica en ES → multilingual_v2 temp 1.1. Outbound: no re-ofrecer lo descartado, preguntar motivo y pivotar a matching. Ver [[conversation-flow-outbound-gotchas]]
+- **Clientify GET /v1/deals/?contact=ID no filtra** → devuelve todo el pipeline; filtrar con `.endsWith('/contact_id/')`. Ver [[clientify]]
