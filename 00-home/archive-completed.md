@@ -160,3 +160,4 @@ tags: [home, archivo]
 - 2026-05-30 · TuFacturaIA · Sprint Multidivisa Recibidas S1+S2+S3+S3.5 + OCR Quality Bug A+B + precio_anual end-to-end + dark mode + mobile plan-billing — 6 PRs mergeados (#106 #107 #108 #110 #113 + #112 audit cross-PR), deploy Dokploy done, HTTP 200 verificado prod, mig 188+189 aplicadas vía Dashboard SQL Editor (pooler ISP timeout).
 - TuFacturaIA — deploy multidivisa + smoke ✅ E2E PROD + cutover SSOT upload manual — 2026-05-30
 - TuFacturaIA — WA Boost patch (contrato JSON cashflow) — 2026-05-29
+- 2026-06-12 · TuFacturaIA · PR #207 (Borja, POST /api/facturas con sesión) mergeado tras fix `source` (estaba en NEXT como bloqueado)

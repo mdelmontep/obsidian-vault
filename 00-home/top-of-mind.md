@@ -10,6 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **TuFacturaIA — smoke E2E cuotas por tier (issue 008)** — sistema completo en prod 2026-06-12 (PRs #213/#215 + patch n8n); 8 pasos en hub §Smoke.
 - **TuFacturaIA — smoke copiloto/OCR post-deploy PR #197** — mergeado 2026-06-12 (`1efb783`); checklist 11 puntos en hub §Smoke (incluye bump copiloto a Sonnet 4.6).
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.
 - **🟢 TuFacturaIA — SOLO falta smoke manual: OCR anomalías post-fix (PR #148+#152, 2026-06-05)** — TODO cerrado salvo el smoke: fix mergeado a main (`5d280a9`) + **deploy Dokploy `done` (live)**; backfill prod aplicado y verificado (13 ingestas, 12→`listo`, 1 conserva `missing_nif_emisor` real; 0 falsos positivos restantes); gotcha shape canónico documentado (PR #152 mergeado, `gotchas.md §OCR`). **Smoke pendiente (tú)**: subir factura nueva por WhatsApp con NIF/nombre/total legibles → debe quedar en "Listo para revisar", NO en "Requiere revisión" con "falta NIF/nombre/total". Control: ticket SIN NIF visible → solo debe saltar "falta NIF". Ver [[consumidor-lee-claves-que-productor-no-emite]]
@@ -26,7 +27,6 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
-- **TuFacturaIA — PR #207 (Borja, POST /api/facturas con sesión) bloqueado** — review publicada 2026-06-12: `source:'mobile'` viola `facturas_fuente_check` → 500 runtime. Esperar fix (cambiar a 'api' o mig ampliando CHECK).
 - **TuFacturaIA — smoke perf auth dedupe (PR #209) + responder ticket bgchivite `1762f07e`** — checklist en hub §Smoke (velocidad /cashflow, regresión impersonación/solo_lectura/Bearer iOS).
 - **TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude)** — en main+prod (`0b64502`, mig 254). Checklist 4 puntos en hub §Smoke.
 - **TuFacturaIA — smoke prod integraciones/plan/módulos (#193-196)** — verificado en LOCAL light+dark (riel C1 categorías, cards losa, badges T3 Gota); falta confirmar en `app.tufacturaia.com`. Bandeja + modales presupuesto ya smoke'd en prod 2026-06-11.

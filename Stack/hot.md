@@ -12,6 +12,11 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — cuotas por tier: contratos implícitos (2026-06-12)
+
+- **Collector alertas admin: dismissKey 2 partes** (`${alert_type}:${org_id}`) — granularidad extra embebida en el alert_type, no como sufijo; verificar contra el route real, no contra el mock. Ver [[admin-alert-collectors-dismiss-contract]]
+- **Migs paralelas CREATE OR REPLACE se pisan** — consolidar la definición completa de la función en la mig de mayor número antes de prod. Ver [[migraciones-paralelas-create-or-replace-se-pisan]]
+
 ### supabase — auth.getUser() es red, no local (2026-06-12)
 
 - **N helpers que llaman getUser = N round-trips GoTrue por request** — validar 1 vez en el wrapper del pipeline y pasar `user` como param opcional; `React.cache()` solo dedupea render pass RSC, no route handlers. Ver [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]]
@@ -145,6 +150,8 @@ Patrones recientes de proyectos activos. Mover a sección permanente o eliminar 
 - **Worktree facturaia: `node_modules` real para `next build` + copiar `supabase/.temp`** — symlink de node_modules vale para typecheck/vitest pero rompe el build de Turbopack; el link de Supabase no está en el worktree. Ver [[worktree-facturaia-build-supabase]]
 
 - **backdrop-filter no renderiza con Next 16/lightningcss** si escribes `-webkit-` a mano (lo deja solo, Chrome lo ignora) → solo `backdrop-filter`; tokens de blur en `:root` base. Ver [[frontend-css-mobile]]
+- **Popover con backdrop-filter dentro de un ancestro con backdrop-filter/transform sale SIN blur** (el ancestro es *backdrop root*; el descendiente solo filtra dentro de su caja → fuera, backdrop vacío). CSS correcto, problema de DOM. Fix: portar el popover a `createPortal(body)` con `position:fixed` desde el trigger (como el Modal). Caso facturaia desplegables topbar 2026-06-12. Ver [[ancestro-con-backdrop-filter-anula-blur-descendiente-portar-popover]]
+- **Cron detector de drift debe usar el MISMO rango que generó el snapshot** — si el productor es acumulado (130 = YTD) y el detector compara solo el trimestre, lo previo sale como "saliente" → falsos positivos diarios, amplificados si `notify_upsert` reabre la notif como no leída. Caso facturaia PR #214 2026-06-12. Ver [[cron-drift-detector-debe-usar-mismo-rango-que-genero-el-snapshot]]
 - **Subagente runaway no se mata con TaskStop** (completed cada ciclo) → aislar trabajo grande en worktree; corte = Esc del humano. Ver [[claude-code-gotchas]]
 - **Subagente de diseño = receta CSS literal en el prompt** (no descripción) o inventa genérico; y agentes custom con error `thinking.type.disabled` → `model: "sonnet"`. Ver [[claude-code-gotchas]]
 - **APCA gate en script Node sobre tokens.css** — umbrales por uso (90/60/30/15), muted dark a 60 no 75, texto semántico via `*-fg`. Ver [[apca-gate-script-tokens]]
