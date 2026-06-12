@@ -10,6 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **TuFacturaIA — limpiar notifs fiscal residuales** — fix #214 verificado en prod (run manual cron 2026-06-12: 130 sin falsos salientes); queda marcar leídas las notifs viejas + abrir/recalcular borradores 130 2T/3T/4T (drift real: abono B2026-0001) + check visual drawer (X 28px, fade chips).
 - **TuFacturaIA — smoke E2E cuotas por tier (issue 008)** — sistema completo en prod 2026-06-12 (PRs #213/#215 + patch n8n); 8 pasos en hub §Smoke.
 - **TuFacturaIA — smoke copiloto/OCR post-deploy PR #197** — mergeado 2026-06-12 (`1efb783`); checklist 11 puntos en hub §Smoke (incluye bump copiloto a Sonnet 4.6).
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.
@@ -27,7 +28,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
-- **TuFacturaIA — smoke perf auth dedupe (PR #209) + responder ticket bgchivite `1762f07e`** — checklist en hub §Smoke (velocidad /cashflow, regresión impersonación/solo_lectura/Bearer iOS).
+- **TuFacturaIA — smoke perf auth dedupe (PR #209) + responder ticket bgchivite `1762f07e`** — deploy Dokploy done 2026-06-12 (11:42, junto a #197/#214); checklist en hub §Smoke (velocidad /cashflow, regresión impersonación/solo_lectura/Bearer iOS).
 - **TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude)** — en main+prod (`0b64502`, mig 254). Checklist 4 puntos en hub §Smoke.
 - **TuFacturaIA — smoke prod integraciones/plan/módulos (#193-196)** — verificado en LOCAL light+dark (riel C1 categorías, cards losa, badges T3 Gota); falta confirmar en `app.tufacturaia.com`. Bandeja + modales presupuesto ya smoke'd en prod 2026-06-11.
 - **TuFacturaIA — n8n voz `zYcHHa8jWXB6dY5i`: mapear `catalogo_id`** — el AI Agent ya recibe ids de `consultar_catalogo` pero no los pasa a las líneas de `/api/voice/generate` (el endpoint ya los acepta desde PR #199). Sesión dedicada en prod con backup del workflow.
