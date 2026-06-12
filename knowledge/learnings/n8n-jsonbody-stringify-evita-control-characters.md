@@ -20,3 +20,8 @@ Usar `JSON.stringify` (sin comillas externas, ya las pone):
 Síntoma: `Bad control character in string literal in JSON at position N`.
 
 Caso típico: error handlers que pasan `stack`, `message`, `description` o cualquier valor que pueda contener saltos de línea, comillas o caracteres de control.
+
+Aplica también a LITERALES con `\n` dentro de la expresión (fallbacks
+`{{ x || 'línea1\n\nlínea2' }}`), no solo a valores de `$json`. Síntoma
+alternativo: body vacío → API destino rechaza campo requerido (Meta
+`text.body is required`), sin error de control character.

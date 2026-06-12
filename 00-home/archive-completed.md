@@ -161,3 +161,4 @@ tags: [home, archivo]
 - TuFacturaIA — deploy multidivisa + smoke ✅ E2E PROD + cutover SSOT upload manual — 2026-05-30
 - TuFacturaIA — WA Boost patch (contrato JSON cashflow) — 2026-05-29
 - 2026-06-12 · TuFacturaIA · PR #207 (Borja, POST /api/facturas con sesión) mergeado tras fix `source` (estaba en NEXT como bloqueado)
+- 2026-06-12 · TuFacturaIA · cuotas por tier cerrado E2E: smoke 008 completo (web 402, API v1 402, copiloto 429, WhatsApp neutro+402), 3 fixes workflow n8n, PR #216 centinela + PR #217 panel admin usage
