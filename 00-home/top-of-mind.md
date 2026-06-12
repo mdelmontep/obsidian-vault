@@ -10,7 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
-- **TuFacturaIA — mergear PR #197 (robustez LLM) + smoke copiloto/OCR post-deploy** — checklist 11 puntos en hub §Smoke. Incluye bump copiloto a Sonnet 4.6. CI rojo por billing → verificado en local.
+- **TuFacturaIA — smoke copiloto/OCR post-deploy PR #197** — mergeado 2026-06-12 (`1efb783`); checklist 11 puntos en hub §Smoke (incluye bump copiloto a Sonnet 4.6).
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.
 - **🟢 TuFacturaIA — SOLO falta smoke manual: OCR anomalías post-fix (PR #148+#152, 2026-06-05)** — TODO cerrado salvo el smoke: fix mergeado a main (`5d280a9`) + **deploy Dokploy `done` (live)**; backfill prod aplicado y verificado (13 ingestas, 12→`listo`, 1 conserva `missing_nif_emisor` real; 0 falsos positivos restantes); gotcha shape canónico documentado (PR #152 mergeado, `gotchas.md §OCR`). **Smoke pendiente (tú)**: subir factura nueva por WhatsApp con NIF/nombre/total legibles → debe quedar en "Listo para revisar", NO en "Requiere revisión" con "falta NIF/nombre/total". Control: ticket SIN NIF visible → solo debe saltar "falta NIF". Ver [[consumidor-lee-claves-que-productor-no-emite]]
 - **🟢 TuFacturaIA — Auditoría seguridad CERRADA (2026-06-04) — solo queda config dashboard** — mig 213 (REVOKE RPC grants, CRÍTICO bypass de pago) en prod, validada (anon→401, auth→403). PR #131 (SSRF render-pdf/webhooks, security headers anti-clickjacking, signout CSRF, voice-guard) mergeado + DESPLEGADO (headers live). Revisión 3 agentes: todo OK + 1 MEDIO → **PR #133 mig 217 mergeado + APLICADO** (revoca `enqueue_outbox_event` de authenticated; smoke anon→401). ⚠️ La 217 se aplicó vía SQL+`schema_migrations` registro manual (NO `db push`) porque el CLI no conecta al pooler 5432 Y un `db push` habría arrastrado las migs de billing 214-216 que su sesión desplegaba en paralelo. Pendiente config user (no código): bucket logos listing off, leaked-password protection on, cuenta E2E sin superadmin (bloqueó smoke 403 del 349 el 2026-06-10). Ver [[supabase-rpc-security-definer-execute-public]]
@@ -26,6 +26,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — PR #207 (Borja, POST /api/facturas con sesión) bloqueado** — review publicada 2026-06-12: `source:'mobile'` viola `facturas_fuente_check` → 500 runtime. Esperar fix (cambiar a 'api' o mig ampliando CHECK).
 - **TuFacturaIA — smoke perf auth dedupe (PR #209) + responder ticket bgchivite `1762f07e`** — checklist en hub §Smoke (velocidad /cashflow, regresión impersonación/solo_lectura/Bearer iOS).
 - **TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude)** — en main+prod (`0b64502`, mig 254). Checklist 4 puntos en hub §Smoke.
 - **TuFacturaIA — smoke prod integraciones/plan/módulos (#193-196)** — verificado en LOCAL light+dark (riel C1 categorías, cards losa, badges T3 Gota); falta confirmar en `app.tufacturaia.com`. Bandeja + modales presupuesto ya smoke'd en prod 2026-06-11.

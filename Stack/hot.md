@@ -20,6 +20,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 - **Working tree compartido sucio → ship via worktree + diff-0** — worktree desde origin/main; archivo con `git diff origin/main HEAD` = 0 se copia wholesale; la sesión paralela puede commitear tu trabajo uncommitted. Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]]
 - **Colisiones git en merge** — `Unable to write index` / `MERGE_HEAD` perdido a mitad / push bloqueado por `next build` lock; salida = worktree desde origin/main + cherry-pick aislado → PR. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]
+- **Triaje ramas/worktrees multi-sesión** — borrable si cherry 0 **o** diff vs main vacío; lock huérfano = `ps -p` al PID antes de `remove -f -f`. Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]
 
 ### facturaia — Supabase: JWT de usuario sin password para smokes (2026-06-11)
 
