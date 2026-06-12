@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### supabase — auth.getUser() es red, no local (2026-06-12)
+
+- **N helpers que llaman getUser = N round-trips GoTrue por request** — validar 1 vez en el wrapper del pipeline y pasar `user` como param opcional; `React.cache()` solo dedupea render pass RSC, no route handlers. Ver [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]]
+
 ### git — sesiones paralelas mismo repo (2026-06-12)
 
 - **Working tree compartido sucio → ship via worktree + diff-0** — worktree desde origin/main; archivo con `git diff origin/main HEAD` = 0 se copia wholesale; la sesión paralela puede commitear tu trabajo uncommitted. Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]]
