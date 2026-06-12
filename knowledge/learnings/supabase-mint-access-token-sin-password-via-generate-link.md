@@ -10,6 +10,10 @@ Para smokes/tests que necesitan un JWT real de un usuario concreto sin conocer n
 1. `POST /auth/v1/admin/generate_link` (service role) con `{"type":"magiclink","email":"..."}` → devuelve `hashed_token`. No dispara SMTP.
 2. `POST /auth/v1/verify` (anon key) con `{"type":"magiclink","token_hash":"<hashed_token>"}` → devuelve `access_token` + `refresh_token` del usuario.
 
+Para smoke de UI (Playwright contra la app Next): inyectar la sesión como cookie
+`sb-<ref>-auth-token` = `base64-` + base64url(JSON de la session); si supera ~3180
+chars, trocear en `sb-<ref>-auth-token.0`, `.1`... (formato @supabase/ssr).
+
 Crítico cuando el usuario ya rotó su password (resetearlo se lo pisaría — caso usuario test iOS de Borja). El token resultante ejercita RLS y endpoints exactamente como el cliente real.
 
 Relacionado: [[supabase-bypassear-plantilla-auth-con-admin-generatelink]]
