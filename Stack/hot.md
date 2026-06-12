@@ -12,6 +12,10 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 ## 🔥 Últimas 2 semanas
 
+### facturaia — extractos WhatsApp multi-org (2026-06-12)
+
+- **Botón HITL diferido = payload con estado persistido propio, no media_id de Meta** — IDs del proveedor caducan y faltan en caminos alternos; referenciar fila propia (bandeja_id) y re-descargar de Storage. Ver [[boton-hitl-referenciar-estado-persistido-no-id-efimero-proveedor]]
+
 ### facturaia — cuotas por tier: contratos implícitos (2026-06-12)
 
 - **Collector alertas admin: dismissKey 2 partes** (`${alert_type}:${org_id}`) — granularidad extra embebida en el alert_type, no como sufijo; verificar contra el route real, no contra el mock. Ver [[admin-alert-collectors-dismiss-contract]]

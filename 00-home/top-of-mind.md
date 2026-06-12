@@ -27,6 +27,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — extractos: manuales (issue 039) + smoke web** — WhatsApp ✅ verde 2026-06-12 (PRs #218/#219/#220 en prod, patches n8n v1+v2); queda flujo navegador `/conciliacion` Importar extracto (5 puntos hub §Smoke) y manuales usuario+admin.
 - **TuFacturaIA — smoke perf auth dedupe (PR #209) + responder ticket bgchivite `1762f07e`** — deploy Dokploy done 2026-06-12 (11:42, junto a #197/#214); checklist en hub §Smoke (velocidad /cashflow, regresión impersonación/solo_lectura/Bearer iOS).
 - **TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude)** — en main+prod (`0b64502`, mig 254). Checklist 4 puntos en hub §Smoke.
 - **TuFacturaIA — smoke prod integraciones/plan/módulos (#193-196)** — verificado en LOCAL light+dark (riel C1 categorías, cards losa, badges T3 Gota); falta confirmar en `app.tufacturaia.com`. Bandeja + modales presupuesto ya smoke'd en prod 2026-06-11.
