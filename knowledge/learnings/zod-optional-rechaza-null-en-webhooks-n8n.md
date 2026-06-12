@@ -18,7 +18,9 @@ const nullishOptional = <T extends z.ZodTypeAny>(s: T) =>
 ```
 
 Aplicable a todos los schemas Zod expuestos a sistemas externos (n8n, Zapier,
-Make, landing pages que usen `||` en JS antes de enviar). NO usar en Server
+Make, landing pages que usen `||` en JS antes de enviar) **y a schemas que
+validan OUTPUT de LLMs**: OpenAI/Anthropic devuelven `null` (no omiten la clave)
+para campos que no encuentran, igual que n8n con `|| null`. NO usar en Server
 Actions ni en endpoints PATCH donde `null` tenga semántica de borrado.
 
 Detección: meta-test que escanee `src/**/route.ts` buscando `.optional()`
@@ -27,3 +29,6 @@ razón`.
 
 Caso real: agency-portal PR #65 rompió onboarding entero (95% del tráfico
 fallaba con 400) durante 12h hasta merge del fix en PR #66.
+Caso real 2: TuFacturaIA OCR 2026-06-12 — el schema del output del LLM tenía
+`forma_pago`/`iban` en `.optional()`; OpenAI los devolvió `null` → 502 y el OCR
+quedó inservible. Fix: todos los opcionales del output a `.nullable().optional()`.
