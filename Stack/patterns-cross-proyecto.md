@@ -149,3 +149,16 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **Dokploy reload tras redeploy** — Bad Gateway hasta Traefik reload manual
 - **Policy `org_member_update` permite UPDATE a CUALQUIER miembro** — sin distinguir rol. Para columnas regulatorias (Verifactu, entorno AEAT, etc.) el riesgo es real: cualquier becario apaga el envío a AEAT desde DevTools. Mitigación: trigger BEFORE UPDATE con guard de rol + API route con `requireRole`. Revisar otras columnas críticas (`regimen_iva`, `nif`, `iae`).
 - **Trigger SQL captura IP via `current_setting('request.headers')`** — Supabase inyecta los headers HTTP en el GUC de sesión cuando viene del PostgREST. En SQL directo (psql, cron, migrations) el GUC no existe → wrap en `BEGIN…EXCEPTION WHEN OTHERS THEN v_ip:=NULL; END`. Útil para auditoría regulatoria.
+
+
+## Rescatados de hot.md (poda 2026-06-12)
+
+- **Split-TX quema números de serie** — contador en TX1 + INSERT en TX2: si TX2 falla el número ya commitió → hueco. `SELECT FOR UPDATE` + UPDATE contador + INSERT en el mismo RPC. Ver [[postgres-split-tx-counter-burn-serie-numeracion]]
+- **Multiempresa SaaS 3 ejes** — navegar=membresía · agregar=propiedad · cobrar=cuenta; no mezclar (agregar por membresía cruda suma datos de clientes que gestionas → bug + RGPD). Ver [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]] · [[ADR-028-multiempresa-scope-navegar-agregar-cobrar]]
+- **SSRF: validar IP no basta sin pinar el fetch** — fetch por hostname re-resuelve DNS (rebinding TOCTOU); pinear con undici Agent `connect.lookup` a la IP validada (hostname para SNI). Callback undici v7 = array `cb(null,[{address,family}])`. Ver [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]]
+- **rebase --onto sobre upstream movido suelta tu commit** — "Successfully rebased" miente; `git log origin/main..HEAD` antes de push, recupera con reflog+cherry-pick. Ver [[git-rebase-onto-upstream-movido-suelta-commit-reflog-recupera]]
+- **build no corre vitest** — registry/enum con test de conteo rompe en CI al añadir entrada; `npx vitest run` antes de push. Ver [[pre-commit-build-no-corre-tests-registry-conteo-rompe-ci]]
+- **Consumidor lee claves que el productor no emite** — JSONB sin tipo compartido = falla silenciosa + tests verdes si prueban el shape equivocado. Ver [[consumidor-lee-claves-que-productor-no-emite]]
+- **Enum nuevo en código sin ampliar el CHECK de BD = insert muere mudo** — outbox-first aborta el envío entero; el 200 anti-enum del endpoint lo oculta. Ver [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]]
+- **`ALTER TYPE ADD VALUE IF NOT EXISTS`** — idempotente; el valor nuevo NO es usable hasta commit → suéltalos al inicio del archivo, no en el `BEGIN` que lo use. Ver [[alter-type-add-value-en-migracion-supabase]]
+- **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas (EXECUTE a PUBLIC por defecto) → bypass de pago/IDOR si reciben org_id sin validar. REVOKE FROM PUBLIC, anon; `REVOKE PUBLIC` solo no basta si hay grant individual. Ver [[supabase-rpc-security-definer-execute-public]] · [[postgres-revoke-public-no-elimina-grants-individuales]]

@@ -78,36 +78,6 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 - **Playwright `filter({ has: locator })` puede timeout** — en páginas con transiciones activas o fuentes cargando, el locator filtrado por heading no resuelve; pasar a `fullPage: true` en `toHaveScreenshot`. Ver [[playwright-section-locator-filter-timeout]]
 - **Baselines Playwright son OS-dependientes** — `darwin` ≠ `jammy`; para CI estable regenerar dentro del container `mcr.microsoft.com/playwright:vX-jammy`.
 
-### Postgres — contador serie + INSERT = misma TX (2026-06-08)
-
-- **Split-TX quema números de serie** — `next_invoice_number_for_org` en TX1, INSERT en TX2: si TX2 falla el contador ya commitió → hueco. Fix: `SELECT FOR UPDATE` + `UPDATE contador` + INSERT dentro del mismo RPC. Ver [[postgres-split-tx-counter-burn-serie-numeracion]]
-
-### Multiempresa SaaS — 3 ejes (2026-06-05)
-
-- **Navegar=membresía · agregar=propiedad · cobrar=cuenta** — no mezclar: agregar por membresía cruda suma datos de clientes que gestionas (bug + RGPD). Ver [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]] · [[ADR-028-multiempresa-scope-navegar-agregar-cobrar]]
-
-### Seguridad — SSRF pinning de IP (2026-06-05)
-
-- **Validar la IP no basta sin pinar el fetch** — fetch por hostname re-resuelve DNS (rebinding TOCTOU); pinear con undici Agent `connect.lookup` a la IP validada, manteniendo hostname para SNI. Callback en undici v7 DEBE ser array `cb(null,[{address,family}])`, NO `cb(null,addr,fam)` → "Invalid IP address: undefined". Ver [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]]
-
-### Git / CI — gotchas (2026-06-05)
-
-- **rebase --onto sobre upstream movido suelta tu commit** — "Successfully rebased" miente; verifica `git log origin/main..HEAD` antes de push, recupera con reflog+cherry-pick. Ver [[git-rebase-onto-upstream-movido-suelta-commit-reflog-recupera]]
-- **build no corre vitest** — registry/enum con test de conteo rompe en CI al añadir entrada; corre `npx vitest run` antes de push. Ver [[pre-commit-build-no-corre-tests-registry-conteo-rompe-ci]]
-
-### OCR — consumidor lee claves fantasma (2026-06-05)
-
-- **Consumidor lee claves que el productor no emite** — JSONB sin tipo compartido = falla silenciosa + tests verdes si prueban el shape equivocado. Ver [[consumidor-lee-claves-que-productor-no-emite]]
-
-### Email/BD — enum código sin CHECK (2026-06-04)
-
-- **Enum nuevo en código sin ampliar el CHECK de BD = insert muere mudo** — outbox-first aborta el envío entero (recover-password no enviaba a NADIE); el 200 anti-enum del endpoint lo oculta. Ver [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]]
-- **Extender enum con `ALTER TYPE ADD VALUE IF NOT EXISTS`** — idempotente; el valor nuevo NO es usable hasta commit → ponlos sueltos al inicio del archivo (no en el `BEGIN` que lo use). Ver [[alter-type-add-value-en-migracion-supabase]]
-
-### Seguridad Supabase — RPC grants (2026-06-04)
-
-- **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas: Postgres concede EXECUTE a PUBLIC por defecto → anon/authenticated invocables con el anon key público. Bypass de pago/IDOR si reciben org_id sin validar. Fix: REVOKE FROM PUBLIC, anon. Ver [[supabase-rpc-security-definer-execute-public]]. OJO: `REVOKE FROM PUBLIC` solo NO basta si anon/authenticated tienen grant individual — revocarlos explícitamente. Ver [[postgres-revoke-public-no-elimina-grants-individuales]]
-
 ### Frontend mobile — marquee + iOS overlay (2026-06-02)
 
 - **Marquee seamless** — wrapper único `w-max` animado + `loading="eager"` en imgs. Sin `w-max` el `-50%` se calcula sobre el viewport → logos desaparecen. Ver [[marquee-css-seamless-loop-w-max-eager]]
