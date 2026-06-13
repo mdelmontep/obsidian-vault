@@ -59,6 +59,7 @@ Resúmenes 1-2 líneas con link al learning. Leer learning completo solo si nece
 
 - **`admin.rpc()` en mock `createAdminClient` necesita declararse explícitamente** — sin él `TypeError: admin.rpc is not a function` rompe todos los tests del handler. Ver [[mock-supabase-fail-fast-default-en-tests-vitest]]
 - **`getByText(x).first()` puede caer en elemento dentro de `<details>` cerrado** — scopear siempre al contenedor visible: `page.locator('.lista').getByText(x)`. Ver [[playwright-getbytext-first-hidden-details-element]]
+- **`locator.isVisible({timeout})` NO espera** — devuelve estado inmediato; en SPA da `false` y un `test.skip` condicional se traga el test. Usa `waitFor({state:'visible'})`. Ver [[playwright-isvisible-ignora-timeout-usar-waitfor]]
 
 ### facturaia — Form parcial + UPSERT fila completa = pérdida silenciosa (2026-06-10)
 
