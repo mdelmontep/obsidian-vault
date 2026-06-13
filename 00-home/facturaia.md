@@ -32,9 +32,9 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## PRIORIDADES PRÓXIMA SESIÓN
 
-**🟢 CONCILIACIÓN — precisión 040-052 COMPLETA Y EN PROD (2026-06-13):**
+**🟢 CONCILIACIÓN — precisión 040-052 COMPLETA + GAPS CERRADOS EN PROD · Fase 2 (053-058) PLANIFICADA (2026-06-13):**
 
-Auditoría profunda (3 agentes: motor SQL / APIs / UI) contra los 12 artículos de Holded como spec de referencia (`docs/architecture/conciliacion-referencia-holded.md`). 13 issues en `issues/040-052-*.md` (PRD `issues/prd-conciliacion-precision.md`). **13/13 cerrados y desplegados** (PRs **#221** features 047-050+052, **#222/#223** E2E 051). Verificado contra Postgres real (Supabase local con **colima** — `supabase start -x vector,logflare`). TDD real-DB en `src/lib/conciliacion/__integration__/*` (**49 tests** `npm run test:integration`) + unit 2100 + **E2E verde contra prod** (`conciliacion-ciclo.spec`).
+Auditoría profunda (3 agentes: motor SQL / APIs / UI) contra los 12 artículos de Holded como spec de referencia (`docs/architecture/conciliacion-referencia-holded.md`). 13 issues en `issues/040-052-*.md` (PRD `issues/prd-conciliacion-precision.md`). **13/13 cerrados y desplegados** (PRs **#221** features 047-050+052, **#222/#223** E2E 051, **#224** gaps, **#225** E2E ciclo real). Verificado contra Postgres real (Supabase local con **colima** — `supabase start -x vector,logflare`). TDD real-DB en `src/lib/conciliacion/__integration__/*` (**54 tests** `npm run test:integration`) + unit 2100 + **E2E verde contra prod** (`conciliacion-ciclo.spec` 5/5 + `conciliacion-vinculacion.spec`).
 
 - **Migs 265-272 EN PROD + reconciliadas** (`schema_migrations` Local=Remote). Se aplicaron por **dashboard SQL editor** (idempotentes) + `supabase migration repair --status applied 265..272` porque el pooler 5432/6543 estaba bloqueado por red (443 sí). Ver [[supabase-pooler-timeout-isp-fallback-dashboard]].
   - **265** guard capacidad mov (C1) + lock concurrencia (C2) + score/compute sobre pendiente real + sugerencias parciales (A1) + mirror skip-if-exists + cap `score/100>1`.
@@ -48,7 +48,22 @@ Auditoría profunda (3 agentes: motor SQL / APIs / UI) contra los 12 artículos 
 - **API/UI cerrado**: bulk-confirm `confirm_all` `.order()` (PostgREST v12) · Zod en confirm · validación import-pdf · cap diario OCR 50/día (decisión: cap operativo, NO cuota plan) · **fmt2 (céntimos) en toda la vista** · estado error con reintentar · **barómetro de confianza** en `sugerencia-card` (nivel Segura/Probable/Posible + barra + score) · pill `Auto` en tabla · KPI auto-conciliadas real desde `module_events`.
 - **UI entregada**: **047** modal bilateral (candidatas izq / seleccionadas dcha, residual en vivo) en el drawer · **048** filtro de estado en URL + columna Progreso % (`role=meter`) + aprobar/descartar inline + cargar más · **049** `/conciliacion/reglas` con pestañas Reglas (constructor condiciones/acción + preview en vivo + reordenar prioridad) / Aprendidas · **050** "Registrar resto como comisión/gasto" en el drawer · **052** manuales usuario+admin.
 - **Endpoints nuevos**: `POST .../[id]/asignar` · `GET .../[id]/candidatas` · `POST .../[id]/registrar-resto` · `/api/conciliacion/reglas` CRUD + `/probar` (las aprendidas se movieron a `/reglas-aprendidas`).
-- **Residual menor**: el spec viejo `conciliacion-vinculacion.spec` comparte el bug de locator (`table[aria-label]` + `isVisible`) que arreglé en `conciliacion-ciclo.spec` — corregir igual cuando se retome. Ver [[playwright-isvisible-ignora-timeout-usar-waitfor]].
+- **GAPS CERRADOS (PR #224/#225, 2026-06-13)** tras auditoría "no dejar ningún hueco":
+  - **050 visibilidad en reportes**: el resto/comisión suma a **Cashflow → "Gastos por categoría"** (query embed `movimiento_metadata!movimiento_metadata_movimiento_id_fkey` + `resto_categoria_id`, movs negativos del mes). Test integración del camino real (`comisiones-reporte.test.ts`).
+  - **Tests cross-org** (asignar/candidatas) + **RLS runtime** de `conciliacion_reglas` (`reglas-rls.test.ts`, requiere `SUPABASE_LOCAL_ANON_KEY`; skip si ausente).
+  - **Spec viejo `conciliacion-vinculacion` ARREGLADO y verde**: locator `[aria-label]` (no `table[aria-label]` — vive en el `<div role=region>`), `isVisible({timeout})` no espera → `waitFor`, dismiss onboarding, fila es `<tr role=button>` (no `<button>`), test 5 → read-only (cancela, re-ejecutable). Ver [[playwright-isvisible-ignora-timeout-usar-waitfor]].
+  - **E2E ciclo manual REAL con teardown** (`conciliacion-ciclo.spec` test 4): asigna 0,01 € por UI contra prod → verifica → desvincula. Salta candidatas en cuarentena (el desvincular deja la factura en cuarentena 30d).
+  - **Honesto — NO mutados por E2E** (cubiertos por integración + ruta): **resto (050)** — el botón "Registrar resto" solo sale con residual ≤5%/≤5€ y no hay UI de teardown del resto; **inline aprobar/descartar (048)** — teardown no puede identificar con seguridad el mov a revertir. Si se quiere E2E real de estos dos → autorizar limpieza vía BD en teardown.
+
+- **Fase 2 — casos avanzados Holded (PR #226, planificado, scope futuro)**: PRD `issues/prd-conciliacion-holded-avanzado.md` + issues:
+  - **053** comisión en cobro (resto en la *factura*, espejo de 050) — **AFK, listo para /tdd**.
+  - **054** remesas 1↔N + estado de remesa (reusa `asignar_manual` de 047) — **AFK**.
+  - **056** transferencias entre cuentas 2 fases (extiende `es_transferencia_interna`/`transfer-pairs`) — **AFK**.
+  - **055** anticipos/pagos a cuenta sin factura — **HITL** (decisión de modelo de datos: entidad nueva vs categorización).
+  - **057** divisa: diferencia de cambio como resto — **HITL** (decisión: resto categorizado vs informativo; recomiendo resto).
+  - **058** préstamos/suplidos/compensación — **HITL/DECISIÓN**: requieren contabilidad de doble partida (asientos PGC) que TuFacturaIA NO tiene. Recomendación: **aproximar con categorización o derivar al gestor, NO construir ledger**. No implementable hasta decidir.
+
+- **CÓMO RETOMAR (siguiente sesión — /tdd 053)**: ver el prompt de arranque que dejé al cierre (sección NOW del top-of-mind). Arrancar Supabase local (`colima start` + `supabase start -x vector,logflare`, `SERVICE_ROLE_KEY` por `supabase status -o env`), confirmar verde (`npm run test:integration`), y `/tdd` sobre `issues/053-comision-en-cobro-resto-factura.md`. El E2E corre contra prod (`.env.test`, org "FacturaIA Sandbox").
 
 **🟡 MÓDULO STOCK/INVENTARIO — Fases A-C EN PROD (invisible) · Fase D en rama `feat/stock-compras` — 2026-06-02:**
 

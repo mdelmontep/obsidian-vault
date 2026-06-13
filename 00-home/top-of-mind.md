@@ -10,6 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **🟢 TuFacturaIA — Conciliación: /tdd 053 (comisión en cobro)** — 040-052 COMPLETO+gaps en prod (PRs #221-#225, migs 265-272). Fase 2 planificada (#226): issues 053-058. Siguiente: `/tdd` sobre `issues/053-comision-en-cobro-resto-factura.md` (AFK, espejo de 050). Luego 054/056 (AFK) y decidir HITL 055 (modelo anticipos), 057 (divisa), 058 (préstamos/suplidos/compensación → recomiendo NO ledger). Detalle + cómo arrancar en hub [[facturaia]] §Conciliación.
 - **TuFacturaIA — limpiar notifs fiscal residuales** — fix #214 verificado en prod (run manual cron 2026-06-12: 130 sin falsos salientes); queda marcar leídas las notifs viejas + abrir/recalcular borradores 130 2T/3T/4T (drift real: abono B2026-0001) + check visual drawer (X 28px, fade chips).
 - **TuFacturaIA — smoke copiloto/OCR post-deploy PR #197** — mergeado 2026-06-12 (`1efb783`); checklist 11 puntos en hub §Smoke (incluye bump copiloto a Sonnet 4.6).
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.
