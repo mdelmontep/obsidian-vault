@@ -27,7 +27,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
-- **🟢 TuFacturaIA — deploy app Dokploy Fase 2 conciliación + smoke UI sandbox** — Fase 2 (053-058) MERGEADA y en prod (PRs #227/#228, migs 273-277 reconciliadas, 2 auditorías cross-PR, smokes prod ROLLBACK verdes). Migs backward-compat con el app actual; falta build Dokploy para endpoints/UI nuevos y luego smoke UI manual en org "FacturaIA Sandbox" de los 5 flujos (comisión cobro, remesa, anticipo registrar+aplicar, traspaso, factura USD diferencia cambio). Hub [[facturaia]] §Conciliación.
+- **🟢 TuFacturaIA — SOLO smoke UI conciliación en sandbox** — deploy YA en prod (autoDeploy Dokploy; Fase 2 #227/#228 + auditoría #231/#235/#236 + colisión #237; migs 273-281 aplicadas/reconciliadas; smokes ROLLBACK verdes). Queda solo el smoke UI manual en "FacturaIA Sandbox" de los 5 flujos (comisión cobro, remesa, anticipo registrar+aplicar, traspaso, factura USD diferencia cambio). Hub [[facturaia]] §Conciliación.
 - **TuFacturaIA — extractos: manuales (issue 039) + smoke web** — WhatsApp ✅ verde 2026-06-12 (PRs #218/#219/#220 en prod, patches n8n v1+v2); queda flujo navegador `/conciliacion` Importar extracto (5 puntos hub §Smoke) y manuales usuario+admin.
 - **TuFacturaIA — smoke perf auth dedupe (PR #209) + responder ticket bgchivite `1762f07e`** — deploy Dokploy done 2026-06-12 (11:42, junto a #197/#214); checklist en hub §Smoke (velocidad /cashflow, regresión impersonación/solo_lectura/Bearer iOS).
 - **TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude)** — en main+prod (`0b64502`, mig 254). Checklist 4 puntos en hub §Smoke.

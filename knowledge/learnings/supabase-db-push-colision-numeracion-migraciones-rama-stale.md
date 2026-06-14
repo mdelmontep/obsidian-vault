@@ -25,4 +25,9 @@ RÁPIDO y verificar en main post-merge que no hay duplicados:
 `/` inicial; sin ella, `e164` en `066_...e164...` da falso positivo "164"). Regla ya
 en el CLAUDE.md del proyecto TuFacturaIA: **numerar al ABRIR el PR, no al crear la rama**.
 
-Relacionado: [[supabase-migration-new-rompe-secuencia-nnn-name]].
+El hook `pre-push` NO detecta la colisión de `NNN` (solo aborta ante timestamps
+remotos) → el `uniq -d` post-merge es la única red. Caso 2026-06-14: conciliación
+(#231/#235) y onboarding (#232) numeraron `279` en paralelo; el de conciliación ya
+estaba aplicado en prod → renumerado **onboarding 279→281** (no la de conciliación).
+
+Relacionado: [[supabase-migration-new-rompe-secuencia-nnn-name]], [[supabase-migration-repair-requiere-fichero-nnn-en-cwd]].
