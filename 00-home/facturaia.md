@@ -32,7 +32,10 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## PRIORIDADES PRÓXIMA SESIÓN
 
-**🟢 CONCILIACIÓN — precisión 040-052 COMPLETA + GAPS CERRADOS EN PROD · Fase 2 (053-058) PLANIFICADA (2026-06-13):**
+**🟢 CONCILIACIÓN — precisión 040-052 + Fase 2 (053-058) COMPLETAS Y EN PROD (2026-06-14):**
+
+**Fase 2 DESPLEGADA**: PRs **#227** (feature) + **#228** (hardening 2ª auditoría) mergeados a main. Migs **273-277 aplicadas a prod y reconciliadas** (`supabase migration list --linked` todas Local+Remote). 2 auditorías cross-PR (3 agentes c/u). Smokes prod verdes (transacción ROLLBACK, cero residuo): 5 RPCs + regresión resto-huérfano + ciclo anticipo desvincular→reutilizar. Verde: build 0, lint+typecheck, unit 2107, integración 88/88. **Pendiente: deploy app Dokploy** (endpoints/UI nuevos; las migs ya viven en prod y son backward-compat con el app actual) + smoke UI manual en sandbox tras deploy.
+
 
 Auditoría profunda (3 agentes: motor SQL / APIs / UI) contra los 12 artículos de Holded como spec de referencia (`docs/architecture/conciliacion-referencia-holded.md`). 13 issues en `issues/040-052-*.md` (PRD `issues/prd-conciliacion-precision.md`). **13/13 cerrados y desplegados** (PRs **#221** features 047-050+052, **#222/#223** E2E 051, **#224** gaps, **#225** E2E ciclo real). Verificado contra Postgres real (Supabase local con **colima** — `supabase start -x vector,logflare`). TDD real-DB en `src/lib/conciliacion/__integration__/*` (**54 tests** `npm run test:integration`) + unit 2100 + **E2E verde contra prod** (`conciliacion-ciclo.spec` 5/5 + `conciliacion-vinculacion.spec`).
 
@@ -55,15 +58,17 @@ Auditoría profunda (3 agentes: motor SQL / APIs / UI) contra los 12 artículos 
   - **E2E ciclo manual REAL con teardown** (`conciliacion-ciclo.spec` test 4): asigna 0,01 € por UI contra prod → verifica → desvincula. Salta candidatas en cuarentena (el desvincular deja la factura en cuarentena 30d).
   - **Honesto — NO mutados por E2E** (cubiertos por integración + ruta): **resto (050)** — el botón "Registrar resto" solo sale con residual ≤5%/≤5€ y no hay UI de teardown del resto; **inline aprobar/descartar (048)** — teardown no puede identificar con seguridad el mov a revertir. Si se quiere E2E real de estos dos → autorizar limpieza vía BD en teardown.
 
-- **Fase 2 — casos avanzados Holded (PR #226, planificado, scope futuro)**: PRD `issues/prd-conciliacion-holded-avanzado.md` + issues:
-  - **053** comisión en cobro (resto en la *factura*, espejo de 050) — **AFK, listo para /tdd**.
-  - **054** remesas 1↔N + estado de remesa (reusa `asignar_manual` de 047) — **AFK**.
-  - **056** transferencias entre cuentas 2 fases (extiende `es_transferencia_interna`/`transfer-pairs`) — **AFK**.
-  - **055** anticipos/pagos a cuenta sin factura — **HITL** (decisión de modelo de datos: entidad nueva vs categorización).
-  - **057** divisa: diferencia de cambio como resto — **HITL** (decisión: resto categorizado vs informativo; recomiendo resto).
-  - **058** préstamos/suplidos/compensación — **HITL/DECISIÓN**: requieren contabilidad de doble partida (asientos PGC) que TuFacturaIA NO tiene. Recomendación: **aproximar con categorización o derivar al gestor, NO construir ledger**. No implementable hasta decidir.
+- **Fase 2 — casos avanzados Holded — IMPLEMENTADA EN LOCAL 2026-06-13 (pendiente commit/PR + aplicar migs a prod)**: PRD `issues/prd-conciliacion-holded-avanzado.md`. Todo verde local: build 0, lint+typecheck, unit 2107, **integración 81/81 (21 ficheros)**. Migs **273-276** aplicadas en LOCAL (psql 54322), **NO en prod**.
+  - **053** comisión en cobro (resto en la *factura*) ✅ — mig 273 (`factura_resto_conciliacion` + `registrar_resto_factura` + `recompute` suma resto) + `POST /api/conciliacion/facturas/[id]/registrar-resto` + cashflow 5ª fuente + UI modal factura.
+  - **054** remesas 1↔N ✅ — helper puro `computeRemesaEstado` (sin tabla) + badge en drawer. Reusa `asignar_manual`.
+  - **056** transferencias 2 fases ✅ — mig 274 (`vincular_transferencia`/`desvincular_transferencia`) + endpoints `transferencia`/`transferencia-candidatas` (lib `findTransferenciaCandidatos`) + UI drawer + chip "Traspaso".
+  - **055** anticipos sin factura ✅ — **decisión: entidad nueva** (mig 276 tabla `anticipo` + `registrar_anticipo`/`aplicar_anticipo`/`desvincular_anticipo`) + endpoints `movimientos/[id]/anticipo`, `anticipos`, `anticipos/[id]/aplicar` + UI drawer (registrar) + modal factura (aplicar) + chip "Anticipo".
+  - **057** divisa diferencia de cambio ✅ — **decisión: resto categorizado** (mig 275: motor cuadra contra `COALESCE(total_eur,total)` en `recompute`/overpayment/`registrar_resto_factura`). Ganancia→resto mov (050), pérdida→resto factura (053). *Limitación: sugerencias auto no convierten divisa (conciliación manual); ganancia (+) aún sin reporte de ingresos por categoría.*
+  - **058** préstamos/suplidos/compensación — **DECIDIDO: no ledger, aproximación por categorización como ámbito FUTURO** → `decisions/ADR-029-conciliacion-casos-asientos-no-ledger.md`. Issue cerrado, sin implementación.
+  - Manuales usuario+admin actualizados (§Conciliación).
+  - **AUDITORÍA cross-PR (3 agentes composición) 2026-06-14 — 7 hallazgos reales corregidos** (migs editadas en sitio, sin commit aún): **P1** resto de factura quedaba huérfano al desvincular y re-falseaba el estado al re-conciliar → `recompute` ahora borra el resto si no hay mfa activa (mig 275) + test. **P2** `vincular_transferencia` dejaba puntero colgante si una pata ya estaba emparejada → guard `ya_emparejado` (274) + test. **P2** `desvincular_transferencia` devolvía ok falso si el mov no existía → `movimiento_not_found` (274) + test. **P2** `validate_mfa_no_overpayment` sin REVOKE → añadido (275). **P1** estado de submodales no se reseteaba al cambiar de factura/mov (drawer+modal). **P2** `estadoCounts` contaba transferencias ocultas → contadores descuadrados. **P2** KPI `conciliado_mes_eur` sumaba `total` nominal en vez de `total_eur` (divisa). **P3** Escape en drawer cierra submodal antes que el drawer. Todo verde tras fixes: integración **84/84**, unit 2107, lint+typecheck. Descartados (no-bug): doble conteo cashflow, resto de anulada (fecha_cobro NULL lo excluye), chip Anticipo.
 
-- **CÓMO RETOMAR (siguiente sesión — /tdd 053)**: ver el prompt de arranque que dejé al cierre (sección NOW del top-of-mind). Arrancar Supabase local (`colima start` + `supabase start -x vector,logflare`, `SERVICE_ROLE_KEY` por `supabase status -o env`), confirmar verde (`npm run test:integration`), y `/tdd` sobre `issues/053-comision-en-cobro-resto-factura.md`. El E2E corre contra prod (`.env.test`, org "FacturaIA Sandbox").
+- **PENDIENTE TRAS ESTA SESIÓN**: (1) **commit + PR** de Fase 2 (rama, no main; CI rojo por billing → verificar local y mergear). (2) **Aplicar migs 273-276 a prod** (dashboard SQL + `migration repair` si pooler 5432 bloqueado; verificar `git log origin/main..HEAD` vacío antes). (3) **Smoke prod** en org "FacturaIA Sandbox": comisión cobro, remesa 1↔N, anticipo+aplicar, traspaso, factura USD diferencia cambio.
 
 **🟡 MÓDULO STOCK/INVENTARIO — Fases A-C EN PROD (invisible) · Fase D en rama `feat/stock-compras` — 2026-06-02:**
 

@@ -52,3 +52,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 026 · 2026-05-29 · [[ADR-026-saas-billing-stripe-hmac-fases-1-2|SaaS billing Stripe + HMAC fases 1-2]] (TuFacturaIA)
 - 027 · 2026-05-31 · [[ADR-027-disponibilidad-slots-precomputados-vs-calculo-en-llm|Disponibilidad de citas: backend devuelve slots pre-computados, el LLM no calcula]] (Simarro)
 - 028 · 2026-06-05 · [[ADR-028-multiempresa-scope-navegar-agregar-cobrar|Multiempresa: navegar=membresía, agregar=propiedad, cobrar=cuenta]] (TuFacturaIA)
+- 029 · 2026-06-13 · [[ADR-029-conciliacion-casos-asientos-no-ledger|Conciliación casos contables (préstamos/suplidos/compensación): NO ledger, aproximación por categorización como ámbito futuro]] (TuFacturaIA)
