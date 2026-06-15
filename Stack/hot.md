@@ -1,5 +1,4 @@
 ---
-- **Bugs que solo afloran contra schema real** — `.order` por columna inexistente → 42703 tragado por maybeSingle (loop); RPC+trigger insertan misma fila → 23505. E2E real los caza, mocks no. Ver [[supabase-errores-que-solo-afloran-contra-schema-real]]
 title: hot cache
 date: 2026-06-14
 tags: [stack, index]
@@ -23,9 +22,11 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Migración aplicada fuera de historial → idempotente + reconciliar schema_migrations** [[migracion-aplicada-fuera-de-historial-supabase]]
 
 - **RPC secundaria opcional (stock inicial, webhook) → devolver warning flag, no silenciar ni 500** [[non-blocking-secondary-rpc-warning-flag]]
+- **`.next/lock` stale bloquea `next build`** — `rm .next/lock` cuando "Another build process running" sin proceso activo. Dev server usa `.next/dev/lock` (distinto). Ver [[next-build-lock-stale-devserver]]
 
 ## prod / supabase / observabilidad
 
+- **Bugs solo afloran contra schema real** — `.order` columna inexistente → 42703; RPC+trigger misma fila → 23505. E2E real los caza, mocks no. Ver [[supabase-errores-que-solo-afloran-contra-schema-real]]
 - **Smoke de RPCs/triggers contra prod sin residuo: `BEGIN; DO $$..asserts..$$; ROLLBACK`** [[smoke-prod-en-transaccion-rollback]]
 - **Dokploy `compose.one` devuelve `deployments[]` SIN ordenar → sort por createdAt** [[dokploy-api-deployments-sin-ordenar]]
 - **supabase `auth.getUser()` es red (round-trip GoTrue) → validar 1 vez en el wrapper** [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]]

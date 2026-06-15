@@ -165,3 +165,6 @@ tags: [home, archivo]
 - 2026-06-12 · TuFacturaIA · PR #207 (Borja, POST /api/facturas con sesión) mergeado tras fix `source` (estaba en NEXT como bloqueado)
 - 2026-06-12 · TuFacturaIA · cuotas por tier cerrado E2E: smoke 008 completo (web 402, API v1 402, copiloto 429, WhatsApp neutro+402), 3 fixes workflow n8n, PR #216 centinela + PR #217 panel admin usage
 - 2026-06-14 · TuFacturaIA · Conciliación Fase 2 (053-058) — comisión en cobro, remesas 1↔N, transferencias entre cuentas 2 fases, divisa diferencia de cambio, anticipos a cuenta (entidad nueva); 058 NO-ledger (ADR-029). PRs #227 (feature) + #228 (hardening 2ª auditoría), migs 273-277 en prod, 2 auditorías cross-PR (3 agentes c/u), smokes prod ROLLBACK verdes. Pendiente: deploy app Dokploy + smoke UI sandbox (en NEXT).
+- 2026-06-15 · TuFacturaIA · Onboarding 021-030 P0 fix — bugs críticos (23505 series duplicadas + loop redirect invited_at) + hardening; PR #250, mig 286 en prod.
+- 2026-06-15 · TuFacturaIA · Stock Fase 1 (STOCK-01→06, issues 060-065) — controla_stock default ON, stock_inicial inline, toast pre-emisión, motivo obligatorio, reconciliar admin, propagación catalogo_id; PR #251, migs 287-288 en prod. 45 tests.
+- 2026-06-15 · TuFacturaIA · Módulo Stock Fases A-E cerrado 2026-06-11 (PRs #130/#137/#139/#198-#203), activable en beta cuando se decida.
