@@ -1,4 +1,5 @@
 ---
+- **Bugs que solo afloran contra schema real** — `.order` por columna inexistente → 42703 tragado por maybeSingle (loop); RPC+trigger insertan misma fila → 23505. E2E real los caza, mocks no. Ver [[supabase-errores-que-solo-afloran-contra-schema-real]]
 title: hot cache
 date: 2026-06-14
 tags: [stack, index]
