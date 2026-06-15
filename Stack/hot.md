@@ -21,6 +21,8 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Migs paralelas CREATE OR REPLACE se pisan → consolidar en la de mayor número** [[migraciones-paralelas-create-or-replace-se-pisan]]
 - **Migración aplicada fuera de historial → idempotente + reconciliar schema_migrations** [[migracion-aplicada-fuera-de-historial-supabase]]
 
+- **RPC secundaria opcional (stock inicial, webhook) → devolver warning flag, no silenciar ni 500** [[non-blocking-secondary-rpc-warning-flag]]
+
 ## prod / supabase / observabilidad
 
 - **Smoke de RPCs/triggers contra prod sin residuo: `BEGIN; DO $$..asserts..$$; ROLLBACK`** [[smoke-prod-en-transaccion-rollback]]

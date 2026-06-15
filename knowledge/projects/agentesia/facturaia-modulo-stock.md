@@ -51,5 +51,46 @@ Mergeada vía **PR #137** (`feat/stock-compras`→main) + **PR #139** fix renumb
 - **Demo montada (2026-06-02)** para recorrer D4/D5 por UI: login `test@facturaia.dev` (org `7d9a2cfe-14ec-4268-a58f-37522915ffef`, OTP ok, NO superadmin). En test: `features.stock.disponibilidad='activo'`; 2 productos (producto test 12@6.25, Folios A4 50@3.00); recibida `DEMO-001` sin_aprobar + bandeja `listo` (`factura-demo.pdf`) con `datos_extraidos.lineas=[Producto test edicion grande(3@10), Portes envio(1@20)]` sin catalogo_id. Flujo: Inventario (ver productos) → Ingesta → abrir demo → asignar L1→producto test (sugerido 100%), L2 sin asignar → suma 50 cuadra base 50 → Aprobar → producto test 12→15, PMP 7.00 + movimiento compra.
 - Saltar OTP en test: `UPDATE profiles SET phone_verified_at=now()`. Activar módulo a una org: `INSERT org_features (org_id, feature_id='stock', enabled=true, source='manual')`.
 
+## Grill-me 2026-06-15 — Roadmap siguiente fase
+
+Sesión de auditoría completa contra Holded (56 artículos). Target: **Perfil B** (comercio/retail pequeño). Sin fabricación, sin lotes/series por ahora.
+
+### Bugs bloqueantes pendientes
+- `convertir_presupuesto` no propaga `catalogo_id` → stock no se descuenta en la conversión más común ✅ corregido en PR #199 según historial, **verificar que está en prod**
+- Canal voz no propaga `catalogo_id` → PR #199 también, **verificar**
+- `controla_stock` es opt-in → debería ser ON por defecto para tipo "producto" (no "servicio")
+- Ajuste manual sin descripción obligatoria → historial sucio
+- `stock_actual` puede ir negativo sin aviso → toast de aviso al facturar con stock insuficiente (no bloqueo)
+- `recompute_stock()` solo corre el cron semanal → disparar manualmente desde /admin
+
+### Features críticas (bloquean casos de uso reales)
+1. **Ficha de producto** `/inventario/[id]` — historial de movimientos, gráfico anual, documentos relacionados, margen
+2. **Stock reservado** — presupuestos aceptados no facturados reservan stock; mostrar: actual / reservado / disponible
+3. **Filtros en listado** — por categoría, alarma activa, sin stock, con stock
+4. **Resumen de valor de inventario** — widget en dashboard: N productos, valor total, coste total
+5. **Stock inicial inline al crear producto** — sin tener que hacer ajuste manual
+6. **Notificación de alarma** — email + badge in-app cuando baja del mínimo
+7. **Importación masiva** — CSV/Excel para onboardear tienda con muchos productos
+8. **Exportación a Excel** — para hacer inventario físico
+9. **Aviso al facturar sin stock suficiente** — toast, no bloqueo
+10. **Múltiples almacenes** — infraestructura ya preparada (almacen_id existe); UI en v2
+11. **Columna margen** en listado
+
+### Diferencial IA vs Holded
+1. **Sugerencia de reposición** — "en X días sin stock, ¿crear factura de compra a [proveedor]?" con pre-relleno
+2. **Importación inteligente** — la IA mapea cualquier Excel del usuario sin plantilla fija
+3. **Panel de salud del producto** — días hasta rotura, calculado con promedio móvil 90 días
+4. **Stock mínimo sugerido** — al activar controla_stock en producto con historial
+5. **Detección de ajustes anómalos** — ajuste >X% del stock → pide confirmación
+
+### NO implementar ahora (exceso para nuestro segmento)
+Lotes/series, fabricación/BOM, catálogo B2B, escáner hardware, picking/packing, etapas logísticas, variantes complejas, múltiples tarifas.
+
+### Fases acordadas
+- **Fase 1** — bugs + UX crítico (ver lista bugs arriba + stock inicial inline + aviso stock insuficiente)
+- **Fase 2** — ficha producto, filtros, resumen, notificaciones, stock reservado, exportación
+- **Fase 3** — diferencial IA (reposición, importación inteligente, panel salud)
+- **Fase 4** — múltiples almacenes, variantes simples
+
 ## Refs
 Colisión numeración migraciones rama stale: [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]. Onboarding por-org no solo backfill: [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]].
