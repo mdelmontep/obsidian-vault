@@ -34,10 +34,15 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Agregado cacheado sobre ledger (ej anticipo) → recompute por trigger desde Σ activas** [[agregado-cacheado-sobre-ledger-recompute-trigger]]
 - **`migration repair`/`db push` necesitan pooler 5432; si cae → Dashboard SQL + repair luego** [[reference-supabase-db-access]]
 
+## supabase / postgrest SDK
+
+- **PostgREST SDK `.or()` no compara columnas entre sí** — usar filtro en memoria o RPC con SQL nativo. Ver [[postgrest-sdk-or-no-compara-columnas]]
+
 ## frontend (FacturaIA glass / UX activo)
 
 - **Modal/popover sin `createPortal` atrapado por ancestro con stacking (sticky/transform/backdrop-filter)** [[modal-portal-stacking-sticky-sidebar]]
 - **Efecto que recarga por entidad + setters que mergean → reset explícito del estado per-entidad** [[effect-reload-por-entidad-setters-merge-exigen-reset]]
 - **Playwright: `isVisible({timeout})` no espera (usa `waitFor`); `page.request` cachea HTTP** [[playwright-isvisible-ignora-timeout-usar-waitfor]]
 - **CSS Module Turbopack: kebab-case → `undefined` silencioso; usar camelCase** [[css-module-camelcase-turbopack]]
+- **Color runtime sin inline style: `data-estado={val}` + CSS `[data-estado="X"]`** — esquiva trinquetes + mantiene dinamismo. Ver [[inline-style-data-attribute-para-color-semaforo]]
 - **Layout server App Router NO ve el pathname → guard por página con helper, no en layout** [[nextjs-layout-no-lee-pathname-server-side]]

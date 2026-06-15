@@ -168,3 +168,5 @@ tags: [home, archivo]
 - 2026-06-15 · TuFacturaIA · Onboarding 021-030 P0 fix — bugs críticos (23505 series duplicadas + loop redirect invited_at) + hardening; PR #250, mig 286 en prod.
 - 2026-06-15 · TuFacturaIA · Stock Fase 1 (STOCK-01→06, issues 060-065) — controla_stock default ON, stock_inicial inline, toast pre-emisión, motivo obligatorio, reconciliar admin, propagación catalogo_id; PR #251, migs 287-288 en prod. 45 tests.
 - 2026-06-15 · TuFacturaIA · Módulo Stock Fases A-E cerrado 2026-06-11 (PRs #130/#137/#139/#198-#203), activable en beta cuando se decida.
+- 2026-06-15 · TuFacturaIA · Stock Fase 2 (STOCK-07→12) + Fase 3 IA (STOCK-13→16) — importación masiva Excel+IA, panel salud producto, sugerencia reposición, mínimo sugerido; mig 293 en prod; commit `a1a5c8d0`.
+- 2026-06-15 · TuFacturaIA · n8n voz pqSWkDIHqmSVHotB — fix mapeo catalogo_id en nodo v2-prep-generate (backup + PUT API).
