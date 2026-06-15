@@ -32,6 +32,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **supabase `auth.getUser()` es red (round-trip GoTrue) → validar 1 vez en el wrapper** [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]]
 - **Output LLM nunca con cast ciego: safeParse Zod + audit del parse failure en BD** [[output-llm-validar-zod-y-auditar-parse-failures-en-bd]]
 - **Agregado cacheado sobre ledger (ej anticipo) → recompute por trigger desde Σ activas** [[agregado-cacheado-sobre-ledger-recompute-trigger]]
+- **Proyección de ledger sin detector de drift diverge en silencio (UPDATE directo/recompute la oculta) → detector + reconcile con audit** [[proyeccion-de-ledger-sin-guardia-diverge-en-silencio]]
 - **`migration repair`/`db push` necesitan pooler 5432; si cae → Dashboard SQL + repair luego** [[reference-supabase-db-access]]
 
 ## supabase / postgrest SDK
@@ -46,3 +47,4 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **CSS Module Turbopack: kebab-case → `undefined` silencioso; usar camelCase** [[css-module-camelcase-turbopack]]
 - **Color runtime sin inline style: `data-estado={val}` + CSS `[data-estado="X"]`** — esquiva trinquetes + mantiene dinamismo. Ver [[inline-style-data-attribute-para-color-semaforo]]
 - **Layout server App Router NO ve el pathname → guard por página con helper, no en layout** [[nextjs-layout-no-lee-pathname-server-side]]
+- **Header sticky con glass translúcido sangra el mesh por las esquinas → opaco** [[header-sticky-glass-sangra-mesh-debe-ser-opaco]]

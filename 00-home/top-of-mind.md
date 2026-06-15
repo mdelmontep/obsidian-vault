@@ -10,8 +10,6 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
-- ✅ **TuFacturaIA conciliación — auditoría + deuda CERRADAS en prod** (2026-06-15): 5-agentes audit → 4 P1/P2 (#231) + 6 P3 (#235) + refinamiento P3-3 (#236) + colisión 279→281 (#237) + deuda final (#240→renum 283 #241): regresión de matriz que yo introduje en 280 revertida (cashflow_event/conciliacion_regla restaurados), guard sobrepago+resto, sanitizer all-IBAN. Migs 278/279/280/281/283 aplicadas+trackeadas. Solo queda smoke UI manual (abajo).
-
 - **TuFacturaIA — limpiar notifs fiscal residuales** — fix #214 verificado en prod (run manual cron 2026-06-12: 130 sin falsos salientes); queda marcar leídas las notifs viejas + abrir/recalcular borradores 130 2T/3T/4T (drift real: abono B2026-0001) + check visual drawer (X 28px, fade chips).
 - **TuFacturaIA — smoke copiloto/OCR post-deploy PR #197** — mergeado 2026-06-12 (`1efb783`); checklist 11 puntos en hub §Smoke (incluye bump copiloto a Sonnet 4.6).
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.
