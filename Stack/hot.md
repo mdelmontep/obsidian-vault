@@ -49,3 +49,4 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Color runtime sin inline style: `data-estado={val}` + CSS `[data-estado="X"]`** — esquiva trinquetes + mantiene dinamismo. Ver [[inline-style-data-attribute-para-color-semaforo]]
 - **Layout server App Router NO ve el pathname → guard por página con helper, no en layout** [[nextjs-layout-no-lee-pathname-server-side]]
 - **Header sticky con glass translúcido sangra el mesh por las esquinas → opaco** [[header-sticky-glass-sangra-mesh-debe-ser-opaco]]
+- **Proxy de impersonación reimplementa la API de Supabase y se queda corto (falta `.not()`/`count`/`maybeSingle`) → lista única + test de paridad; memoizar el cliente o bucle de re-fetch** [[proxy-impersonacion-reimplementa-api-supabase-se-desincroniza]]
