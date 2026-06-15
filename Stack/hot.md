@@ -34,6 +34,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Agregado cacheado sobre ledger (ej anticipo) → recompute por trigger desde Σ activas** [[agregado-cacheado-sobre-ledger-recompute-trigger]]
 - **Proyección de ledger sin detector de drift diverge en silencio (UPDATE directo/recompute la oculta) → detector + reconcile con audit** [[proyeccion-de-ledger-sin-guardia-diverge-en-silencio]]
 - **`migration repair`/`db push` necesitan pooler 5432; si cae → Dashboard SQL + repair luego** [[reference-supabase-db-access]]
+- **API route que hace `fetch` a sí mismo falla en Docker (hairpin NAT) → extraer lógica a lib, no HTTP; smoke en PROD no solo local** [[self-fetch-entre-api-routes-falla-en-docker-prod-extraer-a-lib]]
 
 ## supabase / postgrest SDK
 

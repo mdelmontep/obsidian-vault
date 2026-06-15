@@ -172,3 +172,4 @@ tags: [home, archivo]
 - 2026-06-15 · TuFacturaIA · Módulo Stock Fases A-E cerrado 2026-06-11 (PRs #130/#137/#139/#198-#203), activable en beta cuando se decida.
 - 2026-06-15 · TuFacturaIA · Stock Fase 2 (STOCK-07→12) + Fase 3 IA (STOCK-13→16) — importación masiva Excel+IA, panel salud producto, sugerencia reposición, mínimo sugerido; mig 293 en prod; commit `a1a5c8d0`.
 - 2026-06-15 · TuFacturaIA · n8n voz pqSWkDIHqmSVHotB — fix mapeo catalogo_id en nodo v2-prep-generate (backup + PUT API).
+- 2026-06-15 · TuFacturaIA · Conciliación: auditoría 5-agentes + deuda cerradas en prod (PRs #231/#235/#236/#237/#241, migs 278-283); residual = smoke UI manual (vive en top-of-mind NEXT).
