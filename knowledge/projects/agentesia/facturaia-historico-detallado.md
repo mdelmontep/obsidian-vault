@@ -685,6 +685,14 @@ _(añadir aquí ramas activas con propósito y bloqueador si lo hay)_
 
 Log cronológico de cada cosa que se trabaja. **Antes de empezar** algo nuevo, Claude busca aquí (+ NOW + Histórico) para detectar conflictos, solapes o trabajo previo. **Al avanzar/cerrar** algo, Claude añade entrada.
 
+- 2026-06-16 · `[hecho]` · **Crear doc desde un movimiento — slices A+B en prod** (ticket 2e79bd95 p2, issues 086/087).
+  - **A (086, gasto)** `caa05823`: botón "Crear gasto" en `movimiento-detail-drawer` (solo cargos −, elegibilidad por el núcleo puro) → modal compacto Holded-style (proveedor inferido + importe sembrado base-atrás, todo editable) → `POST /api/recibidas` crea recibida `pendiente` (INSERT directo, sin createDocument) + concilia. **Divergencia con el PRD**: el form de alta de recibida que asumía NO existía (`nueva_recibida_prefill`/`?new=1` se escriben en inventario pero NADIE los lee → flujo reposición→compra roto a medias; recibidas solo nacían por OCR) → decisión Manu: modal-en-drawer, no prefill+navegar.
+  - **B (087, factura)** `3869f21f`: botón "Crear factura" (solo ingresos +) → siembra `sessionStorage 'nueva_factura_prefill'` (cliente inferido + líneas base-atrás + `conciliar_movimiento_id`) → navega a `/generar`, donde el usuario revisa y EMITE (vía fiscal normal `POST /api/facturas`→createDocument/VeriFactu) → tras emitir, `POST /api/conciliacion/movimientos/[id]/conciliar-doc` concilia (idempotente, desacoplado del core, reutilizable por 088).
+  - **Helper único** `src/lib/conciliacion/conciliar-doc-con-movimiento.ts` (`conciliarDocConMovimiento`): tras crear el doc, si ya hay mfa activa mov↔factura (auto-match + `mirror_factura_match_to_nn`) NO re-asigna; si no, `asignar_manual`. No fatal. Sirve emitida↔mov>0 y recibida↔mov<0.
+  - **Tests**: route-tests mockeados (`/api/recibidas`, `/conciliacion/.../conciliar-doc`) + integración real (`__integration__/conciliar-doc-con-movimiento.test.ts`, ambos signos + idempotencia + signo). **Smoke BD verde** contra prod sandbox (`scripts/smoke-086-crear-gasto.mjs`, `MODE=gasto|factura`): recibida→pagada, emitida→cobrada, vías auto+manual, cleanup.
+  - **Bug cazado por el smoke** (`3a09698c`): el helper llamaba `asignar_manual` con 4 args nombrados → PostgREST no resolvía ("Could not find function") → la conciliación manual habría fallado en silencio en prod. Fix: pasar `p_force_cuarentena/p_razon` como el endpoint hermano. Ver [[postgrest-pgrst203-rpc-overloads-pasar-todos-los-params]].
+  - Manuales usuario+admin `b45f85b0`. **Falta**: 088 (WhatsApp HITL n8n) + smoke UI navegador A/B.
+
 Formato: `YYYY-MM-DD HH:MM · estado · qué · ref (commit/PR/file)`. Estados: `[empezado]` / `[en progreso]` / `[bloqueado: razón]` / `[hecho]` / `[descartado: razón]`.
 
 Reglas para el motor de conflictos:

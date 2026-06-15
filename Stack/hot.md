@@ -50,3 +50,4 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Layout server App Router NO ve el pathname → guard por página con helper, no en layout** [[nextjs-layout-no-lee-pathname-server-side]]
 - **Header sticky con glass translúcido sangra el mesh por las esquinas → opaco** [[header-sticky-glass-sangra-mesh-debe-ser-opaco]]
 - **Proxy de impersonación reimplementa la API de Supabase y se queda corto (falta `.not()`/`count`/`maybeSingle`) → lista única + test de paridad; memoizar el cliente o bucle de re-fetch** [[proxy-impersonacion-reimplementa-api-supabase-se-desincroniza]]
+- **RPC con overloads/DEFAULT → pasar TODOS los named params (los nuevos como `null`)** — supabase-js no resuelve por subconjunto; síntoma "Could not find function …". Imita al endpoint hermano que ya la llama. [[postgrest-pgrst203-rpc-overloads-pasar-todos-los-params]]
