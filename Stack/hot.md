@@ -42,6 +42,8 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 ## supabase / postgrest SDK
 
 - **PostgREST SDK `.or()` no compara columnas entre sí** — usar filtro en memoria o RPC con SQL nativo. Ver [[postgrest-sdk-or-no-compara-columnas]]
+- **Validar migración sin tocar prod** — supabase local: init + puertos 544xx (si hay otro stack) + `db reset --local` + smoke con `session_replication_role=replica`. Ver [[validar-migracion-en-supabase-local-sin-tocar-prod]]
+- **Unique de idempotencia con dimensión opt-in** — `NULLS NOT DISTINCT` (PG15+): filas NULL intactas, las nuevas habilitan la dimensión. Ver [[nulls-not-distinct-idempotencia-con-discriminador-opcional]]
 
 ## frontend (FacturaIA glass / UX activo)
 
