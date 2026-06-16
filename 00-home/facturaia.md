@@ -274,6 +274,8 @@ _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda 
 
 ## Seguridad
 
+- **Code Quality (CodeQL) activo (16/06)** — baseline triado: 23 findings Python = scripts desechables n8n-patches (arreglados PR #322), 9 JS fiabilidad = 0 bugs reales (dismiss UI), 8 dead-stores defensivos (dismiss). Sin deuda crítica oculta. Trial 30d → confirmar licencia. Ver [[github-code-quality-triage]]
+
 ### Auditoría de seguridad 2026-06-04 (6 agentes + red team activo)
 - **C1 (crítico) RESUELTO en prod** — RPCs SECURITY DEFINER ejecutables por anon/authenticated vía PostgREST con anon key público (bypass de pago `change_billing_status`, IDOR, DoS numeración, abuso OTP). Mig 213 REVOKE EXECUTE FROM PUBLIC/anon/authenticated en verbos admin-only. Validado desde fuera: anon→401, authenticated→403. Ver [[supabase-rpc-security-definer-execute-public]].
 - **PR #131 mergeado + DESPLEGADO en prod** (SSRF render-pdf+webhooks via `src/lib/security/ssrf.ts`, security headers anti-clickjacking en `next.config.ts`, signout CSRF, voice/generate guard phone↔org, periodo/file.name/email-outbox/idempotency). Headers live verificados (`x-frame-options: DENY`, CSP frame-ancestors, HSTS, nosniff; `x-powered-by` eliminado).

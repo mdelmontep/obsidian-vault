@@ -27,6 +27,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — Code Quality: PR #322 (Python) sin mergear + dismiss ruido JS en UI** — 23 findings Python (scripts n8n-patches) arreglados, pendiente merge; falta dismiss de 9 falsos positivos + 8 dead-stores defensivos (clics UI, 0 bugs reales). Ver [[github-code-quality-triage]]
 - **TuFacturaIA — Stock por lotes/partidas: solo falta smoke UI real** — PR #296 ✅ mergeado+prod 2026-06-16 (308_stock_lotes aplicado como version 308). Opt-in `gestiona_lotes`, motor `aplicar_movimientos_lotes` + `/api/stock/lotes` + UI `/generar` (selector partida) e `/inventario` (PartidasPanel). La colisión del 308 se materializó con mi mig de catálogo → renumerada a **309**. Queda solo smoke UI real de lotes. Ver [[ADR-031-stock-lotes-opt-in]] · [[supabase-db-push-colision-numeracion-migraciones-rama-stale]].
 - **🟢 TuFacturaIA — Drawer ingesta: auto-add (#297) + pulido (#313) MERGEADOS+prod 16/06** — #297 (drawer legible, auto-crear productos, badge coste) en main; encima, pulido grande #313: portal (overlay cubre topbar), comparador PDF en el drawer (pestaña "Factura"), glass coherente, líneas como tarjetas, tipografía a escala, modal "Nuevo producto" migrado al Modal canónico. Smoke UI pendiente en prod.
 
@@ -106,6 +107,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## Bloqueos
 
+- **TuFacturaIA — Code Quality trial 30 días (Manu/Borja)** — feature bajo trial Advanced Security (~mediados julio 2026). Confirmar que la licencia enterprise la cubre o el scan + gate por PR se apagan solos. Ver [[github-code-quality-triage]]
 - **TuFacturaIA — subir tier OpenAI (acción Manu)** — bot WhatsApp salta rate-limit (TPM 30k, Tier 1). Mitigado con prompt −38% + memoria 10→8, pero la raíz es subir a Tier 2 (450k TPM) en platform.openai.com/settings/organization/limits.
 
 ## Vistas por cliente
