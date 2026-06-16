@@ -17,4 +17,12 @@ Fix: migración que re-crea el CHECK (idempotente DROP IF EXISTS + ADD). Regla
 viva: "cambio de enum en código → grep consumidores + PATCH/CHECK en BD".
 Y: respuesta genérica anti-enum necesita observabilidad interna aparte (alerta/
 metric) que no dependa del status devuelto al cliente.
-Relacionado: [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]].
+Recurrencia (FacturaIA `facturas.fuente`, hotspot): mismo bug 2× en días —
+mig 313 añadió `'web'` (form web) y mig 315 `'copiloto'` (tool `emitirFactura`).
+Cada canal nuevo que pasa `createDocument({source})` exige ampliar
+`facturas_fuente_check`. Matiz nuevo (caso 'copiloto' 2026-06-17): un **smoke de
+solo `preview` NO ejercita el `commit`** → el CHECK violado se escondió tras un
+preview smoke verde; el bug salió LIVE. Regla: en tools con split preview/commit,
+el smoke DEBE llegar al commit (ejecutar `executeTool(...,{userConfirmed:true})`,
+no solo `preview`).
+Relacionado: [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]] · [[smoke-insert-directo-no-ejerce-el-motor-real]].
