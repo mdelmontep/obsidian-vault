@@ -67,6 +67,38 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 - **FEATURE COMPLETA** (issues 100-108). Runner vivo en `7884cacc` (107/108 son app-side,
   no necesitó redeploy).
 
+## Fase 4 — mejoras UX / interactividad (roadmap)
+
+**Tanda 1 — HECHA + prod** (PR #327 → main `5d06efb2`, 2026-06-16; app-side, sin migración):
+- **Q9 prompt enrutado** (`src/lib/feedback/claude-prompt.ts`): `buildClaudePrompt` ahora
+  añade bloque "Dónde mirar primero" según tipo + keywords de página/descripción (espejo de
+  la tabla de routing del `CLAUDE.md`: UI→`gotchas §Frontend`+`docs/design/`, auth→§Auth,
+  OCR→§OCR, documentos→`createDocument`, etc.) + guía por tipo (bug/mejora/pregunta).
+  **Fix latente**: el prompt decía "Repo: /Users/manueldelmonte/facturaia" (ruta local, no
+  existe en el runner) → ahora "directorio actual". Tests en `claude-prompt.test.ts`.
+- **Q2** ticket `nuevo`→`en_revision` al encolar (`resolve-ia/route.ts`).
+- **Q3** badge del estado del último job en la lista admin (`getLatestJobStatusByTickets`
+  en repository + `route.ts` adjunta `ai_job_status` + `page.tsx` badge con punto pulsante).
+- **Q4** botón "Relanzar con Claude" cuando el job es terminal (deja claro que re-lanzar
+  continúa leyendo el hilo).
+
+**Tanda 2 — interactividad (SIGUIENTE):**
+- **Q1 progreso en vivo**: el runner ya late `ejecutando` cada 60s; añadir pasos
+  incrementales — tabla nueva `feedback_ai_job_events` (o `claude -p --output-format
+  stream-json` resumido al callback) y el panel los muestra en vivo.
+- **Q7/Q8 loop "Continuar"**: formalizar lo que YA funciona de facto (re-encolar mete todo
+  el hilo en el prompt vía `listMessages`). Claude termina con pregunta → admin responde en
+  hilo → "Continuar" (= relanzar, ya existe) con copy explícito y quizá estado
+  `espera_respuesta`. NO sesión viva: el hilo es la memoria (decisión: barato y robusto).
+
+**Tanda 3 — infra:**
+- **Q5 email con botón de acción**: el email de ticket nuevo lleva botón "Resolver con
+  Claude" → enlace firmado (token HMAC con TTL/single-use, scope superadmin) → endpoint que
+  valida y encola sin entrar a admin.
+- **Q6 paralelismo**: el claim ya usa `FOR UPDATE SKIP LOCKED` → escalar el runner a 2-3
+  réplicas en Dokploy (cada una coge un job distinto sin pisarse). Vigilar RAM (claude+build
+  por réplica) y coste OAuth.
+
 ## 3 bugs reales que destapó el e2e (todos arreglados)
 
 1. RPC `claim` con cola vacía devolvía "fila de nulls" `{id:null,...}` (no NULL) → runner
@@ -78,13 +110,18 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 
 ## Cómo retomar (kickoff siguiente sesión)
 
-**Feature COMPLETA (issues 100-108), en prod y con smoke real verde.** Operativa:
+**Issues 100-108 COMPLETOS en prod + smoke real verde. Fase 4 Tanda 1 también en prod
+(#327).** Lo siguiente es **Fase 4 Tanda 2 (interactividad) y Tanda 3 (infra)** — ver
+sección "Fase 4" arriba con el diseño de cada Q. Empezar por Tanda 2 (Q1 progreso en vivo +
+Q7/Q8 loop "Continuar"), luego Tanda 3 (Q5 email-action + Q6 réplicas runner).
+
+Operativa ya viva:
 - Pausar el runner sin redeploy: `UPDATE system_config SET value='{"enabled":false}'
-  WHERE key='resolver_claude_runner';` (reactivar con `true`). El runner vivo en `7884cacc`.
+  WHERE key='resolver_claude_runner';` (reactivar con `true`). Runner vivo en `7884cacc`.
 - Webhook GitHub (hook id `642750021`) cierra el ticket al mergear el PR del runner.
-  Secret en env del app + en la config del hook.
-- Renovar OAuth de Claude si caduca: `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN` en el
-  env del compose `ticket-runner` + `compose.deploy`.
-- Único pendiente teórico: validar el camino real de 107 con un PR del runner mergeado
-  (el endpoint está probado en vivo: 401/no_job/pong/ping; el resto reutiliza updateTicket+
-  email ya probados). Detalle live en memoria del agente `reference_dokploy_facturaia.md`.
+- Renovar OAuth si caduca: `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN` en env del
+  compose `ticket-runner` + `compose.deploy`.
+- Trabajar en **worktree aislado** desde `origin/main` (hay sesiones paralelas en el repo);
+  gate (lint+typecheck+build) + CI + merge `--admin`. La "Visual Regression /design-system"
+  falla en main (baselines stale) → ignorar, mergear con `--admin`. Detalle live en memoria
+  del agente `reference_dokploy_facturaia.md`.
