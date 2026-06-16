@@ -176,3 +176,4 @@ tags: [home, archivo]
 - 2026-06-15 · TuFacturaIA · Stock Fase 2 (STOCK-07→12) + Fase 3 IA (STOCK-13→16) — importación masiva Excel+IA, panel salud producto, sugerencia reposición, mínimo sugerido; mig 293 en prod; commit `a1a5c8d0`.
 - 2026-06-15 · TuFacturaIA · n8n voz pqSWkDIHqmSVHotB — fix mapeo catalogo_id en nodo v2-prep-generate (backup + PUT API).
 - 2026-06-15 · TuFacturaIA · Conciliación: auditoría 5-agentes + deuda cerradas en prod (PRs #231/#235/#236/#237/#241, migs 278-283); residual = smoke UI manual (vive en top-of-mind NEXT).
+- 2026-06-16 · TuFacturaIA · Conciliación: tickets desde ingreso cuadran al céntimo (bug 190€→189,99 en emitir-ticket/WhatsApp) + toggle "IVA incluido" reintroducido (form + modal producto) — PR #298/#299, mig 309; mergeado+prod+smoke sandbox verde + data-fix 2 docs históricos.
