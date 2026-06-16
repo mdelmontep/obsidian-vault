@@ -37,6 +37,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Sembrar base desde total IVA-incluido pierde céntimo** — base sin redondear si el precio no se ve; tolerancia "conciliado" = fuente única BD/UI (no umbral por capa). Ver [[sembrar-base-desde-total-con-iva-pierde-centimo]]
 - **`migration repair`/`db push` necesitan pooler 5432; si cae → Dashboard SQL + repair luego** [[reference-supabase-db-access]]
 - **API route que hace `fetch` a sí mismo falla en Docker (hairpin NAT) → extraer lógica a lib, no HTTP; smoke en PROD no solo local** [[self-fetch-entre-api-routes-falla-en-docker-prod-extraer-a-lib]]
+- **Smoke `/api/internal/*` en prod: firma HMAC con secreto de PROD (no .env.local) + mutaciones solo sobre sandbox** [[smoke-endpoint-interno-prod-firma-hmac-prod-secret]]
 
 ## supabase / postgrest SDK
 
