@@ -29,18 +29,32 @@ Bot PAT classic `repo` → item "Token Github Bot mdelmonteagentesia" · OAuth C
 item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsynd4p6xb6xivglbwrwsiy`.
 (Bot es colaborador externo → fine-grained PAT NO sirve, classic `repo` sí.)
 
-## Pendiente (issues 103,104,106,107,108)
+## 103/104/106 — HECHOS + desplegados (2026-06-16, PR #316 → main `7884cacc`)
 
-- **103** `sin_cambios` → postear diagnóstico de Claude al hilo (`feedback_ticket_messages`)
-  + ticket `en_revision`. Endpoint interno nuevo + runner captura el diagnóstico.
-- **104** descargar screenshot del ticket al worktree (claim devuelve URL firmada vía
-  `getSignedUrl`, bucket `feedback-screenshots`) y referenciarlo en el prompt (gitignored).
-- **106** email al superadmin al estado terminal (Resend, plantilla nueva, best-effort).
+- **103** `sin_cambios` → Claude manda su último mensaje (stdout de `claude -p`) como
+  `diagnostico` en el callback; el app lo publica como mensaje `admin` en
+  `feedback_ticket_messages` (`recordSinCambiosDiagnostico`) y mueve el ticket
+  `nuevo`→`en_revision`. `transitionAiJob` ahora devuelve `changed` → los efectos
+  terminales (diagnóstico, email) solo se disparan en la transición real, no en
+  callbacks idempotentes duplicados.
+- **104** `claim` firma URL temporal de la 1ª captura (`getSignedUrl`); el runner la
+  baja a `<wt>/.ticket-screenshot.<ext>` (gitignored, se borra con el worktree) y la
+  referencia en el prompt. `claude-prompt.ts` ya soportaba `screenshotPath`.
+- **106** plantilla `feedback-job-result` + `sendJobResultAlert` → email al superadmin
+  (OWNER_EMAIL) en cada estado terminal con resultado + ticket + org + link al PR.
+  Best-effort (no tumba el callback).
+- **Deploy**: `compose.deploy` del runner + autoDeploy del app, ambos en `7884cacc`.
+  ⚠️ Hallazgo: el runner estaba clavado en #304 — **no tenía el código 105** (heartbeat)
+  pese a que #308 estaba en main; este deploy lo puso al día (105+103+104).
+- **Smoke real pendiente**: ticket de UI con captura → confirmar que Claude lee
+  `.ticket-screenshot.*`; y un `sin_cambios` real → diagnóstico en el hilo + email.
+
+## Pendiente (issues 107, 108)
+
 - **107** webhook GitHub PR-merged → ticket `resuelto`. ⚠️ **NECESITA acción humana**: alta
   del webhook + secret en el repo GitHub (como el PAT).
 - **108** kill-switch (system_config) + audit_log por job + system_alerts en fallido +
   sección manual admin ("Resolver con Claude", merge siempre humano, renovar OAuth).
-- Gap menor abierto: el runner toca `run-ticket.mjs` en 103+104 → un solo redeploy al final.
 
 ## 3 bugs reales que destapó el e2e (todos arreglados)
 
@@ -53,8 +67,9 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 
 ## Cómo retomar (kickoff siguiente sesión)
 
-Seguir con issues **103 → 104 → 106** (sin dependencia humana), luego **107** (cuando
-des de alta el webhook GitHub) y **108**. Tras 103+104 (tocan `ops/ticket-runner/run-ticket.mjs`)
-→ un `compose.deploy` del runner (API Dokploy, key en memoria) + verificar. El runner
-está vivo; para pausarlo sin redeploy: `compose.stop`. Detalle live en memoria del agente
-`reference_dokploy_facturaia.md`.
+103/104/106 cerrados y desplegados. Quedan **107** (cuando des de alta el webhook
+GitHub PR-merged + secret) y **108** (kill-switch + audit_log + system_alerts +
+manual admin). Antes de 108: hacer el **smoke real** de 103/104 (ticket con captura →
+Claude la lee; `sin_cambios` real → diagnóstico al hilo + email al superadmin). El
+runner está vivo en `7884cacc`; para pausarlo sin redeploy: `compose.stop`. Detalle
+live en memoria del agente `reference_dokploy_facturaia.md`.
