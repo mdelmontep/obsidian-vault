@@ -36,6 +36,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Dokploy `compose.one` devuelve `deployments[]` SIN ordenar → sort por createdAt** [[dokploy-api-deployments-sin-ordenar]]
 - **supabase `auth.getUser()` es red (round-trip GoTrue) → validar 1 vez en el wrapper** [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]]
 - **Output LLM nunca con cast ciego: safeParse Zod + audit del parse failure en BD** [[output-llm-validar-zod-y-auditar-parse-failures-en-bd]]
+- **Propuesta destructiva (propose/confirm) NO se persiste como texto del assistant → el LLM imita y narra en vez de llamar al tool; persistir como tool_use+tool_result sintético** [[persistir-propuesta-destructiva-como-texto-entrena-al-llm-a-narrar]]
 - **`max_tokens` bajo trunca el JSON de OCR largo (multi-albarán) → faltan líneas; subirlo no encarece las cortas** [[max-tokens-es-tope-no-consumo-trunca-json-ocr-largo]]
 - **Agregado cacheado sobre ledger (ej anticipo) → recompute por trigger desde Σ activas** [[agregado-cacheado-sobre-ledger-recompute-trigger]]
 - **Proyección de ledger sin detector de drift diverge en silencio (UPDATE directo/recompute la oculta) → detector + reconcile con audit** [[proyeccion-de-ledger-sin-guardia-diverge-en-silencio]]
@@ -65,3 +66,8 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **RPC con overloads/DEFAULT → pasar TODOS los named params (los nuevos como `null`)** — supabase-js no resuelve por subconjunto; síntoma "Could not find function …". Imita al endpoint hermano que ya la llama. [[postgrest-pgrst203-rpc-overloads-pasar-todos-los-params]]
 - **PostgREST embed: clonar `.select()` entre tablas gemelas rompe si difieren columnas** — `proveedores` no tiene `empresa` (sí `clientes`) → 500 runtime, invisible en typecheck/mocks. Grepea columnas reales antes de copiar. [[proveedores-no-tiene-columna-empresa-asimetria-clientes]]
 - **Audit trigger no ve service-role** — trigger por `auth.uid()` se salta copiloto/crons/jobs; auditar explícito desde el código con la entidad EXACTA que lee la UI. Ver [[trigger-audit-solo-registra-sesion-humana]]
+
+## dependencias / npm / LLM
+
+- **Modelo Anthropic retirado tras bump SDK** — validar model-ids con `GET /v1/models` (POST messages no sirve sin saldo: billing error precede a model-not-found). Ver [[verificar-modelos-anthropic-vigentes-via-get-v1-models]]
+- **`npm audit fix --force` downgradea majors** — leer "Will install"; para vulns transitivas usar `overrides` en package.json, no --force a ciegas. Ver [[npm-audit-fix-force-propone-downgrades-trampa]]
