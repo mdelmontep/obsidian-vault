@@ -32,4 +32,6 @@ estaba aplicado en prod → renumerado **onboarding 279→281** (no la de concil
 
 Caso 2026-06-16: feedback (#275) y categorías (#278) numeraron `301` en paralelo; categorías mergeó primero → renumerado **feedback 301→302**.
 
+Caso 2026-06-16 (2, cascada): factura-simplificada tomó `302/303` sobre main viejo; main ya tenía `302_feedback` → renumerado a **303/304** + traído `302_feedback` a la rama (local==remoto). Señal extra: `schema_migrations` tenía `302` registrado pero sus DDL ausentes del schema real → confirmó que el `302` remoto era OTRO.
+
 Relacionado: [[supabase-migration-new-rompe-secuencia-nnn-name]], [[supabase-migration-repair-requiere-fichero-nnn-en-cwd]].

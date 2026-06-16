@@ -110,7 +110,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 ## NEXT (próximas 2 semanas)
 
-- **Factura simplificada (ticket) — issues 094-099, arrancar `/tdd` por 094** (2026-06-16) — vía legal para liquidar IVA de cobros B2C sin DNI (RD 1619/2012 art.7). Base: "ingreso sin factura" (PR #270 `d518edde`, mig 300) ya en prod + smoke 5/5. Decisiones grill-me cerradas (nuevo `tipo_documento='factura_simplificada'` serie S, IVA incluido, límites 400/3000, wizard "¿qué es este cobro?", Verifactu F2). Tracer = helper `tipoFacturaFromDocumento`. PRD `issues/prd-factura-simplificada.md`. Decisión: [[ADR-030-ingreso-sin-factura-ticket-vs-fuera-iva]].
+- **🟢 Factura simplificada (ticket) 094-099 — CERRADO 2026-06-16** — epic mergeado a main (TDD por issue), migs **303/304** en prod (renumeradas desde 302/303 por colisión con `302_feedback`), smoke E2E Playwright verde (wizard → ticket serie S → conciliado+cobrado). Residual: (a) **smoke F2 real** con org `verifactu_activo=true` (sandbox lo tiene en false → quedó `no_aplica`); (b) verificar **redeploy Dokploy** del fix `fuente` (commit `2e4285f0`: `emitir-ticket` daba 500 con `source='web'`). ADR-030 · [[smoke-insert-directo-no-ejerce-el-motor-real]].
 
 - **Tickets feedback fase 3 — "Resolver con Claude"** — DISEÑADO + parcialmente construido 2026-06-16. PRs **#283** (Issue 100: cola+endpoints+botón) y **#287** (Issue 101: claim+scaffolding runner Dokploy) abiertos, sin mergear. Pendiente: confirmar plan org (Free→garantía procedural / Team→ruleset candado duro) + setup HITL (cuenta bot, PAT, OAuth, migs) + deploy runner. Detalle, decisiones y kickoff en [[facturaia-resolver-con-claude]].
 
