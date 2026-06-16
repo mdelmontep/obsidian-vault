@@ -1929,3 +1929,23 @@ _Log histórico (mayo 2026, sprints cerrados) archivado en [[facturaia-historico
 
 - ~~**`feat/fiscal-aeat`**~~ ✅ **MERGEADO 2026-06-10 PR #163** — Fiscal Fase 1 (009-015) + aliases OCR (mig 244) + merge duplicados (mig 245). Migs 241-245 en prod. Cron Dokploy `fiscal-generar-borradores` activo. Etapa 2 (016-025) en `issues/`, bloqueada por diseños AEAT + sandbox + gate legal 3b.
 
+
+---
+
+## 2026-06-16 · Informes de analítica 089-092 (CERRADO, en prod)
+
+PRD `issues/prd-informes-analitica.md` (análisis comparativo vs Holded). 4 informes colgados del hub `/informes` (tarjetas, sin tocar sidebar):
+- **Ventas**: por cliente/producto/mes, margen sobre coste de stock + cobertura, narrativa determinista, descuento global aplicado. KPI principal "Ventas emitidas (base, sin IVA)" + secundario **"Pendiente de emitir"** (borradores, solo si count>0).
+- **Gastos**: por proveedor/categoría/mes. KPI "Gasto aprobado (base, sin IVA)" + secundario **"Pendiente de aprobar"** (recibidas en `sin_aprobar`, solo si count>0).
+- **Objetivos**: tabla `objetivos` (mig **296**, RLS + 4 políticas + CHECK facturación-sin-categoría), CRUD gateado propietario|admin, sugerencia determinista desde histórico, widget dashboard.
+- **Actividad**: REUTILIZA `AuditoriaSection`/`buildAuditFeed`; **feed acotado por rol en la capa de datos** (`viewerScope`: admin/propietario/superadmin → equipo; resto → solo lo suyo). Cierra exposición cross-usuario pre-existente del endpoint compartido.
+
+Server-side `/api/informes/*` + helpers puros `src/lib/informes/*`. Tool copiloto `getInformeVentas` (reusa `buildVentasReport`). Manuales usuario+admin actualizados.
+
+**Auditoría multi-agente** (seguridad/correctitud/frontend/composición) + correcciones: dark-mode (tokens `--line`/`--bg-elev`), trim categoría, `.limit()` determinista, validación sugerencia, truncated flag, descuento global, inline-styles→CSS Modules, **doble "€ €" en KPIs** (`fmt()` ya incluye €).
+
+**Decisión abonos**: informes + dashboard + copiloto `getKPIs` los EXCLUYEN (`tipo_documento='factura'`) — la anulación deja la origen en `anulada`; contar el abono negativo restaría 2× → "Facturado" negativo falso. El 303 sí los incluye (correcto fiscalmente). Bug `getKPIs` (incluía abonos) corregido (`a3493b12`).
+
+**Verificado**: 176+ tests, lint+typecheck+build limpios. Playwright (login real) read+write-path verdes en prod, 0 residuo. Mig 296 aplicada a prod (`db push --include-all`, iba por detrás de 297). Bug `proveedores.empresa` (no existe columna; sí en `clientes`) cazado y fijado → [[proveedores-no-tiene-columna-empresa-asimetria-clientes]].
+
+Commits en main: `d2fcc81b` (barrido por sesión paralela 088) + `fe346a29` + `7c52cbad` + `a3493b12` + `858f79fa` + `954dd181`.
