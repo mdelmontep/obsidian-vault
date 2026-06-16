@@ -167,6 +167,15 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 - **No hacer fetch HTTP a tu propia API dentro del contenedor** — DNS interno no resuelve el dominio público. Extraer lógica a función compartida e importar directamente.
 - **Alpine sin bash/curl** — `node:*-alpine` no trae ninguno. Para crons Dokploy via `docker exec`: Shell Type `sh` + `apk add --no-cache curl` en Dockerfile. Ver [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]]
 
+## Dokploy — schedules (crons) vía API
+
+- Los crons de un stack se pueden **crear/listar por API**, no solo desde el panel. Auth header `x-api-key` (token en 1Password `Dokploy API · <host>`).
+- `GET /api/schedule.list?id=<composeId|applicationId>&scheduleType=compose|application` — lista (copia el patrón de un cron existente antes de crear).
+- `POST /api/schedule.create {name, cronExpression, command, scheduleType, composeId|applicationId, serviceName, shellType, script:"", enabled}`.
+- `POST /api/schedule.runManually {scheduleId}` — ejecuta ya; el classifier lo bloquea (mutación prod) → lanzar con `!` o desde la UI app.
+- `composeId`/`applicationId` salen de `GET /api/project.one?projectId=…` (en versiones nuevas apps/compose anidan bajo `environments[]`).
+- Ojo: el panel `/admin/system` de la app (tabla `cron_runs`) y los "Deployments" del schedule en Dokploy miden cosas distintas — la app registra cualquier ejecución del endpoint; Dokploy solo las que dispara su scheduler.
+
 ## Dokploy AgentesIA — acceso SSH
 
 | Host | IP | Puerto SSH | Uso |

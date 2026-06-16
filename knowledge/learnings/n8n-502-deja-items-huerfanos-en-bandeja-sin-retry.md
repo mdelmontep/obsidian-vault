@@ -15,9 +15,11 @@ Cuando n8n cae (502/503), los webhooks fire-and-forget de OCR fallan silenciosam
 
 ## Solucion actual
 
-1. Verificar que n8n esta corriendo (`curl https://n8n.agentesia.world/healthz`)
+1. Verificar que n8n esta corriendo (`curl https://n8n.tufacturaia.com/healthz`)
 2. Si estaba caido, reiniciar y re-trigger manual desde frontend ("Revisar ahora") o desde admin
 3. Para items ya huerfanos: actualizar `estado` a `error` o re-enviar al webhook OCR manualmente
+
+**Reaper implementado (2026-06-16)**: cron `ingesta-stale-sweep` (`*/30`) marca `error` las filas en `procesando` con `created_at > 30 min`; `ocr-process` autodetecta `error` en sus early-returns (p.ej. `OPENAI_API_KEY` ausente) en vez de zombificar al 90%. El estado solo avanza por callback externo → un reaper por tiempo es la única red para los fallos donde no corre código nuestro.
 
 ## Patron reutilizable
 
