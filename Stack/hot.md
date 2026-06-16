@@ -16,6 +16,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Colisiones git multi-sesión (index/MERGE_HEAD/build-lock) → worktree + cherry aislado** [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]
 - **Triaje ramas/worktrees: borrable si cherry-0 o diff-main vacío** [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]
 - **Worktree facturaia: `node_modules` real para `next build` (symlink rompe Turbopack)** [[worktree-facturaia-build-supabase]]
+- **E2E: `request.newContext` hereda storageState (anon → vacío); multi-org → fijar `active_org_id` en seed** [[playwright-request-newcontext-hereda-storagestate]]
 - **Colisión NNN migraciones (rama stale) → renumerar + `uniq -d` post-merge; el hook pre-push NO la detecta** [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]
 - **`migration repair` exige el fichero NNN en el cwd → reparar desde worktree de origin/main** [[supabase-migration-repair-requiere-fichero-nnn-en-cwd]]
 - **Migs paralelas CREATE OR REPLACE se pisan → consolidar en la de mayor número** [[migraciones-paralelas-create-or-replace-se-pisan]]

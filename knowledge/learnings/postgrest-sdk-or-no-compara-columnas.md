@@ -18,4 +18,8 @@ const filtrada = rows.filter(r => r.col_a <= 0 || r.col_a <= r.col_b)
 
 Alternativa si la tabla es grande: RPC con SQL nativo (`WHERE col_a <= col_b`).
 
+**Fix preferido si la comparación es un filtro frecuente**: columna generada `STORED` booleana (`en_alarma bool GENERATED ALWAYS AS (controla_stock AND stock_actual<=stock_minimo) STORED`) → filtrable con `.eq('en_alarma', true)` + índice parcial. Una sola fuente para endpoint, cron e índice. Ver [[columna-generada-stored-para-equivalente-derivado]].
+
+**Footgun del fix en memoria**: si limitas (`.limit(N)`) ANTES de filtrar en JS, descartas filas que sí cumplían → falsos negativos. Caso real: cron alarmas stock 2026-06-16 (`limit(BATCH*4)` + filtro JS dejaba productos en alarma sin notificar).
+
 Aplica a `.or()`, `.filter()` y `.eq()` del SDK — ninguno acepta referencias cruzadas.
