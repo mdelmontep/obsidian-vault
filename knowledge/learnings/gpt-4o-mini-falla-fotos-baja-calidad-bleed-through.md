@@ -14,8 +14,11 @@ más). `gpt-4o` lo resuelve en los mismos documentos.
 - El cuello NO es el prompt ni la resolución: es la capacidad visual del modelo.
   No malgastes tiempo tuneando el prompt antes de probar a subir de tier.
 - Coste/doc de `gpt-4o` ~15-20× el de mini, pero siguen siendo céntimos por factura.
-- Ojo al lado servidor: `gpt-4o` es más lento → vigila timeouts del disparo (caso
-  facturaia: webhook n8n con AbortController a 30s).
+- Ojo al lado servidor: `gpt-4o` es más lento. En facturaia el webhook n8n del OCR
+  (wf `bUqAABW4ITLXFXIp`) es SÍNCRONO (`responseMode=lastNode`) → la app espera a
+  que termine el OCR completo. Su timeout (`triggerOcrWebhook`) debe quedar por
+  encima del timeout interno de OpenAI (60s); estaba en 30s → subido a 90s, o
+  expiraba y reintentaba ×3 disparando procesados duplicados.
 
 NIF del emisor que NO está impreso en el documento (típico en minutas registrales):
 el modelo cae en el del receptor; no se puede extraer lo que no existe → debe
