@@ -30,4 +30,6 @@ remotos) → el `uniq -d` post-merge es la única red. Caso 2026-06-14: concilia
 (#231/#235) y onboarding (#232) numeraron `279` en paralelo; el de conciliación ya
 estaba aplicado en prod → renumerado **onboarding 279→281** (no la de conciliación).
 
+Caso 2026-06-16: feedback (#275) y categorías (#278) numeraron `301` en paralelo; categorías mergeó primero → renumerado **feedback 301→302**.
+
 Relacionado: [[supabase-migration-new-rompe-secuencia-nnn-name]], [[supabase-migration-repair-requiere-fichero-nnn-en-cwd]].
