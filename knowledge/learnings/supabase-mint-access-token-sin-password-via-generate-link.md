@@ -11,8 +11,10 @@ Para smokes/tests que necesitan un JWT real de un usuario concreto sin conocer n
 2. `POST /auth/v1/verify` (anon key) con `{"type":"magiclink","token_hash":"<hashed_token>"}` → devuelve `access_token` + `refresh_token` del usuario.
 
 Para smoke de UI (Playwright contra la app Next): inyectar la sesión como cookie
-`sb-<ref>-auth-token` = `base64-` + base64(JSON de la session, estándar no url); si
-supera ~3180 chars, trocear en `sb-<ref>-auth-token.0`, `.1`... (formato @supabase/ssr).
+`sb-<ref>-auth-token` = `base64-` + base64URL(JSON de la session); si supera 3180 chars,
+trocear en `sb-<ref>-auth-token.0`, `.1`... Lo más robusto: reusar las utils de la propia
+lib — `stringToBase64URL` + `createChunks` de `@supabase/ssr/dist/main/utils/` — en vez de
+reimplementar el encoding (en ssr ≥0.10 es url-safe, no base64 estándar). Verificado ssr 0.10.2 (086).
 Vale también para smoke de API por curl (no solo Playwright): mandar la cookie en el
 header `Cookie:`. Verificado end-to-end contra prod 2026-06-15 (ticket conciliación 085).
 
