@@ -22,3 +22,7 @@ garantía "nunca merge" solo puede ser **procedural** (el script nunca llama
 `gh pr merge` + deny-list). Candado **duro** = subir a GitHub Team (~4 $/usuario/mes)
 y usar ruleset con bypass solo para humanos. Verificar el plan antes de prometer
 el candado duro. Ver [[facturaia-resolver-con-claude]].
+
+**Update 2026-06-16**: `AgentesIA-MAdrid` pasó a **enterprise** → ruleset `Protect main`
+activo (require PR+1 approval, bypass solo team `facturaia-maintainers`); el candado del
+runner ya es por infra, no solo procedural. El learning sigue válido para orgs en Free.

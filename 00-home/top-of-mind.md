@@ -10,6 +10,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NOW
 
+- **🟢 TuFacturaIA — "Resolver con Claude" (feedback fase 3) OPERATIVO en prod** (2026-06-16) — runner Dokploy vivo con Claude real, e2e validado, robustez 105 (watchdog) hecha. **Falta 103,104,106,107,108** (107 = alta webhook GitHub, acción tuya). Retomar por 103→104→106. Estado y kickoff completos en [[facturaia-resolver-con-claude]].
 - **TuFacturaIA — limpiar notifs fiscal residuales** — fix #214 verificado en prod (run manual cron 2026-06-12: 130 sin falsos salientes); queda marcar leídas las notifs viejas + abrir/recalcular borradores 130 2T/3T/4T (drift real: abono B2026-0001) + check visual drawer (X 28px, fade chips).
 - **TuFacturaIA — smoke copiloto/OCR post-deploy PR #197** — mergeado 2026-06-12 (`1efb783`); checklist 11 puntos en hub §Smoke (incluye bump copiloto a Sonnet 4.6).
 - **TuFacturaIA — Eliminar borrador desde menú ⋯ de `/emitidas` no completa** (2026-06-11, agent-browser) — click en "Eliminar" no muestra confirm ni borra (2 intentos con scrollintoview). Reproducir a mano; si es real, fix.

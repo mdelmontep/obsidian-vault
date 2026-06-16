@@ -7,47 +7,54 @@ tags: [facturaia, feedback, claude-code, runner, dokploy]
 
 Botón "Resolver con Claude" en `/admin/feedback`: un runner propio en Dokploy
 ejecuta Claude Code headless con el prompt del ticket, abre un PR (NUNCA mergea)
-y deja trazado el resultado. Fases 1-2 (banner, hilo, "Copiar prompt") ya en prod.
+y deja trazado el resultado. **OPERATIVO en prod con Claude real desde 2026-06-16.**
 
-## Estado (2026-06-16)
+## Estado (2026-06-16) — núcleo en prod, robusto
 
-- **PRD + 9 issues**: `issues/prd-resolver-con-claude.md` + `issues/100`–`108`.
-- **PR #283** (Issue 100): cola `feedback_ai_jobs` + endpoints (resolve-ia/ai-job/
-  callback) + botón panel + lógica pura TDD (claude-prompt, ai-jobs). Gates verdes.
-- **PR #287** (Issue 101, stacked sobre #283): claim atómico (RPC mig 304) + rol RO
-  `claude_runner_ro` + scaffolding runner en `ops/ticket-runner/` (Dockerfile,
-  compose, run-ticket.mjs, deny-list, README). Gates verdes.
-- Ambos **sin mergear**. Worktrees `facturaia-resolver-claude` y `facturaia-runner`.
+- **Mergeado**: #283 (Issue 100, cola+endpoints+botón) + #287 (Issue 101, claim+runner)
+  + #301 + #305 + #308. Migs **305** (feedback_ai_jobs), **306** (claim RPC + rol RO),
+  **310** (fix claim) aplicadas a prod.
+- **Runner Dokploy VIVO**: compose `ticket-runner` composeId `Mv4mWVmR05Xviw8ZmwZ3q`
+  (proyecto tufacturaia-prod). `STUB=0` (Claude real, Opus, OAuth suscripción).
+- **102 (Claude real + gate)**: validado. e2e STUB→PR real del bot; smoke real→`sin_cambios`
+  genuino. El bot `mdelmonteagentesia` NO puede mergear (ruleset `Protect main` id 17755984,
+  bypass solo team `facturaia-maintainers`). Org ahora **enterprise** (CI Actions desbloqueado).
+- **105 (robustez)**: heartbeat 60s + timeout duro + check exit code de claude + cron
+  `feedback-ai-job-watchdog` (scheduleId `cIvhvuFsnFl_N2PfjVAFI`, cada 5 min) que rescata
+  jobs `ejecutando` zombi (>15 min sin latido) → `fallido`. Verificado (rescued 1).
 
-## Decisiones (grilladas)
+## Credenciales (1Password vault FacturAIA)
 
-Trigger = runner polling · auth Claude = **OAuth de suscripción** (no toca API key) ·
-BD = rol read-only · salida = PR o diagnóstico (`pr_abierto|sin_cambios|fallido`) ·
-gate = runner re-corre lint/typecheck/build (CI repo rojo por billing) · modelo = Opus ·
-permisos = aislamiento infra + skip-permissions + deny-list · screenshot = descarga local ·
-zombies = timeout 30min + heartbeat · aviso = panel + email superadmin · cierre = webhook GH.
+Bot PAT classic `repo` → item "Token Github Bot mdelmonteagentesia" · OAuth Claude →
+item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsynd4p6xb6xivglbwrwsiy`.
+(Bot es colaborador externo → fine-grained PAT NO sirve, classic `repo` sí.)
 
-## Candado "nunca merge" — BLOQUEO en plan Free (verificado doc oficial)
+## Pendiente (issues 103,104,106,107,108)
 
-En **org Free + repo privado NO hay candado nativo**: rulesets exigen GitHub Team+,
-la protección de ramas en privados también, y no se puede forkear un privado en Free.
-Y en GitHub no se puede separar push de merge (ambos = `contents:write`). Opciones:
-- **A. Subir org a GitHub Team** (~4 $/usuario/mes) → ruleset en `main` con bypass solo
-  para Manuel = candado duro.
-- **B. Quedarse en Free** → garantía **procedural** (el runner nunca llama `gh pr merge`
-  + deny-list + bot bajo privilegio + PAT scopeado). Ya implementada en el código de #287.
-  Riesgo: un bug podría mergear. **Arrancar con B**, subir a Team si hace falta.
-- **Pendiente**: confirmar si `AgentesIA-MAdrid` ya está en Team (billing). Si sí → A gratis.
+- **103** `sin_cambios` → postear diagnóstico de Claude al hilo (`feedback_ticket_messages`)
+  + ticket `en_revision`. Endpoint interno nuevo + runner captura el diagnóstico.
+- **104** descargar screenshot del ticket al worktree (claim devuelve URL firmada vía
+  `getSignedUrl`, bucket `feedback-screenshots`) y referenciarlo en el prompt (gitignored).
+- **106** email al superadmin al estado terminal (Resend, plantilla nueva, best-effort).
+- **107** webhook GitHub PR-merged → ticket `resuelto`. ⚠️ **NECESITA acción humana**: alta
+  del webhook + secret en el repo GitHub (como el PAT).
+- **108** kill-switch (system_config) + audit_log por job + system_alerts en fallido +
+  sección manual admin ("Resolver con Claude", merge siempre humano, renovar OAuth).
+- Gap menor abierto: el runner toca `run-ticket.mjs` en 103+104 → un solo redeploy al final.
 
-Ver [[github-free-org-privado-sin-branch-protection-ni-rulesets]].
+## 3 bugs reales que destapó el e2e (todos arreglados)
 
-## Prerequisitos de setup (HITL)
+1. RPC `claim` con cola vacía devolvía "fila de nulls" `{id:null,...}` (no NULL) → runner
+   en bucle apretado 9req/s contra /callback. Fix: guard `data?.id` + RPC PL/pgSQL + guard loop.
+   Ver [[postgrest-rpc-composite-devuelve-fila-de-nulls]].
+2. Runner reportaba `pr_abierto` aunque push/PR fallaran (no chequeaba exit codes). Fix: chequear.
+3. `git push` del runner disparaba el pre-push hook (`npm build`) → 2º build → OOM. Fix:
+   `--no-verify` (el runner ya gatea aparte). Ver [[runner-headless-git-push-dispara-pre-push-hook]].
 
-Cuenta bot `mdelmonteagentesia` con Write en `facturaia` (no owner) · PAT fine-grained
-(Contents+PR, scope 1 repo) · `claude setup-token` (OAuth) · migs 303+304 + `ALTER ROLE
-claude_runner_ro WITH LOGIN PASSWORD` · deploy Dokploy con `CLAUDE_RUNNER_STUB=1` primero.
+## Cómo retomar (kickoff siguiente sesión)
 
-## Kickoff siguiente sesión
-
-Mergear #283 → #287, aplicar migs, desplegar runner con STUB=1, verificar
-claim→PR→callback e2e, quitar stub (Claude real), seguir issues 102→108.
+Seguir con issues **103 → 104 → 106** (sin dependencia humana), luego **107** (cuando
+des de alta el webhook GitHub) y **108**. Tras 103+104 (tocan `ops/ticket-runner/run-ticket.mjs`)
+→ un `compose.deploy` del runner (API Dokploy, key en memoria) + verificar. El runner
+está vivo; para pausarlo sin redeploy: `compose.stop`. Detalle live en memoria del agente
+`reference_dokploy_facturaia.md`.

@@ -24,6 +24,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 
 - **RPC secundaria opcional (stock inicial, webhook) → devolver warning flag, no silenciar ni 500** [[non-blocking-secondary-rpc-warning-flag]]
 - **`.next/lock` stale bloquea `next build`** — `rm .next/lock` cuando "Another build process running" sin proceso activo. Dev server usa `.next/dev/lock` (distinto). Ver [[next-build-lock-stale-devserver]]
+- **Runner/bot que hace `git push` dispara el pre-push hook (`npm build`) → doble build → OOM** — push con `--no-verify` (el runner ya gatea aparte); y chequear exit codes de subprocesos o un fallo se disfraza de éxito. Ver [[runner-headless-git-push-dispara-pre-push-hook]]
 
 ## prod / supabase / observabilidad
 
@@ -44,6 +45,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **PostgREST SDK `.or()` no compara columnas entre sí** — usar filtro en memoria o RPC con SQL nativo. Ver [[postgrest-sdk-or-no-compara-columnas]]
 - **Validar migración sin tocar prod** — supabase local: init + puertos 544xx (si hay otro stack) + `db reset --local` + smoke con `session_replication_role=replica`. Ver [[validar-migracion-en-supabase-local-sin-tocar-prod]]
 - **Unique de idempotencia con dimensión opt-in** — `NULLS NOT DISTINCT` (PG15+): filas NULL intactas, las nuevas habilitan la dimensión. Ver [[nulls-not-distinct-idempotencia-con-discriminador-opcional]]
+- **Función `RETURNS composite` con 0 filas → PostgREST devuelve `{id:null,…}` (truthy), NO `null`** — `data ?? null` lo deja pasar como objeto fantasma; validar un campo clave (`data?.id`). Ver [[postgrest-rpc-composite-devuelve-fila-de-nulls]]
 
 ## frontend (FacturaIA glass / UX activo)
 
