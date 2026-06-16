@@ -6,6 +6,38 @@ tags: [home, archivo]
 
 # Completado
 
+### Poda 2026-06-17 — código en prod, solo smoke/acción manual residual
+- 2026-06-12 TuFacturaIA — smoke copiloto/OCR #197 (bump copiloto Sonnet 4.6) — en prod, smoke manual residual.
+- 2026-06-05 TuFacturaIA — OCR anomalías #148/#152 — fix+backfill prod verificado, smoke manual residual. Ver [[consumidor-lee-claves-que-productor-no-emite]].
+- 2026-06-04 TuFacturaIA — Auditoría seguridad #131/#133 (mig 213/217 REVOKE RPC) en prod, validada anon→401/auth→403. Queda solo config dashboard (no-código). Ver [[supabase-rpc-security-definer-execute-public]].
+- 2026-05-31 TuFacturaIA — 2FA TOTP #196 — smoke E2E verde; residual recovery-code/inactividad no automatizable. Ver [[supabase-mfa-totp-integracion-gotchas]].
+- 2026-06-01 TuFacturaIA — Stripe billing LIVE #92/#127 (mig 204, 8 price IDs, Tax ES, portal) — live; residual smoke checkout real (user). Ver [[stripe-tax-registro-ue-via-api]].
+- 2026-05-31 TuFacturaIA — Drive sync #149 (workflow `TwDd1OkMqr3nhSso` activado, 2 ejecuciones success) — residual conectar Drive OAuth+emitir (user). Ver [[dokploy-api-env-vive-en-composefile-no-en-campo-env]].
+- 2026-06-16 TuFacturaIA — Stock lotes #296 (mig 308/309, opt-in `gestiona_lotes`) en prod; queda smoke UI. Ver [[ADR-031-stock-lotes-opt-in]].
+- 2026-06-16 TuFacturaIA — Drawer ingesta auto-add #297 + pulido #313 en prod; queda smoke UI.
+- 2026-06-16 TuFacturaIA — crear doc desde movimiento #086/087/088 + desambiguación #272/#273 — prod, smoke WA E2E verde; residual smoke UI A/B sandbox.
+- 2026-06-16 TuFacturaIA — Conciliación Fase 2 #227/228/231/235/236 (migs 273-281) en prod; queda smoke UI 5 flujos sandbox.
+- 2026-06-16 TuFacturaIA — ticket Chivite OCR multi-albarán #291/#303/#313 (max_tokens 4096, líneas editables) — prod; queda smoke visual. Ver [[max-tokens-es-tope-no-consumo-trunca-json-ocr-largo]].
+- 2026-06-16 TuFacturaIA — extractos issue 039 multi-archivo #289 — smoke prod verde; queda smoke navegador 5 pts originales.
+- 2026-06-16 TuFacturaIA — smoke tickets feedback (banner+hilo+prompt Claude, mig 254) en prod, checklist residual.
+- 2026-06-11 TuFacturaIA — integraciones/plan/módulos #193-196 — verificado local light+dark; queda confirmar prod.
+- 2026-06-16 TuFacturaIA — stock #266 — smoke UI prod residual (v1 bajo_minimo 200, import accionable, rationale, saldo).
+- 2026-06-05 TuFacturaIA — multiempresa gate Pro #157 — smoke E2E verde; residual exclusión cliente (requiere datos mixtos). Ver [[ADR-028-multiempresa-scope-navegar-agregar-cobrar]].
+- 2026-06 TuFacturaIA — modal #121/#122 — verificado E2E; residual lightbox imagen + envío email real. Ver [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]].
+- 2026-06-01 TuFacturaIA — WA multi-org #118 (P0 selección arreglado) — smoke E2E WA residual. Ver [[endpoint-crear-entidad-find-or-create-por-identidad-unica]].
+- 2026-06 TuFacturaIA — admin invite email #116 — reenviar bgchivite + confirmar Resend (residual).
+- 2026-05-26 TuFacturaIA — iCloud Mail provider #77 (mig 171) — smoke residual.
+- 2026-06-16 TuFacturaIA — GitHub Actions billing RESUELTO (org→enterprise, CI verde). Ver [[github-actions-org-private-free-tier-2000-min]].
+
+### Poda 2026-06-17 — smokes STALE (3+ semanas sin correr, archivados; reabrir si vuelven a ser prioridad)
+- 2026-05-21 TuFacturaIA — Copiloto PR-A3.1 smoke E2E (bloqueado OTP headless; backend+vitest 10/10 verde).
+- 2026-05-25 TuFacturaIA — smokes sprint emisor+IRPF+RLS multi-org (migs 162-166, 12 sub-items).
+- 2026-05-25 TuFacturaIA — smokes sprint email Nivel 1+2 + UX form + /emitidas (mig 167, 5 críticos).
+- 2026-05 TuFacturaIA — OTP smoke tests restantes (cambio tel re-auth, fallback degraded, lockout 15min).
+- 2026-05-21 TuFacturaIA — Conciliación #73/#74 smokes (filtros chip, bulk-confirm undo, cron anomaly-batch).
+- 2026-05-19 TuFacturaIA — #47/#48 smoke audit_log + verifactu toggle persistencia/403.
+- 2026-05-29 TuFacturaIA — smoke WA Boost conversacional (cashflow/permitirme/apunta gasto).
+
 - 2026-06-17 TuFacturaIA — **Code Quality (CodeQL) baseline triado y cerrado** — 43 findings: 39 corregidos en main (PR #322 = 23 Python scripts n8n-patches; PR #324 = 16 JS/TS, lint+typecheck+build+vitest verdes) + 4 dismisseados en UI (3 guards defensivos `iban-mask`/`handler`/`verifactu` = Won't fix; 1 FP del global `afterEach` de vitest = False positive). `/security/quality` en 0 abiertos; gate por PR activo. Ver [[github-code-quality-triage]].
 - 2026-06-16 TuFacturaIA — **"Resolver con Claude" (feedback fase 3) COMPLETO (issues 100-108)** — en prod + smoke real verde. 103 diagnóstico al hilo, 104 screenshot al worktree, 106 email superadmin (#316); 107 webhook GitHub PR-merged→resuelto (hook 642750021 live) + 108 kill-switch/audit/alertas/manual (#321, mig 314). Ver [[facturaia-resolver-con-claude]].
 
