@@ -49,12 +49,23 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 - **Smoke real pendiente**: ticket de UI con captura → confirmar que Claude lee
   `.ticket-screenshot.*`; y un `sin_cambios` real → diagnóstico en el hilo + email.
 
-## Pendiente (issues 107, 108)
+## 107/108 — HECHOS + desplegados + smoke real OK (2026-06-16, PR #321 → main `930015c8`)
 
-- **107** webhook GitHub PR-merged → ticket `resuelto`. ⚠️ **NECESITA acción humana**: alta
-  del webhook + secret en el repo GitHub (como el PAT).
-- **108** kill-switch (system_config) + audit_log por job + system_alerts en fallido +
-  sección manual admin ("Resolver con Claude", merge siempre humano, renovar OAuth).
+- **107** endpoint `POST /api/internal/github-webhook`: firma HMAC `X-Hub-Signature-256`
+  con `GITHUB_WEBHOOK_SECRET`; solo `pull_request` closed+merged; mapea `pr_url`→job→ticket
+  → `resuelto` + email de resolución al usuario; idempotente; PR humano sin job → no-op.
+  **Webhook GitHub creado vía `gh api`** (scope `repo` basta, no hizo falta el user): hook
+  id `642750021`, events `pull_request`, ping 200. Secret (64 hex) en env del app + en GitHub.
+- **108** kill-switch `system_config.resolver_claude_runner {enabled}` (claim no entrega si
+  off, fail-open; mig 314 lo siembra) + audit `resolve_ia.enqueue`/`.terminal` en
+  `admin_audit_log` + `system_alert` media al fallar (dedup por ticket) + manual admin §42.6.
+- **Smoke real end-to-end VERDE**: ticket sandbox con captura → runner la descargó → Claude
+  la **leyó** (citó `ZQ7-•••`, describió la pantalla; bonus: detectó el pretexting del
+  "código de verificación" y rehusó transcribirlo) → `sin_cambios` + diagnóstico al hilo +
+  ticket→en_revision (103✓) + email al superadmin (106✓) + audit terminal (108✓).
+  Kill-switch: OFF→`{job:null,paused:true}`, ON→`{job:null}`. Webhook: 401/no_job/pong.
+- **FEATURE COMPLETA** (issues 100-108). Runner vivo en `7884cacc` (107/108 son app-side,
+  no necesitó redeploy).
 
 ## 3 bugs reales que destapó el e2e (todos arreglados)
 
@@ -67,9 +78,13 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 
 ## Cómo retomar (kickoff siguiente sesión)
 
-103/104/106 cerrados y desplegados. Quedan **107** (cuando des de alta el webhook
-GitHub PR-merged + secret) y **108** (kill-switch + audit_log + system_alerts +
-manual admin). Antes de 108: hacer el **smoke real** de 103/104 (ticket con captura →
-Claude la lee; `sin_cambios` real → diagnóstico al hilo + email al superadmin). El
-runner está vivo en `7884cacc`; para pausarlo sin redeploy: `compose.stop`. Detalle
-live en memoria del agente `reference_dokploy_facturaia.md`.
+**Feature COMPLETA (issues 100-108), en prod y con smoke real verde.** Operativa:
+- Pausar el runner sin redeploy: `UPDATE system_config SET value='{"enabled":false}'
+  WHERE key='resolver_claude_runner';` (reactivar con `true`). El runner vivo en `7884cacc`.
+- Webhook GitHub (hook id `642750021`) cierra el ticket al mergear el PR del runner.
+  Secret en env del app + en la config del hook.
+- Renovar OAuth de Claude si caduca: `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN` en el
+  env del compose `ticket-runner` + `compose.deploy`.
+- Único pendiente teórico: validar el camino real de 107 con un PR del runner mergeado
+  (el endpoint está probado en vivo: 401/no_job/pong/ping; el resto reutiliza updateTicket+
+  email ya probados). Detalle live en memoria del agente `reference_dokploy_facturaia.md`.

@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-16 TuFacturaIA — **"Resolver con Claude" (feedback fase 3) COMPLETO (issues 100-108)** — en prod + smoke real verde. 103 diagnóstico al hilo, 104 screenshot al worktree, 106 email superadmin (#316); 107 webhook GitHub PR-merged→resuelto (hook 642750021 live) + 108 kill-switch/audit/alertas/manual (#321, mig 314). Ver [[facturaia-resolver-con-claude]].
+
 - 2026-06-16 TuFacturaIA — **Cron `ingesta-stale-sweep` anti-zombi OCR** (PR #302 a main `79a6502c`): barre `bandeja_ingesta` en `procesando` >30 min → `error` (UI ofrece Reintentar); `ocr-process` autodetecta `error` en early-returns (`OPENAI_API_KEY` ausente) en vez de zombificar al 90%. Alta del cron en Dokploy **vía API** (`schedule.create`) + verificado verde en `/admin/system`. Sin migración (261 ya admite `error`). Ver [[n8n-502-deja-items-huerfanos-en-bandeja-sin-retry]] · [[docker-infra]].
 - 2026-06-16 TuFacturaIA — **Cron Dokploy `cashflow-alerts`** verificado live/enabled (estaba pendiente en top-of-mind; confirmado en la lista de schedules de Dokploy).
 

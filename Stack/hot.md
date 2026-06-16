@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Supabase Storage REST + keys `sb_secret_`** — subir/borrar por curl exige `apikey` + `Authorization` (solo Authorization → 400, despista). Ver [[supabase-storage-rest-upload-requiere-apikey-y-authorization]]
+
 Resúmenes 1 línea + link al learning. Solo lo **activo ≤2 semanas**. Lo anterior
 vive en sus learnings (recall por relevancia) y los permanentes en
 [[patterns-cross-proyecto]]. Poda 2026-06-14.
