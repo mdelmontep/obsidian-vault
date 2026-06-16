@@ -24,3 +24,5 @@ update series_numeracion set contador_actual = contador_actual + 1
 Si el INSERT falla, Postgres rollbackea también el `UPDATE contador_actual`. Sin huecos.
 
 Aplica a cualquier sistema de numeración secuencial (facturas, pedidos, tickets, matrículas).
+
+**Variante 2026-06-16 (preview UI quema contador):** el form `/generar` llamaba a `next_invoice_number` (que hace `UPDATE contador+=1`) solo para *mostrar* el número → abrir "Nueva factura" sin guardar quemaba número. Fix: RPC `peek_invoice_number` read-only (`STABLE`, `SELECT contador+1`, sin UPDATE/FOR UPDATE); el número real lo asigna el INSERT (mig 299, PR #268). Regla: **un preview de numeración nunca debe consumir el contador**.
