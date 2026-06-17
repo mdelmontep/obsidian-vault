@@ -20,6 +20,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 ## NEXT (próximas 2 semanas)
 
 - **TuFacturaIA — Pagar GitHub Advanced Security antes de que caduque el trial (~16 jul 2026)** — decidido pagar para mantener Code Quality (scan + gate por PR); si el trial caduca sin pagar, se apagan. (Baseline ya cerrado, 0 findings abiertos.) Ver [[github-code-quality-triage]]
+- **TuFacturaIA — corregir ID receptor obsoleto en routing de `CLAUDE.md`** (1 línea) — `zYcHHa8jWXB6dY5i` → `pqSWkDIHqmSVHotB` (da 404; ya corregido en `gotchas.md` #368, falta la tabla de routing). Bug de doc que manda a un workflow inexistente.
 - **TuFacturaIA — 116 decomiso bot intención (Fase C, EJECUTABLE — dejar bakear)** — todo el set de creación ya flipado al Copiloto (Fase 3 cerrada 2026-06-17, tap WhatsApp verde) → `GENERAR DOCUMENTO` del bot viejo dormido del todo. Queda retirar los nodos de emisión muertos del receptor `pqSWkDIHqmSVHotB` (con plan + OK; dejar bakear los flips ~1-2 sem antes). Plan: [[facturaia-decomiso-bot-intencion-116]].
 - **TuFacturaIA — ticket Abba BORME: re-escanear + responder** — en `/ingesta` de *Abba* re-escanear los 2 docs (`...310785.jpg`/`...269660.jpg`) → responder ticket a gonzalo.riera. Fix #291 ya en prod. Ver [[gpt-4o-mini-falla-fotos-baja-calidad-bleed-through]] · [[recuperacion-ui-gated-por-estado-pierde-items-en-estado-hermano]].
 - **TuFacturaIA — responder ticket bgchivite `1762f07e`** — deploy perf auth dedupe #209 ya en prod; responder al ticket.
