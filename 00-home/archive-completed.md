@@ -7,6 +7,7 @@ tags: [home, archivo]
 # Completado
 
 ### Poda 2026-06-17 — código en prod, solo smoke/acción manual residual
+- 2026-06-17 TuFacturaIA — host Dokploy `185.47.13.170` blindado contra el OOM del 06-17: **16 GB RAM + 4 GiB swap activo y persistente** (`/etc/fstab` OK, verificado por SSH :5251). SSH del host = **puerto 5251 root** (el 22 está cerrado). Prevención cerrada.
 - 2026-06-17 TuFacturaIA — fix #348 (`e0f1e618`, prompt v12): Copiloto ya no exige NIF en presupuesto/proforma (smoke WhatsApp Fase 3 lo cazó rechazando una proforma sin NIF). Re-test residual: re-tap "hazme una proforma a [cliente sin NIF]" tras deploy → debe crearla. Ver [[llm-sobreaplica-constraint-de-tools-vecinos-sin-antipatron-explicito]].
 - 2026-06-17 TuFacturaIA — **3 crons caídos** investigados+arreglados (todos por schedules Dokploy mal dados de alta `scheduleType=application`/sin `serviceName` → enabled pero nunca disparan): `fiscal-generar-borradores`, `stock-alarmas-email` (recreados `compose`+`serviceName`+`sign-call.sh`, corruptos borrados, smoke verde) y `suspend-overdue` (no tenía schedule → creado). Los 3 verdes. Swap del host ya NO urgente (subido a 16 GB RAM). Ver [[dokploy-schedule-sin-servicename-no-se-ejecuta]].
 - 2026-06-17 TuFacturaIA — Monitorización in-house endurecida (PRs #320/#325/#328/#330/#332/#336/#345 + mig 316): sweep proactivo, watchdog visible, emails desacoplados + plantilla pro, dead-man's-switch externo (GitHub Action). Ver memoria `project-monitorizacion-in-house-facturaia`.
