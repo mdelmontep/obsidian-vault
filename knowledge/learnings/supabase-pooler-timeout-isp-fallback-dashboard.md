@@ -2,7 +2,7 @@
 title: supabase pooler :5432/:6543 timeout desde ISP — fallback dashboard sql editor
 date: 2026-05-30
 source: claude-code-session
-tags: [supabase, postgres, network, migrations, gotcha]
+tags: [supabase, postgres, network, migrations, mcp, gotcha]
 ---
 
 `supabase db push --linked` cuelga en `Initialising login role...` o falla con `dial tcp <ip>:5432 i/o timeout` desde ciertas redes ISP españolas (movistar, fibras compartidas hoteles, wifi cafeterías). Ambos puertos `:5432` (session) y `:6543` (transaction pooler) bloqueados a AWS Dublin.
@@ -17,6 +17,8 @@ tags: [supabase, postgres, network, migrations, gotcha]
 3. Verificar con `select version from supabase_migrations.schema_migrations order by version desc limit 5;`
 
 NUNCA editar `schema_migrations` sin `on conflict do nothing` — un INSERT crudo con version duplicada rompe `supabase migration repair`.
+
+**Alternativa (preferida si hay MCP Supabase)**: el MCP `execute_sql` va por HTTPS :443 (no lo bloquea el ISP aunque 5432/6543 lo estén) → aplica la DDL idempotente (`ADD COLUMN IF NOT EXISTS`/`CREATE OR REPLACE`). NO uses MCP `apply_migration`: sella la versión con timestamp → rompe la convención `NNN_name` y dispara el abort del hook pre-push. Y NO toques `schema_migrations`: deja que el `supabase db push` desde main al mergear registre la versión (idempotente, no re-crea nada). Evita el insert manual del punto 2.
 
 **Alternativa**: tetherear móvil (datos no bloquean 5432) y reintentar `supabase db push --linked` normal.
 
