@@ -224,3 +224,5 @@ tags: [home, archivo]
 - 2026-06-15 · TuFacturaIA · n8n voz pqSWkDIHqmSVHotB — fix mapeo catalogo_id en nodo v2-prep-generate (backup + PUT API).
 - 2026-06-15 · TuFacturaIA · Conciliación: auditoría 5-agentes + deuda cerradas en prod (PRs #231/#235/#236/#237/#241, migs 278-283); residual = smoke UI manual (vive en top-of-mind NEXT).
 - 2026-06-16 · TuFacturaIA · Conciliación: tickets desde ingreso cuadran al céntimo (bug 190€→189,99 en emitir-ticket/WhatsApp) + toggle "IVA incluido" reintroducido (form + modal producto) — PR #298/#299, mig 309; mergeado+prod+smoke sandbox verde + data-fix 2 docs históricos.
+
+- 2026-06-17 · TuFacturaIA · PR #364 motivo cuenta gratis (beta/cortesía/interno) + MRR a 0€ + mig 325 registrada en prod
