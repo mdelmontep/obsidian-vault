@@ -16,4 +16,6 @@ GRANT EXECUTE ON FUNCTION f(...) TO service_role;
 ```
 Verificar: `has_function_privilege('anon', 'f(...)', 'execute')` debe ser false.
 
-Relacionado: [[supabase-rpc-security-definer-execute-public]]
+3ª reincidencia (mig 320, 2026-06-17): `merge_cliente` (callable por anon → borrado cross-tenant), `crear_org_adicional`, `get_stock_health`, `complete_onboarding_perfil`. Es sistémico → el `REVOKE FROM PUBLIC, anon, authenticated` debe ser el DEFAULT al crear toda RPC SECURITY DEFINER (auditar con grep de `security definer` sin su trío de REVOKE).
+
+Relacionado: [[supabase-rpc-security-definer-execute-public]] · [[defensa-cableada-vs-codigo-muerto]]
