@@ -18,5 +18,6 @@ contexto** (`set-input`, `adm-select`, `filter-select`…) → conserva su ident
 visual; solo cambia la lista desplegable. `value` siempre string (castea
 number/enum), `onChange` y efectos secundarios intactos.
 
-No migrables tal cual: `<select>` con `<optgroup>`, uncontrolled (sin
-state/onChange), o que usen `ref`/`style` inline de error → decidir aparte.
+Casos límite (optgroup, borde de error, autofocus por `ref`, uncontrolled): NO
+dejarlos nativos — **ampliar el componente compartido** (props `group`/`invalid`/
+`autoFocus`, o darle estado al uncontrolled). Una fuente única > excepciones.
