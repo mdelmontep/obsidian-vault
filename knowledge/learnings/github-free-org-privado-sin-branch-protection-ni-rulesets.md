@@ -26,3 +26,10 @@ el candado duro. Ver [[facturaia-resolver-con-claude]].
 **Update 2026-06-16**: `AgentesIA-MAdrid` pasó a **enterprise** → ruleset `Protect main`
 activo (require PR+1 approval, bypass solo team `facturaia-maintainers`); el candado del
 runner ya es por infra, no solo procedural. El learning sigue válido para orgs en Free.
+
+**Update 2026-06-17 (gotcha gh CLI)**: ser miembro del team bypass NO hace que
+`gh pr merge` salte el review — su pre-check ve `BLOCKED` y obliga a `--admin`
+("base branch policy prohibits the merge"). Vía limpia sin override para PRs de
+OTRO autor: `gh pr review --approve` (decisión humana) → `gh pr merge --merge`.
+Para PRs propios no hay self-approve → o `--admin` (autorizar en settings) o que
+apruebe otro.
