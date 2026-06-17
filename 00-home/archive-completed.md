@@ -7,6 +7,7 @@ tags: [home, archivo]
 # Completado
 
 ### Poda 2026-06-17 — código en prod, solo smoke/acción manual residual
+- 2026-06-17 TuFacturaIA — Fase 2 Copiloto set fiscal completo flipado a WhatsApp (emitir = último flip, smoke verde). Solo queda 116 decomiso (bloqueado por flip presupuesto/proforma). Ver [[facturaia-decomiso-bot-intencion-116]].
 - 2026-06-12 TuFacturaIA — smoke copiloto/OCR #197 (bump copiloto Sonnet 4.6) — en prod, smoke manual residual.
 - 2026-06-05 TuFacturaIA — OCR anomalías #148/#152 — fix+backfill prod verificado, smoke manual residual. Ver [[consumidor-lee-claves-que-productor-no-emite]].
 - 2026-06-04 TuFacturaIA — Auditoría seguridad #131/#133 (mig 213/217 REVOKE RPC) en prod, validada anon→401/auth→403. Queda solo config dashboard (no-código). Ver [[supabase-rpc-security-definer-execute-public]].
