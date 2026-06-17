@@ -114,6 +114,14 @@ libres con un runner en build. Los heartbeats del runner vieron `502` (gateway/a
 un build del runner + app + n8n roza el OOM. Recomendado: añadir swap (p.ej. 4 GiB) o subir RAM
 del VPS antes de cualquier paralelismo. **Sin esto, NO escalar el runner.**
 
+**🔥 El riesgo se materializó el mismo día**: el OOM tumbó el **control-plane de Dokploy** ~7h
+(containerd/runc wedged → `runc create ... PID from pipe: EOF` en todo contenedor nuevo;
+autoDeploy muerto → Tanda 3 sin desplegar). Recuperado con **reboot del VPS** + **`pg_resetwal`**
+de la BD interna de Dokploy (WAL corrupto por la escritura cortada del OOM). Tras eso, deploy
+manual del app → **Tanda 3 (Q5) LIVE** (`/resolver-con-claude` 200, `POST /api/feedback-action/
+resolve` 303). Detalle completo en `Stack/incidents.md` (2026-06-17, host Dokploy). **Swap 4 GiB AÑADIDO**
+(`/swapfile` en `/etc/fstab`) — causa raíz cerrada. Con swap, Q6 (2 réplicas) ya es viable.
+
 ## 3 bugs reales que destapó el e2e (todos arreglados)
 
 1. RPC `claim` con cola vacía devolvía "fila de nulls" `{id:null,...}` (no NULL) → runner
