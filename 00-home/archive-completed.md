@@ -7,6 +7,7 @@ tags: [home, archivo]
 # Completado
 
 ### Poda 2026-06-17 — código en prod, solo smoke/acción manual residual
+- 2026-06-17 TuFacturaIA — fix #348 (`e0f1e618`, prompt v12): Copiloto ya no exige NIF en presupuesto/proforma (smoke WhatsApp Fase 3 lo cazó rechazando una proforma sin NIF). Re-test residual: re-tap "hazme una proforma a [cliente sin NIF]" tras deploy → debe crearla. Ver [[llm-sobreaplica-constraint-de-tools-vecinos-sin-antipatron-explicito]].
 - 2026-06-17 TuFacturaIA — 2 crons caídos investigados+arreglados: `fiscal-generar-borradores` (schedule Dokploy recreado mal sin `serviceName` → tipo `application`; recreado `compose` + corrupto borrado, smoke verde) y `suspend-overdue` (sin schedule en Dokploy → creado). Ambos verdes. Queda solo el swap del host (en NOW).
 - 2026-06-17 TuFacturaIA — Monitorización in-house endurecida (PRs #320/#325/#328/#330/#332/#336/#345 + mig 316): sweep proactivo, watchdog visible, emails desacoplados + plantilla pro, dead-man's-switch externo (GitHub Action). Ver memoria `project-monitorizacion-in-house-facturaia`.
 - 2026-06-17 TuFacturaIA — Fase 3 Copiloto: tools crearPresupuesto/crearProforma (#344) + flip n8n (g) a WhatsApp LIVE; tap verde (P2026-0010 + F2026-0004, sin NIF). Todo el set de creación ya en el Copiloto. Queda solo 116 Fase C (decomiso nodos). Ver [[facturaia-decomiso-bot-intencion-116]].
