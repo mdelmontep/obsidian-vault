@@ -61,6 +61,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 
 ## frontend (FacturaIA glass / UX activo)
 
+- **Controles nativos no estilables** — el popup de `<input type=date>` y la lista de `<select>` los pinta el SO; construir componente propio + portar. Trigger reusa la className del contexto. Ver [[controles-form-nativos-no-estilables-construir-componente]] · unificar sin tocar N clases [[unificar-controles-regla-global-not-specificity]]
 - **Modal/popover sin `createPortal` atrapado por ancestro con stacking (sticky/transform/backdrop-filter)** [[modal-portal-stacking-sticky-sidebar]]
 - **Efecto que recarga por entidad + setters que mergean → reset explícito del estado per-entidad** [[effect-reload-por-entidad-setters-merge-exigen-reset]]
 - **Playwright: `isVisible({timeout})` no espera (usa `waitFor`); `page.request` cachea HTTP** [[playwright-isvisible-ignora-timeout-usar-waitfor]]
