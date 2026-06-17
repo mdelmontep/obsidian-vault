@@ -10,6 +10,7 @@ tags: [stack, index]
 - **Rate-limit key por IP confiable** — nunca `xff[0]` (spoofeable); usar `x-real-ip` / último hop. Reincidió en 4 endpoints → helper único `lib/http/client-ip.ts`. Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]]
 - **MCP remoto = OAuth obligatorio** — Claude/ChatGPT no aceptan API key estática en conectores remotos; API key solo en MCP local (stdio). Ver [[remote-mcp-exige-oauth-no-api-key-estatica]]
 - **Acción irreversible ≠ tool MCP autónoma** — annotations son hints, no garantías; preparar borrador + deep-link a la app para que confirme un humano. Ver [[acciones-irreversibles-no-tool-mcp-autonoma]]
+- **jose v6 = ESM-only + tsx→CJS rompe top-level await** — servicio Node con tsx en repo sin `type:module` transpila a CJS; correr como ESM o envolver en `main()`. Ver [[jose-v6-esm-only-tsx-cjs-top-level-await]]
 
 Resúmenes 1 línea + link al learning. Solo lo **activo ≤2 semanas**. Lo anterior
 vive en sus learnings (recall por relevancia) y los permanentes en
