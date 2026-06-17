@@ -9,6 +9,7 @@ tags: [home, archivo]
 ### Poda 2026-06-17 — código en prod, solo smoke/acción manual residual
 - 2026-06-17 TuFacturaIA — 2 crons caídos investigados+arreglados: `fiscal-generar-borradores` (schedule Dokploy recreado mal sin `serviceName` → tipo `application`; recreado `compose` + corrupto borrado, smoke verde) y `suspend-overdue` (sin schedule en Dokploy → creado). Ambos verdes. Queda solo el swap del host (en NOW).
 - 2026-06-17 TuFacturaIA — Monitorización in-house endurecida (PRs #320/#325/#328/#330/#332/#336/#345 + mig 316): sweep proactivo, watchdog visible, emails desacoplados + plantilla pro, dead-man's-switch externo (GitHub Action). Ver memoria `project-monitorizacion-in-house-facturaia`.
+- 2026-06-17 TuFacturaIA — Fase 3 Copiloto: tools crearPresupuesto/crearProforma (#344) + flip n8n (g) a WhatsApp LIVE; tap verde (P2026-0010 + F2026-0004, sin NIF). Todo el set de creación ya en el Copiloto. Queda solo 116 Fase C (decomiso nodos). Ver [[facturaia-decomiso-bot-intencion-116]].
 - 2026-06-17 TuFacturaIA — Fase 2 Copiloto set fiscal completo flipado a WhatsApp (emitir = último flip, smoke verde). Solo queda 116 decomiso (bloqueado por flip presupuesto/proforma). Ver [[facturaia-decomiso-bot-intencion-116]].
 - 2026-06-12 TuFacturaIA — smoke copiloto/OCR #197 (bump copiloto Sonnet 4.6) — en prod, smoke manual residual.
 - 2026-06-05 TuFacturaIA — OCR anomalías #148/#152 — fix+backfill prod verificado, smoke manual residual. Ver [[consumidor-lee-claves-que-productor-no-emite]].
