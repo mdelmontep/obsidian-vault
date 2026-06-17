@@ -82,22 +82,37 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 - **Q4** botón "Relanzar con Claude" cuando el job es terminal (deja claro que re-lanzar
   continúa leyendo el hilo).
 
-**Tanda 2 — interactividad (SIGUIENTE):**
-- **Q1 progreso en vivo**: el runner ya late `ejecutando` cada 60s; añadir pasos
-  incrementales — tabla nueva `feedback_ai_job_events` (o `claude -p --output-format
-  stream-json` resumido al callback) y el panel los muestra en vivo.
-- **Q7/Q8 loop "Continuar"**: formalizar lo que YA funciona de facto (re-encolar mete todo
-  el hilo en el prompt vía `listMessages`). Claude termina con pregunta → admin responde en
-  hilo → "Continuar" (= relanzar, ya existe) con copy explícito y quizá estado
-  `espera_respuesta`. NO sesión viva: el hilo es la memoria (decisión: barato y robusto).
+**Tanda 2 — HECHA + prod** (PR #333 → main, 2026-06-17; mig 317 aplicada + runner redeploy):
+- **Q1 progreso en vivo**: tabla `feedback_ai_job_events` (mig 317, append-only, RLS
+  service-role-only) + endpoint interno `POST /feedback-ai-job/[id]/progress`. El runner
+  emite hitos paso a paso (`preparando→analizando→verificando→subiendo`); `GET ai-job`
+  devuelve `events`; el panel pinta un timeline que refresca cada 5s y cierra con el estado
+  terminal. (Decidido: hitos del runner, NO stream-json — robusto y barato.)
+- **Q7/Q8 loop "Continuar"**: botón "Continuar con Claude" (sin_cambios) / "Reintentar con
+  Claude" (fallido) + hint en el modal. Relanzar re-encola leyendo todo el hilo. **SIN** nuevo
+  estado `espera_respuesta` (decisión: el hilo es la memoria, evitar tocar la máquina de estados).
+- Runner desplegado (compose.deploy, commit con 105+103+104+Q1) — verificado en logs: clonó +
+  arrancó `stub=false` 00:06, claim de job real 00:09.
 
-**Tanda 3 — infra:**
-- **Q5 email con botón de acción**: el email de ticket nuevo lleva botón "Resolver con
-  Claude" → enlace firmado (token HMAC con TTL/single-use, scope superadmin) → endpoint que
-  valida y encola sin entrar a admin.
-- **Q6 paralelismo**: el claim ya usa `FOR UPDATE SKIP LOCKED` → escalar el runner a 2-3
-  réplicas en Dokploy (cada una coge un job distinto sin pisarse). Vigilar RAM (claude+build
-  por réplica) y coste OAuth.
+**Tanda 3 — HECHA + prod** (PR #338 → main, 2026-06-17; mig 319 aplicada; app auto-deploy):
+- **Q5 email-action**: `src/lib/feedback/action-token.ts` (HMAC firmado, TTL 7d, jti único) +
+  mig **319** `feedback_action_tokens` (ledger single-use, RLS service-role-only) + página
+  pública `/resolver-con-claude` (confirma en GET) + `POST /api/feedback-action/resolve`
+  (valida+consume+encola). **Mutación en POST, no en GET** (un escáner de correo que pre-cargue
+  el enlace no gasta el token). Botón "Resolver con Claude" en el email de ticket nuevo.
+  Middleware allowlist + rate-limit 60/min/IP. Audit `via:'email_action'`.
+- **Q6 paralelismo — código HECHO, NO escalado** (decisión basada en evidencia): compose
+  parametriza `deploy.replicas: ${RUNNER_REPLICAS:-1}` (default 1, replica-safe por SKIP
+  LOCKED + REPO_DIR por contenedor + ramas por-ticket). **NO se sube a 2-3**: el host
+  `185.47.13.170` es **8 GiB SIN swap**; con UN solo runner en build ya está a 6.6/7.9 GiB
+  (~900 MiB libres) y el runner pega su límite de 3 GiB. Una 2ª réplica concurrente = **OOM
+  seguro** (mataría app/n8n). Escalar solo tras añadir swap o RAM al host. README/.env.example
+  documentan el `RUNNER_REPLICAS`.
+
+**⚠️ Riesgo de host detectado (2026-06-17)**: 185.47.13.170 = 8 GiB **sin swap**, ~900 MiB
+libres con un runner en build. Los heartbeats del runner vieron `502` (gateway/app). Latente:
+un build del runner + app + n8n roza el OOM. Recomendado: añadir swap (p.ej. 4 GiB) o subir RAM
+del VPS antes de cualquier paralelismo. **Sin esto, NO escalar el runner.**
 
 ## 3 bugs reales que destapó el e2e (todos arreglados)
 
@@ -110,10 +125,16 @@ item "CLAUDE_CODE_OAUTH_TOKEN" · rol RO `claude_runner_ro` URL → item `hybhsy
 
 ## Cómo retomar (kickoff siguiente sesión)
 
-**Issues 100-108 COMPLETOS en prod + smoke real verde. Fase 4 Tanda 1 también en prod
-(#327).** Lo siguiente es **Fase 4 Tanda 2 (interactividad) y Tanda 3 (infra)** — ver
-sección "Fase 4" arriba con el diseño de cada Q. Empezar por Tanda 2 (Q1 progreso en vivo +
-Q7/Q8 loop "Continuar"), luego Tanda 3 (Q5 email-action + Q6 réplicas runner).
+**FEATURE COMPLETA — issues 100-108 + Fase 4 Tandas 1, 2 y 3 TODAS en prod (2026-06-17).**
+PRs: #327 (T1), #333 (T2, mig 317), #338 (T3, mig 319). Migs 317+319 aplicadas a prod; runner
+redeployado con el código T2 (progreso en vivo). Todo verde, mergeado `--admin` (ignorando la
+Visual Regression stale). Único pendiente de Q6: **NO escalar réplicas hasta dar swap/RAM al
+host** (ver "Riesgo de host" arriba) — el código ya está listo (`RUNNER_REPLICAS`).
+
+Smoke pendiente (suave): abrir un ticket real y ver el **timeline de progreso en vivo** (Q1) en
+`/admin/feedback`; abrir el email de ticket nuevo y probar el botón **"Resolver con Claude"**
+(Q5) → página `/resolver-con-claude` → encola. Verificar que el job en curso (claim 00:09) cerró
+bien pese al `502` de heartbeat.
 
 Operativa ya viva:
 - Pausar el runner sin redeploy: `UPDATE system_config SET value='{"enabled":false}'
