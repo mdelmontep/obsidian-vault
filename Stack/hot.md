@@ -31,6 +31,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 ## prod / supabase / observabilidad
 
 - **GitHub Code Quality** — preview sin API, triaje en UI; 4 reglas ≈ ruff (S110/SIM115/F401/F841). Ver [[github-code-quality-triage]]
+- **CodeQL Code Scanning (seguridad)** — REST sí funciona (dismiss vía API, auto-mode lo bloquea→`!`); recetas fix bad-tag-filter/redos-email/biased-random. Ver [[codeql-security-alerts-fixes]]
 - **Bugs solo afloran contra schema real** — `.order` columna inexistente → 42703; RPC+trigger misma fila → 23505. E2E real los caza, mocks no. Ver [[supabase-errores-que-solo-afloran-contra-schema-real]]
 - **Smoke de RPCs/triggers contra prod sin residuo: `BEGIN; DO $$..asserts..$$; ROLLBACK`** [[smoke-prod-en-transaccion-rollback]]
 - **Dokploy `compose.one` devuelve `deployments[]` SIN ordenar → sort por createdAt** [[dokploy-api-deployments-sin-ordenar]]
