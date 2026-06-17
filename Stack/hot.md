@@ -21,6 +21,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 - **Worktree facturaia: `node_modules` real para `next build` (symlink rompe Turbopack)** [[worktree-facturaia-build-supabase]]
 - **E2E: `request.newContext` hereda storageState (anon → vacío); multi-org → fijar `active_org_id` en seed** [[playwright-request-newcontext-hereda-storagestate]]
 - **E2E local rojo: baselinea las mismas specs contra `origin/main` antes de culpar a tu rama; FacturaIA `.env.test` apunta a prod → override `E2E_BASE_URL=localhost`** [[e2e-baseline-contra-main-antes-de-culpar-a-tu-rama]]
+- **Visual regression CI (Next dev): acotar trigger a la superficie renderizada + baselines en contenedor jammy local + `domcontentloaded` (el `load` no llega en RSC)** [[regresion-visual-ci-acotar-trigger-y-baselines-en-contenedor]]
 - **Colisión NNN migraciones (rama stale) → renumerar + `uniq -d` post-merge; el hook pre-push NO la detecta** [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]
 - **`migration repair` exige el fichero NNN en el cwd → reparar desde worktree de origin/main** [[supabase-migration-repair-requiere-fichero-nnn-en-cwd]]
 - **Migs paralelas CREATE OR REPLACE se pisan → consolidar en la de mayor número** [[migraciones-paralelas-create-or-replace-se-pisan]]
