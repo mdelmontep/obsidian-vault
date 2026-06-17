@@ -7,6 +7,7 @@ tags: [stack, index]
 # Hot Cache
 
 - **Supabase Storage REST + keys `sb_secret_`** — subir/borrar por curl exige `apikey` + `Authorization` (solo Authorization → 400, despista). Ver [[supabase-storage-rest-upload-requiere-apikey-y-authorization]]
+- **Rate-limit key por IP confiable** — nunca `xff[0]` (spoofeable); usar `x-real-ip` / último hop. Reincidió en 4 endpoints → helper único `lib/http/client-ip.ts`. Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]]
 
 Resúmenes 1 línea + link al learning. Solo lo **activo ≤2 semanas**. Lo anterior
 vive en sus learnings (recall por relevancia) y los permanentes en

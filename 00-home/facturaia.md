@@ -116,6 +116,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 ## NEXT (próximas 2 semanas)
 
+- **Auditoría seguridad 4 dims (PR #341, abierto)** — núcleo sólido (auth/RLS/webhooks OK). Fixes: RBAC `settings/features`+`disconnect` (admin-only), IP confiable en rate-limit (helper `lib/http/client-ip.ts`), reconexión Redis. Follow-ups: fijar `SIGNING_LEGACY_UNTIL` en Dokploy (cerrar legacy `x-service-key`) + `manual-admin` (togglear módulos/desconectar = admin-only). Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]].
+
 - **🟢 Factura simplificada (ticket) 094-099 — CERRADO 2026-06-16** — epic mergeado a main (TDD por issue), migs **303/304** en prod (renumeradas desde 302/303 por colisión con `302_feedback`), smoke E2E Playwright verde (wizard → ticket serie S → conciliado+cobrado). Residual: (a) **smoke F2 real** con org `verifactu_activo=true` (sandbox lo tiene en false → quedó `no_aplica`); (b) verificar **redeploy Dokploy** del fix `fuente` (commit `2e4285f0`: `emitir-ticket` daba 500 con `source='web'`). ADR-030 · [[smoke-insert-directo-no-ejerce-el-motor-real]].
 
 - **"Resolver con Claude" (feedback)** — ✅ issues 100-108 + **Fase 4 Tanda 1** en prod (2026-06-16): prompt enrutado por área, badge "Claude trabajando" en la lista, en_revisión al iniciar, "Relanzar con Claude". **NEXT: Fase 4 Tanda 2** (progreso en vivo + loop "Continuar") **y Tanda 3** (email-action + réplicas runner para paralelo). Roadmap + cómo retomar en [[facturaia-resolver-con-claude]] §Fase 4.
