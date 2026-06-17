@@ -8,6 +8,8 @@ tags: [stack, index]
 
 - **Supabase Storage REST + keys `sb_secret_`** — subir/borrar por curl exige `apikey` + `Authorization` (solo Authorization → 400, despista). Ver [[supabase-storage-rest-upload-requiere-apikey-y-authorization]]
 - **Rate-limit key por IP confiable** — nunca `xff[0]` (spoofeable); usar `x-real-ip` / último hop. Reincidió en 4 endpoints → helper único `lib/http/client-ip.ts`. Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]]
+- **MCP remoto = OAuth obligatorio** — Claude/ChatGPT no aceptan API key estática en conectores remotos; API key solo en MCP local (stdio). Ver [[remote-mcp-exige-oauth-no-api-key-estatica]]
+- **Acción irreversible ≠ tool MCP autónoma** — annotations son hints, no garantías; preparar borrador + deep-link a la app para que confirme un humano. Ver [[acciones-irreversibles-no-tool-mcp-autonoma]]
 
 Resúmenes 1 línea + link al learning. Solo lo **activo ≤2 semanas**. Lo anterior
 vive en sus learnings (recall por relevancia) y los permanentes en
