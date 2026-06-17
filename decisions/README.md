@@ -55,3 +55,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 029 · 2026-06-13 · [[ADR-029-conciliacion-casos-asientos-no-ledger|Conciliación casos contables (préstamos/suplidos/compensación): NO ledger, aproximación por categorización como ámbito futuro]] (TuFacturaIA)
 - 030 · 2026-06-16 · [[ADR-030-ingreso-sin-factura-ticket-vs-fuera-iva|Ingreso sin factura: ticket (simplificada) para ventas con IVA al 303; "sin factura" solo para no sujetos]] (TuFacturaIA)
 - 031 · 2026-06-16 · [[ADR-031-stock-lotes-opt-in|Stock por partidas/lotes: opt-in híbrido por producto, motor aislado]] (TuFacturaIA)
+- 032 · 2026-06-18 · [[ADR-032-mcp-oauth-as-split-app-servicio-handroll|AS OAuth del MCP partido app↔servicio + hand-roll (no @jmondi)]] (TuFacturaIA)
