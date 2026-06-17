@@ -21,4 +21,6 @@ El copy es **misleading**: dice "payments have failed" aunque NUNCA se haya conf
 
 **Verificar cuál es el caso**: org Settings → Billing → "Actions & Packages" muestra `X / 2000 min` consumidos. Si "Payment information" dice "No payment method on file" → es agotamiento de cupo puro, no caducidad de tarjeta.
 
+**Reducir consumo (no agotar el cupo)**: en repo privado, CI con `push:[main]` + `pull_request` corre **2× cada commit** (el PR ya valida con branch protection; el push tras el merge es el mismo commit) → dejar solo `pull_request`. Añadir `concurrency: { group: ..., cancel-in-progress: true }` para matar runs superados. Caso `facturaia` #367 (2026-06-17): ~½ minutos y ½ emails de fallo.
+
 Relacionado: [[dokploy-webhook-independiente-del-ci-status]] — el despliegue sigue funcionando aunque Actions esté bloqueado.
