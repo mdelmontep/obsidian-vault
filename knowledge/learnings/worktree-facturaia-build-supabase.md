@@ -7,7 +7,7 @@ tags: [worktree, nextjs, turbopack, supabase, facturaia, workflow]
 
 Al trabajar en un `git worktree` aislado de **facturaia** (patrón habitual para PRs sin arrastrar commits locales):
 
-- **`node_modules` symlinkado al repo principal sirve para `typecheck` y `vitest`, pero ROMPE `next build`**: Turbopack falla con `Symlink [project]/node_modules is invalid, it points out of the filesystem root`. Fix: `rm node_modules && npm ci` (real) en el worktree. Coste único; los builds siguientes lo reutilizan.
+- **`node_modules` symlinkado al repo principal sirve para `typecheck` y `vitest`, pero ROMPE `next build`**: Turbopack falla con `Symlink [project]/node_modules is invalid, it points out of the filesystem root`. Fix rápido: `cp -al <repo-principal>/node_modules ./node_modules` (hardlinks → directorio real instantáneo que Turbopack acepta, sin reinstalar). Alternativa lenta pero limpia: `rm node_modules && npm ci`.
 - **El link de Supabase NO está en el worktree**: vive en `supabase/.temp/` del repo principal (gitignored). Sin él, `supabase db push`/`migration list --linked` fallan con `Cannot find project ref`. Fix: `cp -r <repo-principal>/supabase/.temp <worktree>/supabase/.temp`.
 - `.env.local` también es gitignored → symlinkarlo o copiarlo si el worktree lo necesita.
 - **Sesión paralela en el MISMO dir principal = colisión**: comparten HEAD/índice de git → tu `commit` puede caer en la rama de la otra sesión y pushearse con ella (caso real 2026-06-11: mi commit de bandeja acabó en su `fix/llm-robustez`). Si detectas otra sesión activa (ficheros ajenos en `git status`, checkouts recientes en `reflog`), trabaja en worktree desde el inicio. Recuperar la rama ajena: `git push --force-with-lease` a su estado anterior.
