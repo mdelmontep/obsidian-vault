@@ -37,6 +37,7 @@ tags: [frontend, css, mobile, overflow]
 ## Modales y popovers
 
 - **Popover dentro de modal con `overflow: hidden` se corta** — el ancestro clipa al popover absoluto. Soluciones: portal con `position: fixed` + `getBoundingClientRect`, o disclosure inline (el popover es un `<div>` siguiente que empuja contenido). Inline es más simple y mejor en móvil. Ver [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]]
+- **Popover/menú anclado a un trigger** → `@floating-ui/react` (hook `useAnchoredMenu` en FacturaIA), no `getBoundingClientRect` + flip manual (frágil). Posicionar con `top/left`, no `transform`. Ver [[react-hooks-refs-falso-positivo-floating-ui]] · ADR-033
 
 ## `dvh` y viewports dinámicos iOS
 

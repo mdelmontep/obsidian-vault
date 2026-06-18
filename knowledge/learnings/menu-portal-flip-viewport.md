@@ -18,3 +18,8 @@ del menú lleva `top?` o `bottom?` y el style usa el que esté.
 
 Caso FacturaIA #355: "Eliminar" un borrador en /emitidas no abría el confirm — era esto.
 Mismo patrón en /recibidas y /presupuestos. Reproducido y verificado con Playwright.
+
+Actualización (2026-06-18, PR #376): el cálculo manual de flip (altura ESTIMADA) era
+frágil → flip prematuro y menú descolgado del trigger. Migrado a `@floating-ui/react`
+(`useAnchoredMenu`): `flip()` mide altura real y solo voltea si no cabe. Preferir Floating
+UI sobre cálculo a mano. Ver [[react-hooks-refs-falso-positivo-floating-ui]] · ADR-033.

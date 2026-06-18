@@ -18,3 +18,7 @@ la derecha, fuera de pantalla.
 Fix robusto: anclar portales posicionados con las PROPS CSS `right`/`left`
 (`right = innerWidth - rect.right`), nunca vía `transform`, si el elemento además anima.
 Patrón ya usado en clientes/facturas/presupuestos del mismo repo. Ver [[menu-portal-flip-viewport]].
+
+Aplica también a `@floating-ui/react`: sus `floatingStyles` posicionan con `transform`
+por defecto → mismo choque con animaciones de apertura. Configurar el hook para posicionar
+con `top/left` (usar `x/y/strategy`, no `floatingStyles`). FacturaIA PR #376 (`useAnchoredMenu`).
