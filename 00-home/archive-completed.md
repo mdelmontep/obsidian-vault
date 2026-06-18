@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-18 TuFacturaIA — `/admin/feedback`: rediseño del detalle a **compositor único con selector de destinatario** (nota interna / al cliente / a Claude), default nota interna, etiquetas de destino en el hilo + **acciones de estado visibles** (Marcar resuelto / Descartar / Reabrir). API messages acepta `internal` (nota interna no manda email). Push directo a main `dcc88348` + manual-admin §42 `fb3ecbf8`. Smoke pendiente (Manu). Ver [[compositor-multidestino-selector-explicito]].
 - 2026-06-18 TuFacturaIA — auditoría cuellos de botella BD → mig 326 índices FK (`lineas_factura`/`bandeja_ingesta`.factura_id) + cron `logs-retention-sweep` (purga cron_runs/api_request_log >90d) + paginación `/api/admin/orgs` (sin settings JSONB) + 4 fixes over-fetch (informes/ventas, getDeudaPorCliente, notifications, fiscal-avisos). PR #375 mergeado (--admin, checks falsos por billing Actions) + migración aplicada + cron verde en prod. Ver [[tablas-de-log-sin-retencion-dominan-el-tamano-de-la-bd]] · [[auditoria-performance-priorizar-por-tamano-real-de-tabla]].
 
 ### Poda 2026-06-17 — código en prod, solo smoke/acción manual residual
