@@ -13,6 +13,7 @@ que reaparecen cada sesión + el área activa hoy. Lo demás vive en `knowledge/
 
 ## de la semana
 
+- **next start sin HMR / puerto equivocado en QA** — edits invisibles, server sirve build viejo; el `next dev` con HMR puede estar en otro puerto. Ver [[next-start-build-estatico-sin-hmr-verificar-puerto]]
 - **react-hooks/refs falso positivo con floating-ui** — el React Compiler marca `refs.setFloating` como ref-en-render; el hook expone `setReference`/`setFloating` top-level (no objeto `refs`). Ver [[react-hooks-refs-falso-positivo-floating-ui]]
 - **Hilo con varios públicos → compositor con selector de destinatario** — cajas separadas con destino implícito = mensaje al destino equivocado; unificar + default seguro + etiqueta de destino. Ver [[compositor-multidestino-selector-explicito]]
 - **Supabase Storage REST + keys `sb_secret_`** — subir/borrar por curl exige `apikey` + `Authorization` (solo Authorization → 400). Ver [[supabase-storage-rest-upload-requiere-apikey-y-authorization]]
