@@ -9,11 +9,13 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-05-18
+## Estado actual · 2026-06-18
 
+- **Chat WhatsApp y voz Retell funcionando E2E** con número de pruebas Agentesia (`+34 910 05 49 50`). Cerebro del bot completo (router-ia, registrar-lead, agenda, Clientify).
+- **Bloqueante go-live activo · conexión del número real a Meta.** El `659 877 708` figura **"Sin conexión"** en Meta (WABA `349202490218983`, modo "App de WhatsApp Business"). Hasta conectarlo a la Cloud API **no se pueden crear las plantillas HSM**. Diagnóstico previo (tarjeta caducada, 2026-06-12) quedó OBSOLETO: la tarjeta ya es válida (VISA `*1716`), negocio Aprobado, rol OK.
+- **Causa real = coexistencia sin completar.** El número se usa a diario en la app WhatsApp Business → único camino es **coexistencia** (conecta a la API sin sacarlo del móvil). Requiere escanear/confirmar desde el móvil del 659. La app "Elphis" de Agentesia NO ve este WABA (vive en otro Business `463746404062650`) → se delega al cliente vía la app del móvil.
+- **Acción en curso:** email enviado a **Pablo Rubio** con paso a paso autónomo para conectarlo desde la app (Ajustes → Herramientas para la empresa → "Registrarse con Facebook"). Detalle técnico completo en `/Users/manueldelmonte/elphis/CLAUDE.md` (bloque "Bloqueante creación plantillas — REDIAGNOSTICADO 2026-06-18"). Ver [[bloqueantes-elphis]].
 - **Diseño técnico cerrado.** Documentado en `/Users/manueldelmonte/elphis/CLAUDE.md` y reflejado en este vault.
-- **Propuesta PDF enviada** a Borja y Dani para validar arquitectura antes de Fase 0. Ver [[propuesta-pdf-elphis]].
-- **Bloqueante único activo**: confirmación de Chatwoot como inbox WhatsApp y handoff humano. Ver [[bloqueantes-elphis]].
 - Credenciales Clientify en memory: [clientify-elphis-api](~/.claude/projects/-Users-manueldelmonte/memory/clientify-elphis-api.md).
 
 ## Datos clave del cliente

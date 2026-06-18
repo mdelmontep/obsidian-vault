@@ -20,6 +20,7 @@ que reaparecen cada sesión + el área activa hoy. Lo demás vive en `knowledge/
 - **Acción irreversible ≠ tool MCP autónoma** — annotations son hints; preparar borrador + deep-link para que confirme un humano. Ver [[acciones-irreversibles-no-tool-mcp-autonoma]]
 - **jose v6 = ESM-only + tsx→CJS rompe top-level await** — correr como ESM o envolver en `main()`. Ver [[jose-v6-esm-only-tsx-cjs-top-level-await]]
 - **Revocar JWT stateless antes de exp = tabla de revocación dedicada** — no inferir de filas de refresh; claim `gid` + `isGrantRevoked` sin caché. Ver [[revocacion-jwt-stateless-tabla-dedicada-no-inferir-de-filas-de-token]]
+- **Revocación: comprobar en CADA resource server, no solo el gateway** — mismo JWT aceptado por la API directa lo salta; fail-closed. Ver [[oauth-revocacion-en-cada-resource-server-no-solo-gateway]]
 - **QA página server-component con Playwright = inyectar cookie `@supabase/ssr`** — la hidratación del dev no prende (login hace submit nativo); firma server-side y captura la cookie. Ver [[supabase-ssr-cookie-injection-qa-playwright]]
 - **Cron Dokploy para código no desplegado = `enabled:false` (pre-staged)** — si no, 404 diario + watchdog en rojo tras deploy. Ver [[dokploy-cron-pre-stage-disabled-si-endpoint-no-desplegado]]
 
