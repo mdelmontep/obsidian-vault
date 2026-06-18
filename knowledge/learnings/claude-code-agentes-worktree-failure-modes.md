@@ -59,6 +59,14 @@ git checkout <worktree-branch> -- \
 
 **Cómo blindar**: identificar los archivos "junk drawer" del repo (catálogos, registries) y mencionarlos en el prompt del agente: "si tocas `src/lib/modules/catalog.ts`, edita SOLO la entrada relevante a tu PR — no toques otras descripciones aunque las veas obsoletas".
 
+## Failure mode D: subagente read-only lee el checkout PRINCIPAL, no el worktree manual
+
+**Síntoma**: trabajo en un worktree manual (`/repo-feature`, rama con N slices ya commiteadas). Lanzo un **Explore** (read-only, sin `isolation:worktree`) para mapear patrones. Devuelve firmas/funciones que NO coinciden con lo que tengo: es la versión del **checkout principal** (`/repo`, sin mis slices) → mapa STALE para paths que existen en ambos.
+
+**Causa**: el subagente resuelve rutas contra el cwd del proceso (repo principal), no contra mi worktree. Para archivos compartidos lee la copia equivocada sin avisar.
+
+**Fix**: (1) en el prompt, ruta ABSOLUTA del worktree + "es un worktree, NO el repo principal; NO leas `/repo`". (2) Re-verifica claims críticos (firmas, auth) leyendo el worktree tú mismo — los del subagente no se heredan. Caso real 2026-06-18 (MCP slice 050): el Explore reportó `withApiV1`/endpoints pre-044 del repo principal.
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:
