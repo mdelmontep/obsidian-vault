@@ -64,6 +64,7 @@ vive en sus learnings (recall por relevancia) y los permanentes en
 
 - **Controles nativos no estilables** — el popup de `<input type=date>` y la lista de `<select>` los pinta el SO; construir componente propio + portar. Trigger reusa la className del contexto. Ver [[controles-form-nativos-no-estilables-construir-componente]] · unificar sin tocar N clases [[unificar-controles-regla-global-not-specificity]]
 - **Modal/popover sin `createPortal` atrapado por ancestro con stacking (sticky/transform/backdrop-filter)** [[modal-portal-stacking-sticky-sidebar]]
+- **z-index: overlays portados = una capa + orden de portal decide; tokenizar value-preserving, no inventar escala** [[zindex-capa-overlay-orden-portal]] · no forzar base en paneles divergentes [[no-forzar-base-en-paneles-divergentes]]
 - **Efecto que recarga por entidad + setters que mergean → reset explícito del estado per-entidad** [[effect-reload-por-entidad-setters-merge-exigen-reset]]
 - **Playwright: `isVisible({timeout})` no espera (usa `waitFor`); `page.request` cachea HTTP** [[playwright-isvisible-ignora-timeout-usar-waitfor]]
 - **CSS Module Turbopack: kebab-case → `undefined` silencioso; usar camelCase** [[css-module-camelcase-turbopack]]
