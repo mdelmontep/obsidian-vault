@@ -11,6 +11,7 @@ tags: [stack, index]
 - **MCP remoto = OAuth obligatorio** — Claude/ChatGPT no aceptan API key estática en conectores remotos; API key solo en MCP local (stdio). Ver [[remote-mcp-exige-oauth-no-api-key-estatica]]
 - **Acción irreversible ≠ tool MCP autónoma** — annotations son hints, no garantías; preparar borrador + deep-link a la app para que confirme un humano. Ver [[acciones-irreversibles-no-tool-mcp-autonoma]]
 - **jose v6 = ESM-only + tsx→CJS rompe top-level await** — servicio Node con tsx en repo sin `type:module` transpila a CJS; correr como ESM o envolver en `main()`. Ver [[jose-v6-esm-only-tsx-cjs-top-level-await]]
+- **Revocar JWT stateless antes de exp = tabla de revocación dedicada** — no inferir de filas de refresh (un cleanup las borra y revive el token); claim `gid` firmado + `isGrantRevoked` sin caché. Ver [[revocacion-jwt-stateless-tabla-dedicada-no-inferir-de-filas-de-token]]
 
 Resúmenes 1 línea + link al learning. Solo lo **activo ≤2 semanas**. Lo anterior
 vive en sus learnings (recall por relevancia) y los permanentes en
