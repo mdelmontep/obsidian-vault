@@ -27,6 +27,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 - **Cron Dokploy para código no desplegado = `enabled:false` (pre-staged)** — si no, 404 diario + watchdog en rojo tras deploy. Ver [[dokploy-cron-pre-stage-disabled-si-endpoint-no-desplegado]]
 - **Bypass de pago en toggle de features** — endpoint que escribe `org_features` overrides debe gatear enable por plan/compra (`org_has_feature` da precedencia al override). Ver [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]]
 - **Advisor Supabase: trigger fns DEFINER = ruido** — `RETURNS trigger` no es RPC-invocable; helpers RLS no revocar; verificar con `has_function_privilege`. Dep importada en runtime no declarada (solo transitiva/dev)=drift+CVE [[import-runtime-dep-no-declarada-solo-transitiva]]. Ver [[supabase-advisor-trigger-functions-definer-son-ruido]]
+- **Watchdog cron: umbral 2× intervalo** — <1× da falso positivo por un tick perdido del scheduler (deploy/jitter). Ver [[watchdog-umbral-debe-tolerar-un-tick-perdido]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/`.
