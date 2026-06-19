@@ -11,3 +11,5 @@ Patrón habitual en helpers RLS y resolvers TS: `.from('org_members').limit(1).s
 **Casos detectados TuFacturaIA (mig 120-121)**: `get_user_org_id()` SQL, `getOrgId` y `getSessionActor` TS, `whatsapp-resolve.resolveSenderOrgForUser`, `resolvePhoneChangeMatch` (bucket pending_change_old). Cada uno resolvía org arbitraria — RLS leía/escribía en la "no elegida".
 
 **Fix canónico**: ORDER BY columna estable (`invited_at ASC`, `created_at ASC`) en el fallback. Mejor aún: fuente de verdad explícita (`profiles.active_org_id` UUID FK con default NULL, escrito por endpoint `/api/auth/switch-org` con audit log). Helpers SQL y TS comparten el mismo path via función `resolve_active_org(uid)`. Ver [[matriz-permisos-rol-aware-bd-mas-espejo-ts]].
+
+**Recurrencia 2026-06-19 (#429)**: el `getOrgId` **cliente** de Settings (`src/components/settings/_shared.tsx`) seguía con `.limit(1).single()` pese a haberse arreglado el server en mig 120 — había DOS `getOrgId`. Toda la página de Settings cargaba/guardaba la org equivocada en multi-org. Lección: al matar este patrón, **grep TODOS los helpers homónimos/duplicados** (`grep -rn "getOrgId\|limit(1)"`), no solo el canónico.
