@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Paginación TuFacturaIA** — `PaginationBar` + `usePaginationParams` listos (commit `2cbbd12b`). Issues 004-008 pendientes. Ver [[ADR-034-paginacion-offset-vs-keyset]] · [[tdd-pure-function-extraction]]
 - **pre-push hook: saltar build en --delete** — leer stdin al inicio; SHA local = `000…0` → exit 0 inmediato. Ver [[git-pre-push-hook-no-guarda-stdin-ni-sale-en-deletes]]
 
 - **contador de numeración editable sin constraint único = duplicados** — bajar el "Nº actual" de una serie reusa números ya emitidos; guard en app + índice único pendiente. Ver [[serie-contador-editable-sin-constraint-unico-genera-duplicados]]
