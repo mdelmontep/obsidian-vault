@@ -39,7 +39,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **TuFacturaIA — 3 envs `.env.test` para activar casos A/B del smoke middleware** (~5min) — `E2E_SUPERADMIN_TEST_ORG_ID`, `E2E_UNVERIFIED_EMAIL`, `E2E_UNVERIFIED_PASSWORD`. Sin ellos solo corre caso C (sanity). Commit cafc8dc
 - **TuFacturaIA — coherencia `manual-usuario.md` vs `manual-admin.md` §31 Equipo** — 3 puntos: etiqueta "Inactivo" (usuario L536) vs estados internos `revocado/expirado`; acción "revocar invitación" del menú ⋯ (L551) no en admin; "transferencia de propiedad" (L558) no documentada en admin. Decidir si UI existe y unificar
 - **TuFacturaIA — decidir VerifACTU worker en Dokploy** (hoy Disabled). Si va a quedar off, eliminar entrada. Si se activa, hacer Run Now y verificar facturas pendiente_envio → aceptada
-- **TuFacturaIA — Stripe en activación de add-ons** — hoy CTA "+XX€/mes" redirige a `/settings?tab=plan` sin cobro real. Conectar checkout para que el toggle = compra. Conciliación 19€ y Anti-fraude 9€ ya seedeados
+- **TuFacturaIA — Stripe en activación de add-ons** — hoy CTA "+XX€/mes" redirige a `/settings?tab=plan` sin cobro real. Conectar checkout para que el toggle = compra. Conciliación 19€ y Anti-fraude 9€ ya seedeados. **Seguridad ya cerrada (auditoría 06-19, main `31f134f1`)**: el toggle rechaza enable fuera de plan con 402 `requires_purchase` (antes lo concedía gratis); falta solo el wiring de checkout. Ver [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]]
 - **TuFacturaIA — Cobros backend** (módulo del recomendador IA) — recordatorios escalados configurables (3/10/25 días, tono, hora). 6 opciones config con badge Próximamente esperan
 - **TuFacturaIA — decidir cliente live vs congelado** — hoy snapshot fiscal al crear factura (datos cliente embebidos). Si editas cliente, PDFs viejos conservan datos antiguos (legalmente correcto, confunde UX). Decisión producto: ¿añadir botón "Re-emitir con datos actuales" o dejar congelado siempre?
 - **TuFacturaIA OTP — patch n8n delivery status** — generar key nueva en `n8n.tufacturaia.com/Settings/API` y ejecutar `python3 ops/n8n-patches/apply-delivery-status.py` (~5min)
@@ -77,6 +77,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **TuFacturaIA — subir tier OpenAI (acción Manu)** — bot WhatsApp salta rate-limit (TPM 30k, Tier 1). Mitigado con prompt −38% + memoria 10→8, pero la raíz es subir a Tier 2 (450k TPM) en platform.openai.com/settings/organization/limits.
 - **TuFacturaIA — billing GitHub Actions re-bloqueado (acción Manu)** — desde 17/06 ~13:00 los jobs mueren a 0 pasos ("payments failed / spending limit"). Repo privado → Actions de pago. CI ya optimizado (#367 solo-PR + concurrency, #365 visual determinista). Subir límite/arreglar pago en Settings → Billing org `AgentesIA-MAdrid`. Ver [[github-actions-org-private-free-tier-2000-min]].
+- **TuFacturaIA — HIBP leaked-password protection requiere Supabase Pro (acción Manu)** — el toggle "Prevent use of leaked passwords" falla en plan free (item LOW de la auditoría 06-19). Activar si/cuando se suba el proyecto Supabase a Pro. Resto de la auditoría ya cerrado en prod.
 
 ## Vistas por cliente
 

@@ -26,6 +26,8 @@ que reaparecen cada sesión + el área activa hoy. Lo demás vive en `knowledge/
 - **Revocación: comprobar en CADA resource server, no solo el gateway** — mismo JWT aceptado por la API directa lo salta; fail-closed. Ver [[oauth-revocacion-en-cada-resource-server-no-solo-gateway]]
 - **QA página server-component con Playwright = inyectar cookie `@supabase/ssr`** — la hidratación del dev no prende (login hace submit nativo); firma server-side y captura la cookie. Ver [[supabase-ssr-cookie-injection-qa-playwright]]
 - **Cron Dokploy para código no desplegado = `enabled:false` (pre-staged)** — si no, 404 diario + watchdog en rojo tras deploy. Ver [[dokploy-cron-pre-stage-disabled-si-endpoint-no-desplegado]]
+- **Bypass de pago en toggle de features** — endpoint que escribe `org_features` overrides debe gatear enable por plan/compra (`org_has_feature` da precedencia al override). Ver [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]]
+- **Advisor Supabase: trigger fns DEFINER = ruido** — `RETURNS trigger` no es RPC-invocable; helpers RLS no revocar; verificar con `has_function_privilege`. Dep importada en runtime no declarada (solo transitiva/dev)=drift+CVE [[import-runtime-dep-no-declarada-solo-transitiva]]. Ver [[supabase-advisor-trigger-functions-definer-son-ruido]]
 
 ## git / worktrees / migraciones (transversal, reaparece siempre)
 
