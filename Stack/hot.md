@@ -28,6 +28,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 - **Bypass de pago en toggle de features** — endpoint que escribe `org_features` overrides debe gatear enable por plan/compra (`org_has_feature` da precedencia al override). Ver [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]]
 - **Advisor Supabase: trigger fns DEFINER = ruido** — `RETURNS trigger` no es RPC-invocable; helpers RLS no revocar; verificar con `has_function_privilege`. Dep importada en runtime no declarada (solo transitiva/dev)=drift+CVE [[import-runtime-dep-no-declarada-solo-transitiva]]. Ver [[supabase-advisor-trigger-functions-definer-son-ruido]]
 - **Watchdog cron: umbral 2× intervalo** — <1× da falso positivo por un tick perdido del scheduler (deploy/jitter). Ver [[watchdog-umbral-debe-tolerar-un-tick-perdido]]
+- **CLS por client-fetch en App Router → SSR-seed** — provider/hook que fetchea (ready false→true) hace aparecer nav/widgets tras el paint; el server layout precomputa y pasa `initialData` (fetch+resolve compartido, paralelizado para no costar TTFB). Ver [[ssr-seed-contra-cls-de-client-fetch-en-app-router]]
+- **Medir CWV autenticado sin lighthouse** — Playwright + storageState + PerformanceObserver (LCP/CLS/`entry.sources`); CLS variable → página-control sin tocar para descartar sesgo. Next 16 Turbopack no imprime First Load JS [[next16-turbopack-no-imprime-first-load-js]]. Ver [[medir-cwv-autenticado-sin-lighthouse]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/`.
