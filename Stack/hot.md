@@ -56,3 +56,4 @@ que reaparecen cada sesión + el área activa hoy. Lo demás vive en `knowledge/
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra). Lo retirado de aquí sigue en `knowledge/learnings/`.
+- [[mcp-conector-remoto-limites-claude-chatgpt-cursor]] — no se puede "empujar" un conector MCP a Claude/ChatGPT; 1-clic solo en Cursor; Team/Enterprise solo Owner.
