@@ -25,3 +25,9 @@ Referencia TuFacturaIA: `src/lib/documents/__tests__/__fixtures__/mock-admin-cli
 de `createAdminClient` DEBE incluir `rpc: vi.fn(async () => ({ data: [], error: null }))`.
 Sin él: `TypeError: admin.rpc is not a function` en todos los tests del handler.
 Aplica a cualquier endpoint que use RPCs vía admin client (no solo `.from()`).
+
+**Gotcha añadido 2026-06-19**: el mock chain debe ser **thenable** además de chainable.
+Si el hook hace `await supabase.from(t).select(...).order(...)` sin terminal `.range()`/`.single()`
+(queries secundarias: clientes, autores, enrichments), necesita `.then/.catch/.finally` en
+el objeto mock. Sin ellos: `TypeError: supabase.from(...).select(...).order(...).then is not a function`.
+Fix: añadir `then: (res, rej) => Promise.resolve(defaultVal).then(res, rej)` al chain object.
