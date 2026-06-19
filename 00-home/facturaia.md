@@ -22,7 +22,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Prod**: `app.tufacturaia.com` + `n8n.tufacturaia.com` (Dokploy `185.47.13.170`, SSL Let's Encrypt OK). BD Supabase `lahqlyaxvobqjgdiftag`. (dominio viejo `facturaia.agentesia.world` caído/obsoleto)
 - **Stack**: Next 16 · Supabase · n8n · OpenAI Vision · Anthropic Claude
 - **Planes**: Starter 19 / Pro 49 / Enterprise 99 €/mes (+IVA 21%, anual −20%) + add-on Centro Fiscal IA 14,90. **Stripe LIVE** desde 2026-06-01.
-- **Migraciones**: prod = main; última aplicada **319** (`feedback_action_tokens`, 2026-06-17; 317 `feedback_ai_job_events` + 318 `dashboard_top_clientes` también ese día). Secuenciales `NNN_`, sin timestamps.
+- **Migraciones**: prod = main; última aplicada **336** (`security_search_path_y_logos_listing`, 2026-06-19; 329-335 = OAuth/MCP server, 06-18). Secuenciales `NNN_`, sin timestamps.
 - **Tests**: Vitest 1648/1648 verde · E2E smoke verde (cashflow v2 · conciliación Fase 2 · onboarding).
 - **Orgs prod**: AgentesiaLab · tecnocloud · Borja Galván · AgenteIA PRUEBA (todas `billing_status=active` complimentary).
 - _Snapshot detallado anterior y changelog completo → [[facturaia-historico-detallado]]._
@@ -310,6 +310,13 @@ _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda 
 - **Fuga RLS `billing_accounts` (multiempresa F1) DETECTADA Y RESUELTA en prod 2026-06-04** — la policy SELECT (mig 215) usaba `user_billing_account_ids()` (todas las orgs-membresía activas), exponiendo plan/`stripe_customer_id`/`payment_failed_*` de orgs que `organizations` oculta (RLS = `id=get_user_org_id`, solo la activa). Fix **mig 218** (`billing_accounts_rls_solo_org_activa`): la cuenta visible es solo la de la org activa, heredando la visibilidad de `organizations`. Validado contra prod con usuario real miembro de 2 orgs: **fuga=0**. Aplicado a prod + PR #134. Detectado al validar RLS antes del deploy del código F2.
 - **Confirmado seguro (red team):** RLS multi-tenant sin fuga cross-org, superficie sin-auth (v1/admin/internal/voice bloquean), billing sin bypass, XSS escapado por React, escalada admin imposible para no-superadmin.
 - **Config dashboard (acción user):** bucket `logos` listing off ✅ HECHO; leaked-password protection ⚠️ requiere Supabase Pro (plan FREE no lo permite) — mientras, min password length subido a 8 + requisitos fuertes ✅; cuenta E2E (`.env.test`) sin rol superadmin de plataforma (pendiente, higiene).
+
+### Auditoría de seguridad 2026-06-19 (red team 4 agentes) — ✅ CERRADA en prod (main `31f134f1` + mig 336)
+- **HIGH bypass de pago en `PATCH /api/settings/features`** — `source='manual'` activaba cualquier módulo de pago gratis (`org_has_feature` da precedencia al override sobre el plan; vector NUEVO, distinto del `change_billing_status` RPC de 06-04). Fix: enable solo si feature en plan efectivo **o** compra previa real (override `source='addon'`, que solo escribe el webhook Stripe); disable siempre; preservar `source='addon'`. +6 tests. Ver [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]].
+- **HIGH deps** — nodemailer ≤9.0.0 (SSRF/file-read) + undici 7.25 (bypass validación TLS que debilitaba el Agent anti-SSRF, **además sin declarar como dep de prod** pese a importarse en `dispatcher.ts`). Overrides a versiones parcheadas + undici declarado. `npm audit`=0. Ver [[import-runtime-dep-no-declarada-solo-transitiva]].
+- **MED** — `/api/seed` destructivo desde sesión (borraba facturas de la org) → guard is_test/superadmin; **mig 336** `search_path` en `merge_*`/INVOKER + `logos_select` scopeado por org (advisors search_path/logos → 0).
+- **Sano (4 agentes + verificación manual + review de composición):** RLS multi-tenant, API v1/webhooks (firma timing-safe, SSRF pin), XSS escapado, agregaciones fiscales. Advisor `*_security_definer_executable` = ruido (trigger fns no RPC-invocables; helpers RLS no se revocan), ver [[supabase-advisor-trigger-functions-definer-son-ruido]].
+- **Residual (no explotable):** HIBP sigue requiriendo Supabase Pro (ver `Config dashboard` arriba); `extension_in_public` **wontfix** — verificado que `anon`/`authenticated` NO tienen `CREATE` en `public` → sin vector de shadowing.
 
 ### Migración crons → HMAC v2 (2026-06-05) — ✅ COMPLETA (2026-06-09)
 Motivo: el legacy `x-service-key` es un secreto estático sin anti-replay; cerrarlo (`SIGNING_LEGACY_UNTIL`) requiere que NINGÚN caller lo use.
