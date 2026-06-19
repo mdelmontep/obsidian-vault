@@ -19,6 +19,8 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — Plantilla custom (editor por bloques)** — issue **118 MERGEADO+desplegado a prod** (PR #415, `4e8ae358`; feature `plantilla_custom` seedeada en prod Enterprise; gate `gateCustomTemplate` en los 8 call sites de render; `template-custom` + 3 mapas de plantilla). Pendiente: UI **119** (fidelidad visual) + **120** (5ª tarjeta+gating, paralelo) → **121** (editor+preview) → **122** (drag+ver-pdf) → **123** (smoke real custom-vs-tech, no ejercitable hasta que exista la UI). Worktree `/Users/manueldelmonte/facturaia-plantilla-custom` (rama `feat/plantilla-custom`, node_modules real; NO usar checkout principal — sesión paralela). PRD+issues en `issues/118-123` + `plantilla-custom-prd.md`. **OJO prod**: `schema_migrations`=341 pero main hasta 365 → 342-365 sin aplicar (divergencia del equipo, reconciliar con `db push`). Ver [[worktree-facturaia-build-supabase]] · [[supabase-pooler-timeout-isp-fallback-dashboard]]
+
 - **TuFacturaIA — smoke deploy #412 (perf DB + CLS)** — verificar en prod: (a) sidebar sin shift al cargar como superadmin; (b) ingesta progress-row no salta; (c) tabla facturas lista dos líneas en móvil ≤640px; (d) Supabase Advisors: auth_rls_initplan + multiple_permissive_policies bajaron
 
 - **TuFacturaIA — paginación server-side** — 004 ✅ (`useFacturasData` hook + `PaginationBar` + filters server-side + 14 tests, rama `fix/mobile-amounts-min-width`). Pendientes: 005 presupuestos → 006 clientes → 007 inventario → 008 conciliacion. Ver [[ADR-034-paginacion-offset-vs-keyset]]
