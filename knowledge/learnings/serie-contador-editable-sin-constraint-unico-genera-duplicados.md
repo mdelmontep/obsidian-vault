@@ -16,7 +16,8 @@ Síntoma reportado por usuario: "pongo numeración 10, vuelvo a 9, ¿genera otra
 - **Fix mínimo (app)**: guard en el `PATCH` — rechazar `contador < actual` si
   la serie ya se usó (`actual > 0`); subir (migración) se permite. Espejo en el
   form (input `min`, aviso, save bloqueado). Mismo criterio "usada" que el DELETE.
-- **Fix duro (pendiente)**: índice único **parcial** sobre `(org_id, serie, num)`
-  excluyendo borradores/no-emitidos. Revisar duplicados existentes antes de crearlo.
+- **Fix duro (aplicado)**: índice único **parcial** sobre `(org_id, serie, num)`
+  excluyendo borradores/no-emitidos (facturas además `tipo='emitida'` para no atrapar
+  recibidas). #420 / mig `343`, aplicado a prod 2026-06-19 (0 duplicados previos verificados).
 
-Caso: modal *Editar serie*, TuFacturaIA #414. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] (cómo se entregó vía worktree con la paralela activa).
+Caso: modal *Editar serie*, TuFacturaIA #414 (guard app) + #420 (índice BD). Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] (cómo se entregó vía worktree con la paralela activa; el `db push` exigió `migration repair` de 5 orphans timestamp de la paralela).

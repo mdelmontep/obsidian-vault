@@ -13,7 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
-- **Paginación TuFacturaIA** — `PaginationBar` + `usePaginationParams` listos. Issues 004 ✅ 005 ✅; 006-008 pendientes. Ver [[ADR-034-paginacion-offset-vs-keyset]] · [[tdd-pure-function-extraction]]
+- **Paginación TuFacturaIA** — `PaginationBar` + `usePaginationParams` listos. Issues 004 ✅ 005 ✅ 006 ✅; 007 inventario → 008 conciliacion. Ver [[ADR-034-paginacion-offset-vs-keyset]] · [[tdd-pure-function-extraction]]
+- **Hook paginado + hook índice separado** — lista paginada con stats por página + carga ligera full-list para merge/NIF dups. Mutations → `reload()+indexReload()`. Ver [[paginated-hook-dual-index-pattern]]
 - **refreshKey en useEffect para invalidar hook paginado post-mutación** — en useEffect deps, no useCallback deps (eslint lo marca innecesario en useCallback). Ver [[paginated-hook-refreshkey-invalidation]]
 - **pre-push hook: saltar build en --delete** — leer stdin al inicio; SHA local = `000…0` → exit 0 inmediato. Ver [[git-pre-push-hook-no-guarda-stdin-ni-sale-en-deletes]]
 
