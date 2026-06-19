@@ -231,3 +231,4 @@ tags: [home, archivo]
 - 2026-06-16 · TuFacturaIA · Conciliación: tickets desde ingreso cuadran al céntimo (bug 190€→189,99 en emitir-ticket/WhatsApp) + toggle "IVA incluido" reintroducido (form + modal producto) — PR #298/#299, mig 309; mergeado+prod+smoke sandbox verde + data-fix 2 docs históricos.
 
 - 2026-06-17 · TuFacturaIA · PR #364 motivo cuenta gratis (beta/cortesía/interno) + MRR a 0€ + mig 325 registrada en prod
+- 2026-06-19 · TuFacturaIA · Perf audit completo: CLS sidebar admin (536px) + ingesta progress-row (45px) + mobile facturas two-line; RLS initplan ×52 (mig 339); FK indexes ×3 (mig 340); multiple_permissive_policies ×91 (mig 341); fix pre-push hook --delete; limpieza 60+ ramas mergeadas. PRs #412 #413.

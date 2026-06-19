@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **pre-push hook: saltar build en --delete** — leer stdin al inicio; SHA local = `000…0` → exit 0 inmediato. Ver [[git-pre-push-hook-no-guarda-stdin-ni-sale-en-deletes]]
+
 - **`hidden` anulado por clase con `display`** — acordeón/disclosure siempre abierto si la clase pone `display:flex/grid`; `[hidden]{display:none}` (UA) pierde por orden de fuente. Fix `.clase[hidden]{display:none}`. Ver [[hidden-anulado-por-clase-con-display]]
 - **next start sin HMR / puerto equivocado en QA** — edits invisibles, server sirve build viejo; el `next dev` con HMR puede estar en otro puerto. Ver [[next-start-build-estatico-sin-hmr-verificar-puerto]]
 - **react-hooks/refs falso positivo con floating-ui** — el React Compiler marca `refs.setFloating` como ref-en-render; el hook expone `setReference`/`setFloating` top-level (no objeto `refs`). Ver [[react-hooks-refs-falso-positivo-floating-ui]]
