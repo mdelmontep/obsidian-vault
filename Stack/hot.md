@@ -18,7 +18,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 - **refreshKey en useEffect para invalidar hook paginado post-mutación** — en useEffect deps, no useCallback deps (eslint lo marca innecesario en useCallback). Ver [[paginated-hook-refreshkey-invalidation]]
 - **pre-push hook: saltar build en --delete** — leer stdin al inicio; SHA local = `000…0` → exit 0 inmediato. Ver [[git-pre-push-hook-no-guarda-stdin-ni-sale-en-deletes]]
 
-- **contador de numeración editable sin constraint único = duplicados** — bajar el "Nº actual" de una serie reusa números ya emitidos; guard en app + índice único pendiente. Ver [[serie-contador-editable-sin-constraint-unico-genera-duplicados]]
+- **contador de numeración editable sin constraint único = duplicados** — bajar el "Nº actual" de una serie reusa números ya emitidos; guard en app (#414) + índice único en BD (#420, mig 343, en prod). Ver [[serie-contador-editable-sin-constraint-unico-genera-duplicados]]
 
 - **`hidden` anulado por clase con `display`** — acordeón/disclosure siempre abierto si la clase pone `display:flex/grid`; `[hidden]{display:none}` (UA) pierde por orden de fuente. Fix `.clase[hidden]{display:none}`. Ver [[hidden-anulado-por-clase-con-display]]
 - **next start sin HMR / puerto equivocado en QA** — edits invisibles, server sirve build viejo; el `next dev` con HMR puede estar en otro puerto. Ver [[next-start-build-estatico-sin-hmr-verificar-puerto]]
