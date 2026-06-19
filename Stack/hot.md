@@ -33,3 +33,4 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/`.
 - [[mcp-conector-remoto-limites-claude-chatgpt-cursor]] — no se puede "empujar" un conector MCP a Claude/ChatGPT; 1-clic solo en Cursor; Team/Enterprise solo Owner.
 - [[mcp-connect-claude-origin-claude-com-y-aud-trailing-slash]] — connect MCP a Claude rompe por Origin claude.com (403) y aud con barra final (401, bucle refresh); diag reproduciendo el flujo + BD oauth_refresh_tokens.
+- [[contenido-llm-en-pdf-render-como-react-no-html]] — texto de un LLM en un PDF: nodos React (escapa), nunca HTML crudo/innerHTML; markdown acotado = parser propio a React, no DOMPurify.

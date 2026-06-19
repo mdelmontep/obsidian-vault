@@ -15,6 +15,8 @@ Dos sesiones Claude Code corriendo simultáneas en el mismo repositorio causan c
 
 4. **Working tree contaminado**: archivos modificados por la otra sesión aparecen en `git status` del propio. Fix: filtrar `git add` explícito por path; NUNCA `git add -A` ni `git add .`.
 
+5. **Merge limpio pero comportamiento cambiado** (2026-06-19): tu PR (basado en main viejo) **auto-mergea sin conflicto** sobre un main donde una sesión paralela **rediseñó el MISMO fichero** (caso: #387 rehízo `integrations-section` de tarjetas→filas mientras yo hacía W1). Git no se queja (hunks disjuntos), pero el render/comportamiento del resultado combinado **NO es el que tú QA'easte** pre-merge. Fix: tras mergear, **re-QA el resultado en main real** (no te fíes de la captura pre-merge); si tu lógica vivía en el diseño viejo, verifica que sigue encajando en el nuevo (`git log --oneline -N <fichero> origin/main` para ver qué tocó la paralela).
+
 **Checklist defensivo en sesiones paralelas**:
 - Antes de commit: `git branch --show-current` (esperar `main` o tu rama). Si no → `git checkout main && git cherry-pick <hash>`.
 - Antes de elegir número de migración: `ls supabase/migrations/0XX*` + `git log --all --pretty=format:'%h %s' -- 'supabase/migrations/0XX*'`.
