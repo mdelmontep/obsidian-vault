@@ -17,6 +17,8 @@ Dos sesiones Claude Code corriendo simultáneas en el mismo repositorio causan c
 
 5. **Merge limpio pero comportamiento cambiado** (2026-06-19): tu PR (basado en main viejo) **auto-mergea sin conflicto** sobre un main donde una sesión paralela **rediseñó el MISMO fichero** (caso: #387 rehízo `integrations-section` de tarjetas→filas mientras yo hacía W1). Git no se queja (hunks disjuntos), pero el render/comportamiento del resultado combinado **NO es el que tú QA'easte** pre-merge. Fix: tras mergear, **re-QA el resultado en main real** (no te fíes de la captura pre-merge); si tu lógica vivía en el diseño viejo, verifica que sigue encajando en el nuevo (`git log --oneline -N <fichero> origin/main` para ver qué tocó la paralela).
 
+6. **Tu cambio sin commitear acaba dentro del commit ajeno** (2026-06-19): la paralela hace `git add -A`/`commit -a` y arrastra tus ficheros modificados-no-staged a SU commit (caso: mi fix de `globals.css` quedó dentro de su `d4a31ad4` "fix(mobile)"). Síntoma: tu `git diff <file>` está **vacío** pero el cambio sí está en el archivo. Confirmar con `git show <hash-ajeno> -- <file>`. No se pierde (vive en su rama); re-aplica el hunk en worktree desde `origin/main` y llévalo a tu PR.
+
 **Checklist defensivo en sesiones paralelas**:
 - Antes de commit: `git branch --show-current` (esperar `main` o tu rama). Si no → `git checkout main && git cherry-pick <hash>`.
 - Antes de elegir número de migración: `ls supabase/migrations/0XX*` + `git log --all --pretty=format:'%h %s' -- 'supabase/migrations/0XX*'`.

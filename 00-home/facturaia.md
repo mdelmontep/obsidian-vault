@@ -353,6 +353,7 @@ Motivo: el legacy `x-service-key` es un secreto estático sin anti-replay; cerra
 - Métricas de uso de API IA (consumo OpenAI/Anthropic por org)
 - Pen-test anual cuando se llegue a >100 clientes
 - Rotar `SUPABASE_SERVICE_ROLE_KEY` — se vio su valor en el transcript de la sesión Claude del 2026-05-27 (al leer el env vía API Dokploy). Exposición local, no a terceros; riesgo bajo pero es service-role (salta RLS). Decidir rotar vs aceptar.
+- Índice único parcial `(org_id, serie, num)` en `facturas`+`presupuestos` (anti-duplicados de numeración). Hoy solo el guard de app del #414 lo evita. Ver [[serie-contador-editable-sin-constraint-unico-genera-duplicados]]. (#414 también arregló el desbordamiento del modal *Editar serie*.)
 
 ---
 
