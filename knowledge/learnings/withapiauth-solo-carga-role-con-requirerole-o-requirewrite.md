@@ -17,7 +17,12 @@ muerto** — nunca corre, sin error visible. Caso real: el seed de
 → role=null → 5/6 orgs reales sin categorías; el modal "Registrar como ingreso"
 y el desplegable de clasificación salían vacíos (fix PR #278 + mig 301 backfill).
 
+Segundo caso (2026-06-19): `GET /series` devolvía `can_manage: role === 'propietario'`
+→ role=null → botones editar/eliminar ocultos para todos aunque el usuario fuera
+propietario. Fix: `canActorDoAction('series.manage')` en el handler en paralelo
+con la query DB, mismo patrón que PATCH/DELETE del mismo archivo.
+
 Fix/patrón: NO dependas de `ctx.role` en un GET sin requireRole/requireWrite.
-O lo declaras, o haces el lookup explícito en el handler, o (si la acción es
-inocua e idempotente, como sembrar defaults) la haces sin gate de rol.
+O lo declaras, o haces el lookup explícito en el handler (vía `canActorDoAction`),
+o (si la acción es inocua e idempotente, como sembrar defaults) la haces sin gate.
 Ideal: documentarlo en `docs/architecture/gotchas.md §Auth`.
