@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **MCP scope grantable vs verifier divergen** — añadir un scope solo en `policy.ts` (well-known/registro) y no en `VALID_SCOPE` del verifier (`user-token.ts`) → token 401 "non-grantable"; allowlist duplicada por defense-in-depth necesita test que itere la canónica. Ver [[mcp-scope-grantable-vs-verifier-divergen]]
+- **Dokploy compose autoDeploy=false no recibe merges** — `mcp-server`/`ticket-runner` no auto-despliegan; tras mergear → `compose.deploy` manual. Ver [[dokploy-compose-autodeploy-false-no-recibe-merges]]
 - **Paginación TuFacturaIA** — `PaginationBar` + `usePaginationParams` listos. Issues 004 ✅ 005 ✅ 006 ✅; 007 inventario → 008 conciliacion. Ver [[ADR-034-paginacion-offset-vs-keyset]] · [[tdd-pure-function-extraction]]
 - **Hook paginado + hook índice separado** — lista paginada con stats por página + carga ligera full-list para merge/NIF dups. Mutations → `reload()+indexReload()`. Ver [[paginated-hook-dual-index-pattern]]
 - **refreshKey en useEffect para invalidar hook paginado post-mutación** — en useEffect deps, no useCallback deps (eslint lo marca innecesario en useCallback). Ver [[paginated-hook-refreshkey-invalidation]]
@@ -25,9 +27,6 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 - **react-hooks/refs falso positivo con floating-ui** — el React Compiler marca `refs.setFloating` como ref-en-render; el hook expone `setReference`/`setFloating` top-level (no objeto `refs`). Ver [[react-hooks-refs-falso-positivo-floating-ui]]
 - **Hilo con varios públicos → compositor con selector de destinatario** — cajas separadas con destino implícito = mensaje al destino equivocado; unificar + default seguro + etiqueta de destino. Ver [[compositor-multidestino-selector-explicito]]
 - **Supabase Storage REST + keys `sb_secret_`** — subir/borrar por curl exige `apikey` + `Authorization` (solo Authorization → 400). Ver [[supabase-storage-rest-upload-requiere-apikey-y-authorization]]
-- **MCP remoto = OAuth obligatorio** — conectores remotos no aceptan API key estática (solo MCP local stdio). Ver [[remote-mcp-exige-oauth-no-api-key-estatica]]
-- **Acción irreversible ≠ tool MCP autónoma** — annotations son hints; preparar borrador + deep-link para que confirme un humano. Ver [[acciones-irreversibles-no-tool-mcp-autonoma]]
-- **jose v6 = ESM-only + tsx→CJS rompe top-level await** — correr como ESM o envolver en `main()`. Ver [[jose-v6-esm-only-tsx-cjs-top-level-await]]
 - **Revocar JWT stateless antes de exp = tabla de revocación dedicada** — no inferir de filas de refresh; claim `gid` + `isGrantRevoked` sin caché. Ver [[revocacion-jwt-stateless-tabla-dedicada-no-inferir-de-filas-de-token]]
 - **Revocación: comprobar en CADA resource server, no solo el gateway** — mismo JWT aceptado por la API directa lo salta; fail-closed. Ver [[oauth-revocacion-en-cada-resource-server-no-solo-gateway]]
 - **QA página server-component con Playwright = inyectar cookie `@supabase/ssr`** — la hidratación del dev no prende (login hace submit nativo); firma server-side y captura la cookie. Ver [[supabase-ssr-cookie-injection-qa-playwright]]
