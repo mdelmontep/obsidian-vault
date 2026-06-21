@@ -19,6 +19,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — configurar monitor externo scheduler** — UptimeRobot/Better Uptime: GET `https://app.tufacturaia.com/api/internal/system/scheduler-heartbeat` + header `Authorization: Bearer $SCHEDULER_HEARTBEAT_TOKEN`. Intervalo 5 min. Token en Dokploy env del compose.
 - **TuFacturaIA — smoke deploy #412 (perf DB + CLS)** — verificar en prod: (a) sidebar sin shift al cargar como superadmin; (b) ingesta progress-row no salta; (c) tabla facturas lista dos líneas en móvil ≤640px; (d) Supabase Advisors: auth_rls_initplan + multiple_permissive_policies bajaron
 
 - **TuFacturaIA — PR #376 Floating UI (popovers)** — 10 componentes migrados de patrón casero a `useAnchoredMenu` (@floating-ui/react), lint/typecheck/build verde, QA visual 8/10. Pendiente: merge cuando se desbloquee CI billing + QA visual `bank-connections-card` (necesita banco) y `header-acciones` (necesita detalle fiscal) — sin datos en sandbox. Rama `fix/team-member-menu-posicion-derecha`. Ver [[react-hooks-refs-falso-positivo-floating-ui]] · ADR-033.
@@ -78,7 +79,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 ## Bloqueos
 
 - **TuFacturaIA — subir tier OpenAI (acción Manu)** — bot WhatsApp salta rate-limit (TPM 30k, Tier 1). Mitigado con prompt −38% + memoria 10→8, pero la raíz es subir a Tier 2 (450k TPM) en platform.openai.com/settings/organization/limits.
-- **TuFacturaIA — billing GitHub Actions re-bloqueado (acción Manu)** — desde 17/06 ~13:00 los jobs mueren a 0 pasos ("payments failed / spending limit"). Repo privado → Actions de pago. CI ya optimizado (#367 solo-PR + concurrency, #365 visual determinista). Subir límite/arreglar pago en Settings → Billing org `AgentesIA-MAdrid`. Ver [[github-actions-org-private-free-tier-2000-min]].
+- **TuFacturaIA — billing GitHub Actions re-bloqueado (acción Manu)** — desde 17/06 ~13:00 los jobs mueren a 0 pasos ("payments failed / spending limit"). Repo privado → Actions de pago. CI ya optimizado (#367 solo-PR + concurrency, #365 visual determinista). Subir límite/arreglar pago en Settings → Billing org `AgentesIA-MAdrid`. Ver [[github-actions-org-private-free-tier-2000-min]]. *(watchdog noise silenciado PR #446; monitor externo pendiente — ver NEXT)*
 - **TuFacturaIA — HIBP leaked-password protection requiere Supabase Pro (acción Manu)** — el toggle "Prevent use of leaked passwords" falla en plan free (item LOW de la auditoría 06-19). Activar si/cuando se suba el proyecto Supabase a Pro. Resto de la auditoría ya cerrado en prod.
 
 ## Vistas por cliente
