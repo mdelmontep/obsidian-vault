@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **useMemo para objeto en deps de hook** — objeto literal inline = nueva ref cada render = render loop; wrappear con useMemo en el consumidor. Ver [[usememo-objeto-inline-en-deps-render-loop]]
 - **MCP scope grantable vs verifier divergen** — añadir un scope solo en `policy.ts` (well-known/registro) y no en `VALID_SCOPE` del verifier (`user-token.ts`) → token 401 "non-grantable"; allowlist duplicada por defense-in-depth necesita test que itere la canónica. Ver [[mcp-scope-grantable-vs-verifier-divergen]]
 - **Dokploy compose autoDeploy=false no recibe merges** — `mcp-server`/`ticket-runner` no auto-despliegan; tras mergear → `compose.deploy` manual. Ver [[dokploy-compose-autodeploy-false-no-recibe-merges]]
 - **Rotación refresh: ventana de gracia anti-falso-positivo** — reintento legítimo del mismo refresh rotado (red/doble submit) NO debe revocar la familia; gracia N s + mismo client_id (RFC 9700). Ver [[oauth-refresh-rotation-idempotencia-ventana-gracia]]

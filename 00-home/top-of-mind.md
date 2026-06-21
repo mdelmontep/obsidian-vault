@@ -19,8 +19,6 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
-- **TuFacturaIA — Plantilla custom (editor por bloques)** — ✅ **118+119+120+121 MERGEADOS a prod** (PRs #415/#429/#430/#436): núcleo+gate+feature Enterprise, reorg visual, 5ª tarjeta+gating, editor estilo+vista previa en vivo. Pendiente: **122** drag 3-zonas + "Ver PDF real" → **123** smoke deploy. Worktree `/Users/manueldelmonte/facturaia-plantilla-custom` rama `feat/plantilla-custom-editor`. PRD+issues en `issues/118-123`. Ver [[rls-multi-tenant-limit-1-sin-order-bug-latente]] · [[worktree-facturaia-build-supabase]]
-
 - **TuFacturaIA — smoke deploy #412 (perf DB + CLS)** — verificar en prod: (a) sidebar sin shift al cargar como superadmin; (b) ingesta progress-row no salta; (c) tabla facturas lista dos líneas en móvil ≤640px; (d) Supabase Advisors: auth_rls_initplan + multiple_permissive_policies bajaron
 
 - **TuFacturaIA — PR #376 Floating UI (popovers)** — 10 componentes migrados de patrón casero a `useAnchoredMenu` (@floating-ui/react), lint/typecheck/build verde, QA visual 8/10. Pendiente: merge cuando se desbloquee CI billing + QA visual `bank-connections-card` (necesita banco) y `header-acciones` (necesita detalle fiscal) — sin datos en sandbox. Rama `fix/team-member-menu-posicion-derecha`. Ver [[react-hooks-refs-falso-positivo-floating-ui]] · ADR-033.

@@ -239,3 +239,5 @@ tags: [home, archivo]
 - 2026-06-19 · TuFacturaIA · Perf audit completo: CLS sidebar admin (536px) + ingesta progress-row (45px) + mobile facturas two-line; RLS initplan ×52 (mig 339); FK indexes ×3 (mig 340); multiple_permissive_policies ×91 (mig 341); fix pre-push hook --delete; limpieza 60+ ramas mergeadas. PRs #412 #413.
 - 2026-06-20 · TuFacturaIA · Paginación inventario (issue 007): useInventarioData hook + PaginationBar + usePaginationParams + modal confirmación reconciliación + botón "Añadir ajuste" por fila + manual usuario. PR #fix/mobile-col-auto-v2.
 - 2026-06-20 · TuFacturaIA · pre-commit ratchet inline-styles saneado (baseline actualizado tras template-custom #415).
+- 2026-06-20 · TuFacturaIA · Plantilla custom issues 121+122+123 — editor estilo+preview (#436), drag 3-zonas + "Ver PDF real" (#438), smoke deploy prod verificado.
+- 2026-06-21 · TuFacturaIA · Fix parpadeo paginación /emitidas — inline object en useFacturasData → render loop → useMemo estabiliza filtros (#439).
