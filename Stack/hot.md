@@ -14,6 +14,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 ## de la semana
 
 - **Turbopack rechaza node_modules symlinkeado en worktree** — `tsc`/`vitest` sí, `next build` no; usar `npm install` real. Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]]
+- **Tabla Supabase ausente = PGRST205 (no 42P01) vía supabase-js** — los guards de degradación deben mirar `code==='PGRST205'`; lo destapa un smoke, no typecheck/build. Ver [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
 - **Aceptar sugerencia HITL debe cerrar la decisión** — si no, el gate de acierto mide ~0% y nunca abre. Ver [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]]
 
 - **CREATE OR REPLACE desde la versión vigente** — copiar el cuerpo del último `NNN_` que define la función (no del issue ni de memoria); `diff` verbatim base-vs-nueva. Regresión semántica que typecheck/tests no ven. Vale doble si lo escribe un subagente. Ver [[create-or-replace-copiar-de-version-vigente]]

@@ -19,6 +19,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **agency-portal — Pizarra/board "centro de mando"** — worktree `agency-portal-pizarra`, rama `feature/pizarra-dashboard` (sin mergear). Hecho: board completo + Bloque A (claridad: badge tipo, semáforo ámbar, hito vencido, € por columna) + B (conexión panel: ficha cliente). Pendiente: **C** (banda de alertas + "vence esta semana" + KPIs MRR/cobros via `getAgencyRecurringRevenue`/`getCommercialDashboardData` + salud cliente `client_dashboard_counters` + onboardings), **D** (Mi trabajo/filtros URL/group-by), y **PR para Borja** (`board_comments` + `projects.source_quote_id`). Dev: `PORT=3002 npm run dev` desde el worktree. Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]] · [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
 - **TuFacturaIA — configurar monitor externo scheduler** — UptimeRobot/Better Uptime: GET `https://app.tufacturaia.com/api/internal/system/scheduler-heartbeat` + header `Authorization: Bearer $SCHEDULER_HEARTBEAT_TOKEN`. Intervalo 5 min. Token en Dokploy env del compose.
 - **TuFacturaIA — smoke deploy #412 (perf DB + CLS)** — verificar en prod: (a) sidebar sin shift al cargar como superadmin; (b) ingesta progress-row no salta; (c) tabla facturas lista dos líneas en móvil ≤640px; (d) Supabase Advisors: auth_rls_initplan + multiple_permissive_policies bajaron
 
