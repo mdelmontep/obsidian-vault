@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Loop/harness design** — LOOP SPEC (GOAL/VERIFY/STOP WHEN/ON STOP) + maker/checker + 4 criterios "¿vale un loop?" + herramientas por complejidad. Ver CLAUDE.md §Loops y harness · §Modo de trabajo
+
 - **QA Next contra Supabase local sin tocar `.env.local` de prod** — `.env.development.local` (solo overrides locales) gana sobre `.env.local`. Ver [[next-env-development-local-precede-a-env-local]]
 - **Pill/chip no reemplaza un dato accionable en un form denso** — consistencia de lenguaje (token color) ≠ de componente. Ver [[pill-no-reemplaza-dato-accionable-en-formulario]]
 - **GitHub App no incluye repos creados tras la instalación** — añadir manualmente en GitHub → Settings → Applications → Configure. Ver [[github-app-no-incluye-repos-nuevos-automaticamente]]
