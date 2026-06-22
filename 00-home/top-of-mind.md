@@ -19,6 +19,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **agency-portal — PR #92 en review (Borja)** — Retell v2→v3 + SDK 5.38 + onboarding mobile tab switcher. Rama `feature/onboarding-secretaria-virtual`.
 - **agency-portal — Pizarra/board: PR #91 en review (Borja)** — rama `feature/pizarra-dashboard`. **PR #91 abierto** (todo en uno: board + Bloques A/B/C/D + migración `board_comments`), reviewer `notcapi`. Pendiente: (1) review+merge de Borja, que aplica la migración con `supabase db push --linked` (hasta entonces board_comments ausente → degrada con PGRST205); (2) validación visual de Manu en local (`PORT=3002 npm run dev` desde el worktree). `projects.source_quote_id` NO entró (sin consumidor). Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]] · [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
 - **TuFacturaIA — smoke deploy #412 (perf DB + CLS)** — verificar en prod: (a) sidebar sin shift al cargar como superadmin; (b) ingesta progress-row no salta; (c) tabla facturas lista dos líneas en móvil ≤640px; (d) Supabase Advisors: auth_rls_initplan + multiple_permissive_policies bajaron
 

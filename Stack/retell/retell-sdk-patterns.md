@@ -34,3 +34,8 @@ tags: [retell, voice, sdk, webhooks]
   3. Nombres de parámetros coinciden con los `Edit Fields` / `Set` del workflow n8n
   4. El workflow destino está activo y no archivado
   5. `parameter_type` es `"json"` si n8n espera `body.args.X`
+
+## Migraciones de versión
+
+- **API v3 list-calls (desde ~2026-06)** — `POST /v3/list-calls` (deprecated `/v2/`). Response: `{ items: RetellCall[], pagination_key?: string, has_more: boolean }` (antes array plano). Paginar con `has_more + pagination_key`, no `batch.length < LIMIT`.
+- **retell-sdk 5.38.0: `webhook_auth` eliminado** — `/lib/webhook_auth.js` ya no existe. Reimplementar con `crypto.createHmac('sha256', apiKey).update(rawBody).digest('hex')` + `crypto.timingSafeEqual`. Ver [[retell-webhook-firma-hmac-body-mas-timestamp]].

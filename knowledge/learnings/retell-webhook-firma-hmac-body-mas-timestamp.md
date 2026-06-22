@@ -20,4 +20,6 @@ Errores típicos que dan `digest_mismatch`:
 
 Ground truth: `import { Retell } from "retell-sdk"; await Retell.verify(body, apiKey, sigHeader)`. Si SDK dice true y tu impl false → bug tuyo. Ver source en `node_modules/retell-sdk/lib/webhook_auth.js`.
 
+⚠️ SDK 5.38.0+: `webhook_auth.js` eliminado. Ground truth ahora es implementación manual: `crypto.createHmac('sha256', apiKey).update(rawBody).digest('hex')` + `crypto.timingSafeEqual`. Ver `agency-portal src/lib/retell/client.ts`.
+
 Misma fórmula sirve para webhooks de tools (mid-call) y server-side del agente (call_started/ended/analyzed). Secret = API key del workspace.
