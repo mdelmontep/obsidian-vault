@@ -13,6 +13,9 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **TS `as const` no indexable con genérico K** — cast a `Record<TemplateKind, ...>[K]`. Ver [[ts-as-const-no-indexable-con-generico-k]]
+- **`git stash` sin `-u` deja untracked; hook pre-commit los detecta igual** — build falla; usar `git stash -u`. Ver [[git-stash-sin-u-deja-untracked-y-hook-falla]]
+
 - **Loop/harness design** — LOOP SPEC (GOAL/VERIFY/STOP WHEN/ON STOP) + maker/checker + 4 criterios "¿vale un loop?" + herramientas por complejidad. Ver CLAUDE.md §Loops y harness · §Modo de trabajo
 
 - **QA Next contra Supabase local sin tocar `.env.local` de prod** — `.env.development.local` (solo overrides locales) gana sobre `.env.local`. Ver [[next-env-development-local-precede-a-env-local]]

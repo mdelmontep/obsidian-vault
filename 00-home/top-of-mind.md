@@ -75,6 +75,8 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **Simarro — oportunidad monitor inmuebles** (StateFox) — scraping Idealista/Fotocasa + alertas precio/m²/zona. Confirmar interés y presupuesto
 - **Clínica Zen — configurar Retell en leads entrantes** — workflow `RN0wl8RaRmwLpnfQ`, verificar webhooks dominio CZ
 
+- **TuFacturaIA — WIP `org-signup-invite` en `stash@{0}`** (main) — feature email invitation; `git stash pop` en rama nueva para retomar.
+
 ## Bloqueos
 
 - **TuFacturaIA — subir tier OpenAI (acción Manu)** — bot WhatsApp salta rate-limit (TPM 30k, Tier 1). Mitigado con prompt −38% + memoria 10→8, pero la raíz es subir a Tier 2 (450k TPM) en platform.openai.com/settings/organization/limits.
