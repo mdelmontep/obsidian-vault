@@ -20,3 +20,7 @@ o espera pings periódicos y **avisa cuando dejan de llegar**. La app
 (data-plane) suele sobrevivir a la caída del control-plane, así que puede
 servir el endpoint y reportar "scheduler muerto". Regla: el watchdog de una
 infra NUNCA debe vivir dentro de esa infra.
+
+Implementación TuFacturaIA 2026-06-22: NotCaído heartbeat (ID 34) +
+`pingSchedulerHeartbeat()` en `withCronTracking` (PR #447) → `NOTCAIDO_HEARTBEAT_URL`
+env Dokploy → ntfy topic `notcaido-mdm-PN7YzRN3iIA` si silencio >2 min.

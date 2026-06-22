@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **GitHub App no incluye repos creados tras la instalación** — añadir manualmente en GitHub → Settings → Applications → Configure. Ver [[github-app-no-incluye-repos-nuevos-automaticamente]]
 - **`.next` typed-routes validator stale tras cambiar de rama** — `tsc` falla con `Cannot find module '.../route.js'` por caché del build anterior; `next build` antes de `tsc`. Ver [[next-typed-routes-validator-stale-tras-cambio-de-rama]]
 - **2 PRs mismo archivo → `git merge-tree` antes de mergear** — detecta el conflicto sin checkout; squash rompe `branch --merged` (borrar con `-D`). Ver [[merge-tree-precheck-cross-pr-y-squash-branch-cleanup]]
 - **Impersonación superadmin NO sirve para QA org-scoped** — caduca ~1h + el proxy no devuelve listas paginadas (vacías + parpadeo); QArear con usuario real. Ver [[impersonacion-superadmin-no-sirve-para-qa-de-ui-org-scoped]]
