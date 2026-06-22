@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-23 facturaia — PR #450: selector de estado de conciliación unificado al `Segmented` canónico (igual que facturas emitidas) + chips fila 2 restyleados + scroll responsive móvil movido al `.rail` base (single source of truth, lo heredan facturas/inventario/ingesta). Verificado Playwright escritorio+móvil. Merge `--admin` (CI bloqueado por billing).
 - 2026-06-22 agency-portal — Pizarra Bloques C (centro de mando: alertas, vence-esta-semana, MRR/cobros, salud cliente, onboardings) + D (mi trabajo / filtros en URL / group-by). `feature/pizarra-dashboard`, sin mergear. Lint+typecheck+test(303)+build+smoke verde.
 
 - 2026-06-22 TuFacturaIA — cron `stock-alarmas-email` ahora **agrupa por org**: 1 email con tabla de todos los productos en alarma, en vez de 1 email por producto (inundaba la bandeja). Subject adaptativo, update anti-spam `.in('id',ids)`, idempotency por org+día. Push directo a main `81b238a1` (efecto en el run de 09:00). Email de prueba verificado vía SMTP local (7 productos Sandbox en 1 correo).

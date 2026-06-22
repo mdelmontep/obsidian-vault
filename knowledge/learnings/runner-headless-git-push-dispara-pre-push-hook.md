@@ -18,3 +18,8 @@ porque el runner ya gatea aparte y sus PRs pasan CI + review. Corolario: un orqu
 que lanza subprocesos (push, gh pr create, claude) DEBE chequear el exit code y reportar
 el stderr — si no, un fallo se disfraza de éxito (reportaba `pr_abierto` sin PR real).
 Ver [[postgrest-rpc-composite-devuelve-fila-de-nulls]].
+
+**Variante 2026-06-23**: si corres `next dev` en un worktree y luego `git push`, el
+pre-push `next build` falla con *"A next build still in progress / didn't exit cleanly"*
+— el `.next` quedó en estado dev. Fix: `rm -rf .next` antes del push (no es OOM ni
+`--no-verify`).
