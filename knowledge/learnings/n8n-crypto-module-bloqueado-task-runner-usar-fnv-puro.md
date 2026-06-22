@@ -24,4 +24,12 @@ const id = ('pre' + fnv32(input, 0x811c9dc5) + fnv32(input, 0xdeadbeef) + fnv32(
 
 Alternativa si tienes acceso al container: env `NODE_FUNCTION_ALLOW_BUILTIN=crypto` + reinicio. En Dokploy = recreate compose.
 
-Caso real: EcoBox `Reservar_cita` 2026-05-25, idempotency event_id `sha1(phone+slot)` reemplazado por FNV. Patrón aplica a todos los workflows clonados del skill `agentesia-pollo-costco`.
+**Alternativa real para HMAC-SHA256**: `crypto.subtle` (WebCrypto API) SÍ está disponible globalmente en el sandbox aunque `require('crypto')` esté bloqueado:
+```js
+const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
+const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(body));
+const hex = Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
+```
+Guard típico: `if (!secret) return $input.all();` para pass-through cuando el secret no está configurado.
+
+Casos reales: EcoBox `Reservar_cita` 2026-05-25 (FNV para idempotency). Elphis `wa-inbound-bridge` 2026-06-22 (HMAC Meta X-Hub-Signature-256 con crypto.subtle).
