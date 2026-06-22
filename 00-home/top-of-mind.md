@@ -80,7 +80,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 ## Bloqueos
 
 - **TuFacturaIA — subir tier OpenAI (acción Manu)** — bot WhatsApp salta rate-limit (TPM 30k, Tier 1). Mitigado con prompt −38% + memoria 10→8, pero la raíz es subir a Tier 2 (450k TPM) en platform.openai.com/settings/organization/limits.
-- **TuFacturaIA — billing GitHub Actions re-bloqueado (acción Manu)** — desde 17/06 ~13:00 los jobs mueren a 0 pasos ("payments failed / spending limit"). Repo privado → Actions de pago. CI ya optimizado (#367 solo-PR + concurrency, #365 visual determinista). Subir límite/arreglar pago en Settings → Billing org `AgentesIA-MAdrid`. Ver [[github-actions-org-private-free-tier-2000-min]]. *(watchdog noise silenciado PR #446; monitor externo pendiente — ver NEXT)*
+- **TuFacturaIA — billing GitHub Actions re-bloqueado (acción Manu)** — desde 17/06 ~13:00 los jobs mueren a 0 pasos ("payments failed / spending limit"). Repo privado → Actions de pago. CI ya optimizado (#367 solo-PR + concurrency, #365 visual determinista). Subir límite/arreglar pago en Settings → Billing org `AgentesIA-MAdrid`. Ver [[github-actions-org-private-free-tier-2000-min]]. *(watchdog noise silenciado PR #446; monitor externo pendiente — ver NEXT)* **Mientras siga bloqueado, los merges van con `gh pr merge --admin` (bypass de checks; requiere OK explícito — el clasificador lo bloquea por defecto).**
 - **TuFacturaIA — HIBP leaked-password protection requiere Supabase Pro (acción Manu)** — el toggle "Prevent use of leaked passwords" falla en plan free (item LOW de la auditoría 06-19). Activar si/cuando se suba el proyecto Supabase a Pro. Resto de la auditoría ya cerrado en prod.
 
 ## Vistas por cliente

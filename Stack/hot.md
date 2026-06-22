@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **`.next` typed-routes validator stale tras cambiar de rama** — `tsc` falla con `Cannot find module '.../route.js'` por caché del build anterior; `next build` antes de `tsc`. Ver [[next-typed-routes-validator-stale-tras-cambio-de-rama]]
+- **2 PRs mismo archivo → `git merge-tree` antes de mergear** — detecta el conflicto sin checkout; squash rompe `branch --merged` (borrar con `-D`). Ver [[merge-tree-precheck-cross-pr-y-squash-branch-cleanup]]
 - **Turbopack rechaza node_modules symlinkeado en worktree** — `tsc`/`vitest` sí, `next build` no; usar `npm install` real. Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]]
 - **Tabla Supabase ausente = PGRST205 (no 42P01) vía supabase-js** — los guards de degradación deben mirar `code==='PGRST205'`; lo destapa un smoke, no typecheck/build. Ver [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
 - **Aceptar sugerencia HITL debe cerrar la decisión** — si no, el gate de acierto mide ~0% y nunca abre. Ver [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]]
