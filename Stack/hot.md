@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Cron materializador + collector en vivo = dedup en runtime, no con filtro de origen** — filtrar el cron crea gap cuando el servicio recupera entre ticks. Ver [[alert-collector-cron-vs-live-dedup-gap]]
 - **TS `as const` no indexable con genérico K** — cast a `Record<TemplateKind, ...>[K]`. Ver [[ts-as-const-no-indexable-con-generico-k]]
 - **`git stash` sin `-u` deja untracked; hook pre-commit los detecta igual** — build falla; usar `git stash -u`. Ver [[git-stash-sin-u-deja-untracked-y-hook-falla]]
 
