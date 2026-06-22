@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **QA Next contra Supabase local sin tocar `.env.local` de prod** — `.env.development.local` (solo overrides locales) gana sobre `.env.local`. Ver [[next-env-development-local-precede-a-env-local]]
+- **Pill/chip no reemplaza un dato accionable en un form denso** — consistencia de lenguaje (token color) ≠ de componente. Ver [[pill-no-reemplaza-dato-accionable-en-formulario]]
 - **GitHub App no incluye repos creados tras la instalación** — añadir manualmente en GitHub → Settings → Applications → Configure. Ver [[github-app-no-incluye-repos-nuevos-automaticamente]]
 - **`.next` typed-routes validator stale tras cambiar de rama** — `tsc` falla con `Cannot find module '.../route.js'` por caché del build anterior; `next build` antes de `tsc`. Ver [[next-typed-routes-validator-stale-tras-cambio-de-rama]]
 - **2 PRs mismo archivo → `git merge-tree` antes de mergear** — detecta el conflicto sin checkout; squash rompe `branch --merged` (borrar con `-D`). Ver [[merge-tree-precheck-cross-pr-y-squash-branch-cleanup]]
