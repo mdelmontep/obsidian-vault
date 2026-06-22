@@ -18,6 +18,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 - **agency-portal — PR #92 en review (Borja)** — Retell v2→v3 + SDK 5.38 + onboarding mobile tab switcher. Rama `feature/onboarding-secretaria-virtual`.
 - **agency-portal — Pizarra/board: PR #91 en review (Borja)** — rama `feature/pizarra-dashboard`. **PR #91 abierto** (todo en uno: board + Bloques A/B/C/D + migración `board_comments`), reviewer `notcapi`. Pendiente: (1) review+merge de Borja, que aplica la migración con `supabase db push --linked` (hasta entonces board_comments ausente → degrada con PGRST205); (2) validación visual de Manu en local (`PORT=3002 npm run dev` desde el worktree). `projects.source_quote_id` NO entró (sin consumidor). Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]] · [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
+- **TuFacturaIA — smoke org-signup-invite** — `/admin/orgs` → modal "Invitar" → rellenar email → "Generar y enviar email"; verificar que llega al destinatario y el enlace abre `/registro?invite=TOKEN`.
 - **TuFacturaIA — smoke deploy #412 (perf DB + CLS)** — verificar en prod: (a) sidebar sin shift al cargar como superadmin; (b) ingesta progress-row no salta; (c) tabla facturas lista dos líneas en móvil ≤640px; (d) Supabase Advisors: auth_rls_initplan + multiple_permissive_policies bajaron
 
 - **TuFacturaIA — PR #376 Floating UI (popovers)** — 10 componentes migrados de patrón casero a `useAnchoredMenu` (@floating-ui/react), lint/typecheck/build verde, QA visual 8/10. Pendiente: merge cuando se desbloquee CI billing + QA visual `bank-connections-card` (necesita banco) y `header-acciones` (necesita detalle fiscal) — sin datos en sandbox. Rama `fix/team-member-menu-posicion-derecha`. Ver [[react-hooks-refs-falso-positivo-floating-ui]] · ADR-033.
@@ -76,7 +77,6 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 - **Simarro — oportunidad monitor inmuebles** (StateFox) — scraping Idealista/Fotocasa + alertas precio/m²/zona. Confirmar interés y presupuesto
 - **Clínica Zen — configurar Retell en leads entrantes** — workflow `RN0wl8RaRmwLpnfQ`, verificar webhooks dominio CZ
 
-- **TuFacturaIA — WIP `org-signup-invite` en `stash@{0}`** (main) — feature email invitation; `git stash pop` en rama nueva para retomar.
 
 ## Bloqueos
 
