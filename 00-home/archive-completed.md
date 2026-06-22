@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-22 agency-portal — Pizarra Bloques C (centro de mando: alertas, vence-esta-semana, MRR/cobros, salud cliente, onboardings) + D (mi trabajo / filtros en URL / group-by). `feature/pizarra-dashboard`, sin mergear. Lint+typecheck+test(303)+build+smoke verde.
+
 - 2026-06-22 TuFacturaIA — cron `stock-alarmas-email` ahora **agrupa por org**: 1 email con tabla de todos los productos en alarma, en vez de 1 email por producto (inundaba la bandeja). Subject adaptativo, update anti-spam `.in('id',ids)`, idempotency por org+día. Push directo a main `81b238a1` (efecto en el run de 09:00). Email de prueba verificado vía SMTP local (7 productos Sandbox en 1 correo).
 - 2026-06-20 TuFacturaIA — paginación server-side todas las vistas (#434 inventario + modal reconciliación con "Añadir ajuste"; #437 conciliación/ingesta/auditoría): 004 facturas ✅ · 005 presupuestos ✅ · 006 clientes ✅ · 007 inventario ✅ · 008 conciliación ✅ · ingesta ✅ · auditoría ✅. usePaginationParams + PaginationBar en toda la app.
 - 2026-06-20 TuFacturaIA — MCP #061 idempotencia de rotación de refresh (**#432**, prod): la rotación con familia + detección de reúso + revocación YA existían; faltaba tolerar el **reintento legítimo** (respuesta del `/token` perdida, doble submit) que reenvía el refresh ya rotado → se revocaba la familia → logout. Ventana de gracia (RFC 9700 §4.14.2, default 15s, mismo `client_id`), **sin migración** (antigüedad vía `created_at` del hijo), `grace=0`=estricto. 26/26 tests OAuth. Compose MCP `autoDeploy=false` → redeploy manual. Ver [[oauth-refresh-rotation-idempotencia-ventana-gracia]].
