@@ -11,7 +11,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 ## NOW
 
 - **TuFacturaIA — notifs fiscal residuales (trabajo manual)** — marcar leídas las notifs viejas + abrir/recalcular borradores 130 2T/3T/4T (drift real: abono B2026-0001) + check visual drawer (X 28px, fade chips). Fix #214 ya en prod.
-- **Centro Elphis — go-live pendiente** — hardening completado (HMAC Meta ✅, doble-deal fix ✅, env vars Dokploy ✅). Pendiente: (1) GCal → calendar Enrique; (2) 4 plantillas Meta HSM (bloqueado: Pablo debe completar coexistencia WA desde app móvil → vía A); (3) 659 877 708 → Cloud API; (4) DPAs; (5) sesión crisis Enrique. HUB: `elphis/CLAUDE.md`
+- **Centro Elphis — go-live pendiente** — hardening completado (HMAC Meta ✅, doble-deal fix ✅, env vars Dokploy ✅, cron-recordatorio-24h eliminado ✅). Pendiente (todos externos): (1) Pablo — coexistencia WA vía A (app móvil 659); (2) 4 plantillas HSM tras conectar; (3) 659 877 708 → Cloud API; (4) DPAs Enrique; (5) sesión crisis Enrique; (6) número recepcionista Alba. HUB: `elphis/CLAUDE.md`
 - **agency-portal — verificar extracción onboarding en prod tras PR #67** — REO RAFTING en curso. Confirmar que "Progreso por sección" y "Respuestas extraídas" se rellenan tras cada turno con dato extraíble. Si aparece `activity_event.action='onboarding.extraction_failed'`, abrir issue
 
 ## NEXT (próximas 2 semanas)
