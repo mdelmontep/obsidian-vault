@@ -61,3 +61,5 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 - [[mcp-conector-remoto-limites-claude-chatgpt-cursor]] — no se puede "empujar" un conector MCP a Claude/ChatGPT; 1-clic solo en Cursor; Team/Enterprise solo Owner.
 - [[mcp-connect-claude-origin-claude-com-y-aud-trailing-slash]] — connect MCP a Claude rompe por Origin claude.com (403) y aud con barra final (401, bucle refresh); diag reproduciendo el flujo + BD oauth_refresh_tokens.
 - [[contenido-llm-en-pdf-render-como-react-no-html]] — texto de un LLM en un PDF: nodos React (escapa), nunca HTML crudo/innerHTML; markdown acotado = parser propio a React, no DOMPurify.
+- [[progreso-real-vs-simulado-tareas-opacas]] — progreso async sin parpadeo: hitos reales backend + merge monótono `max()` + estimador `1−e^(−t/τ)`, nunca `Math.random`.
+- [[verificacion-no-mutar-estado-prod-cuenta-real]] — tests no mutan estado prod del user real: `.env.test` puede apuntar a prod + `E2E_EMAIL`=tu cuenta → writes tocan tu sesión viva.
