@@ -249,3 +249,4 @@ tags: [home, archivo]
 - 2026-06-22 · agency-portal · smoke PRs #72/#73/#75/#77/#78 verificados (browser + code-review). PRs #91/#92 abiertos para Borja.
 - 2026-06-23 · TuFacturaIA · feat org-signup-invite — email de invitación a crear org mergeado a main (mig 377, template hero, modal admin, commits 701d27f6+d46708f3)
 - 2026-06-23 · TuFacturaIA · Rediseño glassmorphic email org-signup-invite — fondo gradiente, card rgba+sombra capas, stripe animado, botón glow CSS (Apple Mail) + VML Outlook. Commit 03b718e3.
+- 2026-06-23 · TuFacturaIA · reconciliación stock en facturas de servicios/consumo (Retell "$X per N"): RESUELTO en prod. mig 378 gatea el descuadre a "hay ≥1 línea que mueve stock" + reconcilia contra el `importe` real (no cantidad×precio) + UI espejo + OCR captura `importe`. Auditado 3+3 agentes.
