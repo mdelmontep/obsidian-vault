@@ -63,3 +63,4 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 - [[contenido-llm-en-pdf-render-como-react-no-html]] — texto de un LLM en un PDF: nodos React (escapa), nunca HTML crudo/innerHTML; markdown acotado = parser propio a React, no DOMPurify.
 - [[progreso-real-vs-simulado-tareas-opacas]] — progreso async sin parpadeo: hitos reales backend + merge monótono `max()` + estimador `1−e^(−t/τ)`, nunca `Math.random`.
 - [[verificacion-no-mutar-estado-prod-cuenta-real]] — tests no mutan estado prod del user real: `.env.test` puede apuntar a prod + `E2E_EMAIL`=tu cuenta → writes tocan tu sesión viva.
+- **Glassmorphism en email sin backdrop-filter** — rgba borders + sombra capas + gradiente wrapper; animación CSS gated con `<!--[if !mso]>`. Ver [[email-glassmorphism-sin-backdrop-filter]]

@@ -248,3 +248,4 @@ tags: [home, archivo]
 - 2026-06-22 · TuFacturaIA · Monitor scheduler dead-man's switch: NotCaído heartbeat (ID 34) + PR #447 pinga NOTCAIDO_HEARTBEAT_URL + ntfy móvil. Watchdog GitHub Actions silenciado (PR #446, billing bloqueado). NotCaido repo en AgentesIA-MAdrid/NotCaido.
 - 2026-06-22 · agency-portal · smoke PRs #72/#73/#75/#77/#78 verificados (browser + code-review). PRs #91/#92 abiertos para Borja.
 - 2026-06-23 · TuFacturaIA · feat org-signup-invite — email de invitación a crear org mergeado a main (mig 377, template hero, modal admin, commits 701d27f6+d46708f3)
+- 2026-06-23 · TuFacturaIA · Rediseño glassmorphic email org-signup-invite — fondo gradiente, card rgba+sombra capas, stripe animado, botón glow CSS (Apple Mail) + VML Outlook. Commit 03b718e3.
