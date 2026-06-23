@@ -58,6 +58,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🔴 **Smoke UI conciliación en sandbox** (tras PR #259/#261) — revisar `/conciliacion`: contraste del drawer, sugerencia visible en el drawer del movimiento, tabla sin scroll horizontal (móvil+web), banner legible. Si chirría → pedir 3-4 variantes numeradas. Pasos en `Smoke tests pendientes`.
 - **Registro branded + onboarding** (PR #256/#258 en main `84277b13`) — **falta deploy Dokploy**; tras deploy, smoke registro → confirmación Resend → perfil → fiscal → canales → dashboard. Pasos en `Smoke tests pendientes`.
 - **Stock / Inventario** — Fases A-D + 1 + 2 + 3 IA completas en prod; lotes CRUD + trazabilidad inversa + FEFO autopick ✅ (mig 375, `d250afe3`). **`disponibilidad='beta'` desde 2026-06-22** (pilotaje gratis, acceso universal sin add-on; antes estaba en `activo` —no `proximamente`— pero solo Sandbox tenía el add-on, 0 pagadores). **Siguiente: monitorizar uso/feedback en pilotaje → decidir flip a `activo`** (cobro 12,90€). Detalle [[facturaia-modulo-stock]].
+- 🟡 **Copiloto paridad MCP — sprint iniciado (1/14).** Issue 001 ✅: `actualizarCliente`/`actualizarProveedor` (destructive, rol propietario/admin/contable/comercial, 22 tools en registry). Siguiente: issue 002 `buscarCatalogo` (read-only) → orden deps en `issues/`.
 - _Hitos recién cerrados (onboarding unificado 021-030, conciliación Fase 2, modelo 349, multiempresa) → [[facturaia-historico-detallado]]._
 ## Bloqueos / esperando a terceros
 
