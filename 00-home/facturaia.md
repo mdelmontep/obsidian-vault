@@ -94,7 +94,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
-- **SEPA (org Sandbox)** — Ajustes datos bancarios (IBAN+BIC+Id Acreedor) → mandato en un cliente → factura pendiente → generar remesa en `/remesas` → validar el XML contra el XSD `pain.008.001.02` del banco. Ver [[sepa-pain008-remesa-adeudo]].
 
 ## Decisiones pendientes (producto)
 
@@ -136,7 +135,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - **Refactor `documents` (deep module) — PR #463 abierto 2026-06-24** — fase 1.1-1.2: dominio fiscal puro extraído de `create-document.ts` a `domain.ts` (reglas RD 1619/2012, `verifactuAplica` único, builders de líneas con signo abono); 199 tests verdes, diff funcional nulo. **Pendiente:** (1) mergear #463; (2) ratificar con gestoría el criterio NIF=A (NIF receptor solo B2B, consumidor final no — ver [[nif-receptor-obligatorio-solo-3-supuestos-verifactu]]) → desbloquea migrar voz/copiloto al gate único (criterio A + clave F2); (3) luego el salto `prepare/commit`+ports. RFC en repo `issues/rfc-unificar-creacion-documentos.md`. Worktree `.wt-documents-refactor` (borrar tras merge).
 
-- **SEPA remesas adeudo directo (pain.008 / Cuaderno 19.14) — ✅ MERGEADO (#459) + GA en prod 2026-06-24** — migs 379-383 aplicadas vía `db push` (la 382 activó `sepa` para Pro/Enterprise; 5 orgs enterprise ya lo ven). XML validado estructuralmente contra remesa real Holded (mismo vocabulario y orden de campos). **Pendiente externo**: que Dani (dansanch@tecnocloud.es) suba un fichero de prueba a su banca y confirme aceptación. Fuera de alcance: devoluciones, B2B, recurrencia. Ver [[sepa-pain008-remesa-adeudo]]. → histórico próxima poda.
+- **SEPA remesas adeudo directo (pain.008 / Cuaderno 19.14) — ✅ CERRADO 2026-06-24** — motor (#459, migs 379-383, GA Pro/Enterprise) + pulido UX (#466: mandatos arriba en ficha cliente, banner config, confirmaciones, historial legible) en main. **Validado en banco real por Dani** (subió el fichero, acepta) + verificado en navegador con Playwright. Fuera de alcance (futuro): devoluciones (R-transactions/pain.002), B2B, recurrencia, aviso IBAN acreedor=deudor. Ver [[sepa-pain008-remesa-adeudo]]. → mover a histórico en próxima poda.
 
 - **Auditoría seguridad 4 dims — ✅ MERGEADO + cerrado (#341, main `b7faef38`)** — núcleo sólido (auth/RLS/webhooks OK). Fixes en prod: RBAC `settings/features`+`disconnect` (admin-only, manual-admin §7.1 actualizado), IP confiable en rate-limit (helper `lib/http/client-ip.ts`), reconexión Redis. Sin follow-ups: el `SIGNING_LEGACY_UNTIL` que el audit marcó INCIERTO **ya estaba cerrado desde 2026-06-09** (ver "Migración crons → HMAC v2" más abajo) — el INCIERTO venía de que el agente no veía el env de prod. Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]].
 
