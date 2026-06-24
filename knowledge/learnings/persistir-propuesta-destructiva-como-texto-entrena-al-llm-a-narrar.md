@@ -25,4 +25,4 @@ tool) y, de paso, evita el tool_use huérfano que rompe el replay de OpenAI.
 Remedio inmediato: limpiar la memoria del hilo (los ejemplos tóxicos ya escritos
 siguen envenenando hasta que se purgan). Few-shot implícito del historial > las
 reglas del system prompt: lo que el modelo VE hacer pesa más que lo que se le
-DICE. Relacionado: [[smoke-insert-directo-no-ejerce-el-motor-real]].
+DICE. Relacionado: [[smoke-insert-directo-no-ejerce-el-motor-real]] · [[tool-result-sintetico-necesita-render-prosa-o-sale-json-crudo]].
