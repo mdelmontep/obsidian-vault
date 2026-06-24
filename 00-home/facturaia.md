@@ -58,7 +58,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🔴 **Smoke UI conciliación en sandbox** (tras PR #259/#261) — revisar `/conciliacion`: contraste del drawer, sugerencia visible en el drawer del movimiento, tabla sin scroll horizontal (móvil+web), banner legible. Si chirría → pedir 3-4 variantes numeradas. Pasos en `Smoke tests pendientes`.
 - **Registro branded + onboarding** (PR #256/#258 en main `84277b13`) — **falta deploy Dokploy**; tras deploy, smoke registro → confirmación Resend → perfil → fiscal → canales → dashboard. Pasos en `Smoke tests pendientes`.
 - **Stock / Inventario** — Fases A-D + 1 + 2 + 3 IA completas en prod; lotes CRUD + trazabilidad inversa + FEFO autopick ✅ (mig 375, `d250afe3`). **`disponibilidad='beta'` desde 2026-06-22** (pilotaje gratis, acceso universal sin add-on; antes estaba en `activo` —no `proximamente`— pero solo Sandbox tenía el add-on, 0 pagadores). **Siguiente: monitorizar uso/feedback en pilotaje → decidir flip a `activo`** (cobro 12,90€). Detalle [[facturaia-modulo-stock]].
-- 🟡 **Copiloto paridad MCP — sprint en curso (3/14, rama `fix/facturas-view-filtros-usememo`).** ✅ 001 `actualizarCliente`/`actualizarProveedor` · ✅ 002 `buscarCatalogo` · ✅ 003 `crearProductoCatalogo`/`actualizarProductoCatalogo` (27 tools en registry, 39 tests). Siguiente: 004 `enviarRecordatorioPago` (destructive).
+- ✅ **Copiloto paridad MCP issues 001-014 — MERGEADO a main (PR #454, 2026-06-24).** 44 tools en registry (27→44), 21 tests verdes, n8n Agente Facturador 183 nodos (+6 toolCode nuevos). Fix voz multi-org (Persistir Transcripcion Pendiente). Bug `consultar_vencimientos`: columna `fecha_vencimiento` no existe → corregido a `vto` en n8n y TypeScript (`listarVencimientosProximos.ts`); cherry-picked en PR #456.
+- ✅ **Copiloto toolCode empty-results — CERRADO 2026-06-24 (PR #456 + patches n8n).** 9 TypeScript tools devuelven `contexto?: string` cuando vacíos; 5 toolCode n8n con try/catch correcto (v2) + instrucción en system prompt Agente Facturador. Smoke: vencimientos ✅, recibidas ✅. Falta smoke: proveedores/IVA/IRPF vacíos + error HTTP (org nueva, lower priority).
 - _Hitos recién cerrados (onboarding unificado 021-030, conciliación Fase 2, modelo 349, multiempresa) → [[facturaia-historico-detallado]]._
 ## Bloqueos / esperando a terceros
 
@@ -88,6 +89,12 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 <!-- Dani: DNS tufacturaia.com DNS-only resuelto 2026-05-16, SSL OK en app. y n8n. -->
 - **Dani + Gonzalo**: subir certificado P12 por org en Ajustes → VERIFACTU. Sin él no se envían facturas a AEAT y aparece error en dashboard
 <!-- Meta plantilla otp_facturaia APPROVED 2026-05-16 (language es_ES). Bloqueo cerrado. -->
+
+## Smoke tests pendientes
+
+- **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
+- **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
+- **SEPA (org Sandbox)** — Ajustes datos bancarios (IBAN+BIC+Id Acreedor) → mandato en un cliente → factura pendiente → generar remesa en `/remesas` → validar el XML contra el XSD `pain.008.001.02` del banco. Ver [[sepa-pain008-remesa-adeudo]].
 
 ## Decisiones pendientes (producto)
 
@@ -125,6 +132,9 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ---
 ## NEXT (próximas 2 semanas)
+
+
+- **SEPA remesas adeudo directo (pain.008 / Cuaderno 19.14) — MVP en PR #459, sin merge** — 5 slices TDD (config banca, mandatos por cliente, generador hand-rolled, flujo remesa+descarga, gating+manuales). Schema **379-381 ya aplicado a cloud por psql** (idempotente) + override `org_features` para Sandbox (QA). Pendiente: merge → `supabase db push --linked` desde main (re-corre 379-381 + aplica **382, que activa `sepa` a todo Pro/Enterprise**) → smoke. Fuera de alcance: devoluciones, B2B, recurrencia. Ver [[sepa-pain008-remesa-adeudo]].
 
 - **Auditoría seguridad 4 dims — ✅ MERGEADO + cerrado (#341, main `b7faef38`)** — núcleo sólido (auth/RLS/webhooks OK). Fixes en prod: RBAC `settings/features`+`disconnect` (admin-only, manual-admin §7.1 actualizado), IP confiable en rate-limit (helper `lib/http/client-ip.ts`), reconexión Redis. Sin follow-ups: el `SIGNING_LEGACY_UNTIL` que el audit marcó INCIERTO **ya estaba cerrado desde 2026-06-09** (ver "Migración crons → HMAC v2" más abajo) — el INCIERTO venía de que el agente no veía el env de prod. Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]].
 

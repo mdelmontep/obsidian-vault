@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Remesa SEPA pain.008 (adeudo directo)** — SeqTp a nivel PmtInf, control del Id de Acreedor `98-mod97(idNac+ES00)`, CtrlSum en céntimos, IBAN single-source. Ver [[sepa-pain008-remesa-adeudo]]
 - **Reconciliar estado externo al reiniciar** — no cancelar+recrear (avalancha de filas fantasma + pérdida de SL/TP); re-trackear por clave natural preservando id. Ver [[reconciliar-estado-externo-al-reiniciar-no-cancelar-recrear]]
 - **Cron materializador + collector en vivo = dedup en runtime, no con filtro de origen** — filtrar el cron crea gap cuando el servicio recupera entre ticks. Ver [[alert-collector-cron-vs-live-dedup-gap]]
 - **TS `as const` no indexable con genérico K** — cast a `Record<TemplateKind, ...>[K]`. Ver [[ts-as-const-no-indexable-con-generico-k]]
