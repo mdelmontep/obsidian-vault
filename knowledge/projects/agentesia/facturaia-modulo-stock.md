@@ -92,5 +92,10 @@ Lotes/series, fabricación/BOM, catálogo B2B, escáner hardware, picking/packin
 - **Fase 3** — diferencial IA (reposición, importación inteligente, panel salud)
 - **Fase 4** — múltiples almacenes, variantes simples
 
+## 2026-06-24 — Cajas + unidad de compra (en prod)
+- **Cajas+unidades** (mig 383, #465): `catalogo_servicios.unidades_por_caja`; inventario/ficha muestran "X cajas · Y sueltas"; ajuste por cajas+sueltas; importador y reposición en cajas; copiloto.
+- **Unidad de compra ERP** (mig 384, #471): comprar en cajas en la aprobación de recibida → coste/ud derivado (precio÷factor) sin tocar el motor (conversión en `aprobar_recibida_con_lineas`). Helper "Coste por caja" en la ficha. Ver [[unidad-compra-convertir-en-insert-no-en-motor]].
+- **Polish** (#475): badge usa coste/ud convertido; desplegable "Por cajas (N ud)" sin truncar; cifras mono.
+
 ## Refs
 Colisión numeración migraciones rama stale: [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]. Onboarding por-org no solo backfill: [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]].

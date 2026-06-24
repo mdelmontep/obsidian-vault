@@ -16,3 +16,5 @@ Fix doble:
 Caso real 2026-05-27 (TuFacturaIA): migs 172/173 aplicadas out-of-band → quedaron fuera del historial. Ver [[reference-supabase-db-access]].
 
 Caso real 2026-06-19 (migs 339/340/341): CLI da `i/o timeout` por pooler → usar MCP `apply_migration`. El MCP ejecuta el SQL pero registra con timestamp en lugar de `NNN`. Fix: INSERT manual en `supabase_migrations.schema_migrations` con `version='339'` y `statements=ARRAY['-- placeholder']`.
+
+**El timeout del pooler suele ser TRANSITORIO** (red del sandbox de Claude Code, no caída de Supabase). Antes de recurrir al MCP+INSERT manual (que genera justo el timestamp huérfano de arriba), **reintenta `supabase db push --linked`**; para LEER/verificar prod el MCP (HTTPS :443) sí llega aunque el pooler `:5432` dé timeout. Caso real 2026-06-24 (migs 383/384, TuFacturaIA): `db push` limpio en cuanto se desbloqueó la red → version `383`/`384` correcta, 0 huérfanos.
