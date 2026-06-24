@@ -9,9 +9,6 @@ Al lanzar varios Agent en background con `isolation: worktree` para implementar+
 
 Síntoma: notificación `Agent stalled: no progress for 600s`, último mensaje tipo "now build" / "now run smoke".
 
-Recuperación (el trabajo NO se pierde):
-1. `git worktree list` → localizar el worktree del agente (`.claude/worktrees/agent-<id>`) y su rama.
-2. `git -C <wt> status` → sus cambios siguen ahí sin commitear.
-3. Termina tú: `npm run build` + tests, `git add` explícito, commit, push, PR.
+Recuperación preferida: **`SendMessage` al `agentId` del agente caído** → reanuda en background desde su transcript, con worktree y contexto intactos, y cierra él mismo (incl. su propio gate). Solo termina tú a mano (`git -C .claude/worktrees/agent-<id>` → build+tests, commit, PR) si el resume no progresa. El stall NO siempre es el build: puede colgarse en lectura/razonamiento por stream, o reportar truncado por error de conexión → **verifica el worktree directamente, no te fíes del reporte final del agente**.
 
-Prevención: en el prompt del agente, pide verificar con `lint`+`typecheck`+**unit tests** (no el build completo) o trocear; deja el build pesado para ti al recuperar. Caso: 3 mejoras MCP (#396/#397/#398) — los 3 se colgaron en el build, recuperados desde sus worktrees. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]].
+Prevención: en el prompt pide verificar con `lint`+`typecheck`+**unit tests** (no el build completo); deja el build pesado para ti al integrar. Casos: 3 mejoras MCP (#396/#397/#398) colgadas en build; refactor arquitectura #472/#473/#474 (2 muertos en stream, 1 truncado) recuperados con SendMessage. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] · [[claude-code-agentes-worktree-failure-modes]].
