@@ -10,7 +10,7 @@ RD 1619/2012 art 6.1.d: el NIF del **destinatario** en factura ordinaria es obli
 2. destinatario que es sujeto pasivo (inversión SP),
 3. operaciones en TAI con emisor establecido (interpretado para destinatario empresario/profesional).
 
-Un **consumidor final/particular** no encaja en ninguno → su NIF NO es obligatorio.
+Un **consumidor final/particular** no encaja en ninguno → su NIF NO es obligatorio. OJO: nombre/razón social (art 6.1.c) y domicilio (art 6.1.e) del destinatario SÍ son obligatorios siempre en factura completa; solo el NIF se relaja para B2C.
 
 **Verifactu (RD 1007/2023) NO añade esa obligación.** Factura ordinaria a consumidor final sin NIF es válida y registrable: clave **F2** (sin identificación del destinatario), `IDDestinatario` omitido, nombre "VENTAS A CONSUMIDOR FINAL".
 
