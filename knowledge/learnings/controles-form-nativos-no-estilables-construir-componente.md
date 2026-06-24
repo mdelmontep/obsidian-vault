@@ -21,3 +21,5 @@ number/enum), `onChange` y efectos secundarios intactos.
 Casos límite (optgroup, borde de error, autofocus por `ref`, uncontrolled): NO
 dejarlos nativos — **ampliar el componente compartido** (props `group`/`invalid`/
 `autoFocus`, o darle estado al uncontrolled). Una fuente única > excepciones.
+
+Ya construidos en el repo (TuFacturaIA): `<DatePicker>` (`src/components/ui/date-picker.tsx`, ISO `YYYY-MM-DD`) y `<Select>` (`select.tsx`) → úsalos, NUNCA reintroduzcas `<input type="date">`/`<select>` nativos. Caso 2026-06-25: SEPA remesas "fecha de cargo" + mandatos "fecha firma" migrados de nativo a `<DatePicker>`.
