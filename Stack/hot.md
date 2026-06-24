@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **NIF receptor solo si B2B** — consumidor final no lo necesita ni con Verifactu activo (clave F2). Exigirlo es más restrictivo que la ley. Ver [[nif-receptor-obligatorio-solo-3-supuestos-verifactu]]
+
 - **Remesa SEPA pain.008 (adeudo directo)** — SeqTp a nivel PmtInf, control del Id de Acreedor `98-mod97(idNac+ES00)`, CtrlSum en céntimos, IBAN single-source. Ver [[sepa-pain008-remesa-adeudo]]
 - **Reconciliar estado externo al reiniciar** — no cancelar+recrear (avalancha de filas fantasma + pérdida de SL/TP); re-trackear por clave natural preservando id. Ver [[reconciliar-estado-externo-al-reiniciar-no-cancelar-recrear]]
 - **Cron materializador + collector en vivo = dedup en runtime, no con filtro de origen** — filtrar el cron crea gap cuando el servicio recupera entre ticks. Ver [[alert-collector-cron-vs-live-dedup-gap]]
