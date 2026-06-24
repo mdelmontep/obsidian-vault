@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Actions caído (billing) → hooks locales = único gate** — un merge con `--no-verify` cuela lint/build roto a main (caso SEPA: `react-hooks/set-state-in-effect` en facturas-view). `npm run lint` global antes de cada merge; node_modules real (`npm ci`) para que el pre-push build pase en worktree. Ver [[actions-sin-billing-hooks-locales-unico-gate]]
 - **NIF receptor solo si B2B** — consumidor final no lo necesita ni con Verifactu activo (clave F2). Exigirlo es más restrictivo que la ley. Ver [[nif-receptor-obligatorio-solo-3-supuestos-verifactu]]
 
 - **Remesa SEPA pain.008 (adeudo directo)** — SeqTp a nivel PmtInf, control del Id de Acreedor `98-mod97(idNac+ES00)`, CtrlSum en céntimos, IBAN single-source. Ver [[sepa-pain008-remesa-adeudo]]
