@@ -1963,3 +1963,14 @@ Server-side `/api/informes/*` + helpers puros `src/lib/informes/*`. Tool copilot
 **Verificado**: 176+ tests, lint+typecheck+build limpios. Playwright (login real) read+write-path verdes en prod, 0 residuo. Mig 296 aplicada a prod (`db push --include-all`, iba por detrás de 297). Bug `proveedores.empresa` (no existe columna; sí en `clientes`) cazado y fijado → [[proveedores-no-tiene-columna-empresa-asimetria-clientes]].
 
 Commits en main: `d2fcc81b` (barrido por sesión paralela 088) + `fe346a29` + `7c52cbad` + `a3493b12` + `858f79fa` + `954dd181`.
+
+---
+
+## 2026-06-24 · Bug recibidas "no se puede cumplimentar NIF proveedor"
+
+Ticket soporte Pescados Chivite (proveedor francés SARL HUITRES GEAY, NIF vacío en recibida `pendiente`). **Causa**: `saveEdit` (`facturas-view.tsx`) bloqueaba TODO guardado fuera de `sin_aprobar`, mezclando datos fiscales del documento (inmutables, RD 1619/2012) con datos maestros del proveedor (nombre/NIF, del contacto).
+
+- **#464**: completar nombre/NIF del proveedor vinculado se permite en cualquier estado de la factura; los campos fiscales siguen restringidos al estado editable.
+- **#467**: si la recibida no tiene proveedor (`proveedor_id` NULL — 29 en prod, OCR sin emisor), `ensureProveedor` hace find-or-create (NIF identidad fuerte, nombre respaldo; espejo del emparejado de la bandeja de ingesta) y vincula el id a la factura. Antes el nombre/NIF tecleados se descartaban en silencio.
+
+Spec E2E de regresión `tests/e2e/smoke/recibidas-completar-nif.spec.ts` (2 casos, verde en localhost con seed/cleanup vía service-role en org sandbox). lint+typecheck+build limpios. Ambos PRs MERGED a main (`178ecf55`, `44063312`).
