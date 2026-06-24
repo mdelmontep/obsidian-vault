@@ -134,7 +134,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ## NEXT (próximas 2 semanas)
 
 
-- **SEPA remesas adeudo directo (pain.008 / Cuaderno 19.14) — MVP en PR #459, sin merge** — 5 slices TDD (config banca, mandatos por cliente, generador hand-rolled, flujo remesa+descarga, gating+manuales). Schema **379-381 ya aplicado a cloud por psql** (idempotente) + override `org_features` para Sandbox (QA). Pendiente: merge → `supabase db push --linked` desde main (re-corre 379-381 + aplica **382, que activa `sepa` a todo Pro/Enterprise**) → smoke. Fuera de alcance: devoluciones, B2B, recurrencia. Ver [[sepa-pain008-remesa-adeudo]].
+- **SEPA remesas adeudo directo (pain.008 / Cuaderno 19.14) — ✅ MERGEADO (#459) + GA en prod 2026-06-24** — migs 379-383 aplicadas vía `db push` (la 382 activó `sepa` para Pro/Enterprise; 5 orgs enterprise ya lo ven). XML validado estructuralmente contra remesa real Holded (mismo vocabulario y orden de campos). **Pendiente externo**: que Dani (dansanch@tecnocloud.es) suba un fichero de prueba a su banca y confirme aceptación. Fuera de alcance: devoluciones, B2B, recurrencia. Ver [[sepa-pain008-remesa-adeudo]]. → histórico próxima poda.
 
 - **Auditoría seguridad 4 dims — ✅ MERGEADO + cerrado (#341, main `b7faef38`)** — núcleo sólido (auth/RLS/webhooks OK). Fixes en prod: RBAC `settings/features`+`disconnect` (admin-only, manual-admin §7.1 actualizado), IP confiable en rate-limit (helper `lib/http/client-ip.ts`), reconexión Redis. Sin follow-ups: el `SIGNING_LEGACY_UNTIL` que el audit marcó INCIERTO **ya estaba cerrado desde 2026-06-09** (ver "Migración crons → HMAC v2" más abajo) — el INCIERTO venía de que el agente no veía el env de prod. Ver [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]].
 
