@@ -180,3 +180,9 @@ Para referencia (no reusar en cliente nuevo, mapear los suyos):
 - 88183 — Chatbot Simarro WhatsApp (chat asíncrono)
 
 Cada uno puede tener múltiples pasos; auditar por UI antes de cualquier debug.
+
+## API REST v4 — quirks de escritura (jun 2026)
+- **Vaciar un CF**: `values: null`, NO `values: []` (Kommo rechaza con `TooFew: should contain exactly 1 element` y tumba TODO el PATCH).
+- **CF multiselect no refresca en vivo en la ficha** tras escritura por API: el panel muestra "Elegir" (vacío) aunque el valor SÍ está (verificable por API + activity log). Recargar la página. Texto/número/select-simple sí refrescan.
+- **GET `/leads/{id}` único** requiere el **long-lived token** (cred `kommoLongLivedApi`); el Bearer "amojo" (scope chats) devuelve la **página de login HTML** (no autentica la API v4 REST).
+- **`filter[id]=X` es inválido** (devuelve `{}`); usar `filter[id][]=X` o `/leads/{id}`.

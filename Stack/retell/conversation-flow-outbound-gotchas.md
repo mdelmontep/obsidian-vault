@@ -52,3 +52,10 @@ NO re-ofrecer a puerta fría la vivienda/producto que ya le interesó (si la des
 4. Degradación limpia: sin matching → vars vacías → el flow cae al camino de descubrimiento puro.
 
 Relacionado: [[prompt-engineering-voice-agents]], [[voice-config-inbound-castellano]].
+
+## Búsqueda en cartera desde voz (gotchas, jun 2026)
+
+- **Condición de edge tipo `prompt` sobre variable vacía NO es fiable**: si la intención del turno encaja, el LLM dispara el edge ignorando el "si `{{var}}` está vacío". Caso: re-propuso una vivienda inexistente con `{{vivienda_match_dir}}` vacío. Fix: separar la decisión en **nodos distintos** (uno solo existe cuando hay dato) + guard en el nodo destino + regla en `global_prompt`. (Ideal: condición `equation`/`is_empty` si la cuenta lo soporta.)
+- **Zona vaga = 0 resultados**: si el cliente dice "la zona", "el noroeste", "cerca", NO lo pases como `municipality` ni dentro de `query` — el backend lo filtra literal y no casa nada. Pasar `municipality` SOLO con municipio concreto; si es vago, buscar por presupuesto/tipo (query genérico) y devolver lo que haya.
+- **No re-ofrecer lo ya visto**: pasar `exclude_ids` con la(s) vivienda(s) que el cliente ya conoce (la original por la que se le llamó). La tool de búsqueda debe soportar exclusión.
+- **`found:0` honesto**: ofrecer zonas/viviendas REALES con stock (consultadas, no inventadas); si no hay nada, "te aviso cuando entre algo" — sin nombrar el canal (WhatsApp) salvo que el cliente lo pida.
