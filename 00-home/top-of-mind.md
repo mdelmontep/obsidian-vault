@@ -16,6 +16,7 @@ Kanban: **NOW** = en lo que estás esta sesión (máx 3). **NEXT** = próximas 2
 
 ## NEXT (próximas 2 semanas)
 
+- **TuFacturaIA — SEPA devoluciones Fase 1 en PR #470** (backend+UI, 37 tests verde, worktree `feat/sepa-devoluciones`) — pendiente: QA localhost UI + golden-file pain.002 real de BBVA (Dani) + `supabase db push` mig 384. C19.14 diferido. NO merge sin OK. Ver [[sepa-pain008-remesa-adeudo]].
 - **TuFacturaIA — refactor arquitectura #2/#3/#4 (3 PRs en review)** — #472 email-provider-port (port Resend/SMTP/in-memory + `attachmentMissing` observable), #473 conciliacion-decision-engine (`decision.ts` puro: umbrales + "manual gana"), #474 copiloto-shared-helpers (`_shared.ts`, dedup). Los 3 con lint+typecheck+build verde, base `e015a98f`, mergeables en cualquier orden. Pendiente: review/merge + smoke. Cierra #2/#3/#4 del informe `/improve-codebase-architecture` (#5 ya estaba; #1 vía #463). Ver [[agente-background-en-worktree-build-cuelga-watchdog]]
 
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC en BingX, tope $10 nocional ($1 margen 10x), ~88 USDT reales; otras 4 estrategias en paper paralelo. Dashboard cryptobruj-bot.185.99.186.76.sslip.io/analisis. Sin validar (negativo en demo) → vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true` en Dokploy.
