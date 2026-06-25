@@ -1974,3 +1974,7 @@ Ticket soporte Pescados Chivite (proveedor francés SARL HUITRES GEAY, NIF vací
 - **#467**: si la recibida no tiene proveedor (`proveedor_id` NULL — 29 en prod, OCR sin emisor), `ensureProveedor` hace find-or-create (NIF identidad fuerte, nombre respaldo; espejo del emparejado de la bandeja de ingesta) y vincula el id a la factura. Antes el nombre/NIF tecleados se descartaban en silencio.
 
 Spec E2E de regresión `tests/e2e/smoke/recibidas-completar-nif.spec.ts` (2 casos, verde en localhost con seed/cleanup vía service-role en org sandbox). lint+typecheck+build limpios. Ambos PRs MERGED a main (`178ecf55`, `44063312`).
+
+### Stock — descuento por lotes (ticket Chivite, 2026-06-25)
+
+- **#488 + mig 388**: ventas de productos con `gestiona_lotes` no descontaban stock — el motor `aplicar_movimientos_lotes` exigía `lote_id` y fallaba en silencio (`raise warning + continue`) cuando no llegaba; varios bordes lo descartaban (Zod no-strict en `POST /api/facturas`, schema `.strict()` en `PATCH`, payload UI, schema API v1). Fix de raíz: **auto-FEFO en el motor** (consume partidas por caducidad/entrada con split; sobreventa→excepción, nunca silencio) como single source of truth para todos los canales (web/API/voz/copiloto) + propagación de `lote_id` en los bordes como defensa en profundidad. Reconciliación one-off de las 3 facturas ya emitidas de Chivite (A2026-0001/0002/0003). Desplegado y verificado en prod (smoke 3/3 + test FEFO transaccional). Learning [[motor-con-input-requerido-debe-defaultear-no-fallar-mudo]].
