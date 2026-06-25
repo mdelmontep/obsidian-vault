@@ -13,6 +13,8 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Error handler n8n global** — 1 workflow `Error Trigger→Set→httpRequest`, asignar `settings.errorWorkflow` a todos vía API; Incoming Webhook Slack > nodo OAuth (portable); NO se hereda en nuevos. Ver [[n8n-error-handler-global-via-errorworkflow]]
+- **n8n: ramas paralelas no garantizan orden** — si B usa `$('A')` y A es hermana, ponerlo en serie (no `$if(isExecuted)`, que deja el dato vacío). Ver [[n8n-ramas-paralelas-no-garantizan-orden-poner-en-serie]]
 - **Actions caído (billing) → hooks locales = único gate** — un merge con `--no-verify` cuela lint/build roto a main (caso SEPA: `react-hooks/set-state-in-effect` en facturas-view). `npm run lint` global antes de cada merge; node_modules real (`npm ci`) para que el pre-push build pase en worktree. Ver [[actions-sin-billing-hooks-locales-unico-gate]]
 - **NIF receptor solo si B2B** — consumidor final no lo necesita ni con Verifactu activo (clave F2). Exigirlo es más restrictivo que la ley. Ver [[nif-receptor-obligatorio-solo-3-supuestos-verifactu]]
 
