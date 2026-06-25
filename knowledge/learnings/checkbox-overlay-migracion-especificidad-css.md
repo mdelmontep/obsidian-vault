@@ -1,25 +1,25 @@
 ---
-title: migrar input nativo a componente con overlay — borrar reglas css del nativo (especificidad)
+title: migrar input nativo a componente wrapper — superar/borrar las reglas css del nativo
 date: 2026-06-25
 source: claude-code-session
 tags: [css, design-system, frontend, facturaia]
 ---
 
-Al sustituir un `<input type=checkbox/radio>` nativo por un componente con
-**overlay transparente** (`input{position:absolute;inset:0;width:100%;opacity:0;z-index:2}`
-sobre una casilla estilizada), hay que **eliminar las reglas CSS viejas del nativo**.
+Al sustituir un `<input>` nativo (checkbox/radio/number) por un componente que lo
+envuelve y lo estiliza, las reglas CSS contextuales del sitio (`.padre input`,
+`.wrapper input[type=x]`) suelen tener MÁS especificidad que las clases del
+componente y lo pisan.
 
-Por qué: un selector como `.wrapper input[type=checkbox]{width:16px}` tiene
-especificidad **(0,2,1)** y GANA al `.input{width:100%}` del componente **(0,1,0)**.
-Resultado: el overlay se encoge a 16px y deja **bordes muertos** sin clic. El `accent-color`
-ya era invisible (input opacity 0), pero el `width/height` sí rompe la interacción.
+- **Checkbox/radio con overlay transparente** (`input{position:absolute;inset:0;
+  width:100%;opacity:0}`): `.wrapper input[type=checkbox]{width:16px}` (0,2,1) gana a
+  `.input{width:100%}` (0,1,0) → encoge el área clicable, bordes muertos. Fix: BORRAR
+  las reglas del nativo al migrar (no tocar `input[type=radio]` ni el switch/Toggle).
+- **Number con stepper**: `.edit-row input` (0,1,1) / `.admin-cobros-pricing-tr
+  input[type=number]` (0,1,2) pisan `.inputStepper{padding-right}` (0,1,0) → el número
+  queda bajo las flechas. Fix: selector COMPUESTO `.input.inputStepper` (0,2,0) gana a
+  todo lo contextual.
 
-Fix: borrar `.wrapper input[type=checkbox]{...}` al migrar. NO tocar las de
-`input[type=radio]` ni las del switch/Toggle.
+Corolarios: wrapper `<span>` no `<label>` (anidable en un `<label>` externo, sin doble
+toggle); en flex-row de ancho fijo el wrap colapsa → pasar `wrapClassName` con el ancho.
 
-Corolario: el wrapper del componente debe ser `<span>`, **no `<label>`** — así puede
-anidarse dentro de un `<label>` externo sin HTML inválido ni doble toggle.
-
-Caso real FacturaIA: tick "Burst" como componente único (`src/components/ui/checkbox.tsx`),
-34 checkboxes migrados; reglas muertas en `.fact-table`/`.gen-send-toggle-row`/
-`.series-modal-checkbox`/`.adm-checkbox`/`.toggleArchivadas`.
+Caso real FacturaIA: checkbox "Burst" + NumberField, fuente única (docs/design §6-7).
