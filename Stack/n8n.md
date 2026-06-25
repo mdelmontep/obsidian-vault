@@ -259,7 +259,7 @@ Para latencia baja con escritura externa (Kommo, Calendar, WA), patrón:
 
 ## Gotchas Code + If (mayo 2026)
 
-- **`If` v2 strict — `null != 0` ⇒ TRUE**. Rompe detección "este id existe?" con `notEquals 0`. Patrón seguro: emitir flag booleano `_has_X = !!X` en el Code anterior, If `boolean.true` sobre el flag. Ver [[n8n-if-strict-null-not-equals-0-evalua-true]].
+- **`If` v2 (strict y loose) — `null != 0` ⇒ TRUE**. Rompe detección "este id existe?" con `notEquals 0` (visto en strict y en `typeValidation:loose`). Patrón seguro: emitir flag booleano `_has_X = !!X` en el Code anterior, If `boolean.true` sobre el flag (mejor que devolver `0` en vez de `null`, que también funciona pero es frágil). Ver [[n8n-if-strict-null-not-equals-0-evalua-true]].
 - **Final response que lee `$('NodeX').first().json` crashea si NodeX no se ejecutó** (rama de cortocircuito, validation fail, dry_run). Patrón: chequear `$input.first().json._short_circuit === true` primero, passthrough. Lookup específico siempre envuelto en try/catch. Ver [[n8n-code-final-response-leer-input-no-nodo-concreto-si-hay-branches]].
 - **`executeWorkflowTrigger` con `inputSource:"workflowInputs"` filtra campos no declarados**. Añadir nuevos campos al schema del trigger en TODOS los sub-workflows downstream (cascade). Ver [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]].
 

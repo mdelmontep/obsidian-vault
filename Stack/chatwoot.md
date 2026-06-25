@@ -24,3 +24,8 @@ tags: [chatwoot, whatsapp, infra]
 - **WhatsApp Cloud en Chatwoot requiere redirigir el webhook de Meta** — sin cambiar la Callback URL en Meta Developer Console → WhatsApp → Configuration, los mensajes siguen llegando al destino anterior (n8n directo) y Chatwoot muestra 0 conversaciones. Configurar URL + Verify Token + suscribir campo `messages`
 - **Custom attributes endpoint v3+ renombrado** — `/api/v1/accounts/{id}/custom_attributes` devuelve 404 en Chatwoot v3+. Usar `custom_attribute_definitions`. Ver [[chatwoot-custom-attribute-definitions-endpoint-v3-renombrado]]
 - **Bot token ≠ admin token** — bot tokens NO sirven para `/inboxes`, `/labels`, `/custom_attribute_definitions` (401). Para crear estructura via API, login admin con `POST /auth/sign_in` y usar el `access_token` devuelto. Ver [[chatwoot-bot-token-vs-admin-token-scopes-distintos]]
+
+## API contacts / conversations
+
+- **`/contacts/search` es GET, no POST** — `GET /api/v1/accounts/{id}/contacts/search?q=<query>` (URL-encode el `+` del E.164). POST a esa ruta → **404** "page doesn't exist". Devuelve `{meta, payload:[...]}`.
+- **`POST /contacts` (API Channel): de dónde sacar el `source_id`** — la respuesta trae el `source_id` del contact_inbox en `payload.contact_inbox.source_id` (singular, top-level) **y** en `payload.contact.contact_inboxes[].source_id` (plural, anidado). NO en `payload.contact_inboxes` (no existe). Hace falta para `POST /conversations` después; leerlo de la ruta equivocada → `source_id:null` → la conversación no se crea ("Resource could not be found").
