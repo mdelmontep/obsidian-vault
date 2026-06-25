@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **Migrar input nativo → componente con overlay** — borra las reglas CSS del nativo (`.wrapper input[type=checkbox]{width}` (0,2,1) gana al `.input{width:100%}` (0,1,0) y encoge el área clicable); wrapper `<span>` no `<label>`. Ver [[checkbox-overlay-migracion-especificidad-css]]
 - **Motor con input requerido → defaultea, no falles mudo** — un default sensato en el motor (FEFO) > parchear N bordes; los canales ciegos no pueden aportar el campo. Ver [[motor-con-input-requerido-debe-defaultear-no-fallar-mudo]]
 - **Chatwoot API: `/contacts/search` es GET (POST→404) + `source_id` de `POST /contacts` en `payload.contact_inbox`** — gotchas al crear contacto/conv vía API Channel. Ver [[../Stack/chatwoot]] §API contacts/conversations
 - **Error handler n8n global** — 1 workflow `Error Trigger→Set→httpRequest`, asignar `settings.errorWorkflow` a todos vía API; Incoming Webhook Slack > nodo OAuth (portable); NO se hereda en nuevos. Ver [[n8n-error-handler-global-via-errorworkflow]]

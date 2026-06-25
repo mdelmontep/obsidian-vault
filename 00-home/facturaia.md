@@ -92,6 +92,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **Tick "Burst" en prod (sin QA visual previo, pusheado directo a main b1b433fd)** — confirmar que renderiza y NO se recorta en tablas densas: emitidas/recibidas (col-chk + cabecera select-all/indeterminate), conciliación, stock/reposición, settings, admin. Vigilar partículas en celdas con `overflow:hidden`.
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
 
