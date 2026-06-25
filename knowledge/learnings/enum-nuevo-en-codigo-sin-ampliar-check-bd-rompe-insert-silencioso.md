@@ -25,4 +25,9 @@ solo `preview` NO ejercita el `commit`** → el CHECK violado se escondió tras 
 preview smoke verde; el bug salió LIVE. Regla: en tools con split preview/commit,
 el smoke DEBE llegar al commit (ejecutar `executeTool(...,{userConfirmed:true})`,
 no solo `preview`).
+Y mig 386 `'recurrente'` (cron recurrencia, 2026-06-25) — 3ª vez en el hotspot.
+**Matiz: al re-crear el CHECK para AÑADIR un valor, incluir TODA la lista
+vigente** (grep todas las defs `*_fuente_check` previas); omití `'web'`/`'copiloto'`
+→ el `ADD CONSTRAINT` falló 23514 sobre **filas existentes** (no sobre el insert).
+El `DROP`+`ADD` dentro de `BEGIN/COMMIT` → el fallo revierte y el constraint queda intacto.
 Relacionado: [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]] · [[smoke-insert-directo-no-ejerce-el-motor-real]].
