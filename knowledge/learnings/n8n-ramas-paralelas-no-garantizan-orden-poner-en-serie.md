@@ -12,3 +12,5 @@ n8n NO garantiza el orden de ejecución entre ramas hermanas (dos nodos que cuel
 `$if(isExecuted)` es solo para ramas condicionales o dos triggers que convergen, donde A legítimamente puede no correr. Ver [[n8n-expresion-nodo-no-ejecutado-falla-silencioso]] y [[n8n-nodos-compartidos-entre-ramas-requieren-if-isExecuted]].
 
 **Caso real**: Simarro reserva (`iMoTKZWxYLymGuHF`) — `Get dirección Retell` colgaba en paralelo de `Preparar Datos Retell`; `Create Calendar Retell` lo referenciaba y corría antes → no creaba evento/tarea/email. Fix: `IF ocupado → Get dirección → Create Calendar`.
+
+**Excepción — cuando serializar multiplica ejecuciones**: si A corre *once-per-item* (GCal getAll, HTTP por item…), ponerlo en serie aguas arriba de B lo hace correr N veces. Usar un nodo **Merge (append)** que sincroniza ambas ramas antes de B. Gotcha: tras el Merge, `$input.all()` de B = items combinados de las dos ramas → leer cada fuente por `$('Nodo').all()`, NO por `$input`, o duplicas. Caso real: EcoBox `Mirar_disponibilidad` (franja + conteo del día con 1 solo getAll por ventana).
