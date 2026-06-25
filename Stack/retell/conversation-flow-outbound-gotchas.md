@@ -30,6 +30,11 @@ Si `n_mirar`/`n_reservar` fijan `idealista_id={{vivienda_idealista_id}}`, cualqu
 ### Bonus: nodo conversation "silencioso" = limbo
 Un conversation node con instrucción "avanza sin hablar" nunca transiciona (la transición ocurre TRAS un turno hablado) → el flow se queda en limbo y el modelo alucina resultados ("tu visita está reservada" sin tool call). Eliminar el nodo o hacerlo hablar siempre.
 
+### 4. Nodo de objeción con un solo edge = trampa terminal
+Caso real (2026-06-25): "No, me pareció cara" → routing a `n_motivo`, cuyo **único edge iba a `n_despedida`**. Cuando luego dijo "sigo buscando", el nodo no tenía salida de rescate → Ana se despidió. El "No" del turno siguiente NO se malinterpretó: el cierre ya estaba cableado desde el turno anterior; daba igual la respuesta.
+
+**Fix doble**: (a) todo nodo de objeción/motivo debe tener edges de rescate hacia descubrimiento/match/callback, no solo a despedida — el cliente suele revelar AHÍ que sigue buscando; (b) en el nodo de entrada, un "No + queja sobre la cosa concreta" (cara, zona) **no es abandono** → enrutar a indagar; reservar la rama "ya no busca" para señales claras (compró/alquiló/lo dejó). Backups: `n8n-backups/simarro/retell-flow-outbound-{pre,postfix}-motivo-deadend-20260625.json`.
+
 ## Naturalidad anti-IA (lo que delata a un agente de voz)
 
 Detectado por el cliente en transcripción real ("se identifica que no es natural, ha sido como IA"):
