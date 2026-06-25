@@ -1,18 +1,18 @@
 ---
-title: en facturaia `proveedores` no tiene `empresa` (sí `clientes`) → embed postgrest 500
-date: 2026-06-16
+title: clonar un `.select()`/forma entre tablas gemelas → grepea las columnas reales (el tipo TS puede mentir)
+date: 2026-06-25
 source: claude-code-session
 tags: [facturaia, supabase, postgrest]
 ---
 
-Asimetría de schema fácil de pasar por alto: `clientes` tiene `nombre` **y** `empresa`
-(razón social, persona jurídica); `proveedores` SOLO tiene `nombre` (NOT NULL), sin `empresa`.
+Al copiar una query o un payload entre dos tablas "gemelas", grepea las columnas reales
+de la tabla destino antes: el tipo TS puede declarar un campo que la columna no tiene.
+No salta en typecheck ni en tests con mocks (el mock devuelve lo que le pongas) — solo
+en runtime contra BD real (`column X does not exist`, 400 `PGRST204` / 500). Lo caza Playwright.
 
-Copiar el patrón de clientes a una query de proveedores rompe:
-`.select('proveedores ( nombre, empresa )')` → 500 PostgREST
-`column proveedores_1.empresa does not exist`. No salta en typecheck ni en tests con
-mocks (el mock devuelve lo que le pongas) — solo en runtime contra BD real. Lo cazó Playwright.
-
-Fix: en proveedores usar solo `nombre`. Nombre de display = `nombre` (sin fallback a empresa).
-Regla general: al clonar una query entre dos tablas "gemelas", grepea las columnas reales
-de la tabla destino antes de copiar el `.select()`. Ver [[playwright-domcontentloaded-no-espera-hidratacion-rsc]].
+Caso facturaia: `clientes` tenía `nombre` **y** `empresa` (razón social) desde mig 037;
+`proveedores` solo `nombre`. El tipo TS `Proveedor` y el form compartido de `/clientes`
+SÍ escribían `empresa` → guardar un proveedor con razón social/contacto: 400, no persistía.
+Resuelto de raíz el **2026-06-25 (mig 387)**: `proveedores` ya tiene `empresa`, la asimetría
+desapareció (quedó obsoleto el comentario de `informes/gastos/route.ts` que evitaba seleccionarla).
+Ver [[campo-huerfano-shape-sin-migracion-paralela]] · [[consumidor-lee-claves-que-productor-no-emite]].
