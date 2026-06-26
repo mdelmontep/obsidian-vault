@@ -15,8 +15,10 @@ Estrategia de pricing aprobada por Manu (2026-06-26) tras auditoría de pagos. *
 - ✅ Migración 399 aplicada a prod (vía MCP, pooler 5432 inaccesible desde la red de Manu). Verificado: 4 planes (14/29/49/99, orden 1-4), grandfathering 1 org, matriz incremental (starter 12 / plus 19 / pro 27 / enterprise 32), stock fuera de beta, add-ons plegados, conciliacion_ia solo enterprise.
 - ✅ Código Plus (literales + UI 4 columnas) en PR #509, build limpio, QA visual OK (4 columnas, Plus con bullets).
 - ⏳ **PENDIENTE registrar 399 en `schema_migrations`**: aplicada vía MCP, NO vía `db push` (pooler caído). Cuando el pooler 5432 responda: `supabase db push --linked` (idempotente, re-ejecuta sin efecto y la registra) o `supabase migration repair --status applied 399`. Hasta entonces `migration list` la muestra como local-no-aplicada (falso; los efectos SÍ están).
-- ⏳ **Env Dokploy**: setear `STRIPE_PRICE_ID_PLUS_MENSUAL`/`_ANUAL` en el compose app (`56B2b1ypWx3Xzdr06eYtG`). OJO gotcha PEM: NO round-tripear el blob env entero (parte las claves PEM multilínea y tumba prod) — añadir solo esas 2 líneas, mejor por panel UI. Sin esto, el checkout de Plus da 503.
-- ⏳ Merge PR #509 + deploy (autoDeploy on push a main).
+- ✅ **Env Dokploy** `STRIPE_PRICE_ID_PLUS_*` puestas + deployado (2026-06-26). Tier Plus operativo en prod.
+- ✅ Merge PR #509 a main (squash `00a4acc5`) + deploy.
+- ⏳ **Smoke prod**: `/settings?tab=plan` → "Cambiar a Plus" → checkout Stripe 29€+IVA.
+- ⚠️ **Price de Starter en Stripe sigue a 19€** (`price_1TdTv0GgQMT2aOqBnoDkGwTZ`) mientras la BD ya está a 14€ → un starter nuevo ve 14€ en la UI pero el checkout cobraría 19€. Hay que crear price starter mensual 14€ + anual 134,40€ en Stripe live y rotar `STRIPE_PRICE_ID_STARTER_MENSUAL/_ANUAL` en Dokploy. La 1 org starter real (suscripción a 19€) decidir si se migra. PENDIENTE de Fase 2B.
 - ⏳ **Fase 2B**: split fino conciliación (cablear sub-flags `conciliacion_ia` + `integracion_banco` en ~30 puntos de gating) + sidebar candado (mostrar features bloqueadas con CTA en vez de ocultarlas). La feature `conciliacion_ia` ya existe en BD (enterprise); falta el gating en código.
 
 ## Estrategia aprobada (decisiones)
@@ -73,5 +75,14 @@ Cuotas sugeridas Plus: facturas 150, OCR 100, WhatsApp msgs 800, copiloto 1,5M t
 - `plans.starter.precio_mes=14` en prod pero mig `204` decía 19 (editado por panel; reconciliar canónico).
 - `stock` en `disponibilidad='beta'` = add-on de pago accesible gratis para todos (fuga de ingresos). Cerrar al reempaquetar.
 - `admin_dashboard_stats` MRR suma solo `precio_mes`, ignora anual y add-ons.
+
+## Fase 2B — pendientes accionables (próxima sesión)
+
+1. **Split conciliación — cablear sub-flags** (las features ya existen en BD tras mig 399; falta el gating en código):
+   - `conciliacion_ia` (solo enterprise): gatear la parte IA. Puntos: `src/app/api/internal/conciliacion/enrich-batch/route.ts` (hoy itera TODAS las orgs sin filtrar feature — filtrar por org en processOrg), `sugerencias/[id]/confirm/route.ts` + `reject/route.ts`, `reglas-aprendidas/route.ts`. UI: `reglas-aprendidas-view.tsx` + bloque de sugerencias IA en `conciliacion-view.tsx`. Decidir si `conciliacion_ia` reemplaza o convive con los toggles `ia_*` de `org_module_config`.
+   - `integracion_banco` (solo enterprise; existe en BD desde mig 004 pero NUNCA se consulta): añadir `requireFeature:'integracion_banco'` al `withApiAuth` de `src/app/api/conciliacion/banks/*` (route, providers, connect, [id], sync, movimientos, access-report — NO `callback`, es OAuth público). UI: gate del CTA "conectar banco" en `conciliacion-view.tsx`.
+2. **Sidebar candado**: `src/components/layout/sidebar.tsx` (~:230) hoy OCULTA los items sin feature (`return hasFeature(...)`). Cambiar a mostrarlos con candado + badge + CTA a `/settings?tab=plan` para descubribilidad/conversión (patrón ya usado en canales de `agentes-view.tsx`).
+3. **Price Starter 14€ en Stripe**: crear price mensual 14€ + anual 134,40€ en Stripe live, rotar `STRIPE_PRICE_ID_STARTER_*` en Dokploy. Hoy Stripe cobra 19€ aunque la BD/UI digan 14€.
+4. **Pendientes menores de la auditoría** (no aplicados): MRR de `admin_dashboard_stats` suma solo `precio_mes` (ignora anual + add-ons → MRR subestimado); `UsageProvider` global + aviso 80% (en Fase 1 solo se migró copiloto/OCR al modal); ajuste opcional `base-checkout.ts:234-236` para que la conversión no arrastre `trial_period_days` (el trial sin tarjeta ya existe vía trigger 130).
 
 Ver auditoría de conexión en PR #509. Hub: [[facturaia]].
