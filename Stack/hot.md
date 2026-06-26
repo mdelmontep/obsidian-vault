@@ -13,6 +13,7 @@ movieron a [[index]] §Transversales (poda 2026-06-19). Lo demás vive en
 
 ## de la semana
 
+- **PostgREST corta agregaciones en JS (cap max-rows 1000)** — sumar filas con `reduce` infravalora en silencio; `count:'exact'` sí es exacto → cifra y count incoherentes. Agrega en BD (RPC SUM) o `.limit(N+1)`+`truncated`. Ver [[postgrest-max-rows-trunca-agregacion-en-js]]
 - **Migrar input nativo → componente con overlay** — borra las reglas CSS del nativo (`.wrapper input[type=checkbox]{width}` (0,2,1) gana al `.input{width:100%}` (0,1,0) y encoge el área clicable); wrapper `<span>` no `<label>`. Ver [[checkbox-overlay-migracion-especificidad-css]]
 - **Motor con input requerido → defaultea, no falles mudo** — un default sensato en el motor (FEFO) > parchear N bordes; los canales ciegos no pueden aportar el campo. Ver [[motor-con-input-requerido-debe-defaultear-no-fallar-mudo]]
 - **Chatwoot API: `/contacts/search` es GET (POST→404) + `source_id` de `POST /contacts` en `payload.contact_inbox`** — gotchas al crear contacto/conv vía API Channel. Ver [[../Stack/chatwoot]] §API contacts/conversations
