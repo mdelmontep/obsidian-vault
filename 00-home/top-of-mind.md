@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — crear prices Stripe live de Plus** (29/278,40) + rotar env `STRIPE_PRICE_ID_PLUS_*` — desbloquea que el tier Plus sea comprable. [[facturaia]]
+- **TuFacturaIA — panel precios admin ↔ Stripe** — rama `feat/precios-admin-stripe-sync` (6 issues código ✅, mig 404 en prod, smoke UI ✅). Falta: abrir PR → merge → go-live (crear price Stripe TEST→LIVE). Prices de Starter 14/Plus 29 ya cableados. Pasos: [[facturaia-precios-admin-stripe-sync]]
 - **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
 - **TuFacturaIA — smoke prod #518 (auditoría APIs)** — gating generar-pdf/generador_voz por rol/feature; alta recibida API con proveedor de otra org → 422; tools MCP stock/catálogo funcionan (scope `stock:draft`); avatar/feedback rechazan no-imagen. [[facturaia]]
 - **TuFacturaIA — pagar GitHub Advanced Security (~16 jul 2026)** — si caduca el trial se apaga Code Quality (scan + gate PR). [[facturaia]]

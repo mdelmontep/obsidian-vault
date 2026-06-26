@@ -34,6 +34,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Stock / Inventario — `disponibilidad='beta'` (pilotaje gratis, acceso universal sin add-on).** Fases A-D + 1 + 2 + 3 IA + lotes/trazabilidad/FEFO completas en prod. **Siguiente: monitorizar uso/feedback en pilotaje → decidir flip a `activo`** (cobro 12,90€). Detalle [[facturaia-modulo-stock]].
 - 🔴 **Smoke UI conciliación en sandbox** (tras PR #259/#261) — `/conciliacion`: contraste del drawer, sugerencia visible, tabla sin scroll horizontal (móvil+web), banner legible. Si chirría → 3-4 variantes numeradas. Pasos en `Smoke tests pendientes`.
 - **Registro branded + onboarding** (PR #256/#258 en main `84277b13`) — **falta deploy Dokploy**; tras deploy, smoke registro → confirmación Resend → perfil → fiscal → canales → dashboard. Pasos en `Smoke tests pendientes`.
+- 🟢 **Panel precios admin ↔ Stripe (fuente única)** — rama `feat/precios-admin-stripe-sync` (pusheada, sin PR). 6 issues código ✅ + mig 404 `plan_prices` **aplicada a prod** + smoke visual UI ✅. **Falta (HITL): abrir PR → merge → go-live (crear price en Stripe TEST→LIVE, nunca `sk_live` a ciegas)**. Pasos exactos: [[facturaia-precios-admin-stripe-sync]].
 - _Hitos cerrados (MCP server LIVE + Directory enviado, Resolver-con-Claude Fase 4, perf merge-train, incidente host OOM, debouncing, emisión web, Copiloto Fase 1+2 + set fiscal, stock lotes, copiloto paridad MCP 001-014, onboarding 021-030, conciliación Fase 2, modelo 349, multiempresa) → [[facturaia-historico-detallado]]._
 ## Bloqueos / esperando a terceros
 
