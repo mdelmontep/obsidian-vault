@@ -16,4 +16,7 @@ Fix: alinear el lector al shape real (única fuente; ambos productores ya
 coinciden) + migrar tests al shape de producción + 1 test de regresión con
 datos reales. Regla: shape compartido → grep TODOS los consumidores y testear
 con el shape que produce el sistema, no uno inventado.
+Caso real 2 (fiscal, #503): el motor 303 emitía cuotas en casillas 02/05/08; la
+spec posicional oficial 2026 las lee en 03/06/09 (02/05/08 = constantes de tipo%)
+→ el `.txt` AEAT salía con las cuotas en cero. Mismo patrón, capa fiscal.
 Ver [[cliente-react-bypasa-endpoint-canonico-bug-fiscal-latente]], [[test-mocks-rename-import-path-no-rename-import]].
