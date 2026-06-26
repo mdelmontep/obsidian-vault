@@ -92,6 +92,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- 🔴 **Notificaciones campanita (PR #507 en main, autoDeploy)** — tras deploy: verificar que la campanita muestra UNA notif agregada de facturas vencidas ("N vencidas · X€"), stock bajo y bandeja, no una por ítem; y que pago fallido/devolución SEPA/remesa lista aparecen. **FALTA dar de alta el cron `bandeja-pendiente-aviso` en Dokploy** (compose `tufacturaia-app`, `45 7 * * *`, command `sh /app/ops/cron/sign-call.sh /api/internal/bandeja-pendiente-aviso POST`) — sin eso ese aviso no se emite. Bug pre-existente arreglado de paso: webhook crítico no-silenciable (`webhook_endpoint_failing_critical` ahora sí se emite a los 50 fallos).
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
 

@@ -10,7 +10,9 @@ y dejar tu `main` local por delante de la base de tus ramas. Entonces
 sesión como si fueran (al revés) del branch → falsa alarma de "contaminación de scope".
 Fix: mira los cambios PROPIOS del branch con
 `git diff $(git merge-base main <branch>) <branch>`, o `git show --stat HEAD` dentro
-del worktree (diff del commit vs su padre). El commit suele estar limpio aunque el
-diff-vs-main parezca sucio. Caso real: auditoría 7-PR en paralelo con sesiones de
-stock/UI mergeando a main a la vez; perdí tiempo investigando "stock files" en PRs
-fiscales que en realidad eran #504/#496 de otra sesión.
+del worktree (diff del commit vs su padre). Inverso real: una rama de worktree creada
+sobre un `origin/main` VIEJO, tras rebase, puede arrastrar reverts de ficheros ajenos →
+verifica el scope con `git diff --name-only origin/main | grep -v <scope>`, NUNCA con
+`git diff --stat | tail -N` (el tail oculta el principio y un commit sucio parece limpio).
+Caso real: auditoría 7-PR en paralelo con sesiones de stock/UI mergeando a main a la vez;
+y PR de notificaciones que revertía el fix fiscal #494/#503 sin verlo por usar `tail`.
