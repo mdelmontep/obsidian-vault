@@ -19,3 +19,5 @@ tags: [email, css, design]
 - Stripe superior: `background-size:300%` + `animation:stripe` → efecto de movimiento de gradiente
 
 **VML para Outlook:** siempre envolver el CTA con `<!--[if mso]>...<![endif]-->` bulletproof.
+
+**Webfont con carácter:** progressive enhancement — `@import` en `<style>` la cargan Apple Mail/iOS; Gmail/Outlook caen a la pila websafe (nunca crítica). La distinción real la dan color/composición, no la fuente.
