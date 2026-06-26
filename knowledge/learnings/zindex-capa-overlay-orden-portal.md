@@ -1,16 +1,15 @@
 ---
-title: z-index de overlays — una capa + orden de portal, tokenizar value-preserving
-date: 2026-06-18
+title: popover portado debe superar el overlay del modal que lo contiene (no basta "una capa")
+date: 2026-06-26
 source: claude-code-session
 tags: [frontend, css, z-index]
 ---
 
-Los overlays portados a `<body>` (modal base, popovers Select/DatePicker, toast, menús) suelen convivir en UNA capa (p.ej. `z-index: 1000`) y el **orden de inserción en el DOM** decide quién queda encima (el último montado gana). Por eso un Select abierto dentro de un modal sale por encima del modal sin necesitar un z mayor.
+Popovers portados a `<body>` (Select/DatePicker via Floating UI) y overlays de modal conviven en UNA capa y el orden DOM decide quién gana **SOLO si comparten z-index**. Si el modal/drawer usa un z MAYOR (drawer 1100, modal 1200, overlay custom 1300), el popover a `--z-overlay`(1000) queda OCULTO bajo el overlay y no clicable.
 
-Implicaciones al tokenizar una escala z-index:
-- Que **refleje el stacking real medido**, NO un ideal "limpio". Un ideal inventado rompe: subir el modal por encima del popover ocultaría el Select abierto dentro de él.
-- Tokenizar **value-preserving** (cada token = el valor mágico que sustituye) = cero cambio de comportamiento.
-- Capa "siempre encima" (confirm dialog, tooltip, modal-sobre-modal) = token aparte (p.ej. `--z-top: 10000`).
-- NO tokenizar z-index **locales** (apilado interno de un componente, badges, `::before`, dropdowns inline) — no son capas globales.
+Corrige el supuesto "tokenizar value-preserving" de la versión previa de esta nota: mantener el popover a 1000 cuando hay overlays a 1300 **perpetúa el bug**.
 
-Relacionado: [[no-forzar-base-en-paneles-divergentes]]
+Fix: token propio `--z-popover` por encima de cualquier modal/drawer y bajo `--z-top` (confirm/tooltip). En TuFacturaIA `--z-popover: 1400` (PR #520). Síntoma: dropdown dentro de modal invisible, o que cierra el modal al clicar (esto último es OTRA causa → ver relacionado).
+
+Capa "siempre encima" (confirm/tooltip/modal-sobre-modal) = `--z-top: 10000`. NO tokenizar z-index locales (badges, `::before`, dropdowns inline).
+Relacionado: [[overlay-padre-onclick-close-sin-guarda-cierra-con-popover-portado]] · [[modal-portal-stacking-sticky-sidebar]] · [[no-forzar-base-en-paneles-divergentes]]
