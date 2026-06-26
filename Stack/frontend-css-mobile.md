@@ -68,6 +68,10 @@ tags: [frontend, css, mobile, overflow]
   CSS: `.set-table-wrap { overflow-x: auto; border-radius: inherit; } .set-table-wrap:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }`. Una clase reusable evita el patrón de 5 inline-styles duplicados. Ver [[mobile-table-scroll-x-needs-region-tabindex-wcag-2-1-1]].
 - **`WebkitOverflowScrolling: 'touch'`** es legacy (iOS 13+ default). No daña pero contamina — eliminar.
 
+## Tabla densa → tarjeta en móvil
+
+- **Al colapsar una `<table>` a tarjetas en móvil, prefiere disclosure inline a scroll horizontal**: chevron que despliega los campos ocultos en una línea extra; el tap-fila sigue abriendo el detalle. Reutiliza una celda con `display:none` en desktop → `colSpan` no cambia. Ojo: `display:flex` en un `<td>` lo saca del layout de tabla y **rompe el `colSpan`** en desktop → acótalo al `@media` móvil (donde el `<tr>` ya es `block`); para alinear sumas usa `margin-left:auto`, no `float:right`. Y `text-overflow:ellipsis` heredado en un `td`/`th` estrecho pinta "…" sobre hijos no-texto (checkbox/badge) → `overflow:visible; text-overflow:clip` en esas columnas. Caso facturaia `fact-table` (2026-06-26). Ver [[tabla-densa-a-tarjeta-en-movil-ellipsis-y-colspan]].
+
 ## Mobile Auth — Inputs y touch targets
 
 - **iOS zoom = `font-size < 16px` en inputs** — Safari auto-hace zoom cuando el input enfocado tiene font-size < 16px. Fix definitivo: `font-size: 16px` en todos los `input`, `select`, `textarea` en la hoja global.

@@ -7,7 +7,17 @@ tags: [facturaia, pricing, planes, billing, stripe, producto]
 
 # Reempaquetado de planes FacturaIA
 
-Estrategia de pricing aprobada por Manu (2026-06-26) tras auditoría de pagos. La **Fase 1** (bugs + conexión + soft-limits) ya está en PR #509. La **Fase 2/3** (tier Plus + reempaquetado + grandfathering) está pendiente de crear prices en Stripe live.
+Estrategia de pricing aprobada por Manu (2026-06-26) tras auditoría de pagos. **Fase 1** (bugs + conexión + soft-limits) + **Fase 2 núcleo** (tier Plus + reempaquetado + grandfathering) en PR #509. Prices Plus creados en Stripe live, migración 399 aplicada a prod (vía MCP execute_sql).
+
+## Estado (2026-06-26)
+
+- ✅ Prices Plus en Stripe LIVE: producto `prod_Um5L4qmpOHIfs4`, mensual 29€ `price_1TmXAyGgQMT2aOqBsL6pkhp1`, anual 278,40€ `price_1TmXAyGgQMT2aOqBETcDK1NJ`. En `.env.local` (dev).
+- ✅ Migración 399 aplicada a prod (vía MCP, pooler 5432 inaccesible desde la red de Manu). Verificado: 4 planes (14/29/49/99, orden 1-4), grandfathering 1 org, matriz incremental (starter 12 / plus 19 / pro 27 / enterprise 32), stock fuera de beta, add-ons plegados, conciliacion_ia solo enterprise.
+- ✅ Código Plus (literales + UI 4 columnas) en PR #509, build limpio, QA visual OK (4 columnas, Plus con bullets).
+- ⏳ **PENDIENTE registrar 399 en `schema_migrations`**: aplicada vía MCP, NO vía `db push` (pooler caído). Cuando el pooler 5432 responda: `supabase db push --linked` (idempotente, re-ejecuta sin efecto y la registra) o `supabase migration repair --status applied 399`. Hasta entonces `migration list` la muestra como local-no-aplicada (falso; los efectos SÍ están).
+- ⏳ **Env Dokploy**: setear `STRIPE_PRICE_ID_PLUS_MENSUAL`/`_ANUAL` en el compose app (`56B2b1ypWx3Xzdr06eYtG`). OJO gotcha PEM: NO round-tripear el blob env entero (parte las claves PEM multilínea y tumba prod) — añadir solo esas 2 líneas, mejor por panel UI. Sin esto, el checkout de Plus da 503.
+- ⏳ Merge PR #509 + deploy (autoDeploy on push a main).
+- ⏳ **Fase 2B**: split fino conciliación (cablear sub-flags `conciliacion_ia` + `integracion_banco` en ~30 puntos de gating) + sidebar candado (mostrar features bloqueadas con CTA en vez de ocultarlas). La feature `conciliacion_ia` ya existe en BD (enterprise); falta el gating en código.
 
 ## Estrategia aprobada (decisiones)
 
