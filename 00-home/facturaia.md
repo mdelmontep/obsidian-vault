@@ -21,8 +21,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - **Prod**: `app.tufacturaia.com` + `n8n.tufacturaia.com` (Dokploy `185.47.13.170`, SSL Let's Encrypt OK). BD Supabase `lahqlyaxvobqjgdiftag`. (dominio viejo `facturaia.agentesia.world` caído/obsoleto)
 - **Stack**: Next 16 · Supabase · n8n · OpenAI Vision · Anthropic Claude
-- **Planes**: Starter 19 / Pro 49 / Enterprise 99 €/mes (+IVA 21%, anual −20%) + add-on Centro Fiscal IA 14,90. **Stripe LIVE** desde 2026-06-01.
-- **Migraciones**: prod = main; última aplicada **336** (`security_search_path_y_logos_listing`, 2026-06-19; 329-335 = OAuth/MCP server, 06-18). Secuenciales `NNN_`, sin timestamps.
+- **Planes**: Starter 14 / **Plus 29** / Pro 49 / Enterprise 99 €/mes (+IVA 21%, anual −20%) + add-on Centro Fiscal IA 14,90. **Stripe LIVE** desde 2026-06-01. Reempaquetado escalonado + tier Plus + grandfathering aplicados **en BD** (mig 399, #509/#513). **Pendiente (acción Manu)**: crear los price IDs de Plus (mensual 29 / anual 278,40) en Stripe live + rotar envs `STRIPE_PRICE_ID_PLUS_*` (Starter 14 ya creado). Hasta entonces el tier Plus no es comprable.
+- **Migraciones**: prod = main; última aplicada **402** (`series_canonicas_backfill`, 2026-06-26). Secuenciales `NNN_`, sin timestamps. _(337-402: MCP server, perf merge-train, Resolver-con-Claude, Verifactu inalterabilidad, reempaquetado planes, notificaciones, series canónicas.)_
 - **Tests**: Vitest 1648/1648 verde · E2E smoke verde (cashflow v2 · conciliación Fase 2 · onboarding).
 - **Orgs prod**: AgentesiaLab · tecnocloud · Borja Galván · AgenteIA PRUEBA (todas `billing_status=active` complimentary).
 - _Snapshot detallado anterior y changelog completo → [[facturaia-historico-detallado]]._
@@ -94,10 +94,11 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
+- **Emitidas: Borja Galván (org `50a3cfbf`) emite su borrador serie A** → debe numerar `A2026-0001` sin error (backfill serie A aplicado 26-jun, mig 402). Cierra ticket #53190361.
 
 ## Decisiones pendientes (producto)
 
-- **Reempaquetado planes — desbloquear Fase 2** (2026-06-26): (1) crear prices Stripe live Plus mensual 29€ / anual 278,40€; (2) confirmar grandfathering (orgs active+trial conservan lo actual, excluir complimentary); (3) precio Starter canónico (prod=14€ vs mig 204=19€); (4) cerrar `stock` en beta (hoy add-on de pago accesible gratis); (5) sidebar candado vs ocultar features. Detalle: [[facturaia-reempaquetado-planes]]
+- **Reempaquetado planes — casi cerrado** (act. 2026-06-26): mig 399 (#509) + Fase 2B (#513) aplicadas a prod ya cubrieron ~~grandfathering~~ ✅ (PASO 1, override `source='grandfathered'`), ~~Starter canónico 14€~~ ✅ (PASO 0, reconciliado desde 19), ~~sidebar candado~~ ✅ (#513). **Queda vivo**: (1) **crear prices Stripe live de Plus** (mensual 29 / anual 278,40) + rotar env `STRIPE_PRICE_ID_PLUS_*` — **acción Manu**, sin esto el tier Plus no es comprable (Starter 14 ya creado); (2) verificar que `stock` en beta no se cobra como add-on de pago (mig 399 PASO 6 tocó incoherencias de add-ons — confirmar). Detalle: [[facturaia-reempaquetado-planes]]
 
 - **WhatsApp en starter — confirmar pricing** — desde 2026-06-01 starter incluye `generador_voz`+`presupuestos` con cuota `whatsapp_docs_mes`=30/mes (antes pro-only). Confirmar que es la intención comercial o revertir el toggle en `/admin/plans`.
 - **Bot WhatsApp case-2 (cambiar org a media conversación, reprocesar sin repetir)** — deferido 2026-06-01: la versión que reejecutaba el agente 2× en una misma ejecución n8n no es production-grade. Rehacer reusando la última propuesta SIN re-correr el agente, con smoke. Hoy "no en la otra" cambia bien pero pide repetir.
