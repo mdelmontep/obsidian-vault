@@ -20,6 +20,7 @@ También tiene agente de voz Retell propio (Laura) para soporte técnico inbound
 ## Próximos hitos
 
 1. **WhatsApp en TuFacturaIA** (LATER) — obtener `phone_number_id` de Meta Business → guardar en `organizations.settings.whatsapp.phone_number_id` → webhook override en n8n receptor v2
+2. **PR #3 voice-webhook-tickets** (NEXT) — pendiente review Dani. Tras merge → smoke E2E con llamada real.
 
 ## Agente de voz Laura — Retell
 

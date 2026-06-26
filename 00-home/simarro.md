@@ -55,6 +55,15 @@ Cambios aplicados sin probar en vivo:
 - Crear salesbot para plantilla `72645` Solicitud_recibida (resto de formTypes del formulario web; relacionado con la verificación del bot `88575` de arriba).
 - Latencia voz opcional: quitar embedding de `Buscar_viviendas` + `begin_message_delay_ms` 1000→400.
 - Consolidar creds (opcional, no urgente): 2 creds `kommoLongLivedApi` con el mismo token → una; 2 SMTP → reasignar los 7 nodos de contratos a `SMTP LEADS Simarro`.
+- **Verificación E2E reserva tras recableo (06-25)**: falta corrida real — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email interno. Crash "node hasn't been executed" cerrado; pendiente la corrida. Ver [[n8n-ramas-paralelas-no-garantizan-orden-poner-en-serie]].
+- **Outbound — re-test guion**: bug `n_motivo` (callejón sin salida) corregido en vivo (06-25). Pendiente re-test "no, me pareció cara → sigo buscando" + marcar consentimiento `1376604` (Ramón). Lanzador `2LqwDgLecHwjgIQl` activo. Ver [[project-outbound-reactivacion]] · [[conversation-flow-outbound-gotchas]].
+- **Simarro/CZ — bug recordatorios por task_type**: el fix viene del blueprint compartido → revisar si Clínica Zen arrastra el mismo (disparaba por cualquier tarea). Ver [[recordatorios-visita-por-task-type]].
+- **Preguntar a Ramón**: (1) ¿bot reserva directo o fecha provisional? (2) ¿pipeline Kommo vale o ajustes?
+- **Verificar salesbot `88183`**: acción "Enviar WhatsApp" con `{{lead.cf.1372573}}` en editor Kommo.
+- **Go-live routing por-agente** (datos): Ramón añade `agente:` en Idealista → sync `3zBDpPwBYLZgMink` → E2E con vivienda real. Hoy `properties.agent=NULL`. Voz publicada (v29). Ver [[routing-citas-por-agente]].
+- **Limpiar leads ZZ TEST matching (Kommo UI)**: `32287686`/`32288360`/`32293872`/`32295018`/`32302304`/`32314286` + `36016032` + Bad Bunny `32281284`. Pendiente también: chatbot WA que mueva a pool (voz ✅) + mapeo agente→`kommo_user_id` (Ramón) + re-notificar bajada de precio.
+- **Limpiar 9 leads test + cred SMTP fantasma**: leads `32260874`/`32260174`/`32260184`/`32260262`/`32260290`/`32260318`/`32260370`/`32257958` + "Ramon Demo". Cred SMTP App Password `simarroproperties@gmail.com` (`oKRmYFhljczyvzV8`) fantasma.
+- **IDs TODO en n8n** (LATER): rellenar TASK_TYPE_ID, RESPONSIBLE_USER_ID, SHEET_ID_LEADS_WEB, calendar Ramón, Supabase pending.
 - **LATER**: `meter info rag` cerrado (no se usa, sin documentos); monitor inmuebles tipo StateFox.
 
 ✓ Resueltos: SMTP (2026-06-02) · leads test limpiados (2026-05-31) · `desiredResults` Apify ya en 50 · sin restos de `Próxima cita` en Code JS (verificado 2026-06-10) · calendarios faltantes en anulación (2026-06-10).

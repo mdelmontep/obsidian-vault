@@ -297,6 +297,24 @@ _Pasos detallados de smokes ya verificados → [[facturaia-historico-detallado]]
 - **Liquidaciones de facturas recibidas**
 - **Facturación recurrente con SEPA**
 - **Dashboard financiero avanzado** con predicciones cashflow basadas en patrones históricos
+- **Auditar resto de Settings (bug lectura impersonando)** — empresa+plantillas ✅ (#460/#462). Revisar email-settings y cualquier sección con `createClient()`/`getOrgId()` → 0 filas o org del superadmin + smoke logo impersonando. Ver [[settings-leen-con-createclient-getorgid-se-rompen-impersonando]]
+- **PR #376 Floating UI (popovers)** — 10 componentes a `useAnchoredMenu`, verde, QA 8/10. Pendiente: merge (CI billing) + QA visual `bank-connections-card` y `header-acciones` (sin datos sandbox). Rama `fix/team-member-menu-posicion-derecha`. Ver [[react-hooks-refs-falso-positivo-floating-ui]] · ADR-033
+- **Fase unificación fields** — Drawers ✅ (#374). Falta: `<Field>`/clase única por tokens (`.form-input`/`.set-input`/`.adm-select`/`.input` divergen) + revisar copiloto. Smoke 2 drawers fiscal en prod. Ver [[controles-form-nativos-no-estilables-construir-componente]] · [[zindex-capa-overlay-orden-portal]]
+- **Corregir ID receptor en routing `CLAUDE.md`** (1 línea) — `zYcHHa8jWXB6dY5i` → `pqSWkDIHqmSVHotB` (404; ya corregido en `gotchas.md` #368, falta la tabla de routing)
+- **Stock plegado en Pro (mig 399) — smoke polish #475** — salió de beta, se incluye en Profesional (ya NO add-on 12,90€). Pendiente: smoke polish (badge coste/ud + "Por cajas") + confirmar gating en prod tras deploy #509. Ver [[facturaia-modulo-stock]]
+- **Seed org test `stock-fase-d.spec.ts`** — crear org `7d9a2cfe-...` + "producto test" + bandeja `e2e00002` + factura `e2e00001` para que el gate spec pase P1-P6
+- **Smoke E2E cobro empresa extra (F3b)** — código en prod (#144). Requiere pago real/Stripe test clock: comprar empresa extra → subscription item quantity + proración + webhook `billing_accounts.empresas_extra`. Hoy 409 `no_active_subscription` (complimentary). Ver [[stripe-subscription-multi-item-resolver-por-price-no-indice]]
+- **Multidivisa Recibidas — queda S4 + WA cutover + ISP** — S1-S3.5 ✅ en prod (mig 187). Pendiente: S4 Copiloto (`revisarBandejaMoneda` + notif FX>5% + badge) · cutover SSOT WhatsApp `pqSWkDIHqmSVHotB` · ISP intracom keywords · auditoría cross-PR 3 agentes. [[facturaia-multidivisa-recibidas]] · ADR-024
+- **Cerrar bucle catálogo productos/servicios** — código en `origin/main` ✅. Falta: cableado n8n (`consultar_catalogo` + write-back `/api/internal/voice/catalogo/guardar`), mig 172 `copiloto_usage_increment` a prod, manuales
+- **Fix locators spec `conciliacion-vinculacion`** — comparte bug `table[aria-label]` (está en `<div role=region>`) + `isVisible()` no espera → `[aria-label=…]` + `waitFor`. Ver [[playwright-isvisible-ignora-timeout-usar-waitfor]]
+- **Setting catalog `bancario_umbral_anomalia`** (~5min) — añadir al `MODULES_CATALOG.conciliacion.settings` (~L258 catalog.ts). Sin esto el cron usa default `0.5` hardcoded
+- **3 envs `.env.test` smoke middleware A/B** (~5min) — `E2E_SUPERADMIN_TEST_ORG_ID`, `E2E_UNVERIFIED_EMAIL/PASSWORD`. Commit cafc8dc
+- **Coherencia `manual-usuario` vs `manual-admin` §31 Equipo** — etiqueta "Inactivo" vs `revocado/expirado`; "revocar invitación" (⋯) no en admin; "transferencia de propiedad" sin documentar. Decidir si UI existe y unificar
+- **Decidir VerifACTU worker Dokploy** (hoy Disabled) — si queda off, eliminar entrada; si on, Run Now + verificar pendiente_envio→aceptada
+- **OTP — patch n8n delivery status** (~5min) — key nueva en `n8n.tufacturaia.com/Settings/API` + `python3 ops/n8n-patches/apply-delivery-status.py`
+- **Quitar dominio viejo `facturaia.agentesia.world`** — repo limpio; queda infra externa (DNS IONOS + entrada stack Dokploy)
+- **Daily Briefing trigger** — `/daily` listo; falta cron Dokploy o trigger automático que escriba `00-home/daily-briefing.md`
+- **Proteger columnas regulatorias con trigger guard** — billing+verifactu ya blindados (migs 321/162). Falta replicar para `regimen_iva`/`nif`/`iae`/`verifactu_num_instalacion` (hoy `org_member_update` deja UPDATE a cualquier miembro). Copiar trigger mig 321
 
 ---
 

@@ -18,6 +18,7 @@ Clínica fisioterapia/salud. Chatbot Chatwoot + agente voz Retell + emails marke
 
 1. **status_id Kommo 'Cita cancelada'** (NEXT) — workflow `DkueIeGFWLKh8nTj` `Update leads1` da 400 NotSupportedChoice (104115987 heredado de Gonzalo). Pedir ID correcto pipeline 13495347
 2. **Configurar Retell en leads entrantes** (LATER) — workflow `RN0wl8RaRmwLpnfQ`, verificar webhooks dominio CZ
+3. **Bug recordatorios por task_type** — el workflow disparaba recordatorio por cualquier tarea; viene del blueprint compartido con Simarro. Revisar si CZ lo tiene. Ver [[recordatorios-visita-por-task-type]]
 
 ## Bloqueos / esperando a terceros
 

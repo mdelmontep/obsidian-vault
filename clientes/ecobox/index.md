@@ -317,3 +317,9 @@ Webhook Meta UI (Manu) configurado 2026-05-28. Field `messages` suscrito. App en
 - [[retell-zadarma-sip-no-popula-retell_llm_dynamic_variables-from_number]] (NUEVO 2026-05-25)
 - [[llm-conversational-current-date-debe-inyectarse-explicito-en-prompt]] (NUEVO 2026-05-25)
 - [[retell-boosted-keywords-stt-letras-españolas-zeta-efe]] (NUEVO 2026-05-25)
+
+## Pendientes
+
+- **Smoke grúa/Mutua → handoff + email** — verificar que el caso grúa/seguro Mutua dispara handoff a humano y envía email de aviso interno.
+- **Smoke reserva E2E que dispare `Build Emails`** — corrida real de reserva que pase por el nodo `Build Emails HTML` de `Reservar_cita` (cliente + interno).
+- **Smoke tope 7º** — comprobar el límite de 7 citas/huecos (tope al 7º).

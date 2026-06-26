@@ -21,11 +21,16 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 3. **agency-portal PR #72 onboarding sync+md+web — smoke pendiente** (NOW) — primer onboarding WhatsApp cerrado (ecobox) destapó tres bugs: sync no escribía nada, `.md` perdía info, bot no preguntaba web pese a estar en notas. Fix en rama `fix/onboarding-sync-and-md-fidelity`. Smoke en próximo cliente real. Detalle [[Stack/onboarding-whatsapp]]
 4. **agency-portal PR #73 factura nueva prerellena fiscal del cliente — smoke pendiente** (NOW) — al crear factura desde detalle de cliente o vía combobox de destinatario, el bloque "Datos fiscales · Destinatario" salía vacío aunque el cliente tenía los 6 campos guardados (razón social, NIF/CIF, dirección, ciudad, CP, país). `page.tsx` cargaba `getAgencyClientDetail` pero sólo pasaba name/email al form; combobox tampoco copiaba `recipient.fiscal` aunque venía cargado. Fix: pasar `FiscalData` y phone vía `defaultRecipient`, inicializar `recipientFiscal` desde ahí, y en `handleRecipientChange` copiar fiscal + abrir collapsible. Detalle [[Stack/agency-portal-forms-prefill]]
 5. **Test ticketing con cliente real** (NEXT) — pedir teléfono al cliente "Soporte técnico" + verificar respuestas TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
+6. **agency-portal — verificar extracción onboarding en prod (PR #67)** (NOW) — confirmar "Progreso por sección" + "Respuestas extraídas" se rellenan por turno; si `activity_event.action='onboarding.extraction_failed'`, abrir issue.
+7. **agency-portal — cron Dokploy `onboarding-reminders`** (NEXT) — botón manual en prod; falta el automático. Clonar schedule `sync-facturaia`: cron `0 10 * * *`, ruta `/api/internal/onboarding-reminders` (POST, `x-service-key`). Ver [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]]
+8. **agency-portal — Pizarra/board PR #91 en review (Borja)** (NEXT) — rama `feature/pizarra-dashboard`. Pendiente: review+merge Borja (aplica mig `board_comments` con `db push`) + QA visual Manu local (`PORT=3002`). Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]] · [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
+9. **agency-portal — n8n router consulta Supabase como source of truth** (NEXT) — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint `/api/onboarding/is-active-by-phone` + nodo HTTP en `ChatBOT mejorado` antes del IF Activo + Redis a caché con re-seed. Ver [[Stack/n8n]] · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
 
 ## Bloqueos / esperando a terceros
 
 - Borja: review PR #54 y #55 cuando se pusheen
 - Borja: review PR #86 (hotfix onboarding 500) y #87 (secretaría virtual HGH) → desplegar tras merge
+- Borja: review + merge PR #91 Pizarra/board (rama `feature/pizarra-dashboard`, aplica mig `board_comments` con `db push`)
 
 ## Links rápidos
 
