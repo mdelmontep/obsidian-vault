@@ -76,7 +76,30 @@ Cuotas sugeridas Plus: facturas 150, OCR 100, WhatsApp msgs 800, copiloto 1,5M t
 - `stock` en `disponibilidad='beta'` = add-on de pago accesible gratis para todos (fuga de ingresos). Cerrar al reempaquetar.
 - `admin_dashboard_stats` MRR suma solo `precio_mes`, ignora anual y add-ons.
 
-## Fase 2B — pendientes accionables (próxima sesión)
+## Fase 2B — estado (sesión 2026-06-26 #2)
+
+Rama `fix/fase2b-reempaquetado` (desde origin/main limpio; PR #509 ya estaba mergeado como `00a4acc5`). Build/lint/typecheck verdes. **Sin commitear aún** (pendiente OK de manuales + push/PR).
+
+- ✅ **Split conciliación cableado** (3 agentes en paralelo):
+  - `integracion_banco`: `requireFeature:'integracion_banco'` añadido a los 7 `banks/*` con sesión (route, providers, connect, [id], sync, movimientos, access-report). `callback` intacto (OAuth público).
+  - `conciliacion_ia`: `requireFeature` en sugerencias confirm/reject + reglas-aprendidas (route + [id]); en `enrich-batch` (cron) gate per-org con `orgCanUseFeature` ANTES de `processOrg` (no gasta LLM), contador `skipped_no_feature` en el summary. Los toggles `ia_*` de `org_module_config` CONVIVEN (plan habilita, toggles afinan).
+  - UI: `conciliacion-view.tsx` → CTA banco bloqueado (candado + "Requiere plan Enterprise" → /settings?tab=plan) si no `integracion_banco`; bloque sugerencias IA oculto + aviso candado si no `conciliacion_ia` (la conciliación manual sigue intacta). `reglas-aprendidas-view.tsx` gateada entera por `conciliacion_ia`. Icono `<Icon name="lock">` + clase `ci-upgrade` reutilizada de agentes-view.
+- ✅ **Sidebar candado**: `sidebar.tsx` + `nav-section.tsx` — items con feature `activo` pero sin acceso por plan ya NO se ocultan: se muestran con candado + navegan a /settings?tab=plan (solo en vista cliente; admin real sin previewAsCustomer no ve candados). `oculto/proximamente/beta` intactos. CSS en globals.css.
+- ✅ **Migración 400** `400_conciliacion_banco_enterprise_only.sql` aplicada vía MCP + registrada en schema_migrations: `integracion_banco` fuera de `pro` (ningún pro lo usaba; ahora enterprise-only como la matriz) + grandfather del org "FacturaIA Sandbox" (test, starter, 21 consents) con override `integracion_banco`+`conciliacion_ia` source=manual. Verificado: ambas features solo en enterprise en plan_features.
+- ✅ **Prices Starter 14€ creados en Stripe LIVE** (producto `prod_UcjNPVrQjGrl7V`, eur, tax_behavior=exclusive): mensual 14€ `price_1TmYfUGgQMT2aOqBoHX17bFe`, anual 134,40€ `price_1TmYfVGgQMT2aOqByFn0JPC3`.
+- ⏳ **Rotar STRIPE_PRICE_ID_STARTER_* en Dokploy**: el classifier bloquea el `compose.update` (round-trip del blob, regla dura PEM). Blob nuevo verificado (solo 2 líneas cambian, firma PEM `[223,279,206]` y 115 líneas idénticas). Lo ejecuta Manu a mano (panel o `! curl`). Old→new: mensual `price_1TdTv0…`→`price_1TmYfU…`; anual `price_1TdTv1…`→`price_1TmYfV…`. Tras setear → `compose.deploy` (no restart). Existentes a 19€ no se tocan (solo nuevos checkouts).
+- ⏳ **Smoke prod** tras rotar: starter nuevo → checkout cobra 14€.
+
+### Follow-ups
+- ✅ **MRR `admin_dashboard_stats` ARREGLADO** (mig 401, aplicada+registrada en prod): añadida columna `billing_accounts.billing_cycle` (mensual|anual) que sincroniza el webhook `customer.subscription.updated` (`handle-subscription-updated.ts`, write account-only desde `mapped.billing`, NULL legacy→mensual). MRR = base (precio del plan, anual prorrateado /12 por ciclo) + add-ons activos (org_features source=addon × plan_features.addon_price_eur por plan de la cuenta). Hoy MRR=0 (0 cuentas pagadoras). NO backfill (sin pagadores). Manual-admin actualizado.
+
+### Follow-ups
+- ✅ **UsageProvider global + aviso 80% HECHO** (PR #515 `feat/usage-provider-80`, build limpio, **sin mergear — pendiente QA visual en localhost**): `UsageProvider` (`src/providers/usage-provider.tsx` + `useUsage()` en `src/lib/usage-client.ts`) lee `/api/settings/usage`, expone uso + cuotas ≥80%; banner descartable `usage-warning-banner.tsx` en el stack del shell (solo billing `active`, escala a danger al 100%, CTA "Ampliar plan" solo en cuotas de upsell, firma de descarte en localStorage). Montado en `dashboard-shell.tsx`.
+
+### Follow-up NO hecho
+- **Trial sin tarjeta `base-checkout.ts`**: NO tocado. El manejo de `trialDaysRemaining` es deliberado y documentado; el ajuste era explícitamente opcional.
+
+## Fase 2B — pendientes accionables (originales)
 
 1. **Split conciliación — cablear sub-flags** (las features ya existen en BD tras mig 399; falta el gating en código):
    - `conciliacion_ia` (solo enterprise): gatear la parte IA. Puntos: `src/app/api/internal/conciliacion/enrich-batch/route.ts` (hoy itera TODAS las orgs sin filtrar feature — filtrar por org en processOrg), `sugerencias/[id]/confirm/route.ts` + `reject/route.ts`, `reglas-aprendidas/route.ts`. UI: `reglas-aprendidas-view.tsx` + bloque de sugerencias IA en `conciliacion-view.tsx`. Decidir si `conciliacion_ia` reemplaza o convive con los toggles `ia_*` de `org_module_config`.
