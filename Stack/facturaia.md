@@ -74,6 +74,11 @@ gh auth switch -u AgentesIAMadrid
 ```
 Para `git push` da igual la cuenta gh — usa SSH key.
 
+### Tokens de diseño + inline-style ratchet
+
+- `--muted2` es tier **placeholder** (Lc~31), NO para texto informativo. Añadidos `--ok-fg-strong`/`--pomegranate-fg`/`--aging-*` (2026-06). Una auditoría marcó `--muted2` como fallo de contraste → verificar la intención del token (comentario/APCA) antes de "arreglarlo".
+- Inline-style ratchet (`.inline-style-baseline.json`): las plantillas `template-*.tsx` son inline por arquitectura PDF (se serializan a HTML para Puppeteer) → al añadir estilos, `npm run ratchet:update`; NO migrar a CSS modules.
+
 ## Operaciones comunes
 
 ### Aplicar migración
