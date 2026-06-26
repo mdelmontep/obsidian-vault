@@ -17,4 +17,6 @@ PL/pgSQL compila el body en lazy (al primer EXECUTE), no en CREATE FUNCTION. Por
 
 Aplica también a triggers (`OLD.X` / `NEW.X`) y a constraints CHECK.
 
+**Grants/ACL se preservan**: `CREATE OR REPLACE` (firma idéntica) NO toca los privilegios — un `REVOKE` de una mig previa sigue vigente; recrear NO resetea a PUBLIC. Misconcepción común en auditorías: creer que mig 216 al recrear `change_billing_status` "reconcedió" EXECUTE a anon/authenticated → falso, el REVOKE de mig 213 seguía aplicado. Para cambiar el ACL hace falta un `GRANT`/`REVOKE` explícito, no basta recrear.
+
 **Caso especial — cambiar `RETURNS TABLE`**: PostgreSQL lanza hard error `42P13` ("cannot change return type of existing function") en lugar de crear función huérfana silenciosa. `DROP FUNCTION IF EXISTS` antes del `CREATE` es obligatorio, no opcional. Caso real: mig 236 TuFacturaIA añadió `org_nombre` a `storage_usage_by_org()` → fallo en `db push` hasta añadir el DROP.

@@ -78,6 +78,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Numeración preview** (#268, mig 299) — abrir "Nueva factura" 2-3× sin guardar → el nº de preview NO avanza; emitir → correlativo sin huecos. [[postgres-split-tx-counter-burn-serie-numeracion]]
 - **Tabla facturas móvil columnas auto-ajuste** (#435) — `/emitidas`/`/recibidas`/`/presupuestos` en móvil real → cada columna muestra su texto completo, scroll horizontal dentro del wrapper.
 - **Registro branded + onboarding** (#256/#258 main `84277b13`) — incógnito `/registro` → email confirmación por Resend (no Supabase) → perfil→fiscal→canales→dashboard; reintento sin confirmar reenvía. [[supabase-bypassear-plantilla-auth-con-admin-generatelink]]
+- **Auditoría APIs #518** (main `d3b2179d`) — (1) `solo_lectura`/`gestor_externo` NO ve "Regenerar PDF" y un POST directo a `generar-pdf` → 403; (2) admin sin módulo `generador_voz` → 403 en sus endpoints; (3) `POST /v1/facturas/recibidas` con `proveedor_id` de otra org → 422; (4) conector MCP con `stock:draft`+rol escritura: `crear_producto_catalogo`/`ajustar_stock` ya NO dan 403; (5) subir un .txt renombrado a .png en avatar/feedback → rechazado por magic-bytes.
 
 **Pendientes en prod (falta confirmar en navegador/datos reales):**
 - **Ingesta: USD + parpadeo + stock servicios** (main `23bb7653`, mig 378) — usuario REAL: factura USD muestra `US$`; barra de bandeja sin parpadeo; factura de servicios USD aprueba sin bloqueo de descuadre; factura de bienes con stock mantiene footer Σlíneas. [[progreso-real-vs-simulado-tareas-opacas]]
@@ -138,6 +139,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ---
 ## NEXT (próximas 2 semanas)
+
+- **Arreglar 14 tests rojos `pending-action/execute` (regresión #517)** — el mock de `getOrgBilling` no implementa `.single()` en la cadena (`admin.from().select().eq().single`), introducido por el gate de billing de #517. Reproducible en `origin/main` limpio. No es de #518. Actualizar el mock-admin del test.
 
 - **Reempaquetado de planes — acción Manu pendiente**: crear price IDs Plus en Stripe live (mensual 29 / anual 278,40) + rotar env `STRIPE_PRICE_ID_PLUS_*` (gotcha PEM → panel UI). Sin esto el tier Plus no es comprable. Resto en prod. Spec: [[facturaia-reempaquetado-planes]]
 
