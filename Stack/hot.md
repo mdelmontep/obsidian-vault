@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **Gate solo en wrapper web no cubre canales** — voz/WA/v1/cron/MCP usan otro auth; el enforcement de plan/cuota/billing debe replicarse por canal o centralizarse en la fuente única. Ver [[gate-en-wrapper-web-no-cubre-canales-con-otro-auth]]
+- **Contador de cuota best-effort = cuota infinita** — increment con solo `console.error` tras el check; si el RPC falla, el contador se congela. Hacerlo observable (alerta/tabla con status). Ver [[contador-de-cuota-best-effort-tras-check-es-cuota-infinita]]
 - **Stripe price (lo que cobra) ≠ precio BD editable** — lo cobrado vive en el env (`STRIPE_PRICE_ID_*`, price inmutable), no en `plans.precio_mes`; editar admin no cambia el cobro → drift (UI 14€, checkout 19€). Ver [[stripe-price-id-en-env-vs-precio-bd-editable-derivan]]
 - **PostgREST corta agregaciones en JS (cap max-rows 1000)** — sumar filas con `reduce` infravalora en silencio; `count:'exact'` sí es exacto → cifra y count incoherentes. Agrega en BD (RPC SUM) o `.limit(N+1)`+`truncated`. Ver [[postgrest-max-rows-trunca-agregacion-en-js]]
 - **Motor con input requerido → defaultea, no falles mudo** — un default sensato en el motor (FEFO) > parchear N bordes; los canales ciegos no pueden aportar el campo. Ver [[motor-con-input-requerido-debe-defaultear-no-fallar-mudo]]

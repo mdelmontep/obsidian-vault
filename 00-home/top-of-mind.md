@@ -17,6 +17,7 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
 - **TuFacturaIA — crear prices Stripe live de Plus** (29/278,40) + rotar env `STRIPE_PRICE_ID_PLUS_*` — desbloquea que el tier Plus sea comprable. [[facturaia]]
+- **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
 - **TuFacturaIA — pagar GitHub Advanced Security (~16 jul 2026)** — si caduca el trial se apaga Code Quality (scan + gate PR). [[facturaia]]
 - **TuFacturaIA — responder tickets** — Abba BORME (re-escanear 2 docs → gonzalo.riera) + bgchivite `1762f07e` (deploy #209 en prod). [[facturaia]]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
