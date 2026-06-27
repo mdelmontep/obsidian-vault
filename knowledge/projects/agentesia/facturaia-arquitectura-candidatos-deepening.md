@@ -12,7 +12,7 @@ Raíz común de #1/#2/#4: **no hay capa de dominio entre los puntos de entrada (
 | # | Candidato | Estado | Profundidad | RFC |
 |---|---|---|---|---|
 | 2 | find-or-create cliente/proveedor | ✅ CERRADO (deployado, smoke E2E verde) | exploración profunda + 3 diseños | `issues/rfc-find-or-create-contacto-nif-opcional.md` |
-| 1 | 45 tools copiloto shallow | 🔵 EXPLORADO (3 diseños + RFC, sin OK aún) | exploración profunda + 3 diseños | `issues/rfc-deepening-tools-copiloto.md` |
+| 1 | 45 tools copiloto shallow | 🟢 Fase 0 (schema único) MERGEADA a main (#536, 2026-06-27); Fases 1-2 (port CopilotoStore + factory) pendientes de OK | exploración profunda + 3 diseños + RFC | `issues/rfc-deepening-tools-copiloto.md` (en repo) |
 | 3 | seam emisión voz↔web (núcleo) | ⏳ solo identificado | — | ⚠️ existe `issues/rfc-unificar-creacion-documentos.md` (previo, revisar vigencia) |
 | 4 | lógica de negocio en route handlers | ⏳ parcial (la #2 quitó ~215 LOC de `pending-action/execute`) | — | — |
 
