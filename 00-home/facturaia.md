@@ -216,6 +216,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## LATER (backlog)
 
+- **Deepening arquitectónico — candidatos 1/3/4** — #2 (find-or-create) cerrado. Pendientes: #1 tools copiloto (45 shallow, ~1.3-1.5k LOC plomería — siguiente recomendado), #3 seam emisión voz↔web (núcleo, RFC previo a revisar), #4 lógica en route handlers (incremental). Roadmap + estado: [[facturaia-arquitectura-candidatos-deepening]]
 - **Backends módulos pendientes** — Fiscal **promovido a NEXT con spec completa [[facturaia-centro-fiscal-ia]]**. Pendientes aún en LATER: Firma eIDAS, Cashflow IA forecast. ~21 opciones config con badge Próximamente
 - **Conexión bancaria automática PSD2 (GoCardless BAD)** — paso 4 del roadmap, tras Norma 43 + trigger emitidas. Tabla `bank_consents` cifrada, endpoints connect/callback/sync, cron 4-6h, dedupe por `provider_transaction_id`, notif `bank_consent_expiring` 7d antes. Empezar con sandbox + 1 banco real (BBVA o Santander). 1-2 semanas. Reutiliza `movimientos_bancarios` y triggers 061 tal cual. Spec: [[facturaia-open-banking-psd2]]
 - **Pasarelas de cobro (Stripe Invoice + Redsys)** — módulo aparte, no conciliación. Webhook `invoice.paid` → match por `metadata.factura_id` → estado cobrada sin pasar por extracto. Cablear cuando Stripe checkout para add-ons esté en NEXT. Spec: [[facturaia-open-banking-psd2]]
