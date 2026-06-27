@@ -18,7 +18,6 @@ tags: [home, prioridades]
 
 - **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
 - **TuFacturaIA — #518 verificado en prod** — smoke dirigido OK (gating rol/feature, Plus comprable, navegación); resto cubierto por suite unitaria 3824/0. MCP_PUBLIC_ENABLED=true (conector activo, NO "Próximamente"). [[facturaia]]
-- **TuFacturaIA — E2E smoke prod ruidoso por fixture** — 55✓/20✗ NO son regresiones: specs acoplados a datos sembrados (p.ej. producto "producto test") + páginas superadmin-only. Montar org sembrado dedicado o restaurar creds E2E. Creds nuevas `e2e+smoke`(admin)/`e2e+ro`(solo_lectura) en `.env.test`+memoria. Revisar selector `#gen-cliente` (2 matches) en `/generar`. [[facturaia]]
 - **TuFacturaIA — pagar GitHub Advanced Security (~16 jul 2026)** — si caduca el trial se apaga Code Quality (scan + gate PR). [[facturaia]]
 - **TuFacturaIA — responder tickets** — Abba BORME (re-escanear 2 docs → gonzalo.riera) + bgchivite `1762f07e` (deploy #209 en prod). [[facturaia]]
 - **TuFacturaIA — UX feedback** — smoke prod #528 (toast guardar empresa/plantillas) + **#529 modal glass confirmación cambio precio en `/admin/plans`** + tanda 2 ✅ #530 (duplicar no duplica, skeletons API keys/objetivos; csv-import ya tenía progreso). [[facturaia]]

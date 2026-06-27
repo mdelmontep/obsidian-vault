@@ -23,7 +23,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Stack**: Next 16 · Supabase · n8n · OpenAI Vision · Anthropic Claude
 - **Planes**: Starter 14 / **Plus 29** / Pro 49 / Enterprise 99 €/mes (+IVA 21%, anual −20%) + add-on Centro Fiscal IA 14,90. **Stripe LIVE** desde 2026-06-01. Reempaquetado escalonado + tier Plus + grandfathering aplicados **en BD** (mig 399, #509/#513). **Pendiente (acción Manu)**: crear los price IDs de Plus (mensual 29 / anual 278,40) en Stripe live + rotar envs `STRIPE_PRICE_ID_PLUS_*` (Starter 14 ya creado). Hasta entonces el tier Plus no es comprable.
 - **Migraciones**: prod = main; última aplicada **402** (`series_canonicas_backfill`, 2026-06-26). Secuenciales `NNN_`, sin timestamps. _(337-402: MCP server, perf merge-train, Resolver-con-Claude, Verifactu inalterabilidad, reempaquetado planes, notificaciones, series canónicas.)_
-- **Tests**: Vitest 1648/1648 verde · E2E smoke verde (cashflow v2 · conciliación Fase 2 · onboarding).
+- **Tests**: Vitest 3824/0 verde · E2E smoke con **skip honesto por precondición** (#531): módulo apagado / rol superadmin / seed ausente → skip con razón, nunca falso rojo. Helper `tests/e2e/fixtures/preconditions.ts` ([[e2e-smoke-skip-honesto]]).
 - **Orgs prod**: AgentesiaLab · tecnocloud · Borja Galván · AgenteIA PRUEBA (todas `billing_status=active` complimentary).
 - _Snapshot detallado anterior y changelog completo → [[facturaia-historico-detallado]]._
 
@@ -71,6 +71,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
 - **Emitidas: Borja Galván (org `50a3cfbf`) emite su borrador serie A** → debe numerar `A2026-0001` sin error (backfill serie A aplicado 26-jun, mig 402). Cierra ticket #53190361.
 - **Email — smoke local ✓** (remitente `hola@tufacturaia.com` por Resend) + mig 405 registrada en `schema_migrations` (repair). Falta: **deploy Dokploy de `main`** + smoke prod (confirmar `hola@` en prod) + **logo real** → `template_config.logoUrl` (ahora placeholder). (#527.) Causa del `info@agentesia` en local: [[smtp-reescribe-from-a-cuenta-autenticada]].
+- **Smoke E2E en vivo tras próximo deploy** — confirmar que los ~20 ex-rojos ahora salen **verde/skip** y 0 falsos rojos (#531, merged `00dc625a`). No se re-corrió contra prod a propósito (el spec de `/generar` crea facturas permanentes en la org is_test). Es el único cabo vivo de la higiene del smoke.
 
 **Pendientes tras deploy Dokploy** (front en main, falta desplegar):
 - **Tarjeta expandible móvil /emitidas+/recibidas** (main `d360d31e`) — móvil real: chevron despliega `Nº·Fecha·Vto·Base·IVA`, tap en la fila abre el modal; total no se pega al `•••`. [[tabla-densa-a-tarjeta-en-movil-ellipsis-y-colspan]]
