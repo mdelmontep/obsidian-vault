@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **Skin app-wide = una palanca de superficie + base opaca aparte** — cards usan `--bg-elev` (el skin lo vuelve translúcido vía `[data-skin]` → todas esmerilan a la vez); `--elev-solid` opaco sostiene el compositing del glass. Blur por regla, no por token. Ver [[skin-app-wide-token-superficie-unico-base-opaca]]
+
 - **E2E smoke: skip honesto por precondición, no falso rojo** — gating por la fuente autoritativa (`featureActive` → `GET /api/settings/features`), nunca texto de UI ni 404; skip SOLO si falta la precondición, jamás relajar una aserción que cace un bug. Ver [[e2e-smoke-skip-honesto]]
 - **BD fuente de verdad vía cache en memoria → hidratar en LECTURA** — la cache module-level arranca null tras deploy; si solo hidratas al escribir, el runtime cae al fallback (env) hasta la 1ª escritura. `ensureCache()` lazy en cada consumidor. Ver [[bd-fuente-verdad-via-cache-memoria-hidratar-en-lectura]]
 - **Smoke test-mode contamina BD prod si la fn escribe en BD** — Stripe TEST no aísla la BD (única=prod); aísla por dato sentinel desechable + guard que rehúsa `sk_live`. Ver [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]]
