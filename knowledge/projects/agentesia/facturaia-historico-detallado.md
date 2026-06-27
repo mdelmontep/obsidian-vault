@@ -6,6 +6,8 @@ tags: [cliente, facturaia, historico]
 
 # TuFacturaIA — Histórico detallado (archivo)
 
+> **2026-06-27 — Alertas técnicas humanizadas (`e1f4fd66`).** Las incidencias `system_alerts` 5xx mostraban el crudo de Postgres en email + `/admin/alerts`; nuevo `humanize-alert.ts` (SSOT en capa de render) → "Qué ha pasado / Qué puedes hacer", crudo degradado a "Detalle técnico". Disparado por el 500 `admin/email-copy` ×17 (schema-cache transitorio post-#527, resuelto a mano). [[humanizar-errores-crudos-en-capa-de-render]] · [[postgrest-schema-cache-notify-tras-migration]].
+>
 > **2026-06-27 — Emails unificados + panel `/admin/emails` (#527) CERRADO.** 19 emails (14 templates + 5 inline migrados al layout compartido) con rediseño glass editorial (hero color, importe big-type, microtipografía, anti-slop). Copy editable desde admin: tabla `email_copy_overrides` con fallback a defaults en código (single source = código), motor `{{var}}` whitelist+escape, `resolveFrom(kind)` unificado (`hola@`/`verificacion@`). Endpoints `/api/admin/email-copy{,/preview,/test}`. Mig 405 aplicada + registrada (repair). Smoke local ✓ remitente `hola@` (Resend; el SMTP de agentesia reescribía el From → [[smtp-reescribe-from-a-cuenta-autenticada]]). Residual: deploy prod + smoke prod + logo real. [[email-glassmorphism-sin-backdrop-filter]] · [[subagente-reusar-endpoint-compartido-rompe-consumidor]].
 >
 > **2026-06-24 — SEPA remesas adeudo directo (pain.008 / C19.14) CERRADO.** Motor (#459, migs 379-383, GA Pro/Enterprise) + pulido UX (#466: mandatos en ficha cliente, banner config, historial). Validado en banco real por Dani (subió el fichero, acepta) + Playwright. Fuera de alcance: B2B, recurrencia, aviso IBAN acreedor=deudor. [[sepa-pain008-remesa-adeudo]].
