@@ -12,7 +12,7 @@ Raíz común de #1/#2/#4: **no hay capa de dominio entre los puntos de entrada (
 | # | Candidato | Estado | Profundidad | RFC |
 |---|---|---|---|---|
 | 2 | find-or-create cliente/proveedor | ✅ CERRADO (deployado, smoke E2E verde) | exploración profunda + 3 diseños | `issues/rfc-find-or-create-contacto-nif-opcional.md` |
-| 1 | 45 tools copiloto shallow | 🟢 Fase 0 (schema único) MERGEADA a main (#536, 2026-06-27); Fases 1-2 (port CopilotoStore + factory) pendientes de OK | exploración profunda + 3 diseños + RFC | `issues/rfc-deepening-tools-copiloto.md` (en repo) |
+| 1 | 45 tools copiloto shallow | 🟢 CERRADO (núcleo). Fase 0 schema único (#536) · Fase 1 port 5 destructive (#538) · Fase 1b 3 email (#539) = 8 tools sobre el port. Fase 2 factory DESCARTADA (sobre-abstracción sobre el port). NO migradas a propósito: duplicar/convertir/editar (familia crear-documento → candidato #3). Pendiente externo: smoke API real (saldo Anthropic) | 3 diseños + RFC + 3 PRs en main | `issues/rfc-deepening-tools-copiloto.md` |
 | 3 | seam emisión voz↔web (núcleo) | ⏳ solo identificado | — | ⚠️ existe `issues/rfc-unificar-creacion-documentos.md` (previo, revisar vigencia) |
 | 4 | lógica de negocio en route handlers | ⏳ parcial (la #2 quitó ~215 LOC de `pending-action/execute`) | — | — |
 

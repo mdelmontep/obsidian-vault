@@ -143,6 +143,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 ## NEXT (próximas 2 semanas)
 
+- **Deepening tools copiloto (candidato #1) — núcleo CERRADO en main**: #536 schema único (Zod→JSON derivado), #538 port `CopilotoStore` (5 tools destructive), #539 email (8 tools en total). Pendiente: smoke API real del copiloto (bloqueado por saldo Anthropic en la key); duplicar/convertir/editar quedaron fuera a propósito → familia crear-documento (ver entrada "Refactor `documents`" abajo). Roadmap [[facturaia-arquitectura-candidatos-deepening]].
+
 - **Arreglar 14 tests rojos `pending-action/execute` (regresión #517)** — el mock de `getOrgBilling` no implementa `.single()` en la cadena (`admin.from().select().eq().single`), introducido por el gate de billing de #517. Reproducible en `origin/main` limpio. No es de #518. Actualizar el mock-admin del test.
 
 - **Reempaquetado de planes — acción Manu pendiente**: crear price IDs Plus en Stripe live (mensual 29 / anual 278,40) + rotar env `STRIPE_PRICE_ID_PLUS_*` (gotcha PEM → panel UI). Sin esto el tier Plus no es comprable. Resto en prod. Spec: [[facturaia-reempaquetado-planes]]

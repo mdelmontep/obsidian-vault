@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **Zod v4 trae `z.toJSONSchema` nativo — deriva el tool-schema del LLM, no lo dupliques** — un `input_schema_json` a mano en paralelo al Zod miente al LLM (required/enum divergen). Fuente única: derivar; `.describe()` por campo. Ver [[zod-v4-tojsonschema-nativo-deriva-tool-schema]]
+- **Port devuelve dato discriminado; el caller traduce a throw en su borde** — el port nunca lanza por precondición (found/none/ambiguous, ok/conflict); el framework no cambia y el adapter in-memory testea sin mockear el query-builder. Inyección opcional (`ctx.store?`) = blast radius mínimo. Ver [[port-devuelve-dato-discriminado-tool-traduce-throw-en-borde]]
 - **Skin app-wide = una palanca de superficie + base opaca aparte** — cards usan `--bg-elev` (el skin lo vuelve translúcido vía `[data-skin]` → todas esmerilan a la vez); `--elev-solid` opaco sostiene el compositing del glass. Blur por regla, no por token. Ver [[skin-app-wide-token-superficie-unico-base-opaca]]
 - **Dokploy `autoDeploy=false` = desfase silencioso** — los merges a main no despliegan; el servicio sirve build viejo sin avisar. Fix: GH Action path-filtered o alerta de desfase (hash de `/health` vs main). Ver [[dokploy-autodeploy-false-desfase-silencioso]]
 

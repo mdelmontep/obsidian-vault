@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — skin "Cristal" en prod (#533, opt-in toggle)** — mergear #535 (€€ Modelo 303 + cards IVA glass) + QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
+- **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
 - **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
 - **TuFacturaIA — #518 verificado en prod** — smoke dirigido OK (gating rol/feature, Plus comprable, navegación); resto cubierto por suite unitaria 3824/0. MCP_PUBLIC_ENABLED=true (conector activo, NO "Próximamente"). [[facturaia]]
 - **TuFacturaIA — pagar GitHub Advanced Security (~16 jul 2026)** — si caduca el trial se apaga Code Quality (scan + gate PR). [[facturaia]]
