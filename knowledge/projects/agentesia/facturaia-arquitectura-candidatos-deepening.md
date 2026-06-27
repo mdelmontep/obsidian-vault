@@ -40,12 +40,15 @@ Divergencias reclasificadas: #1 verifactu / #2 serie = **LATENTES** (schema voz 
 - **#547** `fix/voice-no-abono` — D4/D5: voz no crea abonos (#7/#8). Base de la cadena de voz.
 - **#551** `feat/voice-nif-criterio-a` (stacked en #547) — D1: criterio A, voz permite factura sin NIF a consumidor final.
 
-### HECHO: D1✅ D2✅ D4✅ D5✅ + Fase A✅. PENDIENTE:
-- **D3** (cliente NIF conflict / quitar rename silencioso en v1 `resolveCliente`): no hecho. Cambio de comportamiento de endpoint público → PR propia con cuidado + cómo señalar el conflicto a v1.
-- **F2/Destinatario Verifactu** (HALLAZGO): `tipoFacturaFromDocumento` mapea toda factura a **F1** y el XML **no emite bloque Destinatario**. Factura sin NIF de receptor debería ir **F2**. Es AEAT-facing → verificar contra XSD oficial + gestoría. NO tocado a propósito. (No es regresión: createDocument ya permitía sin-NIF por web/API.)
-- **Convergencia voice→createDocument** (Fase B grande, ~300 LOC): con #544/#547/#551 mergeados, voz ya tiene criterio A + sin abono + logo unificado. Falta eliminar la reimplementación de RPC/PDF/totales de voz delegando en createDocument. Sutilezas: `generado_por_voz` (cuota whatsapp_docs_mes), doble audit, resolución de cliente. Hacer tras mergear la cadena.
+### TODO MERGEADO A MAIN (2026-06-27): Fase A✅ D1✅ D2✅ D3✅ D4✅ D5✅
+- #544 Fase A (núcleo puro compose.ts, diff-nulo) · #552 D2 (logo en createDocument) · #547 D4/D5 (voz no crea abonos) · #551 D1 (criterio A, factura sin NIF a consumidor final) · #554 D3 (no renombrar identidad fiscal por NIF).
+- Nota merge de PRs apiladas con squash: borrar la rama base cierra las PRs stacked → mergear base SIN `--delete-branch`, rebasar la stacked (`git rebase --onto origin/main <base-sha>`), retarget `--base main`, mergear, y limpiar ramas al final. (#550 se cerró al borrar #544 → reemplazada por #552.)
+- Merge con `--admin` (checks de Actions fallan por billing bloqueado, no por tests; verificado verde en local).
 
-**Recomendación**: mergear la cadena (#544→#550, #547→#551) antes de seguir, para no apilar más PRs fiscales sobre ramas sin mergear.
+### PENDIENTE (piezas grandes / sensibles, NO bloquean lo anterior):
+- **F2/Destinatario Verifactu** (HALLAZGO importante): `tipoFacturaFromDocumento` mapea toda factura a **F1** y `xml.ts` **no emite bloque Destinatario** en absoluto. Una factura sin NIF de receptor (que createDocument ya permite por web/API y ahora también voz) debería registrarse **F2**. Es AEAT-facing → verificar contra XSD oficial + ratificar con gestoría antes de tocar. NO es regresión de lo de hoy.
+- **Convergencia voice→createDocument** (lo que queda del núcleo de #3, ~300 LOC): voz aún reimplementa totales/serie/lineas/RPC/PDF (no usa compose.ts). Delegar en createDocument elimina la duplicación. Sutilezas: `generado_por_voz` (cuota whatsapp_docs_mes — añadir flag a CreateDocumentInput), doble audit (voz audita con phone), resolución de cliente. Refactor propio, con tests de paridad.
+- **D3 pleno**: converger `createDocument.resolveCliente` sobre `crearClienteRapido` (candidato #2) — implica unificar la cuota `clientes_mes` (hoy createDocument no la chequea). El D3 mínimo (no renombrar) ya está en main.
 
 ## #4 — Lógica de negocio en route handlers (transversal) — EVALUADO
 El port `CopilotoStore` (`copiloto/store/port.ts`) **NO generaliza mecánicamente** a `createMockAdminClient`/las route tests. Son palancas distintas: CopilotoStore es un *port de dominio estrecho* (superficie tipada, resultado discriminado, oculta PostgREST) que funciona porque las tools hacen pocas operaciones acotadas. `createMockAdminClient` (`documents/__tests__/__fixtures__/`, 9 suites lib, **0/100 route tests**) es lo contrario: un *fake genérico del query-builder*. 86/100 route tests mockean `createAdminClient` ad-hoc. Dos vías: (a) generalizar `createMockAdminClient` a las 86 = consolidar boilerplate de test (barato, no toca prod, NO hace los handlers menos shallow); (b) generalizar el *patrón* CopilotoStore = port estrecho por handler gordo = el deepening real del #4, trabajo por-handler grande. Ninguna sale gratis del port del copiloto.

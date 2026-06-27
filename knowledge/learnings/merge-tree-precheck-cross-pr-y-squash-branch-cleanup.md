@@ -12,4 +12,6 @@ Sale exit≠0 + `CONFLICT (content): ... <archivo>` si chocan. Caso real: #444 a
 
 **Limpieza tras squash-merge**: el squash crea un commit nuevo cuyos padres NO incluyen la rama → `git branch --merged origin/main` NO la lista. Borrar con `git branch -D` (no `-d`, que se niega) + `git push origin --delete`, tras confirmar que el contenido está en main.
 
+**PRs APILADAS con squash**: mergear la base con `--delete-branch` **cierra en cascada** la PR stacked (su base branch desaparece) y GitHub **no la deja reabrir ni retargetear**. Orden correcto: mergear la base SIN `--delete-branch` → `git rebase --onto origin/main <base-sha> <stacked>` (replaya solo los commits propios; el squash de la base no comparte SHA) → force-push → `gh pr edit <stacked> --base main` → mergear → limpiar ramas al final. Caso real: #550 se cerró al borrar #544; hubo que recrearla como #552.
+
 Relacionado: [[audits-cross-pr-vs-per-pr]].
