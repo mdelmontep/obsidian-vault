@@ -7,7 +7,9 @@ tags: [facturaia, billing, stripe, admin, precios]
 
 # Panel de precios admin ↔ Stripe (fuente única de verdad)
 
-**Rama:** `feat/precios-admin-stripe-sync` (pusheada a origin, **sin PR abierto aún**).
+> **CERRADO 2026-06-27** — PRs #522/#525/#526/#529 en main+prod (autoDeploy `17e3f143`). Go-live LIVE validado (Enterprise create+archive en `plan_prices` prod, precio restaurado, coherencia 12/12). Modal glass confirmación (#529). Webhook Stripe LIVE con los 3 eventos `price.*` añadidos (sync inverso #525 operativo). Fix de hidratación de cache en runtime aplicado. Nada pendiente.
+
+**Rama:** `feat/precios-admin-stripe-sync` (mergeada).
 **PRD:** `issues/prd-precios-admin-stripe-sync.md` · **issues:** `issues/precios-001..008`.
 
 ## Por qué
