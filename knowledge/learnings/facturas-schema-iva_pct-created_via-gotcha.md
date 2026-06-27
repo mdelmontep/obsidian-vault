@@ -51,6 +51,8 @@ INSERT INTO facturas (..., created_via, ...) VALUES (..., 'web', ...);
 
 `facturas_fuente_check` (mig 024) solo admite `manual/whatsapp/email/telegram/camara/api/voice`. `createDocument()` recibe `source?: string` (sin union type) → un valor fuera del CHECK compila limpio y revienta con 500 **solo en runtime**. Caso real PR #207 (2026-06-12): `source: 'mobile'` rompía toda creación del endpoint. Al añadir un canal nuevo: o usar un valor existente o mig ampliando el CHECK.
 
+Y ojo: el CHECK de `created_via`/`fuente` está **duplicado en `presupuestos`** (mismo origen mig 038). Ampliarlo en `facturas` NO cubre presupuestos — son constraints separadas. Caso real #007 Slack (2026-06): mig 408 amplió `facturas` a `'slack'` pero olvidó presupuestos → mig 411 tuvo que ampliar `presupuestos.created_via` aparte. Patrón: *cambio en CHECK enum-like = grep todas las tablas hermanas* (`createDocument` escribe en ambas).
+
 ## Por qué
 
 `created_via` lo introdujo la mig de audit actor (`039_audit_actor_externo.sql`) para distinguir el canal de creación con vistas join sobre `api_keys.created_via_api_key_id`. Los 4 valores cubren los canales legítimos de creación; `'manual'` queda en `fuente` (columna previa) que sí admite ese valor.
