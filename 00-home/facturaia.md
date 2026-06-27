@@ -67,6 +67,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **Candidato-2 find-or-create implementado LOCAL (sin commit, 2026-06-27)** — `pending-action/execute` delegado a `crearClienteRapido`/`crearProveedorRapido` (NIF opcional + `lookupAliases`=resolve_proveedor); −148 LOC prod, +14 tests módulo, gates verdes. Pendiente: commit+deploy+smoke WhatsApp → crear_cliente **sin NIF** (crea sin duplicar) + crear_proveedor **renombrado** (match por alias, no duplica). RFC `issues/rfc-find-or-create-contacto-nif-opcional.md`.
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
 - **Emitidas: Borja Galván (org `50a3cfbf`) emite su borrador serie A** → debe numerar `A2026-0001` sin error (backfill serie A aplicado 26-jun, mig 402). Cierra ticket #53190361.
