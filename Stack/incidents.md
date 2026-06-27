@@ -20,6 +20,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 ## 2026
 
 <!-- añade nuevas entradas aquí debajo -->
+- 2026-06-27 · TuFacturaIA · mig `406` duplicada en main (`406_slack_provider_activar` #542 vs `406_eventos_vencimiento` #541, mergeados en paralelo el mismo día) → habría roto `db push` por versión repetida en `schema_migrations` → renumerada la de slack a `409` (#549, cacheado antes de aplicar). Numerar al MERGEAR, no al crear rama. → CLAUDE.md
 - 2026-06-25 · Simarro · llamada outbound cuelga aunque el cliente sigue buscando → nodo `n_motivo` era terminal (único edge → despedida) + `n_start` leía "No, era cara" como abandono → abrir `n_motivo` a match/descubrir/callback + afinar condiciones de `n_start`. Ver [[conversation-flow-outbound-gotchas]]
 - 2026-06-10 · TuFacturaIA · guardar preset del dashboard daba HTTP 500 → policy `profiles_update` recursiva (`42P17`, subselect a profiles dentro de su propia policy) + hook `use-dashboard-config` leía/escribía profiles con query sin filtro y columna `id` inexistente (PK es `user_id`) → fix hook a `user_id`/`maybeSingle` + función `SECURITY DEFINER` en la policy (mig 240, `bc3a79a`/`f588348`). Ver [[rls-policy-recursion-42P17-subquery-misma-tabla]]
 - 2026-06-09 · TuFacturaIA · ia-ops paneles (Copiloto/OCR/WhatsApp/Crons) mostraban texto plano sin layout → CSS Module kebab-case (`.kpi-grid`) + Turbopack no convierte a camelCase → `s.kpiGrid` = `undefined` silencioso → renombrar todas las clases a camelCase directo. Ver [[css-module-camelcase-turbopack]]
