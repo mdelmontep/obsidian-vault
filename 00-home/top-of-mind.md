@@ -17,7 +17,7 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
 - **TuFacturaIA — iniciativa agéntica H1/H2** — H1-G2/G3/G7 mergeados+desplegados a prod (migs 406-409 OK, `factura.vencida` live). Queda: arrancar **G5 Fase 1** (cliente `whatsapp/send.ts`), smoke `por_vencer`, G8 (research). [[facturaia]]
-- **TuFacturaIA — Slack #007 (PR #558) code-complete** — bot slash commands `/factura` (lectura+escritura, autoría real `agent:slack`). Bloqueado merge por CI billing; pendiente HITL (db push **410-411** tras merge —406-409 ya en prod— + alta app Slack + `SLACK_ENABLED`). [[facturaia]]
+- **TuFacturaIA — Slack #007 mergeado (#558) + migs 410/411 en prod** — bot slash commands `/factura` (lectura+escritura, autoría `agent:slack`). Inerte hasta activar: pendiente **solo** alta app `api.slack.com` + envs `SLACK_*` Dokploy + `SLACK_ENABLED=true` (necesita tu cuenta Slack). [[facturaia]]
 - **TuFacturaIA — deepening candidato #3 (seam voz↔web)** — Fase A + D1-D5 en main (#544/#547/#551/#552/#554). Quedan: convergencia voice→createDocument (~300 LOC), F2/Verifactu (gestoría), D3 pleno. Detalle en `knowledge/projects/agentesia/facturaia-arquitectura-candidatos-deepening.md`. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
 - **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
