@@ -17,7 +17,7 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
 - **TuFacturaIA — G5 desacople copiloto↔n8n** — Capa A: g5a-001 ✅ (#560), S2 crear-factura-por-texto ✅ (#563), find-or-create v16 fix ✅ (#566). Queda: validar canary limpio (convive `consulta_copiloto`), S3-S5, G8. [[facturaia]]
-- **TuFacturaIA — Slack completo (#002-#007c)** — integración entera en prod: OAuth, notifs, OCR (Events URL activo), slash commands (lecturas+escrituras), bienvenida al conectar, created_via fix (#571). Solo pendiente: smoke escritura (vincular→`cobrada`) + Manage Distribution multi-cliente (decisión negocio). [[facturaia]]
+- **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
 - **TuFacturaIA — smoke PRE Verifactu** — .p12 Gonzalo (~semana que viene) → validar namespace envelope SOAP + F1/F2 en prewww1.aeat.es. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
 - **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
