@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **Verifactu XSD: SistemaFacturacion.xsd (404) → SuministroInformacion.xsd + SuministroLR.xsd** — dos namespaces, envelope vs. datos; confirmar split en smoke PRE. Ver [[verifactu-xsd-namespace-suministroinfo-vs-sistemafacturacion]]
+
 - **Zod v4 trae `z.toJSONSchema` nativo — deriva el tool-schema del LLM, no lo dupliques** — un `input_schema_json` a mano en paralelo al Zod miente al LLM (required/enum divergen). Fuente única: derivar; `.describe()` por campo. Ver [[zod-v4-tojsonschema-nativo-deriva-tool-schema]]
 - **Outbox: event-type fuera del catálogo suscribible muere en silencio** — el trigger lo encola pero nadie puede suscribirse → `fanout_completed` sin delivery. Guard: test-contrato emisor(SQL)⊆catálogo(enum). Ver [[outbox-event-type-fuera-del-catalogo-muere-silencioso]]
 - **Port devuelve dato discriminado; el caller traduce a throw en su borde** — el port nunca lanza por precondición (found/none/ambiguous, ok/conflict); el framework no cambia y el adapter in-memory testea sin mockear el query-builder. Inyección opcional (`ctx.store?`) = blast radius mínimo. Ver [[port-devuelve-dato-discriminado-tool-traduce-throw-en-borde]]

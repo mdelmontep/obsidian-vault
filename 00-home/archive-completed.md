@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-06-28 facturaia — **deepening #3 voz↔web COMPLETO** — Fase A+B, D1-D5, conformidad XSD Verifactu + F1/F2+Destinatarios (#556+#559+#561+#565+#570). Pendiente solo smoke PRE con .p12 Gonzalo.
 - 2026-06-28 facturaia — **Slack integración completa (#002-#007c)**: bienvenida al conectar workspace (Block Kit, fire-and-forget, #568), tip en panel Ajustes, Events URL OCR activo (subida PDF→bandeja IA), created_via NOT NULL fix en 3 inserts directos (#571). Smoke escritura pendiente (manual).
 - 2026-06-28 facturaia — **G5 S2 + find-or-create v16**: crear factura por texto en WhatsApp (#563) + secuencia numerada anti-patrones explícitos (#566).
 - 2026-06-28 facturaia — **deepening #3 PR-B + D3 pleno**: voice→createDocument (#559) + resolveCliente delega en crearClienteRapido (#561).
