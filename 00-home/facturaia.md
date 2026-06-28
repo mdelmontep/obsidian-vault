@@ -79,7 +79,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Slack (tras activar: app registrada + envs + `SLACK_ENABLED=true`; migs ya en prod)** — conectar workspace en Ajustes›Integraciones → disparar factura vencida/cobro y ver el aviso en el canal (push) → subir un PDF al canal → entra en `bandeja_ingesta` (OCR) → **`/factura resumen|cobros` (lectura) → `/factura cobrada` sin vincular → seguir el deep-link → vincular → reintentar (autoría `agent:slack`)**. PRs #542/#548/**#558**.
 
 - **WhatsApp S3-S5: crearPresupuesto, crearProforma, anularFactura, convertirPresupuesto, cambiarEmpresa** — validar que cada tool responde correctamente desde WhatsApp (paridad con web).
-- **Reconciliar `schema_migrations` (incidente crons 28-jun)** — `supabase migration repair --status applied 412 413` cuando haya red a la BD; los SQL (CHECK `cron_runs` + watchdog robusto, PR #576) se aplicaron a mano/MCP. Sin esto el próximo `db push` los ve pendientes (son idempotentes, no rompen). Ver [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]].
 
 **Pendientes tras deploy Dokploy** (front en main, falta desplegar):
 - **Tarjeta expandible móvil /emitidas+/recibidas** (main `d360d31e`) — móvil real: chevron despliega `Nº·Fecha·Vto·Base·IVA`, tap en la fila abre el modal; total no se pega al `•••`. [[tabla-densa-a-tarjeta-en-movil-ellipsis-y-colspan]]
