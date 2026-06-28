@@ -47,6 +47,16 @@ SELECT DISTINCT created_via FROM facturas WHERE created_via IS NOT NULL;
 INSERT INTO facturas (..., created_via, ...) VALUES (..., 'web', ...);
 ```
 
+### 2b. El mismo NOT-NULL muerde inserts directos de la APP, no solo seeds
+
+Caso real 2026-06-28 (ticket): duplicar factura/presupuesto, ingesta WhatsApp y
+fallback de aprobar-bandeja hacían `.from('facturas'|'presupuestos').insert({...})`
+sin `created_via` → 500 en runtime. Auditoría: grep TODO
+`.from('facturas'|'presupuestos').insert` y confirmar `created_via`. Lo canónico
+es no insertar a mano — `createDocument()` y el RPC `convertir_presupuesto_a_factura`
+ya lo setean (fuente única, inviolable). Valor por canal: web→'web',
+WhatsApp→'voice' (convención backfill mig 038), bandeja/OCR→'ocr'.
+
 ### 3. `fuente` también tiene CHECK — y typecheck no lo caza
 
 `facturas_fuente_check` (mig 024) solo admite `manual/whatsapp/email/telegram/camara/api/voice`. `createDocument()` recibe `source?: string` (sin union type) → un valor fuera del CHECK compila limpio y revienta con 500 **solo en runtime**. Caso real PR #207 (2026-06-12): `source: 'mobile'` rompía toda creación del endpoint. Al añadir un canal nuevo: o usar un valor existente o mig ampliando el CHECK.
