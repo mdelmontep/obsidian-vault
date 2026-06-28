@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — iniciativa agéntica H1/H2** — H1-G2/G3/G7 mergeados+desplegados a prod (migs 406-409 OK, `factura.vencida` live). Queda: arrancar **G5 Fase 1** (cliente `whatsapp/send.ts`), smoke `por_vencer`, G8 (research). [[facturaia]]
+- **TuFacturaIA — G5 desacople copiloto↔n8n** — Fase 1 (`send.ts` #555) ✅, smoke `por_vencer` ✅, ADR v2 ✅ (**hallazgo: n8n no es transporte, hospeda su propio agente GPT-4o → dos cerebros; el copiloto Next.js es el canónico**). Capa A en marcha: g5a-001 merged (#560) + **flip canary n8n vivo y validado** (nº 617314938 responde vía copiloto). Queda: validar canary limpio (convive con ruta vieja `consulta_copiloto`), **S2 crear-factura-por-texto + find-or-create** (#562), S3-S5, G8. [[facturaia]]
 - **TuFacturaIA — Slack #007 mergeado (#558) + migs 410/411 en prod** — bot slash commands `/factura` (lectura+escritura, autoría `agent:slack`). Inerte hasta activar: pendiente **solo** alta app `api.slack.com` + envs `SLACK_*` Dokploy + `SLACK_ENABLED=true` (necesita tu cuenta Slack). [[facturaia]]
 - **TuFacturaIA — deepening #3 (seam voz↔web)** — PR-A #556 ✅. Abiertas: **#559 voice→createDocument (smoke WhatsApp antes de mergear)** y **#561 D3 pleno**. F2/Verifactu: investigación + 7 preguntas gestoría (posible rechazo AEAT vivo → smoke PRE). Detalle en `knowledge/projects/agentesia/facturaia-arquitectura-candidatos-deepening.md`. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
