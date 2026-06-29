@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **`clientes`/`proveedores`: filtrar activos con `.is('archivado_at', null)`, NO `.eq('activo', true)`** — mig 190: soft-delete por timestamp, columna `activo` no existe. Ver [[clientes-proveedores-filtrar-activos-archivado-at]]
+
 - **Turn lock para agentes LLM con historial persistido** — SETNX Redis + Map fallback; acquire antes del runner, release en finally. WhatsApp: 200 en vez de 409. Ver [[copiloto-turn-lock-concurrent-llm-calls]]
 
 - **PostgREST: columna inexistente en SELECT → 400 silencioso (data=null, no error)** — se propaga como "no encontrado"; verificar schema tabla-específica en arquitecturas two-table. Ver [[postgrest-columna-inexistente-en-select-retorna-400-data-null]]
