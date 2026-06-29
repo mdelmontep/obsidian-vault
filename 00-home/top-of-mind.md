@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — copiloto — smoke cron recordatorios-batch + MCP DCR cleanup cron** — S6 ✅ S7 ✅ G6 ✅ (57 tools, cron 00:45 Dokploy creado). Pendiente: smoke primer run + crear cron `mcp-dcr-cleanup` en Dokploy (`/api/internal/mcp-dcr-cleanup`). [[facturaia]]
+- **TuFacturaIA — crear cron `mcp-dcr-cleanup` en Dokploy** — endpoint `/api/internal/mcp-dcr-cleanup`, frecuencia semanal. S7+G6 ✅, smoke 9/9 ✅ (2026-06-30). [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
 - **TuFacturaIA — smoke PRE Verifactu** — .p12 Gonzalo (~semana que viene) → validar namespace envelope SOAP + F1/F2 en prewww1.aeat.es. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]

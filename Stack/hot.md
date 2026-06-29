@@ -53,3 +53,4 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia).
 
 - **Smoke visual SSR sin password** — sesión Supabase inyectada en Playwright (generateLink+verifyOtp+cookie sb-ref base64). Ver [[smoke-visual-ssr-sesion-inyectada-playwright]]
+- **Playwright + componentes custom (checkbox hidden / Select portal)** — clickar label wrapper no input; `waitFor([role="listbox"])` antes de leer opciones; `toHaveValue()` entre fill y submit. Ver [[playwright-custom-components-e2e-selectors]]
