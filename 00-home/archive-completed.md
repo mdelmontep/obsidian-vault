@@ -276,3 +276,5 @@ tags: [home, archivo]
 - 2026-06-29 · TuFacturaIA · G5 desacople copiloto↔n8n Capa A completo — S1-S5 mergeados (find-or-create v20 #575, S3 getBandejaPendiente+enviarEmailPresupuesto e1ac0aa3, S3-S5 retirar legacy n8n 585ce946). Agente legacy n8n retirado.
 - 2026-06-30 · TuFacturaIA · G5·A copiloto S6+S7+G6 completado — 57 tools en registro; enviarRecordatoriosMasivo (tool #58) + runner proactivo headless + cron batch 00:45 Madrid; config por-org recordatorios (G6); bugs críticos PR #591 fixeados antes del primer run (fecha_vencimiento→vto, org_features join, triggered_by CHECK, todayMadrid).
 - 2026-06-30 · TuFacturaIA · copiloto G6 config recordatorios por org — 5 campos (toggle/días/importe/tono/cap) en catalog.ts + cron per-org + UI dependsOn + smoke 9/9 ✅. PR #591.
+- 2026-06-29 · TuFacturaIA · feat/copiloto-sse-streaming mergeado — SSE streaming copiloto drawer (PR #584) + G7 audio Whisper + imagen/doc nativo Next.js, issues 124-127 (dd07fef7).
+- 2026-06-29 · TuFacturaIA · #518 MCP + Plus verificado en prod — smoke dirigido OK (gating rol/feature, Plus comprable, navegación); MCP_PUBLIC_ENABLED=true activo.

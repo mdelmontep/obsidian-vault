@@ -23,7 +23,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Stack**: Next 16 · Supabase · n8n · OpenAI Vision · Anthropic Claude
 - **Planes**: Starter 14 / **Plus 29** / Pro 49 / Enterprise 99 €/mes (+IVA 21%, anual −20%) + add-on Centro Fiscal IA 14,90. **Stripe LIVE** desde 2026-06-01. Reempaquetado escalonado + tier Plus + grandfathering aplicados **en BD** (mig 399, #509/#513). **Pendiente (acción Manu)**: crear los price IDs de Plus (mensual 29 / anual 278,40) en Stripe live + rotar envs `STRIPE_PRICE_ID_PLUS_*` (Starter 14 ya creado). Hasta entonces el tier Plus no es comprable.
 - **Migraciones**: prod = main; última aplicada **409** (`slack_provider_activar`, 2026-06-27; 406 eventos vencimiento + 407-409 slack aplicadas ese día). Secuenciales `NNN_`, sin timestamps. _(337-402: MCP server, perf merge-train, Resolver-con-Claude, Verifactu inalterabilidad, reempaquetado planes, notificaciones, series canónicas.)_
-- **Tests**: Vitest 3824/0 verde · E2E smoke con **skip honesto por precondición** (#531): módulo apagado / rol superadmin / seed ausente → skip con razón, nunca falso rojo. Helper `tests/e2e/fixtures/preconditions.ts` ([[e2e-smoke-skip-honesto]]).
+- **Tests**: Vitest 3824/0 verde · E2E smoke **63 pass / 21 skip** (2026-06-30, `6a0f8456`+`f5e736b4`): cashflow-v2 selectors, conciliacion-ciclo tablist, duplicar-lineas skip, PDF presupuesto precondición, feedback-multi-imagen timeout. Skip honesto por precondición (#531); helper `tests/e2e/fixtures/preconditions.ts` ([[e2e-smoke-skip-honesto]]).
 - **Orgs prod**: AgentesiaLab · tecnocloud · Borja Galván · AgenteIA PRUEBA (todas `billing_status=active` complimentary).
 - _Snapshot detallado anterior y changelog completo → [[facturaia-historico-detallado]]._
 

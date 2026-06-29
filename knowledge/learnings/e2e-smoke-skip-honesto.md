@@ -24,4 +24,7 @@ env), debe **skipear con razón**, no fallar.
   para esos casos usar la señal de bloqueo real en UI (`.tpl-gallery-lock`).
 
 Patrón: `test.beforeEach(async ({ request }) => test.skip(!(await featureActive(request,'conciliacion')), 'módulo no activo (precondición, no regresión)'))`.
+
+- **API endpoint como precondición**: si el smoke llama a una API (render-pdf, signed URL…) y devuelve 404 porque el dato de prueba no existe en sandbox (PDF no generado, recurso no sembrado), eso es precondición ausente, no código roto. Probar N hrefs en un loop, skip si ninguno devuelve 302; no fallar al primer 404.
+
 Ver también [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]].
