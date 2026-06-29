@@ -14,6 +14,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 ## de la semana
 
 - **`clientes`/`proveedores`: filtrar activos con `.is('archivado_at', null)`, NO `.eq('activo', true)`** — mig 190: soft-delete por timestamp, columna `activo` no existe. Ver [[clientes-proveedores-filtrar-activos-archivado-at]]
+- **Tool copiloto: campo en interface pero no en `.select()` → guard mudo** — preview PASS, execute FAIL en RPC. Añadir campo al select y al interface. Ver [[copiloto-tool-select-campo-faltante-guard-mudo]]
 
 - **Turn lock para agentes LLM con historial persistido** — SETNX Redis + Map fallback; acquire antes del runner, release en finally. WhatsApp: 200 en vez de 409. Ver [[copiloto-turn-lock-concurrent-llm-calls]]
 
