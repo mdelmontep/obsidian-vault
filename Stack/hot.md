@@ -13,6 +13,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **PostgREST: columna inexistente en SELECT → 400 silencioso (data=null, no error)** — se propaga como "no encontrado"; verificar schema tabla-específica en arquitecturas two-table. Ver [[postgrest-columna-inexistente-en-select-retorna-400-data-null]]
 - **UPDATE atómico no acopla lo crítico (liberar lock) con lo cosmético (status)** — `cleanup_cron_zombies` escribía `status='zombie'` fuera del CHECK → tumbaba el UPDATE entero → el lock del watchdog nunca se liberaba (auto-curador suicida). Separar: liberar recurso (campos sin constraint) + metadata best-effort (`EXCEPTION WHEN check_violation`). Ver [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]]
 - **Copiloto WhatsApp — campo faltante → preview gate** — Zod optional + preview throw si falta; LLM reintenta con el dato en siguiente turno. Ver [[copiloto-zod-required-blocks-llm]]
 - **Verifactu XSD: SistemaFacturacion.xsd (404) → SuministroInformacion.xsd + SuministroLR.xsd** — dos namespaces, envelope vs. datos; confirmar split en smoke PRE. Ver [[verifactu-xsd-namespace-suministroinfo-vs-sistemafacturacion]]

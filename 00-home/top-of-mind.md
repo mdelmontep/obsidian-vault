@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — G5 desacople copiloto↔n8n** — Capa A: S1 ✅ S2 ✅ (find-or-create v20, #575, smoke OK). Queda: S3 presupuestos/proformas, S4 anular/convertir/cambio-org, S5 retirar legacy n8n + escalarAgenteLegacy. [[facturaia]]
+- **TuFacturaIA — smoke copiloto WhatsApp v26** — 8 bugs corregidos (email_envio en SELECT, cambiarEmpresa, fuzzy num, duplicarPresupuesto forma_pago, searchFacturas contexto, ajustarStock SQLSTATE). Pendiente: smoke prod completo + verificar ajustarStock en prod con logs Supabase. [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
 - **TuFacturaIA — smoke PRE Verifactu** — .p12 Gonzalo (~semana que viene) → validar namespace envelope SOAP + F1/F2 en prewww1.aeat.es. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
