@@ -7,6 +7,10 @@ tags: [elphis, bloqueantes, todo, decisiones]
 
 # Estado de bloqueantes · Centro Elphis
 
+## Bloqueante go-live activo · 2026-06-30 — conexión nº real + verificación negocio
+
+Diagnóstico definitivo (Graph API). El 659 (`577874186587781`, WABA `349202490218983`) está `is_on_biz_app:true` + `DISCONNECTED` + `ON_PREMISE` = **coexistencia a medias, sigue en el móvil**. El negocio `463746404062650` está **NO verificado** (`141010`) → bloquea crear plantillas (`2494160`) + mensajería LIMITED. Coexistencia desde web requiere ser **BSP** (descartado para 1 número). **Decisión cliente pendiente:** A) migrar a Cloud API (OTP, saca del móvil, recomendado) vs B) coexistencia (BSP). **Siguiente:** iniciar verificación de negocio (docs KISAMU, Enrique). App nueva `1332761645647854` + System User token (⚠️ expuesto, rotar). Ver [[whatsapp-conectar-numero-propio-en-movil-a-cloud-api]] · [[whatsapp-diagnosticar-numero-waba-por-graph-api]].
+
 ## Resueltos por el onboarding firmado o por decisión Manu
 
 - Horario del centro: L-V 9-21, S 9-15, cerrado dom + festivos. Atención 24h solo pacientes en proceso.

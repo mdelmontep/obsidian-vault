@@ -9,13 +9,16 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-06-18
+## Estado actual · 2026-06-30
 
 - **Chat WhatsApp y voz Retell funcionando E2E** con número de pruebas Agentesia (`+34 910 05 49 50`). Cerebro del bot completo (router-ia, registrar-lead, agenda, Clientify).
-- **Bloqueante go-live activo · conexión del número real a Meta.** El `659 877 708` figura **"Sin conexión"** en Meta (WABA `349202490218983`, modo "App de WhatsApp Business"). Hasta conectarlo a la Cloud API **no se pueden crear las plantillas HSM**. Diagnóstico previo (tarjeta caducada, 2026-06-12) quedó OBSOLETO: la tarjeta ya es válida (VISA `*1716`), negocio Aprobado, rol OK.
-- **Causa real = coexistencia sin completar.** El número se usa a diario en la app WhatsApp Business → único camino es **coexistencia** (conecta a la API sin sacarlo del móvil). Requiere escanear/confirmar desde el móvil del 659. La app "Elphis" de Agentesia NO ve este WABA (vive en otro Business `463746404062650`) → se delega al cliente vía la app del móvil.
-- **Acción en curso:** email enviado a **Pablo Rubio** con paso a paso autónomo para conectarlo desde la app (Ajustes → Herramientas para la empresa → "Registrarse con Facebook"). Detalle técnico completo en `/Users/manueldelmonte/elphis/CLAUDE.md` (bloque "Bloqueante creación plantillas — REDIAGNOSTICADO 2026-06-18"). Ver [[bloqueantes-elphis]].
-- **Diseño técnico cerrado.** Documentado en `/Users/manueldelmonte/elphis/CLAUDE.md` y reflejado en este vault.
+- **Bloqueante go-live activo · conexión del número real + verificación de negocio.** Diagnóstico definitivo vía Graph API (2026-06-30):
+  - App Meta nueva `1332761645647854` creada **dentro del Business Centro Elphis** (`463746404062650`) + **System User token** con acceso al WABA real `349202490218983`. ⚠️ **Token expuesto en chat → ROTAR.**
+  - El 659 (`577874186587781`) está `is_on_biz_app:true` + `status:DISCONNECTED` + `platform_type:ON_PREMISE` = **coexistencia a medias, sigue en el móvil, no registrado en Cloud API**.
+  - **Negocio `463746404062650` NO verificado** (error API `141010`) → bloquea gestión de plantillas (`2494160`) + mensajería LIMITED. (Corrige diagnósticos previos: no estaba verificado).
+  - Coexistencia desde web (embedded signup) = requiere ser **Business Solution Provider** → descartado para 1 número propio.
+- **Decisión pendiente cliente (Alba/Enrique):** A) **migrar 659 a Cloud API** (alta OTP, lo saca del móvil → recepción a Chatwoot; recomendado para arquitectura bot+Chatwoot) · B) coexistencia (vía BSP, lento). Ver [[bloqueantes-elphis]].
+- **Siguiente al retomar:** iniciar **verificación de negocio** (docs KISAMU, Enrique — cuello de botella lento) + decidir A/B. Detalle técnico en `/Users/manueldelmonte/elphis/CLAUDE.md` ("Bloqueante creación plantillas").
 - Credenciales Clientify en memory: [clientify-elphis-api](~/.claude/projects/-Users-manueldelmonte/memory/clientify-elphis-api.md).
 
 ## Datos clave del cliente
