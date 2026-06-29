@@ -16,8 +16,8 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — copiloto smoke prod S6** — ajustarStock gestiona_lotes fix ✅; 5 tools nuevas (listarClientes, listarProveedores, getFactura, listarPresupuestos, getURLPDF) en PR #588 pendiente merge; tras merge smoke prod 5 tools. [[facturaia]]
-- **TuFacturaIA — copiloto agéntico backlog** — turn lock ✅ (#582) · aprobarDocumentoBandeja ✅ (#583) · SSE ✅ (#584) · S6 en PR #588. Siguiente: merge #588 + smoke prod + encender MCP. [[facturaia]]
+- **TuFacturaIA — copiloto smoke prod S6** — 5 tools nuevas en main (S6 ✅). Pendiente: smoke prod 5 tools + encender MCP. [[facturaia]]
+- **TuFacturaIA — copiloto agéntico backlog** — turn lock ✅ · aprobarDocumentoBandeja ✅ · SSE ✅ · S6 ✅. Siguiente: smoke prod + encender MCP. [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
 - **TuFacturaIA — smoke PRE Verifactu** — .p12 Gonzalo (~semana que viene) → validar namespace envelope SOAP + F1/F2 en prewww1.aeat.es. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
