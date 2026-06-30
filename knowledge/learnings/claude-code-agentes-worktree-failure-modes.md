@@ -67,6 +67,16 @@ git checkout <worktree-branch> -- \
 
 **Fix**: (1) en el prompt, ruta ABSOLUTA del worktree + "es un worktree, NO el repo principal; NO leas `/repo`". (2) Re-verifica claims críticos (firmas, auth) leyendo el worktree tú mismo — los del subagente no se heredan. Caso real 2026-06-18 (MCP slice 050): el Explore reportó `withApiV1`/endpoints pre-044 del repo principal.
 
+## Failure mode E: OTRA sesión (no un agente mío) edita el mismo working tree principal mientras trabajo
+
+**Síntoma**: trabajando en el repo principal (sin worktree), aparece un archivo nuevo que no creé (ej. una migración SQL de otra feature) entre dos de mis propios commits. No es un agente que lancé — es otra sesión Claude Code (o humana) usando el mismo checkout en paralelo.
+
+**Diagnóstico**: `git worktree list` + comparar mtimes de archivos sospechosos contra el timeline de mi sesión. Si el archivo no encaja con nada que yo haya tocado, es trabajo ajeno concurrente.
+
+**Fix**: no seguir editando el principal. Crear worktree propio desde `origin/main` (`git worktree add <path> -b <rama> origin/main`), copiar a mano los archivos de MI trabajo en curso al nuevo worktree, y revertir/limpiar el principal (`git checkout -- <mis-archivos>`, borrar mis archivos nuevos) para no interferir con la otra sesión. Symlink `node_modules` desde el principal en vez de reinstalar (ojo: Turbopack/`next build` rechaza el symlink, `tsc`/`vitest` no — usar `npm install` real si necesitas `next build` en el worktree).
+
+**Cómo blindar**: antes de empezar trabajo largo en el checkout principal (no en un worktree), `git worktree list` + revisar si hay señales de actividad reciente ajena (archivos modificados con mtime fresco que no son míos) en el `git status` inicial.
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:
