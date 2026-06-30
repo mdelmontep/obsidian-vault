@@ -38,6 +38,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — billing GitHub Actions re-bloqueado (Manu)** — desde 17/06 jobs mueren a 0 pasos (spending limit). Subir límite en Settings → Billing org `AgentesIA-MAdrid`. **Mientras siga, merges con `gh pr merge --admin`** (requiere OK explícito). Workflow `deploy-mcp` (path-filtered) + secret `DOKPLOY_API_KEY` ya puestos pero **dormidos hasta que haya billing**; mientras, redeploy MCP manual + alerta de desfase cubren. Ver [[github-actions-org-private-free-tier-2000-min]] · [[dokploy-autodeploy-false-desfase-silencioso]].
 - **TuFacturaIA — subir tier OpenAI (Manu)** — bot WhatsApp salta rate-limit (TPM 30k Tier 1). Subir a Tier 2 (450k) en platform.openai.com. (Ya no urge: 0 errores 429 en 30d.)
 - **TuFacturaIA — HIBP leaked-password requiere Supabase Pro (Manu)** — toggle "Prevent leaked passwords" falla en free. Activar al subir a Pro.
+- **agentesia-skills — PR #3 `onboarding-tour-spotlight`** — pendiente review de alguien del equipo antes de mergear (convención del repo: no merge directo a main).
 
 ## Vistas por cliente (el backlog vive en cada hub)
 

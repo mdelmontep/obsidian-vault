@@ -1,34 +1,23 @@
 ---
-title: tour spotlight in-modal con tourBlocker + z-index elevation
+title: tour spotlight in-modal — tourHighlight necesita fondo propio, no solo outline
 date: 2026-06-30
 source: claude-code-session
 tags: [frontend, ux, onboarding, facturaia]
 ---
 
-Tutorial guiado dentro de un modal sin librerías externas:
+Tutorial guiado tipo spotlight (velo + zona resaltada + tooltip), sin librerías externas.
 
-**Estructura de capas (panel position:relative):**
-- `tourBlocker` — `position:absolute; inset:0; z-index:5; background:rgba(8,12,28,0.62)` → oscurece todo
-- Sección activa → clase `tourHighlight`: `position:relative; z-index:10; outline:2px solid var(--brand)`
-- `tourTooltip` — `position:absolute; z-index:20` + `style={TOUR_TOOLTIP_POS[step]}`
+**Bug real**: `tourHighlight` con solo `outline:2px solid var(--brand)` y sin `background`
+propio no se distingue del velo oscuro si el panel detrás es translúcido/glass — el velo
+se filtra igual a través de la zona "marcada" y el usuario no percibe nada resaltado.
+Fix: la zona activa necesita `background: var(--bg-elev)` (opaco, no heredado del panel)
+además del outline/glow.
 
-**Posicionamiento del tooltip por step:**
-```ts
-const TOUR_TOOLTIP_POS: Record<number, CSSProperties> = {
-  0: { top:'50%', left:'50%', transform:'translate(-50%,-50%)' }, // intro centrado
-  1: { top:'100px', right:'24px' },   // izq activo → tooltip a la derecha
-  2: { top:'100px', left:'24px' },    // der activo → tooltip a la izquierda
-  3: { bottom:'76px', left:'50%', transform:'translateX(-50%)' },
-}
-```
+**Capas** (contenedor `position:relative`): `tourBlocker` (inset:0, z-5, velo oscuro) →
+`tourHighlight` (z-10, fondo propio + outline) → `tourTooltip` (z-20, `style` por step).
 
-**Gate localStorage:**
-```ts
-const TOUR_KEY = 'fia:conciliar-tour-v1'
-useEffect(() => { if (!localStorage.getItem(TOUR_KEY)) setTourStep(0) }, [])
-const skipTour = () => { localStorage.setItem(TOUR_KEY,'1'); setTourStep(-1) }
-```
-
-**ESC:** cierra tour primero, luego modal (handler único con priority check).  
-**Step 0:** sin blocker (panel completo visible), solo tooltip centrado.  
-**Steps 1+:** blocker activo + sección elevada.
+**Ya no se copia por modal**: extraído a componente compartido
+`src/components/ui/{onboarding-tour,use-onboarding-tour}.tsx` — un cambio de diseño se
+propaga a todos los tours del proyecto. Skill de referencia: `fia-onboarding-tour`
+(proyecto-local, con registro de qué vistas lo usan) y versión genérica para otros
+proyectos del equipo en `agentesia-skills/onboarding-tour-spotlight`.

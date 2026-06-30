@@ -26,3 +26,10 @@ Aplicar tokens glass (`.glass-panel`, `.glass-sheen`, `.scrim`) a un CSS Module:
 - `composes` añade los nombres de clase globales al elemento; las propiedades locales que repitan la misma prop que la global **ganan en orden de fuente** → eliminarlas del módulo
 - `backdrop-filter` en `glass-panel`/`scrim` crea stacking context → z-indices de hijos son locales a esa superficie
 - Usar en cualquier modal/drawer/panel nuevo para consistencia visual con el resto de la app
+
+**`glass-panel` (42-46% opaco) vs `glass-strong` (90% opaco)**: elegir por densidad de
+contenido, no por defecto. `glass-panel` es para paneles decorativos sin datos densos
+(drawer de chat IA). Un modal lleno de cifras/texto (facturas, importes) necesita
+`glass-strong` — con `glass-panel` ahí el contraste cae y el texto se vuelve ilegible
+contra el fondo difuminado (caso real: modal de conciliación manual, bajaba el contraste
+por usar `glass-panel` en una lista de facturas con importes).
