@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — smoke WhatsApp G5 canary** — mensaje real + audio + imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Prerequisito: mergear `fix/ingesta-progress-faster-feedback`. [[facturaia]]
+- **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Fix Traefik body limit en prod (PR #597). [[facturaia]]
 - **TuFacturaIA — smoke OCR recibo seguro (2026-06-30)** — subir recibo Hiscox/aseguradora → confirmar estado=listo + categoría Seguros en bandeja (no descartado). PR #595. [[facturaia]]
 - **TuFacturaIA — smoke email OCR tras fix (2026-06-30)** — subir PDF por email → confirmar bandeja_ingesta llega a estado=listo (no error). Justificante → Conciliación recibe movimiento. [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]

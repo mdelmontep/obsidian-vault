@@ -14,6 +14,7 @@ n8n hacía las dos en secuencia. Next.js solo portó ingesta.
 Resultado: bandeja queda en `procesando` indefinidamente → stale-sweep la marca `error` a los 30min.
 
 Fix: en el caller (webhook/upload/email), tras ingesta exitosa (non-idempotent),
-`void callOcrProcess({ org_id, org_nombre, factura_id, bandeja_id, media })` fire-and-forget.
+`void callOcrProcess({ org_id, org_nombre, factura_id, bandeja_id })` fire-and-forget.
 
-El base64 ya está en memoria — no hace falta re-descargarlo de Storage.
+`ocr-process` descarga el documento de Storage internamente (Storage path en `bandeja_ingesta.documento_url`).
+No pasar base64 por HTTP — Traefik body limit (~4MB) lo corta silenciosamente con imágenes >4MB. Ver [[traefik-body-limit-bloquea-base64-media]].
