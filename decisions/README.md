@@ -57,3 +57,5 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 031 · 2026-06-16 · [[ADR-031-stock-lotes-opt-in|Stock por partidas/lotes: opt-in híbrido por producto, motor aislado]] (TuFacturaIA)
 - 032 · 2026-06-18 · [[ADR-032-mcp-oauth-as-split-app-servicio-handroll|AS OAuth del MCP partido app↔servicio + hand-roll (no @jmondi)]] (TuFacturaIA)
 - 033 · 2026-06-18 · [[ADR-033-posicionamiento-popovers-floating-ui|Posicionamiento de popovers anclados con @floating-ui/react (no CSS anchor positioning aún, no cálculo casero)]] (TuFacturaIA)
+- 034 · 2026-06-19 · [[ADR-034-paginacion-offset-vs-keyset|Paginación UI interna — offset vs keyset]] (TuFacturaIA)
+- 035 · 2026-07-01 · [[ADR-035-control-canal-ingesta-pantalla-unica-vs-duplicado|Control de un canal de ingesta vive en una sola pantalla, con estado de solo lectura en el resto]] (TuFacturaIA)

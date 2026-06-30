@@ -14,6 +14,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 ## de la semana
 
 - **Migración colisión NNN entre ramas** — git mv → placeholder → repair --status applied → push. Ver [[supabase-migration-numero-colision-renumerar]]
+- **`supabase db push` sube TODAS las pendientes, no solo la tuya** — aparta con `mv` la migración ajena sin commitear, push, devuélvela. Ver [[supabase-db-push-aplica-todas-pendientes-aparta-las-ajenas]]
+- **`git mv` sobre untracked falla pero renombra igual** — no asumas que no hizo nada por el exit≠0. Ver [[git-mv-archivo-untracked-falla-pero-renombra-igual]]
 - **CSS Module + glass tokens** — `composes: glass-panel scrim from global`; eliminar local `background`. Ver [[css-modules-composes-glass-panel-scrim]]
 - **Tour spotlight in-modal** — tourBlocker z-5 + tourHighlight z-10 + tourTooltip z-20; lookup CSSProperties por step; localStorage gate. Ver [[modal-tour-spotlight-pattern]]
 

@@ -284,3 +284,4 @@ tags: [home, archivo]
 - 2026-06-30 · TuFacturaIA · fix(ocr): recibos seguro (IVA=0) clasificados como factura, no justificante — PR #595 mergeado main
 - 2026-06-30 · TuFacturaIA · PR #593 conciliación cuarentena force UI — drawer sugBox + textarea motivo + "Asignar con motivo" — mergeado main
 - 2026-06-30 · TuFacturaIA · PR #607 mergeado — ingesta justificante routing (manual+auto+reglas) + «Convertir en recurrente» desde lista
+- 2026-07-01 · TuFacturaIA · auditoría UX ingesta Gmail/Drive + fixes en prod (`68a0f25c`) — scope calendar.readonly retirado, rename catálogo "Google (Gmail y Drive)", `bandeja_ingesta.fuente_provider` distingue Gmail/iCloud/M365, control Email OCR consolidado en Agentes IA (toasts rotos en `.ci-toast` sin CSS arreglados con `useToast()`), Telegram marcado "Próximamente" (era formulario sin backend). Mig 420/421/424 en prod.
