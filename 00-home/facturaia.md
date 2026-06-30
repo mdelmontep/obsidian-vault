@@ -74,6 +74,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **🔴 PR #608 — conciliar modal glass + tour + soporte + mig 418** (2026-06-30, URGENTE) — (1) `/conciliacion` → "Conciliar manualmente": panel fondo glass, no blanco. (2) Borrar `fia:conciliar-tour-v1` localStorage → abrir modal → tour 4 pasos, spotlight por sección, ESC cierra tour sin cerrar modal, segundo abrir no muestra tour. (3) `SELECT numero FROM feedback_tickets ORDER BY created_at LIMIT 5` → tickets con `#N`. (4) `/soporte` carga sin 500.
+
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
 - **`factura.por_vencer` en prod** (mig 406 ya aplicada + app desplegada) → crear factura con `vto = hoy+3` (estado pendiente/enviada) y `runManually` del cron `check-vencimientos` → debe encolar `factura.por_vencer` en `outbox_events`. (`factura.vencida` ya validado vía smoke ROLLBACK 2026-06-27 ✓ — [[smoke-trigger-sql-tx-rollback-contra-prod]].)
 - **WhatsApp: voz multi-org** — seleccionar empresa y confirmar que el bot NO pide repetir la nota de voz.
