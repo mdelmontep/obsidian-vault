@@ -10,5 +10,5 @@ tags: [ocr, llm-prompt, ingesta, seguros]
 - Fix: definir "factura" por presencia de EMISOR identificado (empresa/autónomo que cobra), no por IVA.
 - "justificante_pago" = comprobante bancario de UNA transferencia. NO recibo de proveedor ni aseguradora.
 - Archivo: `src/app/api/internal/whatsapp/ocr-process/route.ts` `buildExtractionInstruction()` PASO 0.
-- UI: cuando `doc_type` es `justificante_pago`/`extracto`, mostrar destino (`/conciliacion`) en vez del genérico "Sin datos".
-- **IPS ≠ IVA (recibos de seguro)**: "Impuestos repercutibles" / "Impuesto sobre Primas de Seguros" es IPS, no deducible como IVA. El LLM lo ponía en el campo `iva` si no había regla explícita → tarjeta mostraba "IVA: 20€" con `iva_pct=null` → inconsistencia con detalle. Fix: REGLA 14 en `buildExtractionInstruction` (`iva:0, iva_pct:0` en recibos de seguro) + guard display `ivaPct != null && iva != null` en `hero-card.tsx` (PR #599).
+- **IPS ≠ IVA (recibos de seguro)**: "Impuestos repercutibles" / "Impuesto sobre Primas de Seguros" es IPS, no deducible como IVA. Fix: REGLA 14 (`iva:0, iva_pct:0` en seguros) + guard display en `hero-card.tsx` (PR #599).
+- **NIF emisor extranjero (US/UK/IE) sin NIF español es esperado, no anomalía grave**: `anomaly.ts` marcaba `missing_nif_emisor` siempre `severity:'high'` → forzaba revisión en TODO recibo SaaS extranjero (Resend, AWS, Stripe) aunque la propia REGLA 10 ya documentaba el caso. Fix: severidad `medium` (no fuerza revisión sola) si `pais≠ES` o `moneda≠EUR`. 2026-06-30.
