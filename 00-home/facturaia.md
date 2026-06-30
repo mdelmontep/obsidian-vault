@@ -74,6 +74,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **🔴 PR #609 — soporte + recurrente pill + justificante polish** (2026-06-30, URGENTE) — (1) `/soporte`: carga, cards con `#001`, hilo inline abre sin reload. (2) Factura emitida → modal detalle → pill «Recurrente» en topbar visible y toggle cambia estado. (3) Bandeja ingesta → justificante pendiente → panel idle (orbe brand) · loading (orbe gira) · enviado (orbe verde). (4) `SELECT numero FROM feedback_tickets ORDER BY created_at LIMIT 5` → numeración `#N` presente (mig 418).
+
 - **🔴 PR #608 — conciliar modal glass + tour + soporte + mig 418** (2026-06-30, URGENTE) — (1) `/conciliacion` → "Conciliar manualmente": panel fondo glass, no blanco. (2) Borrar `fia:conciliar-tour-v1` localStorage → abrir modal → tour 4 pasos, spotlight por sección, ESC cierra tour sin cerrar modal, segundo abrir no muestra tour. (3) `SELECT numero FROM feedback_tickets ORDER BY created_at LIMIT 5` → tickets con `#N`. (4) `/soporte` carga sin 500.
 
 - **WhatsApp: consultar_vencimientos con org sin vencimientos próximos** → debe responder con contexto útil + sugerir alternativa (ej. "ampliar a 60 días"), no "no hay nada" ni "problema técnico".
