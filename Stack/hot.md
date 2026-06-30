@@ -13,6 +13,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **OCR WhatsApp: ingesta almacena, el caller dispara ocr-process por separado** — portar solo ingesta deja bandeja en `procesando` indefinidamente. Ver [[whatsapp-ocr-trigger-no-es-ingesta-es-caller]]
 - **Vitest mock clase ES module → `vi.hoisted` antes del factory** — "not a constructor" si referencias vi.fn() no hoisted. Ver [[vitest-mock-clase-esm-vi-hoisted]]
 - **Webhook HMAC test → computar firma real, no mockear verify** — mock bypassa la verificación → falso positivo estructural. Ver [[whatsapp-webhook-test-hmac-computar-real]]
 - **PostgREST `!inner` join sin FK directa → 400 runtime** — query separada + `.in('org_id', ids)`. Ver [[postgrest-join-inner-sin-fk-directa]]
