@@ -13,6 +13,9 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **CSS Module + glass tokens** — `composes: glass-panel scrim from global`; eliminar local `background`. Ver [[css-modules-composes-glass-panel-scrim]]
+- **Tour spotlight in-modal** — tourBlocker z-5 + tourHighlight z-10 + tourTooltip z-20; lookup CSSProperties por step; localStorage gate. Ver [[modal-tour-spotlight-pattern]]
+
 - **Prompt doc_type PASO 0: "factura" por EMISOR, no por IVA** — seguros/sanidad/intracom tienen iva=0 y son facturas; "justificante_pago" = solo comprobante bancario de transferencia. Ver [[ocr-clasificacion-iva-zero-seguros]]
 
 - **WhatsApp OCR: discriminadores internos divergen producer→caller → silencio total en paths non-success** — leer body real del endpoint antes de escribir el caller; grep callers al cambiar shapes. Ver [[whatsapp-internal-http-discriminador-shape]]
@@ -61,3 +64,5 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 
 - **Smoke visual SSR sin password** — sesión Supabase inyectada en Playwright (generateLink+verifyOtp+cookie sb-ref base64). Ver [[smoke-visual-ssr-sesion-inyectada-playwright]]
 - **Playwright + componentes custom (checkbox hidden / Select portal)** — clickar label wrapper no input; `waitFor([role="listbox"])` antes de leer opciones; `toHaveValue()` entre fill y submit. Ver [[playwright-custom-components-e2e-selectors]]
+- **WhatsApp interactive → await upsert antes de enviar botones** — el button_reply llega antes que el fire-and-forget; escritura en BD debe ser await+guard antes del send. Ver [[whatsapp-await-upsert-antes-de-botones-interactivos]]
+- **Docker cache activa → builder prune no basta si hay contenedor activo** — usar `docker compose build --no-cache <svc>` desde el dir del compose. Ver [[docker-layer-cache-persiste-con-contenedor-activo]]
