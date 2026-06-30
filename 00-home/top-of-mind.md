@@ -13,7 +13,6 @@ tags: [home, prioridades]
 - **TuFacturaIA — notifs fiscal residuales (manual)** — marcar leídas notifs viejas + abrir/recalcular borradores 130 2T/3T/4T (drift abono B2026-0001) + check visual drawer. [[facturaia]]
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **TuFacturaIA — presupuestos propios en OCR (en curso, sin commitear)** — backend+endpoint hechos; siguiente: prompt LLM. ⚠️ La colisión migración 421/422 referida aquí puede ya no aplicar — sesión paralela del 2026-07-01 ocupó el 421 para otra cosa y verificó la 422 (presupuesto_id) ya aplicada en prod; confirmar con quien lleve esto antes de renumerar nada. [[facturaia]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
