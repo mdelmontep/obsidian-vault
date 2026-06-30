@@ -280,3 +280,4 @@ tags: [home, archivo]
 - 2026-06-29 · TuFacturaIA · #518 MCP + Plus verificado en prod — smoke dirigido OK (gating rol/feature, Plus comprable, navegación); MCP_PUBLIC_ENABLED=true activo.
 - 2026-06-30 · TuFacturaIA · fix(e2e): 8 fallos smoke corregidos — selectores custom (combobox/DatePicker), strict-mode .first(), hasNotText regex, skip guards — caa800b0 en main
 - 2026-06-30 · TuFacturaIA · fix(ocr): recibos seguro (IVA=0) clasificados como factura, no justificante — PR #595 mergeado main
+- 2026-06-30 · TuFacturaIA · PR #593 conciliación cuarentena force UI — drawer sugBox + textarea motivo + "Asignar con motivo" — mergeado main
