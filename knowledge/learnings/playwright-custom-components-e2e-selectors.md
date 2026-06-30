@@ -35,3 +35,9 @@ const options = await page.locator('[role="option"]').allTextContents()
 ## Label vs valor interno en select
 
 El texto visible de las opciones (`label`) puede diferir del `value` interno. Testear contra el texto visible, no el value.
+
+## filter({ hasNotText }) con badges async
+
+Badge renderizado async puede no estar en DOM cuando el filter evalúa → candidata pasa el filtro pero el botón confirm queda disabled tras el click.
+
+Fix: `await page.waitForTimeout(500)` después de que el modal sea visible, antes del filter. Guard adicional: `await btn.isEnabled().catch(() => false)` tras click → cancelar y probar siguiente item. Preferir `{ hasNotText: /regex/i }` sobre string literal (case-insensitive).

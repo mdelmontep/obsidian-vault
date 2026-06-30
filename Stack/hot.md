@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **WhatsApp OCR: discriminadores internos divergen producer→caller → silencio total en paths non-success** — leer body real del endpoint antes de escribir el caller; grep callers al cambiar shapes. Ver [[whatsapp-internal-http-discriminador-shape]]
+
 - **OCR WhatsApp: ingesta almacena, el caller dispara ocr-process por separado** — portar solo ingesta deja bandeja en `procesando` indefinidamente. Ver [[whatsapp-ocr-trigger-no-es-ingesta-es-caller]]
 - **Vitest mock clase ES module → `vi.hoisted` antes del factory** — "not a constructor" si referencias vi.fn() no hoisted. Ver [[vitest-mock-clase-esm-vi-hoisted]]
 - **Webhook HMAC test → computar firma real, no mockear verify** — mock bypassa la verificación → falso positivo estructural. Ver [[whatsapp-webhook-test-hmac-computar-real]]
