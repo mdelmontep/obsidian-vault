@@ -12,3 +12,4 @@ Patrón correcto:
 - Refresh de fondo silencioso (no togglear loading ni vaciar la lista en error transitorio) + debounce del realtime (coalesce ráfagas) + ref a la última callback para evitar closure stale al cambiar de página.
 - Probar la invariante con tests: el merge nunca decrece bajo refreshes adversos (server→0, fuera de orden).
 Hermano del parpadeo por filtros inline object → render loop (incident 2026-06-21 #439).
+- **Optimistic insert al subir**: sin él, el skeleton espera el evento realtime (~500ms). Insertar el item localmente al recibir el `id` del upload (`estado:'procesando', progreso:0`) y auto-seleccionarlo da visibilidad inmediata. Guard: `prev.some(b => b.id === id)` para no duplicar cuando llega realtime.
