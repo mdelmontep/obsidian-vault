@@ -22,4 +22,6 @@ No es cascada — es derived state documentado en React docs. El render con setS
 
 **Corolario `react-hooks/refs`** (regla del React Compiler): el valor previo de la comparación NO puede ir en `useRef` — leer/escribir `.current` en render está prohibido. Usa `useState` para el previo (como arriba). Para RE-disparar una animación CSS en cada cambio, incrementa un `key` con ese patrón y ponlo en el nodo a re-montar (el resto del subárbol que NO debe re-montarse —p.ej. un `<input>` con foco— va FUERA de ese nodo).
 
-Casos reales facturaia: `AIAssistant` prefill, `ModuloConfig` (commit 02bdf36); shake de `otp-boxes.tsx` re-disparado por `key` con previo en state (PR #254, 2026-06-15).
+Patrón alternativo cuando el estado depende del item seleccionado: un único objeto `{id, estado, ...}` keyed por el id → derived constants post-cálculo del selectedItem, sin useEffect de reset. El estado "incorrecto" queda aislado al id anterior y no se aplica.
+
+Casos reales facturaia: `AIAssistant` prefill, `ModuloConfig` (commit 02bdf36); shake de `otp-boxes.tsx` re-disparado por `key` con previo en state (PR #254, 2026-06-15); `justInteraction` keyed por `selectedId` en `ingesta-view.tsx` (PR #607, 2026-06-30).
