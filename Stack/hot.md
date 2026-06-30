@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **Prompt doc_type PASO 0: "factura" por EMISOR, no por IVA** — seguros/sanidad/intracom tienen iva=0 y son facturas; "justificante_pago" = solo comprobante bancario de transferencia. Ver [[ocr-clasificacion-iva-zero-seguros]]
+
 - **WhatsApp OCR: discriminadores internos divergen producer→caller → silencio total en paths non-success** — leer body real del endpoint antes de escribir el caller; grep callers al cambiar shapes. Ver [[whatsapp-internal-http-discriminador-shape]]
 
 - **OCR WhatsApp: ingesta almacena, el caller dispara ocr-process por separado** — portar solo ingesta deja bandeja en `procesando` indefinidamente. Ver [[whatsapp-ocr-trigger-no-es-ingesta-es-caller]]
