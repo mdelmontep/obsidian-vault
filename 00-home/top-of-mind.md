@@ -17,8 +17,6 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
-- **TuFacturaIA — smoke OCR recibo seguro (2026-06-30)** — subir recibo Hiscox/aseguradora → IVA en tarjeta debe mostrar "—" (no "20€"), estado=listo. REGLA 14 + hero-card fix en main (PR #599 mergeado). [[facturaia]]
-- **TuFacturaIA — smoke email OCR tras fix (2026-06-30)** — subir PDF por email → confirmar bandeja_ingesta llega a estado=listo (no error). Justificante → Conciliación recibe movimiento. [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
 - **TuFacturaIA — smoke PRE Verifactu** — .p12 Gonzalo (~semana que viene) → validar namespace envelope SOAP + F1/F2 en prewww1.aeat.es. [[facturaia]]
 - **TuFacturaIA — skin "Cristal" en prod (#533+#535 mergeados)** — falta solo QA contraste/APCA en pantallas densas antes de ofrecerlo a usuarios. [[facturaia]]
