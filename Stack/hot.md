@@ -18,6 +18,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **Tour spotlight in-modal** — tourBlocker z-5 + tourHighlight z-10 + tourTooltip z-20; lookup CSSProperties por step; localStorage gate. Ver [[modal-tour-spotlight-pattern]]
 
 - **Prompt doc_type PASO 0: "factura" por EMISOR, no por IVA** — seguros/sanidad/intracom tienen iva=0 y son facturas; "justificante_pago" = solo comprobante bancario de transferencia. Ver [[ocr-clasificacion-iva-zero-seguros]]
+- **doc_type no-factura (justificante/extracto) → OCR solo clasifica, no extrae campos** — `datos_extraidos.total/fecha/prov` siempre vacíos para esos tipos; features sobre ellos necesitan segundo pase (`extractMovimientosFromDoc`). Ver [[ocr-clasificacion-doc-type-no-factura-sin-campos]]
 
 - **WhatsApp OCR: discriminadores internos divergen producer→caller → silencio total en paths non-success** — leer body real del endpoint antes de escribir el caller; grep callers al cambiar shapes. Ver [[whatsapp-internal-http-discriminador-shape]]
 
