@@ -84,6 +84,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **🟡 Drawer notificaciones — badge "Fiscal N" vs nº renderizado** (observado 2026-07-02, sin confirmar) — el tab "Fiscal 10" solo pintaba 4 notifs en el DOM al filtrar; la suma de tabs cuadra (2+7+10+8=27), así que probablemente es un límite de render/paginación del drawer, no un conteo erróneo. Revisar el componente del drawer si se retoma; bajo impacto.
 - **🔴 Presupuestos propios en OCR — validar clasificación con doc real** (`40a6b0c3`+`810aa86c` en main) — sube un presupuesto real tuyo (con membrete) a `/ingesta` y confirma `doc_type='presupuesto'` + CTA "Crear presupuesto" funcional. El smoke con documento sintético (sin membrete) no disparó la clasificación de forma consistente tras 2 fixes de prompt — riesgo conocido, no validado con documento real. **Bug menor descubierto de paso (no arreglado, bajo impacto)**: `/api/upload` traga el error si el INSERT de `bandeja_ingesta` falla (p.ej. colisión del índice único `(org_id, file_hash)` con `force=true`) — devuelve 200 con `id` ausente en vez de un error, dejando la factura placeholder huérfana.
 
 - **Búsqueda/filtros/vista lista en Clientes y Proveedores** (`77ba6322` en main, 2026-06-30) — verificado en localhost (búsqueda, filtro actividad, orden, toggle tarjetas/lista, vacío con "Quitar filtros"). Falta smoke en prod tras deploy Dokploy.

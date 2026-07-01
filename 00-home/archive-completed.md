@@ -6,6 +6,8 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-07-02 facturaia — **Notifs fiscales marcadas leídas + borradores 130 recalculados** (sandbox): 130 2T drift 1937,71→1928,13€, 3T/4T 0,00€ (trimestres en curso/futuro, OK); drawer notifs revisado (contraste/filtros/"Marcar todas" OK). El "drift abono B2026-0001" era el PDF viejo del abono (fix PR #64 de mayo), no el cálculo del 130. Destapó PR #641 (labels 130).
+- 2026-07-02 facturaia — **QA contraste/APCA skin Cristal en pantallas densas** → sin fallos. /emitidas, /conciliacion, /fiscal/303, /inventario, modal detalle factura, tema oscuro+claro. Único apunte menor común a toda la app: encabezados de columna en gris tenue. Queda decisión de negocio de ofrecerlo a usuarios.
 - 2026-06-30 facturaia — **Smoke OCR recibo seguro + email OCR** ✅: IVA seguro muestra "—", email→bandeja llega a estado=listo. PRs #595+#599 verificados en prod.
 - 2026-06-30 facturaia — **Panel feedback flotante + arrastrable** (#598+#601): convertido de modal bloqueante a panel `position:fixed` sin backdrop; drag por header (refs, sin re-renders, transform directo al DOM); cursor grab/grabbing; reset de posición al cerrar. Ticket Borja `072ed247` cerrado.
 - 2026-06-28 facturaia — **deepening #3 voz↔web COMPLETO** — Fase A+B, D1-D5, conformidad XSD Verifactu + F1/F2+Destinatarios (#556+#559+#561+#565+#570). Pendiente solo smoke PRE con .p12 Gonzalo.
