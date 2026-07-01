@@ -34,7 +34,7 @@ tags: [home, prioridades]
 
 ## Bloqueos (esperando a terceros)
 
-- **TuFacturaIA — billing GitHub Actions re-bloqueado (Manu)** — desde 17/06 jobs mueren a 0 pasos (spending limit). Subir límite en Settings → Billing org `AgentesIA-MAdrid`. **Mientras siga, merges con `gh pr merge --admin`** (requiere OK explícito). Workflow `deploy-mcp` (path-filtered) + secret `DOKPLOY_API_KEY` ya puestos pero **dormidos hasta que haya billing**; mientras, redeploy MCP manual + alerta de desfase cubren. Ver [[github-actions-org-private-free-tier-2000-min]] · [[dokploy-autodeploy-false-desfase-silencioso]].
+- **TuFacturaIA — CI vuelve a correr (2026-07-01), billing ya no es el bloqueo activo** — jobs completan de nuevo (no mueren a 0 pasos). Lo que llevaba semanas roto detrás del billing eran **2 bugs de infra reales**: FK hardcodeada en mig 400 (abortaba el replay completo en BD fresca) + OOM de V8 en `typecheck`/`build` en runners grandes — ambos arreglados y mergeados (#634, #636), que además destaparon 6 regresiones de tests acumuladas sin CI. Si billing se re-bloquea, seguirá haciendo falta `gh pr merge --admin` (requiere OK explícito). Ver [[migracion-hardcoded-org-id-rompe-replay-fresh-db]] · [[ci-oom-typecheck-build-heap-explicito]].
 - **TuFacturaIA — subir tier OpenAI (Manu)** — bot WhatsApp salta rate-limit (TPM 30k Tier 1). Subir a Tier 2 (450k) en platform.openai.com. (Ya no urge: 0 errores 429 en 30d.)
 - **TuFacturaIA — HIBP leaked-password requiere Supabase Pro (Manu)** — toggle "Prevent leaked passwords" falla en free. Activar al subir a Pro.
 - **agentesia-skills — PR #3 `onboarding-tour-spotlight`** — pendiente review de alguien del equipo antes de mergear (convención del repo: no merge directo a main).
