@@ -29,6 +29,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
+- **AGH Ibérica — #9 (M365) en review (PR #21)** — pendiente review Borja + cabo integración brain↔CalendarTool (no en PRD, avisado) + CI de la org parada. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -52,6 +53,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · #9 en PR, espina Borja |
 
 ## Completado reciente
 

@@ -13,6 +13,9 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **Graph calendarView ignora `Prefer:timezone` en la ventana** — start/end se interpretan en UTC sin offset; incluir offset real (Intl longOffset, DST). Ver [[graph-calendarview-ventana-utc-no-prefer-timezone]]
+- **OAuth PKCE sin store → verifier en `state` cifrado** (no solo firmado) + nonce/exp. Ver [[oauth-state-cifrado-para-pkce-verifier-sin-store]]
+- **Tests integración comparten BD → `vitest fileParallelism:false`** — TRUNCATE global entre ficheros se pisa. Ver [[vitest-fileparallelism-false-tests-integracion-bd-compartida]]
 - **Migración colisión NNN entre ramas** — git mv → placeholder → repair --status applied → push. Ver [[supabase-migration-numero-colision-renumerar]]
 - **`supabase db push` sube TODAS las pendientes, no solo la tuya** — aparta con `mv` la migración ajena sin commitear, push, devuélvela. Ver [[supabase-db-push-aplica-todas-pendientes-aparta-las-ajenas]]
 - **`git mv` sobre untracked falla pero renombra igual** — no asumas que no hizo nada por el exit≠0. Ver [[git-mv-archivo-untracked-falla-pero-renombra-igual]]
