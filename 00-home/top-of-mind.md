@@ -16,6 +16,7 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
 - **TuFacturaIA — 2 PRs de QA/compliance pendientes de revisión** — #639 (fix `/soporte` falso positivo + reload tras enviar presupuesto por email + doc de hueco real de descuento global) y #640 (verificación de 5 documentos legales PSD2/Centro Fiscal IA — CIF, ZDR OpenAI/Anthropic, subencargados — contra fuentes oficiales, no solo research). [[facturaia]]
+- **TuFacturaIA — sección Documentos en admin (#642, mergeado 2026-07-02)** — legales PSD2/Fiscal (FNMT TSA, ZDR OpenAI/Anthropic, briefs abogado/seguro) visibles y descargables desde `/admin/documents`, con registro extensible para futuros docs. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
 - **TuFacturaIA — /soporte: verificar #NNN + badge en admin (Manu)** — `/soporte` carga OK verificado en sandbox 2026-07-02 (bug del Dashboard arreglado); falta que Manu (superadmin) confirme `#NNN` + badge "IA revisando…" en `/admin/feedback` con un ticket de job activo (e2e+smoke no puede sin enviar feedback a soporte real). [[facturaia]]
 - **TuFacturaIA — PR #641: detalle 130 mostraba nomenclatura del 303** — `CasillasTabla`/`ResultadoCard` no recibían `modelo` → "Casilla 71" + labels IVA en una declaración IRPF (cálculo OK, solo presentación). Fix pusheado; pendiente QA visual localhost del render 130 + merge. [[facturaia]]
