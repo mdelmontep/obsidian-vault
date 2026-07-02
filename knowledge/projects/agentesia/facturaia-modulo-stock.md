@@ -7,6 +7,15 @@ tags: [facturaia, stock, inventario, rama]
 
 # TuFacturaIA — Módulo Stock / Inventario
 
+> **ACTUALIZACIÓN 2026-07-02 (verificado en prod):** el módulo YA está en
+> `disponibilidad='activo'` (no `proximamente`/`beta` como dice abajo). El
+> reempaquetado (mig 399) lo plegó dentro de **Pro/Enterprise** y **eliminó el
+> add-on suelto de 12,90€** (`addon_purchasable=false`, precio NULL). `plan_features`:
+> stock enabled en pro+enterprise, false en starter, sin fila en plus (=deny por
+> diseño; gating `override ?? planDefault ?? false` en `feature-data.ts`). Sin
+> regresión: solo Sandbox(test) y Pescados Chivite usan stock, ambas Enterprise.
+> Todo lo de abajo es histórico del desarrollo.
+
 Estado al cierre **2026-06-02**. Dos frentes:
 - **Fases A-C → EN MAIN + PROD** (módulo base, invisible para clientes).
 - **Fase D (compras + IA) → rama `feat/stock-compras`** (checkout `/Users/manueldelmonte/facturaia-stock`, dev :3001). NO en main/prod.
