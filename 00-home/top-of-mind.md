@@ -15,15 +15,13 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — 2 PRs de QA/compliance pendientes de revisión** — #639 (fix `/soporte` falso positivo + reload tras enviar presupuesto por email + doc de hueco real de descuento global) y #640 (verificación de 5 documentos legales PSD2/Centro Fiscal IA — CIF, ZDR OpenAI/Anthropic, subencargados — contra fuentes oficiales, no solo research). [[facturaia]]
 - **TuFacturaIA — sección Documentos en admin (#642, mergeado 2026-07-02)** — legales PSD2/Fiscal (FNMT TSA, ZDR OpenAI/Anthropic, briefs abogado/seguro) visibles y descargables desde `/admin/documents`, con registro extensible para futuros docs. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
 - **TuFacturaIA — /soporte: verificar #NNN + badge en admin (Manu)** — `/soporte` carga OK verificado en sandbox 2026-07-02 (bug del Dashboard arreglado); falta que Manu (superadmin) confirme `#NNN` + badge "IA revisando…" en `/admin/feedback` con un ticket de job activo (e2e+smoke no puede sin enviar feedback a soporte real). [[facturaia]]
-- **TuFacturaIA — PR #641: detalle 130 mostraba nomenclatura del 303** — `CasillasTabla`/`ResultadoCard` no recibían `modelo` → "Casilla 71" + labels IVA en una declaración IRPF (cálculo OK, solo presentación). Fix pusheado; pendiente QA visual localhost del render 130 + merge. [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
 - **TuFacturaIA — smoke PRE Verifactu** — .p12 Gonzalo (~semana que viene) → validar namespace envelope SOAP + F1/F2 en prewww1.aeat.es. [[facturaia]]
 - **TuFacturaIA — decidir ofrecer skin "Cristal" a usuarios** — QA contraste/APCA en pantallas densas hecho 2026-07-02 (sin fallos, oscuro+claro); queda solo la decisión de negocio de exponerlo. [[facturaia]]
-- **TuFacturaIA — smoke prod #517 (auditoría enforcement canales)** — cuenta active sigue facturando/usando bot igual; cuenta suspendida recibe corte por canal voz/WA; verifactu cert solo admin. [[facturaia]]
+- **TuFacturaIA — smoke prod #517 (auditoría enforcement canales) — BLOQUEADO por falta de fixture** — no hay ninguna org en prod con `billing_status` suspended/expired ahora mismo (todas active complimentary) para probar el corte de canal. No verificable hasta que exista un caso real o se cree uno de prueba a propósito. [[facturaia]]
 - **TuFacturaIA — pagar GitHub Advanced Security (~16 jul 2026)** — si caduca el trial se apaga Code Quality (scan + gate PR). [[facturaia]]
 - **TuFacturaIA — responder tickets** — Abba BORME (re-escanear 2 docs → gonzalo.riera) + bgchivite `1762f07e` (deploy #209 en prod). [[facturaia]]
 - **TuFacturaIA — UX feedback pendiente** — smoke prod #528 (toast guardar empresa/plantillas) + #529 (modal glass confirmación cambio precio en `/admin/plans`). [[facturaia]]
@@ -31,7 +29,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — 3 PRs entregadas (CI verde), esperando review/merge de Borja** — **#35** guardrails type-safety (ESLint `no-explicit-any` + step CI, parse JSONB `pending`, `parseEnum` whitelist), **#36** cabo write #11 (`task.create`/`reminder.schedule` como WriteExecutor + prompt), **#37** resolver genérico #32 (Oportunidad por cliente + Consultor tenant-scoped; `ClientResolver` intacto). Sin mergear, cada una worktree+auditoría multi-agente+TDD. Orden imán `app.ts`: **#36 primero, Borja rebasa su #13 (voz Retell, PR #33) encima** (#35/#37 no tocan app.ts). Follow-ups (tocan su `hitl-brain`, esperan su OK): cablear los WriteExecutors del #32, gap `correct`×`prepare`, link task→reminder por `taskId`, `CHECK` de `reminders.channel`. Ver [[store-guard-lanza-en-lectura-tumba-reconciler]] · [[llm-agendado-reloj-en-prompt-y-conversion-utc-en-codigo]]. [[agh-iberica]]
+- **AGH Ibérica — 2 PRs nuevas en review de Borja + 1 follow-up gated** — tren previo (#35/#36/#37) y #13 voz YA mergeados (`main` `863aa77`). Entregado esta sesión: **#42** (#39: cablear `opportunity.update/moveStage/addCandidate` + `consultant.setAvailability` como WriteExecutor sobre el resolver #37) y **#43** (#26: paginación keyset del reconciler de reminders). Ambas worktree+auditoría multi-agente+TDD, sin mergear. **Gated en OK de Borja**: follow-up #39 (desambiguar oportunidad por título cuando el cliente tiene N abiertas — recomendé opción A: field opcional `opportunityTitle`, aditiva; toca resolver #37 + prompt #38). De Borja: #40 (`correct`×`prepare`), #41 (`CHECK reminders.channel`, bloqueado por tooling migración). Ver [[hitl-reresolver-nombre-id-en-execute-no-inyectar-en-prepare]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +53,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · main `ee82131` · **3 PRs en review (#35 guardrails / #36 cabo write #11 / #37 resolver #32)**; #13 voz (Borja) |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · main `863aa77` (#35/#36/#37 + #13 voz mergeados) · **#42 (#39 CRM writeexecutors) + #43 (#26 paginación) en review** |
 
 ## Completado reciente
 
