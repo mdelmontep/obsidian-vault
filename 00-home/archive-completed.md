@@ -6,6 +6,7 @@ tags: [home, archivo]
 
 # Completado
 
+- 2026-07-02 agh-iberica — **#9 (#21 M365) y #22 mergeados a main**. #21: OAuth PKCE + agenda Graph, rebase + 2 nits + CI verde. #22: registro de read-tools en el brain (`ReadTool` por `target`, formateo en código) + wiring `CalendarTool`, cierra e2e-por-chat de #9. Base para #7 y #11.
 - 2026-07-02 facturaia — **Notifs fiscales marcadas leídas + borradores 130 recalculados** (sandbox): 130 2T drift 1937,71→1928,13€, 3T/4T 0,00€ (trimestres en curso/futuro, OK); drawer notifs revisado (contraste/filtros/"Marcar todas" OK). El "drift abono B2026-0001" era el PDF viejo del abono (fix PR #64 de mayo), no el cálculo del 130. Destapó PR #641 (labels 130).
 - 2026-07-02 facturaia — **QA contraste/APCA skin Cristal en pantallas densas** → sin fallos. /emitidas, /conciliacion, /fiscal/303, /inventario, modal detalle factura, tema oscuro+claro. Único apunte menor común a toda la app: encabezados de columna en gris tenue. Queda decisión de negocio de ofrecerlo a usuarios.
 - 2026-06-30 facturaia — **Smoke OCR recibo seguro + email OCR** ✅: IVA seguro muestra "—", email→bandeja llega a estado=listo. PRs #595+#599 verificados en prod.

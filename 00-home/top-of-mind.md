@@ -31,7 +31,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — #21 (#9 M365) lista para merge** — review de Borja resuelta: rebase + 2 nits (timeout Graph + comentario `app.ts`) + CI verde. La mergea Borja. Cabo integración brain↔CalendarTool → **issue #22** (owner Borja, base del #7). Manu en paralelo: **#11** (tareas/recordatorios). Aprendizaje conflictos → PR #23 al CLAUDE.md. [[agh-iberica]]
+- **AGH Ibérica — #11 (tareas/recordatorios) en PR #25, review de Borja** — módulo autocontenido (scheduler BullMQ + outbound agnóstico + plantilla WA utility + read `TasksReadTool`), CI verde, sin tocar lógica del brain. #9(#21) y #22 (registro de read-tools) ya mergeados. El **write conversacional** (`task.create`/`reminder.schedule`) cuelga del registro de write-executors de **#7** (Borja, siguiente); contrato ya fijado. Diferidos trazados: #1 (PII last_error), #14 (fail-closed prod), #26 (tenant_id events + paginación reconciler). [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · #21 lista para merge · #22/#7 Borja · #11 Manu |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · #9/#22 mergeados · #11 en PR #25 (review) · #7 Borja |
 
 ## Completado reciente
 
