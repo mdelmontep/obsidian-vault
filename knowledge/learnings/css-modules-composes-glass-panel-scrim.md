@@ -33,3 +33,5 @@ contenido, no por defecto. `glass-panel` es para paneles decorativos sin datos d
 `glass-strong` — con `glass-panel` ahí el contraste cae y el texto se vuelve ilegible
 contra el fondo difuminado (caso real: modal de conciliación manual, bajaba el contraste
 por usar `glass-panel` en una lista de facturas con importes).
+
+- **Modal CENTRADO con texto**: imitar el patrón canónico "doble cristal" de `src/components/ui/modal.module.css` (marco translúcido + placa interior `glass-bg-strong` ~90% que sostiene el texto). Caso 2026-07-02: submodales de conciliación se veían super-transparentes/ilegibles con `glass-panel` suelto → fix a `glass-bg-strong` + tratamiento del marco; verificado con test de contraste Playwright (13-17:1 AA).
