@@ -16,6 +16,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **Select con columna inexistente = query ENTERA a null, error tragado (42703)** — así vivió el worker VeriFACTU 6 semanas como no-op. Ver [[supabase-select-columna-inexistente-falla-query-entera-42703]]
 - **`curl -sf` trata 3xx como éxito** — cron con redirect de middleware reporta verde sin ejecutar el handler jamás. Ver [[curl-sf-trata-redirect-3xx-como-exito-en-crons]]
 - **`next build` huérfano corrompe `.next` + hook pre-push bloquea push** — "Another next build running"/ENOENT `_ssgManifest.js`; `rm -rf .next`, rebuild, o push por ref + `--no-verify`. Ver [[next-build-lock-huerfano-hace-fallar-pre-push-hook]]
+- **Dos toasters (ToastContext vs sileo): usar el que no tiene provider en esa área = no-op silencioso** — FacturaIA `(admin)` monta sileo, no `ToastProvider`; `useToast` allí no mostraba nada. Ver [[dos-sistemas-toast-usar-el-sin-provider-es-noop-silencioso]]
 
 ## de la semana
 
