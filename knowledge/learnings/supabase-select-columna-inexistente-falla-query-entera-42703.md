@@ -12,6 +12,9 @@ Casos reales FacturaIA (PR #648, destapados al tipar el cliente): worker VeriFAC
 no-op 6 semanas (columna de una VISTA pedida a la tabla) con cron reportando éxito;
 todos los emails con branding fallback (`organizations.web` no existía); endpoint v1
 duplicar siempre 404; `is_admin` nunca concedido (upsert a PK equivocada).
-Defensas: cliente tipado con `Database` (el typegen convierte esto en error de
-compilación, `SelectQueryError`), y para código no tipado: chequear `error` en
-queries críticas. Un smoke "endpoint 200" NO lo caza: el 200 sale igual.
+Más (audit 2026-07-02): Libro IVA XLSX 500 permanente en prod — el select pedía
+columnas x100 que solo existen en OTRA tabla; aquí sí se miraba `error`, pero
+nadie descarga→nadie reporta. Ojo: castear el resultado (`as unknown as X`)
+anula el typecheck del select string igual que no tipar el cliente.
+Defensas: cliente tipado con `Database` sin casts (typegen → error de
+compilación) + chequear `error`. Un smoke "endpoint 200" NO lo caza.

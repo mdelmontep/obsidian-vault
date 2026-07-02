@@ -11,6 +11,7 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **PostgREST: max-rows trunca a 1000 en silencio + `.in()` grande revienta la URL** — paginar `.order(pk).range()` y chunkear ids ≤150; caso export contable. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
 - **Tipar admin client Supabase = migración por fases (HECHA en FacturaIA, PR #648)** — alias incremental + gate por commit + flip final. Ver [[supabase-tipar-admin-client-global-cascada-300-errores]]
 - **Select con columna inexistente = query ENTERA a null, error tragado (42703)** — así vivió el worker VeriFACTU 6 semanas como no-op. Ver [[supabase-select-columna-inexistente-falla-query-entera-42703]]
 - **`curl -sf` trata 3xx como éxito** — cron con redirect de middleware reporta verde sin ejecutar el handler jamás. Ver [[curl-sf-trata-redirect-3xx-como-exito-en-crons]]
