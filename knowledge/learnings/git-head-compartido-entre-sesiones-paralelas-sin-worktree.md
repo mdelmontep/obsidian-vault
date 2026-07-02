@@ -19,4 +19,10 @@ correcta, luego `git branch -f <rama-ajena> <commit-anterior-a-tu-cherry-pick>`
 para devolver su puntero a donde estaba. Nunca `reset --hard` ni tocar su
 working tree — solo el puntero de rama.
 
+Corolario: **antes de "dejar el tree limpio en main"**, `git status` + `git branch
+--show-current`. Si hay WIP sin commitear que NO es tuyo (rama de feature ajena, no
+pusheada, ficheros con timestamp reciente), es una sesión viva — NO hagas
+`checkout`/`stash -u` a ciegas (le borras los ficheros del disco). Déjalo y usa un
+worktree propio desde `origin/main`.
+
 Relacionado: [[merge-tree-precheck-cross-pr-y-squash-branch-cleanup]].
