@@ -19,4 +19,13 @@ Fix: **esperar a que el proceso termine solo** (nunca matarlo a ciegas si el
 repo es compartido con otra sesión — podría ser su build, no el tuyo) +
 `rm .next/lock` + reintentar el push.
 
+Si YA lo mataste a media escritura, `.next` queda **corrupto** → el siguiente
+build peta con `ENOENT .../_ssgManifest.js` (y `rm -rf .next` da "Directory not
+empty" si aún se escribe). Fix: matar los procesos, `rm -rf .next`, rebuild limpio.
+
+Tree en disputa (otra sesión te cambió la rama,
+[[git-head-compartido-entre-sesiones-paralelas-sin-worktree]]): empuja tu rama por
+su ref (`git push origin <rama>`, no toca HEAD) + `--no-verify` si el hook build
+está bloqueado por la concurrencia y tu build ya estaba verde.
+
 Relacionado: [[pre-commit-hook-oom-con-dev-server]].
