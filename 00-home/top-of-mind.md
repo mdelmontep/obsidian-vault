@@ -32,6 +32,7 @@ tags: [home, prioridades]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
 - **AGH Ibérica — #11 (tareas/recordatorios) en PR #25, review de Borja** — módulo autocontenido (scheduler BullMQ + outbound agnóstico + plantilla WA utility + read `TasksReadTool`), CI verde, sin tocar lógica del brain. #9(#21) y #22 (registro de read-tools) ya mergeados. El **write conversacional** (`task.create`/`reminder.schedule`) cuelga del registro de write-executors de **#7** (Borja, siguiente); contrato ya fijado. Diferidos trazados: #1 (PII last_error), #14 (fail-closed prod), #26 (tenant_id events + paginación reconciler). [[agh-iberica]]
+- **AGH Ibérica — #8 (CRM: Oportunidad + embudo + Consultor) en PR #27, review de Borja** — módulo autocontenido `src/tools/crm/` (stores + N-N candidatos + `FunnelConfig` por vertical), reads `opportunities.open`/`consultants` e2e por el registro #22 sin tocar lógica del brain, CI verde (173 tests). Frontera de datos (Consultor sin salario/SS) estructural. Escrituras = executors Tool-shaped colgando de **#7**. **Flag para #7: falta resolución nombre→id para escribir por voz** (no pertenece a ningún issue aún). Ver [[fk-compuesta-tenant-id-defensa-multi-tenant-estructural]] · [[frontera-de-datos-por-ausencia-de-columna-no-por-filtro]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · #9/#22 mergeados · #11 en PR #25 (review) · #7 Borja |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · #9/#22 mergeados · #11 (PR #25) + #8 (PR #27) en review · #7 Borja |
 
 ## Completado reciente
 

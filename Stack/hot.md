@@ -18,6 +18,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **Graph calendarView ignora `Prefer:timezone` en la ventana** — start/end se interpretan en UTC sin offset; incluir offset real (Intl longOffset, DST). Ver [[graph-calendarview-ventana-utc-no-prefer-timezone]]
 - **OAuth PKCE sin store → verifier en `state` cifrado** (no solo firmado) + nonce/exp. Ver [[oauth-state-cifrado-para-pkce-verifier-sin-store]]
 - **Tests integración comparten BD → `vitest fileParallelism:false`** — TRUNCATE global entre ficheros se pisa. Ver [[vitest-fileparallelism-false-tests-integracion-bd-compartida]]
+- **FK compuesta `(tenant_id, id)` = anti-cross-tenant estructural** — impide enlazar entre tenants a nivel BD, no solo con WHERE. Ver [[fk-compuesta-tenant-id-defensa-multi-tenant-estructural]]
+- **Frontera de datos (PII) = ausencia de columna + test de conjunto-exacto** — no filtres lo que no debe existir; introspección `information_schema` con `toEqual`. Ver [[frontera-de-datos-por-ausencia-de-columna-no-por-filtro]]
 - **Migración colisión NNN entre ramas** — git mv → placeholder → repair --status applied → push. Ver [[supabase-migration-numero-colision-renumerar]]
 - **`supabase db push` sube TODAS las pendientes, no solo la tuya** — aparta con `mv` la migración ajena sin commitear, push, devuélvela. Ver [[supabase-db-push-aplica-todas-pendientes-aparta-las-ajenas]]
 - **Recordatorio WhatsApp programado → SIEMPRE plantilla utility** — no hay API de ventana 24h; asume el peor caso. Ver [[whatsapp-recordatorio-diferido-siempre-plantilla-utility]]
