@@ -1,19 +1,18 @@
 ---
-title: tipar createAdminClient con <Database> cascadea 300+ errores en codebase grande
+title: tipar el cliente supabase global es una migración por fases, no una limpieza
 date: 2026-07-02
 source: claude-code-session
 tags: [supabase, typescript, deuda-tecnica, facturaia]
 ---
-En un codebase grande con muchas queries `admin.from().select()`/`.insert()` sin tipar,
-pasar `createClient()` → `createClient<Database>()` NO es un cambio local: convierte
-CADA query del app en type-checked contra el schema. En FacturaIA destapó 300+ errores
-(jsonb `Json` no acepta objetos tipados en insert/upsert, indexar `Json` con string,
-`Date(string|null)`) por todo el árbol, incluidos núcleos (create-document, verifactu,
-notifications, sepa).
-
-Patrón: generar `database.types.ts` es barato y seguro (artefacto + script `gen:types`),
-pero **tipar el cliente global es una migración grande e independiente**, no una tarea de
-"limpieza". Fix acotado: dejar el cliente sin tipar globalmente y usar cast local opt-in
-`admin as SupabaseClient<Database>` por call-site donde quieras type-safety. Los `as any`
-sobre el cliente untyped se pueden quitar sin coste (el cliente ya es `any`).
-Ver [[defense-in-depth-estado-activo-cuando-admin-client-bypasa-rls]].
+`createClient()` → `createClient<Database>()` convierte CADA query en type-checked:
+en FacturaIA destapó 341 errores en 135 ficheros (jsonb/Json, null-handling, selects
+rotos), incluidos núcleos. Ejecutada 2026-07-02 (PR #648) en ~1 día con este patrón:
+1. **Alias tipado incremental**: `createTypedAdminClient()` junto al untyped; migrar
+   call-sites dominio a dominio (hoja→núcleo), cada commit con gate verde (el hook
+   pre-commit hace incommitteable el big-bang). Flip final: renombrar y borrar alias.
+2. Helpers canónicos primero: `zJson`/`zJsonRecord`/`isJsonObject`/`JsonObject`
+   (payloads Zod→jsonb, narrowing sin casts) — evita N variantes por dominio.
+3. Fan-out de agentes por dominio con catálogo de fixes canónicos + "si el fix cambia
+   comportamiento → BLOQUEADO, decisión humana". Los núcleos, con revisión manual.
+Bonus real: los `SelectQueryError` destapan bugs de producción — ver
+[[supabase-select-columna-inexistente-falla-query-entera-42703]].

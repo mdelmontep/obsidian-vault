@@ -11,7 +11,8 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
-- **Tipar admin client Supabase = migración, no limpieza** — global `<Database>` cascadea 300+ errores. Cast local opt-in. Ver [[supabase-tipar-admin-client-global-cascada-300-errores]]
+- **Tipar admin client Supabase = migración por fases (HECHA en FacturaIA, PR #648)** — alias incremental + gate por commit + flip final. Ver [[supabase-tipar-admin-client-global-cascada-300-errores]]
+- **Select con columna inexistente = query ENTERA a null, error tragado (42703)** — así vivió el worker VeriFACTU 6 semanas como no-op. Ver [[supabase-select-columna-inexistente-falla-query-entera-42703]]
 
 ## de la semana
 
