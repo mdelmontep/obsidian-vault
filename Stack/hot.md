@@ -11,6 +11,8 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **Tipar admin client Supabase = migración, no limpieza** — global `<Database>` cascadea 300+ errores. Cast local opt-in. Ver [[supabase-tipar-admin-client-global-cascada-300-errores]]
+
 ## de la semana
 
 - **Graph calendarView ignora `Prefer:timezone` en la ventana** — start/end se interpretan en UTC sin offset; incluir offset real (Intl longOffset, DST). Ver [[graph-calendarview-ventana-utc-no-prefer-timezone]]
