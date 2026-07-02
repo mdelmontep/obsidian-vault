@@ -31,7 +31,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — tren cerrado (main `ee82131`); 3 trabajos desbloqueados, OK de Borja** — todas mis PRs (#8/#11/#14/#12) + #7/#10 mergeadas. Pendiente por hacer (PRs sueltas, cada una worktree+auditoría multi-agente+TDD, sin mergear): **(1) guardrails type-safety** — ESLint `no-explicit-any:error` + parsear JSONB `pending`/validar enums en `postgres-conversation-store.ts` (Borja: mételos tú; congelar antes de más código paralelo); **(2) resolver genérico nombre→id issue #32** — generaliza `ClientResolver` (Oportunidad/Consultor, absorbe Contacto de #10; NO romper firma pública); **(3) cabo #11** — cablear `task.create`/`reminder.schedule` como WriteExecutor en app.ts (vía libre). Prompt completo de los 3 preparado. **#13 (voz Retell) lo coge Borja** (Retell key + Dokploy ya montados). [[agh-iberica]]
+- **AGH Ibérica — 3 PRs entregadas (CI verde), esperando review/merge de Borja** — **#35** guardrails type-safety (ESLint `no-explicit-any` + step CI, parse JSONB `pending`, `parseEnum` whitelist), **#36** cabo write #11 (`task.create`/`reminder.schedule` como WriteExecutor + prompt), **#37** resolver genérico #32 (Oportunidad por cliente + Consultor tenant-scoped; `ClientResolver` intacto). Sin mergear, cada una worktree+auditoría multi-agente+TDD. Orden imán `app.ts`: **#36 primero, Borja rebasa su #13 (voz Retell, PR #33) encima** (#35/#37 no tocan app.ts). Follow-ups (tocan su `hitl-brain`, esperan su OK): cablear los WriteExecutors del #32, gap `correct`×`prepare`, link task→reminder por `taskId`, `CHECK` de `reminders.channel`. Ver [[store-guard-lanza-en-lectura-tumba-reconciler]] · [[llm-agendado-reloj-en-prompt-y-conversion-utc-en-codigo]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **tren cerrado, todo en main (`ee82131`)** · pendiente: guardrails type-safety + resolver #32 + cabo #11; #13 voz (Borja) |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · main `ee82131` · **3 PRs en review (#35 guardrails / #36 cabo write #11 / #37 resolver #32)**; #13 voz (Borja) |
 
 ## Completado reciente
 

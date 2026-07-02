@@ -10,6 +10,7 @@ tags: [claude-code, gotchas, github, plugins]
 - **Scheduled triggers** no acceden a repos privados — repo público o GitHub conectado en claude.ai/settings.
 - **`gh repo edit --visibility`** requiere `--accept-visibility-change-consequences`.
 - **`gh auth switch` para repos multi-cuenta** — `gh auth switch --user <org>` + `gh auth setup-git` antes de push.
+- **`git push` rechazado al tocar `.github/workflows/`** — `refusing to allow an OAuth App to create or update workflow ... without 'workflow' scope`; bloquea TODA la rama, no solo ese fichero. Fix: el usuario corre `gh auth refresh -h github.com -s workflow` (interactivo, abre navegador) y reintentas el push. No lanzable desde Bash no-interactivo → pedírselo con `! gh auth refresh ...`. Si un PR va a tocar CI, valida el scope antes. Caso AGH #35.
 - **Plugins settings.json** — nombre debe coincidir con `marketplace.json` del repo fuente.
 - **Claude Design handoff bundles son tar** — `tar xf`, no abrir como HTML. Contiene README.md + chats/ + project/. Leer chat transcripts primero para la intención.
 - **Zod `.strict()` bloquea campos no listados** — al añadir campos editables desde admin, añadirlos al schema Zod. Si no, PATCH devuelve 400 silenciosamente.
