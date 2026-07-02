@@ -28,6 +28,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **Reset multi-tenant → allowlist ordenada + to_regclass, no catálogo dinámico** — + test-guard de completitud bidireccional; guard duro contra tenant vacío. Ver [[reset-multi-tenant-allowlist-ordenada-vs-catalogo-dinamico]]
 - **Fake vs Postgres divergen en orden** — `.sort()` UTF-16 ≠ collation; usar `localeCompare` en el fake. Ver [[fake-vs-postgres-orden-sort-utf16-vs-collation]]
 - **Guard cross-tenant en upsert de clave global** — `DO UPDATE ... WHERE tenant_id=EXCLUDED` + rowCount (cierra TOCTOU, nunca reasigna dueño). Ver [[guard-cross-tenant-do-update-where-tenant-id-toctou]]
+- **Extender un flujo sin tocar el core de otro → decorator de su interfaz** — envuelve e intercepta; delega tal cual cuando no aplica; estado en store propio. Ver [[decorator-de-interfaz-para-extender-sin-tocar-el-core]]
+- **JS `\b` no casa junto a acentos** — "sí"/"ya está" no matchean; normaliza NFD (quita diacríticos) antes de matchear comandos; comando exacto, no `contains`. Ver [[regex-word-boundary-no-casa-acentos-js-normalizar-nfd]]
 - **`git mv` sobre untracked falla pero renombra igual** — no asumas que no hizo nada por el exit≠0. Ver [[git-mv-archivo-untracked-falla-pero-renombra-igual]]
 - **CSS Module + glass tokens** — `composes: glass-panel scrim from global`; eliminar local `background`. Ver [[css-modules-composes-glass-panel-scrim]]
 - **Tour spotlight in-modal** — tourBlocker z-5 + tourHighlight z-10 + tourTooltip z-20; lookup CSSProperties por step; localStorage gate. Ver [[modal-tour-spotlight-pattern]]
