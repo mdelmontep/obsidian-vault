@@ -7,6 +7,10 @@ tags: [frontend, css, mobile, overflow]
 
 # Frontend / CSS Mobile
 
+## Flex-direction: column en mobile
+
+- **`flex-basis` pensado para ancho pasa a medir ALTO** si el breakpoint mobile cambia el contenedor a `flex-direction: column` — el eje principal rota con la dirección. Un input con `flex: 1 1 240px` se infla a 240px de alto en vez de mantener 240px de ancho. Resetear explícito en el media query: `flex: none; width: 100%;`. Ver [[flexbasis-en-flex-direction-column-se-interpreta-como-alto]]
+
 ## Overflow horizontal — causas y fixes
 
 - **`flex` container tiene `min-width: max-content` por defecto** — un `div` o `p` con `display: flex` dentro de un CSS Grid sin `min-w-0` puede expandir el grid track y hacer la página más ancha que el viewport. Fix: `min-w-0` en el grid item + `min-w-0` en el flex container + `truncate` en los spans de texto largo.
