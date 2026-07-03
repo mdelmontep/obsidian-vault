@@ -59,4 +59,25 @@ Login e2e+smoke en `:3010` contra FacturaIA Sandbox (org `b5f86e8f-...`, ejercic
 
 Informe completo con capturas (Artifact Claude Code, sesión 2026-07-03).
 
-**Pendiente real tras este QA**: (1) Pre303 HITL con certificado (Manu); (2) smoke desde un WhatsApp real (el flujo API está probado, falta el canal físico); (3) mergear el stack 668→669→672→674→677 y repetir el smoke básico en prod.
+**Pendiente real tras este QA**: (1) Pre303 HITL con certificado (Manu — bloqueado por ahora, sin certificado); (2) smoke desde un WhatsApp real (el flujo API está probado, falta el canal físico); (3) mergear el stack — **hecho, ver siguiente sección**.
+
+---
+
+## Merge a main COMPLETO (2026-07-03, misma sesión, tras "mergea el stack en orden")
+
+Auditoría final previa al merge (agente dedicado, foco en lo NO auditado — la tool `listarContrapartesSinNif` añadida durante el QA): **0 hallazgos**. `npx vitest run src/lib/copiloto/__tests__/registry.test.ts` → 23/23. Suite completa 420 archivos/4243 tests. Manuales alineados con el código real (6 opciones en el menú Gestoría, no 5 — verificado contando en `header-acciones.tsx`).
+
+**Polish adicional pedido**: Ajustes > Fiscal y AEAT se veía "pegado al borde" — causa real: `.set-card` es carcasa fina (8px/4px) que espera padding por fila (como `.set-field`, 14px/16px); `PerfilFiscalFields` viene del wizard (vive en `<Modal>` con padding propio, 16px/20px) y nunca se adaptó a Settings. Fix (`.perfilWrap` + `.modeloRow`) sacado a PR **independiente #682** contra `main` (bug ya vivo en prod, sin relación con el stack v1.5) — mergeado primero.
+
+**Intento de merge en orden 668→669→672→674→677 — incidente real y resolución**:
+1. #668 (base `main`) mergeó limpio.
+2. Al borrar la rama `feat/export-v15-ws1-pre303` tras el merge, GitHub **cerró #669** en vez de re-apuntar su base a `main` (los PRs apilados con `base=<rama-de-otro-PR>` NO se retargetan automáticamente al borrar esa rama — se cierran). Lección para la próxima vez: con PRs apilados, retargetar el base a `main` ANTES de borrar la rama predecesora, o no borrar hasta que TODA la cadena esté mergeada.
+3. Reabierto como PR nuevo #683 desde la misma rama (`feat/export-v15-ws2-asientos`, contenido intacto) — pero el diff contra `main` YA NO era limpio: otra sesión paralela había mergeado un PR que añadía iconos (`ico`) + las clases canónicas `row-menu`/`row-menu-item` al mismo menú Gestoría (`header-acciones.tsx`) que WS4 había tocado. Conflicto real de concurrencia, no un error de esta sesión.
+4. Decisión (con OK explícito): en vez de repetir la resolución del mismo conflicto 4 veces (una por cada PR restante) y arriesgar el mismo cierre en cascada 3 veces más, se fusionó `main` en la PUNTA de la pila (`feat/export-v15-ws5-whatsapp`, que ya contenía el diff acumulado de WS2+3+4+5), se resolvió el conflicto de iconos UNA sola vez (iconos `receipt` para "Asientos contables", `sparkle` para "Revisar con IA", conservando las clases `row-menu`), y se mergeó esa rama única (PR #677) contra `main`.
+5. #669/#672/#674 quedaron `CLOSED` (superseded, contenido íntegro en #677 — sin pérdida). #683 quedó `MERGED` automáticamente por GitHub (sus commits ya estaban en `main` vía #677).
+
+**Verificación final en `main` post-merge** (worktree desechable, no el checkout compartido): `npm run lint && npm run typecheck && npm run build` limpios + `npx vitest run src` → **421 archivos, 4265 tests passed**. Sin duplicados de migración (`git ls-tree` + grep). Ramas `feat/export-v15-ws{1,2,3,4,5}-*` y `fix/settings-fiscal-spacing` borradas.
+
+**Nota operativa**: durante la investigación del conflicto se probó un merge de prueba directamente en el worktree activo `export-v15` con `git checkout --detach` — dejó el worktree en HEAD desacoplado con conflictos sin commitear. Revertido con `git merge --abort` + `git checkout feat/export-v15-ws5-whatsapp` sin pérdida de trabajo. Lección: probar merges de conflicto en un worktree DESECHABLE (`git worktree add --detach /tmp/...`), nunca en el worktree que tiene la rama de trabajo real activa.
+
+**Queda pendiente (real, no de código)**: Pre303 HITL con certificado (Manu, bloqueado por falta de certificado) y smoke desde un WhatsApp físico real (el flujo por API ya está probado end-to-end).
