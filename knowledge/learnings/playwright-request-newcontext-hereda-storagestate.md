@@ -11,6 +11,9 @@ Dos gotchas en E2E autenticados (caso real `stock-completo.spec.ts` 2026-06-16):
    (`use.storageState` del config). Un test pensado "sin sesión" sale autenticado y un
    endpoint protegido devuelve datos → el assert de seguridad falla en falso.
    Fix: `newContext({ baseURL, storageState: { cookies: [], origins: [] } })`.
+   Igual con `browser.newContext()` (caso QA export 2026-07-03): el "contexto
+   limpio" para probar login de otro user salió con la sesión admin — anular
+   con `storageState: undefined`.
 
 2. Test user MULTI-ORG: la org activa la resuelve `profiles.active_org_id`
    (ver [[rls-multi-org-active-vs-membership]]), no el login. El seeder debe FIJAR
