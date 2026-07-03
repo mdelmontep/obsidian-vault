@@ -81,3 +81,14 @@ Auditoría final previa al merge (agente dedicado, foco en lo NO auditado — la
 **Nota operativa**: durante la investigación del conflicto se probó un merge de prueba directamente en el worktree activo `export-v15` con `git checkout --detach` — dejó el worktree en HEAD desacoplado con conflictos sin commitear. Revertido con `git merge --abort` + `git checkout feat/export-v15-ws5-whatsapp` sin pérdida de trabajo. Lección: probar merges de conflicto en un worktree DESECHABLE (`git worktree add --detach /tmp/...`), nunca en el worktree que tiene la rama de trabajo real activa.
 
 **Queda pendiente (real, no de código)**: Pre303 HITL con certificado (Manu, bloqueado por falta de certificado) y smoke desde un WhatsApp físico real (el flujo por API ya está probado end-to-end).
+
+---
+
+## Cierre — WhatsApp real + enlace corto + verificación en prod (2026-07-03, misma sesión)
+
+- **Smoke de WhatsApp real hecho por Manu**: "mándame el libro del 2T 2026" → el bot preguntó la empresa (multi-org) → generó el enlace → funcionó. Confirma WS5 end-to-end en producción real, no solo simulado por API.
+- **Enlace demasiado largo/feo** (`/api/fiscal/export-contable-firmado?token=<jwt-largo>`, 150+ caracteres): la firma HMAC protegía datos (`jti`,`exp`) que la fila de `export_signed_links` YA valida por su cuenta al consumir — envoltorio redundante. Fix (PR #686): `jti` de 10 bytes (80 bits) SIN envolver, es el propio código; ruta pública corta `/l/[token]`. Antes de mergear: **verificado de extremo a extremo en un dev server real** (no solo unit tests) — llamada HMAC firmada simulando n8n → enlace corto real → descarga XLSX 200 → segundo intento 410 (single-use). Mergeado tras esa verificación.
+  - Gotcha durante la verificación: la primera llamada de prueba devolvió el enlace VIEJO (cacheado) porque el hilo de copiloto (`copiloto_threads`, título 'WhatsApp') se reutiliza por (org, user) y el LLM repitió la respuesta anterior de memoria en vez de llamar la tool. Fix puntual: renombrar el `titulo` del hilo de test en BD para forzar uno nuevo — la tool se ejecutó fresca y confirmó el comportamiento real.
+- **Verificación completa en `app.tufacturaia.com` (prod real, con browser automation)**: menú Gestoría (6 opciones con iconos), "Revisar con IA" con datos reales (10 facturas sin líneas reales devueltas), Ajustes›Fiscal sin apretarse (mismo fix que en localhost), IAE=763/prorrata=100 persistidos, checkbox "Bien de inversión" presente (con badge "Sugerido por IA" — la IA lo marcó en una factura de ostras, posible falso positivo del modelo pero el mecanismo funciona).
+
+**Estado final: CERRADO.** Único pendiente real: Pre303 HITL, bloqueado por falta de certificado.
