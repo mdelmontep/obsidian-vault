@@ -18,6 +18,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **`curl -sf` trata 3xx como éxito** — cron con redirect de middleware reporta verde sin ejecutar el handler jamás. Ver [[curl-sf-trata-redirect-3xx-como-exito-en-crons]]
 - **`next build` huérfano corrompe `.next` + hook pre-push bloquea push** — "Another next build running"/ENOENT `_ssgManifest.js`; `rm -rf .next`, rebuild, o push por ref + `--no-verify`. Ver [[next-build-lock-huerfano-hace-fallar-pre-push-hook]]
 - **Dos toasters (ToastContext vs sileo): usar el que no tiene provider en esa área = no-op silencioso** — FacturaIA `(admin)` monta sileo, no `ToastProvider`; `useToast` allí no mostraba nada. Ver [[dos-sistemas-toast-usar-el-sin-provider-es-noop-silencioso]]
+- **Antes de migrar cualquier cron FacturaIA a `sign-call.sh` (HMAC v2): grep el 2º arg de `withCronTracking` por `auth:` custom** — se repitió el mismo error (`verifactu-process`) 2 meses después de documentarlo. Ver [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]] ADENDA 3
+- **Cron sin NINGÚN run histórico → salud `'desconocido'`, nunca `'rojo'` → nunca alerta** — auditar `CRON_REGISTRY` vs `schedule.list` real de Dokploy, no fiarse del panel. Ver [[cron-health-desconocido-para-cron-sin-ningun-run]]
 
 ## de la semana
 

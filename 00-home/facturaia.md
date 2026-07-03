@@ -355,6 +355,7 @@ Motivo: el legacy `x-service-key` es un secreto estático sin anti-replay; cerra
 - **Catálogo reconciliado** (PR #147): añadidos fiscal-avisos, fiscal-recalcular-borrador, cron-watchdog, conciliacion-sugerencias-run (el panel solo veía 20/24). Duplicado `sugerencias-run` borrado en Dokploy. Filtros panel admin crons: PR #142.
 - **WhatsApp Receptor v2 HMAC v2** (2026-06-09): 6 nodos migrados (`Hash Session`, `crear_cliente`, `crear_proveedor`, `Obtener Orgs Para Crear`, `Ejecutar Creacion Pendiente`, `Log Bot Error → Error Agente`). Smoke WA OK.
 - **`SIGNING_LEGACY_UNTIL=2026-06-01T00:00:00Z`** (pasada) aplicado vía API Dokploy 2026-06-09. Legacy cerrado definitivamente. Deuda pendiente: Voice* inactivos (no bloquean). Ver [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]].
+- **⚠️ "COMPLETA" tenía huecos — auditoría 2026-07-03**: `agentic-gate-sweep` y `slack-dispatcher` nunca tuvieron schedule real en Dokploy (solo en `CRON_REGISTRY`, 0 runs, sin alerta posible — [[cron-health-desconocido-para-cron-sin-ningun-run]]); `verifactu-process` (fiscal, el más crítico) deshabilitado desde mayo. Los 3 arreglados + 3 schedules duplicados limpiados. Detalle en [[facturaia-historico-detallado]] / `Stack/incidents.md` 2026-07-03.
 
 ### Deudas P0/P1 con threshold claro (priorizadas)
 

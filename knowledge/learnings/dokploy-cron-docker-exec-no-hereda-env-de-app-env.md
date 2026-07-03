@@ -31,3 +31,10 @@ que TODOS los endpoints `/api/internal/*` usan `requireServiceAuth`. `verifactu/
 tiene authCheck CUSTOM (`x-service-key === SUPABASE_SERVICE_ROLE_KEY`, no la firma ni el
 FACTURAIA_SERVICE_KEY normal). Migrar su cron a sign-call.sh (firma v2) lo dejó dando 401
 (estaba disabled, no rompió). Verificar el authCheck del endpoint ANTES de migrar su cron.
+
+ADENDA 3 (2026-07-03, SE REPITIÓ): mismo error exacto, mismo endpoint, dos meses después,
+en otra sesión — al re-habilitar `verifactu-process` (deshabilitado desde mayo) lo
+"moderni­cé" a sign-call.sh sin releer esta nota antes → 401 en bucle + 40 min persiguiendo
+env stale/`compose.deploy` antes de volver al mismo sitio. Check mecánico obligatorio antes
+de tocar CUALQUIER cron: `grep -A15 "withCronTracking(" route.ts` y mirar si el 2º argumento
+trae `auth:` propio — si lo tiene, el comando NO cambia aunque el resto use HMAC v2.
