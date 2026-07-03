@@ -15,6 +15,8 @@ label.mod-config-toggle (wrapper) → click aquí, no en #mc-field-id
 await page.waitForFunction(() => document.querySelectorAll('.disabled-class').length >= N)
 ```
 
+Nota: en **agent-browser** (CDP) el click sobre `[role="option"]` NO funciona igual — ver [[agent-browser-select-custom-click-opcion-no-registra-usar-teclado]].
+
 ## Select con FloatingPortal (Floating UI / shadcn)
 
 El trigger es `<button role="combobox">`. Las opciones se montan async en body via portal.

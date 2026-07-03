@@ -89,6 +89,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- **PR #659 "Asignar cliente en factura emitida" — smoke local OK, pendiente aprobación + merge + deploy** (ticket Borja `/emitidas`, 2026-07-03) — endpoint dedicado `PATCH /api/facturas/[id]/cliente` (solo `cliente_id`, no toca líneas/importes/Verifactu, RD 1619/2012 sigue bloqueando el resto), restringido a propietario/admin. Smoke con `agent-browser` verde en localhost (cambio de cliente, restauración, gating correcto en borrador). CI verde. Bloqueado en 1 aprobación requerida por ruleset del repo (auto-merge desactivado). Falta: aprobación → merge → deploy Dokploy → smoke prod.
 - **✅ "Resolver con Claude directo" — smoke E2E CONFIRMADO (2026-07-03)** — primer ciclo real: ticket de Borja (`/emitidas`, exportar selección múltiple solo daba CSV, faltaba PDF en ZIP) → runner headless generó PR #660 (`fix/ticket-ad1ac8e8`) con `gh pr create` (nunca merge auto) → CI verde (lint/typecheck/test/build/integration/CodeQL) → revisión manual (código correcto: ZIP writer verificado byte a byte contra spec, sin deps nuevas) → aprobado y mergeado a mano. Cierra el pendiente de `CLAUDE.md` §Pendientes acordados (fases 1-3 del botón). Queda solo QA visual en localhost/prod del botón "Descargar PDF (ZIP)".
 - **✅ Post-#648 — los 4 smokes PASADOS en prod (2026-07-02, ejecutados por agente)**: (1) email factura real con branding completo (subject/from "FacturaIA Sandbox", NIF+logo en HTML, delivered, PDF adjunto — verificado en email_log_bodies; copia en dansanch@tecnocloud.es para ojo visual); (2) duplicar v1 → 201 P2026-0033 con líneas copiadas (borrador borrado, keys temporales revocadas) — **queda avisar a Borja del contrato resucitado**; (3) worker VeriFACTU → PRIMER run en cron_runs: success {procesadas:0} — necesitó fix extra PR #649 (la ruta no estaba en isServiceRoute → 307; el cron JAMÁS había ejecutado el handler) — **confirmado post-deploy #649**: run real del cron Dokploy 2026-07-02 15:15 UTC, success, {errores:0, procesadas:0}; (4) copiloto getURLPDF → URL firmada que descarga PDF válido.
 - ✅ **`/admin/features` — toggle "core" devolvía 400 silencioso — MERGEADO** (PR #652, 2026-07-02, `4bf2ad80`): `core` añadido a `adminUpdateFeatureSchema`. **Falta: Manu confirma en `/admin/features` como superadmin que el toggle ya no da 400 (no verificable con mis credenciales, sin rol superadmin).**
@@ -416,6 +417,7 @@ Ver `facturaia/CLAUDE.md` (en repo) para versión completa.
 - Endpoint nuevo = auth + rate limit + validación input siempre
 - Cambios Zod API público = `openapi.json` en mismo commit (clientes openapi-typescript no leen `refine`)
 - UI con badge "implementado" = grep que el backend lee el valor (anti regresión silenciosa)
+- **Merge a main exige 1 aprobación (ruleset del repo) y auto-merge está desactivado** — `gh pr merge --merge` falla con "base branch policy prohibits the merge"; `--auto` falla con "Auto merge is not allowed". Sin aprobación solo queda esperar review o `--admin` (bypass, pedir OK explícito antes de usarlo).
 
 ---
 
