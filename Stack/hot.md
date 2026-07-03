@@ -21,6 +21,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **ZIP mínimo en navegador sin deps: método STORE + DataView a mano** — local header 30B + central dir 46B + EOCD 22B, CRC32 tabla estándar. Ver [[zip-minimo-navegador-sin-dependencias-store]]
 - **Graph calendarView ignora `Prefer:timezone` en la ventana** — start/end se interpretan en UTC sin offset; incluir offset real (Intl longOffset, DST). Ver [[graph-calendarview-ventana-utc-no-prefer-timezone]]
 - **OAuth PKCE sin store → verifier en `state` cifrado** (no solo firmado) + nonce/exp. Ver [[oauth-state-cifrado-para-pkce-verifier-sin-store]]
 - **Tests integración comparten BD → `vitest fileParallelism:false`** — TRUNCATE global entre ficheros se pisa. Ver [[vitest-fileparallelism-false-tests-integracion-bd-compartida]]
