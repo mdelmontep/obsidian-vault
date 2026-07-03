@@ -18,3 +18,5 @@ Fix (origen único): definir en AMBOS bloques de tema de `globals.css`:
 Arregla los 20+ componentes de golpe. Commit `bf96976`. Para modales, añadir además `box-shadow: var(--shadow-lg)` (elevación).
 
 Regla: si un componente usa `var(--algo)` y no pinta, **grep la definición del token** antes de retocar estilos. Un token indefinido falla en silencio.
+
+Recurrencia (2026-07-03, PR #664): `.connectedIconWrap` usaba `var(--success)` dentro de `color-mix(in oklch, var(--success) 14%, transparent)`. El proyecto define el verde semántico como `--ok`, nunca `--success` — mismo patrón, variante `color-mix()`: la función entera se invalida, fondo cae a transparente y `color`/`border` heredan el texto normal. El check de "conectado" salía negro en vez de verde en **todas** las integraciones (confirmado también en Slack), no solo la que tocaba el PR. Grep de `var(--token)` en el módulo tocado antes de dar por buena una revisión visual superficial.
