@@ -11,6 +11,7 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **`void` sobre builder supabase = query NUNCA ejecutada** — thenables lazy; fire-and-forget con `.then(()=>{})`. Ver [[supabase-builders-lazy-void-nunca-ejecuta]]
 - **`new Date(y,m,d).toISOString()` = día anterior fuera de UTC** — rangos de fecha corridos un día; strings + Intl con timeZone. Ver [[new-date-toisostring-desplaza-un-dia-fuera-de-utc]]
 - **PostgREST: max-rows trunca a 1000 en silencio + `.in()` grande revienta la URL** — paginar `.order(pk).range()` y chunkear ids ≤150; caso export contable. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
 - **Tipar admin client Supabase = migración por fases (HECHA en FacturaIA, PR #648)** — alias incremental + gate por commit + flip final. Ver [[supabase-tipar-admin-client-global-cascada-300-errores]]
