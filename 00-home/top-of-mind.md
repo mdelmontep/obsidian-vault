@@ -29,7 +29,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — 2 PRs nuevas en review de Borja + 1 follow-up gated** — tren previo (#35/#36/#37) y #13 voz YA mergeados (`main` `863aa77`). Entregado esta sesión: **#42** (#39: cablear `opportunity.update/moveStage/addCandidate` + `consultant.setAvailability` como WriteExecutor sobre el resolver #37) y **#43** (#26: paginación keyset del reconciler de reminders). Ambas worktree+auditoría multi-agente+TDD, sin mergear. **Gated en OK de Borja**: follow-up #39 (desambiguar oportunidad por título cuando el cliente tiene N abiertas — recomendé opción A: field opcional `opportunityTitle`, aditiva; toca resolver #37 + prompt #38). De Borja: #40 (`correct`×`prepare`), #41 (`CHECK reminders.channel`, bloqueado por tooling migración). Ver [[hitl-reresolver-nombre-id-en-execute-no-inyectar-en-prepare]]. [[agh-iberica]]
+- **AGH Ibérica — esperando a Borja (#52 + tooling migraciones, primeros en su cola mañana)** — PROD VIVO y validado (deploy Dokploy + smoke e2e WhatsApp #44). Mergeados hoy: #42/#43 y **#51** (=#50 desambiguar oportunidad por título opción A + #47 backstop owner en update-path). Mía aprobada pendiente de merge: **#56** (política gate=CI local). Gated en OK de Borja: **#52** (deletrear criticalFields solo en voz, su brain) + **tooling de migración incremental** (desbloquea 2ª mitad #26 `tenant_id` en `reminder_events` + #41 CHECK `reminders.channel`). CI Actions sin billing → gate LOCAL + merge por override de Borja. Ver [[hitl-resumen-debe-nombrar-entidad-desambiguada]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -53,7 +53,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · main `863aa77` (#35/#36/#37 + #13 voz mergeados) · **#42 (#39 CRM writeexecutors) + #43 (#26 paginación) en review** |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · main `767c9f7` · #51 (desambig. título + backstop owner) mergeado · esperando Borja: #52 + tooling migraciones |
 
 ## Completado reciente
 

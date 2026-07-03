@@ -27,6 +27,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **HITL: el resumen de confirmación debe nombrar la entidad que un campo desambigua** — y NO early-return del caso único antes de aplicar ese filtro (o lo ignora en silencio). Ver [[hitl-resumen-debe-nombrar-entidad-desambiguada]]
+- **Tests `*.pg.test.ts` que se autosaltan sin DB → levantar `pgvector/pgvector:pg16` local** — postgres pelado falla por `CREATE EXTENSION vector` (el catch lo traga como "no disponible"). Ver [[tests-pg-self-skip-levantar-pgvector-local]]
 - **ZIP mínimo en navegador sin deps: método STORE + DataView a mano** — local header 30B + central dir 46B + EOCD 22B, CRC32 tabla estándar. Ver [[zip-minimo-navegador-sin-dependencias-store]]
 - **Graph calendarView ignora `Prefer:timezone` en la ventana** — start/end se interpretan en UTC sin offset; incluir offset real (Intl longOffset, DST). Ver [[graph-calendarview-ventana-utc-no-prefer-timezone]]
 - **OAuth PKCE sin store → verifier en `state` cifrado** (no solo firmado) + nonce/exp. Ver [[oauth-state-cifrado-para-pkce-verifier-sin-store]]
