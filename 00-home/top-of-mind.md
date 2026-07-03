@@ -30,7 +30,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — 2 PRs mías pendientes de Borja** — **#66** (#52 deletreo criticalFields solo en voz; gate verde 488/14; verificado que compone limpio con su tren brain #59→#64 aún SIN mergear → rebaso sobre `main` cuando él lo mergee, no antes) + **#67** (DISEÑO tooling migraciones, docs-only; espero su decisión D1 Diseño A vs B + D2 firma `appendEvent`, luego pico tooling→#26→#41). #56 ya en `main` (`1c6d204`). Gate LOCAL (Actions sin billing) + merge por override de Borja. Ver [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]]. [[agh-iberica]]
+- **AGH Ibérica — PR-1 del tooling de migraciones (#77) en review de Borja** — #52 (deletreo solo voz) **MERGEADO** en main; #67 cerrada (diseño promovido a **ADR-0002** dentro de #77). PR-1 = runner + drift-gate, gate verde **525/14**; fui con `tsx` (opción 1, flagueada, reversible). D1–D7 cerradas por Borja (Diseño A, firma `appendEvent`, tsx-en-deploy, forward-only). **Bloqueo:** espero que Borja mergee #77 → luego pico **PR-2 (#26** `tenant_id` en `reminder_events` + firma `appendEvent` 7 callers + `reset.ts`**)** → **PR-3 (#41** CHECK `reminders.channel`**)** desde `main` limpio (no apilo sobre base sin confirmar). Ver [[migraciones-incrementales-conviviendo-con-schema-sql-guarded]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -54,7 +54,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · main `1c6d204` · #52 en PR #66 + diseño migraciones en PR #67 · esperando merge del tren brain de Borja (#59→#64) + su decisión D1/D2 |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · tren brain + #52 en main · **PR-1 migraciones #77** en review (ADR-0002) · luego PR-2 #26 / PR-3 #41 |
 
 ## Completado reciente
 
