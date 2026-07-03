@@ -23,6 +23,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **Tipos Supabase: regenerar con `--linked`, no augmentar Database global a mano** — `--db-url` borra `__InternalSupabase` (rompe drift-check); override global dispara errores en cascada. Ver [[gen-types-linked-no-db-url]]
 - **Antes de migrar cualquier cron FacturaIA a `sign-call.sh` (HMAC v2): grep el 2º arg de `withCronTracking` por `auth:` custom** — se repitió el mismo error (`verifactu-process`) 2 meses después de documentarlo. Ver [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]] ADENDA 3
 - **Cron sin NINGÚN run histórico → salud `'desconocido'`, nunca `'rojo'` → nunca alerta** — auditar `CRON_REGISTRY` vs `schedule.list` real de Dokploy, no fiarse del panel. Ver [[cron-health-desconocido-para-cron-sin-ningun-run]]
+- **Filtro adjuntos email por `Content-Disposition:inline` no basta** — ESPs sin esa cabecera cuelan logos vía `cid:`; cruzar Content-ID vs HTML + tamaño mínimo. Ver [[ingesta-email-imagenes-inline-firma-tratadas-como-adjuntos-facturables]]
 
 ## de la semana
 

@@ -12,3 +12,5 @@ Señal específica por proveedor para descartarlas:
 - **IMAP genérico**: `disposition === 'inline'` en el `bodyStructure`. Ojo: no basta con excluir solo por eso — hay adjuntos reales sin `Content-Disposition` explícito que sí hay que aceptar si tienen `filename`; el fix es "excluir inline explícito", no "exigir attachment explícito".
 
 Caso real: TuFacturaIA, 3 providers (`google-workspace`, `microsoft-365`, `icloud-mail`), PR #673.
+
+**ADENDA (2026-07-03, PR #675)**: `Content-Disposition: inline` no cubre todo — ESPs transaccionales (caso real: Salt Edge, `support@saltedge.com`) embeben logos/iconos vía `cid:` en el HTML SIN esa cabecera; la API expone la parte como adjunto real (filename+id) y el filtro fase 1 no la detecta. Afectó a una org real (no solo sandbox), ~15 filas basura en `bandeja_ingesta`. Señal robusta independiente de la cabecera: cruzar `Content-ID` de la parte contra `cid:<id>` referenciado en el HTML del mensaje (lazy: solo si algún candidato trae Content-ID, evita llamada extra en el caso común de PDF adjunto) + descartar `image/*` <15KB como red de seguridad secundaria (logos de firma siempre son minúsculos).
