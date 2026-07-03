@@ -96,6 +96,9 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **`git diff main <branch>` engaña si tu main local avanzó** — otra sesión mergea → ves cambios fantasma como del branch; usa `git diff $(git merge-base main <branch>) <branch>` o `git show --stat HEAD` en el worktree. Ver [[git-diff-vs-main-drifteado-usar-merge-base]]
 - **Pill `overflow:hidden` en grid rígido se recorta en modal estrecho** — dentro de modal/drawer el ancho ≠ viewport → usa **container query** (`container-type: inline-size` + `@container`), no `@media`. Ver [[pill-overflow-hidden-en-grid-se-recorta-usar-container-query-en-modal]]
 - **Reempaquetar planes → grandfathering ANTES de tocar `plan_features`** — snapshot a `org_features` (source `grandfathered`) de lo que cada org activa tiene hoy, misma migración, o los clientes pierden acceso. Ver [[grandfathering-snapshot-antes-de-reempaquetar-planes]]
+- **Sanitizador que reconstruye objeto por allowlist se ejecuta también al RENDERIZAR, no solo al guardar** — campo nuevo no listado se pierde en cada render aunque esté bien en BD. Ver [[sanitizador-allowlist-reconstruye-objeto-descarta-campos-nuevos]]
+- **Campo opcional ya en el tipo compartido puede seguir vacío por N `.select()` distintos que no lo piden** — grep `.select(`/`from('tabla')` sobre la tabla origen, no solo el tipo. Ver [[campo-opcional-en-tipo-compartido-no-implica-seleccionado-en-todos-los-selects]]
+- **Dokploy `compose.one`/`schedule.one` devuelven el `env` completo del compose** — nunca llamarlos solo para leer metadata; usar `deployment.allByCompose`. Ver [[docker-infra]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia).

@@ -7,6 +7,12 @@ tags: [docker, traefik, dokploy, infra]
 
 # Docker / Infraestructura
 
+## API Dokploy: `compose.one` y `schedule.one` devuelven el `env` COMPLETO
+
+- Ambos endpoints incluyen el bloque `env` entero del compose (todos los secrets: DB, API keys de terceros, tokens) en la respuesta, aunque solo se pida para leer metadata (autoDeploy, appName, último deploy).
+- Nunca llamarlos solo para comprobar config — usar `deployment.allByCompose`/`deployment.one` (no incluyen env) o pedirlo al usuario vía panel.
+- Fuga real 2026-07-03 (TuFacturaIA): se volcó a un chat de Claude Code el env completo de prod (service role key, API keys LLM, tokens WhatsApp, claves de cifrado) al llamar `compose.one` para revisar si un deploy había terminado.
+
 ## Healthchecks en Alpine — `curl` no `wget`
 
 - `node:*-alpine` con `apk add curl` **no tiene `wget`**. Usar siempre `curl` en el test del healthcheck.
