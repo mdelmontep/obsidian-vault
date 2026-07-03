@@ -15,6 +15,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
+- **TuFacturaIA — QA export/bot: mergear #681 + 4 smokes prod** (bot dual WhatsApp · ojo facturas · menús canónicos · Pre303 HITL) — detalle en hub `Smoke tests pendientes`. 7 PRs de la tarde ya en prod. [[facturaia]]
 - **TuFacturaIA — export gestoría v1.5 EN CURSO** — WS1-3 en PRs apilados **#668/#669/#672** (verificador Pre303 + LSI v9.0 · asientos PGC `formato=asientos` · IAE/bien inversión/prorrata), sin merge (QA localhost + Pre303 HITL pendientes). Faltan **WS4** (IA "revisa mi export": tools copiloto) + **WS5** (WhatsApp deep-link firmado). Migs 425/426 ya en prod; pooler caído → registrar 426 con `db push` al recuperar. Prompt de continuación + estado en [[facturaia-export-gestoria-v15]]. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
 - **TuFacturaIA — /soporte: verificar #NNN + badge en admin (Manu)** — `/soporte` carga OK verificado en sandbox 2026-07-02 (bug del Dashboard arreglado); falta que Manu (superadmin) confirme `#NNN` + badge "IA revisando…" en `/admin/feedback` con un ticket de job activo (e2e+smoke no puede sin enviar feedback a soporte real). [[facturaia]]
@@ -29,7 +30,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — esperando a Borja (#52 + tooling migraciones, primeros en su cola mañana)** — PROD VIVO y validado (deploy Dokploy + smoke e2e WhatsApp #44). Mergeados hoy: #42/#43 y **#51** (=#50 desambiguar oportunidad por título opción A + #47 backstop owner en update-path). Mía aprobada pendiente de merge: **#56** (política gate=CI local). Gated en OK de Borja: **#52** (deletrear criticalFields solo en voz, su brain) + **tooling de migración incremental** (desbloquea 2ª mitad #26 `tenant_id` en `reminder_events` + #41 CHECK `reminders.channel`). CI Actions sin billing → gate LOCAL + merge por override de Borja. Ver [[hitl-resumen-debe-nombrar-entidad-desambiguada]]. [[agh-iberica]]
+- **AGH Ibérica — 2 PRs mías pendientes de Borja** — **#66** (#52 deletreo criticalFields solo en voz; gate verde 488/14; verificado que compone limpio con su tren brain #59→#64 aún SIN mergear → rebaso sobre `main` cuando él lo mergee, no antes) + **#67** (DISEÑO tooling migraciones, docs-only; espero su decisión D1 Diseño A vs B + D2 firma `appendEvent`, luego pico tooling→#26→#41). #56 ya en `main` (`1c6d204`). Gate LOCAL (Actions sin billing) + merge por override de Borja. Ver [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -53,7 +54,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · main `767c9f7` · #51 (desambig. título + backstop owner) mergeado · esperando Borja: #52 + tooling migraciones |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · main `1c6d204` · #52 en PR #66 + diseño migraciones en PR #67 · esperando merge del tren brain de Borja (#59→#64) + su decisión D1/D2 |
 
 ## Completado reciente
 

@@ -29,3 +29,34 @@ Referencias: `src/lib/fiscal/export/{export-contable,load-facturas-contables,aea
 **Follow-ups**: (1) pooler Supabase caído → `supabase db push` para registrar mig 426 en `schema_migrations` al recuperar (columnas ya en prod, no-op IF NOT EXISTS) — ver [[supabase-pooler-caido-aplicar-ddl-via-mcp]]; (2) Pre303 HITL (Manu, con certificado); (3) QA localhost (:3010).
 
 **Falta**: WS4 (IA "revisa mi export": 3 tools copiloto preview/commit — VIES/facturas-sin-líneas/regenerar — + botón Avisos + card /informes), WS5 (WhatsApp deep-link firmado HMAC + tabla ledger `export_signed_links` mig 427 + intención n8n), auditoría 3 agentes, manuales, 2 resúmenes. Retomar por WS4.
+
+---
+
+## Estado 2026-07-03 (sesión 2 — WS4+WS5+auditoría+manuales)
+
+- **#674 · WS4** `feat/export-v15-ws4-copiloto` (sobre #672, draft) — 3 tools copiloto: `revisarExportContable`/`listarFacturasSinLineas` (lectura, agrupan avisos sin generar fichero) + `completarNifContraparte` (destructive, NIF←NIF-IVA validado por VIES, nunca escribe si no_concluyente/inválido). Botón "Revisar con IA" en dropdown Gestoría (`header-acciones.tsx`) + card en `informes-view.tsx`, ambos vía `CustomEvent('open-ai-assistant')`.
+- **#677 · WS5** `feat/export-v15-ws5-whatsapp` (sobre #674, draft) — mig **427** `export_signed_links` (ledger single-use, RLS service-role). `signExportLink`/`consumeExportLink` (HMAC+TTL 30min, patrón `action-token.ts`). `build-export-response.ts` extraído del route de sesión — fuente única para el endpoint autenticado y el nuevo `GET /api/fiscal/export-contable-firmado` (público, token en query, añadido a `isServiceRoute`). Tool `enviarLibroExportWhatsapp`: **sin cambios en n8n** — reusa el puente `/api/internal/whatsapp/copiloto` ya existente (mismo registry que la web, `channel` ya no filtra tools desde G5·A S5). Adjuntar fichero = fase 2, sin implementar.
+- **Migraciones 426+427 registradas en prod** vía `mcp__supabase__apply_migration` (pooler 5432 seguía caído). `get_advisors` solo INFO esperado (RLS sin políticas, mismo patrón que `bot_error_log`). `database.types.ts` regenerado vía MCP (nota: el JSON de la MCP omite el schema `graphql_public` que sí trae `supabase gen types --linked`; sin consumidores en el repo, typecheck limpio — vigilar si se re-genera con el CLI en el futuro y reaparece el diff).
+- **Auditoría cross-PR (3 agentes paralelos, diff completo main..ws5)**: sin bloqueantes. 2 fixes aplicados (commit `aec11bb9`): granularidad de error restaurada en `build-export-response.ts` (`db_error`/`cuentas_error` en vez de genérico) + mensaje claro en `completarNifContraparte` cuando el NIF-IVA validado ya pertenece a otro contacto (23505).
+- **Manuales actualizados** (commit `289e9508`): `manual-usuario.md` (5 descargas del menú Gestoría, epígrafe IAE/prorrata en Settings, checkbox "Bien de inversión", secciones "Revisar con IA" y envío por WhatsApp) + `manual-admin.md` (endpoint firmado, conteo tools copiloto 57→63).
+- **Verificador numérico re-corrido tras el refactor** (`scripts/verify-export-aeat.ts` contra Sandbox 2T 2026) — VERDE, confirma que `build-export-response.ts` no cambió el fichero generado.
+
+**Falta**: QA localhost/prod de todo el stack (ver hub `Smoke tests pendientes`), Pre303 HITL (Manu), registrar mig 426 vía CLI cuando el pooler recupere (ya registrada por MCP, solo verificar sin duplicados), 2 resúmenes de cierre (técnico + ELI5).
+
+---
+
+## QA en localhost contra Sandbox real (2026-07-03, misma sesión)
+
+Login e2e+smoke en `:3010` contra FacturaIA Sandbox (org `b5f86e8f-...`, ejercicio 2026 2T con datos reales). 6 flujos probados, 1 bug real encontrado y arreglado, 0 bloqueantes tras el fix.
+
+- **Menú Gestoría**: las 6 opciones visibles y correctas (Excel/CSV×2/Libros AEAT/Asientos/Revisar con IA).
+- **revisarExportContable**: 47 avisos reales del periodo (31 sin NIF, 6 divisas≠EUR, 10 sin líneas) — coincide con el verificador `verify-export-aeat.ts`.
+- **🐛 Bug real encontrado**: pedir "completa el NIF de la primera contraparte" tras revisarExportContable devolvía "No he encontrado ese cliente" — `revisarExportContable` solo da CONTADORES (`contrapartes_sin_nif_completables: number`), nunca ids, así que el LLM no tenía de dónde sacar el `id` que exige `completarNifContraparte`. Fix: nueva tool `listarContrapartesSinNif` (simétrica a `listarFacturasSinLineas`, da `tabla+id+completable`), commit `f5d0fd0e` en #677. Verificado tras el fix: la cadena de 3 tools funciona y el guard de VIES rechaza correctamente un NIF-IVA de test inválido del Sandbox (no escribe nada, mensaje claro).
+- **listarFacturasSinLineas**: deep-links correctos (`/recibidas?factura=ID`).
+- **Settings Fiscal (IAE/prorrata)**: guardado confirmado por consulta directa a BD (`epigrafe_iae='763'` persistido) — el primer intento pareció fallar por un problema del navegador automatizado (botón fuera del viewport reducido, no del producto).
+- **Bandeja "Bien de inversión"**: checkbox interactivo confirmado (toggle a `checked=true`); no se aprobó el documento para no archivar datos reales del Sandbox.
+- **WS5 WhatsApp**: verificado por API (POST firmado HMAC a `/api/internal/whatsapp/copiloto` simulando el receptor n8n, `from_phone` de un admin real del Sandbox) — generó el enlace, la descarga devolvió el XLSX válido (`export-contable-2026-2T.xlsx`, 16.569 bytes), y el segundo intento con el mismo token devolvió **410 single-use** como diseñado. No probado desde un WhatsApp real (teléfono físico).
+
+Informe completo con capturas (Artifact Claude Code, sesión 2026-07-03).
+
+**Pendiente real tras este QA**: (1) Pre303 HITL con certificado (Manu); (2) smoke desde un WhatsApp real (el flujo API está probado, falta el canal físico); (3) mergear el stack 668→669→672→674→677 y repetir el smoke básico en prod.

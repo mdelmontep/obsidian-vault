@@ -11,6 +11,7 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **QA contra agente con memoria = hilo limpio o reset entre rondas** — el historial envenenado ancla al LLM y los fixes parecen no aplicar. Ver [[llm-hilo-envenenado-ancla-tools-frescos-mandan]]
 - **`void` sobre builder supabase = query NUNCA ejecutada** — thenables lazy; fire-and-forget con `.then(()=>{})`. Ver [[supabase-builders-lazy-void-nunca-ejecuta]]
 - **`new Date(y,m,d).toISOString()` = día anterior fuera de UTC** — rangos de fecha corridos un día; strings + Intl con timeZone. Ver [[new-date-toisostring-desplaza-un-dia-fuera-de-utc]]
 - **PostgREST: max-rows trunca a 1000 en silencio + `.in()` grande revienta la URL** — paginar `.order(pk).range()` y chunkear ids ≤150; caso export contable. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
@@ -103,3 +104,4 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 - **Playwright + componentes custom (checkbox hidden / Select portal)** — clickar label wrapper no input; `waitFor([role="listbox"])` antes de leer opciones; `toHaveValue()` entre fill y submit. Ver [[playwright-custom-components-e2e-selectors]]
 - **WhatsApp interactive → await upsert antes de enviar botones** — el button_reply llega antes que el fire-and-forget; escritura en BD debe ser await+guard antes del send. Ver [[whatsapp-await-upsert-antes-de-botones-interactivos]]
 - **Docker cache activa → builder prune no basta si hay contenedor activo** — usar `docker compose build --no-cache <svc>` desde el dir del compose. Ver [[docker-layer-cache-persiste-con-contenedor-activo]]
+- **Gate de drift de schema Postgres** — `DROP/CREATE DATABASE` un `-c` por sentencia; filtrar `\restrict` (token aleatorio de pg_dump ≥16); `pg_dump` dentro del contenedor por paridad de versión. Ver [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]]
