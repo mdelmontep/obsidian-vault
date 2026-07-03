@@ -15,7 +15,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — export gestoría MERGEADO (tren #653/#654/#657/#658): deploy Dokploy + smoke prod + Pre303 HITL** — descargar XLSX/CSVs/AEAT en Sandbox, cuadrar vs /fiscal, Libro IVA revive; validar import del XLSX AEAT en Pre303 con certificado. v1.5 speceada: [[facturaia-export-gestoria-v15]]. [[facturaia]]
+- **TuFacturaIA — export gestoría v1.5 EN CURSO** — WS1-3 en PRs apilados **#668/#669/#672** (verificador Pre303 + LSI v9.0 · asientos PGC `formato=asientos` · IAE/bien inversión/prorrata), sin merge (QA localhost + Pre303 HITL pendientes). Faltan **WS4** (IA "revisa mi export": tools copiloto) + **WS5** (WhatsApp deep-link firmado). Migs 425/426 ya en prod; pooler caído → registrar 426 con `db push` al recuperar. Prompt de continuación + estado en [[facturaia-export-gestoria-v15]]. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
 - **TuFacturaIA — /soporte: verificar #NNN + badge en admin (Manu)** — `/soporte` carga OK verificado en sandbox 2026-07-02 (bug del Dashboard arreglado); falta que Manu (superadmin) confirme `#NNN` + badge "IA revisando…" en `/admin/feedback` con un ticket de job activo (e2e+smoke no puede sin enviar feedback a soporte real). [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]

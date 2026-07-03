@@ -14,3 +14,18 @@ Prompt entregado a Manu el 2026-07-03 (tras mergear el tren #653/#654/#657/#658)
 5. **WhatsApp fase 1** — intención "mándame el libro del 2T" → deep-link firmado de un solo uso (HMAC+TTL, patrón vincular Slack). Adjuntar fichero = fase 2 (análisis de seguridad aparte). Gate: feature fiscal + rol del user vinculado.
 
 Referencias: `src/lib/fiscal/export/{export-contable,load-facturas-contables,aeat-libros-xlsx}.ts`, route `/api/fiscal/[ejercicio]/export-contable`, plantilla oficial parseada en la cabecera de `aeat-libros-xlsx.ts`, [[ADR-036-export-contable-libro-registro-sin-pgc]].
+
+---
+
+## Estado 2026-07-03 (sesión de implementación)
+
+**Worktree**: `/Users/manueldelmonte/facturaia/.claude/worktrees/export-v15`. PRs apilados base main, **sin merge** (QA localhost + Pre303 HITL pendientes):
+- **#668 · WS1** `feat/export-v15-ws1-pre303` — `scripts/verify-export-aeat.ts` + fixture plantilla oficial `LSI_plantilla_v9.0.xlsx` (cotejo real, no circular) + `docs/fiscal/pre303-import-checklist.md`. XLSX real del Sandbox 2T 2026 en `~/Downloads/2026B87654323@FacturaIA Sandbox.xlsx` — 36/42 cabeceras exactas, 60/60 + 9/9 facturas, Σ cuadra al céntimo.
+- **#669 · WS2** — asientos PGC `formato=asientos` (`src/lib/fiscal/export/asientos-contables.ts`) + mig **425** `cuenta_contable` + 8 cuentas PGC en `catalog.ts`. Autoasignación 8 díg. (43000001…). Cuadre debe=haber verificado (69 asientos, 32.066,55 €).
+- **#672 · WS3** — mig **426** `es_bien_inversion` + `epigrafe_iae` + `prorrata_deduccion_pct`; wiring al serializador AEAT (IAE col 5, Bien Inversión col 21, Cuota Deducible×prorrata) + captura UI (wizard/settings/bandeja).
+
+**Decisiones fijadas**: subcuentas 8 díg contiguos · IRPF **473** emitidas / **4751** recibidas (doc `docs/architecture/asientos-contables-pgc.md`) · consentimiento permanente (esta sesión) para migs aditivas a prod.
+
+**Follow-ups**: (1) pooler Supabase caído → `supabase db push` para registrar mig 426 en `schema_migrations` al recuperar (columnas ya en prod, no-op IF NOT EXISTS) — ver [[supabase-pooler-caido-aplicar-ddl-via-mcp]]; (2) Pre303 HITL (Manu, con certificado); (3) QA localhost (:3010).
+
+**Falta**: WS4 (IA "revisa mi export": 3 tools copiloto preview/commit — VIES/facturas-sin-líneas/regenerar — + botón Avisos + card /informes), WS5 (WhatsApp deep-link firmado HMAC + tabla ledger `export_signed_links` mig 427 + intención n8n), auditoría 3 agentes, manuales, 2 resúmenes. Retomar por WS4.
