@@ -15,6 +15,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
+- **TuFacturaIA — auditoría `audit_log`: bloque 1 (seguridad crítica) tras cerrar #685** — ~40 endpoints más sin rastro, mapeados y troceados en 4 bloques (2FA/security-policy, teléfono sin OTP, merge destructivo clientes/proveedores primero). Prompt de arranque completo en el hub. [[facturaia]]
 - **TuFacturaIA — QA export/bot: mergear #681 + 4 smokes prod** (bot dual WhatsApp · ojo facturas · menús canónicos · Pre303 HITL) — detalle en hub `Smoke tests pendientes`. 7 PRs de la tarde ya en prod. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
 - **TuFacturaIA — /soporte: verificar #NNN + badge en admin (Manu)** — `/soporte` carga OK verificado en sandbox 2026-07-02 (bug del Dashboard arreglado); falta que Manu (superadmin) confirme `#NNN` + badge "IA revisando…" en `/admin/feedback` con un ticket de job activo (e2e+smoke no puede sin enviar feedback a soporte real). [[facturaia]]
