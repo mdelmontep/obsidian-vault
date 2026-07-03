@@ -11,8 +11,10 @@ Caso real TuFacturaIA (feedback widget): el modal colgaba del `<aside class="sid
 
 ## Diagnóstico
 
-`document.elementsFromPoint(cx,cy)` con el modal abierto: el primer elemento era el KPI card (z:auto), el backdrop salía el último. Recorrer ancestros del backdrop buscando lo que crea stacking context (NO solo transform — también `position:sticky/fixed`, `opacity<1`, `isolation`, `will-change`, `contain`) clavó el `sticky` del sidebar.
+`document.elementsFromPoint(cx,cy)` con el modal abierto: el primer elemento era el KPI card (z:auto), el backdrop salía el último. Recorrer ancestros del backdrop buscando lo que crea stacking context (NO solo transform — también `position:sticky/fixed`, `opacity<1`, `isolation`, `will-change`, `contain`, **`backdrop-filter`**) clavó el `sticky` del sidebar.
 
 ## Fix
 
 `Modal` renderiza vía `createPortal(jsx, document.body)` → sale al stacking root, z-index global. Guard `mounted` (useState→useEffect) para no llamar createPortal en SSR. Antes de portar un componente compartido: grepear que ningún consumidor tenga `<form>` **envolviendo** al `<Modal>` (submit nativo no cruza el portal; si el form está *dentro*, portan juntos y funciona). Commit `c3998c5`. Relacionado: [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]].
+
+**Variante dropdown en panel glass (2026-07-03)**: mismo mecanismo, no un modal — un `.panel` con `backdrop-filter:blur()` (diseño "cristal") crea stacking context, así que un dropdown `position:absolute` anclado DENTRO nunca pinta por encima de un panel HERMANO posterior en el DOM, con cualquier z-index. Ningún ajuste CSS lo arregla; hace falta portal. Fix: `useFloating`+`FloatingPortal` (mismo patrón que `Select`/`useAnchoredMenu`) en vez de cálculo manual de posición — ver PR #666 TuFacturaIA.

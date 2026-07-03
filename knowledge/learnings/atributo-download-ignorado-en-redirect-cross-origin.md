@@ -25,3 +25,11 @@ Caso real FacturaIA #452: "Descargar PDF" de presupuesto abría el visor;
 `render-pdf` GET acepta `?download=1` y firma con la opción. Aplica a
 cualquier descarga vía Storage firmado + 302. Relacionado:
 [[signed-url-proxy-endpoint-vs-cached-en-bd]].
+
+**Variante same-origin (2026-07-03)**: tras migrar `/api/documents/file` de
+302-a-signed-url a streaming directo del blob (mismo origen, sin redirect),
+reapareció como "se descarga como 'file'" — aquí SÍ se respeta `download`,
+pero sin VALOR explícito el navegador infiere el nombre de la URL
+(`?path=...` no tiene un segmento de filename limpio) y cae a genérico. Fix:
+`download={`${num}.${ext}`}` en el `<a>` (ext derivada del path real, no
+asumida). Ningún cambio de servidor necesario cuando es same-origin.
