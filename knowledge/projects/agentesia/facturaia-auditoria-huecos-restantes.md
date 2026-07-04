@@ -7,6 +7,20 @@ tags: [facturaia, auditoria, audit-log, seguridad, rama]
 
 # TuFacturaIA — Huecos de auditoría restantes (post PR #685)
 
+> **ACTUALIZADO 2026-07-04: Bloques 1-3 CERRADOS.** 7 PRs mergeados a `main`:
+> #685 (actor `human`, base), #690 (Bloque 1), #691 (Bloque 2 + follow-up stock
+> en #696), #693+#694 (Bloque 3a+3b), #698 (fix UX: `accion` humanizada + labels
+> de entidad, ver [[trigger-audit-solo-registra-sesion-humana]]). **Decisión de
+> diseño tomada**: `logAgentAction` explícito en cada endpoint, NO ampliar
+> `feed.ts`/`MODULE_EVENT_TO_AUDIT`. Detalle completo en
+> [[facturaia-historico-detallado]] (00-home, entrada 2026-07-04). Lo que sigue
+> abajo es el mapeo ORIGINAL (pre-fix) — solo el Bloque 4 sigue vigente como
+> pendiente; el resto es histórico de lo ya arreglado.
+>
+> **Nota de alcance Bloque 1**: `settings/password` y `settings/sessions`
+> (mencionados abajo como parte del bloque) NO se tocaron — quedaron fuera del
+> prompt de arranque real. Si se retoma la auditoría, están sin auditar todavía.
+
 ## Contexto
 
 PR #685 (`fix/auditoria-atribucion-actor`, mergeado) arregló el bug reportado en un
@@ -123,22 +137,23 @@ mecánicos. Decidir con Manu antes de arrancar el Bloque 3.
 
 ---
 
-## Prompt para arrancar la siguiente sesión
+## Prompt para arrancar la siguiente sesión (Bloque 4, único pendiente)
 
 Copiar/pegar esto tal cual al empezar:
 
-> Sigue con la auditoría de `audit_log` en TuFacturaIA. Contexto completo en
-> `knowledge/projects/agentesia/facturaia-auditoria-huecos-restantes.md` (Obsidian).
-> PR #685 ya cerró el bug original (Copiloto "Sin identificar" + atribución
-> web→API). Lo que queda son ~40 endpoints más con el mismo tipo de hueco,
-> troceados en 4 bloques por prioridad. Arranca por el **Bloque 1 (seguridad
-> crítica)**: `settings/security-policy`, `me/profile` (cambio de teléfono sin
-> OTP), `clientes/[id]/merge` y `proveedores/[id]/merge`, `auth/onboarding/fiscal`.
-> Mismo patrón que #685: `logAgentAction({ actor: 'human', orgId, userId, accion,
-> entidad, entidadId, detalles })` tras cada mutación, worktree propio, PR con
-> smoke test manual en FacturaIA Sandbox vía agent-browser antes de mergear (así
-> se verificó #685 — usuario `e2e+smoke@agentesia.madrid`, credenciales en
-> `.env.test` del repo). Antes de tocar el Bloque 3 (conciliación), para el trabajo
-> y pregunta a Manu la decisión de diseño abierta (logAgentAction explícito vs.
-> ampliar `feed.ts` para leer `module_events`) — está descrita en la última
-> sección del doc.
+> Sigue con la auditoría de `audit_log` en TuFacturaIA. Bloques 1-3 ya CERRADOS
+> (7 PRs, ver `knowledge/projects/agentesia/facturaia-auditoria-huecos-restantes.md`
+> en Obsidian para contexto histórico). Queda solo el **Bloque 4 (baja
+> prioridad)**: cobros (`cobros/opt-out`+`revoke`, `cobros/send-now`,
+> `lib/cobros/orchestrator.ts`), facturas recurrentes (`facturas-recurrentes/*`,
+> `lib/recurrentes/materializar.ts`), remesas SEPA (`sepa/remesas`,
+> `sepa/remesas-pago`, vía RPC), settings menores (`email-config`, `features`,
+> `module-suggestions`, `whatsapp`, `profile/avatar`), inventario/importar.
+> Mismo patrón ya aplicado en Bloques 1-3: `logAgentAction({ actor: 'human',
+> orgId, userId, accion, entidad, entidadId, detalles })` con `accion` en
+> **frase en español** (NUNCA formato máquina tipo `entidad.verbo` — ese estilo
+> es solo para `actor:'agent:api'`, ver [[trigger-audit-solo-registra-sesion-humana]]),
+> y añadir cualquier `entidad` nueva a `ENTIDAD_LABEL` en `auditoria-section.tsx`.
+> Worktree propio, PR con smoke test manual en FacturaIA Sandbox vía agent-browser
+> antes de mergear, y verifica visualmente la pantalla Ajustes→Auditoría (no solo
+> el insert en BD) antes de dar el smoke por bueno.

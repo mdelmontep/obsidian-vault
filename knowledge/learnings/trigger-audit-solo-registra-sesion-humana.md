@@ -16,8 +16,16 @@ explícita, con la `entidad`/`accion` que la UI reconoce — no confiar en el tr
 Gotcha doble (caso TuFacturaIA, cobro por Copiloto no salía en la ficha):
 - La `entidad` debe coincidir EXACTA con el filtro de la UI: `'facturas'` (plural),
   no `'factura'`. Un singular/plural distinto = fila escrita pero nunca leída.
-- Da igual el `actor_type`: si la UI mapea `accion`→etiqueta, añade la accion al MAP
-  o saldrá el string crudo.
+  `auditoria-section.tsx` sí tiene `ENTIDAD_LABEL` (mapa entidad→español, con
+  fallback al string crudo) — añadir ahí cualquier entidad nueva.
+- `accion` NO tiene mapa de humanización (a diferencia de `entidad`): se
+  renderiza LITERAL en la UI. Escribe la frase en español ya en el `logAgentAction`
+  ("Movimiento bancario eliminado"), nunca claves máquina tipo `entidad.verbo`
+  — ese estilo solo es correcto para `actor:'agent:api'` (precedente:
+  `factura.anular`), no para `actor:'human'`. Recurrencia 2026-07-04: 27 `accion`
+  de un PR grande (auditoría de conciliación) salieron en formato máquina para
+  actor human; solo se detectó con smoke visual real de la pantalla, no
+  verificando inserts en BD.
 
 Relacionado: [[consumidor-lee-claves-que-productor-no-emite]] (mismo origen: el
 consumidor espera una forma/columna que el productor nunca emitió).
