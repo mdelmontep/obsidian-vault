@@ -11,6 +11,8 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **Integrar SaaS en codebase existente: grep el wrapper antes de asumir el SDK** — puede haber cliente REST propio (FacturaIA: `stripe-rest`, no el paquete `stripe`); instruir a subagentes "reusa el patrón del repo", no "usa el SDK". Ver [[codebase-existente-grep-wrapper-antes-de-asumir-sdk]]
+- **`fork` (hereda contexto) se va meta en features grandes** — para implementar 10 ficheros hazlo inline o con `general-purpose` acotado, no un fork; verifica en disco lo que produjo. Ver [[claude-code-agentes-worktree-failure-modes]] §F
 - **Columna nueva sin desplegar rompe el typecheck del `.select()` supabase** — la migración no está en prod → `gen:types` no la trae → el cliente tipado marca error-branded toda la query. Cast local del builder, retirar tras gen:types. Ver [[supabase-select-columna-nueva-no-en-gen-types-falla-typecheck]]
 - **Paso de elección conversacional: resolver la respuesta primero, la pregunta es fallback** — guardar "cualquier texto" traga preguntas/órdenes/emoji; el STT mete "?" por entonación. Ver [[paso-eleccion-conversacional-resolver-respuesta-antes-que-pregunta]]
 - **No pidas elegir opciones que el usuario no puede probar aún** — voz por nombre (clara/diego) sin TTS viva = elección a ciegas; pregunta por atributo (femenina/masculina) o default. Ver [[no-pedir-elegir-opciones-que-el-usuario-no-puede-probar]]

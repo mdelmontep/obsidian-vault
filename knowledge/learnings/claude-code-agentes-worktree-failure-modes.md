@@ -77,6 +77,14 @@ git checkout <worktree-branch> -- \
 
 **Cómo blindar**: antes de empezar trabajo largo en el checkout principal (no en un worktree), `git worktree list` + revisar si hay señales de actividad reciente ajena (archivos modificados con mtime fresco que no son míos) en el `git status` inicial.
 
+## Failure mode F: `fork` (hereda contexto completo) se va meta y se cuelga en features grandes
+
+**Síntoma**: para implementar una feature grande multi-dominio (db+backend+frontend) lancé UN `subagent_type:"fork"` (hereda todo mi contexto). A los 600s: watchdog "no progress", murió sin crear siquiera el worktree. Su mensaje final mostraba al fork investigando su PROPIO árbol de agentes (mencionaba un sub-subagente que había generado) en vez de implementar → se fue meta.
+
+**Causa raíz**: un fork con contexto enorme heredado + tarea grande tiende a razonar sobre la orquestación (incluso a re-delegar) en vez de ejecutar; más superficie para colgarse en el stream.
+
+**Fix**: para features grandes de implementación, hazlas TÚ inline (o un `general-purpose` fresco con brief acotado y paths explícitos), no un `fork`. El fork rinde en tareas de análisis/verificación acotadas que se benefician de tu contexto, no en construir 10 ficheros. Verificar SIEMPRE en disco lo que produjo (worktree creado, commits) antes de fiarte del reporte. Caso real 2026-07-04: fork wa-fase3 Stripe → 0 output; rehecho inline con TDD, limpio.
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:
