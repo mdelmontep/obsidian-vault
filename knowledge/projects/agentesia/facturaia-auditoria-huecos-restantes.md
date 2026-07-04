@@ -139,21 +139,71 @@ mecánicos. Decidir con Manu antes de arrancar el Bloque 3.
 
 ## Prompt para arrancar la siguiente sesión (Bloque 4, único pendiente)
 
-Copiar/pegar esto tal cual al empezar:
+Copiar/pegar esto tal cual al empezar (versión 2026-07-04, multi-agente + loop
+hasta terminar — reemplaza la versión anterior de este doc):
 
-> Sigue con la auditoría de `audit_log` en TuFacturaIA. Bloques 1-3 ya CERRADOS
-> (7 PRs, ver `knowledge/projects/agentesia/facturaia-auditoria-huecos-restantes.md`
-> en Obsidian para contexto histórico). Queda solo el **Bloque 4 (baja
-> prioridad)**: cobros (`cobros/opt-out`+`revoke`, `cobros/send-now`,
-> `lib/cobros/orchestrator.ts`), facturas recurrentes (`facturas-recurrentes/*`,
-> `lib/recurrentes/materializar.ts`), remesas SEPA (`sepa/remesas`,
-> `sepa/remesas-pago`, vía RPC), settings menores (`email-config`, `features`,
-> `module-suggestions`, `whatsapp`, `profile/avatar`), inventario/importar.
-> Mismo patrón ya aplicado en Bloques 1-3: `logAgentAction({ actor: 'human',
-> orgId, userId, accion, entidad, entidadId, detalles })` con `accion` en
-> **frase en español** (NUNCA formato máquina tipo `entidad.verbo` — ese estilo
-> es solo para `actor:'agent:api'`, ver [[trigger-audit-solo-registra-sesion-humana]]),
-> y añadir cualquier `entidad` nueva a `ENTIDAD_LABEL` en `auditoria-section.tsx`.
-> Worktree propio, PR con smoke test manual en FacturaIA Sandbox vía agent-browser
-> antes de mergear, y verifica visualmente la pantalla Ajustes→Auditoría (no solo
-> el insert en BD) antes de dar el smoke por bueno.
+> Cierra el Bloque 4 (último pendiente) de la auditoría de audit_log en TuFacturaIA.
+>
+> CONTEXTO: knowledge/projects/agentesia/facturaia-auditoria-huecos-restantes.md
+> (Obsidian) — Bloques 1-3 ya cerrados (7 PRs: #685/#690/#691/#693/#694/#696/#698).
+> Lee ese doc entero antes de arrancar, incluido el banner de estado al principio
+> y el learning enlazado [[trigger-audit-solo-registra-sesion-humana]].
+>
+> ALCANCE — 5 áreas independientes, todas sin logAgentAction hoy:
+> 1. Cobros: cobros/opt-out (+revoke), cobros/send-now, lib/cobros/orchestrator.ts
+>    (líneas 223, 287, 306, 351).
+> 2. Facturas recurrentes: facturas-recurrentes/route.ts POST, [id]/route.ts
+>    PATCH/DELETE, revisiones/[id]/route.ts DELETE, lib/recurrentes/materializar.ts.
+> 3. Remesas SEPA: sepa/remesas y sepa/remesas-pago — vía RPC (crear_remesa_cobro/
+>    pago), verifica primero si la función SQL ya audita algo antes de asumir que no.
+> 4. Settings menores: email-config PUT, features PATCH, module-suggestions PATCH,
+>    whatsapp PATCH, profile/avatar POST/DELETE.
+> 5. Inventario: inventario/importar/route.ts + lib/catalogo/create-producto.ts.
+>
+> PATRÓN OBLIGATORIO (aprendido en Bloques 1-3, no te lo saltes):
+> - logAgentAction({ actor: 'human', orgId, userId, accion, entidad, entidadId, detalles })
+>   tras cada mutación real (no antes, no si fue no-op).
+> - `accion` SIEMPRE en frase en español natural ("Cliente dado de baja de cobros",
+>   nunca "cobros.opt_out" ni ningún formato entidad.verbo — ese estilo dotted es
+>   EXCLUSIVO de actor:'agent:api', no lo repitas para actor:'human'). La UI de
+>   Ajustes→Auditoría renderiza `accion` literal, sin humanizer.
+> - Toda `entidad` nueva que introduzcas debe añadirse a ENTIDAD_LABEL en
+>   src/components/settings/auditoria-section.tsx (traducción a español del badge).
+> - Para deletes/updates destructivos, captura snapshot ANTES de mutar (nombre,
+>   estado previo) para que `detalles` tenga contexto útil tras el hecho.
+> - Para RPCs que ya insertan en module_events: no lo cuentes como "ya auditado" —
+>   sigue siendo solo analítica de producto, no auditoría legal.
+>
+> USA VARIOS AGENTES EN PARALELO: lanza un agente (Agent tool, tipo
+> facturaia-backend) por cada una de las 5 áreas — son independientes entre sí,
+> no hay razón para hacerlas en serie. Cada agente trabaja en su propio worktree
+> (git worktree add, rama fix/auditoria-bloque4-<area>), aplica el patrón, corre
+> lint+typecheck+build+tests en su worktree, y te devuelve el diff para que tú
+> lo revises antes de dar nada por bueno — no confíes ciegamente en el resultado
+> del agente, verifica tú el diff real.
+>
+> VERIFICACIÓN — sin atajos, para cada área antes de abrir PR:
+> 1. npm run lint && npm run typecheck && npm run build limpios.
+> 2. Tests unitarios existentes en verde.
+> 3. Smoke en vivo contra FacturaIA Sandbox (agent-browser + Supabase MCP): dispara
+>    la mutación real, confirma el INSERT en audit_log con la query SQL.
+> 4. OBLIGATORIO — abre de verdad la pantalla Ajustes → Auditoría en el navegador
+>    (no te fíes solo del INSERT en BD) y confirma visualmente que la fila nueva
+>    se lee en español natural, con el badge de entidad traducido, igual de
+>    legible que el resto del feed. Esto es exactamente lo que se pasó por alto
+>    en el Bloque 3 y tuvo que arreglarse con un PR de seguimiento (#698) — no lo
+>    repitas.
+> 5. Limpia cualquier dato de prueba (clientes/movimientos/reglas desechables)
+>    tras verificar.
+>
+> PROCESO: entra en loop de trabajo — no te detengas a pedir aprobación entre
+> área y área. Termina la implementación + verificación de las 5 áreas, abre un
+> PR por área (o agrupa si tiene sentido), y no des la tarea por cerrada hasta
+> que las 5 estén con lint/typecheck/build/tests verdes y smoke visual confirmado.
+> Si encuentras que alguna RPC de remesas/recurrentes ya audita algo internamente,
+> decláralo explícitamente en el PR en vez de asumir silenciosamente.
+>
+> Al terminar TODO: pregúntame si mergeo (mismo criterio que Bloques 1-3: si el
+> PR va contra `main` y el ruleset bloquea auto-aprobación, `gh pr merge --admin`
+> tras verificación local completa — no antes). Cierra con `/obsidian-1` para
+> persistir el cierre final de la auditoría completa (los 4 bloques).
