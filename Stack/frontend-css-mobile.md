@@ -83,6 +83,7 @@ tags: [frontend, css, mobile, overflow]
 - **Password-eye con padding en vez de size** — `padding: 12px` en el botón + `min-width/height: 44px`. Ajustar `padding-right` del input al nuevo tamaño del botón.
 - **`env(safe-area-inset-*)` en pantallas auth mobile** — `padding-bottom: env(safe-area-inset-bottom, 16px)` en el scroll container. Sin esto el contenido queda cortado bajo el home bar de iOS.
 - **`inputMode="tel"` en campos de teléfono** — abre teclado numérico en iOS/Android directamente, sin depender del `type="tel"`.
+- **`max-width:Npx` y `min-width:Npx` con el MISMO N se solapan exactamente en N** — a 768px ambas queries aplican; si una oculta un panel (`display:none`) y la otra ya cambió la rejilla a 2 columnas, la mitad queda en blanco. Usar límites asimétricos: mobile `max-width:767px`, tablet `min-width:768px`. Caso TuFacturaIA login (PR #704).
 
 ## CSS Grid · trampas de layout en cards móvil
 
