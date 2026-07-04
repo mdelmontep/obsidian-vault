@@ -31,7 +31,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — #104 y #105 (gaps del retest de voz) en PR de Borja** — #104 → PR #110 (dedup de turnos retell: firma del transcript + re-emitir voz sobre el response_id actual, sin silencio bajo latest-wins); #105 → PR #111 (título de tarea autocontenido con contexto del mensaje, sin inventar). Gates verdes (641/18 y 638/20), auditadas 3 agentes. Pendiente: review+merge+deploy de Borja, y validar en local con el **sandbox Meta** (en curso, otra sesión) — capturar payload real de reemit Retell cierra la asunción de #104. Ver [[voz-dedup-turno-por-firma-transcript-reemitir-sobre-response-id-actual]]. [[agh-iberica]]
+- **AGH Ibérica — hoy MERGEADO+prod:** mis PRs #87/#88/#92/#100/#107/#109/#96 (migraciones+reset+guard integración+Langfuse) · **sandbox Meta dev montado** (test number aislado, bucle `tsx watch`+cloudflared; gotcha puerto 7844→hotspot). **Pendiente:** (1) **camino A calidad conversacional (#112)** = triage con #118 de Borja como UN paquete (luz verde suya, toca `tone.ts`); (2) **smokes en casa** (#5 voz, #92 reset, bucle dev — el túnel necesita red que permita 7844); (3) **#104/#105** en review de Borja (#110/#111). Ver [[meta-whatsapp-dev-sandbox-usar-test-number-no-business-de-prod]] · [[voz-dedup-turno-por-firma-transcript-reemitir-sobre-response-id-actual]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · **voz #3 CERRADA** (retest Borja OK) · tren migraciones+onboarding+reset (#87/#88/#92/#86/#100/#109) en main · **#104/#105** (gaps voz) en PR #110/#111 |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · voz #3 + M365 #2 CERRADOS · mi tren (#87/#88/#92/#100/#107/#109/#96) en prod · **sandbox Meta dev** montado · **camino A conversacional (#112)** pendiente triage · #104/#105 en review |
 
 ## Completado reciente
 

@@ -34,6 +34,9 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **cloudflared quick tunnel muere si la red bloquea el puerto 7844** — WiFi oficina lo bloquea (QUIC+TCP); usa hotspot 4G o ngrok/443; localtunnel rompe el webhook de Meta. Ver [[cloudflared-tunnel-bloqueado-puerto-7844-usar-hotspot]]
+- **Meta WhatsApp dev: usa el test number, no asocies la app al Business de prod** — muestra el WABA de prod y suscribir `messages` secuestra el webhook en vivo. Ver [[meta-whatsapp-dev-sandbox-usar-test-number-no-business-de-prod]]
+- **Agente de acciones robótico/interroga = system prompt sin 3 secciones** — capacidades declaradas + asumir(lectura)/confirmar(escritura) + few-shot; confirmación = resumen determinista + envoltura. Ver [[agente-accion-disclosure-capacidades-y-asumir-vs-confirmar]]
 - **`op read` con timeout de autorización → parar y pedir reautorización, NUNCA pegar el secreto literal en el comando como fallback** — el clasificador de Claude Code bloquea cualquier bash con el secreto en texto plano, venga de donde venga. Ver [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
 - **ADR/roadmap propio puede estar stale vs. código real** — verificar contra git log + API en vivo del sistema externo (n8n, etc.) antes de planificar encima, aunque el propio doc del repo lo dé por pendiente. Ver incidente 2026-07-04 en `Stack/incidents.md`
 - **HITL: el resumen de confirmación debe nombrar la entidad que un campo desambigua** — y NO early-return del caso único antes de aplicar ese filtro (o lo ignora en silencio). Ver [[hitl-resumen-debe-nombrar-entidad-desambiguada]]
