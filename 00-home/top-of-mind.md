@@ -15,6 +15,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
+- **TuFacturaIA — retomar plan consolidación WhatsApp: reautorizar 1Password → `g5a-005` → 3 PRs → Stripe Connect** — 3/7 issues cerrados con TDD en ramas sin PR (2026-07-04); detalle y worktrees en hub §WIP. [[facturaia]]
 - **TuFacturaIA — QA export/bot: mergear #681 + 4 smokes prod** (bot dual WhatsApp · ojo facturas · menús canónicos · Pre303 HITL) — detalle en hub `Smoke tests pendientes`. 7 PRs de la tarde ya en prod. [[facturaia]]
 - **TuFacturaIA — datos-backups fases 3-4: smoke prod tras deploy** (a3 SUENLACE+SII · cierre de cuenta=bloqueo · cron `account-closure-apply` verde · limpieza caducados). 4 PRs #692/#695/#697/#699 en main; mig 429 ya en prod. Detalle en hub `Smoke tests pendientes`. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]

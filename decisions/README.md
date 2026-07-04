@@ -60,3 +60,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 034 · 2026-06-19 · [[ADR-034-paginacion-offset-vs-keyset|Paginación UI interna — offset vs keyset]] (TuFacturaIA)
 - 035 · 2026-07-01 · [[ADR-035-control-canal-ingesta-pantalla-unica-vs-duplicado|Control de un canal de ingesta vive en una sola pantalla, con estado de solo lectura en el resto]] (TuFacturaIA)
 - 036 · 2026-07-03 · [[ADR-036-export-contable-libro-registro-sin-pgc|Export contable gestorías: libro registro CSV/XLSX sin cuentas PGC; A3/Sage nativos diferidos]] (TuFacturaIA)
+- 037 · 2026-07-04 · [[ADR-037-whatsapp-verificacion-proveedor-y-cobro-embebido|WhatsApp: verificación de proveedor externo por confirmación manual del admin (no OTP, no solo-NIF) + cobro embebido vía Stripe Connect (no Redsys/Bizum v1)]] (TuFacturaIA)

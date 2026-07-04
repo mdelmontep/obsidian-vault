@@ -31,6 +31,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 
 ## de la semana
 
+- **`op read` con timeout de autorización → parar y pedir reautorización, NUNCA pegar el secreto literal en el comando como fallback** — el clasificador de Claude Code bloquea cualquier bash con el secreto en texto plano, venga de donde venga. Ver [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
+- **ADR/roadmap propio puede estar stale vs. código real** — verificar contra git log + API en vivo del sistema externo (n8n, etc.) antes de planificar encima, aunque el propio doc del repo lo dé por pendiente. Ver incidente 2026-07-04 en `Stack/incidents.md`
 - **HITL: el resumen de confirmación debe nombrar la entidad que un campo desambigua** — y NO early-return del caso único antes de aplicar ese filtro (o lo ignora en silencio). Ver [[hitl-resumen-debe-nombrar-entidad-desambiguada]]
 - **Tests `*.pg.test.ts` que se autosaltan sin DB → levantar `pgvector/pgvector:pg16` local** — postgres pelado falla por `CREATE EXTENSION vector` (el catch lo traga como "no disponible"). Ver [[tests-pg-self-skip-levantar-pgvector-local]]
 - **ZIP mínimo en navegador sin deps: método STORE + DataView a mano** — local header 30B + central dir 46B + EOCD 22B, CRC32 tabla estándar. Ver [[zip-minimo-navegador-sin-dependencias-store]]
