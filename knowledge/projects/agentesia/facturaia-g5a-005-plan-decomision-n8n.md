@@ -41,3 +41,16 @@ Sin razonamiento LLM en n8n para texto: n8n queda como transporte puro.
 ## Riesgos
 - El post-proceso de texto (Totales/Generar) está acoplado al shape del agente; si el copiloto no cubre 100% crear/emitir por texto, hay que mantener puentes o cerrar gaps antes de borrar.
 - Es un workflow LIVE de 184 nodos: editar por nodo, validar por tramos, no “recrear”.
+
+## EJECUTADO — 2026-07-04 (con OK de Manu)
+
+**Hallazgo que cambió el plan**: auditoría del flujo antes de tocar reveló que el workflow estaba **100% fuera del camino**. El webhook de Meta apunta a Next.js (`/api/whatsapp/webhook`) y Next.js maneja texto/voz/OCR **in-house** sin reenviar nunca a n8n (confirmado por código + test `NO reenvía a N8N_MEDIA_WEBHOOK`). El "relay de texto" del plan era innecesario: no hay tráfico que relayar. El único riesgo vivo era el **webhook público sin auth** (`/webhook/whatsapp-tufacturaia`, `authentication:none`) fronteando los 16 toolCode con `SERVICE_ROLE_KEY` sin gating. Decisión (Manu): **escalonado desactivar + borrar nodos** (en vez de recablear un relay a la nada).
+
+**Ejecución (vía API n8n, por tramos):**
+1. `POST /workflows/pqSWkDIHqmSVHotB/deactivate` → `active:false`. Verificado: `POST /webhook/whatsapp-tufacturaia` → `404 not registered`. Superficie SERVICE_ROLE_KEY cerrada, reversible.
+2. Smoke: app viva (307), webhook Next.js vivo (GET verify → 403 token malo; POST → 200 in-house), n8n confirmado inactivo. WhatsApp in-house intacto.
+3. `PUT /workflows/pqSWkDIHqmSVHotB` con 164 nodos (borrados los 20: Agente Facturador + 16 toolCode + OpenAI GPT-4o + Memoria Postgres + Think). 0 referencias residuales. Solo se rompió la conexión muerta `Preparar Input Agente → Agente Facturador`. Workflow queda `active:false` (decomisionado).
+
+**Backups**: `n8n-backups/facturaia/facturaia-whatsapp-receptor-v2-post-g5a005-decomision-2026-07-04.json` (post) + `...pre-g5a005-2026-07-04.json` (pre).
+
+**Nota**: la skill referida en CLAUDE.md como `n8n-workflow-surgical-edit` no existe con ese nombre; la edición quirúrgica se hizo por API n8n directa (GET→editar copia local→validar→PUT). Nodos huérfanos pre-existentes NO tocados (IF Detectar Frase Cobro, Lookup Cobro Pendiente, etc. — ya desconectados antes). El workflow inactivo con 164 nodos podría borrarse entero más adelante si no se quiere conservar histórico.

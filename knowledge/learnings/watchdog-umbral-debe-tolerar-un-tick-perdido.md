@@ -15,4 +15,8 @@ Caso TuFacturaIA 2026-06-19: 3 emails ALTA "Cron en fallo" falsos (bot-error
 -backfill, ingesta/email zombie-sweep) con todos los runs `success`; el
 scheduler de Dokploy perdió el tick 02:30 UTC. Fix #393 (registry.ts).
 El `scheduler-heartbeat` ya aplicaba este principio (tolera 10× sobre 1 min).
+RECURRENCIA 2026-07-04: el fix #393 no cubrió `mcp-dcr-cleanup` (quedó a 36h,
+<2×24h) → volvió a paginar en falso. Tunear umbral por-cron es frágil; el
+patrón robusto es clasificar por criticidad → mantenimiento auto-sanable no
+paginua. Ver [[cron-mantenimiento-auto-sanable-no-debe-paginar-severidad-por-criticidad]].
 Ver [[dokploy-schedule-step-expression-no-catch-up-tras-caida]].
