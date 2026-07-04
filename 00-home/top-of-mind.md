@@ -30,6 +30,7 @@ tags: [home, prioridades]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
 - **AGH Ibérica — PR-1 del tooling de migraciones (#77) en review de Borja** — #52 (deletreo solo voz) **MERGEADO** en main; #67 cerrada (diseño promovido a **ADR-0002** dentro de #77). PR-1 = runner + drift-gate, gate verde **525/14**; fui con `tsx` (opción 1, flagueada, reversible). D1–D7 cerradas por Borja (Diseño A, firma `appendEvent`, tsx-en-deploy, forward-only). **Bloqueo:** espero que Borja mergee #77 → luego pico **PR-2 (#26** `tenant_id` en `reminder_events` + firma `appendEvent` 7 callers + `reset.ts`**)** → **PR-3 (#41** CHECK `reminders.channel`**)** desde `main` limpio (no apilo sobre base sin confirmar). Ver [[migraciones-incrementales-conviviendo-con-schema-sql-guarded]]. [[agh-iberica]]
+- **AGH Ibérica — PR #86 onboarding hardening (opción A del #76) en review de Borja** — endurecido nombre/voz/tono/M365 + `csv.ts` tras auditar con 7 personas (arnés empírico); gate local 482/74. Voz ahora por atributo (femenina/masculina), no por nombre a ciegas. Opción B (unificar en el interpreter) aparcada post-demo. Retest tras #73/#78 desplegados. Ver [[paso-eleccion-conversacional-resolver-respuesta-antes-que-pregunta]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -53,7 +54,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · tren brain + #52 en main · **PR-1 migraciones #77** en review (ADR-0002) · luego PR-2 #26 / PR-3 #41 |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · tren brain + #52 en main · **PR-1 migraciones #77** + **PR #86 onboarding hardening** en review de Borja · luego PR-2 #26 / PR-3 #41 |
 
 ## Completado reciente
 

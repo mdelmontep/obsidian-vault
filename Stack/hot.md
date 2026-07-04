@@ -11,6 +11,8 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **Paso de elección conversacional: resolver la respuesta primero, la pregunta es fallback** — guardar "cualquier texto" traga preguntas/órdenes/emoji; el STT mete "?" por entonación. Ver [[paso-eleccion-conversacional-resolver-respuesta-antes-que-pregunta]]
+- **No pidas elegir opciones que el usuario no puede probar aún** — voz por nombre (clara/diego) sin TTS viva = elección a ciegas; pregunta por atributo (femenina/masculina) o default. Ver [[no-pedir-elegir-opciones-que-el-usuario-no-puede-probar]]
 - **QA contra agente con memoria = hilo limpio o reset entre rondas** — el historial envenenado ancla al LLM y los fixes parecen no aplicar. Ver [[llm-hilo-envenenado-ancla-tools-frescos-mandan]]
 - **`void` sobre builder supabase = query NUNCA ejecutada** — thenables lazy; fire-and-forget con `.then(()=>{})`. Ver [[supabase-builders-lazy-void-nunca-ejecuta]]
 - **`new Date(y,m,d).toISOString()` = día anterior fuera de UTC** — rangos de fecha corridos un día; strings + Intl con timeZone. Ver [[new-date-toisostring-desplaza-un-dia-fuera-de-utc]]
