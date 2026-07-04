@@ -11,3 +11,5 @@ Fix: normaliza antes de testear —
 `text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")` → "sí"→"si", "ya está"→"ya esta"— y define los matchers en ASCII.
 
 Ojo aparte (colisión comando vs dato): para comandos que compiten con texto libre dictado (fin de flujo "ya está" vs un cliente "Grupo Fin"), NO uses `contains`; exige **match exacto** del mensaje normalizado contra un set de comandos.
+
+Caso real (#86, 2026-07-04): reapareció en el MISMO módulo — un matcher (`STOPWORD_FIRST`) seguía aplicándose al texto crudo, así que "sí, confirmo" escapaba el guard y rompía la siembra-por-voz. Lección: normaliza en TODOS los matchers con `\b`, no solo en algunos; es fácil arreglar uno y dejar otro.
