@@ -31,9 +31,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — PR-2 (#87/#26) y PR-3 (#88/#41) de migraciones en review de Borja** — #77 (tooling runner+drift-gate, ADR-0002) **MERGEADO** (aprobado línea a línea). #87 = `tenant_id` en `reminder_events` (migración `0001` con FK compuesta + firma `appendEvent` 7 callers + `reset.ts`); #88 = CHECK `reminders.channel` (`0002`), **stack sobre #87**. Gate local verde **569 tests + drift OK** (pg reales). Reconciler ya paginado en `909acaf` (no re-tocado). Ver [[fk-compuesta-tenant-id-defensa-multi-tenant-estructural]] · [[migraciones-incrementales-conviviendo-con-schema-sql-guarded]]. [[agh-iberica]]
-- **AGH Ibérica — PR #86 onboarding: FIX pusheado (`22aa809`), mergeable** — arregladas las 2 regresiones que cazó el re-run con pg: (1) `\b`+acento en `STOPWORD_FIRST` desviaba `"sí, confirmo"` a CSV → normalizar diacríticos; (2) `isHelp` tragaba «Ayuda en Acción» → en seeding no interceptar si casa CSV. Gate verde con pg (546 tests, `onboarding-e2e` verde), sin romper los 73 del hardening. Follow-ups de parseo permisivo (gateados por confirmación) → opción B post-demo. Ver [[regex-word-boundary-no-casa-acentos-js-normalizar-nfd]] · [[tests-pg-self-skip-levantar-pgvector-local]]. [[agh-iberica]]
-- **AGH Ibérica — planteado a Borja (proceso, pendiente respuesta)** — (1) `resetUserData(tenantId,userId)` per-user + disparador self-serve gateado, para re-onboardear sin reset tenant-wide (que borra a Dani) ni depender de él en BD; (2) cómo iterar/probar ajustes pequeños de UX en WhatsApp in situ sin esperar cada merge+deploy a `main`. [[agh-iberica]]
+- **AGH Ibérica — #104 y #105 (gaps del retest de voz) en PR de Borja** — #104 → PR #110 (dedup de turnos retell: firma del transcript + re-emitir voz sobre el response_id actual, sin silencio bajo latest-wins); #105 → PR #111 (título de tarea autocontenido con contexto del mensaje, sin inventar). Gates verdes (641/18 y 638/20), auditadas 3 agentes. Pendiente: review+merge+deploy de Borja, y validar en local con el **sandbox Meta** (en curso, otra sesión) — capturar payload real de reemit Retell cierra la asunción de #104. Ver [[voz-dedup-turno-por-firma-transcript-reemitir-sobre-response-id-actual]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -57,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · tren brain+voz(#83)+#77 migraciones en main · **PR-2 #87 / PR-3 #88** (migraciones) en review · **#86 onboarding: regresión cazada, no mergear** |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · **voz #3 CERRADA** (retest Borja OK) · tren migraciones+onboarding+reset (#87/#88/#92/#86/#100/#109) en main · **#104/#105** (gaps voz) en PR #110/#111 |
 
 ## Completado reciente
 
