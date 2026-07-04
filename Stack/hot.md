@@ -11,6 +11,7 @@ transversales recurrentes (git/worktrees · método prod · frontend glass · de
 movieron a [[index]] §Transversales. Lo demás vive en `knowledge/learnings/` (recall por
 relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 (49→6).
 
+- **Columna nueva sin desplegar rompe el typecheck del `.select()` supabase** — la migración no está en prod → `gen:types` no la trae → el cliente tipado marca error-branded toda la query. Cast local del builder, retirar tras gen:types. Ver [[supabase-select-columna-nueva-no-en-gen-types-falla-typecheck]]
 - **Paso de elección conversacional: resolver la respuesta primero, la pregunta es fallback** — guardar "cualquier texto" traga preguntas/órdenes/emoji; el STT mete "?" por entonación. Ver [[paso-eleccion-conversacional-resolver-respuesta-antes-que-pregunta]]
 - **No pidas elegir opciones que el usuario no puede probar aún** — voz por nombre (clara/diego) sin TTS viva = elección a ciegas; pregunta por atributo (femenina/masculina) o default. Ver [[no-pedir-elegir-opciones-que-el-usuario-no-puede-probar]]
 - **QA contra agente con memoria = hilo limpio o reset entre rondas** — el historial envenenado ancla al LLM y los fixes parecen no aplicar. Ver [[llm-hilo-envenenado-ancla-tools-frescos-mandan]]

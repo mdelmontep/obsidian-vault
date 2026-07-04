@@ -16,6 +16,7 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
 - **TuFacturaIA — QA export/bot: mergear #681 + 4 smokes prod** (bot dual WhatsApp · ojo facturas · menús canónicos · Pre303 HITL) — detalle en hub `Smoke tests pendientes`. 7 PRs de la tarde ya en prod. [[facturaia]]
+- **TuFacturaIA — datos-backups fases 3-4: smoke prod tras deploy** (a3 SUENLACE+SII · cierre de cuenta=bloqueo · cron `account-closure-apply` verde · limpieza caducados). 4 PRs #692/#695/#697/#699 en main; mig 429 ya en prod. Detalle en hub `Smoke tests pendientes`. [[facturaia]]
 - **TuFacturaIA — smoke WhatsApp G5 canary** — imagen + PDF desde 617314938 → confirmar OCR completa en bandeja (estado=listo). Bypass Traefik (`ce76acfd`) ya en main → smoke tras próximo deploy. [[facturaia]]
 - **TuFacturaIA — /soporte: verificar #NNN + badge en admin (Manu)** — `/soporte` carga OK verificado en sandbox 2026-07-02 (bug del Dashboard arreglado); falta que Manu (superadmin) confirme `#NNN` + badge "IA revisando…" en `/admin/feedback` con un ticket de job activo (e2e+smoke no puede sin enviar feedback a soporte real). [[facturaia]]
 - **TuFacturaIA — Slack completo (#002-#007c)** — todo en prod: OAuth, notifs, OCR, slash commands, bienvenida+modal OAuth, panel tip, created_via fix (#571). Pendiente: smoke escritura (vincular→`/factura cobrada`) + Manage Distribution (decisión negocio). [[facturaia]]
@@ -29,8 +30,8 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — PR-1 del tooling de migraciones (#77) en review de Borja** — #52 (deletreo solo voz) **MERGEADO** en main; #67 cerrada (diseño promovido a **ADR-0002** dentro de #77). PR-1 = runner + drift-gate, gate verde **525/14**; fui con `tsx` (opción 1, flagueada, reversible). D1–D7 cerradas por Borja (Diseño A, firma `appendEvent`, tsx-en-deploy, forward-only). **Bloqueo:** espero que Borja mergee #77 → luego pico **PR-2 (#26** `tenant_id` en `reminder_events` + firma `appendEvent` 7 callers + `reset.ts`**)** → **PR-3 (#41** CHECK `reminders.channel`**)** desde `main` limpio (no apilo sobre base sin confirmar). Ver [[migraciones-incrementales-conviviendo-con-schema-sql-guarded]]. [[agh-iberica]]
-- **AGH Ibérica — PR #86 onboarding hardening (opción A del #76) en review de Borja** — endurecido nombre/voz/tono/M365 + `csv.ts` tras auditar con 7 personas (arnés empírico); gate local 482/74. Voz ahora por atributo (femenina/masculina), no por nombre a ciegas. Opción B (unificar en el interpreter) aparcada post-demo. Retest tras #73/#78 desplegados. Ver [[paso-eleccion-conversacional-resolver-respuesta-antes-que-pregunta]]. [[agh-iberica]]
+- **AGH Ibérica — PR-2 (#87/#26) y PR-3 (#88/#41) de migraciones en review de Borja** — #77 (tooling runner+drift-gate, ADR-0002) **MERGEADO** (aprobado línea a línea). #87 = `tenant_id` en `reminder_events` (migración `0001` con FK compuesta + firma `appendEvent` 7 callers + `reset.ts`); #88 = CHECK `reminders.channel` (`0002`), **stack sobre #87**. Gate local verde **569 tests + drift OK** (pg reales). Reconciler ya paginado en `909acaf` (no re-tocado). Ver [[fk-compuesta-tenant-id-defensa-multi-tenant-estructural]] · [[migraciones-incrementales-conviviendo-con-schema-sql-guarded]]. [[agh-iberica]]
+- **AGH Ibérica — PR #86 onboarding hardening: REGRESIÓN cazada, NO mergear** — el re-run del gate con pg real (los `.pg` se autosaltaron en la sesión previa → falso verde) dejó rojo `onboarding-e2e`: `looksLikeCsv("sí, confirmo")`=true desvía el turno de confirmación de la siembra-por-voz a import-CSV → el write nunca se ejecuta. + `isHelp` traga nombres de cliente con «ayuda» (p.ej. «Ayuda en Acción»). Verificado regresión de la rama (pasa en main). Reportado a Borja; pendiente decidir fix. Ver [[tests-pg-self-skip-levantar-pgvector-local]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -54,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · tren brain + #52 en main · **PR-1 migraciones #77** + **PR #86 onboarding hardening** en review de Borja · luego PR-2 #26 / PR-3 #41 |
+| AGH Ibérica | [[agh-iberica]] | Agente comercial "Carlos" · **PROD VIVO** (Dokploy) · tren brain+voz(#83)+#77 migraciones en main · **PR-2 #87 / PR-3 #88** (migraciones) en review · **#86 onboarding: regresión cazada, no mergear** |
 
 ## Completado reciente
 

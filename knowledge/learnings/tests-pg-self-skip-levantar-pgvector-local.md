@@ -16,5 +16,11 @@ disponible"). Usar la imagen `pgvector/pgvector:pg16`:
 
 `docker run -d --name test-pg -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=<db> -p 5433:5432 pgvector/pgvector:pg16`
 
-Luego `DATABASE_URL=postgres://user:pass@localhost:5433/<db> npm test`. Relacionado:
-[[vitest-fileparallelism-false-tests-integracion-bd-compartida]].
+Luego `DATABASE_URL=postgres://user:pass@localhost:5433/<db> npm test`.
+
+Caso real (2026-07-04, AGH #86): una PR se reportó con "gate verde" pero los `.pg` se
+autosaltaron (sin Docker en esa sesión) → coló una regresión real (el flujo de siembra por
+voz del onboarding roto). El re-run con pg la cazó. Disciplina: tras `npm test`, confirmar
+**0 skips** de los `.pg`/`.redis`; y para dirimir "¿lo rompí yo?" correr el test contra
+`origin/main` (pasa en main + falla en la rama ⇒ regresión de la rama, no pre-existente).
+Relacionado: [[vitest-fileparallelism-false-tests-integracion-bd-compartida]].
