@@ -31,7 +31,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — hoy MERGEADO+prod:** mis PRs #87/#88/#92/#100/#107/#109/#96 (migraciones+reset+guard integración+Langfuse) · **sandbox Meta dev montado** (test number aislado, bucle `tsx watch`+cloudflared; gotcha puerto 7844→hotspot). **Pendiente:** (1) **camino A calidad conversacional (#112)** = triage con #118 de Borja como UN paquete (luz verde suya, toca `tone.ts`); (2) **smokes en casa** (#5 voz, #92 reset, bucle dev — el túnel necesita red que permita 7844); (3) **#104/#105** en review de Borja (#110/#111). Ver [[meta-whatsapp-dev-sandbox-usar-test-number-no-business-de-prod]] · [[voz-dedup-turno-por-firma-transcript-reemitir-sobre-response-id-actual]]. [[agh-iberica]]
+- **AGH Ibérica — #112 (calidad conversacional camino A) IMPLEMENTADO → PR #136** (capabilities + agrupado `summarize` + reglas de prompt; 690 tests, luz verde de Borja); espera **rebase tras el tren de Borja** (#128–#132+#134, él los mergea). En prod: #110/#111 (#104/#105), #113/#124/#122. **#114 lo hice yo** (cerré la PR por un cruce de mensajes de coordinación; Borja la recuperó como **#134**, crédito íntegro mío — ya es suya). **Pendiente mío:** (1) rebasar #112 a main cuando Borja pingue (conflicto append-append trivial ya pre-resuelto); (2) **smokes en casa** (bucle dev/prod #5/#92 — WiFi oficina bloquea 7844→hotspot 4G). Ver [[agente-accion-disclosure-capacidades-y-asumir-vs-confirmar]] · [[cloudflared-tunnel-bloqueado-puerto-7844-usar-hotspot]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · voz #3 + M365 #2 CERRADOS · mi tren (#87/#88/#92/#100/#107/#109/#96) en prod · **sandbox Meta dev** montado · **camino A conversacional (#112)** pendiente triage · #104/#105 en review |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · **#112 camino A → PR #136** (espera rebase tras tren Borja) · #110/#111/#113/#124 en prod · #114→#134 (Borja) · smokes en casa pendientes |
 
 ## Completado reciente
 
