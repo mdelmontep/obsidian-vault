@@ -32,7 +32,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — #136 (#112 calidad conversacional): rebase HECHO+verde, BLOQUEADO por PR cerrada** — rebasado sobre `main` (`abfc8b4`) combinando los 3 lados de `hitl-brain.ts` (#142 mergeCorrectedFields + #144 lastClient + #112 summaryLines), gate BD-fresca 717/0-fail + EVALS 29/29 ×2, pusheado `0b7184b`. **PERO PR #136 la cerró notcapi por accidente** (43s antes del msg de Borja que la daba por abierta) y el force-push post-cierre **bloquea el reopen por API** → esperando a Borja: reabre él o me da OK para PR nueva. Merge lo autoriza Borja. Research de #118 **volcada como comentario** (autorizado). En prod ya: #142/#144/#114(#134)/#113/#124/#122. Issues del testeo WA: #155 (duplicados+bucle resolver), #156/#145 (teléfono+contactos), #157 (ficha cliente) → raíz = arquitectura clasificador-1-turno → **épica #118**. **Pendiente mío:** desbloquear PR #136 (respuesta Borja) · **deploy Langfuse #82 en casa** (checklist en PR #147). Ver [[gh-reopen-pr-cerrada-falla-tras-force-push]] · [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]]. [[agh-iberica]]
+- **AGH Ibérica — pre-demo: paquete contactos + ficha cliente** — pendiente mío: **#156+#161+#145** (modelo de contactos, UNA migración 0004) + **#157** (ficha de cliente). Cerrado esta sesión: **#112/#136 mergeadas (PR #164, crédito íntegro) + cola pre-demo (6 issues: #137/#162/#160/#155/#138) en prod**, main `f3bd587`. **Langfuse #82 DESPLEGADO** (panel Dokploy, verificado, aislado del agente); único gap para trazas de turnos = **#148** (payload `trace-create`+`traceId`, diseño de Borja — evidencia comentada). Pendiente menor: volcar secretos Langfuse a 1Password (GUI). Ver [[next-js-standalone-hostname-bind]] · [[langfuse-v3-selfhost-deploy-gotchas]]. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · **#112 → PR #136 rebasada+verde `0b7184b`, bloqueada (cierre accidental notcapi, reopen pendiente Borja)** · main `abfc8b4` · research #118 volcada · #82 Langfuse + smokes en casa pendientes |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · #112/#136 + cola pre-demo MERGEADAS (PR #164) · main `f3bd587` · **Langfuse #82 desplegado** (gap #148) · pendiente mío: contactos #156+#161+#145 + #157 |
 
 ## Completado reciente
 

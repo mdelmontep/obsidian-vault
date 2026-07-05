@@ -205,3 +205,11 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 | Simarro | `n8nsimarro.agentesia.madrid` | — | `185.47.13.168` |
 | TuFacturaIA (actual) | `n8n.agentesia.world` (compartido) | — | `185.99.186.76` |
 | TuFacturaIA-prod nuevo | (n8n se queda en `agentesia.world`) | — | `185.47.13.170` (VPS dedicado, Dokploy nuevo creado 2026-05-12, vacío al inicio) |
+| AGH Ibérica (agente "Carlos") | — | — | `185.99.186.138` (Dokploy dedicado; panel `agh.agentesialabs.com`, SSH `-p 5251`) |
+
+## Dokploy: desplegar un stack Compose por API + exponerlo por Traefik
+
+- **Deploy por API** (`DOKPLOY_API_KEY`, header `x-api-key`, base `https://<panel>/api`, estilo tRPC `/api/<procedure>`): `compose.create` (**`composeType: docker-compose`**, NO `stack`/swarm — con swarm se ignoran `mem_limit`, `depends_on: condition:service_healthy` y `configs`) → `compose.update` (`sourceType: raw`, `composeFile`, `env`) → `domain.create` (`domainType: compose`, `serviceName`, `port`, `https`, `certificateType: letsencrypt`) → `compose.deploy`. `application.saveEnvironment` exige además `buildArgs`.
+- **Enrutado**: el docker-provider de Traefik vigila `dokploy-network` (`exposedByDefault:false`). Dokploy inyecta los labels al añadir el Domain → el servicio debe estar EN `dokploy-network` y **escuchar en 0.0.0.0** (ver [[next-js-standalone-hostname-bind]]). NO publicar `ports:` al host (choca con puertos en uso / expone servicios internos).
+- **Editar por SSH = efímero**: Dokploy regenera el compose/env desde su BD (SQLite) al pulsar Deploy → editar SIEMPRE en el panel/API. Un `docker compose up` a mano en `/opt/...` funciona pero queda FUERA del panel (invisible para el equipo) — solo emergencia.
+- Aislar un stack pesado (Langfuse/ClickHouse) del resto: `mem_limit` por servicio + rotación de logs (`logging: max-size/max-file`) — protege a los demás containers del box. Ver [[langfuse-v3-selfhost-deploy-gotchas]].
