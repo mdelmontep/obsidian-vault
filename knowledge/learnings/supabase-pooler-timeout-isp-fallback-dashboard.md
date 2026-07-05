@@ -22,4 +22,6 @@ NUNCA editar `schema_migrations` sin `on conflict do nothing` — un INSERT crud
 
 **Alternativa**: tetherear móvil (datos no bloquean 5432) y reintentar `supabase db push --linked` normal.
 
+**Mismo bloqueo también rompe `gen:types --linked`** (cuelga en "Initialising login role..." sin error, sin socket abierto — verificar con `lsof -p <pid>`). Fix: `supabase gen types typescript --project-id <ref> --schema public,graphql_public` (Management API, HTTPS, no pasa por 5432/6543). Ojo: puede servir un schema con caché de minutos — antes de commitear el diff, verificar con `execute_sql` contra `information_schema.tables` que las tablas que el diff ELIMINA de verdad no existen en prod.
+
 Ver [[campo-huerfano-shape-sin-migracion-paralela]] (caso típico que pide push urgente).

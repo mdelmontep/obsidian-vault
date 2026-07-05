@@ -22,4 +22,6 @@ const org = allOrgs.find(o => {
 
 Si no encuentra org, devuelve `[]` y el flujo se corta silenciosamente (no hay error visible en n8n, status "success").
 
+**RECURRENCIA 2026-07-05** (webhook Next.js, no n8n): `processMedia` resolvía por `phone_number_id` para imagen/PDF mientras el texto ya resolvía por `from_phone`+sticky (multi-org). Con 2 orgs compartiendo el mismo número personal, todo documento acababa en la única org con `phone_number_id` realmente wireado en Meta, ignorando la org elegida por texto. Matiz importante: NO sustituir sin más — `phone_number_id` sigue siendo necesario como fallback para el remitente NO registrado (proveedor externo que envía factura sin cuenta, wa-fase2-001). Orden correcto: `from_phone` primero, `phone_number_id` SOLO si `telefono_no_registrado`. Fix PR #764.
+
 Ver también: [[campo sincronizado entre tablas debe poblarse en todos los puntos de escritura]]
