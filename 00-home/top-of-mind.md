@@ -33,7 +33,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — pre-demo: paquete contactos + ficha cliente** — pendiente mío: **#156+#161+#145** (modelo de contactos, UNA migración 0004) + **#157** (ficha de cliente). Cerrado esta sesión: **#112/#136 mergeadas (PR #164, crédito íntegro) + cola pre-demo (6 issues: #137/#162/#160/#155/#138) en prod**, main `f3bd587`. **Langfuse #82 DESPLEGADO** (panel Dokploy, verificado, aislado del agente); único gap para trazas de turnos = **#148** (payload `trace-create`+`traceId`, diseño de Borja — evidencia comentada). Pendiente menor: volcar secretos Langfuse a 1Password (GUI). Ver [[next-js-standalone-hostname-bind]] · [[langfuse-v3-selfhost-deploy-gotchas]]. [[agh-iberica]]
+- **AGH Ibérica — pre-demo: PR #177 (paquete contactos) EN REVIEW de Borja** — #156/#145/#161/#157 en UNA migración 0004: entidad Contact compartida (cliente o libreta interna `client_id NULL`) + phone/address en cliente + ficha `client.detail` + libreta `contacts.internal`, detrás de las interfaces CRM (sin tocar brain ni prompt). Gate verde (789/0-fail + drift + e2e por el brain), auditada 2 revisores, rebasada sobre `2afff8e`. **Pendiente mío: cablear routing prompt/interpreter CON Borja (su zona) + smoke tras merge (checklist ya en la PR).** main `2afff8e` — Borja metió Langfuse **#148/#173 en prod** (trazas de turnos con input/output ya funcionan; #82 efectivamente cerrado por mi parte). Ojo: **#175** bug de Borja (clarify atascado secuestra saludos en prod). Pendiente menor: secretos Langfuse a 1Password (GUI). [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -57,7 +57,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · #112/#136 + cola pre-demo MERGEADAS (PR #164) · main `f3bd587` · **Langfuse #82 desplegado** (gap #148) · pendiente mío: contactos #156+#161+#145 + #157 |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · PR #177 contactos EN REVIEW · main `2afff8e` · Langfuse trazas E2E ✅ (#148/#173) · pendiente: routing prompt + smoke |
 
 ## Completado reciente
 
