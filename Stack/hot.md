@@ -32,6 +32,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-06-26 
 - **Antes de migrar cualquier cron FacturaIA a `sign-call.sh` (HMAC v2): grep el 2º arg de `withCronTracking` por `auth:` custom** — se repitió el mismo error (`verifactu-process`) 2 meses después de documentarlo. Ver [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]] ADENDA 3
 - **Cron sin NINGÚN run histórico → salud `'desconocido'`, nunca `'rojo'` → nunca alerta** — auditar `CRON_REGISTRY` vs `schedule.list` real de Dokploy, no fiarse del panel. Ver [[cron-health-desconocido-para-cron-sin-ningun-run]]
 - **Filtro adjuntos email por `Content-Disposition:inline` no basta** — ESPs sin esa cabecera cuelan logos vía `cid:`; cruzar Content-ID vs HTML + tamaño mínimo. Ver [[ingesta-email-imagenes-inline-firma-tratadas-como-adjuntos-facturables]]
+- **Callback PSD2 sin OAuth (Salt Edge): validar dueño del `connection_id` antes de persistir** — sin token scoped, el id de recurso solo, cruza tenants. Ver [[psd2-callback-connection-id-sin-oauth-debe-validar-dueno]]
+- **Payment link con importe congelado: revalidar el pendiente al conciliar, no confiar en el importe fijado al crearlo** — cobro parcial concurrente por otra vía lo deja obsoleto. Ver [[payment-link-importe-congelado-revalidar-pendiente-al-conciliar]]
 
 ## de la semana
 
