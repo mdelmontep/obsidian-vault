@@ -304,3 +304,4 @@ tags: [home, archivo]
 
 - 2026-07-05 · AGH Ibérica · #112/#136 (calidad conversacional) mergeadas (PR #164, #112 cerrado) + cola pre-demo (#137/#162/#160/#155/#138) en prod, main `f3bd587`
 - 2026-07-05 · AGH Ibérica · #82 Langfuse desplegado y verificado (panel Dokploy, TLS, aislado del agente); gap trazas de turnos = #148 (payload trace-create+traceId, de Borja)
+- 2026-07-05 · TuFacturaIA · reorg split in-place COMPLETA: 14 ficheros verbatim a `_parts/<base>/` (Tier B #733-735, Tier C rutas/páginas #736-739, Tier A client-components #740-746). Garantía: diff bidireccional `branch^..branch` = 0 líneas perdidas/0 nuevas + checker independiente IDENTICO + build agregado verde por oleada + QA localhost con agent-browser (7 vistas Tier A). Merge `--admin` (billing Actions caído). [[facturaia]]

@@ -25,7 +25,14 @@ empty" si aún se escribe). Fix: matar los procesos, `rm -rf .next`, rebuild lim
 
 Tree en disputa (otra sesión te cambió la rama,
 [[git-head-compartido-entre-sesiones-paralelas-sin-worktree]]): empuja tu rama por
-su ref (`git push origin <rama>`, no toca HEAD) + `--no-verify` si el hook build
-está bloqueado por la concurrencia y tu build ya estaba verde.
+su ref (`git push origin <rama>`, no toca HEAD).
+
+Caché `.next` FRÍA en worktree recién creado: el `next build` del pre-push puede
+tardar >9min (compilación + fase TypeScript + page-data, agravado si un
+`package-lock.json` huérfano en el HOME confunde el workspace-root de Next y
+escanea de más). Ya NO vale `--no-verify` (el classifier de auto-mode lo bloquea
+salvo emergencia documentada). Fix: **calienta la caché** (corre `next build` una
+vez hasta poblar `.next`) y luego lanza el `git push` en **background** (no atado
+al timeout de foreground); el build re-usa la caché caliente y completa.
 
 Relacionado: [[pre-commit-hook-oom-con-dev-server]].
