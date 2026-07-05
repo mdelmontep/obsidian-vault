@@ -84,6 +84,7 @@ tags: [frontend, css, mobile, overflow]
 - **`env(safe-area-inset-*)` en pantallas auth mobile** — `padding-bottom: env(safe-area-inset-bottom, 16px)` en el scroll container. Sin esto el contenido queda cortado bajo el home bar de iOS.
 - **`inputMode="tel"` en campos de teléfono** — abre teclado numérico en iOS/Android directamente, sin depender del `type="tel"`.
 - **`max-width:Npx` y `min-width:Npx` con el MISMO N se solapan exactamente en N** — a 768px ambas queries aplican; si una oculta un panel (`display:none`) y la otra ya cambió la rejilla a 2 columnas, la mitad queda en blanco. Usar límites asimétricos: mobile `max-width:767px`, tablet `min-width:768px`. Caso TuFacturaIA login (PR #704).
+- **Dos breakpoints DISTINTOS para una misma transición (ej. 767px móvil-compacto vs 1100px sidebar-fijo) dejan una franja tablet sin tratar** — si el layout completo (columna fija) solo cae a 1 columna en 1100px pero el modo compacto (barra de chips) solo activa en 767px, todo lo que hay entre 767-1100px (iPad portrait típico) pierde la columna fija SIN ganar el modo compacto: queda la lista completa desplegada tapando el contenido. Al auditar un sidebar/nav con 2+ media queries, comprobar el rango ENTRE ellas, no solo cada breakpoint aislado. Fix: unificar ambos al mismo número. Caso TuFacturaIA `/settings` (PR #754, ticket iPad).
 
 ## CSS Grid · trampas de layout en cards móvil
 
