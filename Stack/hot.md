@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-07-05 
 recorte agresivo — el contenido retirado sigue íntegro en sus learnings, solo desaparece
 del índice rápido).
 
+- **Stripe: el CLI puede ir a OTRA cuenta que la sk_live de la app** — IDs con sufijo de cuenta (`…GgQMT2aOqB` vs `…QY4tV8FMxQ`); `retrieve --live` da "No such price" falso si es la del CLI. Verifica con `curl -u $SK` de la app. Ver [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]]
+- **Stripe: resolver item de sub por price, no `items.data[0]`** — Stripe no garantiza el orden; `[0]` puede pillar el add-on y pisar su price al cambiar plan. Ver [[stripe-subscription-item-resolver-por-price-no-por-indice]]
 - **Stripe Connect "sign up for Connect" al crear cuenta conectada** — no es código; la plataforma tiene el perfil de Connect incompleto (restricted / past_due). Testing local: `stripe listen --forward-connect-to`, `return_url` https. Ver [[stripe-connect-signup-gotcha-crear-cuenta-conectada]]
 - **`gh pr merge` miente en el stdout** — verifica `gh pr view <n> --json state` == MERGED, no el texto ("will be automatically merged" contiene "merged"). Ver [[gh-pr-merge-no-confirma-verificar-state-merged]]
 - **Split de fichero sin cambiar comportamiento** — extracción verbatim + checker independiente + `_parts/<basename>/` (no `_parts/` plano). Ver [[split-verbatim-checker-parts-por-basename]]
