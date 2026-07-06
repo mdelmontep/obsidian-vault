@@ -36,3 +36,5 @@ const data = await res.json()
 Sin la segunda, un 402/429/500 pasa como `{data}` válido. Aplica a llamadas internas (`/api/internal/*`), copiloto, voz, webhooks propios.
 
 Ver también [[whatsapp-internal-http-discriminador-shape]]
+
+**RECURRENCIA 2026-07-05** (`webhook/route.ts`, FacturaIA): el fetch del webhook WhatsApp a `/api/internal/whatsapp/copiloto` no comprobaba `res.status`. Bajo el rate-limit interno (429, defensa anti-bucle ~60-120 req/min), el body de error caía en la rama genérica `copiloData.error` → solo log, sin respuesta al usuario. Bot mudo bajo spam real sin explicación. Fix: capturar `res.status`, `sendText` de cortesía si es 429.
