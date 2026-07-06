@@ -17,4 +17,12 @@ solo el build/dev lo destapa.
 OK). El symlink solo revienta si cruza filesystem root (`/private/tmp` ↔ `/Users`).
 `npm install` real (~1-2 min + disco) solo si no puedes co-ubicar el worktree.
 
+**Gotcha del propio fix** (2026-07-06): si el comando `cp -al` se corta a mitad
+(timeout del shell, Ctrl-C) deja una copia PARCIAL sin error visible — el conteo
+de entries en la raíz de `node_modules` puede coincidir a simple vista pero
+falta algún paquete anidado (p. ej. `debug` dentro de `ioredis`), y el síntoma
+solo aparece más tarde como `Module not found` al arrancar `next dev`. Verificar
+con `ls node_modules | wc -l` origen vs copia antes de dar la copia por buena;
+si no cuadra, `rm -rf` y repetir `cp -al` completo sin interrupciones.
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]].
