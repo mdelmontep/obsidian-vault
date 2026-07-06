@@ -25,8 +25,11 @@ del índice rápido).
 - **Payment link con importe congelado: revalidar el pendiente al conciliar, no confiar en el importe fijado al crearlo** — cobro parcial concurrente por otra vía lo deja obsoleto. Ver [[payment-link-importe-congelado-revalidar-pendiente-al-conciliar]]
 - **Import CSV de precios: desambiguar ES/US por presencia de coma, nunca `replace(/\./g,'')` incondicional** — "9.99" formato US se lee como 999 sin error. Ver [[csv-import-precio-decimal-es-us-desambiguar-no-asumir]]
 - **Dato dictado por voz (ASR): normalízalo en la frontera del write, no en el canal** — un chokepoint antes de proponer/persistir, idempotente, solo sobre el campo semántico. Ver [[normalizar-dato-dictado-en-la-frontera-del-write-no-en-el-canal]]
+- **WhatsApp Cloud API fuera de la ventana 24h → plantilla; el botón-URL solo admite sufijo dinámico → acortador propio** — freeform solo dentro de 24h (fuera: error `131047`); variable no abre/cierra cuerpo (`2388299`). Ver [[whatsapp-cloud-api-fuera-de-ventana-24h-plantilla-y-acortador]]
+- **LLM resolviendo «mañana/el martes»: pásale el now en TZ local con día de semana, no ISO UTC** — cerca de medianoche el día UTC ≠ día local → elige mal; test del borde de medianoche. Ver [[llm-fechas-relativas-pasar-now-en-tz-local-con-dia-de-semana]]
 - **Full-bleed de un flex-item = `margin` negativo (stretch lo agranda)** — `-Npx` estira al borde sin sacarlo del flujo; compensa `padding` para no mover contenido; ancho en var; z-index del panel > item para pasar "por detrás". Ver [[full-bleed-flex-item-margin-negativo-stretch]]
 - **Panel glass flotante necesita fondo detrás para no verse plano** — extender el mesh por detrás + z-index del panel sobre el fondo. Liquid Glass SVG = solo Chrome; usa subset: blur + specular layer + rim + sombra en capas. Ver [[glass-flotante-necesita-fondo-detras-liquid-glass-portable]]
+- **Contador de tab/Segmented calculado sobre `data` ya paginado colapsa a 0 al filtrar** — separar conteo (query independiente por categoría) de datos de página. Ver [[contador-por-tab-derivado-de-datos-paginados-colapsa-a-0]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia), no se ha borrado ningún learning.

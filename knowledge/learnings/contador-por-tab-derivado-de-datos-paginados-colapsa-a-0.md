@@ -1,0 +1,16 @@
+---
+title: contador por tab/segmented derivado de datos ya paginados colapsa a 0 al filtrar
+date: 2026-07-06
+source: claude-code-session
+tags: [react, paginacion, ui, supabase]
+---
+
+Patrón de bug recurrente: badges de un Segmented/tabs (ej. "WhatsApp 9", "Vencida 12") calculados con `.filter()`/`.reduce()` sobre el array `data` que YA devuelve el hook paginado — y ese `data` ya viene acotado server-side por el filtro activo (`.eq('estado', filtroActivo)`) y por `.range()`.
+
+**Síntoma**: al activar un tab concreto, el resto de badges colapsan a 0 (solo hay filas del tab activo en el array). El propio "Todas" puede estar mal: si usa `totalCount` de esa misma query filtrada, no es el total real; si usa `data.length`, es solo el tamaño de página.
+
+**Fix**: separar "conteo por categoría" (debe ser independiente del filtro activo, global u respetando SOLO los demás filtros) de "datos de la página actual" (sí filtrados/paginados). Implementación: N queries `.select('id', {count:'exact', head:true})` en paralelo, una por categoría, sin `.eq()` sobre el campo que define el tab. Exponerlas como campo aparte del hook (`channelCounts`/`estadoCounts`), nunca derivarlas de `data` en el componente.
+
+**Gotcha en tests**: si el mock de Supabase comparte un único objeto `chain.eq` entre la query paginada y las nuevas queries de conteo, los tests que assertan "NO se llamó a `.eq('x', y)`" se rompen por falsos positivos — las queries de conteo llaman `.eq()` con valores que la query principal no usaba. Aislar con un sub-chain propio para el conteo (ej. rutear por `select(cols, {head:true})` a un chain distinto).
+
+No es específico de un proyecto: aplica a cualquier vista con Segmented/tabs + paginación server-side + Supabase/Postgres. Caso real: 4 vistas de TuFacturaIA con el mismo bug (`/ingesta`, `/emitidas`, `/recibidas`, `/presupuestos`, PRs #771/#772).

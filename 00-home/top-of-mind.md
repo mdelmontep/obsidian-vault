@@ -28,10 +28,11 @@ tags: [home, prioridades]
 - **TuFacturaIA — responder tickets** — Abba BORME (re-escanear 2 docs → gonzalo.riera) + bgchivite `1762f07e` (deploy #209 en prod). [[facturaia]]
 - **TuFacturaIA — UX feedback pendiente** — smoke prod #528 (toast guardar empresa/plantillas) + #529 (modal glass confirmación cambio precio en `/admin/plans`). [[facturaia]]
 - **TuFacturaIA — emails unificados (#527 en prod)** — deploy Dokploy ✓ (confirmado: el 500 email-copy lo probó), schema-cache transitorio resuelto. Falta: **logo real** + smoke prod del resto de emails + verificar texto humanizado de alertas en panel/email (`e1f4fd66`, sin QA visual). [[facturaia]]
+- **TuFacturaIA — selección múltiple Bandeja IA + fix contadores de tab (PR #770 mergeado, #771/#772 abiertos)** — falta review/merge #771-#772 y decidir si arreglar conciliación (mismo bug, requiere RPC dedicado, más riesgo). [[facturaia]]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — DEMO MAÑANA 7-jul en oficinas AGH + sprint de voz en curso** — 06-jul: drill de voz de Borja (4 llamadas) cazó 8 issues. Sprint pre-demo: Borja en copys/config voz (#200/#195/#196/#201); yo cerré **#199** (teléfono dictado→dígitos, normalización en la frontera del write, ver [[normalizar-dato-dictado-en-la-frontera-del-write-no-en-el-canal]]) → **PR #210 esperando merge de Borja**. Carlos ya probando el de WhatsApp. Mío esta semana (sin prisa): **#197** tareas→calendario M365 (toca scope Entra `Calendars.ReadWrite`, gotchas #143). Pendiente lunes: secrets prod→1Password (bloqueado: red no alcanza box `:5251`) + recordatorios prod + buzón incidencias@tecnocloud.es + re-triage #85. PROD VIVO, main AGH `345b723`. [[agh-iberica]]
+- **AGH Ibérica — DEMO 7-jul en oficinas AGH** — sprint voz: **#199** (teléfono dictado→dígitos, [[normalizar-dato-dictado-en-la-frontera-del-write-no-en-el-canal]]) + **#206** (onboarding-voz honesto sobre el enlace M365) YA EN PROD. Míos en PR esperando merge de Borja: **#216** (fechas relativas, [[llm-fechas-relativas-pasar-now-en-tz-local-con-dia-de-semana]]) + **#221** (enlace M365 corto `/c/{token}`, [[whatsapp-cloud-api-fuera-de-ventana-24h-plantilla-y-acortador]]). Próxima sesión: implementar **#227** (dedup de clientes duplicados por variación de ASR — prompt de arranque ya redactado). Bloqueado: **#197/#228** (agenda/tareas→calendario, necesita scope Entra `Calendars.ReadWrite` + admin consent = Borja) · secrets prod→1Password (lunes, red no alcanza box `:5251`) · recordatorios prod + buzón incidencias@tecnocloud.es + re-triage #85. #217/#218 los cogió Dani (PR #226). PROD VIVO, main AGH `452b6f9`. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · main `345b723` · **DEMO 7-jul** + sprint voz (Retell) en curso · #199 en PR #210; pendiente: #197 + secrets→1Password (lunes) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · main `452b6f9` · **DEMO 7-jul** · #199/#206 en prod; #216/#221 en PR (merge Borja); #227 next; #197/#228 bloqueados (scope Entra) |
 
 ## Completado reciente
 
