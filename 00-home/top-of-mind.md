@@ -31,7 +31,7 @@ tags: [home, prioridades]
 - **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
-- **AGH Ibérica — próxima fase: testear a fondo y mejorar el agente de VOZ (Retell)** — dirección de Borja al cierre (2026-07-05): no quedan issues grandes; casi todo el hardening ha sido WhatsApp → los flujos nuevos de contactos/ficha/correo están sin ejercitar por voz. Cada fallo = issue con transcript + `needs-triage`. Pendiente aparte (lunes): secrets prod → 1Password (bloqueado: mi red no alcanza el box `:5251` + Borja quiere matizar el plan). TODO lo demás EN PROD (main `74fa289`): #185/#182 libreta interna email.send (`115aa47`) · contactos #177 (mig 0004) · #82 writes en trazas (#179) · #175 clarify TTL (#178) · fase 2 routing 5 intenciones (#183) · fixes smoke correo (#186). Lunes ≥11:00: recordatorios en prod + buzón incidencias@tecnocloud.es + re-triage #85. [[agh-iberica]]
+- **AGH Ibérica — DEMO MAÑANA 7-jul en oficinas AGH + sprint de voz en curso** — 06-jul: drill de voz de Borja (4 llamadas) cazó 8 issues. Sprint pre-demo: Borja en copys/config voz (#200/#195/#196/#201); yo cerré **#199** (teléfono dictado→dígitos, normalización en la frontera del write, ver [[normalizar-dato-dictado-en-la-frontera-del-write-no-en-el-canal]]) → **PR #210 esperando merge de Borja**. Carlos ya probando el de WhatsApp. Mío esta semana (sin prisa): **#197** tareas→calendario M365 (toca scope Entra `Calendars.ReadWrite`, gotchas #143). Pendiente lunes: secrets prod→1Password (bloqueado: red no alcanza box `:5251`) + recordatorios prod + buzón incidencias@tecnocloud.es + re-triage #85. PROD VIVO, main AGH `345b723`. [[agh-iberica]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - **cryptobruj-bot — EN REAL, monitorizar** — scalp-5m/BTC BingX, tope $10, ~88 USDT; vigilar drawdown/ntfy. Revertir: `EXCHANGE_TESTNET=true`.
 
@@ -55,7 +55,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · contactos+#82+#175+fase2+#185 libreta interna EN PROD · main `74fa289` · próxima fase: testear/mejorar agente VOZ (Retell); pendiente: secrets→1Password (lunes) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · main `345b723` · **DEMO 7-jul** + sprint voz (Retell) en curso · #199 en PR #210; pendiente: #197 + secrets→1Password (lunes) |
 
 ## Completado reciente
 

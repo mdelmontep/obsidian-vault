@@ -24,6 +24,7 @@ del índice rápido).
 - **Cron de mantenimiento auto-sanable no debe paginar (email), solo panel** — tunear umbral por-cron es frágil (recurrió); clasifícalo por criticidad → 'housekeeping' emite severidad 'media' sin email. Ver [[cron-mantenimiento-auto-sanable-no-debe-paginar-severidad-por-criticidad]]
 - **Payment link con importe congelado: revalidar el pendiente al conciliar, no confiar en el importe fijado al crearlo** — cobro parcial concurrente por otra vía lo deja obsoleto. Ver [[payment-link-importe-congelado-revalidar-pendiente-al-conciliar]]
 - **Import CSV de precios: desambiguar ES/US por presencia de coma, nunca `replace(/\./g,'')` incondicional** — "9.99" formato US se lee como 999 sin error. Ver [[csv-import-precio-decimal-es-us-desambiguar-no-asumir]]
+- **Dato dictado por voz (ASR): normalízalo en la frontera del write, no en el canal** — un chokepoint antes de proponer/persistir, idempotente, solo sobre el campo semántico. Ver [[normalizar-dato-dictado-en-la-frontera-del-write-no-en-el-canal]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia), no se ha borrado ningún learning.
