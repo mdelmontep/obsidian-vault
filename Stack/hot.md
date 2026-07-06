@@ -30,6 +30,8 @@ del índice rápido).
 - **Full-bleed de un flex-item = `margin` negativo (stretch lo agranda)** — `-Npx` estira al borde sin sacarlo del flujo; compensa `padding` para no mover contenido; ancho en var; z-index del panel > item para pasar "por detrás". Ver [[full-bleed-flex-item-margin-negativo-stretch]]
 - **Panel glass flotante necesita fondo detrás para no verse plano** — extender el mesh por detrás + z-index del panel sobre el fondo. Liquid Glass SVG = solo Chrome; usa subset: blur + specular layer + rim + sombra en capas. Ver [[glass-flotante-necesita-fondo-detras-liquid-glass-portable]]
 - **Contador de tab/Segmented calculado sobre `data` ya paginado colapsa a 0 al filtrar** — separar conteo (query independiente por categoría) de datos de página. Ver [[contador-por-tab-derivado-de-datos-paginados-colapsa-a-0]]
+- **Skeleton debe calcar el layout real (chrome + line-box) o hace snap/"2 cargas"** — un solo skeleton de página reusado en loading.tsx + early-return; nada de empty-state durante la carga; alturas = line-box no glifo; mismo `y` de arranque. Ver [[skeleton-debe-calcar-el-layout-real-para-no-hacer-snap]]
+- **transform/filter en un ancestro rompe hijos position:absolute** — pasa a bloque contenedor; una animación de entrada con transform/blur reventó el carril de dígitos del odómetro. Un gesto por superficie. Ver [[transform-o-filter-en-ancestro-rompe-hijos-position-absolute]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia), no se ha borrado ningún learning.
