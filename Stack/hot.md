@@ -13,6 +13,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-07-05 
 recorte agresivo — el contenido retirado sigue íntegro en sus learnings, solo desaparece
 del índice rápido).
 
+- **Stripe Connect "sign up for Connect" al crear cuenta conectada** — no es código; la plataforma tiene el perfil de Connect incompleto (restricted / past_due). Testing local: `stripe listen --forward-connect-to`, `return_url` https. Ver [[stripe-connect-signup-gotcha-crear-cuenta-conectada]]
 - **`gh pr merge` miente en el stdout** — verifica `gh pr view <n> --json state` == MERGED, no el texto ("will be automatically merged" contiene "merged"). Ver [[gh-pr-merge-no-confirma-verificar-state-merged]]
 - **Split de fichero sin cambiar comportamiento** — extracción verbatim + checker independiente + `_parts/<basename>/` (no `_parts/` plano). Ver [[split-verbatim-checker-parts-por-basename]]
 - **WhatsApp interactive → await upsert antes de enviar botones** — el button_reply llega antes que el fire-and-forget; escritura en BD debe ser await+guard antes del send. Ver [[whatsapp-await-upsert-antes-de-botones-interactivos]]
