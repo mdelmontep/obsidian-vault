@@ -25,4 +25,10 @@ solo aparece más tarde como `Module not found` al arrancar `next dev`. Verifica
 con `ls node_modules | wc -l` origen vs copia antes de dar la copia por buena;
 si no cuadra, `rm -rf` y repetir `cp -al` completo sin interrupciones.
 
+**Gotcha del symlink con git (2026-07-07):** si usas el symlink (ok en proyectos sin
+Turbopack, p. ej. backend Node), `git stash push -u` se lo lleva al stash (es untracked) →
+tras un `checkout -b` el symlink puede no volver y `vitest`/`tsc` rompen con
+`Cannot find package 'vitest'`. Recrear el symlink antes de correr tests (o mover cambios
+entre ramas sin `-u`). Ver [[git-stash-sin-u-deja-untracked-y-hook-falla]].
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]].

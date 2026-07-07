@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — DEMO HOY 7-jul en oficinas AGH** — Tren de merges COMPLETO, todo en prod (`main de429f6`): míos **#227 dedup** + **#193 harness voz** + #216 fechas + #221 enlace corto; #217/#218/#220 (Dani). Verificado por llamada real (transcripts por API): **#227 y #215 funcionan**; #218 no testeable (tenant con M365). **Backlog drill de voz #231–#249** = zona interpreter/prompt de Borja + EVALS, post-demo a su triaje. Lo más visible: **#232/#234** (pending persiste entre llamadas y secuestra) · #238 (fecha robótica «jue,9 jul,10:00») · #231/#249 (deletreo; #249 nombres de letra lo hace Borja, ver [[retell-deletreo-nombres-de-letra-no-peladas-tts]]) · #237 resolución fuzzy · #241 recall→registrar reunión. #229 parte 2 = #245. Bloqueado #197/#228 (scope Entra `Calendars.ReadWrite`=Borja) · secrets prod→1Password (lunes). [[agh-iberica]]
+- **AGH Ibérica — post-demo (demo 7-jul PASÓ, buena)** — Auditoría adversarial **Tier 2** (prompts/conectividad/procesamiento) ejecutada → issues #260-268 + #275 (flake migrador). 6 PRs míos a merge de Borja: **#269** timeouts gateway+pool (#260/#262) · **#270** release del wamid (#261) · **#271** extractJson/drafter (#264) · **#272** reminder onExhausted (#265) · **#273** gate regresión prompts (#266) · **#274** firma texto plano (#268). **#263** (dedup Retell en reconexión) bloqueado por **#258** (Borja, misma zona `ws-server`). **Tier 3** escrito, pendiente ejecutar (ver inbox). Backlog drill voz #231–#249 (Borja+EVALS). Bloqueado #197/#228 (scope Entra=Borja) · secrets prod→1Password (lunes). [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · **DEMO 7-jul** · #227/#193/#216/#221 en prod (tren completo, main `de429f6`); backlog drill voz #231–#249 (Borja, post-demo); #197/#228 bloqueados (scope Entra) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · demo 7-jul pasó (buena) · post-demo: auditoría Tier 2 → 6 PRs (#269-274) a merge Borja; Tier 3 pendiente; #263 bloq. por #258; #197/#228 bloq. (scope Entra) |
 
 ## Completado reciente
 
