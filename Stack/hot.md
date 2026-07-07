@@ -13,6 +13,8 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-07-05 
 recorte agresivo — el contenido retirado sigue íntegro en sus learnings, solo desaparece
 del índice rápido).
 
+- **Auditar/fixear con red** (AGH, activo) — worktree desde origin/main + dedup vs issues abiertos ANTES de filar; re-audita tus propios fixes con agentes independientes antes de mergear. Ver [[auditar-sobre-origin-main-worktree-no-cwd-stale]] · [[maker-checker-re-auditar-fixes-propios-antes-de-merge]].
+
 - **Sync bidireccional: anti-eco por hash canónico de la forma mapeada** — hashea `mapToExternal(x)` en ambos lados (no el raw); si las representaciones no convergen (doc con líneas vs importe agregado), borra la fila de push auto-encolada en el pull. Ver [[sync-bidireccional-anti-eco-hash-canonico]]
 - **Stripe: el CLI puede ir a OTRA cuenta que la sk_live de la app** — IDs con sufijo de cuenta (`…GgQMT2aOqB` vs `…QY4tV8FMxQ`); `retrieve --live` da "No such price" falso si es la del CLI. Verifica con `curl -u $SK` de la app. Ver [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]]
 - **Stripe: resolver item de sub por price, no `items.data[0]`** — Stripe no garantiza el orden; `[0]` puede pillar el add-on y pisar su price al cambiar plan. Ver [[stripe-subscription-item-resolver-por-price-no-por-indice]]

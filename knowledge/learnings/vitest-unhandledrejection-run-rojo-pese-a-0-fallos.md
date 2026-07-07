@@ -20,3 +20,8 @@ administrator command` como rejection sin handler. Intermitente: dependía del p
 - Fix de raíz: cerrar TODO pool/conexión (`await pool.end()`) antes del `DROP DATABASE`, o
   `pg_terminate_backend` sobre la datname. Distinto de [[vitest-fileparallelism-false-tests-integracion-bd-compartida]]
   (colisión entre ficheros que comparten BD) — aquí es fuga de teardown de una BD efímera.
+
+Variante "CUELGA" (no rojo): tras matar runs de vitest (Ctrl-C/timeout), los procesos hijo quedan
+ZOMBIS compitiendo por handles (Redis/BD) → el siguiente run se cuelga (>2-5 min) en vez de fallar. Fix:
+`ps aux | grep vitest | grep -v grep | awk '{print $2}' | xargs -r kill -9` y re-corre. No es el código.
+Caso AGH 2026-07-07 (tras varias tandas de gate seguidas).
