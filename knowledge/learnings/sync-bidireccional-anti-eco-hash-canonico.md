@@ -13,3 +13,5 @@ Patrón que funciona:
 3. **Cuando las representaciones NO convergen** (p.ej. doc externo con líneas vs entidad local con importes agregados), el hash no casa nunca → el eco se cuela una vez. Fix robusto ahí: tras el upsert del pull, **borrar la fila de cola de push auto-encolada** por el trigger para esa entidad (si el usuario edita luego, el trigger la re-encola = cambio legítimo).
 
 Conflictos: last-write-wins por `updated_at`; empate/duda → gana el sistema autoritativo (el tuyo).
+
+**Caveat real (incidente Holded 2026-07-07)**: el anti-eco no protege si el `PUT` de push manda el objeto **completo** con solo el subconjunto de campos que tu sistema mapea — el externo reemplaza el objeto entero y borra los campos que no conocías (ver [[facturaia-holded-integracion]]). Antes de activar push+pull juntos por primera vez: probar contra una cuenta externa VACÍA, nunca una con datos reales de negocio.
