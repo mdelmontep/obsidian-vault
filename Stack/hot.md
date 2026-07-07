@@ -34,6 +34,8 @@ del índice rápido).
 - **Contador de tab/Segmented calculado sobre `data` ya paginado colapsa a 0 al filtrar** — separar conteo (query independiente por categoría) de datos de página. Ver [[contador-por-tab-derivado-de-datos-paginados-colapsa-a-0]]
 - **Skeleton debe calcar el layout real (chrome + line-box) o hace snap/"2 cargas"** — un solo skeleton de página reusado en loading.tsx + early-return; nada de empty-state durante la carga; alturas = line-box no glifo; mismo `y` de arranque. Ver [[skeleton-debe-calcar-el-layout-real-para-no-hacer-snap]]
 - **transform/filter en un ancestro rompe hijos position:absolute** — pasa a bloque contenedor; una animación de entrada con transform/blur reventó el carril de dígitos del odómetro. Un gesto por superficie. Ver [[transform-o-filter-en-ancestro-rompe-hijos-position-absolute]]
+- **Stripe: un Coupon no es tecleable, hace falta un PromotionCode aparte** — `discounts[]` y `allow_promotion_codes` son mutuamente excluyentes; suscripción existente ≠ Checkout Session. Ver [[stripe-coupon-no-es-tecleable-necesita-promotion-code]]
+- **`git worktree add` sin `cd` inmediato → Bash cae en el checkout principal** — falsos "lint limpio"/"migración pendiente" si no verificas `pwd`+`git branch --show-current` justo después. Ver [[worktree-add-sin-cd-bash-cae-en-checkout-principal]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia), no se ha borrado ningún learning.
