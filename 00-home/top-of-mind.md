@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — post-demo (demo 7-jul PASÓ) · MERGE+FIX: 3 auditorías cerradas, ~15 PRs abiertas, NADA en main aún** — Tier 1 (**#257/#258/#259/#267**) + Tier 2 (**#280** dispatch+outbox #276, **#281/#282/#283**) + cosecha #260-#268 (**#269-#274**) + docs **#294**; todas gate local verde, a merge con `gh --admin` (Actions rojo=billing, falso negativo). **Pendiente: tren de merges SERIAL** (rebase→gate→merge; un solo conductor; pares que chocan: #267↔#280 en app.ts/inbound-pipeline, #272↔#281 en bullmq, #258↔#267 en .env). Luego implementar ready-for-agent: Tier 3 **#284-#290** (7 fuertes; #284 HIGH writes fallidos invisibles en traza) + voz #231-#247 + onboarding #223-#251. ⚠️ verificar que #269-#274 no commitearon `node_modules`. #253 queda abierto (PR #259 solo mitiga). Lecciones: [[maker-checker-re-auditar-fixes-propios-antes-de-merge]] · [[auditar-sobre-origin-main-worktree-no-cwd-stale]]. **#263** bloq. #258 · #197/#228 bloq. (Entra=Borja) · secrets prod→1Password (lunes). [[agh-iberica]]
+- **AGH Ibérica — post-demo: tren de merges COMPLETO + Tier 3 completo + voz pre-demo 7/9** — sesión maratón 7/8-jul: 15 PRs mergeadas a main, Tier 3 (#284-#290) cerrado, voz pre-demo #231/#232/#233/#237/#241/#242/#246 cerrados con EVALS reales. Deferred con análisis (no a medias): #228 (necesita #197 primero), #247 (necesita estado conversacional nuevo), #238 (necesita cambiar firma de `WriteExecutor.summarize`). **Próxima sesión**: voz resto (#234/#235/#236/#239/#240/#202/#204/#245/#191) + #150 (vitest 2→4/typescript 6, major, post-demo) + Fase 3 triaje + Fase 4 cierre (PROJECT-STATUS.md). Dashboard CRM de Borja/Dani = proyecto paralelo, zona fría, ya en prod. Prompt de continuación completo en `docs/agents/` del repo o pedir a Manu. [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · demo 7-jul pasó (buena) · post-demo: Tier 2 → 6 PRs (#269-274) + Tier 3 → 10 issues (#284-293) + PR docs #294; fase MERGE+FIX; #263 bloq. por #258; #197/#228 bloq. (scope Entra) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · Tier 3 + voz pre-demo 7/9 cerrados · próximo: voz resto + #150 + triaje/cierre |
 
 ## Completado reciente
 

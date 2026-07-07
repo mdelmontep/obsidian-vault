@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-02
+updated: 2026-07-08
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,27 +44,25 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-02)
+## Estado (2026-07-08) — PROD VIVO, post-demo en marcha
 
-- ✅ **#4** esqueleto andante (LlmBrain + gateway + whitelist multi-tenant + webhook WhatsApp + Postgres) — mergeado (abierto para end-to-end en vivo, bloqueado por #1).
-- ✅ **#6** bucle HITL proponer→confirmar→ejecutar + primera entidad CRM (Cliente) — mergeado (PR #20).
-- ✅ **#15 (STT)** `TranscriptionProvider` + `gpt-4o-transcribe` (Manu) — mergeado (PR #18).
-- 🔵 **#9 (M365)** OAuth con PKCE + state cifrado + tokens cifrados (AES-256-GCM/HKDF) + `CalendarTool` "¿qué tengo hoy?" (Europe/Madrid) + Postgres cifrado (Manu) — **PR #21 abierto, en review**.
-- ⏳ CI en GitHub Actions; `main` protegido (PR + check `test` verde obligatorio).
+Demo del 7-jul con Carlos **pasó bien**. CI de GitHub Actions muerto por billing de la org (no se paga) → gate = local (lint+typecheck+vitest sobre BD real 5433/6380) documentado en cada PR, merge con `gh pr merge --admin` (o desde la UI web si la cuenta no tiene admin del repo — ver [[github-required-check-failing-bloquea-incluso-admin-merge]]).
 
-**Ruta crítica:** `#1 → #4 → #5 → #6 → #7`. Tras #6, fan-out: #8, #11, #9→#10, #13, #14.
+**Sesión maratón 7/8-jul (tren de merges + Fase 2):**
+- ✅ **Tren de merges completo**: 15 PRs → `main`, 0 abiertas de la sesión. Encontrado y arreglado symlink `node_modules` colado a main por error propio (worktree).
+- ✅ **Tier 3 completo** (auditoría adversarial, 4 grupos, #284-#290): trazar writes fallidos en Langfuse, idempotencia del confirm HITL, traza de outbound cross-canal, funnel per-tenant real + dedup de import CSV + `UNIQUE` en `clients` (migración 0007).
+- ✅ **Voz pre-demo 7/9**: #232 (pending no secuestra conversación), #241 (recall ya no crea reunión duplicada), #231 (deletreo solo en altas nuevas), #246 (teléfono dictado en palabras ya no se pierde + backstop), #233 (grounding de reads), #237 (resolución de referencias parcial/difusa), #242 (capacidades no se derivan a WhatsApp de más). Todos con EVALS reales ×3 (key OpenAI provista en sesión, guardada en `.env` local, NUNCA committeada).
+- 🟡 **Deferred con análisis en el issue** (no a medias): #228 (agendar futuro→calendario M365) necesita `CalendarWriteExecutor` que no existe, depende de #197. #247 (subconjunto de lista tras pointer) necesita estado conversacional nuevo (`lastVoicePointer`) que atraviesa casi todo `hitl-brain.ts` — mejor con la épica #118. #238 (lectura natural de fecha/hora) necesita cambiar la firma de `WriteExecutor.summarize()` para conocer el canal (7 executores + call sites) — refactor real, no fix puntual.
+- 🔴 **Pendiente próxima sesión**: voz resto (#234/#235/#236/#239/#240/#202/#204/#245/#191), #150 (vitest 2→4 + typescript 6, major bump post-demo, no trivial), Fase 3 (triaje del resto sin tocar código) y Fase 4 (cierre: PROJECT-STATUS.md + memoria).
+- **Dashboard CRM** (proyecto PARALELO de Borja/Dani, PRD #295): zona 100% fría `dashboard/` — auth+OIDC Entra, cartera+VisibilityPolicy, ficha+timeline, gestión usuarios, todo YA en `main` y en prod (`panel.agh.agentesialabs.com`). Cero cruce con el agente salvo `schema.sql` (migraciones 0006 Borja, mías 0007, próxima suya 0008+ para `audit_log`).
+
+**Ruta crítica del MVP conversacional**: completa desde hace semanas. Todo el trabajo actual es hardening post-demo + backlog de voz.
 
 ## Bloqueantes
 
-- **#1 WhatsApp/Meta** (número + credenciales) — Dani. Desbloquea end-to-end WhatsApp.
-- **#2 M365** (app registration Entra ID: `Calendars.Read` + `Mail.Send`, tenant de prueba propio de AIA) — desbloquea el end-to-end del #9/#10.
-- **#3 Retell** (API key por 1Password) — desbloquea #13.
-- **Dokploy dedicado** — producción, no bloquea desarrollo.
-- **CI parada**: GitHub Actions dejó de encolar runs (probable límite de minutos/facturación de la org `AgentesIA-MAdrid`) → con `main` protegido, bloquea todos los merges. Revisar Settings → Billing.
-
-## Cabo abierto de integración (#6 ↔ #9)
-
-El `CalendarTool` del #9 está listo y testeado, pero el brain aún **no lo enruta**: `TurnInterpretation.read` solo admite `target: "clients"` y `HitlBrain` tiene `ClientStore` hardcoded. Para que "¿qué tengo hoy?" funcione por chat hay que extender la costura del brain (intención de calendario + inyectar el tool). **No estaba en PRD ni issues** — avisado a Borja + anotado en PR #21.
+- **#263** (dedup Retell) bloqueado por zona compartida con #258 (ya resuelto, revisar si sigue bloqueado).
+- **#197/#228** — necesitan scope Entra `Calendars.ReadWrite` + admin consent (Borja).
+- Secrets de prod → migrar a 1Password (pendiente recurrente).
 
 ## Preguntas abiertas (para Carlos, no bloquean diseño)
 
