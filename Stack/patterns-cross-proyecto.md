@@ -113,7 +113,7 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **supabase db push falla por histórico desincronizado** — workaround: db query -f + migration repair selectivo. Ver [[supabase-cli-db-push-fail-por-historico-desincronizado-workaround]]
 - **Dokploy schedule.list expone env completo del compose** — secrets en plano. API key Dokploy = master key. Ver [[dokploy-api-get-schedule-list-expone-env-completo-secrets]]
 - **Dokploy schedule.update NO es PATCH parcial** — payload completo obligatorio (re-send pattern). Ver [[dokploy-api-schedule-update-requiere-payload-completo-no-patch]]
-- **Dokploy compose.update SÍ admite parcial** — contradicción vs schedule.update. Probar por endpoint. Ver [[dokploy-api-compose-update-admite-payload-parcial-vs-schedule-update-no]]
+- **Dokploy compose.update SÍ admite parcial** — contradicción vs schedule.update. Probar por endpoint. Ver [[dokploy-api-schedule-update-requiere-payload-completo-no-patch]]
 - **Backblaze Computer Backup ≠ B2 Cloud Storage** — productos separados, paneles distintos, B2 exige 2FA. Ver [[backblaze-computer-backup-vs-b2-cloud-storage-productos-distintos]]
 - **Skip validación solo INSERT** — UPDATE puede setear flag bypass. `IF TG_OP = 'INSERT' AND ...`. Ver [[skip-validacion-solo-en-insert-no-update-evita-vector-evasion]]
 - **EXCEPTION WHEN OTHERS** atrapa check_violation → 500 opaco. Discriminar SQLSTATE + pattern SQLERRM. Ver [[exception-when-others-colapsa-check-violation-discriminable]]

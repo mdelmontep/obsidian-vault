@@ -12,3 +12,5 @@ Fix: resolver por price siempre —
 En FacturaIA se extrajo a `findBasePlanItem(items, isBasePrice)` (helper puro, testeable sin cache). Bug real: `change-plan` era el único que usaba `[0]` mientras empresa-extra y el reconciliador del webhook ya resolvían por price (PR #777).
 
 Regla general: cualquier lectura de "el item X" de una sub multi-item = por price/lookup, nunca por posición.
+
+El add-on se sincroniza por su propio item: `empresas_extra = addonItem.quantity` (0 si el item ya no está). Al comprarlo, subscription item con quantity en el MISMO ciclo que el base + `proration_behavior=always_invoice`; update optimista local + webhook reconcilia (caso F3b, PR #144). Hermano de [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]].

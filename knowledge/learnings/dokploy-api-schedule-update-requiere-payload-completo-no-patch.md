@@ -20,6 +20,6 @@ tags: [dokploy, api, trpc, gotcha]
 
 **Aplicable**: a otros endpoints tRPC Dokploy con suffix `.update` (mismo patrón en `application.update`, `environment.update`, etc.). Comportamiento estándar tRPC con schemas Zod estrictos en backend.
 
-**OJO contradicción descubierta 2026-05-23**: `compose.update` SÍ admite payload parcial (verificado con `{composeId, env}` → HTTP 200). No es regla universal Dokploy — probar por endpoint primero parcial, si falla pasar a completo. Ver [[dokploy-api-compose-update-admite-payload-parcial-vs-schedule-update-no]].
+**OJO contradicción descubierta 2026-05-23**: `compose.update` SÍ admite payload parcial (verificado con `{composeId, env}` → HTTP 200); también `application.update`/`environment.update` probablemente. No es regla universal Dokploy — **probar por endpoint primero parcial (solo id + field), si falla pasar a completo** (evita re-serializar campos con control chars del GET previo).
 
 **Workaround alternativo**: si tu integración modifica schedules con frecuencia, hacer un helper `updateScheduleField(scheduleId, field, value)` que internamente hace GET + spread + POST. Evita duplicar el re-send en cada llamada.
