@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — post-demo (demo 7-jul PASÓ, buena)** — Auditoría adversarial **Tier 2** (prompts/conectividad/procesamiento) ejecutada → issues #260-268 + #275 (flake migrador). 6 PRs míos a merge de Borja: **#269** timeouts gateway+pool (#260/#262) · **#270** release del wamid (#261) · **#271** extractJson/drafter (#264) · **#272** reminder onExhausted (#265) · **#273** gate regresión prompts (#266) · **#274** firma texto plano (#268). **#263** (dedup Retell en reconexión) bloqueado por **#258** (Borja, misma zona `ws-server`). **Tier 3** escrito, pendiente ejecutar (ver inbox). Backlog drill voz #231–#249 (Borja+EVALS). Bloqueado #197/#228 (scope Entra=Borja) · secrets prod→1Password (lunes). [[agh-iberica]]
+- **AGH Ibérica — post-demo (demo 7-jul PASÓ, buena) · ahora MERGE+FIX de la cosecha de auditorías** — **Tier 3 EJECUTADA** (HITL/obs/multi-tenant/persistencia/lifecycle) → 10 issues `needs-triage` **#284-#293** (7 fuertes verificados 3/3 lentes: #284 HIGH writes fallidos invisibles en traza, #285/#286 HITL re-ejecución/batch-parcial, #287/#288 obs, #289/#290 multi-tenant/integridad; 3 low latentes #291-#293) + PR docs **#294**. Verificación adversarial [[verificacion-adversarial-lentes-triar-por-que-lente-refuta]]. Cosecha Tier 2 aún a merge (6 PRs **#269-#274**). Manu ya puede mergear → **revisar todos los issues, ordenar por dependencia y fix+merge con sentido**. **#263** bloq. por **#258** (Borja). Bloqueado #197/#228 (scope Entra=Borja) · secrets prod→1Password (lunes). [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · demo 7-jul pasó (buena) · post-demo: auditoría Tier 2 → 6 PRs (#269-274) a merge Borja; Tier 3 pendiente; #263 bloq. por #258; #197/#228 bloq. (scope Entra) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · demo 7-jul pasó (buena) · post-demo: Tier 2 → 6 PRs (#269-274) + Tier 3 → 10 issues (#284-293) + PR docs #294; fase MERGE+FIX; #263 bloq. por #258; #197/#228 bloq. (scope Entra) |
 
 ## Completado reciente
 
