@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — #150 + triaje + cierre YA HECHOS, quedan 2 PRs por revisar de Borja** — PR #347 (deps vitest 2→4/TS 6, 0 vulns, gate verde) + PR #348 (docs status) abiertas sin mergear. Triaje: 11 issues→`ready-for-agent`, #85→`needs-info` (posible duplicado del dashboard CRM), #256 cerrado. **Próxima sesión**: mergear #347/#348, coger los `ready-for-agent` nuevos, decidir #85 con Borja. Dashboard CRM de Borja/Dani = proyecto paralelo, zona fría, ya en prod y navegable (#327). [[agh-iberica]]
+- **AGH Ibérica — agente "Carlos" PROD VIVO** — 08-jul noche: tren de 5 PRs propias mergeado a `main` (#368/#371/#367/#370/#377), incl. **#375 open-threads (fase 1 de la épica #118 de memoria conversacional)**. **Próxima sesión = cerrar la propuesta #234/#118**: (1) subir la extracción de hilos de trigger-based (#204) a estilo Mem0 real (paso LLM ADD/UPDATE/DELETE/NOOP en turnos sustanciales); (2) mover el job semanal del polling actual a BullMQ repeatable; (3) memoria profunda #118 = piezas C (entidades recientes en `ConversationState`) y D (rolling window del interpreter) de Dani, esperan decisión de diseño de Borja. Dani #374/#376 quedaron BEHIND tras el tren. Backstop pg de la migración 0008 sin correr en local (sin Docker); DDL verificado a mano. [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · #150+triaje hechos, PRs #347/#348 a revisión Borja |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · tren 08-jul noche mergeado (5 PRs, incl. #375 open-threads); próx: cerrar propuesta #118 |
 
 ## Completado reciente
 
