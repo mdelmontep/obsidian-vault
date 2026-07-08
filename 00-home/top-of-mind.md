@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — post-demo: voz COMPLETA (16/18 issues de voz cerrados), queda #150 + triaje + cierre** — sesión maratón 7/8-jul: tren de merges (15 PRs) + Tier 3 (#284-#290) + voz pre-demo 7/9 + voz resto 9/9, todos con PR propia y gate local verde. Deferred con análisis (no a medias): #228/#247/#238 (pre-demo) y #245 items 2-5 (merge/delete duplicados, limpieza prod). **Próxima sesión**: #150 (vitest 2→4/typescript 6, major, worktree aislado) + Fase 3 triaje (excluir #295-#309 del dashboard) + Fase 4 cierre (reescribir `docs/PROJECT-STATUS.md`). Dashboard CRM de Borja/Dani = proyecto paralelo, zona fría, ya en prod. [[agh-iberica]]
+- **AGH Ibérica — #150 + triaje + cierre YA HECHOS, quedan 2 PRs por revisar de Borja** — PR #347 (deps vitest 2→4/TS 6, 0 vulns, gate verde) + PR #348 (docs status) abiertas sin mergear. Triaje: 11 issues→`ready-for-agent`, #85→`needs-info` (posible duplicado del dashboard CRM), #256 cerrado. **Próxima sesión**: mergear #347/#348, coger los `ready-for-agent` nuevos, decidir #85 con Borja. Dashboard CRM de Borja/Dani = proyecto paralelo, zona fría, ya en prod y navegable (#327). [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · Tier 3 + voz COMPLETA cerrados · próximo: #150 + triaje/cierre |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · #150+triaje hechos, PRs #347/#348 a revisión Borja |
 
 ## Completado reciente
 
