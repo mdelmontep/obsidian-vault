@@ -103,6 +103,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- 🔴 **WhatsApp: lote de fotos + confirmación (PR #796+#797, mergeados 2026-07-08) — falta smoke final** — antes cada foto de un envío múltiple pisaba `whatsapp_pending_intent` (PK por teléfono) y preguntaba empresa 1 vez por foto, con riesgo de procesar el documento equivocado. Fix: `whatsapp_media_batch` (mig 446, insert-or-append atómico vía `xmax=0`) agrupa en 1 sola pregunta; botón "Cambiar empresa" solo aparece si `memberships_count>1`; `doc_confirm:yes`/`org_select` ahora reclaman el intent con DELETE condicionado al contenido (evita doble procesado si se tocan 2 confirmaciones casi a la vez). Confirmado real: 1 sola pregunta para 4 fotos juntas. **Falta**: confirmar que ya no sale "Cambiar empresa" con 1 sola empresa activa y que no hay doble procesado. Ver [[pending-intent-por-key-necesita-claim-atomico-no-select-luego-delete]].
+
 - ✅ **feat SKU inventario (PR #752) — smoke real en prod CERRADO (2026-07-05)** — auditoría NOTES.md completa: dedup `generar-view` (#756/#757), PR drift de tipos (#763), smoke real con agent-browser contra org sandbox (login real + SQL directo) que encontró y corrigió 2 bugs (#766): precio import CSV corrupto ×100 en formato US, producto invisible en /inventario tras import sin columnas de stock. **Pendiente real**: confirmar deploy Dokploy de #766 antes de darlo por verificado en producción. Detalle en [[facturaia-historico-detallado]].
 
 - ✅ **Reorg split in-place — COMPLETA, 14 ficheros en main** (2026-07-05). Detalle completo movido a [[facturaia-historico-detallado]].
