@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — agente "Carlos" PROD VIVO** — 09-jul: auditoría de robustez multi-agente de open-threads (#375) → arreglados el bloqueante **#380** (PR #383) + durabilidad pg **#381 M2/M5/M7** + **#382 M4a** (PR #384), todo en `main` con gate **pg+redis real + drift-gate**. Bug de prod cazado: el fix de #380 no persistía en Postgres (solo in-memory) → ver [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]]. **Próxima sesión**: decisión de Borja sobre **#378** (Mem0; análisis coste+latencia dejado en el issue) y **#379** (BullMQ); quedan **#381 L1/L2/L3** (LOW) y 1 eval de recall frágil («no me consta» vs clarify, #244/#118). Dani #374/#376 BEHIND. [[agh-iberica]]
+- **AGH Ibérica — agente "Carlos" PROD VIVO · frente de CAPACIDAD abierto** — 09-jul (sesión enorme): auditoría open-threads 100% cerrada+verificada (PRs #383/#384/#400/#401/#402; ADR-0003 memoria=determinista/no-Mem0-aún, ADR-0004 scheduling=polling/no-BullMQ). **Capacidad de la secretaria (interpretar/contestar/recordar/aprender):** PR **#404** mergeado = recall con umbral+top-k+atribución+multi-reunión (mata el confidently-wrong, ver [[recall-semantico-sin-umbral-es-confidently-wrong]]). **Próxima sesión** (ver prompt de continuación): recoger el **paquete de propuesta #118 conversacional para Borja** (ventana de turnos, entidades recientes, síntesis natural, fix del clarify-routing — su lane), montar la **infra de medición** (score+baseline, mío) y valorar #245 item 4 (limpiar duplicados prod, necesita creds prod). Norte: contestar natural PERO grounded ([[asistente-enterprise-natural-pero-grounded-no-llm-libre]]). Docker local=colima (pg 5433/redis 6380 vía docker run). [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · tren 08-jul noche mergeado (5 PRs, incl. #375 open-threads); próx: cerrar propuesta #118 |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · open-threads cerrado; frente de CAPACIDAD abierto (recall #404 hecho); próx: paquete #118 a Borja + medición |
 
 ## Completado reciente
 
