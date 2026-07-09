@@ -14,6 +14,7 @@ recorte agresivo — el contenido retirado sigue íntegro en sus learnings, solo
 del índice rápido).
 
 - **Auditar/fixear con red** (AGH, activo) — worktree desde origin/main + dedup vs issues abiertos ANTES de filar; re-audita tus propios fixes con agentes independientes antes de mergear. Ver [[auditar-sobre-origin-main-worktree-no-cwd-stale]] · [[maker-checker-re-auditar-fixes-propios-antes-de-merge]].
+- **Fix validado solo in-memory oculta bug pg-solo-prod** (AGH, activo) — campo nuevo en estado persistido: grep el store Postgres + test pg round-trip + backstop pg antes de "hecho". Ver [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]].
 - **Required check en FAILING bloquea incluso `gh pr merge --admin`/API** — solo pending/no-arrancó se salta con admin; failing real solo lo evita la UI web con permiso de bypass. Ver [[github-required-check-failing-bloquea-incluso-admin-merge]]
 - **`unaccent()` en un índice de Postgres → 42P17 (no IMMUTABLE)** — envolver en función SQL propia marcada IMMUTABLE. Ver [[postgres-unaccent-no-immutable-index-necesita-wrapper]]
 - **Resolver con match fuzzy: el escape-hatch "colapsa al más reciente" solo vale para duplicados EXACTOS** — con capas parciales/difusas, ambigüedad real debe preguntar, nunca adivinar. Ver [[resolver-ambiguo-escape-hatch-duplicados-exactos-vs-fuzzy]]

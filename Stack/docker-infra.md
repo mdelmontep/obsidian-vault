@@ -77,6 +77,12 @@ networks:
 - `retries: 10` + `start_period: 30s` para Postgres en primer arranque
 - Redis: `redis-cli ping` es suficiente
 
+## Runtime local en esta Mac (colima, no Docker Desktop)
+
+- El runtime es **colima** (`colima start`), NO Docker Desktop → `open -a Docker` falla ("Unable to find application"). Arrancar con `colima start` (levanta una VM ~15s).
+- **No hay plugin `docker compose`** → `docker compose up -d` da "unknown shorthand flag: 'd'". Levantar servicios con `docker run` directo. Dev local AGH: `docker run -d --name agh-pg -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=agh_dev -p 5433:5432 pgvector/pgvector:pg16` + `docker run -d --name agh-redis -p 6380:6379 redis:7-alpine redis-server --appendonly yes --maxmemory-policy noeviction`.
+- Scripts que asumen `docker compose exec` (p.ej. `db:check-drift` de AGH) fallan → replicar con `docker exec <container>`.
+
 ## Passwords y variables
 
 - **Sin caracteres especiales** (`$`, `#`, `&`, `@`) en passwords de Redis y Postgres — se corrompen en Docker Compose
