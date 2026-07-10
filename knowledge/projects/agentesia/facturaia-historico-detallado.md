@@ -2074,3 +2074,7 @@ Nota metodológica: `psql` directo se cuelga en este entorno (probable bloqueo d
 ### Dedup NOTES.md CERRADO — 5 PRs adicionales (2026-07-05, #757-761)
 
 `calendario` (dayISO/truncate16), `cashflow` (psd2BancosLabel), `ingesta` (normalizeNif/normalizeProvName), `conciliacion` (memo porRevisarMovs + matchesTransferFilter); `generar-view` resultó no-op al coincidir byte a byte con #756 de sesión paralela. Las 9 duplicaciones idénticas de la auditoría, resueltas. Mecanismo: 5 worktrees + build/QA localhost/verificación `state=MERGED` por PR.
+
+### Ingesta — desplegable «⋯» canónico + copy de error OCR en español (2026-07-10, #813)
+
+Dos fixes de bandeja detectados por Manu en prod (captura): (1) el menú «⋯» de `BulkBar` (selección múltiple) y `ActionBar` (por-doc) usaba un `overflow-pop` casero → migrado al patrón canónico `useAnchoredMenu` + `.row-menu`/`.row-menu-item` (mismo que fiscal/equipo); CSS muerto `.overflow-*`/`.ab-overflow-pop` eliminado. (2) La bandeja mostraba el `last_error` técnico crudo (`max_attempts_reached: status_502`, escrito por el worker de la cola OCR) → helper `ocrErrorLabel()` traduce a copy español; el crudo queda en el `title` para soporte. Mergeado `--admin` + **verificado en prod** por comportamiento (DOM: menú con clase `row-menu` no `overflow-pop`; cero `status_502` crudos). Manuales revisados: no requieren cambio (mismos ítems/acciones).
