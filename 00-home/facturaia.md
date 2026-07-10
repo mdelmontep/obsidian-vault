@@ -108,6 +108,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- ✅ **ia-ops diagnóstico shadow (#798) — SMOKE REAL PROD OK (2026-07-10)** — verificado en app.tufacturaia.com con org FacturaIA Sandbox (superadmin temporal, revertido): funnel 0 verde/26 ámbar/17 rojo, motivos con etiqueta legible (`Proveedor aún no de confianza` 43), maduración 0/2/34. Exactamente lo diseñado. Gate cerrado por 0 verdes = confirmado el cuello de botella.
+- ✅ **#810 follow-up — etiquetas cuadres `irpf_*` del 130 — RESUELTO (#812, main 2026-07-10)**: los 6 tipos IRPF del 130 añadidos a `cuadreLabel` (`cuadre-meta.ts`) con etiqueta legible + test. Gap del smoke cerrado.
 - 🟠 **ia-ops diagnóstico shadow (PR #798, mergeado 2026-07-09) — smoke superadmin pendiente** — como superadmin en `app.tufacturaia.com/admin/ia-ops`, pestañas **OCR** y **Enrich (movs)**: el bloque nuevo bajo el acierto ("¿por qué no auto-aplica?") debe renderizar el funnel verde/ámbar/rojo, el top-6 de motivos bloqueantes (OCR: `proveedor_no_confianza` dominando) y la maduración de proveedores, con datos reales. Read-only, sin schema/auth. No pude QAearlo yo (usuario e2e es admin, no superadmin). Gates verdes (lint/tc/build/tests 5/5), merge limpio.
 
 - 🟠 **Cola OCR (EN PROD via #802) — smoke pendiente** — (1) subir un lote grande de facturas por WhatsApp/upload → filas entran en `bandeja_ingesta` estado `pendiente` y el dispatcher las pasa a `listo`/`revisar` en <1-2 min (cola drena, no se quedan en `pendiente`); (2) confirmar en `/admin/system/crons` que `ocr-dispatcher` corre y `ingesta-stale-sweep` ya no aparece huérfano; (3) forzar un insert que falle (o revisar logs) para ver que ahora sale error real, no 200 falso.
