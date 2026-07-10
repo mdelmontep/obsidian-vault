@@ -49,6 +49,7 @@ del índice rápido).
 - **Stripe: un Coupon no es tecleable, hace falta un PromotionCode aparte** — `discounts[]` y `allow_promotion_codes` son mutuamente excluyentes; suscripción existente ≠ Checkout Session. Ver [[stripe-coupon-no-es-tecleable-necesita-promotion-code]]
 - **`git worktree add` sin `cd` inmediato → Bash cae en el checkout principal** — falsos "lint limpio"/"migración pendiente" si no verificas `pwd`+`git branch --show-current` justo después. Ver [[worktree-add-sin-cd-bash-cae-en-checkout-principal]]
 - **Supabase "restricted"/egress tumba la app entera vía healthcheck → Traefik 404** (Docker "healthy" engaña; `curl -I` da 404 `text/plain`). Restaurar plan; egress es mensual. Ver [[supabase-egress-restringido-tumba-app-via-healthcheck-traefik-404]]
+- **≥2 botones de acción con un `busy` bool compartido → label de progreso en el botón equivocado** — al pulsar uno, todos cambian de label a la vez; estado POR-acción, no bool. Ver [[estado-busy-por-accion-no-un-bool-compartido]]
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia), no se ha borrado ningún learning.
