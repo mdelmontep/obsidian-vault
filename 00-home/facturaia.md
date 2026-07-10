@@ -109,6 +109,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- 🔴 **Drawer «Personalizar» del Resumen (#819, main 2026-07-10)** — smoke prod tras deploy: abrir Personalizar en `/` → panel frost sólido (blur+scrim, shell canónico `Drawer`), texto legible, ESC cierra. Ticket `678aa22c` (Borja). Nota: en móvil ya no es bottom-sheet, es panel lateral como el resto.
 - ✅ **ia-ops diagnóstico shadow (#798) — SMOKE REAL PROD OK (2026-07-10)** — verificado en app.tufacturaia.com con org FacturaIA Sandbox (superadmin temporal, revertido): funnel 0 verde/26 ámbar/17 rojo, motivos con etiqueta legible (`Proveedor aún no de confianza` 43), maduración 0/2/34. Exactamente lo diseñado. Gate cerrado por 0 verdes = confirmado el cuello de botella.
 - ✅ **#810 follow-up — etiquetas cuadres `irpf_*` del 130 — RESUELTO (#812, main 2026-07-10)**: los 6 tipos IRPF del 130 añadidos a `cuadreLabel` (`cuadre-meta.ts`) con etiqueta legible + test. Gap del smoke cerrado.
 - 🟠 **ia-ops diagnóstico shadow (PR #798, mergeado 2026-07-09) — smoke superadmin pendiente** — como superadmin en `app.tufacturaia.com/admin/ia-ops`, pestañas **OCR** y **Enrich (movs)**: el bloque nuevo bajo el acierto ("¿por qué no auto-aplica?") debe renderizar el funnel verde/ámbar/rojo, el top-6 de motivos bloqueantes (OCR: `proveedor_no_confianza` dominando) y la maduración de proveedores, con datos reales. Read-only, sin schema/auth. No pude QAearlo yo (usuario e2e es admin, no superadmin). Gates verdes (lint/tc/build/tests 5/5), merge limpio.
