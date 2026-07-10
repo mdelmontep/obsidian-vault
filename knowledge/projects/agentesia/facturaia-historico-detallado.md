@@ -2082,3 +2082,7 @@ Dos fixes de bandeja detectados por Manu en prod (captura): (1) el menú «⋯»
 ### Drawer «Personalizar» del Resumen sobre el shell canónico (2026-07-10, #819)
 
 Ticket `678aa22c` (Borja): el panel de personalización del dashboard se veía "demasiado transparente" — era un drawer a mano con `var(--bg-elev)` (60% translúcido en skin glass) sin `backdrop-filter` ni scrim. Migrado a `ui/drawer.tsx` (glass-panel + sheen + scrim + focus trap + ESC + aria-modal), −97 líneas; el module.css queda solo con presets/toggles. Override `.body.body` (clase doblada) porque el orden de bundle entre CSS Modules no está garantizado — primer consumidor de `bodyClassName`. Verificado en localhost con e2e+smoke (captura antes/después en artifact). Merge `--admin` tras gates locales verdes.
+
+### Ajuste global de fondos al abrir drawers/modales (2026-07-10, #821)
+
+Follow-up del #819 a petición de Manu: `--glass-bg-panel` +20% de opacidad y `--scrim-bg`/`--scrim-fallback-bg` ∓20% en los 4 bloques de tema (base+freebie × light+dark) — el panel se ve más sólido y el fondo detrás más claro. Solo `tokens.css`; aplica a todos los drawers/popovers/modales (fuente única). QA visual localhost claro+oscuro aprobado antes del merge.
