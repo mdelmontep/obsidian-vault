@@ -34,3 +34,13 @@ previsualizar como cliente, no cambies el default — añade un toggle
 `effectiveIsAdmin = isAdmin && !previewAsCustomer` (solo presentación, localStorage;
 permisos reales intactos, siempre hay forma de volver). Relacionado:
 [[role-gate-endpoint-debe-contemplar-superadmin]].
+
+Update 2026-07-11 (cuadres 390): trampa al ENLAZAR entre páginas con familias de
+gating distintas. `getModuleAccess` devuelve `redirect` para 'proximamente' a
+no-superadmin, pero las páginas de DETALLE (`/fiscal/{ej}/{modelo}/{periodo}`)
+gatean con `orgHasFeature` y SÍ renderizan. Resultado: un enlace desde una página
+que renderiza (detalle) al hub `/fiscal/{ej}` (getModuleAccess) rebota a `/` justo
+para los usuarios que ven el detalle → CTA muerto silencioso. Regla: antes de
+enlazar entre páginas, comprueba que comparten familia de gating; si no, el destino
+puede botar. Fix del 390 ("Resolver aquí"): enlazar al detalle del 303 (misma
+familia orgHasFeature), no al hub. [[componentes-que-duplican-feature-check-se-desincronizan-del-provider]]
