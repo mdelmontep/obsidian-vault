@@ -15,4 +15,6 @@ Patrón:
    revisión humana (p.ej. `confianza='baja'`), nunca `null` silencioso.
 
 Caso: ocr-process TuFacturaIA 2026-06-11 (PR #197).
-Ver [[llm-tool-calling-elimina-silent-fail-extraccion-estructurada]] · [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]]
+Matiz posterior (#834): un 200 no-parseable NO debe devolver 5xx — es una
+negativa del modelo, no un fallo. Auditar sí, pero → revisión manual sin retry
+ni alerta. Ver [[llm-responde-200-no-json-no-es-fallo-pipeline]] · [[llm-tool-calling-elimina-silent-fail-extraccion-estructurada]] · [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]]

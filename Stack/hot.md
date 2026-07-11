@@ -13,6 +13,7 @@ relevancia) y los universales en [[patterns-cross-proyecto]]. Podado 2026-07-05 
 recorte agresivo — el contenido retirado sigue íntegro en sus learnings, solo desaparece
 del índice rápido).
 
+- **LLM 200 con no-JSON = negativa, no avería** (FacturaIA OCR, activo) — respuesta 200 no-parseable (p.ej. gpt-4o rehúsa un DNI) no se reintenta ni paginea como outage; va a revisión manual + audit. Retry/alerta solo si la API falla (non-2xx). Ver [[llm-responde-200-no-json-no-es-fallo-pipeline]].
 - **Auditar/fixear con red** (AGH, activo) — worktree desde origin/main + dedup vs issues abiertos ANTES de filar; re-audita tus propios fixes con agentes independientes antes de mergear. Ver [[auditar-sobre-origin-main-worktree-no-cwd-stale]] · [[maker-checker-re-auditar-fixes-propios-antes-de-merge]].
 - **Fix validado solo in-memory oculta bug pg-solo-prod** (AGH, activo) — campo nuevo en estado persistido: grep el store Postgres + test pg round-trip + backstop pg antes de "hecho". Ver [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]].
 - **Recall/RAG sin umbral = confidently-wrong** (AGH capacidad, activo) — k=1 sin piso de distancia miente con seguridad; devolver distancia + umbral + top-k + atribución + golden negativo. Ver [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]].
