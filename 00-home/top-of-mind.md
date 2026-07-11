@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - **Centro Elphis — go-live bloqueado en conexión nº real** — hardening ✅; chatbot WA E2E ✅ 30-jun. Bloqueo: negocio sin verificar (iniciar verif. KISAMU/Enrique) + decidir migración 659→Cloud API vs coexistencia(BSP); plantillas+bot real bloqueados hasta eso. App+token Meta nuevos (rotar token). Resto: DPAs Enrique, sesión crisis, número Alba. [[clientes/centro-elphis/index|centro-elphis]]
 - **agency-portal — verificar extracción onboarding prod (PR #67)** — confirmar "Progreso por sección" + "Respuestas extraídas" por turno; si `onboarding.extraction_failed`, abrir issue. [[agentesia]]
-- **AGH Ibérica — agente "Carlos" PROD VIVO · 11-jul: 3 bugs del drill #192 MERGEADOS en `main`** — #403 (lastVoicePointer no persiste, mig 0013) · #436 🔴 (confirm de voz ejecutaba propuesta NO OÍDA, viola HITL — guarda dentro del `case "confirm"` compartido, mig 0014) · #437 (clarify de recap inventado + secuestro de turno, prompt lane Borja, mergeado con override de Manu). Verificado post-merge: 1545/123/3 + drift-gate limpio. **Pendiente:** (a) alguien con `OPENAI_API_KEY` corra `evals:check` ×3 sobre las 2 reglas nuevas de #437 (mergeado sin evals reales por falta de key en el entorno); (b) Dani verificar su #425 (bare-confirm #411, misma región del `case "confirm"`) al rebasar — no debería chocar, la guarda de #436 ya lo cubre. **L5/L3-A siguen BLOQUEADOS en decisión RGPD de Borja** (egress de nombres de cuenta al LLM). Docker local=colima (pg 5433/redis 6380 docker run). Merge: clasificador exige nombrar el bypass CI Y, si aplica, el de revisión humana, por separado. [[agh-iberica]]
+- **AGH Ibérica — agente "Carlos" PROD VIVO · 11-jul: dedup #245 ENTREGADO** — `crm.mergeClients` (fusionar duplicados sin perder historial: reassign 5 tablas + delete en una tx) en prod (#460, evals ×3 doble-verde Manu+Borja) + fusionado el duplicado real del drill `grabados`→`Dragados` en prod (cero pérdida). Bugs voz #403/#436/#437 mergeados + evals de Borja. **PENDIENTE = nod de Borja al encaje onboarding de #451 (`ClientIntake`)**: las 4 decisiones de diseño ya cerradas en el issue; con su OK → implementar (mover el dedup ya probado al módulo, `CreateClientWriteExecutor`→adapter, wiring en `src/composition/capabilities.ts` [geografía nueva post-#455, NO `app.ts`]). No arrancar la interfaz antes de su nod. L5/L3-A bloqueados RGPD. Ver [[agh-245-done-451-pending-borja-nod]]. [[agh-iberica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
@@ -58,7 +58,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · épica #118 CERRADA (L1/L2a/L2b/persona, recall 100%); próx: bugs voz #403/#436/#437 (diagnosticados); L5 bloqueado RGPD |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** · #118 + dedup #245 (`mergeClients`) entregados; PENDIENTE nod de Borja para #451 `ClientIntake`; L5/L3-A bloqueados RGPD |
 
 ## Completado reciente
 
