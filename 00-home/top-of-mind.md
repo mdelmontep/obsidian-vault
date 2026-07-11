@@ -44,6 +44,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — subir tier OpenAI (Manu)** — bot WhatsApp salta rate-limit (TPM 30k Tier 1). Subir a Tier 2 (450k) en platform.openai.com. (Ya no urge: 0 errores 429 en 30d.)
 - **TuFacturaIA — HIBP leaked-password YA ACTIVABLE (Supabase en Pro desde 10-jul)** — activar el toggle "Prevent leaked passwords" en el dashboard de Auth.
 - **agentesia-skills — PR #3 `onboarding-tour-spotlight`** — pendiente review de alguien del equipo antes de mergear (convención del repo: no merge directo a main).
+- **AGH Ibérica — rutina cloud semanal de auditoría Langfuse lista, bloqueada en instalar la Claude GitHub App (Borja)** — payload de la rutina (maker/checker, cron lunes 09:00 Madrid, credenciales Langfuse ya en el prompt) validado y guardado; `RemoteTrigger create` da 401 hasta que un admin de la org instale la app en https://claude.ai/code/onboarding?magic=github-app-setup. Avisado en `#cli-agh-iberica` 2026-07-11.
 - **TuFacturaIA — Salt Edge Test access (Manu)** — sin esto no se puede validar PR #610 (draft) contra sandbox real; además tiene un bug real de fuga cross-tenant sin resolver (re-revisado 2026-07-05, NO mergeado). Aprobar en dashboard Salt Edge → seguir en [[facturaia]].
 
 ## Vistas por cliente (el backlog vive en cada hub)
