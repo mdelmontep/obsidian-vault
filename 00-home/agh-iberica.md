@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-08
+updated: 2026-07-13
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -30,41 +30,48 @@ Se construye como **rebanada vertical de una plataforma multi-tenant**: `base + 
 
 ## Equipo y reparto
 
-- **Borja Galván** — conduce la **espina** `#4 → #5 → #6` (define los contratos compartidos: `src/domain|brain|tools`) + `#14`.
-- **Manu** — **módulos autocontenidos detrás de interfaz** en paralelo (sin pisar la espina): #15 STT, #9 M365.
-- **Dani** — setups externos (Meta, M365, Retell, Dokploy).
+- **Borja Galván** (`notcapi`) — **autoridad de merge** + coordinación/triage; contratos compartidos (`src/domain|brain|tools`) y **dashboard CRM**.
+- **Manu** (`mdelmontep`) — módulos autocontenidos del **agente conversacional** detrás de interfaz (capacidad #118, dedup #245, secretaria #467, ClientIntake #451, gaps de auditoría).
+- **Dani** (`tecnocloudes`) — infra + identidad (Meta, M365/Entra, Retell, Dokploy; vínculo dashboard↔agente #489).
 
 Reglas de no pisarse: reclamar issue antes · rama por issue → PR a `main` · avisar por Slack antes de tocar un tipo en `src/domain|brain|tools` · `git pull --rebase` a menudo.
 
 ## Stack (ADR-0001)
 
-Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6: canal stateless → estado en `conversation_state`; el bucle HITL es código propio detrás de la costura `Brain`; Mastra queda como puerta de salida). Servidor **Hono**. Model gateway **LiteLLM** (provider-agnóstico, salto a Azure-UE por config). Voz **Retell → LiveKit**. WhatsApp **Cloud API directo**. STT **gpt-4o-transcribe** (interfaz OpenAI-compatible, swap a faster-whisper). Datos **Postgres + pgvector**. Cola **Redis + BullMQ**. Observabilidad **Langfuse**. Deploy **Dokploy dedicado**. Seguridad **escalón 1** (API pública + DPA + zero-retention).
+Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6: canal stateless → estado en `conversation_state`; el bucle HITL es código propio detrás de la costura `Brain`; Mastra queda como puerta de salida). Servidor **Hono**. Model gateway **OpenAI-compat** (`MODEL_GATEWAY_URL`, hoy OpenAI directo — no LiteLLM; provider-agnóstico, salto a Azure-UE por config). Modelo real gpt-4o. Voz **Retell → LiveKit**. WhatsApp **Cloud API directo**. STT **gpt-4o-transcribe** (interfaz OpenAI-compatible, swap a faster-whisper). Datos **Postgres + pgvector**. Cola **Redis + BullMQ**. Observabilidad **Langfuse**. Deploy **Dokploy dedicado**. Seguridad **escalón 1** (API pública + DPA + zero-retention).
 
 ## Arquitectura
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-08) — PROD VIVO, post-demo en marcha
+## Estado (2026-07-13) — PROD VIVO, secretaria conversacional completa
 
-Demo del 7-jul con Carlos **pasó bien**. CI de GitHub Actions muerto por billing de la org (no se paga) → gate = local (lint+typecheck+vitest sobre BD real 5433/6380) documentado en cada PR, merge con `gh pr merge --admin` (o desde la UI web si la cuenta no tiene admin del repo — ver [[github-required-check-failing-bloquea-incluso-admin-merge]]).
+Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `npm run gate`/`gate:full` (lint 0-`any` + typecheck + test agente + gate dashboard [+ drift]) sobre HEAD rebasado, documentado en cada PR; **merge = Borja** (`gh pr merge --admin`, el rojo de Actions es falso negativo) o **founder override nombrando el bypass por-PR** (el clasificador lo exige; ver [[agh-self-merge-clasificador-nombrar-bypass]]). El detalle día-a-día vive en `docs/status-log/` del repo y en [[archive-completed]].
 
-**Sesión maratón 7/8-jul (tren de merges + Fase 2):**
-- ✅ **Tren de merges completo**: 15 PRs → `main`, 0 abiertas de la sesión. Encontrado y arreglado symlink `node_modules` colado a main por error propio (worktree).
-- ✅ **Tier 3 completo** (auditoría adversarial, 4 grupos, #284-#290): trazar writes fallidos en Langfuse, idempotencia del confirm HITL, traza de outbound cross-canal, funnel per-tenant real + dedup de import CSV + `UNIQUE` en `clients` (migración 0007).
-- ✅ **Voz pre-demo 7/9**: #232 (pending no secuestra conversación), #241 (recall ya no crea reunión duplicada), #231 (deletreo solo en altas nuevas), #246 (teléfono dictado en palabras ya no se pierde + backstop), #233 (grounding de reads), #237 (resolución de referencias parcial/difusa), #242 (capacidades no se derivan a WhatsApp de más). Todos con EVALS reales ×3 (key OpenAI provista en sesión, guardada en `.env` local, NUNCA committeada).
-- 🟡 **Deferred con análisis en el issue** (no a medias): #228 (agendar futuro→calendario M365) necesita `CalendarWriteExecutor` que no existe, depende de #197. #247 (subconjunto de lista tras pointer) necesita estado conversacional nuevo (`lastVoicePointer`) que atraviesa casi todo `hitl-brain.ts` — mejor con la épica #118. #238 (lectura natural de fecha/hora) necesita cambiar la firma de `WriteExecutor.summarize()` para conocer el canal (7 executores + call sites) — refactor real, no fix puntual.
-- ✅ **Voz resto COMPLETO (mismo día, 2ª mitad de sesión)**: #234 (TTL pending 1h→1 semana, parcial: "no anunciar al arrancar" queda documentado, necesita `isCallStart` + decisión de producto de Borja), #240 (enumerar tipos de alta), #239 (email hablado con pausas «arroba»/«punto»), #202 (tono secretaria en voz para un solo write; batch multi-write mantiene formato por-línea a propósito, ver [[voz-batch-multi-write-no-fusionar-en-una-frase-rompe-deletreo-dosificado]]), #191 (leer buzón responde honesto, no clarify en bucle), #204 (compromiso con marco temporal en reunión propone también task/reminder), #236 (intent "repeat" nuevo — «¿repite?» re-dice lo último sin persistencia nueva), #235 (consultor inexistente en addCandidate inyecta su alta como prerequisite del mismo batch, ver [[hitl-prerequisite-injection-colapsa-dialogo-multi-turno-de-intencion-compuesta]]), #245 (parcial: salida "es nuevo" del dedup #227 ya no repregunta en bucle vía `confirmedNew`; quedan items 2-5 — merge/delete duplicados, limpieza prod — documentados en el issue, sin cerrar). 9/9 con PR propia + gate local verde (1088→1104 tests) + EVALS ×3 donde tocaba prompt.
-- ✅ **#150 (deps vitest 2→4 + TypeScript 6) → PR #347**, worktree aislado, sin cruce con nadie. `npm audit` 5→0 vulns (root + `dashboard/`, vite 5→8 arrastrado). Breaking change real: TS 6 `noUncheckedSideEffectImports` → `declare module "*.css"` en `vite-env.d.ts`. Gate antes/después idéntico (1152+132 tests, mismos 2 fallos ajenos #317/#275). PR sin mergear, a Borja.
-- ✅ **Fase 3 triaje** (16 issues `needs-triage` sueltos, 3 agentes en paralelo verificando contra código actual, excluidos #295-#309): 11→`ready-for-agent` (#317 #275 #263 #253 #251 #248 #244 #228 #225 #224 #223), #85→`needs-info` (probable duplicado del dashboard CRM #296, a confirmar con Borja), **#256 cerrado** (el fix ya estaba en main desde #227/#237, el issue describía código ya muerto), #293/#292/#291 se quedan en `needs-triage` (necesitan decisión de diseño antes de ser accionables).
-- ✅ **Fase 4 cierre**: `docs/PROJECT-STATUS.md` actualizado con el resultado de esta sesión → PR #348 (docs-only, no reescrito desde cero — ya estaba al día por la sesión paralela del dashboard, solo se añadió la entrada de esta sesión).
-- **Dashboard CRM** (proyecto PARALELO de Borja/Dani, PRD #295): zona 100% fría `dashboard/` — auth+OIDC Entra, cartera+VisibilityPolicy, ficha+timeline, gestión usuarios, **shell de navegación (#327)**, todo YA en `main` y en prod (`panel.agh.agentesialabs.com`), navegable de extremo a extremo. Siguiente: #305 (escrituras+audit_log, 1ª escritura del dashboard, migración 0008+). Cero cruce con el agente salvo `schema.sql`.
+**Agente conversacional — todo en `main` + prod (autodeploy):**
+- **Capacidad conversacional (épica #118)**: L1 ventana de turnos → L2a recentEntities → L2b fuente única de entidad activa + #445 anáfora a persona. Recall ~100%, OVERALL ~98-99%. **L5/L3-A POSPUESTOS por RGPD** (Borja): sin egress de nombres de cartera al LLM hasta cerrar la política de datos con el cliente.
+- **Dedup de clientes #245 CERRADO**: `crm.mergeClients` (fusiona duplicados sin perder historial, transaccional) en prod + fusionado el duplicado real del drill (`grabados`→`Dragados`). Scanner read-only `scripts/scan-duplicate-clients.ts`.
+- **Drill de voz #192**: 6 hallazgos mergeados (lastVoicePointer, HITL de voz, recap inventado, saludo≠siembra, puntuación ASR, sí/no desnudo).
+- **Secretaria conversacional (épica #467) COMPLETA**: P1 reads de lista fraseados grounded (voz intacta, kill-switch `READ_PRESENTER_ENABLED`) + P2 social/small-talk + P5 preferencias firma/franja (`user_preferences`, mig 0016). PRs #471/#473/#474. Ver [[agh-secretaria-conversacional-plan-1-2-5]].
+- **#451 `ClientIntake`** (#484): módulo único de alta (normalización + dedup exacto/aproximado 0.85 + `confirmedNew` + email→update); `CreateClientWriteExecutor`→adapter retrocompat; **onboarding gana el dedup aproximado**.
+- **Gaps de la auditoría Langfuse**: #481 bucle del «sí» al conectar M365 (#494) + #482-p2 guard del `to` (no placeholder/pronombre al HITL, #491).
+- **Observabilidad**: Langfuse v3 en prod (tracing activo, content=true); `userId` en claro opt-in `LANGFUSE_TRACE_PLAIN_USER_ID` (#472/#475); **rutina de auditoría semanal** (lunes 09:00, maker/checker, postea como bot; idempotente por estado de issues — ver [[audit-bot-recurrente-idempotencia-por-estado-de-issues]]).
+- **Arquitectura (épica #457)**: gate raíz `npm run gate` (#453); split actor/owner (#450); `createApp` por slices en **`src/composition/`** (#455) — **wiring nuevo: tool/read/write → `capabilities.ts`, store → `persistence.ts`, env/validación → `config.ts` (⚠️ orden de throws fijado por `app-config.test.ts`), worker → `lifecycle.ts`; NUNCA `app.ts`**; smoke contra el brain real (#456, `LlmBrain` retirado).
 
-**Ruta crítica del MVP conversacional**: completa desde hace semanas. Todo el trabajo actual es hardening post-demo + backlog de voz.
+**Dashboard CRM** (#296, Borja/Dani, prod `panel.agh.agentesialabs.com`): épica premium #392 CERRADA; escrituras en ficha (#439) + split actor/owner (#450) + CRUD de cliente completo (#305) + UI ficha/cartera (#483, mig 0017 `tasks.due_date`). En curso #490/#493 (editar/borrar notas/reuniones/tareas + pulido). Vínculo identidad dashboard↔agente vía `oid` de Entra (#489, PR #492). Zona dashboard-local, cero cruce con el agente salvo `schema.sql`.
+
+**Migraciones al día: 0018** (`users.email`, #495). 0016 `user_preferences`, 0017 `tasks.due_date`.
+
+**EN COORDINACIÓN (no cerrado, bloqueado en terceros):**
+- **#482-p1** self-recipient «mi correo»: cimiento en prod (mig 0018 `users.email`, #495); falta el **reader** en `email-send-write-executor.ts` (espera el email poblado por **Dani** desde el token de Entra, #492) + **señal en `SYSTEM_PROMPT`** (lane Borja).
+- **#485** el agente escribe `audit_log` + procedencia: **dimensionado** — el agente NO tiene write-store transaccional unificado como el dashboard → «audit en la MISMA tx» exige enhebrar `TransactionHandle` (seam #253) por el camino de escritura = contrato compartido; **espera OK de Borja al cómo**.
 
 ## Bloqueantes
 
-- **#263** (dedup Retell) marcado `ready-for-agent` — verificar que #258 esté mergeado antes de cogerlo (mismos archivos).
-- **#197/#228** — necesitan scope Entra `Calendars.ReadWrite` + admin consent (Borja).
+- **#482-p1 / #485** — esperando respuesta de Dani (email de Entra) y Borja (señal de prompt + contrato del audit); ver arriba.
+- **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
+- **#197/#228** (agendar futuro→calendario) — scope Entra `Calendars.ReadWrite` + admin consent (Borja).
+- **SSH al host de prod** con timeouts intermitentes (visto en el drill) → diagnóstico vía panel/API Dokploy mientras.
 - Secrets de prod → migrar a 1Password (pendiente recurrente).
 
 ## Preguntas abiertas (para Carlos, no bloquean diseño)
