@@ -63,3 +63,4 @@ del índice rápido).
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas, docker-infra) y transversales en [[index]]. Lo retirado de aquí sigue en `knowledge/learnings/` (recall por relevancia), no se ha borrado ningún learning.
 - **Agentes background muertos por session limit → SendMessage al mismo agentId, no relanzar** (activo) — inventariar working tree primero; reanudar el que más progreso dejó, nunca dos sobre los mismos archivos. Ver [[agentes-background-mueren-por-session-limit-reanudar-con-sendmessage]].
+- **Schedule Dokploy compose exige `serviceName`** — sin él runManually→500 "invalid container name" y el cron no dispara (invisible); un cron que nunca corrió = watchdog no alerta → verifica el 1er run a mano. Ver [[dokploy-compose-schedule-requiere-servicename]]
