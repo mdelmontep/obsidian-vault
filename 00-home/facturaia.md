@@ -117,6 +117,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- 🔴 **#875 aprobación/descarga masiva recibidas (post-deploy 2026-07-13)** — en `app.tufacturaia.com/recibidas`: seleccionar un lote grande de `sin_aprobar` → "Aprobar seleccionadas" debe rellenar el botón + contador `N/total` y terminar en pocos segundos (antes ~min); confirmar que las aprobadas **conservan su número** (fix `num_factura`). Igual con "Descargar PDF (ZIP)". Ver [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] · incidents 2026-07-13.
 - 🔴 **#825 Centro Fiscal (post-deploy 2026-07-13)** — tras el deploy de #825: abrir `/fiscal/2026/180/<T>`, `/347`, `/303` en prod y confirmar que NO hay error 42703 (columna `situacion_inmueble` + `fiscal_plazos` ya en prod), que el 180 pide/usa situación del inmueble y que los plazos 111/115/190/347 aparecen. Baseline del bug corregido: starter declaraba base/cuota=0 por el gate `stock` en `aprobar_recibida_con_lineas`.
 - 🔴 **#871 totales (post-deploy 2026-07-13)** — editar un borrador con líneas de subtotal no-exacto (p.ej. 0,99 × dto 10%) → emitir → confirmar que pantalla=BD=XML VeriFACTU cuadran al céntimo (antes el editor redondeaba por línea).
 - ✅ **#873 /informes selector de periodo — SMOKE PROD OK (2026-07-13)** — el selector (cabecera del Modelo 303) gobierna toda la página (tarjeta 303 + IRPF + comparativa + exports) y permite trimestres/ejercicios anteriores. Verificado en prod. Ticket bgchivite `c1274624` cerrado.
