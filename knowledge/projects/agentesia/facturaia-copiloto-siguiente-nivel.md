@@ -49,19 +49,23 @@ Objetivo: dejar de optimizar a ciegas. **No es montar telemetría, es TERMINAR d
    `copiloto_feedback` (solo-negativo → sentiment up/down + índice único msg/user); endpoint
    `POST /api/copiloto/feedback` con verificación de propiedad + upsert; componente `MessageFeedback`
    (👎 revela chips de motivo). Iconos thumbs añadidos. types a mano (gen cuelga). Pendiente `db push` mig 455.
-3. **Panel de calidad conversacional** en `/admin/ia-ops` (junto al de OCR/enrich existente):
-   % turnos que cierran sin agotar `MAX_TOOL_LOOPS`, % confirmaciones abortadas/canceladas,
-   tools con peor `success` (hoy `listarClientes` 56%), coste/turno, feedback negativo reciente.
-4. **Eval set vivo minado de prod**: script que convierte turnos reales (`copiloto_mensajes` +
-   `copiloto_tool_calls`) en casos golden candidatos → curación manual → crece más allá de los 14.
+3. **Panel de calidad conversacional** en `/admin/ia-ops` — ✅ **PR #854** (apilado sobre #852):
+   éxito por tool (peor arriba, destapa `listarClientes`), feedback 👍/👎 + % negativo + 👎 recientes,
+   funnel de confirmación (abandono). Loop-exhaustion fuera (no se persiste `stopReason`; necesitaría schema).
+4. **Eval set vivo minado de prod** — ✅ **PR #859** (`npm run eval:mine`): destila turnos reales
+   (mensajes + tool_calls) en casos `EvalCase` candidatos, prioriza feedback negativo > tool fallido >
+   normal, listo para curar a mano. Verificado contra prod (destapó el turno del bug `.or()`).
 5. **Fix `listarClientes`** (56% OK) — bug concreto que el diagnóstico ya señala.
 6. Consolidar strings de modelo (duplicados en `runner.ts` / `llm/client.ts` / `admin/llm/route.ts`)
    antes de meter más modelos (deuda que marca `copiloto-modelo-escalado.md`).
 
 ## Tier 1 — Proactividad + multimodal (retención, infra ya existe)
 
-1. **Motor de insights proactivo** (fase 6): el endpoint `/api/internal/copiloto/proactive`
-   y el headless G6 ya existen. Falta el **motor que decide qué merece un empujón**:
+1. **Motor de insights proactivo** — ✅ **PR #865**: cron `copiloto-insights` determinista
+   (sin LLM). Señales: (a) IVA 303 próximo + estimado, (b) impagados al dueño, (c) gasto
+   recurrente sin factura. (d) cashflow negativo → delegado a `cashflow-alerts` (no duplica).
+   Digest reutiliza `user_notification_preferences` (no se reimplementa). Config `insights_auto`.
+   Falta ops: alta del schedule en Dokploy. Motivación original ↓:
    - Fiscal: "se acerca el 20, tu IVA estimado es X, te faltan N facturas de gastos".
    - Cobros: "cliente lleva 45 días sin pagar, ¿le mando recordatorio?".
    - Gastos: "detecté un gasto recurrente sin factura".
@@ -69,9 +73,10 @@ Objetivo: dejar de optimizar a ciegas. **No es montar telemetría, es TERMINAR d
      cobros/impagados, gasto recurrente sin factura, cashflow negativo proyectado). Canal =
      **campanita in-app por defecto + digest opt-in** (email/WhatsApp solo si el usuario lo activa).
      Evitar duplicar el aviso de cobros con el cron `copiloto-recordatorios-batch` existente.
-2. **Multimodal en el runner**: hoy el OCR va por pipeline aparte (bandeja), el copiloto NO
-   "ve" el documento. Claude y gpt-5.2 son multimodales. Salto: foto de ticket → "¿lo registro
-   como gasto de vehículo?" en el MISMO turno conversacional, sin pipeline desconectado.
+2. **Multimodal en el runner** — ✅ **PR #864**: `RunnerInput.images` + helper `user-content.ts`
+   (image base64 Anthropic / image_url OpenAI); drawer con adjuntar+preview; endpoint acepta
+   `image` (cap 5MB); prompt v33 sección IMÁGENES → propone `registrarGasto`. Alcance web (WhatsApp
+   sigue en bandeja OCR, follow-up).
 
 ## Tier 2 — IMPORTANTE, cuanto antes, con buen plan
 
