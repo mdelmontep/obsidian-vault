@@ -12,6 +12,11 @@ inexistentes — parece typecheck roto, pero es un **lock huérfano**: un
 background y `.next/lock` bloquea el build nuevo a medias, dejando el
 `.next/dev` en estado inconsistente.
 
+Otra cara del mismo lock: `next build` puede petar con `"Another next build
+process is already running"` por un `.next/lock` (archivo vacío 0 bytes) stale
+sin proceso vivo que lo tenga. Distinguir: el build usa `.next/lock`; el dev
+server usa `.next/dev/lock` (JSON `{pid,port}`) — son archivos distintos.
+
 Diagnóstico: `ps aux | grep "next build"` — si aparece un proceso corriendo
 y `.next/lock` existe, es esto, no un error de código.
 

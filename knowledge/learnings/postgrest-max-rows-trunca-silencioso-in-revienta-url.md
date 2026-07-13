@@ -14,3 +14,8 @@ Patrón fix (FacturaIA `load-facturas-contables.ts` + `admin-connections.ts`):
 chunkear ids a ≤150-500 por request y paginar con `.order(pk).range(from, to)`
 en bucle hasta `page.length < PAGE_SIZE` (el order estable es obligatorio o
 range salta/repite filas). Test: cliente fake que simula el cap de 1000.
+
+Señal de diagnóstico: si pides `{ count: 'exact' }` el count SÍ es exacto (lo
+calcula la BD), pero el importe (reduce en JS sobre filas truncadas) sale de
+menos → count y cifra €/ quedan incoherentes entre sí; esa discrepancia delata
+el truncado. Como las filas no van ordenadas, además el corte es no determinista.
