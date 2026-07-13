@@ -14,6 +14,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Recall/RAG sin umbral = confidently-wrong** — k=1 sin piso de distancia miente; devolver distancia+umbral+top-k+atribución+golden negativo. Ver [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]].
 - **Presenter grounded: conserva los ítems verbatim, no aflojes el verificador** — el guard estricto es demasiado en ítems compuestos; arregla el prompt del presenter, no el verificador. Ver [[presenter-grounded-conservar-items-verbatim-no-aflojar-verificador]].
 - **Evals de modelo real: agregar corridas + baseline con margen** — un fichero de 3 casos oscila 100%↔33%; gate = N corridas + baseline − margen − tolerancia. Es la red para tocar el prompt. Ver [[evals-de-modelo-real-oscilan-agregar-corridas-y-baseline-con-margen]].
+- **Correr evals opt-in: `vitest --repeat` no es CLI + timeout 5s da falsos timeouts** — bucle bash o runner; `--testTimeout=25000`; el full ×1 amplifica la varianza del baseline (×3 es el comparable). Ver [[evals-opt-in-vitest-repeat-timeout]].
 - **Fix validado solo in-memory oculta bug pg-solo-prod** — campo nuevo en estado persistido: grep el store Postgres + test pg round-trip antes de "hecho". Ver [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]].
 
 ## Auditoría / agentes / rutinas cloud
@@ -26,6 +27,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Working tree en rama STALE → verifica antes de reimplementar** — lee de `git show origin/main:<path>` + `git merge-base --is-ancestor` antes de construir. Ver [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]].
 - **`git worktree add` sin `cd` inmediato → Bash cae en el checkout principal** — verifica `pwd`+`git branch --show-current` justo después. Ver [[worktree-add-sin-cd-bash-cae-en-checkout-principal]].
 - **`gh pr merge` miente en stdout** — verifica `gh pr view <n> --json state` == MERGED. Ver [[gh-pr-merge-no-confirma-verificar-state-merged]].
+- **PR stackeada + squash → `rebase --onto <base-vieja>`, no rebase normal** — el squash mete la base con SHA nuevo; un rebase normal la duplica. Luego retarget a main + verificar `baseRefName`. Ver [[rebase-onto-pr-stackeada-squash-no-duplicar]].
 - **Actions caído (billing) → hooks locales = único gate** — `npm run lint` global antes de cada merge; node_modules real para que el pre-push build pase en worktree. Ver [[actions-sin-billing-hooks-locales-unico-gate]].
 
 ## Infra / Dokploy / Supabase / Stripe (FacturaIA)
