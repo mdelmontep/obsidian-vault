@@ -2088,3 +2088,10 @@ Ticket `678aa22c` (Borja): el panel de personalización del dashboard se veía "
 ### Ajuste global de fondos al abrir drawers/modales (2026-07-10, #821)
 
 Follow-up del #819 a petición de Manu: `--glass-bg-panel` +20% de opacidad y `--scrim-bg`/`--scrim-fallback-bg` ∓20% en los 4 bloques de tema (base+freebie × light+dark) — el panel se ve más sólido y el fondo detrás más claro. Solo `tokens.css`; aplica a todos los drawers/popovers/modales (fuente única). QA visual localhost claro+oscuro aprobado antes del merge.
+
+### Sesión de cierre de pendientes (2026-07-13)
+
+Triaje: el hub NOW/WIP estaba muy stale — decenas de PRs marcados 🔴/🟡 ya MERGED (verificado por `gh pr view`: #754 #766 #767 #771 #772 #781 #798 #799 #811 #841 #866 #869 + wa-fase #700/#701/#702). Trabajo real:
+- **PR #871 (totales, follow-up de #869)** — `subtotalLinea` exportado como sede única y usado en `PATCH /api/facturas/[id]` sin redondear; el editor de borrador persistía el subtotal redondeado por línea (drift ±1 cént. vs XML VeriFACTU que suma crudo por grupo). Gates verdes + test de regresión. **Pendiente: merge de Manu (=deploy).** Ver [[totales-multilinea-redondeo-por-grupo-de-iva-una-sede]].
+- **Rama `feat/copiloto-ux-markdown-ancho-botones` = CRUFT** — contenido íntegro ya en main vía PR #841 (mergeado 12-jul, v32 plegado, main en v33); confirmado con `git range-diff`. Borrada local+remota.
+- **PR #825 (Centro Fiscal)** — estaba 43 commits por detrás de main. Merge de `origin/main`, resuelto conflicto trivial de import (MessageFeedback+AssistantMarkdown coexisten) + 3 errores de integración (`ejercicio` a `CuadreResolverDrawer` en detalle 180/190/347, igual que 349). Gates verdes (typecheck/lint/build, 5049 tests; único fallo ajeno = `registry-wired`, crons `ocr-dispatcher`/`copiloto-insights` sin cablear en admin). Pushed → **MERGEABLE, 0 detrás de main.** Migs 452/453 (libres, sin colisión) se aplican con `db push` tras merge. **Bloqueado solo en OK de bypass de Manu para auto-merge.**
