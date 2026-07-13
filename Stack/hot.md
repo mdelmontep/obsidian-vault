@@ -10,6 +10,11 @@ tags: [stack, index]
 (recall por relevancia) y transversales en [[index]] §Transversales / [[patterns-cross-proyecto]].
 Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo sale del índice rápido).
 
+## UI / listados (reutilizable)
+- **Buscador de listado = lupa expandible**, no fila propia ni inline fijo (estruja/hueco). Ver [[buscador-listado-lupa-expandible-no-fila-propia]].
+- **Column-picker: ocultar por CSS (display:none), no desmontar** th/td → preserva colSpan/sort/bulk. Ver [[ocultar-columnas-tabla-por-css-no-desmontar]].
+- **Refactor UI grande con agentes**: particiona por archivo disjunto (no por feature) + antes/después vía `git stash`. Ver [[refactor-ui-grande-agentes-paralelos-particionados-por-archivo]].
+
 ## Agente AGH (capacidad conversacional)
 - **Recall/RAG sin umbral = confidently-wrong** — k=1 sin piso de distancia miente; devolver distancia+umbral+top-k+atribución+golden negativo. Ver [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]].
 - **Presenter grounded: conserva los ítems verbatim, no aflojes el verificador** — el guard estricto es demasiado en ítems compuestos; arregla el prompt del presenter, no el verificador. Ver [[presenter-grounded-conservar-items-verbatim-no-aflojar-verificador]].
