@@ -353,10 +353,9 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
   2. **Smoke prod** `app.tufacturaia.com` light+dark.
   3. **Billing Actions** ([[project-github-actions-billing-blocked]]): regenerar baselines visuales + verificar CI cuando se arregle.
 
-- **⚠️ Worktrees con trabajo REAL sin PR (triaje 2026-07-13, NO borrar sin decidir)** — sobrevivieron a la limpieza de 14 worktrees porque tienen commits no mergeados y sin PR:
+- **⚠️ Worktree con trabajo REAL sin PR (triaje 2026-07-13, NO borrar sin decidir)** — sobrevivió a la limpieza de 15 worktrees porque tiene commit no mergeado y sin PR:
   - `fix/gestor-externo-ux-gating` (worktree `fix-gestor-externo-ux`, 1 commit `3565698e`) — "gestor_externo/solo_lectura ya no ven acciones bloqueadas por el backend"; 9 ficheros (facturas/presupuestos/conciliación/settings row-menus + welcome). UI → necesita QA localhost. **Decidir: PR o descartar.**
-  - `fix/informes-selector-periodo` (worktree `informes-selector`, 1 commit `82b8bdb2`) — "el selector de periodo gobierna toda la página + trimestres anteriores". Probablemente de sesión paralela. UI. **Decidir: PR o descartar.**
-  - `agent-a80ef300…` (detached `618525e1`, sin rama) — "migrar disparo OCR de n8n a callOcrProcess directo"; posible superseded por la retirada n8n (#814/#816/#820/#822). Detached → se pierde si se poda. **Verificar si su contenido ya está en main; si sí, borrar worktree.**
+  - _Resueltos 2026-07-13: `fix/informes-selector-periodo` → mergeado por sesión paralela (#873); `agent-a80ef300` (disparo OCR→callOcrProcess) → superseded por la cola OCR #802 (`call-ocr-process.ts` ya en main), worktree borrado._
   - `feat/saltedge-psd2-ais` (worktree `saltedge-psd2`) — PR #610 DRAFT, bloqueado gate legal PSD2. Conservar.
 - **Ramas locales retomables (triaje 2026-06-12, regla 2 semanas)** — el resto se borró tras verificar merged/superseded:
   - `feat/fiscal-etapa2-captura` (6 commits, 06-10) — issues 019 (retención IRPF + IA OCR) y 021 (arrendamiento + ref catastral + OCR). Parte de Fiscal Etapa 2 (016-025).
