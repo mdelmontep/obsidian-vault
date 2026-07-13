@@ -63,8 +63,8 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 **Migraciones al día: 0018** (`users.email`, #495). 0016 `user_preferences`, 0017 `tasks.due_date`.
 
 **EN COORDINACIÓN (no cerrado, bloqueado en terceros):**
-- **#482-p1** self-recipient «mi correo»: cimiento en prod (mig 0018 `users.email`, #495); falta el **reader** en `email-send-write-executor.ts` (espera el email poblado por **Dani** desde el token de Entra, #492) + **señal en `SYSTEM_PROMPT`** (lane Borja).
-- **#485** el agente escribe `audit_log` + procedencia: **dimensionado** — el agente NO tiene write-store transaccional unificado como el dashboard → «audit en la MISMA tx» exige enhebrar `TransactionHandle` (seam #253) por el camino de escritura = contrato compartido; **espera OK de Borja al cómo**.
+- **#482-p1** self-recipient «mi correo»: cimiento en prod (mig 0018 `users.email`, #495); falta el **reader** en `email-send-write-executor.ts`. **Dani deja #492 parada a merge tal cual y NO persiste el email** (cuerpo: «solo los 3 campos de siempre, minimización») → de facto **opción 2**: Borja mergea #492, y Manu captura el `email`/`upn` del token de Entra encima (tocando `m365/*`, hoy vedado con #492 abierta) + **señal en `SYSTEM_PROMPT`** (lane Borja). Confirmación explícita del 1 vs 2 pedida a Dani (13-jul noche).
+- **#485** el agente escribe `audit_log` + procedencia: **prep de implementación MAPEADA en el issue** (comentario). El andamiaje del **seam #253 YA existe** (`TransactionRunner`/`TransactionHandle` cableado en `persistence.ts`; `meeting`/`merge-clients` executors ya escriben en tx; la mayoría de stores CRM ya aceptan `tx?`) → NO es un rediseño. **El único punto de contrato que necesita el OK de Borja = añadir `provenance?` (aditivo) a `WriteContext`** para llevar voice/onboarding/import al `after`; en el agente actor==owner==`ctx.userId` (sin split #450). Detrás de esa firma: nuevo `AuditStore` (espejo de `PostgresCrmWriteStore.audit`) + envolver executors en `runInTransaction` + `tx?` en los stores que faltan + wiring + tests.
 
 ## Bloqueantes
 

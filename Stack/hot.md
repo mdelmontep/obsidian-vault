@@ -39,6 +39,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Stripe: el CLI puede ir a OTRA cuenta que la sk_live de la app** — "No such price" falso; verifica con `curl -u $SK` de la app. Ver [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]].
 
 ## Frontend / UX / QA
+- **Subida en lote vs rate-limit per-user: sin backoff el excedente se pierde** — Retry-After exacto (PTTL) + `code:rate_limited` en el 429 + `fetchWithTransientRetry` (backoff sobre 429-por-minuto/5xx/red, no sobre topes de plan) + panel de reintento. La cola de fondo NO cubre la ráfaga de subida HTTP. Ver [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]].
 - **Acción masiva en cliente con N round-trips en serie cuelga la UI** — batch read (`.in(ids)`) + un `UPDATE .in(ids)` si todas iguales, o pool acotado (~6) + contador `N/total` y relleno del botón. Ver [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]].
 - **agent-browser `eval` reutiliza contexto → `const` redeclarado peta** — envuelve en IIFE o usa `wait --fn` para esperar sin polling manual (evita cronometrajes falsos). Ver [[agent-browser-eval-contexto-persiste-const-usar-iife]].
 
