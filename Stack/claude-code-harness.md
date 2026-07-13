@@ -53,3 +53,12 @@ Sin VERIFY explícito no hay loop, hay agente autoaprobándose.
 Regla de reparto: si es un paso a ejecutar → skill; si es prohibición dura → hook (los modelos leen, los hooks bloquean); si es conocimiento condicional → rule con `paths:` o vault; CLAUDE.md solo lo que aplica a TODAS las sesiones.
 
 Las skills soportan contexto dinámico: `` !`comando` `` dentro del SKILL.md se ejecuta al invocar y su output entra en el prompt (ej.: `/agh-start` precarga `git status`, worktrees e issues abiertos). Caso real: harness AGH Ibérica (`/agh-start`, `/agh-pr`, `/agh-end` + hook `git-guard.sh`).
+
+## Rutinas cloud (RemoteTrigger / CCR) — gotchas
+
+Las rutinas de `claude.ai/code` corren en un CCR aislado en la nube de Anthropic (git checkout propio; SIN acceso a tu máquina ni a env locales). Al montar una:
+- **Egress allowlist-gated.** Salir a un host privado (p.ej. un Langfuse self-host) da **403 en el CONNECT** por defecto. Fix: editor de la rutina → icono de nube del entorno → engranaje → *Update cloud environment* → **Network access: Custom** + añadir el dominio en **Allowed domains** (marca también "default package managers"). **Se aplica a NUEVAS sesiones** → re-lanzar el run tras guardar. Allowlistar TODOS los hosts que toca: el servicio + `hooks.slack.com` (webhook) + `api.github.com` (`gh`).
+- **Identidad de bot:** si adjuntas tu conector MCP personal de Slack, la rutina postea **como tú** (suplantación). Para identidad de bot: **webhook/bot-token** (`curl` a `hooks.slack.com`, requiere allowlist) reusando una app existente (p.ej. "AIA Bot"), y quita el conector personal (`clear_mcp_connections`).
+- **El clasificador de auto-mode BLOQUEA `RemoteTrigger create`** de una rutina que egresa PII a la nube si la única autorización vino de un compañero por Slack, no del **propio usuario en sesión** → hace falta el OK directo del dueño de la cuenta.
+- **Secretos** van en el prompt de la rutina; las respuestas de la API (`get`/`run`) devuelven el prompt COMPLETO con los secretos → quedan en el transcript, rótalos si importa.
+- `RemoteTrigger` (no curl): `list`/`get`/`create`/`update`/`run`. `update` de `job_config` REEMPLAZA el prompt entero (no es patch del texto). No se pueden borrar rutinas por API (UI `claude.ai/code/routines`). Cron en UTC, mínimo 1h.
