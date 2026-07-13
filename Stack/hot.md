@@ -30,6 +30,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **`gh pr merge` miente en stdout** — verifica `gh pr view <n> --json state` == MERGED. Ver [[gh-pr-merge-no-confirma-verificar-state-merged]].
 - **PR stackeada + squash → `rebase --onto <base-vieja>`, no rebase normal** — el squash mete la base con SHA nuevo; un rebase normal la duplica. Luego retarget a main + verificar `baseRefName`. Ver [[rebase-onto-pr-stackeada-squash-no-duplicar]].
 - **Actions caído (billing) → hooks locales = único gate** — `npm run lint` global antes de cada merge; node_modules real para que el pre-push build pase en worktree. Ver [[actions-sin-billing-hooks-locales-unico-gate]].
+- **Limpiar root checkout viejo con worktrees → stash selectivo + ff-only** — nada de reset (git-guard lo bloquea); caracteriza los cambios (monolito pre-refactor = obsoleto); `stash push -- <paths>` (recuperable) + `merge --ff-only`. Ver [[limpiar-root-checkout-viejo-con-worktrees-stash-selectivo-ff-only]].
 
 ## Infra / Dokploy / Supabase / Stripe (FacturaIA)
 - **NUNCA `compose.one`/`application.one`/`schedule.one` de Dokploy en crudo** — vuelcan el `env` con secrets en plano (fuga real 07-03); hook global BLOQUEA, usa `~/.claude/bin/dokploy-safe.sh`. Ver [[dokploy-api-get-schedule-list-expone-env-completo-secrets]].
