@@ -26,6 +26,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 ## Git / worktrees / merge (multi-sesión)
 - **Working tree en rama STALE → verifica antes de reimplementar** — lee de `git show origin/main:<path>` + `git merge-base --is-ancestor` antes de construir. Ver [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]].
 - **`git worktree add` sin `cd` inmediato → Bash cae en el checkout principal** — verifica `pwd`+`git branch --show-current` justo después. Ver [[worktree-add-sin-cd-bash-cae-en-checkout-principal]].
+- **Worktree monorepo → symlinkar TAMBIÉN el node_modules anidado** (`dashboard/node_modules`), no solo el raíz; si no, tests del subpaquete fallan (`react/jsx-dev-runtime`) y parece regresión tuya. Ver [[worktree-monorepo-symlink-node-modules-anidado]].
 - **`gh pr merge` miente en stdout** — verifica `gh pr view <n> --json state` == MERGED. Ver [[gh-pr-merge-no-confirma-verificar-state-merged]].
 - **PR stackeada + squash → `rebase --onto <base-vieja>`, no rebase normal** — el squash mete la base con SHA nuevo; un rebase normal la duplica. Luego retarget a main + verificar `baseRefName`. Ver [[rebase-onto-pr-stackeada-squash-no-duplicar]].
 - **Actions caído (billing) → hooks locales = único gate** — `npm run lint` global antes de cada merge; node_modules real para que el pre-push build pase en worktree. Ver [[actions-sin-billing-hooks-locales-unico-gate]].
