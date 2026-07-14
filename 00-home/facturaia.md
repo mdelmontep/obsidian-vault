@@ -359,10 +359,11 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
   2. **Smoke prod** `app.tufacturaia.com` light+dark.
   3. **Billing Actions** ([[project-github-actions-billing-blocked]]): regenerar baselines visuales + verificar CI cuando se arregle.
 
-- **⚠️ Worktree con trabajo REAL sin PR (triaje 2026-07-13, NO borrar sin decidir)** — sobrevivió a la limpieza de 15 worktrees porque tiene commit no mergeado y sin PR:
-  - `fix/gestor-externo-ux-gating` (worktree `fix-gestor-externo-ux`, 1 commit `3565698e`) — "gestor_externo/solo_lectura ya no ven acciones bloqueadas por el backend"; 9 ficheros (facturas/presupuestos/conciliación/settings row-menus + welcome). UI → necesita QA localhost. **Decidir: PR o descartar.**
-  - _Resueltos 2026-07-13: `fix/informes-selector-periodo` → mergeado por sesión paralela (#873); `agent-a80ef300` (disparo OCR→callOcrProcess) → superseded por la cola OCR #802 (`call-ocr-process.ts` ya en main), worktree borrado._
-  - `feat/saltedge-psd2-ais` (worktree `saltedge-psd2`) — PR #610 DRAFT, bloqueado gate legal PSD2. Conservar.
+- **Worktrees rescatables — TODOS resueltos 2026-07-13/14:**
+  - `fix/gestor-externo-ux-gating` (role-gating gestor_externo/solo_lectura) → **rescatado deduplicado en PR #885 (MERGEADO)**: facturas/presupuestos/row-menu ya los cubría main (#880, causaban redeclaración de `orgRole`); porté solo los huecos que faltaban (conciliación, settings deep-link, onboarding welcome). QA localhost admin verde. Worktree+rama borrados.
+  - `fix/informes-selector-periodo` → mergeado por sesión paralela (#873).
+  - `agent-a80ef300` (disparo OCR→callOcrProcess) → superseded por la cola OCR #802 (`call-ocr-process.ts` ya en main), borrado.
+  - `feat/saltedge-psd2-ais` (worktree `saltedge-psd2`) → PR #610 DRAFT, bloqueado gate legal PSD2. Conservar.
 - **Ramas locales retomables (triaje 2026-06-12, regla 2 semanas)** — el resto se borró tras verificar merged/superseded:
   - `feat/fiscal-etapa2-captura` (6 commits, 06-10) — issues 019 (retención IRPF + IA OCR) y 021 (arrendamiento + ref catastral + OCR). Parte de Fiscal Etapa 2 (016-025).
   - `feat/glass-tokens` (5 commits, 06-10) + `stash@{1}` — glass overlays globales olas 1-2 + mesh + topbar scroll. **Revisar solapamiento** con el porteo glass ya mergeado; probablemente parcialmente superseded. **Decidir aquí (no parchear suelto):** `.int-row` (lista integraciones, #387) es glass sobre fondo de datos, lo que `docs/design/03-fundamentos.md` excluye (máx 3 superficies glass) y le faltan los guards mandatados (`@supports`+fallback sólido, `prefers-reduced-transparency`). Heredado de `.int-card` (06-11), no nuevo. Opciones: quitar glass de listas o añadir guards centrales en `.glass`.
