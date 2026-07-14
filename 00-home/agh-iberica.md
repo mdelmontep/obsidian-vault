@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-13
+updated: 2026-07-14
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,7 +44,7 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-13) — PROD VIVO, secretaria conversacional completa
+## Estado (2026-07-14) — PROD VIVO, secretaria conversacional completa + audit del agente + self-recipient
 
 Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `npm run gate`/`gate:full` (lint 0-`any` + typecheck + test agente + gate dashboard [+ drift]) sobre HEAD rebasado, documentado en cada PR; **merge = Borja** (`gh pr merge --admin`, el rojo de Actions es falso negativo) o **founder override nombrando el bypass por-PR** (el clasificador lo exige; ver [[agh-self-merge-clasificador-nombrar-bypass]]). El detalle día-a-día vive en `docs/status-log/` del repo y en [[archive-completed]].
 
@@ -55,6 +55,8 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 - **Secretaria conversacional (épica #467) COMPLETA**: P1 reads de lista fraseados grounded (voz intacta, kill-switch `READ_PRESENTER_ENABLED`) + P2 social/small-talk + P5 preferencias firma/franja (`user_preferences`, mig 0016). PRs #471/#473/#474. Ver [[agh-secretaria-conversacional-plan-1-2-5]].
 - **#451 `ClientIntake`** (#484): módulo único de alta (normalización + dedup exacto/aproximado 0.85 + `confirmedNew` + email→update); `CreateClientWriteExecutor`→adapter retrocompat; **onboarding gana el dedup aproximado**.
 - **Gaps de la auditoría Langfuse**: #481 bucle del «sí» al conectar M365 (#494) + #482-p2 guard del `to` (no placeholder/pronombre al HITL, #491).
+- **#485 audit del agente (#501, `365c1e9`)**: el agente = **2º escritor de `audit_log`** — cada write CRM mutador (client/contact/meeting+note/task + borrado del duplicado en mergeClients) en la MISMA tx que la entidad, forma dashboard (#440/#450), actor=`ctx.userId`, **procedencia** (voice/onboarding/chat) en el `after` — sin columna nueva ni migración (solo comentario en schema.sql → drift no aplica). `AuditStore` (Postgres/InMemory/Noop) + `tx?` en los stores + `ClientStore.findById` (FOR UPDATE) + `delete` con RETURNING. 4 pg-real de atomicidad (incl. rollback). Patrón reusable: [[audit-log-multi-escritor-procedencia-en-after-before-sin-carrera]].
+- **#482-p1 self-recipient (#503, `0c40fdf`)**: «mándamelo a mí» → resuelve `users.email` (poblado por `provisionWorker` + el connect de M365 que captura el claim `email/upn/preferred_username` del id_token, best-effort/fail-closed, sin persistir el token); guard anclado que nunca secuestra un envío a terceros; señal en `SYSTEM_PROMPT`; fallback `awaiting_email` en onboarding. Cierra #482 de verdad (estaba CLOSED sin la parte 1 hecha).
 - **Observabilidad**: Langfuse v3 en prod (tracing activo, content=true); `userId` en claro opt-in `LANGFUSE_TRACE_PLAIN_USER_ID` (#472/#475); **rutina de auditoría semanal** (lunes 09:00, maker/checker, postea como bot; idempotente por estado de issues — ver [[audit-bot-recurrente-idempotencia-por-estado-de-issues]]).
 - **Arquitectura (épica #457)**: gate raíz `npm run gate` (#453); split actor/owner (#450); `createApp` por slices en **`src/composition/`** (#455) — **wiring nuevo: tool/read/write → `capabilities.ts`, store → `persistence.ts`, env/validación → `config.ts` (⚠️ orden de throws fijado por `app-config.test.ts`), worker → `lifecycle.ts`; NUNCA `app.ts`**; smoke contra el brain real (#456, `LlmBrain` retirado).
 
@@ -62,9 +64,11 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 
 **Migraciones al día: 0018** (`users.email`, #495). 0016 `user_preferences`, 0017 `tasks.due_date`.
 
-**EN COORDINACIÓN (no cerrado, bloqueado en terceros):**
-- **#482-p1** self-recipient «mi correo»: cimiento en prod (mig 0018 `users.email`, #495); falta el **reader** en `email-send-write-executor.ts`. **Dani deja #492 parada a merge tal cual y NO persiste el email** (cuerpo: «solo los 3 campos de siempre, minimización») → de facto **opción 2**: Borja mergea #492, y Manu captura el `email`/`upn` del token de Entra encima (tocando `m365/*`, hoy vedado con #492 abierta) + **señal en `SYSTEM_PROMPT`** (lane Borja). Confirmación explícita del 1 vs 2 pedida a Dani (13-jul noche).
-- **#485** el agente escribe `audit_log` + procedencia: **prep de implementación MAPEADA en el issue** (comentario). El andamiaje del **seam #253 YA existe** (`TransactionRunner`/`TransactionHandle` cableado en `persistence.ts`; `meeting`/`merge-clients` executors ya escriben en tx; la mayoría de stores CRM ya aceptan `tx?`) → NO es un rediseño. **El único punto de contrato que necesita el OK de Borja = añadir `provenance?` (aditivo) a `WriteContext`** para llevar voice/onboarding/import al `after`; en el agente actor==owner==`ctx.userId` (sin split #450). Detrás de esa firma: nuevo `AuditStore` (espejo de `PostgresCrmWriteStore.audit`) + envolver executors en `runInTransaction` + `tx?` en los stores que faltan + wiring + tests.
+**Follow-ups (no bloquean):**
+- **#500 (Borja)**: superficie de **visualización del `audit_log`** en el dashboard, ahora que incluye los writes del agente con procedencia. Read-only, sin migración.
+- **Backfill opcional de `users.email` (Manu)**: el self-recipient solo tiene efecto para usuarios con la columna poblada (los que conecten M365 tras la release o pasen por `awaiting_email`); los 4-5 comerciales YA conectados no se capturan retroactivamente (mismo caso que el `oid` de #489). Backfill si se quiere efecto inmediato.
+- **Arquitectura (#454)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`), exige ventana propia + anuncio.
+- **PR #504** (solo-docs, esta sesión) a merge de Borja.
 
 ## Bloqueantes
 

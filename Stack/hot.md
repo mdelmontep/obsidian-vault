@@ -26,6 +26,8 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 ## Auditoría / agentes / rutinas cloud
 - **Auditar/fixear con red** — worktree desde origin/main + dedup vs issues abiertos ANTES de filar; re-audita tus fixes con agentes independientes antes de mergear. Ver [[auditar-sobre-origin-main-worktree-no-cwd-stale]] · [[maker-checker-re-auditar-fixes-propios-antes-de-merge]].
 - **Bot de auditoría recurrente: idempotencia por estado de issues** — dedup contra abiertos Y cerrados; cerrar = corregido (suprime salvo regresión) / `wontfix` (supresión permanente). La fuente de datos no sabe qué está arreglado. Ver [[audit-bot-recurrente-idempotencia-por-estado-de-issues]].
+- **`audit_log` con 2º escritor (agente): procedencia en el `after` jsonb (sin columna), before sin carrera (FOR UPDATE / DELETE RETURNING), audit en la misma tx, deps opcionales** — atomicidad se prueba con pg-real (fake in-memory no lo demuestra). Ver [[audit-log-multi-escritor-procedencia-en-after-before-sin-carrera]].
+- **Delegar implementación con deps opcionales → revisar el camino de composición, no solo la hoja** — gate verde ≠ cableado; el código muerto no rompe tests. Ver [[subagente-feature-sin-cablear-composicion]].
 - **Rutinas cloud (RemoteTrigger/CCR): egress allowlist + identidad bot** — 403 en CONNECT a host privado → Network access Custom + Allowed domains (aplica a sesiones NUEVAS); postea por webhook, no por conector personal (suplanta). Ver `Stack/claude-code-harness.md` §Rutinas cloud.
 - **Agentes background muertos por session limit → SendMessage al mismo agentId** — inventariar working tree primero; nunca dos sobre los mismos archivos. Ver [[agentes-background-mueren-por-session-limit-reanudar-con-sendmessage]].
 
