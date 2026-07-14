@@ -66,7 +66,7 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 
 **Follow-ups (no bloquean):**
 - **#500 (Borja)**: superficie de **visualización del `audit_log`** en el dashboard, ahora que incluye los writes del agente con procedencia. Read-only, sin migración.
-- **Backfill opcional de `users.email` (Manu)**: el self-recipient solo tiene efecto para usuarios con la columna poblada (los que conecten M365 tras la release o pasen por `awaiting_email`); los 4-5 comerciales YA conectados no se capturan retroactivamente (mismo caso que el `oid` de #489). Backfill si se quiere efecto inmediato.
+- ~~**Backfill de `users.email`**~~ HECHO 2026-07-14 (`UPDATE 4` en prod: david/estefanía/itziar/jamie desde su identidad `entra-invite`, verificado read-only antes; guardado `email IS NULL`+`entra-invite`+`LIKE '%@%'`). **Carlos + 6 usuarios test** siguen sin email (sin `entra-invite`) → se capturan al conectar M365 o vía `awaiting_email`. Falta smoke conductual E2E del self-recipient (dictar «mándamelo a mí»).
 - **Arquitectura (#454)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`), exige ventana propia + anuncio.
 - **PR #504** (solo-docs, esta sesión) a merge de Borja.
 
