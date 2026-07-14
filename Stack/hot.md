@@ -52,6 +52,9 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 ## Frontend / UX / QA
 - **Subida en lote vs rate-limit per-user: sin backoff el excedente se pierde** — Retry-After exacto (PTTL) + `code:rate_limited` en el 429 + `fetchWithTransientRetry` (backoff sobre 429-por-minuto/5xx/red, no sobre topes de plan) + panel de reintento. La cola de fondo NO cubre la ráfaga de subida HTTP. Ver [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]].
 - **Acción masiva en cliente con N round-trips en serie cuelga la UI** — batch read (`.in(ids)`) + un `UPDATE .in(ids)` si todas iguales, o pool acotado (~6) + contador `N/total` y relleno del botón. Ver [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]].
+- **Clave de selección de fila = id único, no campo de negocio** — `num??id` colapsa duplicados (nº recibidas repite) → acciones en lote saltan filas en silencio. Ver [[clave-seleccion-fila-debe-ser-id-unico-no-campo-de-negocio]].
+- **OpenAI vision lee un PDF del revés si rotas páginas con pdf-lib** — honra el `/Rotate`; auto-orientar reintentando en fallos [180,90,270]. Ver [[openai-vision-lee-pdf-del-reves-rotando-con-pdf-lib]].
+- **Dep nativa (sharp) en ruta API → import dinámico en try/catch** — el import estático tumba TODA la ruta si el `.node` no carga en Alpine; + `serverExternalPackages`. Ver [[dep-nativa-import-dinamico-defensivo-en-ruta-api]].
 - **agent-browser `eval` reutiliza contexto → `const` redeclarado peta** — envuelve en IIFE o usa `wait --fn` para esperar sin polling manual (evita cronometrajes falsos). Ver [[agent-browser-eval-contexto-persiste-const-usar-iife]].
 
 ---
