@@ -33,6 +33,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Hook-guard de comandos: matchea sobre el comando SIN comillas (scrub `"…"`/`'…'`), no substring cruda** — si no, un `gh pr create --body`/`git commit -m` que menciona la frase da falso positivo. Ver [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]].
 - **Rutinas cloud (RemoteTrigger/CCR): egress allowlist + identidad bot** — 403 en CONNECT a host privado → Network access Custom + Allowed domains (aplica a sesiones NUEVAS); postea por webhook, no por conector personal (suplanta). Ver `Stack/claude-code-harness.md` §Rutinas cloud.
 - **Agentes background muertos por session limit → SendMessage al mismo agentId** — inventariar working tree primero; nunca dos sobre los mismos archivos. Ver [[agentes-background-mueren-por-session-limit-reanudar-con-sendmessage]].
+- **Prompt caching Anthropic: cachear solo system+tools deja el HISTORIAL sin cachear** — en runner multi-turno/agéntico añade 3er breakpoint MÓVIL en el último mensaje (máx 4/request); `input_tokens` ya excluye lo cacheado, loguea `cache_read`. Ver [[anthropic-prompt-cache-prefijo-system-tools]].
 
 ## Git / worktrees / merge (multi-sesión)
 - **Working tree en rama STALE → verifica antes de reimplementar** — lee de `git show origin/main:<path>` + `git merge-base --is-ancestor` antes de construir. Ver [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]].

@@ -1,11 +1,13 @@
 ---
-title: anthropic prompt caching cachea por prefijo — un campo variable en `system` invalida también el cache de los `tools`
+title: anthropic prompt caching cachea por prefijo — cachear solo system+tools deja el historial sin cachear
 date: 2026-05-27
 source: claude-code-session
-tags: [claude-api, anthropic, caching, coste]
+tags: [claude-api, anthropic, caching, coste, copiloto]
 ---
-`cache_control: {type:'ephemeral'}` cachea TODO el prefijo del request hasta el breakpoint. Orden del prefijo: `system` → `tools` → `messages`.
+`cache_control: {type:'ephemeral'}` cachea TODO el prefijo hasta el breakpoint. Orden real de render: `tools` → `system` → `messages` (breakpoint en el último bloque de `system` cachea tools+system juntos).
 
-Si metes un campo que cambia (fecha del día, idioma del user) dentro de `system`, rompes el cache de system Y de los `tools` (van después en el prefijo) → pagas tokens completos. Para cachear los tools de forma estable, el contenido variable debe ir en el primer mensaje de usuario, NO en system; o asume bust diario/por-idioma.
+Campo variable (fecha del día, idioma, uuid) dentro de `system` → rompe el cache de system Y de los tools → tokens completos. Volátil al final, estable delante; o asume bust diario/por-idioma.
 
-TTL por defecto 5 min: en multi-turno (loop de tools + turnos seguidos en <5 min) el hit es el caso común y ahí vive el ahorro. Poner el breakpoint en el último tool cachea system+tools juntos. SDK `@anthropic-ai/sdk` ≥0.90: `system` admite array de TextBlockParam con `cache_control`.
+GOTCHA (FacturaIA copiloto, PR #894 2026-07-14): cachear solo system+tools NO cachea el HISTORIAL, que es lo que crece (turnos, tool_results, imágenes). En un runner multi-turno/agéntico añade un 3er breakpoint MÓVIL en el último bloque del último mensaje, recolocándolo antes de cada llamada al SDK y limpiando el previo (máx 4 breakpoints/request; ventana de lookback 20 bloques). Cachea la conversación entre iteraciones del loop y entre turnos.
+
+Observabilidad: `usage.cache_read_input_tokens` (~0,1×) y `cache_creation_input_tokens` (~1,25×); `input_tokens` ya EXCLUYE lo cacheado → cacheRead alto + input bajo = caché OK. No viene en la respuesta al cliente salvo que lo añadas: loguéalo en servidor. TTL 5 min. SDK `@anthropic-ai/sdk` ≥0.90: `system` = array TextBlockParam con cache_control.
