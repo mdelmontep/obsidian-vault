@@ -33,6 +33,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 
 ## Git / worktrees / merge (multi-sesión)
 - **Working tree en rama STALE → verifica antes de reimplementar** — lee de `git show origin/main:<path>` + `git merge-base --is-ancestor` antes de construir. Ver [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]].
+- **Stash/WIP viejo puede estar ya en main** — con ramas en paralelo se vuelve obsoleto; `git log origin/main -S "<firma>"` antes de reconciliar, y `git apply --3way` con 0 diff = ya aplicado. Ver [[stash-o-wip-viejo-puede-estar-ya-en-main-verificar-antes-de-reconciliar]].
 - **`git worktree add` sin `cd` inmediato → Bash cae en el checkout principal** — verifica `pwd`+`git branch --show-current` justo después. Ver [[worktree-add-sin-cd-bash-cae-en-checkout-principal]].
 - **Worktree monorepo → symlinkar TAMBIÉN el node_modules anidado** (`dashboard/node_modules`), no solo el raíz; si no, tests del subpaquete fallan (`react/jsx-dev-runtime`) y parece regresión tuya. Ver [[worktree-monorepo-symlink-node-modules-anidado]].
 - **`gh pr merge` miente en stdout** — verifica `gh pr view <n> --json state` == MERGED. Ver [[gh-pr-merge-no-confirma-verificar-state-merged]].
