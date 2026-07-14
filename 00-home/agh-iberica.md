@@ -57,6 +57,8 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 - **Gaps de la auditoría Langfuse**: #481 bucle del «sí» al conectar M365 (#494) + #482-p2 guard del `to` (no placeholder/pronombre al HITL, #491).
 - **#485 audit del agente (#501, `365c1e9`)**: el agente = **2º escritor de `audit_log`** — cada write CRM mutador (client/contact/meeting+note/task + borrado del duplicado en mergeClients) en la MISMA tx que la entidad, forma dashboard (#440/#450), actor=`ctx.userId`, **procedencia** (voice/onboarding/chat) en el `after` — sin columna nueva ni migración (solo comentario en schema.sql → drift no aplica). `AuditStore` (Postgres/InMemory/Noop) + `tx?` en los stores + `ClientStore.findById` (FOR UPDATE) + `delete` con RETURNING. 4 pg-real de atomicidad (incl. rollback). Patrón reusable: [[audit-log-multi-escritor-procedencia-en-after-before-sin-carrera]].
 - **#482-p1 self-recipient (#503, `0c40fdf`)**: «mándamelo a mí» → resuelve `users.email` (poblado por `provisionWorker` + el connect de M365 que captura el claim `email/upn/preferred_username` del id_token, best-effort/fail-closed, sin persistir el token); guard anclado que nunca secuestra un envío a terceros; señal en `SYSTEM_PROMPT`; fallback `awaiting_email` en onboarding. Cierra #482 de verdad (estaba CLOSED sin la parte 1 hecha).
+- **#452 módulo temporal (#509, `4be24b9`)**: la semántica temporal (`parseWhen`/`formatLocal`/tz) estaba duplicada en 3 executors (meeting.schedule/reminder.schedule/thread.postpone) → consolidada en `src/reminders/when.ts` (`resolveTemporal(nowMs,when)→resolved|past|invalid` + `formatLocalInstant`). Move-don't-reshape (cero cambios de wording), +21 tests DST. Cierra el hallazgo 3 de la revisión #457.
+- **#508 fix del harness (`6685712`)**: `git-guard` ignora el contenido entre comillas antes de matchear → un `gh pr create --body "…reset --hard…"` o `git commit -m "…"` ya no dan falso positivo (mismo fix al hook global `~/.claude/hooks/git-guard.sh`).
 - **Observabilidad**: Langfuse v3 en prod (tracing activo, content=true); `userId` en claro opt-in `LANGFUSE_TRACE_PLAIN_USER_ID` (#472/#475); **rutina de auditoría semanal** (lunes 09:00, maker/checker, postea como bot; idempotente por estado de issues — ver [[audit-bot-recurrente-idempotencia-por-estado-de-issues]]).
 - **Arquitectura (épica #457)**: gate raíz `npm run gate` (#453); split actor/owner (#450); `createApp` por slices en **`src/composition/`** (#455) — **wiring nuevo: tool/read/write → `capabilities.ts`, store → `persistence.ts`, env/validación → `config.ts` (⚠️ orden de throws fijado por `app-config.test.ts`), worker → `lifecycle.ts`; NUNCA `app.ts`**; smoke contra el brain real (#456, `LlmBrain` retirado).
 
@@ -67,8 +69,8 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 **Follow-ups (no bloquean):**
 - **#500 (Borja)**: superficie de **visualización del `audit_log`** en el dashboard, ahora que incluye los writes del agente con procedencia. Read-only, sin migración.
 - ~~**Backfill de `users.email`**~~ HECHO 2026-07-14 (`UPDATE 4` en prod: david/estefanía/itziar/jamie desde su identidad `entra-invite`, verificado read-only antes; guardado `email IS NULL`+`entra-invite`+`LIKE '%@%'`). **Carlos + 6 usuarios test** siguen sin email (sin `entra-invite`) → se capturan al conectar M365 o vía `awaiting_email`. Falta smoke conductual E2E del self-recipient (dictar «mándamelo a mí»).
-- **Arquitectura (#454)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`), exige ventana propia + anuncio.
-- **PR #504** (solo-docs, esta sesión) a merge de Borja.
+- **Arquitectura (#454, lane de Borja)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`, `hitl-brain.ts`), exige ventana propia + anuncio.
+- **Smoke conductual E2E** del self-recipient (dictar «mándamelo a mí» por WhatsApp/voz) + carlos+6 test sin `users.email` (reconexión M365).
 
 ## Bloqueantes
 
