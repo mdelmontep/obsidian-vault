@@ -14,6 +14,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Buscador de listado = lupa expandible**, no fila propia ni inline fijo (estruja/hueco). Ver [[buscador-listado-lupa-expandible-no-fila-propia]].
 - **Column-picker: ocultar por CSS (display:none), no desmontar** th/td → preserva colSpan/sort/bulk. Ver [[ocultar-columnas-tabla-por-css-no-desmontar]].
 - **Refactor UI grande con agentes**: particiona por archivo disjunto (no por feature) + antes/después vía `git stash`. Ver [[refactor-ui-grande-agentes-paralelos-particionados-por-archivo]].
+- **Submodal dentro de un drawer/contenedor que coordina Escape/focus a mano → NO migrar a `<Modal>` sin más** (doble cierre). Ver [[migrar-submodal-a-modal-choca-con-escape-del-contenedor]].
 
 ## Agente AGH (capacidad conversacional)
 - **Recall/RAG sin umbral = confidently-wrong** — k=1 sin piso de distancia miente; devolver distancia+umbral+top-k+atribución+golden negativo. Ver [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]].
