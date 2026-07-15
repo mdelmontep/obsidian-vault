@@ -63,6 +63,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Dep nativa (sharp) en ruta API → import dinámico en try/catch** — el import estático tumba TODA la ruta si el `.node` no carga en Alpine; + `serverExternalPackages`. Ver [[dep-nativa-import-dinamico-defensivo-en-ruta-api]].
 - **agent-browser `eval` reutiliza contexto → `const` redeclarado peta** — envuelve en IIFE o usa `wait --fn` para esperar sin polling manual (evita cronometrajes falsos). Ver [[agent-browser-eval-contexto-persiste-const-usar-iife]].
 - **Grid `1fr` no encoge bajo su contenido `nowrap` → desborda** — usar `minmax(0, 1fr)` + `min-width:0` en la cadena flex-column; el badge/importe se salía de pantalla pese al ellipsis. Lo caza el QA visual, no el build. Ver [[grid-1fr-no-encoge-con-contenido-nowrap-usar-minmax-0-1fr]].
+- **`backdrop-filter` invisible en Turbopack: no declares `-webkit-` a mano** — lightningcss colapsa el par y sirve solo la variante `-webkit-`, dropando la sin prefijo → Chrome no aplica el glass. Solo `backdrop-filter`; el pipeline prefija. Ver [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.

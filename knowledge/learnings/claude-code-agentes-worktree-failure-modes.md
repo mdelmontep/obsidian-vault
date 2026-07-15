@@ -85,6 +85,24 @@ git checkout <worktree-branch> -- \
 
 **Fix**: para features grandes de implementación, hazlas TÚ inline (o un `general-purpose` fresco con brief acotado y paths explícitos), no un `fork`. El fork rinde en tareas de análisis/verificación acotadas que se benefician de tu contexto, no en construir 10 ficheros. Verificar SIEMPRE en disco lo que produjo (worktree creado, commits) antes de fiarte del reporte. Caso real 2026-07-04: fork wa-fase3 Stripe → 0 output; rehecho inline con TDD, limpio.
 
+## Failure mode G: worktree "corrupto" — build falla en origin/main puro, worktree hermano pasa → recrear
+
+**Síntoma**: `next build` en un worktree falla determinista (`InvariantError: Expected workStore to be initialized. This is a bug in Next.js` en el prerender de páginas ajenas al diff), incluso tras revertir TODO el diff a origin/main. Un worktree HERMANO con el mismo origin/main + mismo `node_modules` (symlink compartido) buildeale limpio. Caché limpia (`.next`, `node_modules/.cache`), carga baja, browser cerrado — sigue fallando solo ese worktree.
+
+**Causa probable**: estado local del worktree envenenado tras un `npm install` INTERRUMPIDO (timeout) contra el `node_modules` symlinkado compartido + builds concurrentes. `npm ci` en la raíz restaura el node_modules compartido pero NO cura el worktree.
+
+**Fix**: no perseguir el fantasma — **recrear el worktree**. El commit vive en la rama: `git worktree remove --force <path>` + `git worktree add <path> <rama>` + re-symlink env/node_modules → buildeale limpio. Caso real 2026-07-15 (PR-B móvil).
+
+**Blindaje**: NUNCA `npm install <dep>` dentro de un worktree con `node_modules` symlinkado compartido (afecta a todos + puede colgar). Añadir deps desde el checkout que posee node_modules, o al mergear.
+
+## Failure mode H: `git stash` comparte stack entre TODOS los worktrees del repo → pop aplica stash ajeno
+
+**Síntoma**: `git stash pop` en mi worktree aplica cambios que NO son míos (de otra rama/sesión) con conflictos `UU` en ficheros que no toqué.
+
+**Causa**: el stack de stashes (`refs/stash`) es del REPO, compartido por todos los worktrees. `git stash push` apila sobre el stack común; un `pop` posterior saca lo que haya en el tope — puede ser de otra sesión paralela.
+
+**Fix / blindaje**: **no usar `git stash` para aislar en un repo con worktrees.** Para probar "con/sin mi diff" usa `git checkout <ref> -- <paths>` (revertir ficheros puntuales) o un worktree/rama aparte. Si ya pasó: `stash pop` en conflicto NO borra el stash (sigue en el stack, nada perdido) → `git checkout HEAD -- <ficheros UU>` para descartar la copia mal aplicada y verificar `git stash list` intacto. Caso real 2026-07-15: popé un stash de otra sesión (13 en el stack). Relacionado: [[git-stash-sin-u-deja-untracked-y-hook-falla]].
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:

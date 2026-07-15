@@ -9,6 +9,18 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 
 **Estado (2026-07-15):** primera ola (PR0-PR6: home nativo, shell+PWA, sheet "+", tab Facturas, tab Documentos, menú "Más") EN PROD. Esta spec es el prompt de ejecución de la SEGUNDA ola, listo para lanzar en otra sesión de Claude Code (Opus, multi-agente). Decisiones cerradas con Manuel: **push = infra completa, VAPID las genera Manuel**; **offline = estrategia profesional tipo fintech** (shell precacheado, datos network-first con marca de antigüedad, nunca cifras obsoletas sin aviso). [[facturaia]]
 
+## Progreso (2026-07-15 — ejecutado, 5 PRs abiertos sin mergear)
+
+- **#907 PR-A** glass chrome móvil + menú "Más" flotante (radio 28) + **fondo con halos brand** para dar cuerpo al glass (2 feedbacks de Manuel aplicados). QA completa claro/oscuro + artifact.
+- **#910 PR-B** PWA: service worker offline (navegación network-first→offline.html, datos API nunca cacheados, escrituras no interceptadas) + migración `462_push_subscriptions` + endpoint `/api/push/subscribe` + `PwaManager`. **Envío push = follow-up (bloqueado por VAPID de Manuel).** Fix en QA: middleware redirigía `/sw.js`+`/offline.html` a /login (307) → añadidos al matcher.
+- **#911 PR-D** botón "Recordar cobro" 1 toque en el home (reusa `/api/cobros/send-now`). **Parte 2 (detalle móvil con barra de acciones) pendiente** (inviolables acciones-por-estado).
+- **#916 PR-F** badges menú "Más" (`useSidebarCounts`) + reset de overlays al cruzar breakpoint + fix real de focus-trap Shift+Tab (más-menu/create-sheet/notifications-drawer).
+- **#917 PR-E** escaneo multipágina (combina imágenes en 1 PDF client-side con pdf-lib → reusa `/api/upload`, sin cambios de backend) + aviso de calidad (varianza Laplaciano). **Manual de usuario pendiente** + calibrar umbral blur.
+
+**Diferido a sesión aparte:** PR-C (gestos swipe+undo, pull-to-refresh, scroll infinito — toca `useFacturasData`/`usePaginationParams` compartido + mutaciones) y auditoría de rendimiento (LCP móvil throttled).
+
+**Smokes al mergear:** `supabase db push` mig 462 · VAPID (`npx web-push generate-vapid-keys`) · offline PWA iOS (modo avión) · conflictos globals.css esperables entre PRs (`.mmenu`/`.mh-due`/`.csheet`). Gotcha CSS de la sesión: [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]].
+
 ## Hallazgo que motiva la fase 1 (glass)
 El chrome móvil de la primera ola es SÓLIDO, no glass: `.csheet`/`.mmenu`/`.ming`/`.mfac__card` = 0 reglas de `backdrop-filter`, mientras la app tiene sistema glass real (`.glass-sheen` globals.css ~37, patrón `notifications-drawer`). La fase 1 unifica a glass; cada pieza nueva nace glass.
 
