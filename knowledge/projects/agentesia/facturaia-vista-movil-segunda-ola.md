@@ -9,7 +9,7 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 
 **Estado (2026-07-15):** primera ola (PR0-PR6: home nativo, shell+PWA, sheet "+", tab Facturas, tab Documentos, menú "Más") EN PROD. Esta spec es el prompt de ejecución de la SEGUNDA ola, listo para lanzar en otra sesión de Claude Code (Opus, multi-agente). Decisiones cerradas con Manuel: **push = infra completa, VAPID las genera Manuel**; **offline = estrategia profesional tipo fintech** (shell precacheado, datos network-first con marca de antigüedad, nunca cifras obsoletas sin aviso). [[facturaia]]
 
-## Progreso (2026-07-15 — ejecutado, 5 PRs abiertos sin mergear)
+## Progreso (2026-07-15 — 5 PRs MERGEADOS a main, deploy auto en Dokploy)
 
 - **#907 PR-A** glass chrome móvil + menú "Más" flotante (radio 28) + **fondo con halos brand** para dar cuerpo al glass (2 feedbacks de Manuel aplicados). QA completa claro/oscuro + artifact.
 - **#910 PR-B** PWA: service worker offline (navegación network-first→offline.html, datos API nunca cacheados, escrituras no interceptadas) + migración `462_push_subscriptions` + endpoint `/api/push/subscribe` + `PwaManager`. **Envío push = follow-up (bloqueado por VAPID de Manuel).** Fix en QA: middleware redirigía `/sw.js`+`/offline.html` a /login (307) → añadidos al matcher.
@@ -19,7 +19,16 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 
 **Diferido a sesión aparte:** PR-C (gestos swipe+undo, pull-to-refresh, scroll infinito — toca `useFacturasData`/`usePaginationParams` compartido + mutaciones) y auditoría de rendimiento (LCP móvil throttled).
 
-**Smokes al mergear:** `supabase db push` mig 462 · VAPID (`npx web-push generate-vapid-keys`) · offline PWA iOS (modo avión) · conflictos globals.css esperables entre PRs (`.mmenu`/`.mh-due`/`.csheet`). Gotcha CSS de la sesión: [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]].
+**Merge (2026-07-15):** los 5 + fix #921 (renumerada `462_push_subscriptions`→**463**, chocaba con `462_holded` de #908). Merges limpios (hunks disjuntos), deploy auto.
+
+**Pendiente próxima sesión (5 puntos, prompt abajo en `Índice de áreas`/hub):**
+1. **Aplicar `463_push_subscriptions` a prod** — `supabase db push --linked` desde main limpio (red no bloqueada; los puertos PG timeoutean desde la Mac de Manuel). Dormido sin VAPID, sin prisa.
+2. **VAPID** — `npx web-push generate-vapid-keys` → envs Dokploy (`VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`/`VAPID_SUBJECT`) + `NEXT_PUBLIC_VAPID_PUBLIC_KEY`; luego cerrar el envío server-side (helper `sendPush*` + wiring a `notify()`).
+3. **Manual de usuario** (`docs/manuals/manual-usuario.md`) del flujo de escaneo multipágina + calibrar umbral de blur (80) con fotos reales.
+4. **Smokes prod** (artifact antes/después): móvil glass/badges/recordar/escaneo · offline PWA iOS (modo avión) · integración `create-sheet` (F+E auto-fusionados) · combinación globals.css.
+5. **PR-C** (gestos swipe+undo, pull-to-refresh, scroll infinito — toca `useFacturasData`/`usePaginationParams` + mutaciones, respetar inviolables acciones-por-estado) + **auditoría de rendimiento** (LCP móvil throttled).
+
+Gotcha CSS de la sesión: [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]]. Failure modes de merge/worktree: [[claude-code-agentes-worktree-failure-modes]] (G recrear worktree corrupto, H stash compartido).
 
 ## Hallazgo que motiva la fase 1 (glass)
 El chrome móvil de la primera ola es SÓLIDO, no glass: `.csheet`/`.mmenu`/`.ming`/`.mfac__card` = 0 reglas de `backdrop-filter`, mientras la app tiene sistema glass real (`.glass-sheen` globals.css ~37, patrón `notifications-drawer`). La fase 1 unifica a glass; cada pieza nueva nace glass.
