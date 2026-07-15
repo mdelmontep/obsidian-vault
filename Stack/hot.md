@@ -52,6 +52,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Schedule Dokploy compose exige `serviceName`** — sin él runManually→500 y el cron no dispara (invisible); verifica el 1er run a mano. Ver [[dokploy-compose-schedule-requiere-servicename]].
 - **Supabase egress restringido tumba la app vía healthcheck → Traefik 404** (Docker "healthy" engaña; `curl -I` da 404). Restaurar plan; egress es mensual. Ver [[supabase-egress-restringido-tumba-app-via-healthcheck-traefik-404]].
 - **Stripe: el CLI puede ir a OTRA cuenta que la sk_live de la app** — "No such price" falso; verifica con `curl -u $SK` de la app. Ver [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]].
+- **Holded v2: el rol de un contacto es `client_record`/`supplier_record`, no `type`** — un contacto puede ser cliente Y proveedor; decidir por `type` mete proveedores en clientes. Ver [[holded-v2-contacto-rol-por-record-no-por-type]].
 
 ## Frontend / UX / QA
 - **Subida en lote vs rate-limit per-user: sin backoff el excedente se pierde** — Retry-After exacto (PTTL) + `code:rate_limited` en el 429 + `fetchWithTransientRetry` (backoff sobre 429-por-minuto/5xx/red, no sobre topes de plan) + panel de reintento. La cola de fondo NO cubre la ráfaga de subida HTTP. Ver [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]].

@@ -7,7 +7,11 @@ tags: [facturaia, holded, integraciones, sync, erp, incidente]
 
 # Integración Holded — CERRADA, pull-only, en prod
 
-**Estado final (2026-07-07): viva en prod, pull-only.** Contactos/productos/gastos bajan de Holded a TuFacturaIA cada 15 min; TuFacturaIA nunca escribe en Holded. `HOLDED_ENABLED=true`. Sin pendientes. Runbook operativo (incluye el incidente completo) en `docs/architecture/holded-runbook.md`.
+**Estado final (2026-07-07): viva en prod, pull-only.** Contactos/productos/gastos bajan de Holded a TuFacturaIA cada 15 min; TuFacturaIA nunca escribe en Holded. `HOLDED_ENABLED=true`. Runbook operativo (incluye el incidente completo) en `docs/architecture/holded-runbook.md`.
+
+## Bug rol cliente/proveedor — PR #908 (2026-07-15, pendiente smoke prod)
+
+El pull metía TODOS los contactos en `clientes` sin mirar el rol (sandbox: 409 → 0 proveedores). Ironía: los mismos `client_record`/`supplier_record` que el push perdía en el incidente eran la señal de rol que el pull ignoraba. Fix: `contactRoles()` deriva el rol real (record > type; cubre doble rol); `pullContactRole` rutea a `clientes`/`proveedores`; `holded_entity_map.entity_type` → `contact_client`/`contact_supplier` (mig 462 amplía el CHECK). Reconciliación de lo ya importado: `scripts/reconcile-holded-roles.ts` (idempotente) — aplicada al sandbox + mig 462 en remoto. **Pendiente:** smoke prod del próximo pull (debe ser no-op limpio). Ver [[holded-v2-contacto-rol-por-record-no-por-type]].
 
 ## Historial (5 PRs, en orden)
 
