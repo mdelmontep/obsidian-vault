@@ -102,6 +102,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Decisiones pendientes (producto)
 
+- **Ofrecer skin "Cristal" a usuarios** — QA contraste/APCA en pantallas densas OK (2026-07-02, oscuro+claro); queda solo la decisión de negocio de exponerlo.
+
 - ✅ **Cutover cola OCR — RESUELTO (2026-07-08)**: ejecutado por #802 (no #800) — mig 449 aplicada a prod + cron `ocr-dispatcher` dado de alta y verificado. Queda solo el smoke (ver Smoke) y cerrar el PR #800 duplicado. Detalle en NOW.
 
 - **Paso 2 del auto-OCR: calidad de extracción vs fricción de aprobación (2026-07-08)** — backfill de `facturas_ok` y bajar umbral 3→2 **descartados por datos** (dry-run: madura 0 proveedores; solo 3 con ≥2 recibidas limpias, 31 limpias en total). Raíz real: **86% de recibidas en `sin_aprobar`** (230/268) — no se aprueban, nada madura, nada va a verde. Dos vías: (1) **calidad de extracción** (endurecer prompt `ocr-process` + evaluar upgrade modelo vision; ~20% docs con num/fecha/total vacíos) — recomendada, útil independientemente del volumen de aprobación; (2) **fricción de aprobación** (por qué 230 recibidas sin aprobar) — es la raíz del auto-OCR inerte, pero producto/UX, no un knob. Ver [[gate-agentico-que-no-dispara-suele-estar-inanido-no-mal-calibrado]].
@@ -262,7 +264,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🟠 **OCR auto-orientación + scroll-fade toolbars EN PROD (#905, 2026-07-15) — smoke** (movido de top-of-mind 2026-07-15) — escanear un doc torcido → llega derecho; selección masiva en /recibidas; scroll-fade horizontal en los chips de filtros/presupuestos/notif-drawer con overflow. (Auto-orientación y selección masiva también cubiertas por #888.)
 - 🔴 **Responder tickets** (movido de top-of-mind 2026-07-15) — Abba BORME (re-escanear 2 docs → gonzalo.riera) + bgchivite `1762f07e` (deploy #209 en prod).
 - 🔴 **UX feedback — smoke prod** (movido de top-of-mind 2026-07-15) — #528 (toast al guardar empresa/plantillas) + #529 (modal glass confirmación de cambio de precio en `/admin/plans`).
-- 🟠 **Decidir ofrecer skin "Cristal" a usuarios (decisión de negocio)** (movido de top-of-mind 2026-07-15) — QA contraste/APCA en pantallas densas hecho 2026-07-02 (sin fallos, oscuro+claro); queda solo la decisión de negocio de exponerlo.
 
 ## NEXT (próximas 2 semanas)
 
