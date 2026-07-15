@@ -11,4 +11,6 @@ Consolidar cientos de call-sites de una clase global (`.btn-*`) al componente pr
 3. **Enforcement incremental**: trinquete que congela el conteo de nativos (permite bajar, bloquea subir) + regla de lint a `error` SOLO en la carpeta ya limpia (beachhead) y `warning` en el resto.
 4. Deja nativo lo que NO es el primitivo: `<a>/<Link>` (sin `as`), dialectos con prefijo (`adm-btn-*`), `<label>`, icon-only/toggles.
 
+**Cuándo NO aplica**: solo sirve para primitivos DROP-IN (`<button>`→`<Button>`, mismos children). Un primitivo COMPUESTO (`<Input>` = `div.field>label>wrap>input`+error) reestructura el DOM por call-site → migrarlo es refactor por-formulario con QA por-pantalla, NO fleet mecánico. Detéctalo antes de lanzar agentes.
+
 Caso real FacturaIA: 1053→577 botones nativos en una sesión con fleets de agentes. Ver [[css-background-white-hardcoded-rompe-dark-mode-silencioso]].

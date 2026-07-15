@@ -18,7 +18,7 @@ tags: [home, prioridades]
 
 - **TuFacturaIA — prompt caching copiloto en prod (#894)** — smoke pendiente (grep logs del host por `copiloto/cache`). [[facturaia]]
 - **TuFacturaIA — UI polish sidebar/clientes/facturas en prod (#882/#883/#884)** — smoke pendiente. [[facturaia]]
-- **TuFacturaIA — unificación UI: `<Button>` fuente única EN PROD (5 PRs, −476 nativos)** — siguiente: enlaces btn-*, dialectos `.adm-btn-*`, otros primitivos (Input/Select/Modal), vaciar globals.css. [[facturaia]]
+- **TuFacturaIA — unificación UI: botón + color/dark-mode EN PROD (7 PRs, −476 botones/−221 hex, verificado 5113 tests)** — Fase 4 (estructural, NO fleet): reinvenciones→ui/drawer/segmented, Input/Select compuestos, enlaces `<a>` btn-* + vaciar globals.css. Prompt de arranque en memoria `project_unificacion_ui_facturaia`. [[facturaia]]
 - **TuFacturaIA — Centro Fiscal (#825) en prod + migs 452/453** — solo smoke prod fiscal pendiente (Manu). [[facturaia]]
 - **TuFacturaIA — cuadres fiscales rediseñados (#835 mergeado)** — 2 follow-ups (smoke 390 + bug gating hub /fiscal) en hub «Smoke». [[facturaia]]
 - **TuFacturaIA — cobro Stripe Connect** — todo preparado, bloqueado solo en acción Manu (KYC dashboard `acct_1Td5cc`). [[facturaia]]
