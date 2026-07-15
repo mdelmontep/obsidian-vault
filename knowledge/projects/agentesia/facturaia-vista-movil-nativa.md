@@ -7,7 +7,7 @@ tags: [facturaia, frontend, mobile, spec]
 
 # Vista móvil nativa TuFacturaIA
 
-**Estado (2026-07-14):** alcance decidido (Home + TODAS las tabs nativas), sin código. Prompt de plan para Fable 5 listo abajo → lanzar en otra sesión y revisar el plan antes de tocar código. [[facturaia]]
+**Estado (2026-07-15): COMPLETADA — PR0-PR6 EN PROD.** Home nativo, shell+PWA, sheet "+", tab Facturas, tab Documentos, menú "Más" mergeados. Siguiente: [[facturaia-vista-movil-segunda-ola]] (glass + push + offline + gestos). Lo de abajo es el plan histórico de la primera ola. [[facturaia]]
 
 ## Contexto rastreado
 - La app HOY es solo responsive; NO hay vista móvil dedicada.
