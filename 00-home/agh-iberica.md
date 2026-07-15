@@ -70,9 +70,9 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 **Follow-ups (no bloquean):**
 - **#500 (Borja)**: superficie de **visualización del `audit_log`** en el dashboard, ahora que incluye los writes del agente con procedencia. Read-only, sin migración.
 - ~~**Backfill de `users.email`**~~ HECHO 2026-07-14 (`UPDATE 4` en prod: david/estefanía/itziar/jamie desde su identidad `entra-invite`, verificado read-only antes; guardado `email IS NULL`+`entra-invite`+`LIKE '%@%'`). **Carlos + 6 usuarios test** siguen sin email (sin `entra-invite`) → se capturan al conectar M365 o vía `awaiting_email`. Falta smoke conductual E2E del self-recipient (dictar «mándamelo a mí»).
-- **Arquitectura (#454, lane de Borja)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`, `hitl-brain.ts`), exige ventana propia + anuncio. **Secuenciar con #520** (corregir «lo último» no-cliente, cae en ese mismo switch) y considerar **#521** (deixis/ordinales — fork de diseño del voz-only de #247).
-- **PR #519 (revisión de Dani)**: cita FORWARD en `client.prep` (`CalendarTool.upcomingDays`, zona m365) — su nod para mergear.
-- **Smoke conductual E2E** del self-recipient (dictar «mándamelo a mí» por WhatsApp/voz) + carlos+6 test sin `users.email` (reconexión M365).
+- **Arquitectura (#454, lane de Borja)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`, `hitl-brain.ts`), exige ventana propia + anuncio. **#520 ya MERGEADO en ese mismo switch (`case confirm`/`correct`, mig 0021) → #454 debe REBASAR sobre el `main` nuevo antes de seguir** (opción A, decisión de founder). Considerar **#521** (deixis/ordinales — fork de diseño del voz-only de #247).
+- **Smoke conductual E2E** del self-recipient (dictar «mándamelo a mí» por WhatsApp/voz) + carlos+6 test sin `users.email` (reconexión M365). → guion completo de QA en llamada: [[agh-qa-voz-guion-llamada]].
+- **En prod 2026-07-15**: #519 (cita FORWARD en `client.prep`, mergeado) · #520/#527 (corregir «lo último» confirmado para reunión/tarea/oportunidad/contacto, no solo cliente; nuevos `meeting/task/contact.update` + puntero `lastWrite`, mig 0021).
 
 ## Bloqueantes
 
@@ -92,4 +92,4 @@ La política de datos del cliente decide el escalón: (1) API pública + DPA + z
 
 ## Relacionados
 
-[[agentesia]] · [[top-of-mind]]
+[[agh-qa-voz-guion-llamada]] (guion de QA en llamada real) · [[agentesia]] · [[top-of-mind]]

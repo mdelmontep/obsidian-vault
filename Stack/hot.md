@@ -11,6 +11,7 @@ tags: [stack, index]
 Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo sale del índice rápido).
 
 ## UI / listados (reutilizable)
+- **Migrar en masa a un primitivo sin cambiar píxeles**: alinea su geometría al legacy primero (mide computed styles; ojo `line-height`), className-merge desbloquea los omitidos, enforcement con trinquete + error solo en carpeta limpia. Ver [[migracion-invisible-de-primitivo-alinear-geometria-al-legacy]].
 - **Scroll-fade dinámico** en riel que no cabe (`.scroll-fade-x`+`useScrollFade`): difumina solo el borde con contenido oculto. Gotchas: sin `transition` sobre `@property` (se clava en 0px), la máscara recorta `box-shadow` externo, callback ref para portales. Ver [[scroll-fade-dinamico-mascara-gotchas]].
 - **Buscador de listado = lupa expandible**, no fila propia ni inline fijo (estruja/hueco). Ver [[buscador-listado-lupa-expandible-no-fila-propia]].
 - **Column-picker: ocultar por CSS (display:none), no desmontar** th/td → preserva colSpan/sort/bulk. Ver [[ocultar-columnas-tabla-por-css-no-desmontar]].
