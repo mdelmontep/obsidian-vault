@@ -59,6 +59,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **OpenAI vision lee un PDF del revés si rotas páginas con pdf-lib** — honra el `/Rotate`; auto-orientar reintentando en fallos [180,90,270]. Ver [[openai-vision-lee-pdf-del-reves-rotando-con-pdf-lib]].
 - **Dep nativa (sharp) en ruta API → import dinámico en try/catch** — el import estático tumba TODA la ruta si el `.node` no carga en Alpine; + `serverExternalPackages`. Ver [[dep-nativa-import-dinamico-defensivo-en-ruta-api]].
 - **agent-browser `eval` reutiliza contexto → `const` redeclarado peta** — envuelve en IIFE o usa `wait --fn` para esperar sin polling manual (evita cronometrajes falsos). Ver [[agent-browser-eval-contexto-persiste-const-usar-iife]].
+- **Grid `1fr` no encoge bajo su contenido `nowrap` → desborda** — usar `minmax(0, 1fr)` + `min-width:0` en la cadena flex-column; el badge/importe se salía de pantalla pese al ellipsis. Lo caza el QA visual, no el build. Ver [[grid-1fr-no-encoge-con-contenido-nowrap-usar-minmax-0-1fr]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
