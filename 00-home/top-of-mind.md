@@ -16,7 +16,6 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — Holded rol cliente/proveedor (#908 mergeado 15-jul)** — smoke prod: proveedores separados en su pestaña + próximo pull no-op. Reconciliación+mig 462 ya en sandbox. [[facturaia]]
 - **TuFacturaIA — prompt caching copiloto en prod (#894)** — smoke pendiente (grep logs del host por `copiloto/cache`). [[facturaia]]
 - **TuFacturaIA — UI polish sidebar/clientes/facturas en prod (#882/#883/#884)** — smoke pendiente. [[facturaia]]
 - **TuFacturaIA — unificación UI: `<Button>` fuente única EN PROD (5 PRs, −476 nativos)** — siguiente: enlaces btn-*, dialectos `.adm-btn-*`, otros primitivos (Input/Select/Modal), vaciar globals.css. [[facturaia]]
