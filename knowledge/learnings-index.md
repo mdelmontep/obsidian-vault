@@ -1,0 +1,903 @@
+---
+title: índice de learnings (MOC)
+date: 2026-07-15
+tags: [home, indice, moc]
+---
+# Índice de learnings
+
+Mapa temático de los ~863 learnings en `knowledge/learnings/`. Grep aquí para descubrir qué existe antes de crear uno nuevo. Regenerable.
+
+## Supabase / Postgres / BD (237)
+- [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] — acción masiva en cliente con N round-trips en serie cuelga la UI — batch + pool + progreso
+- [[agregado-cacheado-sobre-ledger-recompute-trigger]] — agregado cacheado sobre tabla-ledger compartida → recompute por trigger, no a mano en el…
+- [[agrupacion-por-campo-texto-libre-exige-normalizacion-en-write-path]] — agrupación por campo de texto libre exige normalización en write path + saneo
+- [[alerta-por-conteo-de-estado-debe-acotar-a-entidades-activas]] — alerta por conteo de filas en estado no-terminal debe acotar a entidades activas
+- [[alter-type-add-value-en-migracion-supabase]] — extender un enum postgres en migración supabase con ALTER TYPE ADD VALUE
+- [[anthropic-valida-saldo-antes-de-schema]] — la API de Anthropic valida saldo antes que el schema — no sirve para smoke-testear tool-s…
+- [[apify-daily-scrape-supabase-upsert-sweep-removed]] — apify daily scrape -> supabase upsert + sweep removed
+- [[audit-feed-multi-source-snapshot-vs-diff-shape]] — audit feed multi-source — shape snapshot/diff o columna detalle queda vacía
+- [[audit-log-multi-escritor-procedencia-en-after-before-sin-carrera]] — audit_log multi-escritor — procedencia en el `after` jsonb, before sin carrera vía for-up…
+- [[auditar-un-lado-de-par-simetrico-revisar-el-espejo]] — auditar un lado de un par simétrico → grepear el espejo en el mismo PR
+- [[auditoria-performance-priorizar-por-tamano-real-de-tabla]] — auditoría de performance bd — priorizar por tamaño real de tabla, no por el patrón abstra…
+- [[busqueda-hibrida-sql-pgvector-supabase]] — busqueda hibrida sql + pgvector en supabase para catalogos
+- [[campo-huerfano-shape-sin-migracion-paralela]] — Campo huérfano — código referencia columna sin migración paralela → UI vacía silenciosa
+- [[campo-opcional-en-tipo-compartido-no-implica-seleccionado-en-todos-los-selects]] — un campo opcional ya declarado en el tipo compartido puede seguir vacío en N puntos disti…
+- [[campo-sincronizado-entre-tablas-debe-poblarse-en-todos-los-puntos-de-escritura]] — campo sincronizado entre tablas debe poblarse en todos los puntos de escritura
+- [[check-constraint-recrear-incluye-valores-existentes]] — recrear un CHECK para añadir un valor debe incluir TODOS los existentes
+- [[checkbox-overlay-migracion-especificidad-css]] — migrar input nativo a componente wrapper — superar/borrar las reglas css del nativo
+- [[cliente-react-bypasa-endpoint-canonico-bug-fiscal-latente]] — cliente react bypasa endpoint canónico con supabase.from() — guards = teatro
+- [[clientes-proveedores-filtrar-activos-archivado-at]] — clientes/proveedores: filtrar activos con archivado_at IS NULL, no activo=true
+- [[cloudflare-waf-bloquea-sql-patterns-en-query-params-supabase]] — cloudflare waf bloquea sql patterns en query params supabase
+- [[columna-generada-stored-para-equivalente-derivado]] — equivalente derivado que debe seguir sincronizado → columna GENERATED STORED, no trigger…
+- [[columnas-regulatorias-requieren-guard-rol-trigger-no-solo-rls]] — columnas regulatorias requieren guard de rol en trigger + API route, no solo RLS
+- [[conflicto-rebase-migraciones-paralelas-mismo-table-resolver-aditivo]] — conflicto de rebase entre 2 PRs que añaden columnas distintas a la misma tabla se resuelv…
+- [[consumidor-lee-claves-que-productor-no-emite]] — consumidor que lee claves de campo que el productor no emite falla en silencio
+- [[contador-por-tab-derivado-de-datos-paginados-colapsa-a-0]] — contador por tab/segmented derivado de datos ya paginados colapsa a 0 al filtrar
+- [[copiloto-tool-select-campo-faltante-guard-mudo]] — tool copiloto: campo en interface pero no en select → guard mudo
+- [[coste-derivado-de-tokens-mensaje-vs-columna-tool-calls-vacia]] — Coste copiloto — derivar de tokens del mensaje, no de columna `cost_usd` de tool_calls
+- [[create-or-replace-copiar-de-version-vigente]] — create or replace de función: copiar de la versión vigente, no de la del issue
+- [[cron-drift-detector-debe-usar-mismo-rango-que-genero-el-snapshot]] — Cron detector de drift debe usar el MISMO rango que generó el snapshot
+- [[cron-queue-top-n-by-date-filter-js-no-procesa-antiguos]] — cron tipo queue con "top-N by date + filter JS" no procesa pendientes antiguos
+- [[date-trunc-en-where-no-sargable-aunque-haya-indice]] — date_trunc en WHERE no es sargable aunque haya índice
+- [[decomiso-bot-monolitico-bloqueado-por-nodos-compartidos]] — decomiso de bot monolítico bloqueado por nodos de creación compartidos
+- [[defense-in-depth-estado-activo-cuando-admin-client-bypasa-rls]] — Defense-in-depth — chequear estado='activo' explícito cuando admin client bypasea RLS
+- [[descartar-soft-exclude-ocultar-de-listado-no-hard-delete]] — accion "descartar" sobre estado soft-exclude debe ocultar del listado, no hard-delete
+- [[dokploy-api-schedule-runmanually-trigger-cron-on-demand]] — Dokploy API — `schedule.runManually` para Run Now de un cron sin tocar UI
+- [[dominio-renombrado-no-es-migracion-verificar-mismo-backend]] — cambio de dominio no es migración — verificar backend antes de asumir
+- [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]] — gate de drift de schema postgres — gotchas de psql -c y pg_dump ≥16
+- [[encryption-key-de-credenciales-en-bd-no-es-rotable-in-place]] — encryption key de credenciales en bd no es rotable in-place
+- [[endpoint-crear-entidad-find-or-create-por-identidad-unica]] — endpoint que crea entidad con identidad única debe find-or-create, no insert ciego
+- [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]] — endpoint que escribe overrides de features debe gatear "enable" por plan o compra (bypass…
+- [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]] — valor de enum nuevo en código sin ampliar el check de la bd rompe el insert en silencio
+- [[etag-por-path-upsert-stale-304]] — etag por path con upsert mutable devuelve 304 indefinido
+- [[exception-when-others-colapsa-check-violation-discriminable]] — EXCEPTION WHEN OTHERS colapsa check_violation discriminables → 500 opaco
+- [[extender-database-supabase-interface-never-anyclient]] — extender el tipo Database de supabase-js sin romper el cliente tipado
+- [[facturas-schema-iva_pct-created_via-gotcha]] — Tabla `facturas` — gotchas schema (iva_pct, created_via NOT NULL con CHECK)
+- [[fake-vs-postgres-orden-sort-utf16-vs-collation]] — fake in-memory vs Postgres divergen en orden — .sort() UTF-16 ≠ collation
+- [[feature-flags-multi-tenant-patron-plan-defaults-org-overrides]] — feature flags multi-tenant patron plan defaults org overrides
+- [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]] — feature que siembra recursos por org → actualizar el onboarding de orgs nuevas, no solo b…
+- [[filtro-texto-libre-a-columna-tipada-error-tragado-parece-vacio-real]] — filtro de texto libre a columna tipada + error tragado = panel de ceros indistinguible de…
+- [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]] — un fix validado solo con fakes in-memory puede ocultar un bug de prod solo-Postgres
+- [[fk-compuesta-tenant-id-defensa-multi-tenant-estructural]] — FK compuesta (tenant_id, id) = defensa multi-tenant estructural, no solo WHERE
+- [[form-defaults-respetar-schema-no-bang-bang-config]] — form defaults — respetar f.default, no usar !!config[key]
+- [[form-parcial-upsert-fila-completa-borra-columnas-no-enviadas]] — formulario parcial + UPSERT de fila completa borra columnas no enviadas (pérdida silencio…
+- [[frontera-de-datos-por-ausencia-de-columna-no-por-filtro]] — frontera de datos (PII/compliance) = ausencia de columna, no filtro que se pueda olvidar
+- [[gen-types-linked-no-db-url]] — regenerar tipos supabase con --linked, nunca augmentar el Database global a mano
+- [[grandfathering-snapshot-antes-de-reempaquetar-planes]] — grandfathering — snapshot a org_features antes de reempaquetar plan_features
+- [[guard-cross-tenant-do-update-where-tenant-id-toctou]] — guard cross-tenant en upsert — DO UPDATE ... WHERE tenant_id = EXCLUDED + rowCount
+- [[guard-trigger-anclar-en-estado-terminal-no-mutable]] — un guard/trigger de inalterabilidad debe anclarse en estado terminal, no en uno mutable
+- [[hash-magic-link-supabase-requiere-setsession-explicito]] — hash magic link supabase requiere setsession explicito
+- [[helper-sql-orden-last-revert-at-antes-de-update-mfa]] — helper SQL con chain de triggers — setear guard ANTES del trigger source
+- [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]] — integración crítica en jsonb de tabla genérica pierde observabilidad por diseño
+- [[magic-link-un-solo-uso-lo-preconsumen-escaneres-email]] — magic link de un solo uso lo pre-consumen los escáneres de email corporativos
+- [[matriz-permisos-rol-aware-bd-mas-espejo-ts]] — matriz permisos rol aware bd mas espejo ts
+- [[memoryPostgresChat-session-key-es-telefono-no-conversation-id]] — memoryPostgresChat session key es telefono no conversation id
+- [[merge-no-destructivo-reassign-por-store-y-delete-en-misma-tx]] — fusionar 2 filas padre con hijos FK — reassign por-store + delete en la MISMA tx
+- [[migracion-aditiva-idempotente-aplicar-pre-deploy-evita-ventana-rotura]] — Migración aditiva e idempotente → aplicarla ANTES del deploy evita la ventana de rotura
+- [[migracion-aplicada-fuera-de-historial-supabase]] — migración aplicada fuera de `supabase db push` no entra en schema_migrations → reaplicar…
+- [[migracion-auth-sin-downtime-con-signing-legacy-until]] — Migración de auth sin downtime con SIGNING_LEGACY_UNTIL
+- [[migracion-hardcoded-org-id-rompe-replay-fresh-db]] — insert con uuid literal de org de prod en una migración rompe el replay en BD fresca
+- [[migracion-numerar-contra-prod-schema-migrations]] — Numerar migración contra el repo (no contra prod) → colisión con ramas aplicadas-sin-merg…
+- [[migraciones-incrementales-conviviendo-con-schema-sql-guarded]] — migraciones incrementales conviviendo con schema.sql idempotente (guards + drift-gate)
+- [[migraciones-paralelas-create-or-replace-se-pisan]] — migraciones paralelas con create or replace de la misma función se pisan
+- [[migrar-auth-wrapper-default-vs-handler-por-handler]] — Migrar auth — cambiar el default del wrapper vs handler por handler
+- [[migration-add-column-backfill-not-null-misma-transaccion]] — migration con NOT NULL — secuencia ADD nullable, UPDATE backfill, SET NOT NULL
+- [[migrations-por-modulo-si-commits-van-por-modulo]] — migrations por módulo si commits van por módulo
+- [[mock-supabase-fail-fast-default-en-tests-vitest]] — mock Supabase con fail-fast por defecto en tests Vitest
+- [[n8n-api-embeddings-openai-conexion-tipo-ai-embedding]] — n8n api embeddings openai se conecta via ai_embedding no ai_vectorStore
+- [[n8n-chat-histories-en-postgres-local-no-supabase]] — n8n_chat_histories vive en Postgres local del n8n Dokploy, no en Supabase del proyecto
+- [[n8n-code-sandbox-no-tiene-urlsearchparams]] — n8n Code sandbox no expone URLSearchParams ni URL globalmente
+- [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]] — n8n executeWorkflowTrigger schema estricto filtra campos no declarados
+- [[n8n-executeWorkflowTrigger-v1.1-requiere-input-schema]] — n8n executeWorkflowTrigger v1.1 requiere input schema
+- [[n8n-inventario-auth-incluye-toolcode-y-httprequest]] — inventario callers auth en n8n no basta con filtrar nodos de tipo .code
+- [[n8n-jsonbody-stringify-evita-control-characters]] — n8n jsonbody stringify evita control characters
+- [[n8n-postgres-webhook-lastnode-solo-devuelve-primer-row]] — n8n postgres node con webhook lastnode solo devuelve primer row
+- [[n8n-public-api-google-oauth-schema-buggy-crear-en-ui]] — n8n public api no permite crear google oauth via rest crear en ui
+- [[n8n-supabase-selfhosted-default-rest-api-no-postgres]] — n8n a Supabase self-hosted Dokploy = REST API por default
+- [[next-env-development-local-precede-a-env-local]] — .env.development.local precede a .env.local en next (qa local sin tocar prod)
+- [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]] — cookie de impersonación pegada no implica middleware caído
+- [[non-blocking-secondary-rpc-warning-flag]] — non-blocking secondary rpc → devolver warning flag en vez de silenciar o 500
+- [[nulls-not-distinct-idempotencia-con-discriminador-opcional]] — extender un unique de idempotencia con columna nullable usando NULLS NOT DISTINCT
+- [[numeric-precision-drift-bruto-neto-iva]] — numeric(x,2) genera drift inevitable convirtiendo bruto↔neto con iva
+- [[outbox-event-type-fuera-del-catalogo-muere-silencioso]] — outbox — un event-type fuera del catálogo suscribible muere en silencio
+- [[outbox-idempotencia-por-hash-contenido]] — outbox idempotencia por hash de contenido, no por clave estructural
+- [[outbox-trigger-bd-vs-hook-js-multiples-entry-points]] — outbox para columna mutada por múltiples puntos → trigger BD, no hook JS
+- [[pending-intent-por-key-necesita-claim-atomico-no-select-luego-delete]] — tabla pending-intent con PK por key necesita claim atómico, no select+delete
+- [[persist-merge-shallow-deja-cruft-entre-contextos]] — persist merge shallow deja cruft entre contextos
+- [[pg-returns-table-prefijo-out-para-evitar-ambiguity]] — PG function RETURNS TABLE con SELECT INTO → prefijo out_ para evitar ambiguity
+- [[pg-trigger-depth-1-skip-rompe-loops-cascade]] — pg_trigger_depth() > 1 SKIP rompe loops cascade sin flag de sesión
+- [[pgcrypto-supabase-trigger-search-path]] — pgcrypto en supabase cloud está en schema extensions, no public
+- [[playwright-request-newcontext-hereda-storagestate]] — e2e — request.newContext hereda storageState; multi-org → fijar org activa en el seed
+- [[postgres-asumir-columna-existente-en-trigger-rewrite-verifica-information-schema]] — Reescribir trigger que asume columna existente — verifica `information_schema.columns` an…
+- [[postgres-check-constraint-not-valid-aplica-a-inserts-no-a-existing]] — Postgres CHECK NOT VALID solo ignora filas existentes — INSERTs nuevos sí lo evalúan
+- [[postgres-guard-transition-no-persiste-en-recompute-chain]] — Guard per-transición no persiste si otro trigger re-UPDATEa con OLD distinto
+- [[postgres-revoke-public-no-elimina-grants-individuales]] — REVOKE FROM PUBLIC no elimina grants individuales de anon/authenticated
+- [[postgres-rpc-firma-identica-create-replace]] — al recrear rpc postgres mantener firma idéntica o queda función huérfana
+- [[postgres-split-tx-counter-burn-serie-numeracion]] — postgres split-tx quema contadores de serie numeracion
+- [[postgres-template-tokens-replace-simple-no-rechaza-desconocidos]] — postgres template tokens con replace simple no rechaza tokens desconocidos
+- [[postgres-unaccent-no-immutable-index-necesita-wrapper]] — unaccent() de postgres no es IMMUTABLE — falla en un índice sin wrapper
+- [[postgres-word-similarity-vs-similarity-para-needle-in-haystack]] — Postgres pg_trgm — word_similarity vs similarity para needle in haystack
+- [[postgrest-columna-inexistente-en-select-retorna-400-data-null]] — postgrest columna inexistente en select retorna 400 data=null sin error descriptivo
+- [[postgrest-filtro-columna-simple-pierde-filas-si-el-criterio-real-es-coalesce]] — filtro postgrest por una columna pierde filas si el criterio real es coalesce(a,b)
+- [[postgrest-join-inner-sin-fk-directa]] — postgrest !inner join falla si no hay FK directa entre las dos tablas
+- [[postgrest-max-rows-trunca-silencioso-in-revienta-url]] — postgrest trunca a 1000 filas en silencio y .in() grande revienta la url
+- [[postgrest-or-con-plus-url-encoding]] — postgrest .or() con + en valor requiere URL-encoding manual
+- [[postgrest-or-no-escapa-delimitadores]] — postgrest .or() no escapa sus delimitadores — comas/paréntesis en el valor rompen el filt…
+- [[postgrest-pgrst203-rpc-overloads-pasar-todos-los-params]] — pgrst203 con rpc overloads — pasar todos los named params
+- [[postgrest-rpc-composite-devuelve-fila-de-nulls]] — función postgres RETURNS composite con 0 filas → postgrest devuelve fila-de-nulls, no null
+- [[postgrest-rpc-hint-revela-signature-aplicada-en-prod]] — postgrest rpc hint revela signature aplicada en prod
+- [[postgrest-schema-cache-notify-tras-migration]] — postgrest schema cache miss — NOTIFY pgrst tras añadir columna
+- [[postgrest-sdk-or-no-compara-columnas]] — postgrest sdk .or() no compara columna contra columna
+- [[pr-grande-con-migracion-y-cambio-bucket-revisar-antes-de-mergear]] — pr grande con migración o bucket privado — checklist antes de mergear
+- [[profiles-pk-es-user_id-no-id]] — profiles pk es user_id, no id — fk en migraciones
+- [[proveedor-aliases-ocr-dedup]] — Aliases de proveedor: dedup OCR tras renombrar
+- [[proveedores-no-tiene-columna-empresa-asimetria-clientes]] — clonar un `.select()`/forma entre tablas gemelas → grepea las columnas reales (el tipo TS…
+- [[proxy-impersonacion-reimplementa-api-supabase-se-desincroniza]] — Proxy de impersonación que reimplementa la API de Supabase se desincroniza en silencio
+- [[proyeccion-de-ledger-sin-guardia-diverge-en-silencio]] — proyección denormalizada de un ledger diverge en silencio sin un detector
+- [[re-autenticacion-con-password-para-acciones-sensibles-admin]] — re-autenticacion con password para acciones sensibles admin
+- [[react-pdf-font-register-usa-rutas-filesystem-no-urls]] — react-pdf font register usa rutas filesystem no urls
+- [[recall-semantico-sin-umbral-es-confidently-wrong]] — recall semántico con k=1 sin umbral de distancia es confidently-wrong por diseño
+- [[regresion-visual-ci-acotar-trigger-y-baselines-en-contenedor]] — regresión visual en ci — build prod (no next dev), acotar trigger, baselines en contenedor
+- [[remote-triggers-claude-probablemente-bloquean-curl-en-sandbox]] — remote triggers de claude probablemente bloquean curl en sandbox
+- [[reportes-financieros-deben-excluir-estados-no-fiscales]] — reportes financieros deben excluir estados no-fiscales
+- [[reset-multi-tenant-allowlist-ordenada-vs-catalogo-dinamico]] — reset multi-tenant — allowlist ordenada + to_regclass, no catálogo dinámico
+- [[revocacion-jwt-stateless-tabla-dedicada-no-inferir-de-filas-de-token]] — revocar un jwt stateless antes de exp exige tabla de revocación dedicada, no inferirla de…
+- [[rls-multi-org-active-vs-membership]] — rls multi-org usar get_user_org_id() no IN (SELECT org_members)
+- [[rls-multi-tenant-limit-1-sin-order-bug-latente]] — rls multi tenant limit 1 sin order bug latente
+- [[rls-multi-tenant-supabase-con-security-definer]] — rls multi-tenant en supabase usa security definer para aislar org_id
+- [[rls-org-members-select-debe-incluir-own-memberships]] — rls org members select debe incluir own memberships
+- [[rls-policy-recursion-42P17-subquery-misma-tabla]] — rls policy que subconsulta su propia tabla → recursión 42P17
+- [[rpc-rls-authuid-vacio-en-service-role]] — un rpc/policy que scopea por auth.uid() devuelve vacío con service-role
+- [[scheduled-triggers-anthropic-no-acceden-repos-privados-github]] — scheduled triggers de anthropic no acceden a repos privados de github
+- [[schema-migrations-no-es-source-of-truth-si-aplicas-manual]] — schema_migrations no es source of truth si aplicas manual
+- [[select-for-update-skip-locked-via-rpc-security-definer]] — workers concurrentes en outbox → RPC SECURITY DEFINER con FOR UPDATE SKIP LOCKED
+- [[serie-contador-editable-sin-constraint-unico-genera-duplicados]] — contador editable de numeración sin constraint único genera duplicados
+- [[settings-leen-con-createclient-getorgid-se-rompen-impersonando]] — componentes de settings que leen con createClient()/getOrgId() se rompen impersonando
+- [[signOut-solo-invalida-refresh-no-access-token]] — signOut solo invalida refresh no access token
+- [[signup-invite-token-propio-vs-magic-link-supabase]] — invitar a crear org sin saber email exige token propio, no magic link supabase
+- [[skip-validacion-solo-en-insert-no-update-evita-vector-evasion]] — skip de validación SOLO en INSERT, nunca en UPDATE — vector evasión
+- [[smoke-insert-directo-no-ejerce-el-motor-real]] — un smoke que replica los inserts a mano no ejerce el motor real ni sus checks
+- [[smoke-prod-en-transaccion-rollback]] — smoke de rpcs/triggers contra prod en transacción begin/rollback = cero residuo
+- [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]] — smoke en test-mode contamina la bd de prod si la función también escribe en bd
+- [[smoke-trigger-sql-tx-rollback-contra-prod]] — smokear un trigger/migración SQL contra prod con una tx que hace ROLLBACK
+- [[smoke-visual-ssr-sesion-inyectada-playwright]] — smoke visual de página admin SSR sin password — sesión inyectada en playwright
+- [[sql-function-con-select-puro-requiere-language-sql-no-plpgsql]] — sql function con select puro requiere language sql no plpgsql
+- [[store-guard-lanza-en-lectura-tumba-reconciler]] — validar un enum lanzando en el mapper de lectura de un store tumba el barrido de arranque
+- [[supabase-advisor-trigger-functions-definer-son-ruido]] — el advisor de Supabase marca trigger functions DEFINER como ejecutables por anon/authenti…
+- [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]] — supabase auth.getUser() valida en red — dedupe en el pipeline, no por helper
+- [[supabase-builders-lazy-void-nunca-ejecuta]] — void sobre un builder de supabase-js = la query nunca se ejecuta
+- [[supabase-bypassear-plantilla-auth-con-admin-generatelink]] — bypassear plantillas auth supabase usando admin.generateLink + envío propio
+- [[supabase-check-constraint-triggered-by-enum]] — supabase check constraint — insertar valor no permitido → 23514 no 23505
+- [[supabase-cli-adoptar-tarde-en-proyecto-con-migrations-aplicadas-por-studio]] — adoptar supabase CLI en proyecto con migrations aplicadas a mano por Studio
+- [[supabase-cli-db-push-fail-por-historico-desincronizado-workaround]] — supabase cli db push fail por historico desincronizado workaround
+- [[supabase-cli-rechaza-migrations-con-version-duplicada]] — supabase CLI rechaza migrations con versión duplicada
+- [[supabase-cli-skipea-migrations-con-prefijo-no-puramente-numerico]] — supabase CLI skipea migrations con prefijo no puramente numérico
+- [[supabase-create-or-replace-view-falla-tras-add-column]] — create or replace view falla tras add column si la view usa f.*
+- [[supabase-createuser-race-trigger-handle-new-user]] — supabase createuser race trigger handle new user
+- [[supabase-database-types-insert-never-omit-circular]] — supabase database.types — insert/update con omit genera never por referencia circular
+- [[supabase-db-push-aplica-todas-pendientes-aparta-las-ajenas]] — supabase db push aplica todas las migraciones pendientes, aparta las ajenas antes
+- [[supabase-db-push-colision-numeracion-migraciones-rama-stale]] — supabase db push da por aplicadas las migraciones cuyo NNN ya existe en remoto y no las e…
+- [[supabase-db-push-db-url-desde-worktree-sin-link]] — aplicar migración a prod con db push --db-url (worktree sin link / --linked colgado)
+- [[supabase-egress-restringido-tumba-app-via-healthcheck-traefik-404]] — supabase con egress restringido tumba la app entera vía healthcheck → Traefik 404 (docker…
+- [[supabase-embedded-select-no-funciona-en-views]] — embedded select de supabase-js no funciona sobre views
+- [[supabase-enable-rls-olvidado-tabla-publica]] — supabase: policies sin ENABLE ROW LEVEL SECURITY = tabla pública
+- [[supabase-errores-que-solo-afloran-contra-schema-real]] — supabase — bugs que solo afloran contra el schema/estado real (mocks y review estático no…
+- [[supabase-gen-types-numeric-override-bigint-string]] — typegen supabase modela NUMERIC como number; override de Database para bigint-as-string
+- [[supabase-hook-vitest-mock-chain-thenable]] — mock chain thenable para hooks supabase en vitest
+- [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]] — supabase insert silencioso con ts-nocheck oculta columnas inexistentes
+- [[supabase-inviteuserbyemail-no-propaga-data-a-raw-user-meta-data]] — supabase inviteuserbyemail no siempre propaga data a raw user meta data
+- [[supabase-js-catch-sobre-query-es-codigo-muerto]] — supabase-js — .catch() sobre un query builder es código muerto
+- [[supabase-js-fk-embed-tipa-array-pero-runtime-objeto]] — supabase-js embed via FK tipa array pero runtime devuelve objeto
+- [[supabase-js-in-uuid-column-text-empty]] — supabase-js .in() sobre columna UUID con array text puede devolver vacío silenciosamente
+- [[supabase-maybesingle-devuelve-null-si-multiples-filas]] — supabase .maybeSingle() devuelve null sin throw si hay >1 filas
+- [[supabase-mcp-apply-migration-version-timestamp]] — MCP supabase apply_migration registra version timestamp, no NNN
+- [[supabase-mfa-totp-integracion-gotchas]] — supabase mfa totp — step-up obligatorio, listFactors solo verified, recovery codes a mano
+- [[supabase-migration-new-rompe-secuencia-nnn-name]] — supabase migration new rompe formato NNN_name.sql → registry queda con timestamp huérfano
+- [[supabase-migration-numero-colision-renumerar]] — supabase migration número colisión entre ramas — renumerar
+- [[supabase-migration-repair-requiere-fichero-nnn-en-cwd]] — supabase migration repair exige que el fichero NNN_*.sql exista en el cwd
+- [[supabase-mint-access-token-sin-password-via-generate-link]] — Supabase: mint access_token de un usuario sin su password (generate_link + verify)
+- [[supabase-pooler-caido-aplicar-ddl-via-mcp]] — pooler supabase caído (5432 timeout) → aplicar ddl vía mcp execute_sql
+- [[supabase-pooler-timeout-isp-fallback-dashboard]] — supabase pooler :5432/:6543 timeout desde ISP — fallback dashboard sql editor
+- [[supabase-profile-lookup-cross-canal-debe-scoping-org-members]] — lookup profile cross-canal para audit DEBE scoping via org_members
+- [[supabase-realtime-canal-nombre-unico-por-instancia-de-hook]] — un hook con canal realtime Supabase de nombre fijo revienta si se monta dos veces
+- [[supabase-realtime-off-en-impersonacion-ui-optimista-se-cuelga]] — realtime se apaga en impersonación → UI con estado optimista se cuelga sin fallback
+- [[supabase-rpc-con-auth-uid-falla-con-service-role]] — supabase rpc con auth uid falla con service role
+- [[supabase-rpc-security-definer-execute-public]] — rpc security definer en supabase son ejecutables por anon vía postgrest si no revocas
+- [[supabase-sb-secret-vs-jwt-http]] — supabase sb_secret requiere header apikey en http directo (no solo bearer)
+- [[supabase-select-columna-inexistente-falla-query-entera-42703]] — select supabase con columna inexistente falla la query entera y nadie se entera
+- [[supabase-select-columna-nueva-no-en-gen-types-falla-typecheck]] — columna nueva de una migración sin desplegar rompe el typecheck del .select() supabase
+- [[supabase-site-url-fallback-rompe-redirecturl-fuera-de-allowlist]] — supabase site url es fallback silencioso si redirectto no está en allowlist
+- [[supabase-ssr-cookie-injection-qa-playwright]] — qa de páginas server-component con playwright = inyectar la cookie de @supabase/ssr, no h…
+- [[supabase-start-colima-macos-vector-container-falla]] — supabase start en Mac+colima aborta todo el stack si falla el contenedor vector
+- [[supabase-storage-objects-metadata-no-es-fiable-para-size]] — supabase storage.objects metadata no es fiable para size
+- [[supabase-storage-rest-upload-requiere-apikey-y-authorization]] — supabase storage rest (subir/borrar) con keys sb_secret_ exige apikey + authorization
+- [[supabase-storage-upsert-needs-select-policy]] — supabase storage upsert requiere policy SELECT aunque INSERT/UPDATE existan
+- [[supabase-subagent-driven-development-paralelo-requiere-commits-y-archivos-exclusivos]] — subagent-driven development paralelo requiere commits y archivos exclusivos
+- [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]] — supabase-js devuelve PGRST205 (no 42P01) cuando la tabla no existe
+- [[supabase-tipar-admin-client-global-cascada-300-errores]] — tipar el cliente supabase global es una migración por fases, no una limpieza
+- [[supabase-trigger-captura-ip-via-current-setting-request-headers]] — trigger Supabase captura IP/UA via current_setting('request.headers')
+- [[tablas-de-log-sin-retencion-dominan-el-tamano-de-la-bd]] — tablas de log/tracking sin retención crecen sin cota y dominan el tamaño de la bd
+- [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]] — bd de test persistente contaminada entre ramas → recrear fresca antes del gate
+- [[tests-integration-supabase-validar-schema-antes-de-redactar]] — tests integration supabase validar schema antes de redactar
+- [[tests-pg-self-skip-levantar-pgvector-local]] — tests de integración Postgres que se autosaltan sin DB → levantar pgvector local, no post…
+- [[toggle-optimista-sin-rollback-miente-al-usuario]] — toggle/switch optimista que no comprueba el error de la mutación miente al usuario
+- [[trigger-audit-solo-registra-sesion-humana]] — trigger de auditoría por auth.uid() no registra acciones service-role
+- [[trigger-before-insert-on-conflict-do-nothing-cuenta-fila-fantasma]] — trigger BEFORE INSERT cuenta fila fantasma cuando hay ON CONFLICT DO NOTHING
+- [[trigger-handle_new_user-rama-legacy-choca-con-insert-explicito]] — trigger handle_new_user rama legacy choca con insert explicito
+- [[trigger-recursivo-revertir-estado-deja-candidato-libre-que-otro-trigger-rematchea]] — Trigger recursivo cuando revertir estado deja "candidato libre" que otro trigger re-match…
+- [[triggers-bd-sync-son-antipatron]] — triggers bd de sincronización son antipatrón
+- [[triggers-postgres-auditoria]] — triggers postgres para auditoría automática por tabla
+- [[typescript-6-noUncheckedSideEffectImports-rompe-imports-css-sin-tipo]] — typescript 6 activa noUncheckedSideEffectImports por defecto y rompe imports css sin tipo
+- [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
+- [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética
+- [[upsert-atomico-rpc-vs-check-then-act-evita-lost-update]] — UPSERT atómico con RPC vs check-then-act para counters compartidos
+- [[upsert-sombra-por-id-remoto-no-por-id-local]] — UPSERT sombra por id remoto, no por id local — múltiples paths convergen sin duplicar
+- [[validar-input-antes-de-rpc-atomico-e-insert]] — validar input puro antes de RPC atómico e INSERT
+- [[validar-migracion-en-supabase-local-sin-tocar-prod]] — validar una migración sin mergear en stack supabase local (no prod)
+- [[verifactu-huella-encadenada-race-condition-sin-advisory-lock]] — Cadena hash encadenada Postgres requiere advisory_xact_lock por partición
+- [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] — verifactu — RPC atómico cierra race transacciones REST separadas
+- [[verificacion-no-mutar-estado-prod-cuenta-real]] — scripts de verificación pueden corromper prod si .env.test apunta al proyecto real y la c…
+- [[verificar-check-constraint-sin-tocar-prod-con-count-exacto-rest]] — verificar check constraint en prod con count exacto rest (sin tocar filas)
+- [[vitest-fileparallelism-false-tests-integracion-bd-compartida]] — vitest fileparallelism:false para tests de integración que comparten una bd
+- [[vitest-mock-admin-client-cuando-test-toca-wrapper-outbox]] — Vitest — mock @/lib/admin cuando el test toca un wrapper con INSERT outbox previo
+- [[vitest-unhandledrejection-run-rojo-pese-a-0-fallos]] — vitest sale EXIT 1 por un unhandledRejection aunque 0 tests fallen (fuga de teardown pg)
+- [[whatsapp-await-upsert-antes-de-botones-interactivos]] — whatsapp await upsert antes de enviar botones interactivos
+- [[whatsapp-ocr-trigger-no-es-ingesta-es-caller]] — ocr whatsapp — ingesta almacena, el caller dispara ocr-process por separado
+- [[worktree-facturaia-build-supabase]] — Worktree en facturaia — node_modules real para next build + copiar link Supabase
+- [[zod-v4-tojsonschema-nativo-deriva-tool-schema]] — zod v4 trae z.toJSONSchema nativo — deriva el tool-schema del LLM, no lo dupliques a mano
+
+## Frontend / React / CSS / UI (151)
+- [[admin-tooling-para-no-tecnicos-read-only-semaforo-ejemplos]] — admin tooling para owner no-técnico — read-only + semáforo + ejemplos
+- [[agent-browser-cdp-formularios-react-requestsubmit]] — agent-browser (vercel) en formularios react — el click no submite, usar form.requestSubmi…
+- [[agent-browser-select-custom-click-opcion-no-registra-usar-teclado]] — agent-browser — click en opción de Select custom (ARIA combobox) no selecciona; usar tecl…
+- [[aib-intracom-excluido-regimen-anticipos-liva-75-dos]] — aib intracom excluido regimen anticipos liva 75 dos
+- [[ancestro-con-backdrop-filter-anula-blur-descendiente-portar-popover]] — Un ancestro con backdrop-filter/transform anula el blur del popover descendiente → portar…
+- [[anclar-pie-pdf-al-fondo-pagina-puppeteer-html]] — anclar pie de factura al fondo de página en pdf html→puppeteer
+- [[animar-entrada-de-elemento-floating-ui-dos-capas-y-starting-style]] — animar la entrada de un tooltip/popover de floating-ui necesita 2 capas + @starting-style
+- [[apca-gate-script-tokens]] — contraste APCA como gate reproducible en script node sobre tokens css
+- [[aria-pressed-vs-radiogroup-seleccion-exclusiva]] — aria-pressed modela toggle independiente, no exclusión mutua
+- [[bandeja-staging-tabla-real-fk-restrict-borrar-sincroniza-ambos-lados]] — tabla limbo (bandeja) + tabla real con FK RESTRICT — borrar de un lado debe sincronizar e…
+- [[banner-cuenta-pares-vs-pestana-cuenta-entidades-misma-palabra]] — dos contadores con la misma palabra pero distinta unidad confunden — cuenta la entidad de…
+- [[blob-url-cleanup-revokeobjecturl-react]] — createObjectURL en react sin revoke = memory leak silencioso
+- [[bot-multi-accion-fallback-activo-silencia-routing]] — bot multi-acción fallback active_org_id silencia routing
+- [[buscador-listado-lupa-expandible-no-fila-propia]] — buscador de listado como lupa expandible, no fila propia ni inline fijo
+- [[cache-invalidation-artifacts-emitidos]] — artifacts emitidos no se regeneran al cambiar dato fuente
+- [[cada-aviso-una-sola-superficie]] — cada aviso una sola superficie — el panel de avisos solo contiene accionables
+- [[cambiar-plan-debe-invalidar-todos-los-datos-derivados]] — cambiar plan debe invalidar todos los datos derivados
+- [[chatwoot-search-contact-api-requires-admin-token-no-bot]] — Chatwoot `/contacts/search` API requiere admin token, no bot token
+- [[ci-oom-typecheck-build-heap-explicito]] — tsc/next build mueren por OOM en CI de repos grandes sin ser error real
+- [[clave-seleccion-fila-debe-ser-id-unico-no-campo-de-negocio]] — la clave de selección/expansión de fila debe ser el id único, no un campo de negocio
+- [[codigo-error-de-dominio-es-estado-de-producto-no-error]] — código de error de dominio es estado de producto, no error a volcar crudo
+- [[color-mix-in-srgb-para-sombras-tematizables]] — color-mix() para sombras y tints sin hardcodear rgba por tema
+- [[componentes-que-duplican-feature-check-se-desincronizan-del-provider]] — componentes que duplican feature check se desincronizan del provider
+- [[compositor-multidestino-selector-explicito]] — hilo con varios públicos → un compositor con selector de destinatario explícito
+- [[copiloto-zod-required-blocks-llm]] — copiloto — campo zod requerido impide llamada al tool, llm pide en texto
+- [[css-animation-transform-pisa-transform-estatico]] — animación @keyframes con transform final pisa el transform estático del elemento
+- [[css-background-white-hardcoded-rompe-dark-mode-silencioso]] — css background:white hardcoded rompe dark mode silencioso
+- [[css-clase-decorativa-compartida-trampas-cascada]] — clase decorativa compartida en css = 2 trampas de cascada
+- [[css-fixed-overlay-100dvh-ios]] — overlay fixed en ios: usar 100dvh no inset-0
+- [[css-grid-1fr-desborda-usa-minmax-0-1fr]] — css grid `1fr` a secas desborda — usa `minmax(0,1fr)` en tracks flexibles
+- [[css-module-camelcase-turbopack]] — CSS Module — kebab-case no convierte a camelCase (Next.js exportLocalsConvention 'asIs')
+- [[css-modules-composes-glass-panel-scrim]] — css modules composes glass-panel/scrim from global
+- [[css-scoped-theming-pill-vars]] — theming scoped a un componente via --comp-* CSS vars con fallback a token global
+- [[dataviz-dos-escalas-bandas-verticales-no-dual-axis]] — dos escalas distintas en un chart → bandas verticales TradingView, no dual-axis
+- [[dedup-key-no-debe-incluir-contenido-volatil]] — clave de dedup de notificaciones no debe incluir contenido volátil (contadores)
+- [[dokploy-buildkit-cache-invencible-bump-package-json]] — Dokploy BuildKit cachea COPY aunque cambien archivos → bump package.json
+- [[dokploy-env-pass-through-requiere-docker-compose-environment]] — Dokploy env panel solo llega al contenedor si docker-compose la referencia
+- [[dokploy-requiere-reload-manual-traefik-tras-redeploy]] — dokploy requiere reload manual de traefik tras cada redeploy
+- [[dos-react-pdf-document-misma-url-nocache-onloaderror]] — dos <Document> de react-pdf con misma URL no-cache concurrentes → onLoadError
+- [[dos-sistemas-toast-usar-el-sin-provider-es-noop-silencioso]] — con dos sistemas de toast, usar el que no tiene provider en esa área = no-op silencioso
+- [[effect-reload-por-entidad-setters-merge-exigen-reset]] — efecto que recarga por entidad + setters que mergean = estado stale de la entidad anterior
+- [[email-glassmorphism-sin-backdrop-filter]] — glassmorphism en email sin backdrop-filter
+- [[email-hero-position-absolute-no-funciona-gmail]] — email hero overlay position:absolute no funciona en gmail
+- [[enum-dos-fuentes-vocabularios-distintos-normalizar-antes-de-switch-dedup]] — enum emitido por dos fuentes con vocabularios distintos → normalizar a canónico antes de…
+- [[enum-legal-hardcodeado-en-ui-falsifica-motivos]] — enum legal hardcodeado en ui falsifica motivos
+- [[estado-busy-por-accion-no-un-bool-compartido]] — varios botones con un `busy` bool compartido ponen el label de progreso en el botón equiv…
+- [[facturaia-tokens-admin-sin-definir]] — TuFacturaIA — tokens CSS --panel/--border/--text usados pero sin definir
+- [[flexbasis-en-flex-direction-column-se-interpreta-como-alto]] — flex-basis pensado para ancho se interpreta como alto si el flex-direction pasa a column…
+- [[floating-ui-strategy-fixed-vs-absolute-desplaza-tooltip]] — floating-ui strategy por defecto (absolute) con CSS position:fixed desplaza el elemento
+- [[floating-ui-usedelaygroup-auto-registra-currentid]] — floating-ui useDelayGroup registra currentId solo si le pasas el context de useFloating
+- [[fmtdate-null-tumba-pagina-entera-react]] — formatter date/string sin guard null tumba página entera React
+- [[full-bleed-flex-item-margin-negativo-stretch]] — full-bleed de un flex-item con margin negativo (stretch lo agranda)
+- [[github-required-check-failing-bloquea-incluso-admin-merge]] — un required status check en estado FAILING bloquea el merge incluso con admin/API
+- [[glass-flotante-necesita-fondo-detras-liquid-glass-portable]] — un panel glass flotante necesita fondo detrás para no verse plano (+ liquid glass portabl…
+- [[grid-1fr-no-encoge-con-contenido-nowrap-usar-minmax-0-1fr]] — un track de grid 1fr no encoge bajo su contenido nowrap; usar minmax(0, 1fr)
+- [[header-sticky-glass-sangra-mesh-debe-ser-opaco]] — header sticky con glass translúcido sangra el fondo por las esquinas — usar opaco
+- [[hero-split-antes-despues-foto-real-con-overlay]] — hero split "antes/después" con foto real necesita overlay blanco + shadow fuerte
+- [[hidden-anulado-por-clase-con-display]] — el atributo html `hidden` lo anula cualquier clase con `display:`
+- [[hitl-prerequisite-injection-colapsa-dialogo-multi-turno-de-intencion-compuesta]] — en HITL, una intención compuesta (alta implícita + acción) se colapsa con prerequisite in…
+- [[html-email-strings-tipados-vs-react-email-mjml]] — 5-10 templates email — html strings tipados gana a react email o mjml
+- [[humanizar-errores-crudos-en-capa-de-render]] — traducir errores técnicos a lenguaje llano en la capa de render, no en el origen
+- [[inline-style-data-attribute-para-color-semaforo]] — data-attribute para color runtime en semáforos evita inline style
+- [[ios-safari-body-scroll-lock-position-fixed]] — ios safari body scroll lock: position fixed + top -scrollY
+- [[kommo-llt-requiere-subdominio-cuenta-no-api-c]] — kommo long lived token requiere subdominio de cuenta, no api-c.kommo.com
+- [[kommo-scope-chats-puede-no-aparecer-en-ui-contactar-soporte]] — kommo scope chats puede no aparecer en ui, contactar soporte
+- [[kommo-task-types-solo-se-crean-desde-ui]] — kommo task types solo se crean desde la UI, no vía API
+- [[llave-css-faltante-invalida-todo-el-css-posterior]] — llave css faltante invalida todo el css posterior
+- [[llm-ambiguity-lista-candidatos-numerados-y-memoria-conversacional]] — llm ambiguity con voz — lista candidatos numerados + memoria conversacional
+- [[llm-safety-critical-un-tool-no-cascada-de-tools]] — LLM safety-critical — un solo tool, no cascada de tools en orden estricto
+- [[llm-tool-use-card-visual-instruir-no-duplicar-lista]] — llm tool-use con cards visuales — instruir explícito a no duplicar la lista
+- [[menu-portal-flip-viewport]] — menú/popover portal posicionado por rect.bottom se sale del viewport en filas bajas
+- [[metricas-dashboard-sobre-total-no-sobre-filtro]] — las métricas de un dashboard van sobre el total, no sobre la vista filtrada
+- [[metricas-fuente-fuerte-mas-event-log]] — metricas en ui necesitan tabla de dominio mas event-log como complemento
+- [[migrar-submodal-a-modal-choca-con-escape-del-contenedor]] — migrar un submodal a <Modal> común choca con el escape/focus que ya coordina su contenedor
+- [[mobile-inert-plus-aria-hidden-ios-15-fallback]] — mobile — inert + aria-hidden complementarios para iOS 15.0-15.4
+- [[mobile-overflow-layout-viewport-contain-y-grid-span]] — overflow móvil — el layout viewport se expande (contain:layout) y grid-column span crea c…
+- [[mobile-restore-focus-after-inert-needs-raf]] — mobile — restore-focus tras inert en requestAnimationFrame
+- [[mobile-table-scroll-x-needs-region-tabindex-wcag-2-1-1]] — mobile — tablas con scroll-x necesitan role=region + tabIndex + aria-label
+- [[mobile-vh-dvh-cascade-vs-min-atomic-safari-15]] — mobile — vh/dvh cascada doble declaración, no min() atómico
+- [[mock-no-actualizado-tras-refactor-io-rompe-suite-sin-aviso]] — correr el test file solo antes de extenderlo — puede estar ya roto en main
+- [[modal-portal-stacking-sticky-sidebar]] — modal sin portal montado en sidebar sticky queda bajo el contenido de main
+- [[modal-tour-spotlight-pattern]] — tour spotlight in-modal — tourHighlight necesita fondo propio, no solo outline
+- [[n8n-api-importar-workflows-json-requiere-archivos-temporales]] — n8n api importar workflows json requiere archivos temporales
+- [[n8n-http-request-multipart-binary-requiere-formBinaryData]] — n8n http request multipart binary requiere formBinaryData
+- [[n8n-nodos-compartidos-entre-ramas-requieren-if-isExecuted]] — n8n nodos compartidos entre ramas requieren $if isExecuted
+- [[n8n-public-api-header-required-es-key-invalida]] — n8n Public API responde "X-N8N-API-KEY header required" aunque mandes la cabecera, si la…
+- [[n8n-web-ui-paste-convierte-comillas-a-smart-quotes-syntaxerror]] — pegar JS en n8n web UI puede convertir comillas a smart quotes y romper el parser
+- [[narrative-headline-no-mezclar-saldo-acumulado-con-delta-mensual]] — Narrativa de forecast — NUNCA mezclar "saldo acumulado del peor mes" con "delta neto vs m…
+- [[next-image-server-side-pdf]] — next/image rompe en puppeteer y renderizado server-side
+- [[next-start-build-estatico-sin-hmr-verificar-puerto]] — next start sirve build estático sin hmr; verificar modo y puerto del server antes de qa
+- [[nextjs-throw-module-load-rompe-build-collecting-page-data]] — Throw top-level en route.ts crashea build Next.js durante page-data collection
+- [[no-forzar-base-en-paneles-divergentes]] — no forzar un componente base en paneles con interacción divergente
+- [[no-pedir-elegir-opciones-que-el-usuario-no-puede-probar]] — no pidas elegir entre opciones que el usuario no puede probar todavía
+- [[npm-run-build-rompe-next-dev-corriendo-mismo-repo]] — npm run build mientras next dev sigue vivo rompe los chunks del dev server
+- [[ocultar-columnas-tabla-por-css-no-desmontar]] — selector de columnas: ocultar por CSS (display:none), no desmontando th/td
+- [[openapi-fetch-parsea-todo-como-json-incluido-binarios]] — openapi-fetch parsea todo como JSON, también binarios
+- [[overlay-padre-onclick-close-sin-guarda-cierra-con-popover-portado]] — overlay-padre con onClick=onClose sin guarda cierra el modal al usar un popover portado
+- [[overlays-sobre-cards-usar-bg-elev2-no-panel]] — overlays sobre cards — usar token elevación superior, no --panel
+- [[parser-numero-es-bug-con-input-html5-number-punto-como-decimal-no-millares]] — parser ES naïve rompe valores de `<input type=number>` (siempre punto US)
+- [[payload-parcial-cliente-existente-oculta-bug-hasta-activar-validacion-relacionada]] — arreglar un campo de un payload puede activar una validación que expone otro campo roto
+- [[pdf-adjunto-email-vs-link-frozen-blob]] — pdf como adjunto en email queda congelado en el inbox del destinatario
+- [[pdfjs-en-next-iframe-nativo-vs-react-pdf-ssr-false]] — visor pdf en next — iframe nativo da cromo feo, usar react-pdf con dynamic ssr:false
+- [[pill-no-reemplaza-dato-accionable-en-formulario]] — un pill/chip de estado no debe reemplazar un dato accionable en un formulario denso
+- [[pill-overflow-hidden-en-grid-se-recorta-usar-container-query-en-modal]] — Pill con overflow:hidden en grid rígido se recorta en modal estrecho — usar container que…
+- [[playwright-custom-components-e2e-selectors]] — playwright — selectores fiables con componentes custom (checkbox, select portal)
+- [[playwright-domcontentloaded-no-espera-hidratacion-rsc]] — Playwright domcontentloaded no espera hidratación RSC + attached vs isVisible
+- [[popover-en-modal-con-overflow-hidden-se-corta-usar-inline-disclosure]] — popover dentro de modal con overflow hidden se corta usar inline disclosure
+- [[pre-commit-build-no-corre-tests-registry-conteo-rompe-ci]] — build no corre vitest; un test de cardinalidad de registry rompe en CI al añadir entrada
+- [[progreso-real-vs-simulado-tareas-opacas]] — barra de progreso de tarea async opaca — hitos reales backend + estimador monótono client…
+- [[puppeteer-html-to-pdf-pixel-perfect-con-plantillas-react]] — puppeteer html-to-pdf pixel-perfect con plantillas react
+- [[react-19-strict-bloquea-setstate-en-useeffect]] — react 19 strict bloquea setstate en useeffect, usar derived state pattern
+- [[react-set-state-in-effect-solo-flagea-funcion-nombrada-no-then-inline]] — react-hooks/set-state-in-effect solo flagea llamar a una función nombrada, no un .then()…
+- [[react-state-string-vs-number-para-inputs-numericos]] — react inputs numéricos — state string > state number (cursor + 0 editable)
+- [[recuperacion-ui-gated-por-estado-pierde-items-en-estado-hermano]] — recuperacion UI gateada por etiqueta de estado pierde items en estado hermano
+- [[retell-knowledge-base-api-requiere-multipart-form-data]] — retell create-knowledge-base requiere multipart no json
+- [[retell-tools-conversation-flow-require-tool-id-field]] — retell custom tools en conversation flow requieren tool_id explícito
+- [[retell-transfer-call-builtin-vs-custom-function-para-sip]] — Retell transfer_call built-in vs custom function — solo el built-in transfiere SIP
+- [[saldo-inicial-cashflow-coexistencia-psd2-manual]] — Saldo inicial cashflow — coexistencia PSD2 + manual sin conflicto
+- [[scroll-fade-dinamico-mascara-gotchas]] — scroll-fade dinámico con mask-image — 3 gotchas (transition/@property, box-shadow, portal)
+- [[scroll-shadows-komarov-con-css-variable-dark-mode]] — scroll shadows técnica Komarov con variable CSS para dark mode
+- [[scroll-snap-no-recomendado-para-filter-chips]] — scroll-snap para filter chips: Material M3 lo desaconseja
+- [[shippear-quirurgico-desde-working-tree-compartido-sucio]] — shippear quirúrgico desde working tree compartido sucio
+- [[sips-no-exporta-webp-en-macos-usar-cwebp]] — sips no exporta webp en macos usar cwebp
+- [[skeleton-de-loading-debe-gatear-por-data-length-no-solo-loading]] — skeleton de loading debe gatear por data.length===0, no solo por el flag loading
+- [[skeleton-debe-calcar-el-layout-real-para-no-hacer-snap]] — el skeleton debe calcar el layout real (chrome + line-box) o hace "snap" y parece 2 cargas
+- [[skin-app-wide-token-superficie-unico-base-opaca]] — skin app-wide = una palanca de superficie (--bg-elev) + base opaca aparte para el glass
+- [[slack-canvas-api-requiere-changes-array-con-operation]] — slack canvas api requiere changes array con operation
+- [[ssr-seed-contra-cls-de-client-fetch-en-app-router]] — ssr-seed contra cls de datos fetcheados client-side en app router
+- [[sticky-scroll-multiescena-parametrizar-scenecount]] — sticky scroll multiescena con escenas distintas por device requiere parametrizar sceneCou…
+- [[stripe-coupon-no-es-tecleable-necesita-promotion-code]] — un Coupon de Stripe no es tecleable por el cliente, hace falta un PromotionCode aparte
+- [[svg-normalized-viewbox-distorsiona-circles-y-markers]] — svg con viewBox normalizado + preserveAspectRatio none distorsiona circles y markers
+- [[tabla-densa-a-tarjeta-en-movil-ellipsis-y-colspan]] — tabla densa → tarjeta en móvil — celdas estrechas heredan el ellipsis del td y display:fl…
+- [[tabla-scrollbar-overlay-macos-oculta-corte-de-columna]] — tabla con overflow-x:auto y scrollbar overlay de macOS parece rota, no scrolleable
+- [[table-layout-fixed-columnas-porcentaje]] — table-layout fixed — % por variante deben sumar igual (gaps + última col px)
+- [[tdd-pure-function-extraction]] — extraer función pura antes del componente/hook acelera TDD sin DOM
+- [[terminal-compartida-desktop-movil-tmux-tailscale-mosh]] — terminal/claude compartida desktop+móvil — tmux grouped + tailscale ssh + mosh
+- [[toggle-ux-only-no-contamina-storage-canonico-fiscal]] — toggle UX-only (precio inclusive, fechas, divisas) NO contamina storage canónico
+- [[toggle-vistas-relacionadas-es-sintoma-mal-diseno-ux]] — toggle entre vistas de datos relacionados suele ser síntoma de mal diseño UX
+- [[tool-result-sintetico-necesita-render-prosa-o-sale-json-crudo]] — tool_result sintético persistido para el LLM necesita render en prosa o sale JSON crudo a…
+- [[transform-o-filter-en-ancestro-rompe-hijos-position-absolute]] — transform/filter en un ancestro rompe hijos position:absolute (animación de entrada sobre…
+- [[use-client-en-componente-server-only-devuelve-null-en-standalone]] — use client en componente server-only devuelve null en standalone
+- [[useeffect-sync-estado-a-url-pisa-query-params-si-corre-antes-de-hidratar]] — useeffect que sincroniza estado→url pisa los query params si corre antes de hidratar
+- [[usesearchparams-requiere-suspense-en-next15-prerender]] — usesearchparams requiere suspense en next15 prerender
+- [[ux-duplicacion-filtros-estado-vs-tipo-doc]] — si valor del enum estado aparece como chip Y como tab tipo doc → duplicación
+- [[variable-local-en-map-sombrea-import-mismo-nombre]] — variable local dentro de un .map() puede sombrear un import con el mismo nombre
+- [[verificar-aa-sobre-glass-componer-capas-alpha]] — verificar aa sobre superficies translucidas componiendo capas alpha en script
+- [[wcag-2-1-2-no-keyboard-trap-vs-modal-focus-trap]] — wcag 2 1 2 no keyboard trap vs modal focus trap
+- [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]] — whatsapp fuera de la ventana de 24h exige plantilla HSM aprobada
+- [[zindex-capa-overlay-orden-portal]] — popover portado debe superar el overlay del modal que lo contiene (no basta "una capa")
+- [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
+- [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
+
+## Claude Code / agentes / harness (89)
+- [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
+- [[3-agentes-paralelos-auditoria-cambios-grandes]] — 3 agentes paralelos auditando cambios grandes — security / backend / frontend
+- [[actions-sin-billing-hooks-locales-unico-gate]] — con Actions caído (billing), los git hooks locales son el único gate de lint/build en fac…
+- [[agente-accion-disclosure-capacidades-y-asumir-vs-confirmar]] — agente de acciones — declara capacidades, asume-lecturas / confirma-escrituras
+- [[agente-background-en-worktree-build-cuelga-watchdog]] — agente background en worktree que corre `npm run build` cuelga el watchdog (~600s)
+- [[agente-ia-genera-entidad-relacionada-necesita-tool-lookup-de-referencia]] — agente ia que genera entidad relacionada necesita tool de lookup de referencia
+- [[agente-llm-json-estricto-tool-conversacional-envolver-en-tipo]] — tool conversacional en agente LLM "solo JSON" debe envolver su respuesta en el tipo enrut…
+- [[agentes-background-mueren-por-session-limit-reanudar-con-sendmessage]] — agentes background muertos por session limit se reanudan con sendmessage, no relanzando
+- [[apps-limpiadoras-dejan-agentes-y-daemons-persistentes-al-desinstalar]] — apps limpiadoras dejan agentes y daemons persistentes al desinstalar
+- [[audit-3-agentes-paralelos-detecta-vulnerabilidades-cross-sprint]] — Audit con 3 agentes paralelos detecta vulnerabilidades cross-sprint
+- [[chatwoot-webhook-message-created-no-incluye-labels]] — chatwoot webhook message_created no incluye labels
+- [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]] — chatwoot whatsapp cloud requiere redirigir webhook de meta
+- [[cherry-pick-4-worktrees-agentes-paralelos]] — 4 agentes paralelos en worktrees aislados + cherry-pick combinado a 1 PR
+- [[claude-code-agentes-worktree-failure-modes]] — Claude Code agentes worktree — failure modes y cómo blindarlos
+- [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] — Claude Code — sesiones paralelas mismo repo causan colisiones git
+- [[claude-md-global-no-debe-superar-150-lineas-efectivas]] — claude-md global no debe superar 150 lineas efectivas
+- [[claude-md-por-proyecto-reduce-tokens-y-carga-solo-lo-relevante]] — claude-md por proyecto reduce tokens y carga solo lo relevante
+- [[codebase-existente-grep-wrapper-antes-de-asumir-sdk]] — en codebase existente, grep cómo integra el SaaS antes de asumir su SDK
+- [[container-memory-limit-cgroup-swap-host-no-extiende]] — límite memory de un contenedor es techo de cgroup; el swap del host no lo extiende
+- [[cron-endpoint-retirado-deja-schedule-externo-huerfano]] — retirar un cron deja el scheduler externo huérfano y su 404 no deja rastro
+- [[dokploy-api-get-schedule-list-expone-env-completo-secrets]] — dokploy api get schedule list expone env completo secrets
+- [[dokploy-api-schedule-update-requiere-payload-completo-no-patch]] — dokploy api schedule update requiere payload completo no patch
+- [[dokploy-compose-schedule-requiere-servicename]] — schedule Dokploy tipo compose exige serviceName — sin él runManually 500 y el cron no dis…
+- [[dokploy-schedule-bash-c-rompe-process-exit-con-word-wrap]] — dokploy schedules — word-wrap rompe comandos largos en bash -c
+- [[dokploy-schedule-sin-servicename-no-se-ejecuta]] — un schedule "compose" de Dokploy sin serviceName (o scheduleType=application) no se ejecu…
+- [[dokploy-schedule-step-expression-no-catch-up-tras-caida]] — cron dokploy con expresión */N en hora fija no se recupera tras caída del scheduler
+- [[dokploy-webhook-independiente-del-ci-status]] — dokploy webhook independiente del ci status
+- [[evals-de-agente-descartan-features-que-parecian-necesarias]] — Un harness de evals para un agente descarta features que parecían necesarias
+- [[extender-tipo-en-agente-json-out-parchear-downstream-o-lookup-recurso]] — extender tipo en agente JSON-out — parchear downstream o lookup recurso
+- [[git-head-compartido-entre-sesiones-paralelas-sin-worktree]] — sin worktree por sesión, un checkout ajeno desvía tu próximo commit a su rama
+- [[git-pre-push-hook-no-guarda-stdin-ni-sale-en-deletes]] — pre-push hook corre build incluso en git push --delete si no guarda stdin
+- [[git-stash-sin-u-deja-untracked-y-hook-falla]] — git stash sin -u deja untracked en disco y el hook pre-commit los detecta
+- [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]] — hooks-guard de comandos — matchea sobre el comando SIN comillas, no substring cruda (fals…
+- [[hooks-lentos-repo-compartido-usar-background-y-poll]] — pre-commit/pre-push lentos en repo compartido — lanzar en background y hacer poll
+- [[karpathy-dev-principles]] — principios karpathy para desarrollo con claude code
+- [[kommo-webhook-deja-de-disparar-tras-update-n8n]] — kommo webhook deja de disparar tras actualizar workflow en n8n
+- [[kommo-webhook-seleccionar-solo-mensaje-entrante-recibido]] — kommo webhook seleccionar solo mensaje entrante recibido
+- [[kommo-webhook-status-lead-dispara-en-todos-los-cambios]] — kommo webhook status_lead dispara en todos los cambios de estado
+- [[launchctl-disable-gui-uid-para-agentes-usuario-sin-tocar-plists-sip]] — launchctl disable gui uid para agentes usuario sin tocar plists sip
+- [[limpiar-root-checkout-viejo-con-worktrees-stash-selectivo-ff-only]] — limpiar un root checkout viejo con worktrees paralelos — stash selectivo + ff-only, nunca…
+- [[macos-temporaryitems-screencapture-sandboxed]] — macOS screencapture en TemporaryItems está sandboxed (Operation not permitted)
+- [[marquee-css-seamless-loop-w-max-eager]] — marquee css seamless loop: w-max + loading eager en wrapper único
+- [[mcp-connect-claude-origin-claude-com-y-aud-trailing-slash]] — Conectar un MCP remoto a Claude — 2 gotchas que rompen el connect (origin claude.com + au…
+- [[n8n-chat-memory-contamina-tool-retry-tras-bugfix]] — n8n AI Agent con Postgres Chat Memory no re-llama tool tras bugfix
+- [[n8n-contextwindowlength-bajo-hace-que-agente-repita-preguntas]] — n8n contextWindowLength bajo hace que el agente repita preguntas ya contestadas
+- [[n8n-respondtoWebhook-json-formato-expresion-objeto]] — n8n respondToWebhook JSON mode requiere expresión objeto, no literal
+- [[n8n-retell-webhook-map-args-snap-forward-no-override-total]] — n8n retell webhook map-args debe usar fechas del llm con snap-forward, no ignorarlas
+- [[n8n-wait-node-vacio-webhook-type-stuck]] — n8n wait node vacío es webhook-type y se queda stuck para siempre
+- [[n8n-webhook-payload-campo-requerido-funcion-local-duplicada]] — función local de webhook omite campos que el endpoint requiere
+- [[n8n-webhook-sin-auth-frontea-service-role-key]] — n8n: webhook authentication:none + toolCode con SERVICE_ROLE_KEY = acceso privilegiado si…
+- [[n8n-webhook-tool-respond-no-hardcodear-exito-gatear-en-error-nodo]] — workflow-webhook que respalda un tool LLM no debe hardcodear éxito en el respond
+- [[nano-banana-vive-en-skill-design-scripts]] — nano banana / gemini image gen vive en ~/.claude/skills/design/scripts
+- [[next-build-lock-huerfano-hace-fallar-pre-push-hook]] — next build lock huérfano hace fallar el pre-push hook con mensaje engañoso
+- [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]] — op read — el secreto nunca debe aparecer literal en un comando bash, ni copiado desde mem…
+- [[opt-out-de-setting-en-agentes-cuando-inline-es-suficiente]] — Setting en /agentes vs inline — cuándo elegir cuál
+- [[paginated-hook-dual-index-pattern]] — hook paginado + hook índice separado para views con búsqueda in-memory
+- [[paginated-hook-refreshkey-invalidation]] — refreshKey en useEffect para invalidar hook paginado post-mutación
+- [[pre-commit-hook-oom-con-dev-server]] — pre-commit hook con build se queda sin memoria si hay dev server vivo
+- [[react-hooks-refs-falso-positivo-floating-ui]] — react-hooks/refs (React Compiler) marca refs.setFloating de floating-ui como falso positi…
+- [[recuperar-trabajo-en-vuelo-tras-crash-via-worktrees]] — tras un crash, reconstruir el trabajo en vuelo desde worktrees + stash + mtime
+- [[refactor-ui-grande-agentes-paralelos-particionados-por-archivo]] — refactor UI grande con Claude Code — subagentes paralelos particionados por archivo
+- [[reglas-aprendidas-de-confirmacion-manual-cierra-loop-aprendizaje]] — Reglas aprendidas de confirmación manual — cierre del loop de aprendizaje
+- [[retell-custom-tools-comparten-webhook-y-se-rutar-por-body-name]] — retell custom tools comparten webhook y se rutar por body name
+- [[retell-importar-agente-requiere-crear-llm-y-agente-separados]] — retell importar agente requiere crear llm y agente separados
+- [[retell-llm-cambios-sin-publish-agente-no-afectan-llamadas]] — retell cambios al LLM sin publish del agente no afectan llamadas reales
+- [[retell-subagent-nodes-dividen-agentes-monoliticos-en-especializados]] — retell subagent nodes dividen agentes monolíticos en especializados
+- [[retell-webhook-firma-hmac-body-mas-timestamp]] — retell webhook firma HMAC sobre body+timestamp, no solo body
+- [[runner-headless-git-push-dispara-pre-push-hook]] — runner headless con git push dispara el pre-push hook del repo (build) → OOM
+- [[skill-chain-ui-impeccable-polish-audit-critique-baseline-typeset]] — skill chain ui impeccable polish audit critique guidelines baseline typeset
+- [[skill-unknown-fallback-leer-skill-md-directamente]] — skill "unknown" → leer SKILL.md directamente con Read
+- [[smoke-fixtures-en-repo-no-en-desktop]] — Smoke fixtures van al repo (docs/runbooks/smokes/), no a ~/Desktop
+- [[split-verbatim-checker-parts-por-basename]] — partir ficheros grandes sin cambiar comportamiento — verbatim + checker independiente + _…
+- [[stripe-mcp-conector-cuenta-equivocada-oauth-no-invalida-entre-sesiones]] — conector MCP de Stripe puede autenticar contra la cuenta equivocada, y desconectar en otr…
+- [[subagente-feature-sin-cablear-composicion]] — feature construida en la hoja pero sin cablear por el composition root = código muerto qu…
+- [[subagente-reusar-endpoint-compartido-rompe-consumidor]] — subagente que reusa un endpoint compartido rompe el consumidor existente
+- [[toolWorkflow-onError-stopWorkflow-mata-al-agente-silenciosamente]] — toolWorkflow onError stopWorkflow mata al agente silenciosamente
+- [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] — triaje seguro de ramas y worktrees con sesiones paralelas
+- [[useeffectevent-react19-no-se-llama-desde-settimeout]] — useEffectEvent react19 no se llama desde setTimeout
+- [[usememo-objeto-inline-en-deps-render-loop]] — objeto literal inline en deps de hook → render loop
+- [[useref-dedup-set-se-reinicia-en-remontaje]] — useRef como set de "ya notificado" se reinicia en cada remontaje del componente
+- [[webhook-delete-hibrido-hard-si-no-disparo-soft-si-tiene-historial]] — webhook delete híbrido — hard si no disparó, soft si tiene historial
+- [[webhook-idempotency-borrar-log-en-errores-transitorios]] — webhook idempotency — borrar log en errores transitorios para reintento limpio
+- [[webhook-impl-verificar-contra-sdk-oficial-del-provider]] — implementar webhook verify — usar SDK oficial como ground truth antes de dudar del config
+- [[whatsapp-webhook-test-hmac-computar-real]] — webhook test hmac - computar firma real, no mockear la verificación
+- [[workflow-temporal-webhook-para-operaciones-bulk-calendar]] — workflow temporal webhook para operaciones bulk en google calendar
+- [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]] — working tree en rama stale te hace leer código viejo — verifica antes de reimplementar un…
+- [[worktree-add-sin-cd-bash-cae-en-checkout-principal]] — git worktree add sin cd inmediato — bash sigue en el cwd previo, no en el nuevo worktree
+- [[write-tool-byte-nulo-en-template-literal]] — edit no casa una línea "idéntica" → revisar bytes ocultos (byte nulo) con python repr
+- [[zod-optional-rechaza-null-en-webhooks-n8n]] — zod .optional() rechaza null en webhooks externos
+
+## n8n / workflows (78)
+- [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]] — $fromAI en toolCode lanza no-execution-data-available en n8n 2.15.x
+- [[adr-premisa-falsa-auditar-integracion-real]] — un adr puede partir de una premisa falsa — auditar la integración real antes de implement…
+- [[boton-hitl-referenciar-estado-persistido-no-id-efimero-proveedor]] — botón HITL debe referenciar estado persistido propio, no IDs efímeros del proveedor
+- [[chatwoot-nota-voz-content-null-audio-en-attachments-transcribir-whisper]] — chatwoot nota de voz llega con content null y audio en attachments, transcribir con whisp…
+- [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]] — defensa en código contra LLM creativo para invariantes de dominio
+- [[dokploy-env-compose-section-necesaria-para-variables-custom]] — dokploy env custom necesita estar en compose environment: además del panel
+- [[e2e-baseline-contra-main-antes-de-culpar-a-tu-rama]] — e2e local rojo — baselinea las mismas specs contra origin/main antes de atribuir a tu rama
+- [[fetch-no-existe-en-sandbox-toolCode-n8n]] — fetch no existe en el sandbox de toolCode de n8n
+- [[github-prs-encadenados-no-llegan-a-main]] — github prs encadenados no propagan a main al mergear
+- [[google-calendar-query-busca-en-summary-y-description]] — google calendar query busca en summary y description
+- [[google-calendar-tool-0-eventos-significa-todo-libre]] — google calendar tool 0 eventos significa todo libre
+- [[httpRequest-returnFullResponse-sigue-lanzando-en-non-2xx]] — this.helpers.httpRequest con returnFullResponse sigue lanzando en non-2xx
+- [[kommo-salesbot-puede-mover-leads-de-estado-sin-n8n]] — kommo salesbot puede mover leads de estado sin que n8n lo sepa
+- [[kommo-salesbot-run-success-sin-acciones]] — kommo salesbot/run devuelve success:true aunque el bot no tenga acciones configuradas
+- [[leer-system-prompt-y-tools-actuales-antes-de-modificar-ai-agent]] — leer system prompt y tools actuales antes de modificar AI agent
+- [[llm-calcula-mal-dia-semana-a-fecha-sin-weekday-number]] — llm calcula mal dia de semana a fecha sin weekday number
+- [[mcp-n8n-no-tiene-todos-los-workflows-fallback-rest-api]] — mcp n8n no tiene todos los workflows — fallback rest api con x-n8n-api-key
+- [[merge-tree-precheck-cross-pr-y-squash-branch-cleanup]] — verificar conflicto cross-PR con merge-tree antes de mergear; squash rompe branch --merged
+- [[n8n-502-deja-items-huerfanos-en-bandeja-sin-retry]] — n8n 502 deja items huerfanos en bandeja sin retry automatico
+- [[n8n-api-activate-es-POST-no-PATCH]] — n8n api activate es POST no PATCH
+- [[n8n-api-put-workflows-rechaza-settings-desconocidos]] — n8n api put workflows rechaza settings desconocidos
+- [[n8n-code-final-response-leer-input-no-nodo-concreto-si-hay-branches]] — n8n Code final response — leer $input, no $('NodeX'), si hay ramas con cortocircuito
+- [[n8n-code-node-no-interpola-llaves-dobles]] — n8n code nodes no interpolan {{ }} — al migrar http→code el body va como objeto
+- [[n8n-code-node-sandbox-no-tiene-helpers-binaryToBuffer]] — n8n code node sandbox no tiene helpers.binaryToBuffer
+- [[n8n-code-node-validar-runtime-con-mocks-no-solo-sintaxis]] — validar un n8n code node en runtime con mocks antes de desplegarlo, no solo la sintaxis
+- [[n8n-compose-env-vars-yaml-y-panel]] — dokploy compose pasa al container solo las env listadas en el yaml, no las del panel
+- [[n8n-crypto-module-bloqueado-task-runner-usar-fnv-puro]] — n8n Code node bloquea `require('crypto')` — usar hash JS puro (FNV-1a)
+- [[n8n-debounce-redis-1s-causa-duplicados-en-chatbot]] — n8n debounce redis con wait 1s causa duplicados en chatbot
+- [[n8n-dollar-json-tras-http-es-respuesta-http-no-item-original]] — n8n $json tras nodo HTTP es la respuesta del HTTP, no el item original
+- [[n8n-edit-fields-optional-chaining-body-args-plano-vs-wrapped]] — edit fields necesita optional chaining cuando el body llega plano (chat) vs envuelto en a…
+- [[n8n-emailsend-html-no-evalua-expresiones]] — n8n emailsend html no evalúa expresiones embebidas
+- [[n8n-emailsend-onerror-continue-skip-sin-destinatario]] — n8n emailSend con destinatario opcional → onError continueRegularOutput
+- [[n8n-error-handler-global-via-errorworkflow]] — n8n error handler global via settings.errorWorkflow + incoming webhook
+- [[n8n-expresion-nodo-no-ejecutado-falla-silencioso]] — n8n expresion referenciando nodo no ejecutado falla silencioso
+- [[n8n-gcal-additionalFields-newlines-no-double-escape]] — n8n GCal create description requiere `\n` no `\\n` para saltos de línea
+- [[n8n-gcal-getall-empty-no-propaga-downstream]] — n8n Google Calendar getAll vacío no propaga a nodos downstream
+- [[n8n-gmail-node-no-soporta-headers-custom]] — n8n gmail node nativo no soporta headers custom
+- [[n8n-helpers-httprequest-lanza-en-4xx-sin-ignorehttpstatuserrors]] — n8n helpers.httpRequest lanza en 4xx sin ignoreHttpStatusErrors
+- [[n8n-http-request-predefinedcredentialtype]] — n8n http request soporta predefinedcredentialtype para reutilizar credenciales sin hardco…
+- [[n8n-http-responseformat-json-rompe-con-404-traefik]] — HTTP node n8n responseFormat=json revienta con 404 HTML de Traefik en redeploy
+- [[n8n-if-strict-null-not-equals-0-evalua-true]] — n8n If strict — null != 0 evalúa TRUE y rompe detección de existencia
+- [[n8n-langchain-toolcode-args-en-input-no-en-query]] — n8n langchain toolCode — usar $fromAI() para args, no `query` ni $input
+- [[n8n-list-reply-sin-regla-router-se-descarta-reclasificar-a-texto]] — n8n: un list_reply sin regla en el router de botones se descarta en silencio
+- [[n8n-live-edit-canary-1-nodo-fail-open]] — editar workflow n8n vivo compartido — canary con 1 nodo code fail-open
+- [[n8n-mcp-partial-update-valida-workflow-live-no-local]] — n8n mcp partial update valida workflow live no local
+- [[n8n-mcp-server-puede-apuntar-a-instancia-distinta-verificar]] — n8n mcp server puede apuntar a instancia distinta — verificar antes de operar
+- [[n8n-network-external-true-falla-en-dokploy-sin-pre-create]] — n8n compose con networks external true falla en dokploy nuevos
+- [[n8n-public-api-no-permite-update-credentials-recrear-y-repuntar]] — n8n public API no permite UPDATE credentials — solo POST/DELETE
+- [[n8n-queue-mode-wait-nodes-poll-cada-60s]] — n8n queue mode hace que Wait nodes se atasquen ~60s
+- [[n8n-ramas-paralelas-no-garantizan-orden-poner-en-serie]] — n8n ramas paralelas no garantizan orden de ejecución, poner en serie
+- [[n8n-reservar-overlap-guard-server-side-anti-doble-booking]] — anti-doble-booking necesita check de solapamiento server-side, no basta el event_id deter…
+- [[n8n-se-cuelga-sin-crashear-necesita-healthcheck-http]] — n8n se cuelga sin crashear — necesita healthcheck http
+- [[n8n-set-node-output-solo-lleva-assignments-explicitos]] — n8n Set node output solo lleva assignments explícitos
+- [[n8n-status-success-no-implica-camino-critico]] — n8n "success" no implica que la ejecución recorrió el camino crítico
+- [[n8n-subworkflow-return-es-ultima-hoja-rama-paralela-contamina]] — n8n sub-workflow devuelve la última hoja; una rama paralela dead-end contamina el retorno
+- [[n8n-task-runner-sandbox-sin-url-global]] — n8n code node sandbox no expone url global aunque crypto este permitido
+- [[n8n-toolworkflow-cachedresultname-puede-mentir]] — n8n toolWorkflow cachedResultName puede mentir tras clonar workflow
+- [[n8n-worker-valida-todos-los-nodos-aunque-no-esten-en-el-path]] — n8n worker valida todos los nodos aunque no estén en el path de ejecución
+- [[ocr-facturas-confunde-receptor-con-emisor-sin-org-nombre]] — ocr de facturas confunde receptor con emisor sin contexto de org_nombre
+- [[onError-continueRegularOutput-devuelve-axiosError-no-statusCode]] — onError continueRegularOutput devuelve axiosError no statusCode
+- [[openai-chatcompletions-pdf-usar-image-url-no-file]] — openai chat completions pdf → image_url no type:file
+- [[pr-apilado-squash-cierra-al-borrar-base]] — PR apilado + squash-merge de su base + borrar rama → el apilado se auto-cierra y no se re…
+- [[pr-review-ya-resuelta-por-el-reviewer-mismo]] — confirmar estado real del PR antes de invertir en review
+- [[rama-error-bot-no-debe-capturar-respuestas-conversacionales]] — rama de error de un bot no debe loguear respuestas conversacionales como error
+- [[recordatorios-visita-por-task-type]] — recordatorios de visita kommo deben filtrar por task_type, no por "cualquier tarea en 24h
+- [[redis-debounce-campo-nombre-diferente-pierde-mensajes]] — redis debounce con campo nombre diferente pierde mensajes silenciosamente
+- [[regenerar-types-gen-conflict-con-pr-abierto]] — regenerar types.gen contra prod si hay PR abierto que lo toca = conflict
+- [[replicar-cliente-n8n-vaciar-ids-cz-no-disfrazar]] — replicar workflows n8n entre clientes vaciar IDs origen a placeholders
+- [[retell-parameter-type-form-vs-json-rompe-n8n-silenciosamente]] — retell parameter_type form vs json rompe n8n silenciosamente
+- [[retell-simulation-test-tool-mocks-y-sin-mock-e2e-real]] — retell simulation testing — tool_mocks para el LLM, sin-mock para E2E real
+- [[scraping-idealista-fotocasa-produccion]] — scraping idealista/fotocasa en producción — apify es lo viable
+- [[set-node-pierde-json-body-en-downstream-usar-referencia-directa]] — set node pierde json body en downstream — usar referencia directa
+- [[slot-resolver-deterministic-pre-llm-nlu-regex-espanol]] — slot resolver determinista pre-LLM con NLU regex en español
+- [[stash-o-wip-viejo-puede-estar-ya-en-main-verificar-antes-de-reconciliar]] — un stash/WIP viejo puede estar ya mergeado en main — verifícalo antes de reconciliar
+- [[tool-description-generica-no-fuerza-ejecucion-de-tool-critica]] — tool description generica no fuerza ejecucion de tool critica
+- [[toolHttpRequest-sin-parametros-gpt41-ignora-tool-calling]] — toolHttpRequest sin parámetros + GPT-4.1 ignora tool calling
+- [[verificar-persistencia-tras-put-api-con-grep-marker-unico]] — verificar persistencia tras PUT a API con grep marker único
+- [[whatsapp-interactive-list-limites-y-row-id-pattern]] — WhatsApp Interactive List — límites Meta y patrón row.id "tipo:UUID
+
+## Auth / seguridad / multi-tenant (56)
+- [[2fa-telefono-solo-para-canal-que-lo-usa-no-gate-global]] — verificación de teléfono/2FA debe alcanzar solo a quien usa el canal, no ser gate global…
+- [[acciones-irreversibles-no-tool-mcp-autonoma]] — acciones irreversibles no deben ser tool mcp autónoma
+- [[agent-browser-navegador-compartido-entre-sesiones-concurrentes]] — agent-browser sin --session comparte navegador/cookies con otras sesiones Claude Code con…
+- [[amojo-api-v1-requiere-token-centrifugo-no-oauth2]] — amojo api v1 requiere token centrifugo, no oauth2
+- [[api-idempotency-key-scope-ruta-resuelta-no-plantilla-id]] — idempotency-key de una API debe escoparse a la ruta resuelta, no a la plantilla del endpo…
+- [[auth-org-gate-bloquea-aceptar-primera-invitacion]] — middleware que exige org activa bloquea el endpoint de aceptar la 1ª invitación
+- [[capacidad-en-dos-capas-tool-mas-gate-endpoint-verificar-paridad-o-queda-muerta]] — capacidad en 2 capas (tool que anuncia + gate de endpoint que autoriza) — verificar parid…
+- [[chatwoot-bot-token-vs-admin-token-scopes-distintos]] — chatwoot bot token no sirve para operaciones admin usar login admin
+- [[checklist-seguridad-api-routes-nextjs]] — checklist seguridad api routes nextjs
+- [[codeql-security-alerts-fixes]] — codeql code scanning (seguridad) — rest sí funciona; recetas de fix js recurrentes
+- [[contenido-llm-en-pdf-render-como-react-no-html]] — contenido de un LLM en un PDF → renderizar como nodos React, nunca HTML crudo
+- [[controles-form-nativos-no-estilables-construir-componente]] — controles de formulario nativos (select, date) no se pueden estilar — construir component…
+- [[defensa-cableada-vs-codigo-muerto]] — una defensa de seguridad sin consumidores = código muerto = falsa seguridad
+- [[endpoints-impersonate-por-query-no-cookie]] — endpoints con superadmin impersonando deben aceptar query param org_id, no fiar en cookie
+- [[env-fecha-mal-formada-fail-closed-no-fail-open]] — Env con fecha mal formada → fail-closed, no fail-open
+- [[fine-grained-pat-no-sirve-colaborador-externo-org]] — fine-grained PAT no puede apuntar a repo de org si la cuenta es colaborador externo
+- [[gate-en-wrapper-web-no-cubre-canales-con-otro-auth]] — un gate que vive solo en el wrapper web no cubre los canales con otro auth
+- [[github-free-org-privado-sin-branch-protection-ni-rulesets]] — org GitHub Free + repo privado no puede proteger ramas (ni rulesets, ni forks)
+- [[google-oauth-error-400-invalid-request-significa-client-id-vacio]] — google oauth error 400 invalid_request significa client_id vacío
+- [[guardarrail-mutacion-sensible-choke-point-no-disciplina-por-callsite]] — guardarraíl de mutación sensible = un choke-point obligatorio, no disciplina por call site
+- [[helper-compartido-list-y-authz-mismo-mapping]] — list y authz que comparten predicado de pertenencia = un solo helper
+- [[idor-detras-de-canal-hmac-validar-membresia-del-recurso]] — un canal interno firmado (hmac) no exime de autorizar al dueño del recurso
+- [[impersonacion-superadmin-no-sirve-para-qa-de-ui-org-scoped]] — la impersonación de superadmin no sirve para QA de UIs org-scoped
+- [[import-runtime-dep-no-declarada-solo-transitiva]] — import en runtime de un paquete no declarado en dependencies (solo transitivo/dev) = drif…
+- [[llm-error-categorizar-no-exponer-crudo-a-logs]] — LLM — categorizar error en buckets accionables, NO loggear objeto crudo
+- [[mcp-conector-remoto-limites-claude-chatgpt-cursor]] — Límites reales de los conectores MCP remotos (Claude/ChatGPT/Cursor)
+- [[mcp-scope-grantable-vs-verifier-divergen]] — defense-in-depth de scopes duplicado diverge si no se espeja al añadir uno
+- [[meta-whatsapp-dev-sandbox-usar-test-number-no-business-de-prod]] — meta whatsapp dev — usa el test number, no la app asociada al Business de prod
+- [[multiempresa-saas-tres-ejes-navegar-agregar-cobrar]] — multiempresa saas: navegar=membresía, agregar=propiedad, cobrar=cuenta (no mezclar)
+- [[n8n-api-publica-no-expone-valores-de-credenciales]] — n8n api publica no expone valores de credenciales
+- [[n8n-reimplementa-endpoint-backend-pierde-sus-defensas]] — n8n que reimplementa lógica backend se salta sus defensas
+- [[n8n-sessionid-sin-plus-vs-endpoint-e164]] — sessionId de n8n viene sin + pero endpoints E.164 estrictos lo exigen
+- [[nextjs-layout-no-lee-pathname-server-side]] — next.js app router layout no recibe el pathname en servidor
+- [[npm-audit-fix-force-propone-downgrades-trampa]] — npm audit fix --force puede downgradear majors — usar overrides
+- [[oauth-cascade-revoke-por-external-id-multi-org]] — OAuth multi-org → cascada de revoke por external_id (sub Google)
+- [[oauth-redirect-uri-debe-usar-request-origin-no-env-var]] — oauth redirect_uri debe usar request.nextUrl.origin no env var
+- [[oauth-refresh-rotation-idempotencia-ventana-gracia]] — rotación de refresh: ventana de gracia para no revocar reintentos legítimos
+- [[oauth-revocacion-en-cada-resource-server-no-solo-gateway]] — revocación de grant oauth debe comprobarse en cada resource server que acepte el token, n…
+- [[oauth-state-cifrado-para-pkce-verifier-sin-store]] — oauth authorization-code sin store de sesión — sella el pkce verifier en un state cifrado
+- [[otp-onboarding-patterns]] — Patrones OTP teléfono onboarding (TuFacturaIA 2026-05-16)
+- [[psd2-callback-connection-id-sin-oauth-debe-validar-dueno]] — callback psd2 sin oauth (salt edge) que recibe un connection_id debe validar dueño antes…
+- [[pwa-manifest-e-iconos-gateados-por-middleware-matcher-next]] — el matcher del middleware Next debe excluir manifest.webmanifest e iconos o la PWA no ins…
+- [[remote-mcp-exige-oauth-no-api-key-estatica]] — conectores mcp remotos exigen oauth 2.1, no api key estática
+- [[role-gate-endpoint-debe-contemplar-superadmin]] — un gate de rol en un endpoint debe contemplar al superadmin (role=null) o lo bloquea
+- [[single-source-attribution-multi-fuente]] — atribuir tenant ↔ entidad externa por un único campo deja huecos — unir fuentes
+- [[slack-bot-sin-groups-read-no-lista-canales-privados]] — slack bot sin groups:read no lista canales privados
+- [[smoke-endpoint-interno-prod-firma-hmac-prod-secret]] — smokear un endpoint /api/internal/* en prod exige firmar hmac con el secreto de prod
+- [[ssrf-validar-dns-no-cierra-rebinding-sin-pinar-ip]] — validar la url resolviendo dns no cierra el rebinding si el fetch re-resuelve por hostname
+- [[system-prompt-previous-state-es-data-no-instrucciones]] — system prompt — previous_state es DATA, no instrucciones
+- [[timing-safe-comparison-obligatoria-para-service-key-auth]] — timing-safe comparison obligatoria para service-key auth
+- [[token-un-solo-uso-con-tabla-propia-hmac-es-redundante]] — token de un solo uso respaldado por tabla propia — el envoltorio HMAC es redundante
+- [[traefik-dokploy-client-ip-x-real-ip-o-ultimo-xff]] — bajo traefik/dokploy la ip del cliente está en x-real-ip o último xff (no primero)
+- [[unificar-controles-regla-global-not-specificity]] — unificar todos los <select>/controles sin tocar cada clase — regla global con :not (0,2,1)
+- [[whatsapp-multi-tenant-matching-debe-ser-por-numero-remitente-no-por-phone-number-id]] — whatsapp multi-tenant matching debe ser por numero remitente no por phone_number_id
+- [[withapiauth-solo-carga-role-con-requirerole-o-requirewrite]] — withApiAuth solo carga `role` si el endpoint declara requireRole/requireWrite
+- [[xss-en-email-html-interpolado-de-bd]] — xss en email html interpolado de bd se subestima — escape obligatorio
+
+## Git / repo / CI (52)
+- [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]] — aceptar una sugerencia HITL debe cerrar la decisión o el gate de acierto nunca abre
+- [[asistente-enterprise-natural-pero-grounded-no-llm-libre]] — contestar como ChatGPT" en un asistente enterprise = natural PERO grounded, no LLM libre
+- [[audit-bot-recurrente-idempotencia-por-estado-de-issues]] — bot de auditoría recurrente — la idempotencia vive en el estado de los issues, no en la f…
+- [[audits-cross-pr-vs-per-pr]] — audits cross pr vs per pr
+- [[chrome-cache-macos-ruta-system-cache-es-independiente-del-profile]] — chrome cache macos ruta system cache es independiente del profile
+- [[conciliacion-multi-señal-vs-importe-bruto-falsos-positivos]] — Conciliación bancaria — match multi-señal vs importe bruto (falsos positivos)
+- [[cross-pr-integrar-interfaz-por-tipado-estructural]] — integrar con una interfaz de otra PR no mergeada por tipado estructural
+- [[csv-import-precio-decimal-es-us-desambiguar-no-asumir]] — import CSV de precios — desambiguar ES/US por presencia de coma, nunca asumir un locale
+- [[daedalus-mainnet-es-blockchain-cardano-legitima-207gb-no-cache]] — daedalus mainnet es blockchain cardano legitima 207gb no cache
+- [[duetexpertd-servicio-siri-sugerencias-consume-cpu-en-idle]] — duetexpertd servicio siri sugerencias consume cpu en idle
+- [[env-vacia-rompe-default-con-nullish-coalescing-numeric]] — `??` no cubre env vacía — Number("") es 0 y rompe el default
+- [[error-class-substring-cross-provider-anclar-nombre]] — detección de error por substring en módulo multi-provider — anclar al nombre del provider…
+- [[feature-atada-a-capacidad-del-plan-no-se-cobra-aparte]] — feature de pago atada a una capacidad que el plan ya concede → inclúyela en ese plan, no…
+- [[gcal-q-search-no-encuentra-recien-creados-usar-event_id-deterministic]] — GCal q-search eventual-consistency — usar event_id determinista
+- [[gh-borrar-base-de-pr-apilada-cierra-la-hija-irreversible]] — gh — borrar la base de una PR apilada cierra la PR hija (irreversible); retargetear antes
+- [[gh-pr-merge-delete-branch-cierra-pr-apilado-dependiente]] — gh pr merge --delete-branch de un PR base cierra (no reapunta) el PR apilado dependiente
+- [[gh-pr-merge-no-confirma-verificar-state-merged]] — gh pr merge puede "decir" merged sin fusionar — verifica state=MERGED, no el stdout
+- [[gh-reopen-pr-cerrada-falla-tras-force-push]] — reabrir una pr cerrada falla si force-pusheas antes de reabrirla
+- [[git-diff-vs-main-drifteado-usar-merge-base]] — git diff contra main local drifteado muestra cambios fantasma; usar merge-base
+- [[git-merge-base-is-ancestor-falso-negativo-con-squash]] — git merge-base --is-ancestor da falso negativo con ramas squash-merged
+- [[git-mv-archivo-untracked-falla-pero-renombra-igual]] — git mv sobre archivo untracked falla pero renombra igual
+- [[git-rebase-onto-upstream-movido-suelta-commit-reflog-recupera]] — rebase --onto sobre upstream movido puede soltar tu commit; reflog + cherry-pick recupera
+- [[github-code-quality-triage]] — github code quality (preview) — sin api, triaje en ui; 4 reglas ≈ ruff
+- [[graph-calendarview-ventana-utc-no-prefer-timezone]] — graph calendarview interpreta la ventana en utc, no por prefer:outlook.timezone
+- [[hash-dedup-necesita-indice-secuencial-para-movimientos-repetidos]] — hash dedup necesita índice secuencial para movimientos repetidos
+- [[helper-validacion-canonico-front-back-evita-divergencia]] — validador de invariante de dominio en módulo único front+back
+- [[hitl-reresolver-nombre-id-en-execute-no-inyectar-en-prepare]] — en HITL, re-resuelve nombre→id en execute; no lo inyectes en prepare (el flujo de correcc…
+- [[internal-fetch-res-ok-silencioso]] — internal fetch res ok silencioso
+- [[llm-agendado-reloj-en-prompt-y-conversion-utc-en-codigo]] — agendar por LLM — reloj en el prompt, hora local del modelo, conversión UTC en código
+- [[llm-runner-output-cliente-bloques-y-aprobacion]] — salida de runner-llm cara al cliente — bloques delimitados + borrador con aprobación huma…
+- [[macbook-pro-i9-2019-throttling-severo-bajo-carga-sostenida]] — macbook pro i9 2019 throttling severo bajo carga sostenida
+- [[madge-ciclo-import-dinamico-no-rompe-arista]] — madge sigue imports dinámicos y de tipo — para romper un ciclo elimina la arista estática
+- [[mock-funcion-compartida-en-test-endpoint-falso-verde-composicion]] — mockear una función compartida en el test de su consumidor oculta bugs de composición
+- [[nul-byte-literal-en-markdown-hace-que-git-trate-el-archivo-como-binario]] — un NUL byte literal en un .md hace que git lo trate como binario en diffs
+- [[observabilidad-fallback-conservar-error-canal-primario]] — Cuando fallback rescata, conservar error del canal primario en audit
+- [[paso-eleccion-conversacional-resolver-respuesta-antes-que-pregunta]] — paso de elección conversacional — resolver la respuesta primero, la pregunta es el fallba…
+- [[pnpm-action-setup-v4-conflict-con-packageManager]] — pnpm/action-setup@v4 rompe si declaras versión en workflow Y en packageManager de package…
+- [[presenter-grounded-conservar-items-verbatim-no-aflojar-verificador]] — presenter LLM grounded — conserva los ítems verbatim, no aflojes el verificador
+- [[prompts-financieros-necesitan-tabla-scoring-numerica]] — prompts financieros necesitan tabla scoring numérica
+- [[rebase-onto-pr-stackeada-squash-no-duplicar]] — pr stackeada sobre otra con squash-merge — rebase --onto <base-vieja>, no rebase normal
+- [[reconciliar-estado-externo-al-reiniciar-no-cancelar-recrear]] — al reiniciar, reconciliar estado externo por clave natural — no cancelar+recrear
+- [[saltedge-integracion-multi-provider-contrato-existente]] — integración nueva a una familia ya cubierta por un contrato compartido — buscar ESE contr…
+- [[script-one-shot-con-env-local-divergente-de-prod]] — scripts one-shot con .env.local divergente de prod dan 404 fantasmas
+- [[signed-url-proxy-endpoint-vs-cached-en-bd]] — signed URLs con TTL — exponer proxy endpoint, no cachear en BD
+- [[slack-canvas-api-no-permite-leer-contenido-de-secciones]] — slack canvas api no permite leer contenido de secciones
+- [[structured-outputs-strict-garantiza-forma-no-veracidad]] — Structured Outputs (json_schema strict) garantiza la FORMA, no la veracidad
+- [[sync-bidireccional-anti-eco-hash-canonico]] — anti-eco en sync bidireccional — hash canónico sobre forma mapeada, no sobre el raw
+- [[tool-feature-gated-error-llm-alucina-dato-devolver-mensaje-honesto]] — tool con feature-gate que lanza error deja al LLM inventar un dato falso
+- [[vitest-mock-parcial-util-rompe-al-anadir-export]] — vi.mock parcial de un módulo util rompe en silencio al añadir un export nuevo
+- [[vitest-vi-fn-sin-params-rompe-spread-args]] — vi.fn(() => ...) sin params declarados rompe spread (...args) con TS2556
+- [[whitelist-no-es-dry-run-añadir-flag-explicito]] — Whitelist ≠ dry-run — añadir flag explícito si quieres seguridad en smokes
+- [[worktree-monorepo-symlink-node-modules-anidado]] — worktree fresco de monorepo — el symlink de node_modules debe incluir el de cada paquete…
+
+## WhatsApp / voz / Meta / copiloto (51)
+- [[anthropic-prompt-cache-prefijo-system-tools]] — anthropic prompt caching cachea por prefijo — cachear solo system+tools deja el historial…
+- [[auditar-sobre-origin-main-worktree-no-cwd-stale]] — auditar/arreglar en worktree desde origin/main, no sobre el cwd stale (o el hallazgo se i…
+- [[chatwoot-agent-bot-debe-asignarse-al-inbox-correcto]] — chatwoot agent bot debe asignarse al inbox correcto
+- [[chatwoot-allow-auto-assign-true-cascada-a-assignee-individual]] — chatwoot allow_auto_assign true cascada a assignee individual
+- [[chatwoot-automation-rule-assignee-not-present-dispara-siempre]] — chatwoot automation rule assignee_id is_not_present dispara en cada update
+- [[chatwoot-custom-attribute-definitions-endpoint-v3-renombrado]] — chatwoot v3+ renombra custom_attributes a custom_attribute_definitions
+- [[chatwoot-labels-post-replace-all-get-merge-pattern]] — chatwoot labels post reemplaza todos — get + merge antes de añadir
+- [[cloudflared-tunnel-bloqueado-puerto-7844-usar-hotspot]] — cloudflared quick tunnel muere si la red bloquea el puerto 7844
+- [[copiloto-turn-lock-concurrent-llm-calls]] — turn lock por hilo para agentes llm con historial persistido
+- [[fire-and-forget-resultado-descartado-esconde-fallo-loguear-en-transporte]] — fire-and-forget cuyo resultado se descarta esconde el fallo — loguear en el transporte co…
+- [[gpt-4o-era-el-modelo-real-en-prod-sin-saberlo]] — Verifica qué modelo LLM corre DE VERDAD en prod antes de optimizar el prompt
+- [[kommo-custom-field-rechaza-emoji-4-byte]] — kommo rechaza emojis de 4 bytes en el valor de un custom field vía api
+- [[llm-current-date-debe-inyectarse-explicito-evita-alucinar-anyo]] — LLM voz inventa el año si no se inyecta la fecha actual explícita
+- [[llm-hilo-envenenado-ancla-tools-frescos-mandan]] — un hilo con respuestas erróneas acumuladas ancla al llm aunque el tool dé el dato bueno
+- [[llm-sobreaplica-constraint-de-tools-vecinos-sin-antipatron-explicito]] — el LLM sobreaplica un constraint de tools vecinos si no hay anti-patrón explícito
+- [[llm-tool-description-precondiciones-pesa-mas-que-prompt]] — tool description con precondiciones pesa más que el system prompt para evitar tool-call t…
+- [[maker-checker-re-auditar-fixes-propios-antes-de-merge]] — maker/checker — re-audita tus propios fixes con agentes independientes antes de mergear
+- [[meta-error-2494160-templates-causa-numero-no-connected]] — meta error 2494160 "waba sin permiso plantillas" suele ser número no CONNECTED
+- [[meta-whatsapp-payload-type-a-nivel-message-no-dentro-de-text]] — Meta WhatsApp Cloud payload — type está a nivel del message, no dentro de text
+- [[meta-whatsapp-template-language-spanish-es-es]] — Plantillas WhatsApp "Spanish (SPA)" se aprueban como es_ES, no es
+- [[normalizar-dato-dictado-en-la-frontera-del-write-no-en-el-canal]] — normalizar datos dictados en la frontera del write, no en el canal
+- [[persistir-propuesta-destructiva-como-texto-entrena-al-llm-a-narrar]] — persistir una propuesta destructiva como texto del assistant entrena al LLM a narrar en v…
+- [[probar-endpoint-llm-con-hilo-persistente-repite-respuesta-cacheada]] — probar un endpoint de copiloto/LLM con hilo persistente puede repetir la respuesta anteri…
+- [[retell-boosted-keywords-letras-españolas-stt]] — Retell boosted_keywords con letras españolas mejora STT de matrículas
+- [[retell-call-summary-vs-tool-args-intencion-para-resumen-email]] — retell call_summary (transcript completo) supera a args.intencion para emails post-llamada
+- [[retell-cold-vs-warm-transfer-y-numero-distinto-del-caller]] — transfer Retell — cold vs warm, y el número destino no puede ser el del que llama
+- [[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]] — retell conversation flow flex compila todo y dispara token-scaling
+- [[retell-current-time-y-current-calendar-dynamic-vars-evitan-fecha-hardcodeada]] — usar {{current_time_[tz]}} y {{current_calendar_[tz]}} de Retell en vez de hardcodear la…
+- [[retell-custom-voice-label-no-garantiza-audio-real]] — Retell custom voice — la etiqueta no garantiza el audio real
+- [[retell-deletreo-nombres-de-letra-no-peladas-tts]] — retell/voz — deletrear con nombre de letra (uve, o, zeta), no letras peladas
+- [[retell-execution-message-description-no-comprometer-accion]] — retell execution_message_description no debe comprometer la acción futura
+- [[retell-from_number-no-auto-sustituye-en-tool-args]] — Retell `{{from_number}}` NO se auto-sustituye en argumentos de tool
+- [[retell-function-node-instruction-construye-iso-params]] — retell function node instruction guía construcción de parámetros iso
+- [[retell-post-call-analysis-persistir-datos-estructurados]] — retell post-call analysis para persistir datos estructurados de la llamada con latencia c…
+- [[retell-published-flow-400-crear-nuevo-y-reasignar]] — retell published flow devuelve 400 — crear flow nuevo y reasignar agente
+- [[retell-subagent-default-transfer-debe-bloquearse-explicito-por-caso]] — Retell subagent por defecto deriva a humano — bloquear explícito por caso
+- [[retell-tool-call-strict-mode-no-fuerza-ejecutar-solo-valida-args]] — Retell `tool_call_strict_mode` solo valida args, no fuerza ejecutar el tool
+- [[smoke-multi-org-whatsapp-clean-state]] — smoke multi-org WhatsApp bot requiere limpiar 3 tablas + no abrir web
+- [[traefik-body-limit-bloquea-base64-media]] — traefik body limit (~4mb) corta silenciosamente base64 de imágenes en http interno
+- [[verificacion-adversarial-lentes-triar-por-que-lente-refuta]] — verificación adversarial de N lentes — triar cada hallazgo por QUÉ lente lo refuta
+- [[voice-agent-confunde-persona-interna-con-nombre-cliente]] — voice agent confunde persona interna con nombre del cliente al transferir
+- [[voz-batch-multi-write-no-fusionar-en-una-frase-rompe-deletreo-dosificado]] — en confirmaciones de voz, no fusiones un batch multi-write en una sola frase hablada si c…
+- [[voz-dedup-turno-por-firma-transcript-reemitir-sobre-response-id-actual]] — voz streaming (retell) — dedup de turnos por firma del transcript, pero re-emitir la voz…
+- [[whatsapp-cloud-api-fuera-de-ventana-24h-plantilla-y-acortador]] — whatsapp cloud api fuera de la ventana 24h necesita plantilla, y el botón-url solo admite…
+- [[whatsapp-cloud-api-vs-business-app-numero-exclusivo]] — whatsapp cloud api y app business móvil no coexisten en mismo número
+- [[whatsapp-conectar-numero-propio-en-movil-a-cloud-api]] — conectar un número de whatsapp que ya está en el móvil (business app) a cloud api
+- [[whatsapp-diagnosticar-numero-waba-por-graph-api]] — diagnosticar estado de un número/waba de whatsapp por graph api
+- [[whatsapp-internal-http-discriminador-shape]] — whatsapp internal http discriminador shape
+- [[whatsapp-no-renderiza-doble-asterisco]] — whatsapp no renderiza markdown estandar (** doble asterisco aparece literal)
+- [[whatsapp-recordatorio-diferido-siempre-plantilla-utility]] — recordatorio/notificación programada por whatsapp → siempre plantilla utility
+- [[whatsapp-template-variable-no-admite-saltos-de-linea]] — variables de plantilla whatsapp no admiten saltos de linea ni tabs (#132018)
+
+## Verifactu / fiscal / facturación (25)
+- [[acciones-de-estado-fiscal-vs-sombra-en-sistema-externo]] — acciones de estado fiscal vs sombra en sistema externo
+- [[aeat-disenos-registro-en-xlsx-no-html-mirror-mit]] — aeat disenos registro en xlsx no html mirror mit
+- [[aeat-formas-presentacion-fichero-vs-conducto-vs-colaborador-social]] — formas de presentar un modelo aeat — fichero vs conducto (cert cliente) vs colaborador so…
+- [[backblaze-b2-object-lock-compliance-worm-fiscal-es]] — backblaze b2 object lock compliance worm fiscal es
+- [[campo-que-sobrevive-a-drop-on-write-derivar-no-almacenar]] — un dato que debe sobrevivir al drop-on-write se DERIVA de la fuente durable, no se almace…
+- [[cashflow-saldo-actual-mas-serie-historica-doble-conteo]] — combinar saldo-actual con serie acumulada desde el pasado = doble conteo
+- [[cifras-derivadas-en-capa-ia-reusan-filtro-canonico]] — cifras de negocio en una capa nueva (ia/copiloto) deben reusar el filtro canónico, no rei…
+- [[evals-de-modelo-real-oscilan-agregar-corridas-y-baseline-con-margen]] — evals de modelo real con pocas muestras oscilan → agregar N corridas + baseline con margen
+- [[github-actions-org-private-free-tier-2000-min]] — github actions org private free tier 2000 min
+- [[irpf-dt-18-vivienda-habitual-doble-condicion]] — irpf dt 18 vivienda habitual doble condicion
+- [[iva-modelo-303-c68-es-regularizacion-anual-no-deducibles]] — iva modelo 303 c68 es regularizacion anual no deducibles
+- [[llm-fechas-relativas-pasar-now-en-tz-local-con-dia-de-semana]] — para que un llm resuelva «mañana/el martes» pásale el now en zona local con el día de la…
+- [[nif-espana-paraguas-dni-nie-cif-desde-rd-1065-2007]] — NIF España es paraguas (DNI/NIE/CIF) desde RD 1065/2007
+- [[nif-receptor-obligatorio-solo-3-supuestos-verifactu]] — nif del receptor obligatorio solo en 3 supuestos; consumidor final no lo necesita ni con…
+- [[openapi-spec-mantenido-a-mano-deriva-del-handler]] — openapi.json mantenido a mano deriva silenciosamente del handler
+- [[payment-link-importe-congelado-revalidar-pendiente-al-conciliar]] — payment link con importe congelado en su creación — revalidar el pendiente al conciliar,…
+- [[pr-externa-sobre-modelo-sunsetado-portar-no-mergear]] — pr externa sobre modelo sunsetado — portar al nuevo antes de mergear
+- [[sembrar-base-desde-total-con-iva-pierde-centimo]] — sembrar base desde un total con iva incluido pierde un céntimo (≈mitad de importes redond…
+- [[stripe-price-id-en-env-vs-precio-bd-editable-derivan]] — stripe price (lo que cobra) vive en env, no en el precio editable de la bd
+- [[stripe-tax-registro-ue-via-api]] — stripe tax en españa por api — tax_behavior exclusive + registro ue con place_of_supply_s…
+- [[totales-multilinea-redondeo-por-grupo-de-iva-una-sede]] — totales multi-línea deben redondear la cuota por GRUPO de iva, no por línea, con una sola…
+- [[verifactu-aplazado-2027-rdl-15-2025]] — verifactu aplazado 2027 rdl 15 2025
+- [[verifactu-xml-desglose-obligatorio-xsd-rechaza-sin-el]] — Verifactu XML exige bloque Desglose o AEAT rechaza por XSD
+- [[verifactu-xsd-namespace-suministroinfo-vs-sistemafacturacion]] — verifactu xsd: SistemaFacturacion.xsd (404) — usar SuministroInformacion.xsd + Suministro…
+- [[verificar-modelos-anthropic-vigentes-via-get-v1-models]] — verificar si un modelo anthropic sigue vigente con GET /v1/models
+
+## Docker / Dokploy / deploy / infra (24)
+- [[alert-collector-cron-vs-live-dedup-gap]] — cron materializador + collector en vivo necesitan dedup en runtime, no filtro de origen
+- [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]] — alpine docker sin bash ni curl — añadir via dockerfile para crons
+- [[backblaze-computer-backup-vs-b2-cloud-storage-productos-distintos]] — backblaze computer backup vs b2 cloud storage productos distintos
+- [[cron-alta-frecuencia-exigir-2-fallos-consecutivos-antes-de-paginar]] — cron de alta frecuencia — exigir ≥2 fallos consecutivos antes de paginar por email
+- [[cron-dokploy-curl-service-key]] — cron dokploy con docker exec curl service-key, validar con run-now
+- [[cron-health-desconocido-para-cron-sin-ningun-run]] — computeHealth trata un cron sin NINGÚN run histórico como 'desconocido', no 'rojo' — nunc…
+- [[cron-health-flapea-con-run-en-vuelo-sobre-error]] — cron health flapea si deduces "recuperado" de "ya no está en rojo" y pillas un run en vue…
+- [[cron-mantenimiento-auto-sanable-no-debe-paginar-severidad-por-criticidad]] — cron de mantenimiento auto-sanable no debe paginar por email — severidad por criticidad,…
+- [[docker-compose-env-not-recreate]] — docker compose up no recrea container si solo cambia el valor de una variable referenciada
+- [[docker-layer-cache-persiste-con-contenedor-activo]] — docker layer cache persiste si hay contenedor activo referenciando la capa
+- [[dokploy-api-deployments-sin-ordenar]] — Dokploy API: compose.one devuelve deployments SIN ordenar
+- [[dokploy-api-env-vive-en-composefile-no-en-campo-env]] — dokploy api compose.one — las env viven en composeFile, no en el campo env
+- [[dokploy-autodeploy-false-desfase-silencioso]] — dokploy compose con autodeploy=false acumula merges sin desplegar (desfase silencioso)
+- [[dokploy-compose-autodeploy-false-no-recibe-merges]] — dokploy compose con autoDeploy=false no recibe los merges a main
+- [[dokploy-cron-docker-exec-no-hereda-env-de-app-env]] — los crons de dokploy (docker exec) no heredan las env que la app carga de /app/.env
+- [[dokploy-cron-pre-stage-disabled-si-endpoint-no-desplegado]] — cron dokploy para código aún no desplegado = crearlo enabled:false (pre-staged)
+- [[dokploy-env-clave-dos-puntos-no-se-parsea]] — env de dokploy con CLAVE:valor (dos puntos) no define la variable
+- [[dokploy-paste-compose-corruption]] — dokploy puede corromper líneas al pegar yaml en pestaña compose
+- [[easypanel-y-dominio-custom-pueden-resolver-a-ips-distintas]] — easypanel y dominio custom pueden resolver a ips distintas
+- [[github-app-no-incluye-repos-nuevos-automaticamente]] — github app installation no incluye repos creados después de la instalación
+- [[langfuse-v3-selfhost-deploy-gotchas]] — langfuse v3 self-host — gotchas de deploy (traceId, clickhouse RAM, headless init)
+- [[monitor-en-la-misma-infra-no-detecta-su-propia-muerte]] — un monitor que corre en la misma infra que vigila no detecta que esa infra muera
+- [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]] — observabilidad nueva destapa bugs viejos en silencio
+- [[watchdog-umbral-debe-tolerar-un-tick-perdido]] — umbral de watchdog de cron debe tolerar ≥1 tick perdido (2× intervalo)
+
+## TypeScript / tooling / testing (24)
+- [[admin-alert-collectors-dismiss-contract]] — collector de alertas admin debe emitir dismissKey de 2 partes
+- [[agent-browser-eval-contexto-persiste-const-usar-iife]] — agent-browser eval reutiliza el contexto JS — `const` redeclarado lanza "already declared
+- [[agent-browser-verificar-snapshot-no-solo-screenshot]] — agent-browser — verificar mensajes con snapshot de accesibilidad, no solo screenshot
+- [[bigint-json-stringify-replacer-determinista]] — bigint json stringify replacer determinista
+- [[e2e-smoke-skip-honesto]] — E2E smoke — skip honesto por precondición, no falso rojo
+- [[endpoint-sin-consumidor-real-tiene-bugs-latentes]] — endpoint sin consumidor real esconde bugs latentes hasta primer uso
+- [[evals-opt-in-vitest-repeat-timeout]] — correr evals opt-in con modelo real — vitest --repeat no es flag CLI y el timeout 5s da f…
+- [[float-exp-underflow-asintota-tests]] — float exp underflow asintota tests
+- [[helper-di-client-mover-dentro-si-ningun-caller-lo-reutiliza]] — helper con client inyectado por parámetro — moverlo dentro si ningún caller lo reutiliza
+- [[intl-numberformat-grouping-difiere-node-icu-vs-browser-en-tests]] — intl.numberformat agrupa distinto en node (icu) vs browser — no aseverar el string en tes…
+- [[jose-v6-esm-only-tsx-cjs-top-level-await]] — jose v6 es esm-only; tsx sin "type":"module" transpila a cjs y rompe top-level await
+- [[llm-tool-use-multi-turno-replay-tool-calls-y-results-emparejados]] — llm tool-use multi-turno requiere replay de tool_calls y tool_results emparejados
+- [[medir-cwv-autenticado-sin-lighthouse]] — medir core web vitals autenticado sin lighthouse (playwright)
+- [[openapi-fetch-ternary-rompe-narrowing-typescript]] — openapi-fetch ternary rompe narrowing — r.response.status aparece como `never`
+- [[playwright-getbylabel-falla-sin-htmlfor-usar-placeholder-o-filter-by-option]] — Playwright getByLabel falla sin htmlFor — usar placeholder o filter by option
+- [[playwright-getbytext-first-hidden-details-element]] — playwright getByText().first() puede resolver en elemento oculto dentro de <details> cerr…
+- [[playwright-isvisible-ignora-timeout-usar-waitfor]] — playwright locator.isVisible({timeout}) no espera — usa waitFor para skips condicionales
+- [[playwright-page-request-respeta-cache-http-del-browser]] — playwright page.request respeta la caché http del browser
+- [[playwright-section-locator-filter-timeout]] — playwright filter({ has: locator }) + waitFor puede timeout en páginas complejas
+- [[test-mocks-rename-import-path-no-rename-import]] — Renombrar import en handler → actualizar TODOS los `vi.mock` que mockean ese path
+- [[test-verde-puede-codificar-el-bug-como-esperado]] — un test en verde puede estar codificando el bug como comportamiento esperado
+- [[ts-as-const-no-indexable-con-generico-k]] — ts as const no indexable con genérico k — ts2536
+- [[vitest-mock-clase-esm-vi-hoisted]] — vitest mock clase es module - vi.hoisted para evitar "not a constructor
+- [[zod-vs-openapi-doc-contrato-real-de-clientes-generados]] — zod refine no llega a clientes openapi-typescript — actualizar openapi.json en mismo comm…
+
+## Next.js / App Router (17)
+- [[bd-fuente-verdad-via-cache-memoria-hidratar-en-lectura]] — bd como fuente de verdad vía cache en memoria: hidratar en lectura, no solo al escribir
+- [[crypto-modulo-server-only-bloquea-scripts-cli-extraer-primitivas]] — módulo de cifrado con `import 'server-only'` bloquea scripts cli — extraer primitivas
+- [[curl-sf-trata-redirect-3xx-como-exito-en-crons]] — curl -sf trata un redirect 3xx como éxito — cron que reporta verde sin ejecutar nada
+- [[dep-nativa-import-dinamico-defensivo-en-ruta-api]] — dep con binario nativo (sharp) en ruta API Next — import dinámico dentro de try/catch
+- [[fire-and-forget-en-handler-corto-pierde-side-effect]] — void async() en un handler que retorna enseguida abandona el side-effect
+- [[monitor-deploy-usar-senal-comportamiento-no-existencia]] — monitor deploy listo — señal de comportamiento distinto, no respuesta genérica
+- [[next-js-standalone-hostname-bind]] — next.js standalone bindea a $HOSTNAME, no a 0.0.0.0 (502 tras reverse proxy)
+- [[next-public-envs-dokploy-runtime-fallback-headers]] — next public envs dokploy runtime fallback headers
+- [[next-typed-routes-validator-stale-tras-cambio-de-rama]] — next typed-routes validator stale tras cambiar de rama rompe el typecheck
+- [[next16-turbopack-no-imprime-first-load-js]] — next 16 + turbopack no imprime la tabla first load js en build
+- [[nextjs-unstable-cache-no-invalida-con-escritura-directa-bd]] — Next.js unstable_cache no se invalida con escrituras directas a BD desde scripts externos
+- [[nextjs16-middleware-to-proxy]] — next.js 16 renombra middleware.ts a proxy.ts
+- [[pdf-lib-funciona-en-nextjs-turbopack-donde-pdfkit-falla]] — pdf-lib funciona en next.js turbopack donde pdfkit falla
+- [[self-fetch-entre-api-routes-falla-en-docker-prod-extraer-a-lib]] — Self-fetch entre API routes falla en Docker prod — extraer a lib
+- [[turbopack-rechaza-symlink-node-modules-en-worktree]] — turbopack rechaza node_modules symlinkeado en un worktree (tsc/vitest sí lo aceptan)
+- [[vitest-recoge-specs-e2e-duplicados-en-next-standalone]] — vitest recoge specs e2e duplicados dentro de .next/standalone tras un build
+- [[zod-strict-bloquea-campos-no-listados-silenciosamente]] — zod strict bloquea campos no listados silenciosamente
+
+## OCR / ingesta / documentos (16)
+- [[documento-dinero-ya-cobrado-debe-marcarse-cobrada-explicito]] — documento que representa dinero ya cobrado debe marcarse cobrada explícito
+- [[flag-de-revision-derivado-solo-se-sube-nunca-se-limpia]] — un flag derivado que solo se escribe al detectar anomalía deja avisos fantasma
+- [[gate-agentico-que-no-dispara-suele-estar-inanido-no-mal-calibrado]] — un gate agéntico/ml que no dispara suele estar inanido en el origen, no mal calibrado
+- [[gpt-4o-mini-falla-fotos-baja-calidad-bleed-through]] — gpt-4o-mini (vision) falla en fotos de baja calidad con transparencia del reverso
+- [[imap-attachment-selectivo-bodystructure-evita-oom]] — imap attachment selectivo via bodyStructure evita oom
+- [[ingesta-email-imagenes-inline-firma-tratadas-como-adjuntos-facturables]] — ingesta de email por MIME allowlist mete logos de firma como si fueran facturas
+- [[llm-prompt-bloque-contexto-presupone-rol-fijo-bloquea-rol-nuevo]] — al añadir un rol nuevo a un clasificador LLM, revisa los bloques de contexto que ya presu…
+- [[llm-responde-200-no-json-no-es-fallo-pipeline]] — llm responde 200 con no-json (negativa) no es fallo de pipeline
+- [[llm-source-quote-anti-alucinacion-extraccion]] — source_quote literal del usuario como ancla anti-alucinación en extracción LLM
+- [[llm-tool-calling-elimina-silent-fail-extraccion-estructurada]] — tool calling forzado elimina silent fail en extracción estructurada del LLM
+- [[max-tokens-es-tope-no-consumo-trunca-json-ocr-largo]] — max_tokens es un tope (no consumo); si es bajo trunca el JSON de OCR largo
+- [[ocr-clasificacion-doc-type-no-factura-sin-campos]] — ocr clasifica doc_type no-factura pero no extrae sus campos
+- [[ocr-clasificacion-iva-zero-seguros]] — ocr llm clasifica como justificante_pago docs con iva=0 si prompt requiere iva para "fact…
+- [[openai-vision-lee-pdf-del-reves-rotando-con-pdf-lib]] — OpenAI vision lee un PDF escaneado del revés si rotas sus páginas con pdf-lib
+- [[output-llm-validar-zod-y-auditar-parse-failures-en-bd]] — output llm validar con zod y auditar parse failures en bd
+- [[pdf-fallback-pipeline-devolver-razon-no-null]] — pipeline asset con fallback debe devolver razón del fallo no Buffer|null
+
+## Notificaciones / email / integraciones (10)
+- [[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]] — calendar event id determinista sha1 phone+slot evita doble booking
+- [[email-imagenes-base64-bloqueadas-usar-hosting]] — email imágenes base64 bloqueadas por clientes de correo
+- [[fnmt-tsa-mtls-x509-rfc3161-no-rest]] — fnmt tsa mtls x509 rfc3161 no rest
+- [[gcal-eventid-charset-restriction-a-v0-9-base32hex]] — Google Calendar eventId charset restringido a [a-v0-9] (base32hex), 5-1024 chars
+- [[gmail-poll-debe-filtrar-self-sender]] — gmail-poll debe filtrar self-sender para no ingerir tickets falsos
+- [[put-objeto-completo-borra-campos-no-mapeados]] — PUT de objeto completo a una API externa borra campos que tu integración no mapea
+- [[signed-url-corta-fetch-interno-no-reusar-en-email]] — signed URL del fetch server-side no se reutiliza como href de email
+- [[smtp-reescribe-from-a-cuenta-autenticada]] — el smtp del proveedor reescribe el From a la cuenta autenticada
+- [[types-gen-consumer-desfasado-aunque-spec-este-al-dia]] — types.gen.ts del consumer puede estar desfasado aunque la spec del backend esté al día
+- [[verificar-comportamiento-real-api-antes-de-creer-al-integrador]] — verificar comportamiento real de api antes de creer al integrador
+
+## Stripe / pagos / billing (6)
+- [[contador-de-cuota-best-effort-tras-check-es-cuota-infinita]] — un contador de cuota best-effort tras el check es cuota infinita si el increment falla
+- [[git-checkout-file-en-red-check-deja-commit-sin-fix]] — git checkout <file> en el red-check deja el commit sin el fix (y build no compila tests)
+- [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]] — stripe: el CLI --live puede ir a otra cuenta que la sk_live de la app → 'No such price' e…
+- [[stripe-connect-signup-gotcha-crear-cuenta-conectada]] — stripe connect: 'sign up for connect' al crear cuenta conectada = perfil de plataforma in…
+- [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]] — stripe subscription.deleted handler debe resolver por sub.id no solo por metadata.kind
+- [[stripe-subscription-item-resolver-por-price-no-por-indice]] — stripe: resolver el item de una suscripción por price, nunca por índice items.data[0]
+
+## Stock / inventario (3)
+- [[motor-con-input-requerido-debe-defaultear-no-fallar-mudo]] — motor con input requerido debe defaultear, no fallar mudo
+- [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]] — subida en lote cliente backoff sobre rate limit servidor
+- [[unidad-compra-convertir-en-insert-no-en-motor]] — unidad de compra (cajas) — convertir en el RPC de inserción, no en el motor de stock
+
+## Otros (24)
+- [[apps-electron-guardan-cache-en-partitions-service-worker-no-en-root]] — apps electron guardan cache en partitions service worker no en root
+- [[atributo-download-ignorado-en-redirect-cross-origin]] — el atributo download del <a> se ignora en redirects cross-origin
+- [[bullmq-cola-efimera-bd-fuente-de-verdad]] — bullmq es disparador efímero, no almacén — bd fuente de verdad + reconciliación al boot
+- [[caller-timeout-debe-cubrir-peor-caso-del-retry-interno]] — el timeout del caller debe cubrir el peor caso acumulado del retry interno del callee
+- [[ccxt-mexc-futuros-no-soporta-crear-ordenes]] — ccxt no implementa crear órdenes de futuros en MEXC (createSwapOrder es stub)
+- [[clearbit-logo-api-ya-no-existe]] — clearbit logo api ya no existe
+- [[converger-canal-divergente-sobre-fuente-unica]] — converger un canal divergente sobre la fuente única sin regresión
+- [[cookie-impersonate-leak-fuera-de-admin]] — cookie impersonate leak fuera de admin
+- [[decorator-de-interfaz-para-extender-sin-tocar-el-core]] — decorar una interfaz para interceptar sin tocar el core de otro
+- [[endpoint-idempotente-restaura-soft-deleted-si-existing]] — endpoint POST idempotente restaura soft-deleted en vez de "ya existe
+- [[extract-error-objeto-anidado-en-apis-modernas]] — extractError debe gestionar error como objeto anidado
+- [[gating-de-modulo-duplicado-por-pagina-centralizar-en-helper]] — el gating de visibilidad/acceso de un módulo duplicado por página deriva inconsistente —…
+- [[google-favicon-api-patron-auto-logo]] — google favicon api patron auto-logo para proveedores
+- [[hitl-resumen-debe-nombrar-entidad-desambiguada]] — un gate HITL solo protege si el resumen nombra la entidad que un campo desambigua
+- [[kommo-salesbot-ids-ajax-v4]] — kommo salesbot ids — endpoint real es /ajax/v4/bots/ no /api/v2/salesbot
+- [[kommo-salesbot-json-adaptation]] — kommo salesbot jsons del drive tienen datos hardcodeados de cz — adaptar antes de importar
+- [[new-date-toisostring-desplaza-un-dia-fuera-de-utc]] — new Date(y,m,d).toISOString() desplaza la fecha un día fuera de UTC
+- [[osascript-finder-delete-para-papelera-reversible-en-vez-de-rm-rf]] — osascript finder delete para papelera reversible en vez de rm rf
+- [[port-devuelve-dato-discriminado-tool-traduce-throw-en-borde]] — port/adapter devuelve dato discriminado; el caller traduce a throw en su borde
+- [[regex-word-boundary-no-casa-acentos-js-normalizar-nfd]] — en JS \b no casa junto a acentos — normaliza NFD antes de matchear comandos
+- [[resolver-ambiguo-escape-hatch-duplicados-exactos-vs-fuzzy]] — un escape-hatch que colapsa ambigüedad a "el más reciente" solo vale para duplicados EXAC…
+- [[sanitizador-allowlist-reconstruye-objeto-descarta-campos-nuevos]] — sanitizador que reconstruye un objeto por allowlist descarta silenciosamente campos nuevo…
+- [[sepa-pain008-remesa-adeudo]] — generar remesa sepa pain.008 (adeudo directo / cuaderno 19.14)
+- [[verificar-que-el-bug-sigue-vivo-contra-codigo-actual-antes-de-fixear]] — verificar que un bug sigue vivo contra el código actual antes de fixear
