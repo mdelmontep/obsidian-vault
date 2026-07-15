@@ -66,6 +66,8 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **agent-browser `eval` reutiliza contexto → `const` redeclarado peta** — envuelve en IIFE o usa `wait --fn` para esperar sin polling manual (evita cronometrajes falsos). Ver [[agent-browser-eval-contexto-persiste-const-usar-iife]].
 - **Grid `1fr` no encoge bajo su contenido `nowrap` → desborda** — usar `minmax(0, 1fr)` + `min-width:0` en la cadena flex-column; el badge/importe se salía de pantalla pese al ellipsis. Lo caza el QA visual, no el build. Ver [[grid-1fr-no-encoge-con-contenido-nowrap-usar-minmax-0-1fr]].
 - **`backdrop-filter` invisible en Turbopack: no declares `-webkit-` a mano** — lightningcss colapsa el par y sirve solo la variante `-webkit-`, dropando la sin prefijo → Chrome no aplica el glass. Solo `backdrop-filter`; el pipeline prefija. Ver [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]].
+- **agent-browser `set device` DESPUÉS de `open` no sirve si la app decide móvil por UA server-side** — el primer render ya quedó fijado a desktop aunque el viewport cambie después; setea dispositivo/media ANTES de navegar. Ver [[agent-browser-set-device-antes-de-open-para-ssr-mobile]].
+- **Contención de CPU multi-sesión puede parecer bug de UI (skeleton atascado)** — antes de diagnosticar, `uptime`/`ps aux` + esperar 30-60s reales; un "atasco" de segundos bajo load>10 puede no ser código. Ver [[cpu-contencion-multisesion-falso-positivo-ui-atascada]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.

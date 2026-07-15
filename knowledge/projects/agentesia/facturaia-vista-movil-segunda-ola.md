@@ -7,7 +7,7 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 
 # Vista móvil TuFacturaIA — segunda ola
 
-**Estado (2026-07-15):** primera ola (PR0-PR6: home nativo, shell+PWA, sheet "+", tab Facturas, tab Documentos, menú "Más") EN PROD. Esta spec es el prompt de ejecución de la SEGUNDA ola, listo para lanzar en otra sesión de Claude Code (Opus, multi-agente). Decisiones cerradas con Manuel: **push = infra completa, VAPID las genera Manuel**; **offline = estrategia profesional tipo fintech** (shell precacheado, datos network-first con marca de antigüedad, nunca cifras obsoletas sin aviso). [[facturaia]]
+**Estado (2026-07-16): SEGUNDA OLA COMPLETA EN PROD.** Primera ola (PR0-PR6) + segunda ola (8 PRs: #907/#910/#911/#916/#917/#921 + #928/#929/#930) mergeadas. Único pendiente: calibración de blur (bloqueada, esperando fotos de Manu) y confirmación de deploy VAPID. Spec original (prompt de ejecución) queda abajo como referencia histórica. [[facturaia]]
 
 ## Progreso (2026-07-15 — 5 PRs MERGEADOS a main, deploy auto en Dokploy)
 
@@ -21,12 +21,14 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 
 **Merge (2026-07-15):** los 5 + fix #921 (renumerada `462_push_subscriptions`→**463**, chocaba con `462_holded` de #908). Merges limpios (hunks disjuntos), deploy auto.
 
-**Pendiente próxima sesión (5 puntos, prompt abajo en `Índice de áreas`/hub):**
-1. **Aplicar `463_push_subscriptions` a prod** — `supabase db push --linked` desde main limpio (red no bloqueada; los puertos PG timeoutean desde la Mac de Manuel). Dormido sin VAPID, sin prisa.
-2. **VAPID** — `npx web-push generate-vapid-keys` → envs Dokploy (`VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`/`VAPID_SUBJECT`) + `NEXT_PUBLIC_VAPID_PUBLIC_KEY`; luego cerrar el envío server-side (helper `sendPush*` + wiring a `notify()`).
-3. **Manual de usuario** (`docs/manuals/manual-usuario.md`) del flujo de escaneo multipágina + calibrar umbral de blur (80) con fotos reales.
-4. **Smokes prod** (artifact antes/después): móvil glass/badges/recordar/escaneo · offline PWA iOS (modo avión) · integración `create-sheet` (F+E auto-fusionados) · combinación globals.css.
-5. **PR-C** (gestos swipe+undo, pull-to-refresh, scroll infinito — toca `useFacturasData`/`usePaginationParams` + mutaciones, respetar inviolables acciones-por-estado) + **auditoría de rendimiento** (LCP móvil throttled).
+**Los 5 puntos — CERRADOS 2026-07-16 (sesión /loop con agentes paralelos):**
+1. ✅ **Migración 463 a prod** — aplicada, RLS+4 políticas verificadas por psql directo.
+2. ✅ **VAPID + push server-side** (PR #929) — Manu puso las claves en Dokploy. `sendPushForNotification` (`src/lib/push/send.ts`) enganchado a `notify()` solo warning|critical, gateado en VAPID, respeta `shouldDeliver`+quiet hours, poda 404/410. Gap real cerrado en el mismo PR: `/api/push/subscribe` no activaba `channel_push` → nadie habría recibido nada. **Pendiente**: confirmar `compose.deploy` (rebuild) para que `NEXT_PUBLIC_VAPID_PUBLIC_KEY` se hornee en el bundle cliente + smoke de envío real en iOS instalado.
+3. ⚠️ **Manual de usuario** (PR #928) mergeado. **Blur calibration BLOQUEADA** — sin fotos reales en el repo; esperando 2-3 de Manu (nítida+borrosa) para tocar `BLUR_VARIANCE_THRESHOLD` en `image-quality.ts`.
+4. ✅ **Smokes prod con Artifact** — recorrido completo iPhone 14 claro/oscuro contra FacturaIA Sandbox. Descartado un falso positivo (skeleton de Facturas por contención de CPU multi-sesión, no bug — ver [[cpu-contencion-multisesion-falso-positivo-ui-atascada]]). Hallazgo preexistente fuera de alcance: [[theme-en-localstorage-sin-cookie-espejo-causa-hydration-mismatch]].
+5. ✅ **PR-C** (#930) gestos — swipe+undo (2 patrones: commit-inmediato+revert-endpoint en facturas, pending-commit 5s en ingesta), pull-to-refresh, scroll infinito bifurcado sin tocar desktop. Revisado línea por línea antes de mergear. **Auditoría de rendimiento**: Lighthouse+throttling contra build de producción — LCP 5.1s/FCP 3.7s/CLS 0/TBT 10ms/score 0.72 (medido sobre `/login` por bloqueo de auth en servidor standalone); sin margen claro, no se tocó código.
+
+Gotcha de QA de esta sesión: [[agent-browser-set-device-antes-de-open-para-ssr-mobile]].
 
 Gotcha CSS de la sesión: [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]]. Failure modes de merge/worktree: [[claude-code-agentes-worktree-failure-modes]] (G recrear worktree corrupto, H stash compartido).
 
