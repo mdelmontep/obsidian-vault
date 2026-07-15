@@ -374,6 +374,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## LATER (backlog)
 
+- **Erradicar la clase 42703 (columna inexistente en select) quitando los `as` casts sobre resultados Supabase** — deuda técnica. El tipado ya lo caza (SelectQueryError → TS2339); un `as DocRow[]` lo tira. Plan fásico + gotchas en [[facturaia-erradicar-casts-supabase-42703]]. Motivado por los 5 bugs 42703 de 2026-07-15 (#918/#922).
 - **Deepening arquitectónico — candidatos 1/3/4** — #2 (find-or-create) cerrado. Pendientes: #1 tools copiloto (45 shallow, ~1.3-1.5k LOC plomería — siguiente recomendado), #3 seam emisión voz↔web (núcleo, RFC previo a revisar), #4 lógica en route handlers (incremental). Roadmap + estado: [[facturaia-arquitectura-candidatos-deepening]]
 - **Backends módulos pendientes** — Fiscal **promovido a NEXT con spec completa [[facturaia-centro-fiscal-ia]]**. Pendientes aún en LATER: Firma eIDAS, Cashflow IA forecast. ~21 opciones config con badge Próximamente
 - **Conexión bancaria automática PSD2 (GoCardless BAD)** — paso 4 del roadmap, tras Norma 43 + trigger emitidas. Tabla `bank_consents` cifrada, endpoints connect/callback/sync, cron 4-6h, dedupe por `provider_transaction_id`, notif `bank_consent_expiring` 7d antes. Empezar con sandbox + 1 banco real (BBVA o Santander). 1-2 semanas. Reutiliza `movimientos_bancarios` y triggers 061 tal cual. Spec: [[facturaia-open-banking-psd2]]
