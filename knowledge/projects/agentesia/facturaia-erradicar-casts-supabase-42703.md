@@ -5,11 +5,13 @@ source: claude-code-session
 tags: [facturaia, supabase, typescript, type-safety, deuda-tecnica]
 ---
 
-> **ESTADO: PARCIAL — burndown EN CURSO (2026-07-16).** Guardarraíl cubre **9 zonas** (~290 casts erradicados); quedan **~250 casts** en el resto del repo.
-> - **Mergeado a prod** (4 PRs + smoke real supabase-js 0×42703): #926 fiscal+guardarraíl base · #931 conciliacion+documents+helper `rpc-result` · #933 admin+internal+integrations · #935 endurecer regla (casts con `data` renombrado) + 54 con alias. → 7 carpetas.
-> - **En PR #944** (sin merge): `src/lib/copiloto/**` + `src/app/api/**` (~105 casts; tests copiloto 752 + api 936). Bug real: `voice/cashflow` `.select` de `cashflow_events` no traía `org_id/created_at/updated_at` que el mapper usa.
-> - **PENDIENTE** (~250 casts, ~90 ficheros): resto de `src/lib/**`, `src/components/**` (los client components SÍ hacen queries directas → casts reales), `src/app/**` no-api + `src/hooks/**`. Se intentó full-repo con 5+3 agentes pero la infra cortó 4 (session-limit + connection-closed); trabajo parcial en stashes locales (a dropear en fresh session). **Prompt de continuación estructurado entregado al usuario** (patrón agente-por-zona gateado por lint, máx 2-3 concurrentes). Ver [[orquestar-subagentes-paralelos-burndown-grande-limites-y-checker]].
-> - Learning núcleo: [[casts-sobre-data-de-query-supabase-ocultan-42703-que-el-tipo-ya-detecta]].
+> **ESTADO: ✅ COMPLETADO (2026-07-16).** Guardarraíl ESLint 42703 con **scope global permanente `src/**`** (0 violaciones en todo el repo). Total erradicado ~**450 casts** en 9 PRs.
+> - **Mergeado a prod** (fase inicial, 4 PRs + smoke real supabase-js 0×42703): #926 fiscal+guardarraíl base · #931 conciliacion+documents+helper `rpc-result` · #933 admin+internal+integrations · #935 endurecer regla (casts con `data` renombrado) + 54 con alias.
+> - **PR #944**: `src/lib/copiloto/**` + `src/app/api/**` (~105 casts). Bug real: `voice/cashflow` `.select` de `cashflow_events` no traía `org_id/created_at/updated_at`.
+> - **PR #961 (cierre, 3 olas de 3 agentes, ~264 casts)**: Ola 1 `lib/{admin,audit,agentic,llm,fiscal,cashflow,cobros,feedback,datos}` (90) · Ola 2 `lib/{billing,features,modules,notifications,ingesta,ocr,email,internal,clientes,proveedores,auth,mcp,oauth,recurrentes}` (91) · Ola 3 `components/**`+`hooks/**`+`app` no-api (83). eslint src/**=0, tsc completo limpio, vitest verde, smoke prod 7 selects 0×42703.
+> - **Bugs reales aflorados**: enums TEXT en BD como enum ciego (agentic modo, fiscal_declaraciones.estado, gastos_recurrentes.frecuencia, cashflow_events.direccion/source, ingesta_routing.accion→fallback 'revisar', discount_coupons, notifications.digest_frequency, recurrentes cadencia/estado/modo_emision) · organizations.plan nullable · `.select` con `+`→literal · select dinámico union→ParserError partido en 2 literales.
+> - **DEUDA (follow-up)**: `useOrgClient()` devuelve `SupabaseClient` SIN `<Database>` → la capa components/hooks NO tiene validación 42703 real (en embeds postgrest devuelve tipos de error → casts de borde documentados en factura-detail-modal, use-conciliacion-data). `createClient()` YA es `<Database>`; tipar `useOrgClient` restauraría la protección pero cascadea a todos los consumidores. Latente: `facturas.vto` nullable en `src/lib/cashflow`, `plans.precio_mes/descripcion` nullable vs `PlanDB` non-null.
+> - Learning núcleo: [[casts-sobre-data-de-query-supabase-ocultan-42703-que-el-tipo-ya-detecta]] · orquestación: [[orquestar-subagentes-paralelos-burndown-grande-limites-y-checker]].
 
 # Objetivo
 
