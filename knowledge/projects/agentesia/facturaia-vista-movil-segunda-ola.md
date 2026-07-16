@@ -7,7 +7,7 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 
 # Vista móvil TuFacturaIA — segunda ola
 
-**Estado (2026-07-16): SEGUNDA OLA COMPLETA EN PROD.** Primera ola (PR0-PR6) + segunda ola (8 PRs: #907/#910/#911/#916/#917/#921 + #928/#929/#930) mergeadas. Único pendiente: calibración de blur (bloqueada, esperando fotos de Manu) y confirmación de deploy VAPID. Spec original (prompt de ejecución) queda abajo como referencia histórica. [[facturaia]]
+**Estado (2026-07-16): SEGUNDA OLA COMPLETA EN PROD.** Primera ola (PR0-PR6) + segunda ola (8 PRs: #907/#910/#911/#916/#917/#921 + #928/#929/#930) mergeadas. Umbral de blur validado con fotos reales de Manu (sin cambio de código). Único pendiente: confirmación de deploy VAPID (`compose.deploy` + smoke push real iOS). Spec original (prompt de ejecución) queda abajo como referencia histórica. [[facturaia]]
 
 ## Progreso (2026-07-15 — 5 PRs MERGEADOS a main, deploy auto en Dokploy)
 
@@ -24,7 +24,7 @@ tags: [facturaia, frontend, mobile, pwa, spec]
 **Los 5 puntos — CERRADOS 2026-07-16 (sesión /loop con agentes paralelos):**
 1. ✅ **Migración 463 a prod** — aplicada, RLS+4 políticas verificadas por psql directo.
 2. ✅ **VAPID + push server-side** (PR #929) — Manu puso las claves en Dokploy. `sendPushForNotification` (`src/lib/push/send.ts`) enganchado a `notify()` solo warning|critical, gateado en VAPID, respeta `shouldDeliver`+quiet hours, poda 404/410. Gap real cerrado en el mismo PR: `/api/push/subscribe` no activaba `channel_push` → nadie habría recibido nada. **Pendiente**: confirmar `compose.deploy` (rebuild) para que `NEXT_PUBLIC_VAPID_PUBLIC_KEY` se hornee en el bundle cliente + smoke de envío real en iOS instalado.
-3. ⚠️ **Manual de usuario** (PR #928) mergeado. **Blur calibration BLOQUEADA** — sin fotos reales en el repo; esperando 2-3 de Manu (nítida+borrosa) para tocar `BLUR_VARIANCE_THRESHOLD` en `image-quality.ts`.
+3. ✅ **Manual de usuario** (PR #928) mergeado. **Blur calibration validada 2026-07-16** — 2 fotos reales de Manu (nítida factura Mesoestetic + borrosa movida), replicado el algoritmo exacto de `image-quality.ts` (resize 800px + luminancia Rec.601 + Laplaciano 4-vecinos): nítida=768.8, borrosa=58.6. El umbral actual (`BLUR_VARIANCE_THRESHOLD=80`) clasifica ambas correctamente con margen amplio — sin cambio de código.
 4. ✅ **Smokes prod con Artifact** — recorrido completo iPhone 14 claro/oscuro contra FacturaIA Sandbox. Descartado un falso positivo (skeleton de Facturas por contención de CPU multi-sesión, no bug — ver [[cpu-contencion-multisesion-falso-positivo-ui-atascada]]). Hallazgo preexistente fuera de alcance: [[theme-en-localstorage-sin-cookie-espejo-causa-hydration-mismatch]].
 5. ✅ **PR-C** (#930) gestos — swipe+undo (2 patrones: commit-inmediato+revert-endpoint en facturas, pending-commit 5s en ingesta), pull-to-refresh, scroll infinito bifurcado sin tocar desktop. Revisado línea por línea antes de mergear. **Auditoría de rendimiento**: Lighthouse+throttling contra build de producción — LCP 5.1s/FCP 3.7s/CLS 0/TBT 10ms/score 0.72 (medido sobre `/login` por bloqueo de auth en servidor standalone); sin margen claro, no se tocó código.
 
