@@ -5,6 +5,8 @@ source: claude-code-session
 tags: [facturaia, supabase, typescript, type-safety, deuda-tecnica]
 ---
 
+> **ESTADO: COMPLETADO 2026-07-16.** 4 PRs mergeados a main (deploy auto) + smoke real por supabase-js contra prod (12 selects, 0×42703): #926 fiscal+guardarraíl base · #931 conciliacion+documents+helper `rpc-result` · #933 admin+internal+integrations (via 3 subagentes gateados por el lint) · #935 endurecer regla a casts con `data` renombrado + barrer 54 con alias. ~185 casts erradicados, ~15 interfaces muertas fuera. Guardarraíl cubre 7 carpetas (burndown; ampliar al resto en futuras sesiones). Learning: [[casts-sobre-data-de-query-supabase-ocultan-42703-que-el-tipo-ya-detecta]].
+
 # Objetivo
 
 Que un `.select('columna_inexistente')` (o filtro/order) sea **error de compilación de verdad**, para matar la clase entera de bug **42703** en runtime (PostgREST `column does not exist`). Caso que lo motivó: 5 bugs 42703 en una sesión (Holded `PROVEEDOR_COLS.updated_at` #918 + 4 más en #922: `presupuestos.iva_pct`, `lineas_factura.created_at`, `plan_features.plan_id`, `facturas.num_factura`), todos con resultado vacío en silencio.

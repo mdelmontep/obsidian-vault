@@ -55,6 +55,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Stripe: el CLI puede ir a OTRA cuenta que la sk_live de la app** — "No such price" falso; verifica con `curl -u $SK` de la app. Ver [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]].
 - **Holded v2: el rol de un contacto es `client_record`/`supplier_record`, no `type`** — un contacto puede ser cliente Y proveedor; decidir por `type` mete proveedores en clientes. Ver [[holded-v2-contacto-rol-por-record-no-por-type]].
 - **Lista de columnas reusada entre tablas parecidas → 42703 si una no tiene la col** (`proveedores` sin `updated_at`/`telefono_e164`); un helper que traga `error` lo degrada a null silencioso → comportamiento erróneo. Lee `error`, haz throw; reproduce por supabase-js no psql. Ver [[column-list-drift-clientes-proveedores-select-inexistente-42703]].
+- **Castear `.data` de una query oculta el 42703 que el tipo YA detecta** (`(data ?? []) as X[]`, `.maybeSingle<T>()`, select concatenado). Erradicado en TuFacturaIA (4 PRs) + guardarraíl ESLint scoped: `?? []` = lista de query (marcar) vs `?? {}` = jsonb (no). Ver [[casts-sobre-data-de-query-supabase-ocultan-42703-que-el-tipo-ya-detecta]].
 - **Dokploy: `compose.deploy` del MISMO commit = no-op** (no recrea contenedor); `deployments[]=done` no garantiza swap. Verifica por `docker ps` (antigüedad) + `docker exec grep <string-literal>` en `.next/server`; cambia el SHA para forzar. Ver [[dokploy-redeploy-mismo-commit-es-no-op-cambiar-sha-fuerza-recreacion]].
 
 ## Frontend / UX / QA
