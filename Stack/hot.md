@@ -69,6 +69,8 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **`backdrop-filter` invisible en Turbopack: no declares `-webkit-` a mano** — lightningcss colapsa el par y sirve solo la variante `-webkit-`, dropando la sin prefijo → Chrome no aplica el glass. Solo `backdrop-filter`; el pipeline prefija. Ver [[turbopack-lightningcss-dropea-backdrop-filter-sin-prefijo]].
 - **agent-browser `set device` DESPUÉS de `open` no sirve si la app decide móvil por UA server-side** — el primer render ya quedó fijado a desktop aunque el viewport cambie después; setea dispositivo/media ANTES de navegar. Ver [[agent-browser-set-device-antes-de-open-para-ssr-mobile]].
 - **Contención de CPU multi-sesión puede parecer bug de UI (skeleton atascado)** — antes de diagnosticar, `uptime`/`ps aux` + esperar 30-60s reales; un "atasco" de segundos bajo load>10 puede no ser código. Ver [[cpu-contencion-multisesion-falso-positivo-ui-atascada]].
+- **"Reinvención→primitivo" no es siempre migración: verifica comportamiento antes** — el nombre engaña (feedback-modal=panel flotante, .card-grid=layout grid); lee el componente entero y o extiendes el primitivo a superset o lo dejas bespoke. Ver [[verificar-primitivo-cubre-comportamiento-antes-de-consolidar-reinvencion]].
+- **pre-push que buildea muere por OOM bajo sesiones paralelas** — `ps aux | grep "next build"`; espera ventana libre y pushea; nunca `--no-verify` el build. Ver [[pre-push-build-oom-bajo-sesiones-paralelas]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
