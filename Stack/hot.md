@@ -64,7 +64,12 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Dokploy: `compose.deploy` del MISMO commit = no-op** (no recrea contenedor); `deployments[]=done` no garantiza swap. Verifica por `docker ps` (antigüedad) + `docker exec grep <string-literal>` en `.next/server`; cambia el SHA para forzar. Ver [[dokploy-redeploy-mismo-commit-es-no-op-cambiar-sha-fuerza-recreacion]].
 - **`NEXT_PUBLIC_*` nueva en el panel de envs no llega al cliente sin build-arg explícito** — Dockerfile necesita `ARG`+`ENV` en el stage builder ANTES de `npm run build`, y docker-compose `build: args:`; ningún redeploy (ni sin caché) lo arregla sin ese cableado. Ver [[next-public-env-necesita-build-arg-explicito-en-docker]].
 
+## CI / gates
+- **`npm run typecheck | tail` enmascara el exit de tsc** — el pipeline devuelve el exit de `tail`(=0); un gate "verde" puede tener errores TS reales. Captura el exit real (`> f 2>&1; echo $?`) o `grep "error TS"`. Ver [[typecheck-pipe-tail-enmascara-exit]].
+- **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — usa `BigInt(300000)` en tests fiscales. Ver [[bigint-literal-tsc-target-es2020]].
+
 ## Frontend / UX / QA
+- **Borde con luz que orbita + halo glass que crece**: anillo `conic-gradient(from var(--a))` recortado con máscara + `@property --a` para girar (transform no vale); acelerar en hover SIN salto con WAAPI `updatePlaybackRate` (no `animation-duration`). Ver [[css-border-beam-conic-property-playbackrate]].
 - **Subida en lote vs rate-limit per-user: sin backoff el excedente se pierde** — Retry-After exacto (PTTL) + `code:rate_limited` en el 429 + `fetchWithTransientRetry` (backoff sobre 429-por-minuto/5xx/red, no sobre topes de plan) + panel de reintento. La cola de fondo NO cubre la ráfaga de subida HTTP. Ver [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]].
 - **Acción masiva en cliente con N round-trips en serie cuelga la UI** — batch read (`.in(ids)`) + un `UPDATE .in(ids)` si todas iguales, o pool acotado (~6) + contador `N/total` y relleno del botón. Ver [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]].
 - **Clave de selección de fila = id único, no campo de negocio** — `num??id` colapsa duplicados (nº recibidas repite) → acciones en lote saltan filas en silencio. Ver [[clave-seleccion-fila-debe-ser-id-unico-no-campo-de-negocio]].
