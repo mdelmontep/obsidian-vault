@@ -18,7 +18,7 @@ tags: [home, prioridades]
 
 - **TuFacturaIA — prompt caching copiloto en prod (#894)** — smoke pendiente (grep logs del host por `copiloto/cache`). [[facturaia]]
 - **TuFacturaIA — UI polish sidebar/clientes/facturas en prod (#882/#883/#884)** — smoke pendiente. [[facturaia]]
-- **TuFacturaIA — unificación UI: Fase 4 Punto 1 + drenaje hex HECHOS (11 PRs 15/16-jul, hex 1327→465, lint:css 158→34)** — Punto 1 (SortableTh + Segmented superset + admin tabs) + tokenización total de hex a suelo legítimo. Queda estructural: inline-styles 856, admin.css `.adm-*`→primitivos, vaciar globals.css, ampliar token-system. Drawers (P2) y Card (P6) descartados por evidencia. Prompt de cierre multi-agente+/loop en memoria `project_unificacion_ui_facturaia`. [[facturaia]] · Ver [[verificar-primitivo-cubre-comportamiento-antes-de-consolidar-reinvencion]]
+- **TuFacturaIA — unificación UI Fase 4 FINAL: Frentes 1+2 HECHOS (PR #945 token-system, #951 inline-styles, 2026-07-16)** — quedan Frente 3 (admin.css `.adm-*`→primitivos) y Frente 4 (globals.css + enlaces `btn-*`). Prompt de cierre completo en memoria `project_unificacion_ui_facturaia`. [[facturaia]]
 - **TuFacturaIA — Centro Fiscal (#825) en prod + migs 452/453** — solo smoke prod fiscal pendiente (Manu). [[facturaia]]
 - **TuFacturaIA — cuadres fiscales rediseñados (#835 mergeado)** — 2 follow-ups (smoke 390 + bug gating hub /fiscal) en hub «Smoke». [[facturaia]]
 - **TuFacturaIA — cobro Stripe Connect** — todo preparado, bloqueado solo en acción Manu (KYC dashboard `acct_1Td5cc`). [[facturaia]]

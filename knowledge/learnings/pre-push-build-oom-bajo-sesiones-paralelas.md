@@ -15,3 +15,9 @@ Táctica: monitor ligero (ps/vm_stat) que avise cuando 0 ajenos; separa la esper
 `--no-verify` (build es la verdad). `--no-verify` solo justificable en el
 pre-COMMIT (si lint/typecheck ya se verificaron aparte, verdes), jamás en el
 build del pre-push. Ver [[actions-sin-billing-hooks-locales-unico-gate]].
+
+Corolario (2026-07-16): bajo la misma saturación, `npm test` completo puede dar
+FALSOS fallos por timeout de test (5s) en ficheros que no tocaste — no asumas
+regresión: reejecuta ese fichero aislado (`npx vitest run <ruta>`); si pasa
+limpio en 1-2s, era carga de CPU, repite la suite completa una vez más antes
+de comitear.
