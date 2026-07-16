@@ -71,6 +71,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Contención de CPU multi-sesión puede parecer bug de UI (skeleton atascado)** — antes de diagnosticar, `uptime`/`ps aux` + esperar 30-60s reales; un "atasco" de segundos bajo load>10 puede no ser código. Ver [[cpu-contencion-multisesion-falso-positivo-ui-atascada]].
 - **"Reinvención→primitivo" no es siempre migración: verifica comportamiento antes** — el nombre engaña (feedback-modal=panel flotante, .card-grid=layout grid); lee el componente entero y o extiendes el primitivo a superset o lo dejas bespoke. Ver [[verificar-primitivo-cubre-comportamiento-antes-de-consolidar-reinvencion]].
 - **pre-push que buildea muere por OOM bajo sesiones paralelas** — `ps aux | grep "next build"`; espera ventana libre y pushea; nunca `--no-verify` el build. Ver [[pre-push-build-oom-bajo-sesiones-paralelas]].
+- **VeriFactu: huella=8 campos (cierra en FechaHoraHusoGenRegistro, hex MAYÚSCULAS, timestamp único), WS con mTLS, respuesta sin CodigoRespuesta** — valida la huella contra el ejemplo firmado oficial. Ver [[verifactu-huella-8-campos-mtls-parser-respuesta]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
