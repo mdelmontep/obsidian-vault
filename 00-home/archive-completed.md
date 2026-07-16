@@ -337,3 +337,4 @@ tags: [home, archivo]
 
 - Burndown 42703 (casts sobre .data de queries) CERRADO 100% — 9 PRs, ~450 casts, guardarráil ESLint global src/**; deuda useOrgClient sin <Database> pasa a LATER (2026-07-16, PR #961)
 - 2026-07-16 · TuFacturaIA · **Unificación UI COMPLETA — los 4 Frentes en prod (11 PRs #953-#963)** — admin.css/globals.css sin clases `.adm-*`/`.btn-*` huérfanas, todo migrado a `<Button>`/`<Input>`/`<Segmented>` o relocalizado donde el primitivo no encajaba (icon-buttons admin, campos admin con textarea, links de texto). Botones nativos 589→558, hex 400→397. Detalle → [[facturaia-historico-detallado]]. [[facturaia]]
+- 2026-07-16 · TuFacturaIA · PR #967 mergeado: `compose.test.ts` (`buildVerifactuData`) desactualizado tras el commit `842b3034` de Fase 4a QR pre/prod — añadió campo `entorno` sin actualizar el test. Fix de 1 línea, detectado y cerrado durante el cierre de la unificación UI. [[facturaia]]
