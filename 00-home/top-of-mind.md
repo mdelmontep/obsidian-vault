@@ -16,6 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
+- **TuFacturaIA — multi-cuenta email por proveedor COMPLETA en prod (7 PRs, mig 464, 2026-07-16)** — Gmail/M365/iCloud admiten N cuentas por org; falta reconectar 2ª cuenta real para smoke round-trip (login OAuth interactivo). [[facturaia]]
 - **TuFacturaIA — prompt caching copiloto en prod (#894)** — smoke pendiente (grep logs del host por `copiloto/cache`). [[facturaia]]
 - **TuFacturaIA — UI polish sidebar/clientes/facturas en prod (#882/#883/#884)** — smoke pendiente. [[facturaia]]
 - **TuFacturaIA — unificación UI Fase 4 FINAL: Frentes 1+2 HECHOS (PR #945 token-system, #951 inline-styles, 2026-07-16)** — quedan Frente 3 (admin.css `.adm-*`→primitivos) y Frente 4 (globals.css + enlaces `btn-*`). Prompt de cierre completo en memoria `project_unificacion_ui_facturaia`. [[facturaia]]

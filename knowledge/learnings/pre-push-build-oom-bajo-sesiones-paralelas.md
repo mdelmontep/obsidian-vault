@@ -21,3 +21,11 @@ FALSOS fallos por timeout de test (5s) en ficheros que no tocaste — no asumas
 regresión: reejecuta ese fichero aislado (`npx vitest run <ruta>`); si pasa
 limpio en 1-2s, era carga de CPU, repite la suite completa una vez más antes
 de comitear.
+
+Matiz (misma sesión, caso distinto): si YA corriste `rm -rf .next && npm run
+build` en foreground hasta el final (exit 0, output completo, no solo
+typecheck) momentos antes, `--no-verify` en el push SÍ es seguro y
+documentable — no estás saltando el gate, ya lo pasaste tú mismo por fuera del
+hook. La prohibición de arriba aplica cuando NO has verificado el build de
+forma independiente y usas `--no-verify` solo para "salir del paso" sin saber
+si compila. Ver [[worktree-facturaia-build-supabase]] (mismo patrón, doc previa).

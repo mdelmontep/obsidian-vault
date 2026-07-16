@@ -5,7 +5,11 @@ source: claude-code-session
 tags: [facturaia, supabase, typescript, type-safety, deuda-tecnica]
 ---
 
-> **ESTADO: COMPLETADO 2026-07-16.** 4 PRs mergeados a main (deploy auto) + smoke real por supabase-js contra prod (12 selects, 0×42703): #926 fiscal+guardarraíl base · #931 conciliacion+documents+helper `rpc-result` · #933 admin+internal+integrations (via 3 subagentes gateados por el lint) · #935 endurecer regla a casts con `data` renombrado + barrer 54 con alias. ~185 casts erradicados, ~15 interfaces muertas fuera. Guardarraíl cubre 7 carpetas (burndown; ampliar al resto en futuras sesiones). Learning: [[casts-sobre-data-de-query-supabase-ocultan-42703-que-el-tipo-ya-detecta]].
+> **ESTADO: PARCIAL — burndown EN CURSO (2026-07-16).** Guardarraíl cubre **9 zonas** (~290 casts erradicados); quedan **~250 casts** en el resto del repo.
+> - **Mergeado a prod** (4 PRs + smoke real supabase-js 0×42703): #926 fiscal+guardarraíl base · #931 conciliacion+documents+helper `rpc-result` · #933 admin+internal+integrations · #935 endurecer regla (casts con `data` renombrado) + 54 con alias. → 7 carpetas.
+> - **En PR #944** (sin merge): `src/lib/copiloto/**` + `src/app/api/**` (~105 casts; tests copiloto 752 + api 936). Bug real: `voice/cashflow` `.select` de `cashflow_events` no traía `org_id/created_at/updated_at` que el mapper usa.
+> - **PENDIENTE** (~250 casts, ~90 ficheros): resto de `src/lib/**`, `src/components/**` (los client components SÍ hacen queries directas → casts reales), `src/app/**` no-api + `src/hooks/**`. Se intentó full-repo con 5+3 agentes pero la infra cortó 4 (session-limit + connection-closed); trabajo parcial en stashes locales (a dropear en fresh session). **Prompt de continuación estructurado entregado al usuario** (patrón agente-por-zona gateado por lint, máx 2-3 concurrentes). Ver [[orquestar-subagentes-paralelos-burndown-grande-limites-y-checker]].
+> - Learning núcleo: [[casts-sobre-data-de-query-supabase-ocultan-42703-que-el-tipo-ya-detecta]].
 
 # Objetivo
 
