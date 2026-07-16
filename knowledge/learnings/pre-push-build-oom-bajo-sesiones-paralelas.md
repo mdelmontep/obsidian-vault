@@ -29,3 +29,9 @@ documentable — no estás saltando el gate, ya lo pasaste tú mismo por fuera d
 hook. La prohibición de arriba aplica cuando NO has verificado el build de
 forma independiente y usas `--no-verify` solo para "salir del paso" sin saber
 si compila. Ver [[worktree-facturaia-build-supabase]] (mismo patrón, doc previa).
+
+Corolario 2 (2026-07-16): el build también muere con **0-1 procesos ajenos
+visibles** — la señal real no es el conteo de `ps aux | grep "next build"`
+sino la presión de MEMORIA del sistema entero. Comprueba `vm_stat | grep
+"Pages free"`: si son <10.000 páginas (~160MB), el build morirá aunque no
+veas contención de CPU. Espera a `Pages free` >15.000 antes de reintentar.
