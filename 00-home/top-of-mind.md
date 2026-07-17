@@ -18,6 +18,7 @@ tags: [home, prioridades]
 
 - **TuFacturaIA — importar facturas externas (emitidas/recibidas OCR) EN CURSO, rama sin mergear** — registro espejo sin VeriFactu (ADR-038); backend+OCR+UI hechos y QA'd (dropzone glass); falta aplicar mig 470 a prod → luego UI que la lee + F6/F7. Detalle en hub «WIP». [[facturaia]]
 - **TuFacturaIA — provider IMAP genérico ACTIVO en prod (6 PRs, mig 466+469, 2026-07-17)** — conectar cualquier servidor IMAP (SSRF pinning verificado); botón "Otro (IMAP)" operativo; falta smoke real del cliente de Manu. [[facturaia]]
+- **TuFacturaIA — registro standalone + onboarding claro + validación en vivo ACTIVO en prod (PR #984, 2026-07-17)** — falta smoke prod; pendiente aparte: mismo bug de `.field` sin diseño en 3 modales no tocados. [[facturaia]]
 - **TuFacturaIA — multi-cuenta email por proveedor COMPLETA en prod (7 PRs, mig 464, 2026-07-16)** — Gmail/M365/iCloud admiten N cuentas por org; falta reconectar 2ª cuenta real para smoke round-trip (login OAuth interactivo). [[facturaia]]
 - **TuFacturaIA — prompt caching copiloto en prod (#894)** — smoke pendiente (grep logs del host por `copiloto/cache`). [[facturaia]]
 - **TuFacturaIA — UI polish sidebar/clientes/facturas en prod (#882/#883/#884)** — smoke pendiente. [[facturaia]]

@@ -89,6 +89,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **SSRF-safe por IP pineada: verifica en el código fuente cómo la librería relaciona `host`/`servername`/flags TLS** — imapflow rompe SNI sin `servername` explícito y hace downgrade silencioso sin `doSTARTTLS` explícito. Ver [[imapflow-pinning-ip-servername-dostarttls-explicito]].
 - **`react-hooks/static-components` bloquea `<MAP[key] />` aunque el mapa sea estático** — envolver el lookup en un único componente estable (`BrandIcon({slug})` con el lookup dentro), no exponer una función que devuelve componente. Ver [[react-hooks-static-components-lookup-dinamico]].
 - **VeriFactu: huella=8 campos (cierra en FechaHoraHusoGenRegistro, hex MAYÚSCULAS, timestamp único), WS con mTLS, respuesta sin CodigoRespuesta** — valida la huella contra el ejemplo firmado oficial. Ver [[verifactu-huella-8-campos-mtls-parser-respuesta]].
+- **TuFacturaIA tiene 4 dialectos de input CSS (`.field`/`.ob-input`/`.set-input`/`ui/input.tsx`)** — `.field` a pelo fuera de `.auth-card` hereda estilo de card de detalle, no de formulario; en modales nuevos usa `ui/input.tsx`. Ver [[facturaia-multiples-dialectos-input-field-generico-rompe-fuera-de-contexto]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
