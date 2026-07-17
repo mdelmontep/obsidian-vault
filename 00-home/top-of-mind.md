@@ -16,6 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
+- **TuFacturaIA — cashflow base caja + capa Vencimientos calendario (PR #986, sin mergear)** — arregla saldo 90d duplicado (devengo+caja contaban 2× la misma factura); falta review+merge+smoke. [[facturaia]]
 - **TuFacturaIA — importar facturas externas (emitidas/recibidas OCR) EN CURSO, rama sin mergear** — registro espejo sin VeriFactu (ADR-038); backend+OCR+UI hechos y QA'd (dropzone glass); falta aplicar mig 470 a prod → luego UI que la lee + F6/F7. Detalle en hub «WIP». [[facturaia]]
 - **TuFacturaIA — provider IMAP genérico ACTIVO en prod (6 PRs, mig 466+469, 2026-07-17)** — conectar cualquier servidor IMAP (SSRF pinning verificado); botón "Otro (IMAP)" operativo; falta smoke real del cliente de Manu. [[facturaia]]
 - **TuFacturaIA — registro standalone + onboarding claro + validación en vivo ACTIVO en prod (PR #984, 2026-07-17)** — falta smoke prod; pendiente aparte: mismo bug de `.field` sin diseño en 3 modales no tocados. [[facturaia]]
