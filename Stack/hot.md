@@ -72,6 +72,10 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **`npm run typecheck | tail` enmascara el exit de tsc** — el pipeline devuelve el exit de `tail`(=0); un gate "verde" puede tener errores TS reales. Captura el exit real (`> f 2>&1; echo $?`) o `grep "error TS"`. Ver [[typecheck-pipe-tail-enmascara-exit]].
 - **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — usa `BigInt(300000)` en tests fiscales. Ver [[bigint-literal-tsc-target-es2020]].
 
+## Import / datos externos
+- **CSV de tarifa de ERP español (Telematel/GO!Catalog) = cp1252 + `;` + precio por lote** — decodifica latin1 (o salen `�`) y divide `P.V.P./UNIDADES` (cable 2517 con UNIDADES=1000 = 2,517 €/m, no ×1000). Captura fichero real antes de codificar. Ver [[importar-csv-erp-espanol-encoding-cp1252-y-precio-por-unidad-multiple]].
+- **Vídeo sin audio: léelo por fotogramas** — `ffmpeg -vf fps=1/5` + Read de los .jpg; no hay transcripción de voz, pero lo que se ve en pantalla sí. Ver [[transcribir-video-sin-audio-extraer-fotogramas-ffmpeg]].
+
 ## Frontend / UX / QA
 - **Borde con luz que orbita + halo glass que crece**: anillo `conic-gradient(from var(--a))` recortado con máscara + `@property --a` para girar (transform no vale); acelerar en hover SIN salto con WAAPI `updatePlaybackRate` (no `animation-duration`). Ver [[css-border-beam-conic-property-playbackrate]].
 - **Subida en lote vs rate-limit per-user: sin backoff el excedente se pierde** — Retry-After exacto (PTTL) + `code:rate_limited` en el 429 + `fetchWithTransientRetry` (backoff sobre 429-por-minuto/5xx/red, no sobre topes de plan) + panel de reintento. La cola de fondo NO cubre la ráfaga de subida HTTP. Ver [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]].
