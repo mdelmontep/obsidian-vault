@@ -83,6 +83,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **"Reinvención→primitivo" no es siempre migración: verifica comportamiento antes** — el nombre engaña (feedback-modal=panel flotante, .card-grid=layout grid); lee el componente entero y o extiendes el primitivo a superset o lo dejas bespoke. Ver [[verificar-primitivo-cubre-comportamiento-antes-de-consolidar-reinvencion]].
 - **pre-push que buildea muere por OOM bajo sesiones paralelas** — `ps aux | grep "next build"`; espera ventana libre y pushea; nunca `--no-verify` el build. Ver [[pre-push-build-oom-bajo-sesiones-paralelas]].
 - **SSRF-safe por IP pineada: verifica en el código fuente cómo la librería relaciona `host`/`servername`/flags TLS** — imapflow rompe SNI sin `servername` explícito y hace downgrade silencioso sin `doSTARTTLS` explícito. Ver [[imapflow-pinning-ip-servername-dostarttls-explicito]].
+- **`react-hooks/static-components` bloquea `<MAP[key] />` aunque el mapa sea estático** — envolver el lookup en un único componente estable (`BrandIcon({slug})` con el lookup dentro), no exponer una función que devuelve componente. Ver [[react-hooks-static-components-lookup-dinamico]].
 - **VeriFactu: huella=8 campos (cierra en FechaHoraHusoGenRegistro, hex MAYÚSCULAS, timestamp único), WS con mTLS, respuesta sin CodigoRespuesta** — valida la huella contra el ejemplo firmado oficial. Ver [[verifactu-huella-8-campos-mtls-parser-respuesta]].
 
 ---
