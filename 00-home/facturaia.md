@@ -14,7 +14,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 **Modelo de 2 niveles — no leer todo, leer lo que toca:**
 - **Arranque de sesión (siempre, barato ~6-8K tokens)**: leer solo este bloque superior — `Estado` + `NOW` + `Bloqueos` + `Decisiones pendientes` + `Índice de áreas`. Es la foto del proyecto.
 - **Durante (bajo demanda)**: abrir el subfile del área en la que trabajas (ver `Índice de áreas`) o la sección inferior concreta (NEXT / Smoke / WIP). NO leer el hub entero ni el histórico salvo que se pida.
-- **Cierre (`/obsidian-1`)**: lo cerrado (✅ / ~~tachado~~) **se mueve a [[facturaia-historico-detallado]]**, no se acumula aquí. Entradas del hub = 1-2 líneas mirando hacia delante. Sección que pasa de ~30 líneas → extraer a subfile.
+- **Cierre — ritual `/fia-precommit` → `/fia-cierre` (gate DoD multi-agente, 14 dimensiones: MCP, diseño, UX, fallo/éxito, BD, observabilidad, regresión, rendimiento, contrato, fiscal, smoke, cabos; en `.claude/commands/`) → `/obsidian-1`**: lo cerrado (✅ / ~~tachado~~) **se mueve a [[facturaia-historico-detallado]]**, no se acumula aquí. Entradas del hub = 1-2 líneas mirando hacia delante. Sección que pasa de ~30 líneas → extraer a subfile.
 
 ---
 
