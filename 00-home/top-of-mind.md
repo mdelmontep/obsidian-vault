@@ -16,7 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **TuFacturaIA — cashflow base caja + capa Vencimientos calendario (PR #986, sin mergear)** — arregla saldo 90d duplicado (devengo+caja contaban 2× la misma factura); falta review+merge+smoke. [[facturaia]]
+- **TuFacturaIA — cashflow base caja + capa Vencimientos + fixes de smoke EN PROD (PRs #986/#987/#988 + mig 495, 2026-07-17)** — saldo 90d ya no duplica; calendario con capa Vencimientos + aclaración caja; KPIs "Salud del negocio" arreglados en Vista cliente. Pendiente: smoke Manu (refrescar Vista cliente → tarjetas), bug tragado `fiscal_plazos.org_id` (baja sev) y reconciliar migs timestamp (con Obras). Detalle en hub. [[facturaia]]
 - **TuFacturaIA — importar facturas externas (emitidas/recibidas OCR) EN CURSO, rama sin mergear** — registro espejo sin VeriFactu (ADR-038); backend+OCR+UI hechos y QA'd (dropzone glass); falta aplicar mig 470 a prod → luego UI que la lee + F6/F7. Detalle en hub «WIP». [[facturaia]]
 - **TuFacturaIA — Módulo Obras (mini-ERP instalaciones, sustituye WAPI) EN CURSO, rama `feat/modulo-obras-wapi` sin mergear** — catálogo + modelo de precio (descuento proveedor×familia, MIN) + presupuestos→aceptación→obra + dashboard/calendario/auditoría HECHOS; migs 471-494 en prod (repair al merge); 2 auditorías `/fia-cierre` pasadas + obra demo end-to-end. Pendiente: catálogo tipos M.O. (Natalia) + merge a main. Estado durable en repo `issues/CONTINUAR-obras.md`. [[facturaia]]
 - **TuFacturaIA — provider IMAP genérico ACTIVO en prod (6 PRs, mig 466+469, 2026-07-17)** — conectar cualquier servidor IMAP (SSRF pinning verificado); botón "Otro (IMAP)" operativo; falta smoke real del cliente de Manu. [[facturaia]]
