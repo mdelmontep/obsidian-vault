@@ -11,4 +11,6 @@ Número usado a diario en la app WhatsApp Business (`is_on_biz_app:true`) → 2 
 
 El **embedded signup / `config_id`** es patrón ISV/BSP para dar de alta números de *terceros*. NO es para 1 número propio — no malgastes días montándolo.
 
-Ver [[whatsapp-diagnosticar-numero-waba-por-graph-api]].
+**Migración confirmada (2026-07-17):** borrar cuenta en la app móvil (Ajustes→Cuenta→Eliminar) → añadir el número por WhatsApp Manager con OTP. Esto crea un **WABA y `phone_number_id` NUEVOS** (los del diagnóstico previo quedan stale → re-lee `GET /{waba}/phone_numbers`). Con el negocio verificado, `POST /{phone_id}/register {messaging_product,pin(6díg)}` **sí funciona por API** (contradice "SMB debe registrar por UI"). Después `POST /{app_id}/subscriptions object=whatsapp_business_account fields=messages` con app token (`app_id|app_secret`) para el webhook. Recuerda repuntar `META_APP_SECRET` de n8n al de la app suscrita (valida el HMAC entrante).
+
+Ver [[whatsapp-diagnosticar-numero-waba-por-graph-api]] · [[whatsapp-cloud-api-vs-business-app-numero-exclusivo]].

@@ -7,9 +7,11 @@ tags: [elphis, bloqueantes, todo, decisiones]
 
 # Estado de bloqueantes · Centro Elphis
 
-## Bloqueante go-live activo · 2026-06-30 — conexión nº real + verificación negocio
+## ✅ RESUELTO 2026-07-17 — conexión nº real (era bloqueante desde 2026-06-30)
 
-Diagnóstico definitivo (Graph API). El 659 (`577874186587781`, WABA `349202490218983`) está `is_on_biz_app:true` + `DISCONNECTED` + `ON_PREMISE` = **coexistencia a medias, sigue en el móvil**. El negocio `463746404062650` está **NO verificado** (`141010`) → bloquea crear plantillas (`2494160`) + mensajería LIMITED. Coexistencia desde web requiere ser **BSP** (descartado para 1 número). **Decisión cliente pendiente:** A) migrar a Cloud API (OTP, saca del móvil, recomendado) vs B) coexistencia (BSP). **Siguiente:** iniciar verificación de negocio (docs KISAMU, Enrique). App nueva `1332761645647854` + System User token (⚠️ expuesto, rotar). Ver [[whatsapp-conectar-numero-propio-en-movil-a-cloud-api]] · [[whatsapp-diagnosticar-numero-waba-por-graph-api]].
+Negocio KISAMU verificado + cliente OK → **vía A (migración)**: borrar cuenta en la app móvil → alta OTP en WhatsApp Manager → `register` con PIN → suscribir webhook → repuntar env n8n. **659 en Cloud API + bot WhatsApp real E2E funcionando.** IDs nuevos: WABA `3949824101978503`, phone_number_id `1166319609905823`, app `1332761645647854`. Detalle en memory [[elphis-wa-cloud-api-migracion]]. Ver [[whatsapp-conectar-numero-propio-en-movil-a-cloud-api]].
+
+**Nuevos pendientes derivados:** (1) rotar `META_APP_SECRET` `723c1d…` (expuesto en captura) + actualizar Dokploy env/`.env`; (2) plantilla HSM para reservas por **voz** (business-initiated sin ventana 24h → texto libre falla; crear Utility + rama en book-and-notify). Ver [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]].
 
 ## Resueltos por el onboarding firmado o por decisión Manu
 

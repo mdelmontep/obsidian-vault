@@ -9,17 +9,13 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-06-30
+## Estado actual · 2026-07-17
 
-- **Chat WhatsApp y voz Retell funcionando E2E** con número de pruebas Agentesia (`+34 910 05 49 50`). Cerebro del bot completo (router-ia, registrar-lead, agenda, Clientify).
-- **Bloqueante go-live activo · conexión del número real + verificación de negocio.** Diagnóstico definitivo vía Graph API (2026-06-30):
-  - App Meta nueva `1332761645647854` creada **dentro del Business Centro Elphis** (`463746404062650`) + **System User token** con acceso al WABA real `349202490218983`. ⚠️ **Token expuesto en chat → ROTAR.**
-  - El 659 (`577874186587781`) está `is_on_biz_app:true` + `status:DISCONNECTED` + `platform_type:ON_PREMISE` = **coexistencia a medias, sigue en el móvil, no registrado en Cloud API**.
-  - **Negocio `463746404062650` NO verificado** (error API `141010`) → bloquea gestión de plantillas (`2494160`) + mensajería LIMITED. (Corrige diagnósticos previos: no estaba verificado).
-  - Coexistencia desde web (embedded signup) = requiere ser **Business Solution Provider** → descartado para 1 número propio.
-- **Decisión pendiente cliente (Alba/Enrique):** A) **migrar 659 a Cloud API** (alta OTP, lo saca del móvil → recepción a Chatwoot; recomendado para arquitectura bot+Chatwoot) · B) coexistencia (vía BSP, lento). Ver [[bloqueantes-elphis]].
-- **Siguiente al retomar:** iniciar **verificación de negocio** (docs KISAMU, Enrique — cuello de botella lento) + decidir A/B. Detalle técnico en `/Users/manueldelmonte/elphis/CLAUDE.md` ("Bloqueante creación plantillas").
-- Credenciales Clientify en memory: [clientify-elphis-api](~/.claude/projects/-Users-manueldelmonte/memory/clientify-elphis-api.md).
+- **659 877 708 MIGRADO a Cloud API y bot WhatsApp real funcionando E2E** (entrante→n8n→Chatwoot→router-ia→saliente verificado). Se hizo la vía A (migración): negocio KISAMU ya verificado + cliente OK → borrar cuenta en la app móvil → alta OTP en WhatsApp Manager → `register` con PIN → suscribir webhook → repuntar env n8n.
+  - **IDs nuevos** (la migración creó WABA nuevo; los viejos quedan obsoletos): WABA `3949824101978503` · phone_number_id `1166319609905823` · app `1332761645647854` · phone público `+34 659 87 77 08`. Detalle y credenciales en memory [[elphis-wa-cloud-api-migracion]].
+  - Prompt del bot afinado 2026-07-17: "nuestro director" (no nombra a Enrique salvo si preguntan), oferta paciente/familiar, enlace Doctoralia dirige a marcar "Primera visita de valoración", cierre corto sin duplicar, `**`→`*` normalizado, reutiliza motivo/relación del historial (no re-pregunta).
+  - Chatwoot: 2 cuentas de recepción creadas (`centroelphis@gmail.com`, `info@centroelphis.com`) como administrator.
+- **Pendientes go-live:** (1) **rotar `META_APP_SECRET`** `723c1d…` (expuesto en captura) → actualizar en Dokploy env + `.env`; (2) **plantilla HSM para reservas por VOZ** — el enlace desde una llamada es business-initiated sin ventana 24h → hoy `book-and-notify` manda texto libre y fallará; crear plantilla Utility con botón URL Doctoralia + rama en book-and-notify (ver [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]]); (3) DPAs Enrique, sesión 30min crisis, número directo recepcionista (Alba). Ver [[bloqueantes-elphis]].
 
 ## Datos clave del cliente
 

@@ -22,4 +22,6 @@ curl -X POST https://chatwoot.../auth/sign_in \
 
 Ese `access_token` se manda como header `api_access_token: <token>` en endpoints `/api/v1/accounts/{id}/*`.
 
-Caso real: EcoBox 2026-05 — perdí 5 min con bot token (`/profile` daba 401) hasta cambiar a login admin.
+**Crear agente con contraseña fija** (no invitación-email, para dar cuentas al cliente): con la Platform API key → `POST /platform/api/v1/users {name,email,password}` (queda `confirmed:true`) + `POST /platform/api/v1/accounts/{id}/account_users {user_id,role:agent}`. Cambiar rol después: `PATCH /api/v1/accounts/{id}/agents/{user_id} {role:administrator}` con token admin. Ojo: `POST /api/v1/accounts/{id}/agents` da 500 en v4 si el email ya existe (bug) — por eso el alta va por Platform API.
+
+Caso real: EcoBox 2026-05 — perdí 5 min con bot token (`/profile` daba 401) hasta cambiar a login admin. Elphis 2026-07 — alta de 2 cuentas de recepción con contraseña vía Platform API.
