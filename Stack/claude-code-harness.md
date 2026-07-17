@@ -54,6 +54,8 @@ Regla de reparto: si es un paso a ejecutar → skill; si es prohibición dura �
 
 Las skills soportan contexto dinámico: `` !`comando` `` dentro del SKILL.md se ejecuta al invocar y su output entra en el prompt (ej.: `/agh-start` precarga `git status`, worktrees e issues abiertos). Caso real: harness AGH Ibérica (`/agh-start`, `/agh-pr`, `/agh-end` + hook `git-guard.sh`).
 
+Un `PreToolUse:Bash` puede **reescribir** el comando (no solo bloquear) devolviendo `hookSpecificOutput.updatedInput.command` — base para interceptar de forma transparente. Caso real: [[fia-gate]], semáforo de CPU que enruta `build`/`typecheck`/`lint` por un throttle global cuando hay varias sesiones (soluciona [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] y [[pre-push-build-oom-bajo-sesiones-paralelas]]).
+
 ## Rutinas cloud (RemoteTrigger / CCR) — gotchas
 
 Las rutinas de `claude.ai/code` corren en un CCR aislado en la nube de Anthropic (git checkout propio; SIN acceso a tu máquina ni a env locales). Al montar una:
