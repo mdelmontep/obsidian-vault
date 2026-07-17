@@ -11,4 +11,6 @@ Caso real (pentest TuFacturaIA): `requireWriteAccess(orgId)` en `src/lib/billing
 
 Fix: cablear el gate en el pipeline central (`withApiAuth` + `withApiV1`), no en cada endpoint (se olvida uno). Mismo patrón que el kill-switch read-only que ya vivía al lado.
 
-Regla de auditoría: por cada helper de seguridad (`require*`, `assert*`, `check*`, guards), `grep` sus llamadas. 0 consumidores = agujero + falsa sensación de cobertura. Relacionado: [[postgres-revoke-public-no-elimina-grants-individuales]].
+Variante (config/feature toggles): un campo de `config_schema` marcado `implemented:true` sin consumidor = toggle decorativo que miente al usuario. Caso TuFacturaIA módulo OCR (PR #990): `auto_categorizar` (implemented:true) no lo leía nadie → guardaba en BD pero la categoría se aplicaba SIEMPRE. Fix: gatear la escritura + test ON/OFF. Auditar config es igual: por cada toggle que promete comportamiento, grep su consumidor.
+
+Regla de auditoría: por cada helper de seguridad (`require*`, `assert*`, `check*`, guards) O flag/toggle de feature, `grep` sus llamadas/lecturas. 0 consumidores = agujero o feature falsa + falsa sensación de cobertura. Relacionado: [[postgres-revoke-public-no-elimina-grants-individuales]].
