@@ -13,4 +13,10 @@ propio trabajo:
 - un half-fix con `Closes` que habría cerrado un issue a medias → si arreglas solo una parte usa `Refs #N`
   y deja el issue abierto (no auto-cierres el tracker del residual).
 
+Reforzado 2026-07-17 (módulo Obras, 3 cierres /fia-cierre seguidos): cada tanda de fixes metió un aviso
+nuevo que solo cazó la auditoría SIGUIENTE — ping-pong de a11y (el "fix a11y" dejó la fila sin teclado),
+CTA de notificación a ruta 404, y el bug fecha-vs-timestamp repetido en 2 sitios. El gate (lint/tc/build)
+NO ve rutas rotas, a11y ni formato → re-auditar el DIFF DE LOS ARREGLOS (code-review + QA visual), no
+solo confiar en el gate verde.
+
 Barato, pre-merge, ROI alto. Misma maquinaria que [[verificacion-adversarial-lentes-triar-por-que-lente-refuta]], aplicada a tu propio diff.
