@@ -4,6 +4,8 @@ date: 2026-07-18
 tags: [inbox, facturaia, obras]
 ---
 
+> **RESUELTO 2026-07-18 (FASE 2, rama `feat/obras-f2-int`):** pedidos de compra (C1), recepción de albaranes (C2, reusa stock D2), y facturas de proveedor atadas a obra (recibidas OCR + puente N:M, NO maestro fiscal nuevo) IMPLEMENTADOS. Decisión fiscal: el pedido es documento interno NO fiscal (sin serie/createDocument); el albarán es de ENTRADA (compra), no de venta → no hay conversión pedido→factura de venta. Detalle en `docs/architecture/obras/fase2-plan-decisiones.md`. Este inbox queda cerrado.
+
 Manuel quiere valorar/implementar más adelante que el módulo Obras genere también **albaranes, pedidos y la conversión pedido→factura** (y facturas de proveedor). Decidido diferir (18-jul), NO en la sesión de facturación.
 
 Contexto/evidencia:

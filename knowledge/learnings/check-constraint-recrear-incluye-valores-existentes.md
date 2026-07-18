@@ -8,4 +8,6 @@ Patrón habitual para "permitir un valor nuevo" en un CHECK tipo-enum: `DROP CON
 
 Caso real FacturaIA: mig 408 recreaba `facturas_fuente_check` con solo 8 valores; el constraint vivo (mig 024) ya admitía `web`/`mobile`/`copiloto`/`recurrente` (filas reales) → 23514, deploy roto.
 
+2ª reincidencia (mig 509, 2026-07-18, módulo Obras): recreaba `cashflow_events_source_check` con la lista de la mig 153 omitiendo `whatsapp_quick` (añadido por mig 168) → habría roto el gasto rápido de WhatsApp. Cazado en revisión ANTES de prod. Patrón recurrente → candidato a check en `/fia-cierre` (dimensión BD): toda mig con `DROP CONSTRAINT ... _check` debe diffear contra el `pg_get_constraintdef` vivo.
+
 Regla: antes de recrear un CHECK, LEER el actual con `pg_get_constraintdef(oid)` (o `\d tabla`) y AÑADIR el valor a esa lista, nunca reescribirla. Verificar contra datos: `SELECT DISTINCT col` debe ⊆ lista nueva. Smoke con tx ROLLBACK → [[smoke-trigger-sql-tx-rollback-contra-prod]].
