@@ -16,6 +16,6 @@ GRANT EXECUTE ON FUNCTION f(...) TO service_role;
 ```
 Verificar: `has_function_privilege('anon', 'f(...)', 'execute')` debe ser false.
 
-3ª reincidencia (mig 320, 2026-06-17): `merge_cliente` (callable por anon → borrado cross-tenant), `crear_org_adicional`, `get_stock_health`, `complete_onboarding_perfil`. Es sistémico → el `REVOKE FROM PUBLIC, anon, authenticated` debe ser el DEFAULT al crear toda RPC SECURITY DEFINER (auditar con grep de `security definer` sin su trío de REVOKE).
+3ª/4ª reincidencia (mig 320 2026-06-17: `merge_cliente`/`crear_org_adicional`/`get_stock_health`/`complete_onboarding_perfil`; migs 486/489 módulo Obras 2026-07-18: `obras_cerrar`/`obras_aceptar_presupuesto`/`obras_siguiente_numero_presupuesto` ejecutables por `authenticated`, verificado `has_function_privilege=true`). Reincide en CADA módulo nuevo porque el grep-audit no se corre al crear la migración → el `REVOKE FROM PUBLIC, anon, authenticated` debe ser el DEFAULT (meterlo en la skill `fia-migracion` + grep de `security definer` sin su trío de REVOKE).
 
 Relacionado: [[supabase-rpc-security-definer-execute-public]] · [[defensa-cableada-vs-codigo-muerto]]
