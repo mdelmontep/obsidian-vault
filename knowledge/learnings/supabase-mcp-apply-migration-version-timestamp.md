@@ -20,3 +20,5 @@ update supabase_migrations.schema_migrations
  where name='NNN_slug_completo';
 ```
 Verificar después: `select count(*) ... where version ~ '^\d{14}$'` = 0. El `name` en el ledger va SIN el prefijo numérico (como las filas de `db push`). Ver [[supabase-puertos-postgres-bloqueados]].
+
+**⚠️ Seguridad (2026-07-18):** `apply_migration`/`generate_typescript_types` NO aceptan `project_ref` → operan sobre el proyecto que tenga configurado el MCP, que en FacturaIA es **PROD** (`list_migrations` devuelve las 500+ migs de prod; `list_branches` falla con `Project reference is missing`). Es decir: NO se puede usar este MCP para aplicar a una rama de dev — un `apply_migration` con un `DROP COLUMN` iría directo a prod. Antes de aplicar cualquier DDL por MCP, confirma con `list_migrations` que estás donde crees. Para trabajo que necesita rama de dev sin tocar prod: `db push` desde main limpio (lo aplica el humano) o arreglar el `project_ref` de ramas del MCP.
