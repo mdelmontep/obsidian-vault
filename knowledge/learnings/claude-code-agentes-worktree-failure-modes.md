@@ -103,6 +103,14 @@ git checkout <worktree-branch> -- \
 
 **Fix / blindaje**: **no usar `git stash` para aislar en un repo con worktrees.** Para probar "con/sin mi diff" usa `git checkout <ref> -- <paths>` (revertir ficheros puntuales) o un worktree/rama aparte. Si ya pasó: `stash pop` en conflicto NO borra el stash (sigue en el stack, nada perdido) → `git checkout HEAD -- <ficheros UU>` para descartar la copia mal aplicada y verificar `git stash list` intacto. Caso real 2026-07-15: popé un stash de otra sesión (13 en el stack). Relacionado: [[git-stash-sin-u-deja-untracked-y-hook-falla]].
 
+## Failure mode I: `isolation:worktree` arranca sobre main y/o deja el HEAD del coordinador driftado
+
+**Síntoma (I-1)**: el worktree del agente arranca en la LÍNEA MAIN, no en la rama de trabajo de la sesión (`feat/x`). Si la feature vive solo en `feat/x` (no en main), el agente no ve el módulo y su commit/merge sale mal. Varios agentes de una misma tanda lo reportaron; los que tocaban ficheros de la feature se autocorrigieron con `git checkout -b <rama> feat/x`, otros no.
+
+**Síntoma (I-2, peor)**: tras completar un agente `isolation:worktree`, `git branch --show-current` en MI checkout (coordinador) devuelve la rama DEL AGENTE, no `feat/x`. Un `git merge <agente>` da "Already up to date" (mi HEAD ya es esa rama) → parece que no pasó nada. En realidad la operación de worktree del agente driftó mi HEAD.
+
+**Fix**: (1) en el prompt del agente, exigir `git checkout -b <rama-hija> feat/x` como PRIMER paso + verificar que existen ficheros clave de la feature; PARAR si faltan. (2) Coordinador: `git branch --show-current` ANTES de cada merge/commit; si driftó, `git checkout feat/x` y reconciliar (`git merge <rama-agente>` con ff, luego seguir). El trabajo NO se pierde (vive en la rama del agente), solo hay que realinear el puntero. Caso real 2026-07-18 (Obras facturación, 8 agentes). Relacionado con B (base desfasada) y E (edición concurrente del principal).
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:
