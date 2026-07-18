@@ -12,6 +12,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 
 ## UI / listados (reutilizable)
 - **Server Component NO puede llamar función de módulo `'use client'`** (Next 16): revienta en runtime y el `build` NO lo caza → smoke de navegación real obligatorio. Ver [[server-component-no-puede-llamar-funcion-use-client]].
+- **setState anidado en el updater de otro setState** se ejecuta 2× bajo StrictMode (dev) → un toggle se anula ("no invierte" solo en local). Fusiona estados relacionados en un objeto con updater puro. Ver [[setstate-anidado-en-updater-rompe-bajo-strictmode]].
 - **`agent-browser screenshot` cuelga en apps con polling** (nunca network-idle) → Playwright con `waitUntil: 'domcontentloaded'`. Ver [[agent-browser-screenshot-cuelga-apps-con-polling]].
 - **Migrar en masa a un primitivo sin cambiar píxeles**: alinea su geometría al legacy primero (mide computed styles; ojo `line-height`), className-merge desbloquea los omitidos, enforcement con trinquete + error solo en carpeta limpia. Ver [[migracion-invisible-de-primitivo-alinear-geometria-al-legacy]].
 - **Scroll-fade dinámico** en riel que no cabe (`.scroll-fade-x`+`useScrollFade`): difumina solo el borde con contenido oculto. Gotchas: sin `transition` sobre `@property` (se clava en 0px), la máscara recorta `box-shadow` externo, callback ref para portales. Ver [[scroll-fade-dinamico-mascara-gotchas]].
