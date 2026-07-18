@@ -271,6 +271,7 @@ Mapa temático de los ~863 learnings en `knowledge/learnings/`. Grep aquí para 
 - [[color-mix-in-srgb-para-sombras-tematizables]] — color-mix() para sombras y tints sin hardcodear rgba por tema
 - [[componentes-que-duplican-feature-check-se-desincronizan-del-provider]] — componentes que duplican feature check se desincronizan del provider
 - [[compositor-multidestino-selector-explicito]] — hilo con varios públicos → un compositor con selector de destinatario explícito
+- [[colapso-grid-0fr-child-divergente-queda-inert-visible]] — colapso grid 0fr keyed al child — un child de clase distinta queda visible e inert (parece menú muerto)
 - [[copiloto-zod-required-blocks-llm]] — copiloto — campo zod requerido impide llamada al tool, llm pide en texto
 - [[css-animation-transform-pisa-transform-estatico]] — animación @keyframes con transform final pisa el transform estático del elemento
 - [[css-background-white-hardcoded-rompe-dark-mode-silencioso]] — css background:white hardcoded rompe dark mode silencioso
@@ -804,6 +805,7 @@ Mapa temático de los ~863 learnings en `knowledge/learnings/`. Grep aquí para 
 - [[medir-cwv-autenticado-sin-lighthouse]] — medir core web vitals autenticado sin lighthouse (playwright)
 - [[openapi-fetch-ternary-rompe-narrowing-typescript]] — openapi-fetch ternary rompe narrowing — r.response.status aparece como `never`
 - [[playwright-getbylabel-falla-sin-htmlfor-usar-placeholder-o-filter-by-option]] — Playwright getByLabel falla sin htmlFor — usar placeholder o filter by option
+- [[playwright-boundingbox-mide-geometria-aunque-overflow-recorte]] — playwright boundingBox() mide la geometría aunque un ancestro la recorte con overflow:hidden
 - [[playwright-getbytext-first-hidden-details-element]] — playwright getByText().first() puede resolver en elemento oculto dentro de <details> cerr…
 - [[playwright-isvisible-ignora-timeout-usar-waitfor]] — playwright locator.isVisible({timeout}) no espera — usa waitFor para skips condicionales
 - [[playwright-page-request-respeta-cache-http-del-browser]] — playwright page.request respeta la caché http del browser

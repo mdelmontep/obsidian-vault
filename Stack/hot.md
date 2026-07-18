@@ -11,9 +11,11 @@ tags: [stack, index]
 Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo sale del índice rápido).
 
 ## UI / listados (reutilizable)
+- **Copy español anti-slop**: el tell de IA dominante es la raya `—` (remate dramático / con espacios / densidad), no las frases-plantilla. De-slop quirúrgico, nunca find-replace (rompe placeholder `'—'`, comentarios, prompts). Ver [[copy-espanol-raya-tell-ia-dominante]].
 - **Server Component NO puede llamar función de módulo `'use client'`** (Next 16): revienta en runtime y el `build` NO lo caza → smoke de navegación real obligatorio. Ver [[server-component-no-puede-llamar-funcion-use-client]].
 - **setState anidado en el updater de otro setState** se ejecuta 2× bajo StrictMode (dev) → un toggle se anula ("no invierte" solo en local). Fusiona estados relacionados en un objeto con updater puro. Ver [[setstate-anidado-en-updater-rompe-bajo-strictmode]].
 - **Nav activo por `startsWith` enciende el ancestro** además de la hoja cuando un path es prefijo de otro (`/obras` vs `/obras/materiales`) → usar el prefijo navegable más específico. Ver [[nav-activo-por-startswith-enciende-el-ancestro]].
+- **Colapso `grid 0fr` keyed a la clase del hijo**: un grupo anidado que reusa el wrapper pero con hijo de clase distinta (`.nav-sublist` vs `.nav-list`) no recorta → queda visible + `inert` → "menú muerto", no glitch. Ver [[colapso-grid-0fr-child-divergente-queda-inert-visible]].
 - **`agent-browser screenshot` cuelga en apps con polling** (nunca network-idle) → Playwright con `waitUntil: 'domcontentloaded'`. Ver [[agent-browser-screenshot-cuelga-apps-con-polling]].
 - **Migrar en masa a un primitivo sin cambiar píxeles**: alinea su geometría al legacy primero (mide computed styles; ojo `line-height`), className-merge desbloquea los omitidos, enforcement con trinquete + error solo en carpeta limpia. Ver [[migracion-invisible-de-primitivo-alinear-geometria-al-legacy]].
 - **Scroll-fade dinámico** en riel que no cabe (`.scroll-fade-x`+`useScrollFade`): difumina solo el borde con contenido oculto. Gotchas: sin `transition` sobre `@property` (se clava en 0px), la máscara recorta `box-shadow` externo, callback ref para portales. Ver [[scroll-fade-dinamico-mascara-gotchas]].

@@ -16,6 +16,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
+- **TuFacturaIA — copy anti-slop (PR #996, 18-jul)** — quitados tells de IA (em-dash) en marketing/emails/in-app/manual-usuario + guardarraíl `copy-humano.md`. Pendiente: merge #996 + rehacer de-slop de `manual-admin.md` (subagente no escribió). Ver [[copy-espanol-raya-tell-ia-dominante]]. Detalle en hub. [[facturaia]]
 - **TuFacturaIA — módulo OCR: gate real `auto_categorizar` + métricas de aprendizaje IA (auto_accuracy + progreso al gate) + polish EN PROD (PR #990, 2026-07-18)** — 2 smokes en hub (toggle categoría OFF; %precisión con ≥50 decisiones). Detalle en hub. [[facturaia]]
 - **TuFacturaIA — cashflow base caja + capa Vencimientos + fixes de smoke EN PROD (PRs #986/#987/#988 + mig 495, 2026-07-17)** — saldo 90d ya no duplica; calendario con capa Vencimientos + aclaración caja; KPIs "Salud del negocio" arreglados en Vista cliente. Pendiente: smoke Manu (refrescar Vista cliente → tarjetas), bug tragado `fiscal_plazos.org_id` (baja sev) y reconciliar migs timestamp (con Obras). Detalle en hub. [[facturaia]]
 - **TuFacturaIA — importar facturas externas (emitidas/recibidas OCR) EN CURSO, rama sin mergear** — registro espejo sin VeriFactu (ADR-038); backend+OCR+UI hechos y QA'd (dropzone glass); falta aplicar mig 470 a prod → luego UI que la lee + F6/F7. Detalle en hub «WIP». [[facturaia]]
