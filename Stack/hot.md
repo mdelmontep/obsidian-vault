@@ -62,6 +62,8 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **UI flotante desde script macOS → swiftDialog, no osascript** — un NSPanel/WKWebView por osascript da `visible=true` pero no pinta. Ver [[ui-flotante-desde-script-macos-swiftdialog-no-osascript-panel]]. Y gotchas BSD sed/`while read` → [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]].
 
 ## Infra / Dokploy / Supabase / Stripe (FacturaIA)
+- **Cap `.limit()` sobre un id-set que alimenta una AGREGACIÓN infra-reporta el total en silencio** (OK para listado/mapa id→nombre, NO para `IN(ids)`→SUM). Ver [[cap-en-id-set-que-alimenta-agregacion-infra-reporta-en-silencio]].
+- **Puertos Postgres bloqueados → aplicar migración por `psql -f` + registrar versión NNN a mano** en `schema_migrations` (poor-man's `migration repair`, no dispara el hook pre-push de timestamps). Ver [[aplicar-migracion-por-psql-y-registrar-version-cuando-el-cli-supabase-esta-bloqueado]].
 - **NUNCA `compose.one`/`application.one`/`schedule.one` de Dokploy en crudo** — vuelcan el `env` con secrets en plano (fuga real 07-03); hook global BLOQUEA, usa `~/.claude/bin/dokploy-safe.sh`. Ver [[dokploy-api-get-schedule-list-expone-env-completo-secrets]].
 - **Schedule Dokploy compose exige `serviceName`** — sin él runManually→500 y el cron no dispara (invisible); verifica el 1er run a mano. Ver [[dokploy-compose-schedule-requiere-servicename]].
 - **Supabase egress restringido tumba la app vía healthcheck → Traefik 404** (Docker "healthy" engaña; `curl -I` da 404). Restaurar plan; egress es mensual. Ver [[supabase-egress-restringido-tumba-app-via-healthcheck-traefik-404]].
