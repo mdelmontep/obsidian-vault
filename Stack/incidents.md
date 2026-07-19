@@ -148,5 +148,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 
 - 2026-07-19 · TuFacturaIA · 7 páginas de módulos gated (cashflow, fiscal ×3, inventario, recurrentes, remesas) devolvían **HTTP 500 en su rama UPSELL** — las orgs SIN el módulo (las de conversión) veían un crash en vez del EmptyState "activar módulo". Causa: `buttonClassName` (función pura) vivía en el módulo `'use client'` `button.tsx`; llamarla desde el Server Component revienta en runtime (Next 16) y el `build` no lo caza. Latente semanas: las orgs de test tienen todos los módulos → happy path, nunca renderizan la rama upsell. Destapado por el smoke E2E del enlace fiscal (misma raíz, PR #1022). Fix #1025: extraer `buttonClassName` a `button-class.ts` sin `'use client'` + re-export (0 consumidores client tocados). Ver [[server-component-no-puede-llamar-funcion-use-client]].
 
+- 2026-07-19 · TuFacturaIA · editar un material no guardaba (y fijar la duración del kill-switch de mantenimiento fallaba) → `<input number>` con `min`/`step` incompatibles = `stepMismatch` → `checkValidity()` false → `requestSubmit()` no enviaba, sin error visible. Fix `step="any"` (#1030 materiales, #1034 admin). Ver [[html-stepmismatch-min-step-bloquea-submit]].
+
 ## Archivo
 Incidentes de **mayo 2026 y anteriores** movidos a [[incidents-archive-2026]] (2026-07-13). Aquí solo lo reciente (jun–jul).

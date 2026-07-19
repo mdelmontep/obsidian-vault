@@ -11,6 +11,7 @@ tags: [stack, index]
 Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo sale del índice rápido).
 
 ## UI / listados (reutilizable)
+- **`<input number>` con `min`/`step` incompatibles = `stepMismatch`** → `checkValidity()` false → el form no envía y NO hay error visible (el guardado "no hace nada"). Fix en origen: `step="any"` (continuo) o alinear step divisor de min. Ver [[html-stepmismatch-min-step-bloquea-submit]].
 - **Copy español anti-slop**: el tell de IA dominante es la raya `—` (remate dramático / con espacios / densidad), no las frases-plantilla. De-slop quirúrgico, nunca find-replace (rompe placeholder `'—'`, comentarios, prompts). Ver [[copy-espanol-raya-tell-ia-dominante]].
 - **Server Component NO puede llamar función de módulo `'use client'`** (Next 16): revienta en runtime, el `build` NO lo caza. Fix si es pura: extraer a módulo sin `'use client'` + re-export. Blind-spot: suele esconderse en ramas upsell/empty/error que las orgs de test (full-feature) nunca renderizan → smokea las ramas degradadas, no solo el happy path. Ver [[server-component-no-puede-llamar-funcion-use-client]].
 - **setState anidado en el updater de otro setState** se ejecuta 2× bajo StrictMode (dev) → un toggle se anula ("no invierte" solo en local). Fusiona estados relacionados en un objeto con updater puro. Ver [[setstate-anidado-en-updater-rompe-bajo-strictmode]].
