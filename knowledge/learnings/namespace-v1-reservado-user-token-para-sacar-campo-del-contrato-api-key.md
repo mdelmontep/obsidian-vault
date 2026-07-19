@@ -11,4 +11,6 @@ El test de contrato NO prohíbe el recurso en v1: prohíbe que el campo toque el
 2. sector/módulo ausente → 404 (mismo criterio, no filtrar existencia por org).
 3. scope ausente → 403.
 
-Clave: el wrapper NO pasa `requireScope` al middleware genérico (si no, devuelve 403 a api_key ANTES del guard → filtra existencia). El scope se re-valida server-side dentro. Reutiliza funciones puras compartidas web↔v1 para no duplicar query (sin regresión). Añadir tools MCP cambia el hash de `tools-manifest` → el servicio MCP (`autoDeploy=false`) necesita redeploy manual. Ver [[facturaia]].
+Clave: el wrapper NO pasa `requireScope` al middleware genérico (si no, devuelve 403 a api_key ANTES del guard → filtra existencia). El scope se re-valida server-side dentro. Reutiliza funciones puras compartidas web↔v1 para no duplicar query (sin regresión). Añadir tools MCP cambia el hash de `tools-manifest` → el servicio MCP (`autoDeploy=false`) necesita redeploy manual (`compose.deploy`, verificar `/health` count/hash).
+
+Para ESCRITURA el mismo patrón: el wrapper pasa `requireWrite` pero TAMPOCO `requireScope` — así la fase auth deja pasar al api_key (sin 403) y el guard le da 404 primero. Ojo: la escritura MCP suele ir sobre un slice READ ya mergeado; si tu worktree se creó antes de esos merges (y de ramas paralelas), **rebasa sobre origin/main antes del PR** o `git diff` muestra deleciones fantasma y revertirías trabajo ajeno. Ver [[facturaia]].
