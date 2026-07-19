@@ -12,3 +12,5 @@ Vías:
 - Solo tu máquina → `~/.claude/rules/` (user-level, no versionado, no llega a compañeros).
 
 Además (verificado en docs oficiales, `memory.md`): un rule con `paths:` que no casa en la sesión **no aparece** → mueve solo reglas file-scoped y de bajo riesgo (cosméticas). NUNCA inviolables transversales/de integridad (auth, filtros de query, series documentales): si un día no tocas ese path, desaparecen. Ver [[gate-agentico-que-no-dispara-suele-estar-inanido-no-mal-calibrado]] (mismo espíritu: lo condicional que no dispara pasa desapercibido).
+
+Aplica igual a TODO el andamiaje, no solo rules: FacturaIA #1009 (2026-07-19) versionó `settings.json` + `commands/` + `agents/` + `hooks/` con el mismo split (`.claude/*` + `!` selectivo), dejando `settings.local.json`/`skills/`/`worktrees/` ignorados. **NUNCA pegar secretos en el allowlist de `settings.local.json`**: queda en disco en claro (había un `PGPASSWORD` y un JWT de n8n). El allowlist genérico va en `settings.json` versionado.
