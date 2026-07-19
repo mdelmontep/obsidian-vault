@@ -10,7 +10,9 @@ de gestión (HTTPS) sigue viva. Fallback para no bloquear la sesión:
 
 - Aplicar el DDL idempotente (`add column if not exists`, `create ... if not
   exists`) vía MCP `supabase execute_sql` (verifica antes `get_project_url` ==
-  el ref de `.env.local`).
+  el ref de `.env.local`). USA `execute_sql`, NO `apply_migration`: este último
+  registra una versión TIMESTAMP en `schema_migrations` que dispara el hook
+  `pre-push` del repo (aborta futuros push por migración con timestamp).
 - `gen:types` funciona igual (usa management API, no el pooler).
 - El cliente de la app (`createAdminClient`, PostgREST HTTPS) también sigue
   funcionando → los verify scripts corren.

@@ -108,6 +108,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 
 - **Cifrar una columna existente = fases + dual-write que degrada** — DDL aditiva → dual-write (lectores siguen en plaintext) → backfill → cutover (fail-closed). Si el cifrado falla en dual-write (env ausente), degradar a plaintext-only + log, nunca romper el flujo. Ver [[cifrado-columna-dual-write-degrada]].
 - **Blind index (buscar sobre columna cifrada) DEBE ir scoped por tenant** — `HMAC(clave, org_id+':'+valor)`; sin `org_id` el mismo valor casa entre orgs (correlación cross-tenant en dump). Clave HMAC separada de la de cifrado. Ver [[blind-index-scoped-por-tenant]].
+- **Cutover columna-en-claro → hash SIN caída = expand-contract** — conserva la columna plana (nullable) + trigger BEFORE INSERT que rellena el hash desde ella (los inserts del código viejo cumplen NOT NULL) + DROP diferido a migración gated posterior. Viejo lee plano, nuevo lee hash → coexisten. Si la app solo toca la columna vía RPC (nunca `.eq`), ya es zero-downtime. Ver [[cutover-token-hash-zero-downtime-expand-contract]].
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
