@@ -150,5 +150,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 
 - 2026-07-19 · TuFacturaIA · editar un material no guardaba (y fijar la duración del kill-switch de mantenimiento fallaba) → `<input number>` con `min`/`step` incompatibles = `stepMismatch` → `checkValidity()` false → `requestSubmit()` no enviaba, sin error visible. Fix `step="any"` (#1030 materiales, #1034 admin). Ver [[html-stepmismatch-min-step-bloquea-submit]].
 
+- 2026-07-20 · TuFacturaIA · main quedó con **lint rojo enmascarado**: #1086 (overhaul materiales) mergeó con 2 `setState`-en-effect (`react-hooks/set-state-in-effect`) que los gates solo-PR + merge `--admin` no revalidaron. Como el pre-commit hook lintea TODO el repo, bloqueaba cualquier commit ajeno (destapado al tunear el botón «Ask»). Fix #1087: `eslint-disable-next-line` justificado (loaders async legítimos). Patrón: `--admin` + gates solo-PR → main puede ir rojo y frenar al siguiente. Ver [[actions-sin-billing-hooks-locales-unico-gate]].
+
 ## Archivo
 Incidentes de **mayo 2026 y anteriores** movidos a [[incidents-archive-2026]] (2026-07-13). Aquí solo lo reciente (jun–jul).
