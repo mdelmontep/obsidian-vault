@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-14
+updated: 2026-07-20
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,7 +44,7 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-14) — PROD VIVO, secretaria completa + audit del agente + self-recipient + auditoría de COMUNICACIÓN
+## Estado (2026-07-20) — PROD VIVO, secretaria completa + audit del agente + self-recipient + auditoría de COMUNICACIÓN + coherencia/composición del prompt
 
 Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `npm run gate`/`gate:full` (lint 0-`any` + typecheck + test agente + gate dashboard [+ drift]) sobre HEAD rebasado, documentado en cada PR; **merge = Borja** (`gh pr merge --admin`, el rojo de Actions es falso negativo) o **founder override nombrando el bypass por-PR** (el clasificador lo exige; ver [[agh-self-merge-clasificador-nombrar-bypass]]). El detalle día-a-día vive en `docs/status-log/` del repo y en [[archive-completed]].
 
@@ -65,14 +65,16 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 
 **Dashboard CRM** (#296, Borja/Dani, prod `panel.agh.agentesialabs.com`): épica premium #392 CERRADA; escrituras en ficha (#439) + split actor/owner (#450) + CRUD de cliente completo (#305) + UI ficha/cartera (#483, mig 0017 `tasks.due_date`). En curso #490/#493 (editar/borrar notas/reuniones/tareas + pulido). Vínculo identidad dashboard↔agente vía `oid` de Entra (#489, PR #492). Zona dashboard-local, cero cruce con el agente salvo `schema.sql`.
 
-**Migraciones al día: 0020** (`conversation_state.clarify_repeat`, #515). 0016 `user_preferences`, 0017 `tasks.due_date`, 0018 `users.email`, 0019 `tasks.meeting_id` (Borja, #502).
+**Migraciones al día: 0021** (`conversation_state.last_write`, #527). 0016 `user_preferences`, 0017 `tasks.due_date`, 0018 `users.email`, 0019 `tasks.meeting_id` (Borja, #502), 0020 `conversation_state.clarify_repeat` (#515).
 
 **Follow-ups (no bloquean):**
 - **#500 (Borja)**: superficie de **visualización del `audit_log`** en el dashboard, ahora que incluye los writes del agente con procedencia. Read-only, sin migración.
 - ~~**Backfill de `users.email`**~~ HECHO 2026-07-14 (`UPDATE 4` en prod: david/estefanía/itziar/jamie desde su identidad `entra-invite`, verificado read-only antes; guardado `email IS NULL`+`entra-invite`+`LIKE '%@%'`). **Carlos + 6 usuarios test** siguen sin email (sin `entra-invite`) → se capturan al conectar M365 o vía `awaiting_email`. Falta smoke conductual E2E del self-recipient (dictar «mándamelo a mí»).
-- **Arquitectura (#454, lane de Borja)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`, `hitl-brain.ts`), exige ventana propia + anuncio. **#520 ya MERGEADO en ese mismo switch (`case confirm`/`correct`, mig 0021) → #454 debe REBASAR sobre el `main` nuevo antes de seguir** (opción A, decisión de founder). Considerar **#521** (deixis/ordinales — fork de diseño del voz-only de #247).
+- **Arquitectura (#454, lane de Borja)**: queda el tramo final (transiciones del pending en el switch de `routeTurn`, `hitl-brain.ts`), exige ventana propia + anuncio. **#520 ya MERGEADO en ese mismo switch (`case confirm`/`correct`, mig 0021) → #454 debe REBASAR sobre el `main` nuevo antes de seguir** (opción A, decisión de founder). Considerar **#521** (deixis/ordinales — fork de diseño del voz-only de #247) y **#535** G1/G2 (confirm+composición · limpieza tras write fallido), que caen en el mismo switch → mismo window; el test-candado #536 ya protege el invariante del failed-confirm (si el refactor mueve el sello antes de `executeWrite`, salta en rojo).
 - **Smoke conductual E2E** del self-recipient (dictar «mándamelo a mí» por WhatsApp/voz) + carlos+6 test sin `users.email` (reconexión M365). → guion completo de QA en llamada: [[agh-qa-voz-guion-llamada]].
 - **En prod 2026-07-15**: #519 (cita FORWARD en `client.prep`, mergeado) · #520/#527 (corregir «lo último» confirmado para reunión/tarea/oportunidad/contacto, no solo cliente; nuevos `meeting/task/contact.update` + puntero `lastWrite`, mig 0021).
+- **En prod 2026-07-16**: #529/#530 (`cc233ac`) — coherencia del `SYSTEM_PROMPT` (catálogo `capabilities` completo, regla única «apuntar», `email.send` en sub-viñetas, `#231` consolidado) + composición multi-write explícita (política pro-precisión) con ejes de eval `composition`/`confusion`. El modelo YA componía → blindaje, no fix (foto ×3): [[prompt-coherencia-fotografiar-evals-antes]]. Pendiente ojo post-hoc de Borja a F2/F3.
+- **En prod 2026-07-20**: #536 (`692b73a`) — test-candado del failed-confirm (#535). La auditoría-langfuse semanal filó #535 pero **la hipótesis no se sostiene contra `main`** (un write fallido == excepción; el `catch` corre antes del sello de estado, ya limpio); el test ancla ese invariante y blinda la zona de #454. **G1** (confirm+composición) y **G2** (limpieza de estado tras write fallido) = forks de diseño `ready-for-human` → ventana de #454. Verificar-contra-main: [[verificar-que-el-bug-sigue-vivo-contra-codigo-actual-antes-de-fixear]].
 
 ## Bloqueantes
 
