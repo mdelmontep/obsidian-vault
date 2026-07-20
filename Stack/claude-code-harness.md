@@ -24,19 +24,26 @@ Si falta uno → prompt manual.
 ## LOOP SPEC mínimo
 
 ```
-GOAL: <condición objetiva de éxito>
-VERIFY: <qué lo falla automáticamente>
-STOP WHEN: éxito OR <N> iteraciones
-ON STOP: <qué reportar>
+GOAL:      <condición objetiva de éxito>
+MAKER:     Sonnet (construye) — nunca se autojuzga
+CHECKER:   tests deterministas (primario) + browser opcional (secundario) — VETA
+STOP WHEN: suite COMPLETA verde + typecheck limpio  OR  <N> iteraciones
+ON STOP:   <qué reportar>
 ```
 
 Sin VERIFY explícito no hay loop, hay agente autoaprobándose.
 
-**Maker/Checker:** agente rápido/barato que produce + agente lento/estricto con instrucciones distintas que verifica. El que hizo el trabajo no es buen juez.
+**Checker determinista primario, no el navegador.** `/fia-verify`/agent-browser es capa SECUNDARIA: es frágil (crashea el renderer, el click no dispara el handler React). Un checker que se cae no verifica, finge. STOP con **suite completa + typecheck**, no solo el test del target: un loop-until-green puede arreglar el objetivo y romper un vecino si el checker solo mira el target (guard anti-regresión).
+
+**Maker ≠ checker:** contexto y modelo distintos; el que hizo el trabajo no es buen juez. **Reparto de modelo por eslabón:** Fable planea · Opus juzga/irreversible · Sonnet construye (maker) · Haiku mecánico/volumen y traer-doc-web (solo fetch).
 
 **Métrica real:** % outputs aceptados sin retrabajo. <50% → el loop cuesta más de lo que ahorra.
 
-**Por complejidad:** prompt inline → `/loop` → `/schedule` → `Workflow` tool (>1 agente o >3 iteraciones).
+**Por complejidad:** prompt inline → `/loop` → `/schedule` → `Workflow` tool (>1 agente o >3 iteraciones). Budget real (contador que corta) solo en `Workflow` (`budget.spent()/remaining()`); en `/loop` a mano = cap de iteraciones + supervisión. No declarar un techo que no mides.
+
+## Loop de ciclo completo
+
+No envuelvo un paso, envuelvo el ciclo: `/loop` que encadena `/prd-to-issues` → `/grill-me` → build → tests+`/fia-verify` → PR → `/fia-cierre`, cada eslabón en su carril de modelo. **Gate "solo sugerencias documentadas":** en el grill auto-acepta una propuesta solo con respaldo real — **Haiku TRAE la fuente, Opus DECIDE si de verdad la respalda** (el juicio de evidencia no va al modelo más débil); sin respaldo → a revisión humana. Maker/checker aplicado a las DECISIONES, no solo al código. No es raíl fijo: los eslabones se combinan según la sesión, el pipeline completo es el máximo no el mínimo. Codificado en el CLAUDE.md global como patrón nombrado para que Claude lo reconozca y lo sugiera.
 
 ## Dónde vive cada pieza del harness (jul 2026)
 
