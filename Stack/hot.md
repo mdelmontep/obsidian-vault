@@ -28,6 +28,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 
 ## Agente AGH (capacidad conversacional)
 - **Recall/RAG sin umbral = confidently-wrong** — k=1 sin piso de distancia miente; devolver distancia+umbral+top-k+atribución+golden negativo. Ver [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]].
+- **Copiloto multi-dominio: entidad con tabla propia = tool de búsqueda propia + regla en el prompt + fuzzy (no ilike ni catálogo genérico)** — si no, el LLM cae en la tool genérica ciega a la tabla y dice "no existe". Nunca auto-elegir si mueve stock/coste. Ver [[copiloto-entidad-tabla-propia-necesita-tool-busqueda-y-regla-en-prompt]].
 - **Presenter grounded: conserva los ítems verbatim, no aflojes el verificador** — el guard estricto es demasiado en ítems compuestos; arregla el prompt del presenter, no el verificador. Ver [[presenter-grounded-conservar-items-verbatim-no-aflojar-verificador]].
 - **Evals de modelo real: agregar corridas + baseline con margen** — un fichero de 3 casos oscila 100%↔33%; gate = N corridas + baseline − margen − tolerancia. Es la red para tocar el prompt. Ver [[evals-de-modelo-real-oscilan-agregar-corridas-y-baseline-con-margen]].
 - **Correr evals opt-in: `vitest --repeat` no es CLI + timeout 5s da falsos timeouts** — bucle bash o runner; `--testTimeout=25000`; el full ×1 amplifica la varianza del baseline (×3 es el comparable). Ver [[evals-opt-in-vitest-repeat-timeout]].
