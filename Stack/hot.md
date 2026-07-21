@@ -123,3 +123,5 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
+- **db push "remote versions not found"** — checkout stale o nº migración duplicado, NO `migration repair`. Ver [[db-push-remote-versions-not-found-es-checkout-stale-o-num-duplicado-no-repair]]
+- **Supabase local en FacturaIA** — no hay config.toml: init + puertos 544xx + analytics off + dup 519. Ver [[levantar-supabase-local-en-facturaia-config-puertos-analytics-dup519]]

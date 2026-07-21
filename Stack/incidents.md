@@ -158,3 +158,4 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 
 ## Archivo
 Incidentes de **mayo 2026 y anteriores** movidos a [[incidents-archive-2026]] (2026-07-13). Aquí solo lo reciente (jun–jul).
+- 2026-07-21 · FacturaIA · `supabase db push` de Fase 2 Obras aborta "remote migration versions not found in local" → nº migración 519 DUPLICADO (orphan `519_obras_materiales_trazabilidad_ia` idéntico al 524, colado en #1094) → borrar el orphan; NO correr el `migration repair --reverted` que sugiere el CLI (corrompe historial). Ver [[db-push-remote-versions-not-found-es-checkout-stale-o-num-duplicado-no-repair]]
