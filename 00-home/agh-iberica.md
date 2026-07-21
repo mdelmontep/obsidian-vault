@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-20
+updated: 2026-07-21
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,7 +44,7 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-20) — PROD VIVO, secretaria completa + audit del agente + self-recipient + auditoría de COMUNICACIÓN + coherencia/composición del prompt
+## Estado (2026-07-21) — PROD VIVO · secretaria + audit + self-recipient + coherencia prompt + BORRADO de entidades sueltas (5) + fixes de dogfooding
 
 Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `npm run gate`/`gate:full` (lint 0-`any` + typecheck + test agente + gate dashboard [+ drift]) sobre HEAD rebasado, documentado en cada PR; **merge = Borja** (`gh pr merge --admin`, el rojo de Actions es falso negativo) o **founder override nombrando el bypass por-PR** (el clasificador lo exige; ver [[agh-self-merge-clasificador-nombrar-bypass]]). El detalle día-a-día vive en `docs/status-log/` del repo y en [[archive-completed]].
 
@@ -75,6 +75,7 @@ Demo del 7-jul con Carlos OK. CI Actions muerto por billing → **gate LOCAL** `
 - **En prod 2026-07-15**: #519 (cita FORWARD en `client.prep`, mergeado) · #520/#527 (corregir «lo último» confirmado para reunión/tarea/oportunidad/contacto, no solo cliente; nuevos `meeting/task/contact.update` + puntero `lastWrite`, mig 0021).
 - **En prod 2026-07-16**: #529/#530 (`cc233ac`) — coherencia del `SYSTEM_PROMPT` (catálogo `capabilities` completo, regla única «apuntar», `email.send` en sub-viñetas, `#231` consolidado) + composición multi-write explícita (política pro-precisión) con ejes de eval `composition`/`confusion`. El modelo YA componía → blindaje, no fix (foto ×3): [[prompt-coherencia-fotografiar-evals-antes]]. Pendiente ojo post-hoc de Borja a F2/F3.
 - **En prod 2026-07-20**: #536 (`692b73a`) — test-candado del failed-confirm (#535). La auditoría-langfuse semanal filó #535 pero **la hipótesis no se sostiene contra `main`** (un write fallido == excepción; el `catch` corre antes del sello de estado, ya limpio); el test ancla ese invariante y blinda la zona de #454. **G1** (confirm+composición) y **G2** (limpieza de estado tras write fallido) = forks de diseño `ready-for-human` → ventana de #454. Verificar-contra-main: [[verificar-que-el-bug-sigue-vivo-contra-codigo-actual-antes-de-fixear]].
+- **En prod 2026-07-21 — jornada de dogfooding real (11 PRs, `main` `9471b07`):** **borrado de entidades sueltas** (reunión/tarea/oportunidad/contacto/nota) por anáfora «bórrala» (vía `lastWrite`) y por referencia «borra la reunión de X» + audit (#545/#546/#547/#548); «bórrala» sobre un borrado PENDIENTE lo confirma (#549, antes el LLM lo cancelaba → casi borra lo que no era). **Precisión del interpreter:** alta de cliente con contexto NO fabrica reunión fantasma (#543); apunte con día = `reminder.schedule` con body limpio (#551). **Correos como secretaria** (#552, EmailDrafter). + enlace M365 en `seeding` (#539), `opportunity.create` no revienta por stage fuera del embudo (#542). Método+patrones nuevos: [[hitl-turnos-criticos-deterministas-antes-del-llm]] · [[guard-en-prepare-de-un-item-declina-el-batch-entero]]. **A la cola de Borja (zona #454, NO auto-merge):** **PR #557** (#535-G1, «sí, y además X» → confirma pending + encola compuesto, orquestado en `handleSerialized` sin tocar el switch) · **#521** (deixis «la última reunión», fork de diseño = revertir voz-only de #247). Follow-up: auditar `opportunity.create` (su store.create sin `tx`). Decisión de reuniones (founder): futura→schedule, pasada dictada→create, alta de cliente→ninguna.
 
 ## Bloqueantes
 
