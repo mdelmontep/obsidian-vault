@@ -98,6 +98,10 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Borrado masivo por API (PostgREST/MCP) hace timeout con decenas de miles de filas** (y a veces rollback silencioso → verificar con `count`); borrar por lotes con `ctid IN (SELECT ctid ... LIMIT 130000)`, hijas antes que padre. Guarda: nunca borrar en org `is_test=false`. Ver [[supabase-borrado-masivo-api-timeout-lotes-ctid]].
 - **`db_error` simultáneo en endpoints no relacionados con sesiones paralelas activas** → puede ser DDL concurrente (migración RLS/Realtime de otra sesión) bloqueando momentáneamente, no bug de código — verificar logs postgres + reproducir la query a mano antes de tocar nada. Ver [[db-error-transitorio-por-ddl-concurrente-entre-sesiones-paralelas]].
 
+## OCR / prompts LLM (FacturaIA)
+- **Campo de extracción sin regla anti-invención explícita se alucina por defecto** aunque los campos vecinos sí la tengan (caso `forma_pago`: sin guard, ticket sin mención de pago salió como "Efectivo"). Auditar TODOS los campos de un prompt de extracción, no asumir "implícito". Ver [[ocr-prompt-campo-sin-regla-anti-invencion-se-alucina]].
+- **Pipeline async con notificación solo en el camino feliz deja al usuario sin respuesta si falla** — auditar cada `return` temprano del endpoint: ¿ese exit notifica o deja el silencio? Ver [[pipeline-async-solo-notifica-camino-feliz-deja-fallo-silencioso]].
+
 ## CI / gates
 - **`npm run typecheck | tail` enmascara el exit de tsc** — el pipeline devuelve el exit de `tail`(=0); un gate "verde" puede tener errores TS reales. Captura el exit real (`> f 2>&1; echo $?`) o `grep "error TS"`. Ver [[typecheck-pipe-tail-enmascara-exit]].
 - **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — usa `BigInt(300000)` en tests fiscales. Ver [[bigint-literal-tsc-target-es2020]].
