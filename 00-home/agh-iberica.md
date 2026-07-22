@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-21
+updated: 2026-07-22
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -43,6 +43,10 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 ## Arquitectura
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
+
+## Estado (2026-07-22) — PROD VIVO · sin PRs abiertas, main al día
+
+**22-jul**: `main` en `7023395`, repo limpio, cero PRs abiertas. **#532 CERRADO** (meeting.update `participants` aditivo, PR #578, mergeado por Manu directo tras gate local verde) — decisión de diseño: `topics`/`nextAction` se quedan sustitutivos (contrato de #520), solo `participants` es aditivo. Borja cerró su cola completa desde Slack: **#557 mergeado** (`f41e27f`, #535-G1 confirm+composición), **#537/#558 reconciliadas** (docs stale de `PROJECT-STATUS.md` descartadas, `status-log/` aterrizado), **ojo post-hoc F2/F3 (#529/#530) sin hallazgos**. Queda SOLO para ventana de Borja (su criterio): **#521** (deixis «la última», fork revierte voz-only #247) y **tramo final de #454** (switch `routeTurn`, ya puede rebasar con #557 dentro). Gotcha operativo de la sesión: subagente colgado esperando notificación fantasma de un `npm run gate` backgroundeado — [[subagente-background-bash-no-se-autorreanuda-esperando-notificacion]].
 
 ## Estado (2026-07-21) — PROD VIVO · secretaria + audit + self-recipient + coherencia prompt + BORRADO de entidades sueltas (5) + fixes de dogfooding
 

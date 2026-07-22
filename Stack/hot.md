@@ -40,6 +40,7 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Evals de modelo real: agregar corridas + baseline con margen** — un fichero de 3 casos oscila 100%↔33%; gate = N corridas + baseline − margen − tolerancia. Es la red para tocar el prompt. Ver [[evals-de-modelo-real-oscilan-agregar-corridas-y-baseline-con-margen]].
 - **Correr evals opt-in: `vitest --repeat` no es CLI + timeout 5s da falsos timeouts** — bucle bash o runner; `--testTimeout=25000`; el full ×1 amplifica la varianza del baseline (×3 es el comparable). Ver [[evals-opt-in-vitest-repeat-timeout]].
 - **Fix validado solo in-memory oculta bug pg-solo-prod** — campo nuevo en estado persistido: grep el store Postgres + test pg round-trip antes de "hecho". Ver [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]].
+- **Subagente que backgroundea `npm run gate` no se autorreanuda** — se queda "esperando notificación" para siempre; verifica con `ps aux` desde el padre y reenvía diciéndole que compruebe en primer plano. Ver [[subagente-background-bash-no-se-autorreanuda-esperando-notificacion]].
 
 ## Auditoría / agentes / rutinas cloud
 - **Auditar/fixear con red** — worktree desde origin/main + dedup vs issues abiertos ANTES de filar; re-audita tus fixes con agentes independientes antes de mergear. Ver [[auditar-sobre-origin-main-worktree-no-cwd-stale]] · [[maker-checker-re-auditar-fixes-propios-antes-de-merge]].
