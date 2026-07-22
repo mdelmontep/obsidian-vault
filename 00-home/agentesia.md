@@ -1,6 +1,6 @@
 ---
 title: agentesia
-date: 2026-05-07
+date: 2026-07-22
 tags: [cliente, agentesia]
 ---
 
@@ -11,26 +11,20 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 ## Estado
 
 - **agency-portal** (Borja como reviewer) — Next.js, integra con TuFacturaIA via API v1 (HMAC webhooks + outbox + Stripe-style sync)
+- **`/agency/time`** — dashboard de horas del equipo (Dani/Borja/Manu): ingesta vía hooks locales de Claude Code (`ops/claude-time-tracker`), límites de uso 5h/semanal, síntesis IA (gpt-4o-mini) de qué está haciendo cada uno en "Trabajando ahora" (árbol persona→proyecto, fusiona sesiones concurrentes del mismo proyecto para no duplicar tiempo)
 - **Chatbot ticketing** desplegado en `89B9QN23hOHDq6oP` n8n
 - **Slack workspace** activo, canvases por proyecto
 
 ## Próximos hitos
 
-1. **agency-portal PR #86 + #87 — review Borja + deploy** (NOW) — #86 hotfix: la llamada a OpenAI en el onboarding no estaba en try/catch → un fallo tumbaba el webhook con 500 silencioso y el bot quedaba mudo; ahora degrada + audita `onboarding.llm_call_failed`. #87 feature: módulo "secretaría virtual con jerarquía" para HGH Ibérica (asistente interno por comercial + visibilidad del responsable sobre su equipo), validado con dry-run real. Independientes, 4 checks verdes. Detalle [[Stack/onboarding-whatsapp]]
-2. **agency-portal PR #54 + #55 pendientes pushear** (NOW) — #55 audit actor passthrough, #54 base lista. Tras merge: regen types.gen.ts + quitar 3 `as never` + migration `quotes.converted_facturaia_factura_id`
-3. **agency-portal PR #72 onboarding sync+md+web — smoke pendiente** (NOW) — primer onboarding WhatsApp cerrado (ecobox) destapó tres bugs: sync no escribía nada, `.md` perdía info, bot no preguntaba web pese a estar en notas. Fix en rama `fix/onboarding-sync-and-md-fidelity`. Smoke en próximo cliente real. Detalle [[Stack/onboarding-whatsapp]]
-4. **agency-portal PR #73 factura nueva prerellena fiscal del cliente — smoke pendiente** (NOW) — al crear factura desde detalle de cliente o vía combobox de destinatario, el bloque "Datos fiscales · Destinatario" salía vacío aunque el cliente tenía los 6 campos guardados (razón social, NIF/CIF, dirección, ciudad, CP, país). `page.tsx` cargaba `getAgencyClientDetail` pero sólo pasaba name/email al form; combobox tampoco copiaba `recipient.fiscal` aunque venía cargado. Fix: pasar `FiscalData` y phone vía `defaultRecipient`, inicializar `recipientFiscal` desde ahí, y en `handleRecipientChange` copiar fiscal + abrir collapsible. Detalle [[Stack/agency-portal-forms-prefill]]
-5. **Test ticketing con cliente real** (NEXT) — pedir teléfono al cliente "Soporte técnico" + verificar respuestas TICKET_CREATED/APPENDED/ERROR_NO_CLIENTE. Limpiar workflow temporal `a96XVFKX4WujMCKW`
-6. **agency-portal — verificar extracción onboarding en prod (PR #67)** (NOW) — confirmar "Progreso por sección" + "Respuestas extraídas" se rellenan por turno; si `activity_event.action='onboarding.extraction_failed'`, abrir issue.
-7. **agency-portal — cron Dokploy `onboarding-reminders`** (NEXT) — botón manual en prod; falta el automático. Clonar schedule `sync-facturaia`: cron `0 10 * * *`, ruta `/api/internal/onboarding-reminders` (POST, `x-service-key`). Ver [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]]
-8. **agency-portal — Pizarra/board PR #91 en review (Borja)** (NEXT) — rama `feature/pizarra-dashboard`. Pendiente: review+merge Borja (aplica mig `board_comments` con `db push`) + QA visual Manu local (`PORT=3002`). Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]] · [[supabase-tabla-ausente-postgrest-pgrst205-no-42p01]]
-9. **agency-portal — n8n router consulta Supabase como source of truth** (NEXT) — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint `/api/onboarding/is-active-by-phone` + nodo HTTP en `ChatBOT mejorado` antes del IF Activo + Redis a caché con re-seed. Ver [[Stack/n8n]] · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
+1. **agency-portal — Dani: hook time-tracker no reporta pese a reinstalar** (NOW, 22-jul) — última actividad real de Dani congelada desde hace 45+ min pese a abrir sesión nueva y escribir prompts. Se le pasaron 3 comandos de diagnóstico (config `~/.agentesia-tracker.json`, hook registrado en `~/.claude/settings.json`, test manual POST a `/api/internal/time-ingest`) — pendiente que los corra y comparta la salida (sobre todo el `HTTP_STATUS` del test manual).
+2. **agency-portal — CI (Actions) bloqueado por billing, confirmado también aquí** (recurrente, mismo org que TuFacturaIA) — jobs mueren en 2-4s con "recent account payments have failed". Mismo patrón que TuFacturaIA: verificar local (`lint`+`typecheck`+`test`+`build`) antes de cada merge, `gh pr merge --merge` normal (no hace falta `--admin` aquí, a diferencia de TuFacturaIA). Ver [[github-actions-org-private-free-tier-2000-min]].
+3. **agency-portal — n8n router consulta Supabase como source of truth** (NEXT, arrastrado) — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint `/api/onboarding/is-active-by-phone` + nodo HTTP en `ChatBOT mejorado` antes del IF Activo + Redis a caché con re-seed. Ver [[Stack/n8n]] · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
 
 ## Bloqueos / esperando a terceros
 
-- Borja: review PR #54 y #55 cuando se pusheen
-- Borja: review PR #86 (hotfix onboarding 500) y #87 (secretaría virtual HGH) → desplegar tras merge
-- Borja: review + merge PR #91 Pizarra/board (rama `feature/pizarra-dashboard`, aplica mig `board_comments` con `db push`)
+- Dani: correr diagnóstico del hook de time-tracker (ver hito 1)
+- GitHub org: subir spending limit / esperar reset de cupo Actions (ver hito 2)
 
 ## Links rápidos
 
@@ -43,3 +37,5 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 
 - 2026-05-02: integración API v1 ↔ agency-portal viva en prod (7 PRs apilados + 7 fixes auditoría)
 - 2026-06-16: onboarding WhatsApp caído — cuenta OpenAI sin saldo (`429 insufficient_quota`) → webhook 500 silencioso, bot mudo. Diagnóstico vía ejecuciones n8n. Recargado el saldo (revive sin deploy) + PR #86 para que no muera en silencio. Feature secretaría virtual HGH (PR #87) lista y validada con dry-run.
+- 2026-06-22: Pizarra/board (PR #91) + secretaría virtual HGH + fixes de prefill fiscal + extracción onboarding, todo mergeado y cerrado (verificado vía `gh pr view` — el hub llevaba semanas desfasado listándolos como pendientes).
+- 2026-07-22: módulo **time-tracking** completo en prod — dashboard + ingesta (#156), dominio prod correcto (#157), límites de uso 5h/semanal (#158), síntesis IA gpt-4o-mini del bloque de trabajo (#160), auto-refresco + filtros (#161), árbol "Trabajando ahora" por persona + fix de solape en cálculo de horas cuando hay sesiones concurrentes del mismo proyecto (#163). CI de Actions confirmado bloqueado por billing (mismo org que TuFacturaIA) — merges verificados en local. Ver [[merged-duration-intervalos-solapados-time-tracking]] · [[claude-code-hooks-no-se-recargan-en-sesion-abierta]].
