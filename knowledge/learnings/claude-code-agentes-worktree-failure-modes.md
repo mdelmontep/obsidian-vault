@@ -111,6 +111,14 @@ git checkout <worktree-branch> -- \
 
 **Fix**: (1) en el prompt del agente, exigir `git checkout -b <rama-hija> feat/x` como PRIMER paso + verificar que existen ficheros clave de la feature; PARAR si faltan. (2) Coordinador: `git branch --show-current` ANTES de cada merge/commit; si driftó, `git checkout feat/x` y reconciliar (`git merge <rama-agente>` con ff, luego seguir). El trabajo NO se pierde (vive en la rama del agente), solo hay que realinear el puntero. Caso real 2026-07-18 (Obras facturación, 8 agentes). Relacionado con B (base desfasada) y E (edición concurrente del principal).
 
+## Failure mode J: subagente lanza Monitor/background para esperar el gate de CPU compartido → su turno "termina" y hay que reanudarlo a mano, repetidas veces
+
+**Síntoma**: subagente en worktree corre `npm run lint`/`build` bajo un semáforo de CPU compartido entre sesiones (tipo `fia-gate`). El comando tarda por la cola del semáforo, el subagente lo backgroundea o lanza un Monitor para esperar la notificación — y ENTONCES su propia invocación se reporta como "completed" (sin trabajo real terminado) porque no tiene "hijos en background" vivos desde la perspectiva del orquestador. Hay que mandarle `SendMessage` para reanudarlo, y vuelve a pasar lo mismo en el siguiente paso largo. Con carga de máquina muy alta (load avg 30-60+, varias sesiones Claude en paralelo) puede escalar a `stalled: no progress for 600s` y matar el proceso real a medio construir (visto: 3 agentes paralelos perdieron su build en curso así).
+
+**Causa**: un subagente que delega su propia espera a Monitor/background pierde el turno — la espera async anidada dentro de un Agent no compone bien con el mecanismo de notificación del orquestador.
+
+**Fix**: para pasos largos dentro de un subagente (build bajo gate compartido), instruir explícitamente "no uses Monitor ni background para esperar — llama al comando real directamente con Bash, foreground, y si se corta a los 120s (el harness fuerza background pase lo que pase con `timeout`), en cuanto te reanude vuelve a intentar el SIGUIENTE paso pendiente inmediatamente, no repitas comprobaciones de estado". Si aun así hay `stalled`/`killed` repetido, es señal de que la máquina está genuinamente saturada (`uptime` load avg muy por encima de nº de cores) — mejor que el ORQUESTADOR (tú) tome el control directo del gate (commit/push) con `nohup ... &`+`disown` + Monitor propio en primer plano, en vez de seguir relanzando subagentes que van a repetir el mismo fallo.
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:
