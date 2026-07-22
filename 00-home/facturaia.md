@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-07-21
+updated: 2026-07-22
 tags: [cliente, facturaia, hub]
 ---
 
@@ -108,6 +108,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **`missing_nif_emisor` ya no fuerza revisión en proveedor extranjero** (`src/lib/ocr/anomaly.ts`, 2026-06-30, caso real: recibo Resend en sandbox) — severidad `medium` si `pais≠ES`/`moneda≠EUR`. Lint+typecheck+build verde. **Pendiente: commit+push+deploy+smoke** (ver [[ocr-clasificacion-iva-zero-seguros]]).
 - **`fix/ingesta-progress-faster-feedback` — audit discriminadores OCR staged, pendiente commit+PR** — prerequisito canary G5 (paths non-success pipeline eran silenciosos). Cambios: shapes ingesta, !res.ok webhook, float clamp progress.ts.
 - **🔴 Smoke «Convertir en recurrente» pendiente** — factura emitida real con SEPA activo → toggle topbar → cadencia/fecha/modo → confirmar entrada en `facturas_recurrentes` + redirect `/recurrentes`. (`27d0c773` en main, no verificado E2E.)
+- **Dropzone "Importar extracto bancario" (/conciliacion) — CERRADA ✅ (2 PRs, 2026-07-22)**: #1148 sustituyó el recuadro punteado plano por la pieza compartida "Border Beam glass" (misma que `importar-factura-modal`); #1151 (reporte de Manu tras el primer merge) corrigió el hueco muerto bajo la caja — el modal `size="lg"` fuerza `min-height:480px` con independencia del contenido — subiendo el `min-height` de la caja a 340px + mejoras de texto/contraste (badge circular, chips de formato). QA visual claro/oscuro/hover en ambas rondas. Ver [[next-typed-routes-validator-stale-tras-cambio-de-rama]] (variante: `pkill` a `next dev` a medio-generar corrompe `.next/dev/types/validator.ts` y bloquea el pre-commit).
 - _Hitos cerrados (PR #607 «Convertir en recurrente» lista+modal+ingesta justificante, toggle topbar `27d0c773`, MCP server LIVE + Directory enviado, Resolver-con-Claude Fase 4, perf merge-train, incidente host OOM, debouncing, emisión web, Copiloto Fase 1+2 + set fiscal, stock lotes, copiloto paridad MCP 001-014, onboarding 021-030, conciliación Fase 2, modelo 349, multiempresa) → [[facturaia-historico-detallado]]._
 ## Bloqueos / esperando a terceros
 
