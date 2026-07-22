@@ -103,6 +103,9 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Pipeline async con notificación solo en el camino feliz deja al usuario sin respuesta si falla** — auditar cada `return` temprano del endpoint: ¿ese exit notifica o deja el silencio? Ver [[pipeline-async-solo-notifica-camino-feliz-deja-fallo-silencioso]].
 
 ## CI / gates
+- **Dependencias ya parcheadas por su fabricante se quedan sin recoger sin `npm update` rutinario** — 4 de 6 alertas Dependabot ya cabían en el rango `^` declarado, el lockfile solo se toca al añadir deps nuevas. `npm outdated <pkg>`: si Wanted>Current, es 1 minuto sin tocar `package.json`. Ver [[dependencias-npm-parcheadas-upstream-nunca-se-recogen-sin-npm-update-rutinario]].
+- **Dependabot solo alerta si no tiene `dependabot.yml`** — security-alerts (pasivo, automático) y version-updates (abre PRs) son features DISTINTAS; sin el `.yml` con `schedule`, nadie abre el PR del bump. Ver [[dependabot-solo-alerta-no-abre-pr-sin-config-explicita]].
+- **Trinquete de baseline (bloquea solo lo NUEVO)** — patrón reusable para deuda que no se puede cerrar de golpe (usado 3× ya: inline-style, design-debt, audit npm). Probar con un caso que DEBERÍA fallar antes de confiar. Ver [[trinquete-baseline-bloquea-solo-lo-nuevo-patron-reusable]].
 - **`npm run typecheck | tail` enmascara el exit de tsc** — el pipeline devuelve el exit de `tail`(=0); un gate "verde" puede tener errores TS reales. Captura el exit real (`> f 2>&1; echo $?`) o `grep "error TS"`. Ver [[typecheck-pipe-tail-enmascara-exit]].
 - **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — usa `BigInt(300000)` en tests fiscales. Ver [[bigint-literal-tsc-target-es2020]].
 
