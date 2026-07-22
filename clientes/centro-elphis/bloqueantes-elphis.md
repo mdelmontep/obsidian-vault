@@ -11,7 +11,7 @@ tags: [elphis, bloqueantes, todo, decisiones]
 
 Negocio KISAMU verificado + cliente OK → **vía A (migración)**: borrar cuenta en la app móvil → alta OTP en WhatsApp Manager → `register` con PIN → suscribir webhook → repuntar env n8n. **659 en Cloud API + bot WhatsApp real E2E funcionando.** IDs nuevos: WABA `3949824101978503`, phone_number_id `1166319609905823`, app `1332761645647854`. Detalle en memory [[elphis-wa-cloud-api-migracion]]. Ver [[whatsapp-conectar-numero-propio-en-movil-a-cloud-api]].
 
-**Nuevos pendientes derivados:** (1) rotar `META_APP_SECRET` `723c1d…` (expuesto en captura) + actualizar Dokploy env/`.env`; (2) plantilla HSM para reservas por **voz** (business-initiated sin ventana 24h → texto libre falla; crear Utility + rama en book-and-notify). Ver [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]].
+**Nuevos pendientes derivados:** (1) rotar `META_APP_SECRET` `723c1d…` (expuesto en captura) + actualizar Dokploy env/`.env` — **la validación HMAC en sí ya está confirmada activa** (23-jul, ver [[webhook-hmac-pass-through-verificar-env-real-no-solo-codigo]]), solo falta la rotación del secret; (2) plantilla HSM para reservas por **voz** (business-initiated sin ventana 24h → texto libre falla; crear Utility + rama en book-and-notify). Ver [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]].
 
 ## Resueltos por el onboarding firmado o por decisión Manu
 
