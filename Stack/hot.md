@@ -108,6 +108,8 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 - **Trinquete de baseline (bloquea solo lo NUEVO)** — patrón reusable para deuda que no se puede cerrar de golpe (usado 3× ya: inline-style, design-debt, audit npm). Probar con un caso que DEBERÍA fallar antes de confiar. Ver [[trinquete-baseline-bloquea-solo-lo-nuevo-patron-reusable]].
 - **`npm run typecheck | tail` enmascara el exit de tsc** — el pipeline devuelve el exit de `tail`(=0); un gate "verde" puede tener errores TS reales. Captura el exit real (`> f 2>&1; echo $?`) o `grep "error TS"`. Ver [[typecheck-pipe-tail-enmascara-exit]].
 - **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — usa `BigInt(300000)` en tests fiscales. Ver [[bigint-literal-tsc-target-es2020]].
+- **Bump de dep directa fijada como `optionalDependency` vieja en otra dep (ej. next→sharp) deja 2 copias** — `npm ls <pkg>` para verificar dedupe; arregla con `overrides`, nunca `audit fix --force`. Ver [[npm-overrides-necesario-cuando-dependencia-fija-optionaldependency-vieja]].
+- **Regresión de suite tras un bump: comparar SIEMPRE contra `origin/main` limpio antes de culpar al bump** — un baseline viejo (main avanzó en paralelo) es indistinguible de una regresión nueva. Ver [[regresion-en-suite-tras-bump-verificar-contra-main-limpio-antes-atribuir]].
 
 ## Import / datos externos
 - **CSV de tarifa de ERP español (Telematel/GO!Catalog) = cp1252 + `;` + precio por lote** — decodifica latin1 (o salen `�`) y divide `P.V.P./UNIDADES` (cable 2517 con UNIDADES=1000 = 2,517 €/m, no ×1000). Captura fichero real antes de codificar. Ver [[importar-csv-erp-espanol-encoding-cp1252-y-precio-por-unidad-multiple]].

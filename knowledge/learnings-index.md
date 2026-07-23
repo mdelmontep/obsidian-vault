@@ -5,7 +5,7 @@ tags: [home, indice, moc]
 ---
 # Índice de learnings
 
-Mapa temático de los ~863 learnings en `knowledge/learnings/`. Grep aquí para descubrir qué existe antes de crear uno nuevo. Regenerable.
+Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973** (última recategorización 2026-07-15, ~110 learnings nuevos desde entonces sin clasificar en las secciones de abajo — grep directo en `knowledge/learnings/` para esos). Grep aquí para descubrir qué existe antes de crear uno nuevo. Regenerable.
 
 ## Supabase / Postgres / BD (237)
 - [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] — acción masiva en cliente con N round-trips en serie cuelga la UI — batch + pool + progreso

@@ -1,0 +1,193 @@
+{
+  "updatedAt": "2026-05-15T14:23:07.732Z",
+  "createdAt": "2026-05-15T14:23:07.732Z",
+  "id": "TJ8wDqH4ok6LHUrB",
+  "name": "Email Polling - TuFacturaIA",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 30 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.FACTURAIA_APP_URL || 'https://facturaia.agentesia.world' }}/api/email/poll",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-service-key",
+              "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "poll-request",
+      "name": "Poll Email Inboxes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Every 30 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Poll Email Inboxes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Every 5 Minutes": {
+      "recurrenceRules": []
+    },
+    "node:Every Hour": {
+      "recurrenceRules": []
+    },
+    "node:Every 30 Minutes": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": null,
+  "versionId": "dae4ccbf-423a-48a1-88f5-7bfa4001387c",
+  "activeVersionId": "dae4ccbf-423a-48a1-88f5-7bfa4001387c",
+  "versionCounter": 12,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-05-15T14:23:07.732Z",
+      "createdAt": "2026-05-15T14:23:07.732Z",
+      "role": "workflow:owner",
+      "workflowId": "TJ8wDqH4ok6LHUrB",
+      "projectId": "UUy2j6TbtkLOkSB2",
+      "project": {
+        "updatedAt": "2026-05-15T12:01:38.129Z",
+        "createdAt": "2026-05-14T12:18:17.402Z",
+        "id": "UUy2j6TbtkLOkSB2",
+        "name": "Manuel del Monte <m.delmonte.p@agentesia.madrid>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "daa19c1f-b333-422c-b538-c9376a131006"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-15T14:23:07.732Z",
+    "createdAt": "2026-05-15T14:23:07.732Z",
+    "versionId": "dae4ccbf-423a-48a1-88f5-7bfa4001387c",
+    "workflowId": "TJ8wDqH4ok6LHUrB",
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "minutes",
+                "minutesInterval": 30
+              }
+            ]
+          }
+        },
+        "id": "schedule-trigger",
+        "name": "Every 30 Minutes",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          240,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "={{ $env.FACTURAIA_APP_URL || 'https://facturaia.agentesia.world' }}/api/email/poll",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "x-service-key",
+                "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+              }
+            ]
+          },
+          "options": {
+            "timeout": 120000
+          }
+        },
+        "id": "poll-request",
+        "name": "Poll Email Inboxes",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          460,
+          300
+        ]
+      }
+    ],
+    "connections": {
+      "Every 30 Minutes": {
+        "main": [
+          [
+            {
+              "node": "Poll Email Inboxes",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Manuel del Monte",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-15T14:34:34.060Z",
+        "id": 4,
+        "workflowId": "TJ8wDqH4ok6LHUrB",
+        "versionId": "dae4ccbf-423a-48a1-88f5-7bfa4001387c",
+        "event": "activated",
+        "userId": "daa19c1f-b333-422c-b538-c9376a131006"
+      }
+    ]
+  }
+}

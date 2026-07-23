@@ -8,7 +8,7 @@ tags: [facturaia, n8n, g5, seguridad, decomision]
 # g5a-005 — Decomisión del Agente Facturador en n8n
 
 Workflow: **FacturaIA — WhatsApp Receptor v2** (`pqSWkDIHqmSVHotB`, n8n.tufacturaia.com), 184 nodos, `active:true`.
-Backup previo (sin secretos, credenciales por referencia): `n8n-backups/facturaia/facturaia-whatsapp-receptor-v2-pre-g5a005-2026-07-04.json`.
+Backup previo (sin secretos, credenciales por referencia): `~/facturaia/ops/n8n-backups/facturaia-whatsapp-receptor-v2-pre-g5a005-2026-07-04.json`.
 
 ## Evidencia (audit cerrado)
 - **0 tráfico real** del Agente Facturador en la ventana retenida (2026-06-27→29): las 21 ejecuciones con el agente activo son SOLO de testers internos (Manu `34617314938`, Sory `34661253928`). Cero remitentes externos.
@@ -51,6 +51,6 @@ Sin razonamiento LLM en n8n para texto: n8n queda como transporte puro.
 2. Smoke: app viva (307), webhook Next.js vivo (GET verify → 403 token malo; POST → 200 in-house), n8n confirmado inactivo. WhatsApp in-house intacto.
 3. `PUT /workflows/pqSWkDIHqmSVHotB` con 164 nodos (borrados los 20: Agente Facturador + 16 toolCode + OpenAI GPT-4o + Memoria Postgres + Think). 0 referencias residuales. Solo se rompió la conexión muerta `Preparar Input Agente → Agente Facturador`. Workflow queda `active:false` (decomisionado).
 
-**Backups**: `n8n-backups/facturaia/facturaia-whatsapp-receptor-v2-post-g5a005-decomision-2026-07-04.json` (post) + `...pre-g5a005-2026-07-04.json` (pre).
+**Backups**: `~/facturaia/ops/n8n-backups/facturaia-whatsapp-receptor-v2-post-g5a005-decomision-2026-07-04.json` (post) + `...pre-g5a005-2026-07-04.json` (pre), ambos en `~/facturaia/ops/n8n-backups/`.
 
 **Nota**: la skill referida en CLAUDE.md como `n8n-workflow-surgical-edit` no existe con ese nombre; la edición quirúrgica se hizo por API n8n directa (GET→editar copia local→validar→PUT). Nodos huérfanos pre-existentes NO tocados (IF Detectar Frase Cobro, Lookup Cobro Pendiente, etc. — ya desconectados antes). El workflow inactivo con 164 nodos podría borrarse entero más adelante si no se quiere conservar histórico.

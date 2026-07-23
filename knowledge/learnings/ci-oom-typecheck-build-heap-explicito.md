@@ -21,4 +21,10 @@ env:
 Aplica también al step de `build` si usa Next (hace su propio type-check interno, más
 pesado por el bundling encima — mismo riesgo).
 
+Confirmado 2026-07-23 que no es solo GitHub Actions: en un `docker build` local sobre
+Colima con 10GB de RAM asignada, `next build` seguía haciendo OOM en el paso de
+TypeScript con el mismo heap ~2GB fijo — subir la RAM del host/VM no lo arregla, hace
+falta `NODE_OPTIONS` explícito dentro del contenedor (probado inyectándolo vía
+`docker exec -e`, no vale con solo aumentar el `--memory` de la VM).
+
 Relacionado (distinto pero cercano): [[pre-commit-hook-oom-con-dev-server]].

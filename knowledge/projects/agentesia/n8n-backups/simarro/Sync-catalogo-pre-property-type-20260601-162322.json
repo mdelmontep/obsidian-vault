@@ -1,0 +1,2157 @@
+{
+  "updatedAt": "2026-05-27T17:14:02.712Z",
+  "createdAt": "2026-05-03T20:19:16.125Z",
+  "id": "nzxtGnblEFwwkofO",
+  "name": "Sync_catalogo_idealista",
+  "description": "Sync diario Idealista. Apify webhook → embeddings → upsert Supabase → sweep removidas → enriquecimiento (thumbnail hosted + traducción EN→ES) → Google Sheet.",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "apify_simarro_done",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "8c942110-3bbe-408f-bccc-6f2040b2dc32",
+      "name": "Apify Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        208
+      ],
+      "webhookId": "2f10e74d-a22e-4f6e-bd01-fcb00178d767"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.body.resource.defaultDatasetId }}/items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "clean",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "4f49dfc1-341a-4013-a195-9f70f3b00132",
+      "name": "Fetch Apify Dataset",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        192
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VRvbo0uafY0t80fV",
+          "name": "Apify Bearer Simarro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all().map(i => i.json);\nconst properties = [];\nconst texts = [];\nconst today = new Date().toISOString();\n\n// Parsea \"agente: X\" de la descripción (última aparición), normaliza (minúsculas, sin\n// acentos, sin puntuación). Devuelve el texto normalizado o null. La resolución a un\n// calendar_id concreto la hace la reserva contra la tabla `agents` (single source).\nfunction parseAgent(desc) {\n  if (!desc) return null;\n  const matches = [...String(desc).matchAll(/agente?\\s*:\\s*([^\\n\\r.;,]+)/gi)]; // casa 'Agent:' (EN) y 'agente:' (ES)\n  if (!matches.length) return null;\n  const norm = matches[matches.length - 1][1]\n    .toLowerCase()\n    .normalize('NFD').replace(/[̀-ͯ]/g, '')\n    .replace(/[^a-z0-9\\s]/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n  return norm || null;\n}\n\nfor (const it of items) {\n  const url = it.url || '';\n  const m = url.match(/\\/inmueble\\/(\\d+)\\//);\n  if (!m) continue;\n  const idealista_id = m[1];\n\n  const text = [\n    it.address || '',\n    it.municipality || '',\n    it.province || '',\n    it.description || ''\n  ].filter(Boolean).join(' . ').slice(0, 8000);\n\n  properties.push({\n    idealista_id,\n    url,\n    thumbnail: it.thumbnail || null,\n    price: it.price ?? null,\n    address: it.address || null,\n    municipality: it.municipality || null,\n    province: it.province || null,\n    description: it.description || null,\n    rooms: it.rooms ?? null,\n    bathrooms: it.bathrooms ?? null,\n    size_m2: it.size ?? null,\n    agent: parseAgent(it.description),\n    status: 'active',\n    last_seen_at: today,\n    raw: it\n  });\n  texts.push(text);\n}\n\nreturn [{ json: { properties, texts, sweep_cutoff: today } }];\n"
+      },
+      "id": "d2575545-3a34-4f35-8f9d-6bd0605e5cee",
+      "name": "Prepare Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: \"text-embedding-3-small\", input: $json.texts }) }}",
+        "options": {}
+      },
+      "id": "774f1fac-aa54-4148-94f0-d687a2730401",
+      "name": "OpenAI Embeddings Batch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "h2VznKpN6CYCnDxr",
+          "name": "OpenAI - Simarro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst embResp = $input.first().json;\nconst prepared = $('Prepare Items').first().json;\nconst properties = prepared.properties;\nconst sweep_cutoff = prepared.sweep_cutoff;\n\nif (!embResp.data || embResp.data.length !== properties.length) {\n  throw new Error('Embedding count mismatch: ' + (embResp.data?.length ?? 0) + ' vs ' + properties.length);\n}\n\nconst sorted = [...embResp.data].sort((a, b) => a.index - b.index);\nconst enriched = properties.map((p, i) => ({\n  ...p,\n  embedding: sorted[i].embedding\n}));\n\nreturn [{ json: { properties: enriched, sweep_cutoff } }];\n"
+      },
+      "id": "345e4820-0cd4-48c5-87d6-21f8aab558a7",
+      "name": "Merge Embeddings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://supabase-simarro.agentesia.madrid/rest/v1/properties",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "on_conflict",
+              "value": "idealista_id"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.properties) }}",
+        "options": {}
+      },
+      "id": "d77d149e-610e-4d59-b7df-ce040a44b7a5",
+      "name": "Bulk Upsert Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1120,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "https://supabase-simarro.agentesia.madrid/rest/v1/properties",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "last_seen_at",
+              "value": "=lt.{{ $('Merge Embeddings').first().json.sweep_cutoff }}"
+            },
+            {
+              "name": "status",
+              "value": "eq.active"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"removed\", removed_at: $('Merge Embeddings').first().json.sweep_cutoff }) }}",
+        "options": {}
+      },
+      "id": "3cb9da4b-f9b7-4b30-823d-9eff0881251f",
+      "name": "Sweep Removed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1344,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://supabase-simarro.agentesia.madrid/rest/v1/properties",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "eq.active"
+            },
+            {
+              "name": "select",
+              "value": "idealista_id,url,thumbnail,thumbnail_hosted,price,address,municipality,rooms,bathrooms,size_m2,description,last_seen_at,raw,agent"
+            },
+            {
+              "name": "order",
+              "value": "address.asc"
+            },
+            {
+              "name": "limit",
+              "value": "1000"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c6ce3015-6abf-4c01-bc94-d363b42c3a4e",
+      "name": "Fetch Active Properties",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1568,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.all();\nconst arr = (input.length === 1 && Array.isArray(input[0].json))\n  ? input[0].json\n  : input.map(i => i.json);\n\nconst tipoMap = {\n  flat:'Piso', house:'Casa', chalet:'Chalet', duplex:'Dúplex',\n  penthouse:'Ático', studio:'Estudio', premise:'Local',\n  office:'Oficina', garage:'Garaje', land:'Terreno'\n};\n\nreturn arr.map(p => {\n  const raw = p.raw || {};\n  const tipoRaw = raw.propertyType || raw.typology || raw.property_type || '';\n  const tipo = tipoMap[tipoRaw] || tipoRaw || '';\n  const foto = p.thumbnail ? `=IMAGE(\"${p.thumbnail}\")` : '';\n  const precio = p.price ? `€${Number(p.price).toLocaleString('es-ES')}` : '';\n  const actualizado = p.last_seen_at ? p.last_seen_at.split('T')[0] : '';\n  const desc = p.description || '';\n\n  // Galería: top 10 URLs de la primera ráfaga de imágenes de Apify.\n  const imagesSource = Array.isArray(raw?.multimedia?.images)\n    ? raw.multimedia.images.map(x => x && x.url).filter(Boolean).slice(0, 10)\n    : [];\n\n  return { json: {\n    Foto: foto,\n    Referencia: p.idealista_id || '',\n    Agente: p.agent || '',\n    Tipo: tipo,\n    Direccion: p.address || '',\n    Municipio: p.municipality || '',\n    Precio: precio,\n    m2: p.size_m2 || '',\n    Hab: p.rooms || '',\n    Banos: p.bathrooms || '',\n    URL: p.url || '',\n    Descripcion: desc,\n    Actualizado: actualizado,\n    thumbnail_url: p.thumbnail || '',\n    thumbnail_hosted: p.thumbnail_hosted || '',\n    imagesSource: imagesSource\n  }};\n});"
+      },
+      "id": "e9d13a4c-edbb-4dac-9d15-4d81f6aa808a",
+      "name": "Split Properties",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.thumbnail_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "a9733147-c23c-4e5e-b41c-071a80b235f1",
+      "name": "Download Thumbnail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2016,
+        0
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://supabase-simarro.agentesia.madrid/storage/v1/object/thumbnails/{{ $('Split Properties').item.json.Referencia }}.jpg",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-upsert",
+              "value": "true"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "e237c173-4444-4686-a459-e64b2da062b5",
+      "name": "Upload Thumbnail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst original = $('Split Properties').item.json;\nif (original.thumbnail_hosted) {\n  return { json: { ...original } };\n}\nconst uploadResult = $input.item.json;\nconst uploadOk = !uploadResult.error && original.thumbnail_url;\nconst thumbnailHosted = uploadOk\n  ? 'https://supabase-simarro.agentesia.madrid/storage/v1/object/public/thumbnails/' + original.Referencia + '.jpg'\n  : '';\nreturn { json: { ...original, thumbnail_hosted: thumbnailHosted } };\n"
+      },
+      "id": "80e7847b-0e60-4d32-8e1a-e0da9affd6ef",
+      "name": "Set thumbnail_hosted",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4o-mini\",\n  \"response_format\": {\"type\": \"json_object\"},\n  \"messages\": [\n    {\"role\":\"system\",\"content\":\"Traductor inmobiliario EN→ES España. Recibes texto con prefijos 'Direccion:' y 'Descripcion:'. Devuelve JSON con keys exactos {Direccion, Descripcion} con cada campo traducido al español natural de España. Si ya está en español, mantén original. Conserva nombres propios. Mapeo tipos: Detached house→Chalet, Flat/apartment→Piso, Penthouse→Ático, Duplex→Dúplex, Studio→Estudio, Terraced house→Adosado, Semi-detached→Pareado. Si el texto acaba con una línea tipo 'Agent: X' o 'Agente: X', CONSÉRVALA al final como 'Agente: X' con el nombre intacto. Tono comercial sobrio, números exactos. Solo JSON.\"},\n    {\"role\":\"user\",\"content\": {{ JSON.stringify('Direccion: ' + ($json.Direccion || '') + '\\nDescripcion: ' + ($json.Descripcion || '')) }} }\n  ],\n  \"max_tokens\":800,\"temperature\":0.2\n}",
+        "options": {}
+      },
+      "id": "126be81c-e44e-4e8f-9e18-63a4556fa0c2",
+      "name": "Translate Description",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2688,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "openAiApi": {
+          "id": "h2VznKpN6CYCnDxr",
+          "name": "OpenAI - Simarro"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const original = $('Set thumbnail_hosted').item.json;\nlet parsed = {};\ntry {\n  parsed = JSON.parse($json.choices[0].message.content.trim());\n} catch (e) { parsed = {}; }\nreturn { json: {\n  ...original,\n  Direccion: parsed.Direccion || original.Direccion,\n  Descripcion: parsed.Descripcion || original.Descripcion\n} };"
+      },
+      "id": "ee4677d8-f20e-4011-a57b-c4cb4bea7c51",
+      "name": "Merge Translation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2912,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://supabase-simarro.agentesia.madrid/rest/v1/properties?idealista_id=eq.{{ $json.Referencia }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ thumbnail_hosted: $json.thumbnail_hosted, address: $json.Direccion, description: $json.Descripcion }) }}",
+        "options": {}
+      },
+      "id": "089d3792-0625-4b96-a0e0-4453a9c7c93f",
+      "name": "PATCH thumbnail_hosted",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3136,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1B5oVJ3mascNu8z7UNxXaQhMmibKnni1LClEMMI7hl7Y",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Foto": "={{ $(\"Merge Translation\").item.json.Foto }}",
+            "Referencia": "={{ $(\"Merge Translation\").item.json.Referencia }}",
+            "Tipo": "={{ $(\"Merge Translation\").item.json.Tipo }}",
+            "Dirección": "={{ $(\"Merge Translation\").item.json.Direccion }}",
+            "Municipio": "={{ $(\"Merge Translation\").item.json.Municipio }}",
+            "Precio": "={{ $(\"Merge Translation\").item.json.Precio }}",
+            "m²": "={{ $(\"Merge Translation\").item.json.m2 }}",
+            "Hab.": "={{ $(\"Merge Translation\").item.json.Hab }}",
+            "Baños": "={{ $(\"Merge Translation\").item.json.Banos }}",
+            "URL": "={{ $(\"Merge Translation\").item.json.URL }}",
+            "Descripción": "={{ $(\"Merge Translation\").item.json.Descripcion }}",
+            "Actualizado": "={{ $(\"Merge Translation\").item.json.Actualizado }}",
+            "Agente": "={{ $('Merge Translation').item.json.Agente }}"
+          },
+          "schema": [
+            {
+              "id": "Foto",
+              "displayName": "Foto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Dirección",
+              "displayName": "Dirección",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Municipio",
+              "displayName": "Municipio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Precio",
+              "displayName": "Precio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "m²",
+              "displayName": "m²",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hab.",
+              "displayName": "Hab.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Baños",
+              "displayName": "Baños",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripción",
+              "displayName": "Descripción",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Actualizado",
+              "displayName": "Actualizado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Agente",
+              "displayName": "Agente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "matchingColumns": [
+            "Referencia"
+          ]
+        },
+        "options": {}
+      },
+      "id": "e57c044c-100d-42fa-ba6e-adb4282ceeb9",
+      "name": "Write to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        3360,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lgEol9bvQdobB5p0",
+          "name": "Simarro Sheets"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://simarro-web.agentesia.madrid/api/properties/revalidate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 2dd05a334af590642cfff373f56bec135a98fd4f1340870479781399eb135842"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3632,
+        240
+      ],
+      "name": "Revalidate Web",
+      "id": "b8b2ca23-7d02-42e6-a1f9-ae60215364a6",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recibe N items (uno por propiedad) con campo URL. Emite UN item con\n// el array property_urls para enviar al actor Apify en modo detail.\nconst urls = [];\nconst seen = new Set();\nfor (const item of $input.all()) {\n  const p = item.json || {};\n  const u = p.URL || p.url;\n  if (typeof u === 'string' && u && !seen.has(u)) {\n    seen.add(u);\n    urls.push({ url: u });\n  }\n}\nreturn [{ json: { property_urls: urls } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        240
+      ],
+      "name": "Aggregate Detail URLs",
+      "id": "1b598647-8bf8-437d-b8f7-6fa6601fa998"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2768,
+        240
+      ],
+      "name": "Download Gallery Image",
+      "id": "73b4c4fd-0ead-4978-a5fb-17f368243b71",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://supabase-simarro.agentesia.madrid/storage/v1/object/gallery/{{ $('Split Detail Images').item.json.idealista_id }}/{{ $('Split Detail Images').item.json.index }}.jpg",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-upsert",
+              "value": "true"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2992,
+        240
+      ],
+      "name": "Upload Gallery Image",
+      "id": "9d3d8746-8549-483a-bccc-478013aa7550",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recibe N items, cada uno con el Key devuelto por Storage tras el upload.\n// Parsea idealista_id e index del Key y agrupa.\nconst base = 'https://supabase-simarro.agentesia.madrid/storage/v1/object/public';\nconst grouped = new Map();\n\nfor (const it of $input.all()) {\n  const j = it.json || {};\n  const key = j.Key || j.key || '';\n  const m = String(key).match(/^gallery\\/([^/]+)\\/(\\d+)\\.jpg$/);\n  if (!m) continue;\n  const id = m[1];\n  const idx = parseInt(m[2], 10);\n  if (!Number.isFinite(idx)) continue;\n  if (!grouped.has(id)) grouped.set(id, []);\n  grouped.get(id)[idx] = `${base}/${key}`;\n}\n\nconst out = [];\nfor (const [id, urls] of grouped.entries()) {\n  const clean = urls.filter(Boolean);\n  if (clean.length === 0) continue;\n  out.push({ json: { idealista_id: id, images_hosted: clean } });\n}\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3216,
+        240
+      ],
+      "name": "Aggregate Gallery URLs",
+      "id": "6996f34b-5cfe-48f6-afd5-9eaff9725737"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://supabase-simarro.agentesia.madrid/rest/v1/properties?idealista_id=eq.{{ $json.idealista_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ images_hosted: $json.images_hosted }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3440,
+        240
+      ],
+      "name": "PATCH images_hosted",
+      "id": "6f4d75e6-59ee-4c45-94a6-239df8fa463e",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Wm7JL1tsxiWyElqt",
+          "name": "Supabase Simarro"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/dz_omar~idealista-scraper-api/run-sync-get-dataset-items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer [REDACTED-APIFY_TOKEN]"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ Property_urls: $json.property_urls, desiredResults: 10 }) }}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2208,
+        240
+      ],
+      "name": "Fetch Detail Apify",
+      "id": "5194b74f-3899-4dbe-bea7-d8fd39b49d0c",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recibe la response del actor en modo DETAIL (array de items con multimedia.images[]).\n// Emite N×M items con {idealista_id, url, index} para subir al bucket gallery.\nconst out = [];\nfor (const it of $input.all()) {\n  const arr = Array.isArray(it.json) ? it.json : (Array.isArray(it.json?.body) ? it.json.body : [it.json]);\n  for (const item of arr) {\n    if (!item || typeof item !== 'object') continue;\n    const id = item.adid || item.propertyId || item.propertyCode;\n    if (!id) continue;\n    const imgs = item.multimedia?.images || [];\n    if (!Array.isArray(imgs)) continue;\n    imgs.slice(0, 10).forEach((img, index) => {\n      const u = img && img.url;\n      if (typeof u === 'string' && u) {\n        out.push({ json: { idealista_id: String(id), url: u, index } });\n      }\n    });\n  }\n}\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2528,
+        240
+      ],
+      "name": "Split Detail Images",
+      "id": "788e7110-f206-47a1-856d-bf7c2f19d68d"
+    }
+  ],
+  "connections": {
+    "Apify Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Apify Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Apify Dataset": {
+      "main": [
+        [
+          {
+            "node": "Prepare Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Items": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Embeddings Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Embeddings Batch": {
+      "main": [
+        [
+          {
+            "node": "Merge Embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Embeddings": {
+      "main": [
+        [
+          {
+            "node": "Bulk Upsert Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bulk Upsert Supabase": {
+      "main": [
+        [
+          {
+            "node": "Sweep Removed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sweep Removed": {
+      "main": [
+        [
+          {
+            "node": "Fetch Active Properties",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Active Properties": {
+      "main": [
+        [
+          {
+            "node": "Split Properties",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Properties": {
+      "main": [
+        [
+          {
+            "node": "Download Thumbnail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aggregate Detail URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "Upload Thumbnail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "Set thumbnail_hosted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set thumbnail_hosted": {
+      "main": [
+        [
+          {
+            "node": "Translate Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate Description": {
+      "main": [
+        [
+          {
+            "node": "Merge Translation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Translation": {
+      "main": [
+        [
+          {
+            "node": "PATCH thumbnail_hosted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH thumbnail_hosted": {
+      "main": [
+        [
+          {
+            "node": "Write to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Gallery Image": {
+      "main": [
+        [
+          {
+            "node": "Upload Gallery Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Gallery Image": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Gallery URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Gallery URLs": {
+      "main": [
+        [
+          {
+            "node": "PATCH images_hosted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Detail URLs": {
+      "main": [
+        [
+          {
+            "node": "Fetch Detail Apify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Detail Apify": {
+      "main": [
+        [
+          {
+            "node": "Split Detail Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Detail Images": {
+      "main": [
+        [
+          {
+            "node": "Download Gallery Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH images_hosted": {
+      "main": [
+        [
+          {
+            "node": "Revalidate Web",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate",
+    "timezone": "Europe/Madrid"
+  },
+  "staticData": {
+    "node:Sync diario 8:15": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "pinData": {},
+  "versionId": "599005bc-feae-47d7-a58c-6147be46b677",
+  "activeVersionId": "599005bc-feae-47d7-a58c-6147be46b677",
+  "versionCounter": 155,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-05-03T20:19:16.125Z",
+      "createdAt": "2026-05-03T20:19:16.125Z",
+      "role": "workflow:owner",
+      "workflowId": "nzxtGnblEFwwkofO",
+      "projectId": "KzDhDvn7gXhn9Jke",
+      "project": {
+        "updatedAt": "2026-04-14T19:24:58.568Z",
+        "createdAt": "2026-04-14T17:51:20.172Z",
+        "id": "KzDhDvn7gXhn9Jke",
+        "name": "agentesia madrid <info@agentesia.madrid>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "e11c9a81-3802-42a8-8b75-5d3028942946"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-27T17:14:02.713Z",
+    "createdAt": "2026-05-27T17:14:02.713Z",
+    "versionId": "599005bc-feae-47d7-a58c-6147be46b677",
+    "workflowId": "nzxtGnblEFwwkofO",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "apify_simarro_done",
+          "responseMode": "lastNode",
+          "options": {}
+        },
+        "id": "8c942110-3bbe-408f-bccc-6f2040b2dc32",
+        "name": "Apify Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -64,
+          208
+        ],
+        "webhookId": "2f10e74d-a22e-4f6e-bd01-fcb00178d767"
+      },
+      {
+        "parameters": {
+          "url": "=https://api.apify.com/v2/datasets/{{ $json.body.resource.defaultDatasetId }}/items",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "clean",
+                "value": "1"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          }
+        },
+        "id": "4f49dfc1-341a-4013-a195-9f70f3b00132",
+        "name": "Fetch Apify Dataset",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          224,
+          192
+        ],
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "VRvbo0uafY0t80fV",
+            "name": "Apify Bearer Simarro"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "\nconst items = $input.all().map(i => i.json);\nconst properties = [];\nconst texts = [];\nconst today = new Date().toISOString();\n\n// Parsea \"agente: X\" de la descripción (última aparición), normaliza (minúsculas, sin\n// acentos, sin puntuación). Devuelve el texto normalizado o null. La resolución a un\n// calendar_id concreto la hace la reserva contra la tabla `agents` (single source).\nfunction parseAgent(desc) {\n  if (!desc) return null;\n  const matches = [...String(desc).matchAll(/agente?\\s*:\\s*([^\\n\\r.;,]+)/gi)]; // casa 'Agent:' (EN) y 'agente:' (ES)\n  if (!matches.length) return null;\n  const norm = matches[matches.length - 1][1]\n    .toLowerCase()\n    .normalize('NFD').replace(/[̀-ͯ]/g, '')\n    .replace(/[^a-z0-9\\s]/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n  return norm || null;\n}\n\nfor (const it of items) {\n  const url = it.url || '';\n  const m = url.match(/\\/inmueble\\/(\\d+)\\//);\n  if (!m) continue;\n  const idealista_id = m[1];\n\n  const text = [\n    it.address || '',\n    it.municipality || '',\n    it.province || '',\n    it.description || ''\n  ].filter(Boolean).join(' . ').slice(0, 8000);\n\n  properties.push({\n    idealista_id,\n    url,\n    thumbnail: it.thumbnail || null,\n    price: it.price ?? null,\n    address: it.address || null,\n    municipality: it.municipality || null,\n    province: it.province || null,\n    description: it.description || null,\n    rooms: it.rooms ?? null,\n    bathrooms: it.bathrooms ?? null,\n    size_m2: it.size ?? null,\n    agent: parseAgent(it.description),\n    status: 'active',\n    last_seen_at: today,\n    raw: it\n  });\n  texts.push(text);\n}\n\nreturn [{ json: { properties, texts, sweep_cutoff: today } }];\n"
+        },
+        "id": "d2575545-3a34-4f35-8f9d-6bd0605e5cee",
+        "name": "Prepare Items",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          448,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.openai.com/v1/embeddings",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "openAiApi",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ model: \"text-embedding-3-small\", input: $json.texts }) }}",
+          "options": {}
+        },
+        "id": "774f1fac-aa54-4148-94f0-d687a2730401",
+        "name": "OpenAI Embeddings Batch",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          672,
+          0
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "h2VznKpN6CYCnDxr",
+            "name": "OpenAI - Simarro"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "\nconst embResp = $input.first().json;\nconst prepared = $('Prepare Items').first().json;\nconst properties = prepared.properties;\nconst sweep_cutoff = prepared.sweep_cutoff;\n\nif (!embResp.data || embResp.data.length !== properties.length) {\n  throw new Error('Embedding count mismatch: ' + (embResp.data?.length ?? 0) + ' vs ' + properties.length);\n}\n\nconst sorted = [...embResp.data].sort((a, b) => a.index - b.index);\nconst enriched = properties.map((p, i) => ({\n  ...p,\n  embedding: sorted[i].embedding\n}));\n\nreturn [{ json: { properties: enriched, sweep_cutoff } }];\n"
+        },
+        "id": "345e4820-0cd4-48c5-87d6-21f8aab558a7",
+        "name": "Merge Embeddings",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          896,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://supabase-simarro.agentesia.madrid/rest/v1/properties",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "on_conflict",
+                "value": "idealista_id"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Prefer",
+                "value": "resolution=merge-duplicates,return=minimal"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify($json.properties) }}",
+          "options": {}
+        },
+        "id": "d77d149e-610e-4d59-b7df-ce040a44b7a5",
+        "name": "Bulk Upsert Supabase",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          1120,
+          0
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "https://supabase-simarro.agentesia.madrid/rest/v1/properties",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "last_seen_at",
+                "value": "=lt.{{ $('Merge Embeddings').first().json.sweep_cutoff }}"
+              },
+              {
+                "name": "status",
+                "value": "eq.active"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Prefer",
+                "value": "return=minimal"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ status: \"removed\", removed_at: $('Merge Embeddings').first().json.sweep_cutoff }) }}",
+          "options": {}
+        },
+        "id": "3cb9da4b-f9b7-4b30-823d-9eff0881251f",
+        "name": "Sweep Removed",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          1344,
+          0
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "https://supabase-simarro.agentesia.madrid/rest/v1/properties",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "status",
+                "value": "eq.active"
+              },
+              {
+                "name": "select",
+                "value": "idealista_id,url,thumbnail,thumbnail_hosted,price,address,municipality,rooms,bathrooms,size_m2,description,last_seen_at,raw,agent"
+              },
+              {
+                "name": "order",
+                "value": "address.asc"
+              },
+              {
+                "name": "limit",
+                "value": "1000"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "c6ce3015-6abf-4c01-bc94-d363b42c3a4e",
+        "name": "Fetch Active Properties",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1568,
+          0
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const input = $input.all();\nconst arr = (input.length === 1 && Array.isArray(input[0].json))\n  ? input[0].json\n  : input.map(i => i.json);\n\nconst tipoMap = {\n  flat:'Piso', house:'Casa', chalet:'Chalet', duplex:'Dúplex',\n  penthouse:'Ático', studio:'Estudio', premise:'Local',\n  office:'Oficina', garage:'Garaje', land:'Terreno'\n};\n\nreturn arr.map(p => {\n  const raw = p.raw || {};\n  const tipoRaw = raw.propertyType || raw.typology || raw.property_type || '';\n  const tipo = tipoMap[tipoRaw] || tipoRaw || '';\n  const foto = p.thumbnail ? `=IMAGE(\"${p.thumbnail}\")` : '';\n  const precio = p.price ? `€${Number(p.price).toLocaleString('es-ES')}` : '';\n  const actualizado = p.last_seen_at ? p.last_seen_at.split('T')[0] : '';\n  const desc = p.description || '';\n\n  // Galería: top 10 URLs de la primera ráfaga de imágenes de Apify.\n  const imagesSource = Array.isArray(raw?.multimedia?.images)\n    ? raw.multimedia.images.map(x => x && x.url).filter(Boolean).slice(0, 10)\n    : [];\n\n  return { json: {\n    Foto: foto,\n    Referencia: p.idealista_id || '',\n    Agente: p.agent || '',\n    Tipo: tipo,\n    Direccion: p.address || '',\n    Municipio: p.municipality || '',\n    Precio: precio,\n    m2: p.size_m2 || '',\n    Hab: p.rooms || '',\n    Banos: p.bathrooms || '',\n    URL: p.url || '',\n    Descripcion: desc,\n    Actualizado: actualizado,\n    thumbnail_url: p.thumbnail || '',\n    thumbnail_hosted: p.thumbnail_hosted || '',\n    imagesSource: imagesSource\n  }};\n});"
+        },
+        "id": "e9d13a4c-edbb-4dac-9d15-4d81f6aa808a",
+        "name": "Split Properties",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1792,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.thumbnail_url }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          }
+        },
+        "id": "a9733147-c23c-4e5e-b41c-071a80b235f1",
+        "name": "Download Thumbnail",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2016,
+          0
+        ],
+        "continueOnFail": true
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://supabase-simarro.agentesia.madrid/storage/v1/object/thumbnails/{{ $('Split Properties').item.json.Referencia }}.jpg",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "x-upsert",
+                "value": "true"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "binaryData",
+          "inputDataFieldName": "data",
+          "options": {}
+        },
+        "id": "e237c173-4444-4686-a459-e64b2da062b5",
+        "name": "Upload Thumbnail",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2240,
+          0
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        },
+        "continueOnFail": true
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "jsCode": "\nconst original = $('Split Properties').item.json;\nif (original.thumbnail_hosted) {\n  return { json: { ...original } };\n}\nconst uploadResult = $input.item.json;\nconst uploadOk = !uploadResult.error && original.thumbnail_url;\nconst thumbnailHosted = uploadOk\n  ? 'https://supabase-simarro.agentesia.madrid/storage/v1/object/public/thumbnails/' + original.Referencia + '.jpg'\n  : '';\nreturn { json: { ...original, thumbnail_hosted: thumbnailHosted } };\n"
+        },
+        "id": "80e7847b-0e60-4d32-8e1a-e0da9affd6ef",
+        "name": "Set thumbnail_hosted",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2464,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.openai.com/v1/chat/completions",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "openAiApi",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"model\": \"gpt-4o-mini\",\n  \"response_format\": {\"type\": \"json_object\"},\n  \"messages\": [\n    {\"role\":\"system\",\"content\":\"Traductor inmobiliario EN→ES España. Recibes texto con prefijos 'Direccion:' y 'Descripcion:'. Devuelve JSON con keys exactos {Direccion, Descripcion} con cada campo traducido al español natural de España. Si ya está en español, mantén original. Conserva nombres propios. Mapeo tipos: Detached house→Chalet, Flat/apartment→Piso, Penthouse→Ático, Duplex→Dúplex, Studio→Estudio, Terraced house→Adosado, Semi-detached→Pareado. Si el texto acaba con una línea tipo 'Agent: X' o 'Agente: X', CONSÉRVALA al final como 'Agente: X' con el nombre intacto. Tono comercial sobrio, números exactos. Solo JSON.\"},\n    {\"role\":\"user\",\"content\": {{ JSON.stringify('Direccion: ' + ($json.Direccion || '') + '\\nDescripcion: ' + ($json.Descripcion || '')) }} }\n  ],\n  \"max_tokens\":800,\"temperature\":0.2\n}",
+          "options": {}
+        },
+        "id": "126be81c-e44e-4e8f-9e18-63a4556fa0c2",
+        "name": "Translate Description",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2688,
+          0
+        ],
+        "retryOnFail": true,
+        "maxTries": 3,
+        "waitBetweenTries": 2000,
+        "credentials": {
+          "openAiApi": {
+            "id": "h2VznKpN6CYCnDxr",
+            "name": "OpenAI - Simarro"
+          }
+        },
+        "continueOnFail": true
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "jsCode": "const original = $('Set thumbnail_hosted').item.json;\nlet parsed = {};\ntry {\n  parsed = JSON.parse($json.choices[0].message.content.trim());\n} catch (e) { parsed = {}; }\nreturn { json: {\n  ...original,\n  Direccion: parsed.Direccion || original.Direccion,\n  Descripcion: parsed.Descripcion || original.Descripcion\n} };"
+        },
+        "id": "ee4677d8-f20e-4011-a57b-c4cb4bea7c51",
+        "name": "Merge Translation",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2912,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://supabase-simarro.agentesia.madrid/rest/v1/properties?idealista_id=eq.{{ $json.Referencia }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Prefer",
+                "value": "return=minimal"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ thumbnail_hosted: $json.thumbnail_hosted, address: $json.Direccion, description: $json.Descripcion }) }}",
+          "options": {}
+        },
+        "id": "089d3792-0625-4b96-a0e0-4453a9c7c93f",
+        "name": "PATCH thumbnail_hosted",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          3136,
+          0
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        },
+        "continueOnFail": true
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1B5oVJ3mascNu8z7UNxXaQhMmibKnni1LClEMMI7hl7Y",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "0",
+            "mode": "id"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Foto": "={{ $(\"Merge Translation\").item.json.Foto }}",
+              "Referencia": "={{ $(\"Merge Translation\").item.json.Referencia }}",
+              "Tipo": "={{ $(\"Merge Translation\").item.json.Tipo }}",
+              "Dirección": "={{ $(\"Merge Translation\").item.json.Direccion }}",
+              "Municipio": "={{ $(\"Merge Translation\").item.json.Municipio }}",
+              "Precio": "={{ $(\"Merge Translation\").item.json.Precio }}",
+              "m²": "={{ $(\"Merge Translation\").item.json.m2 }}",
+              "Hab.": "={{ $(\"Merge Translation\").item.json.Hab }}",
+              "Baños": "={{ $(\"Merge Translation\").item.json.Banos }}",
+              "URL": "={{ $(\"Merge Translation\").item.json.URL }}",
+              "Descripción": "={{ $(\"Merge Translation\").item.json.Descripcion }}",
+              "Actualizado": "={{ $(\"Merge Translation\").item.json.Actualizado }}",
+              "Agente": "={{ $('Merge Translation').item.json.Agente }}"
+            },
+            "schema": [
+              {
+                "id": "Foto",
+                "displayName": "Foto",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Referencia",
+                "displayName": "Referencia",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Tipo",
+                "displayName": "Tipo",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Dirección",
+                "displayName": "Dirección",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Municipio",
+                "displayName": "Municipio",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Precio",
+                "displayName": "Precio",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "m²",
+                "displayName": "m²",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Hab.",
+                "displayName": "Hab.",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Baños",
+                "displayName": "Baños",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "URL",
+                "displayName": "URL",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Descripción",
+                "displayName": "Descripción",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Actualizado",
+                "displayName": "Actualizado",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Agente",
+                "displayName": "Agente",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "matchingColumns": [
+              "Referencia"
+            ]
+          },
+          "options": {}
+        },
+        "id": "e57c044c-100d-42fa-ba6e-adb4282ceeb9",
+        "name": "Write to Sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          3360,
+          0
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lgEol9bvQdobB5p0",
+            "name": "Simarro Sheets"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://simarro-web.agentesia.madrid/api/properties/revalidate",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer 2dd05a334af590642cfff373f56bec135a98fd4f1340870479781399eb135842"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {
+            "timeout": 10000
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          3632,
+          240
+        ],
+        "name": "Revalidate Web",
+        "id": "b8b2ca23-7d02-42e6-a1f9-ae60215364a6",
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Recibe N items (uno por propiedad) con campo URL. Emite UN item con\n// el array property_urls para enviar al actor Apify en modo detail.\nconst urls = [];\nconst seen = new Set();\nfor (const item of $input.all()) {\n  const p = item.json || {};\n  const u = p.URL || p.url;\n  if (typeof u === 'string' && u && !seen.has(u)) {\n    seen.add(u);\n    urls.push({ url: u });\n  }\n}\nreturn [{ json: { property_urls: urls } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2016,
+          240
+        ],
+        "name": "Aggregate Detail URLs",
+        "id": "1b598647-8bf8-437d-b8f7-6fa6601fa998"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.url }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2768,
+          240
+        ],
+        "name": "Download Gallery Image",
+        "id": "73b4c4fd-0ead-4978-a5fb-17f368243b71",
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://supabase-simarro.agentesia.madrid/storage/v1/object/gallery/{{ $('Split Detail Images').item.json.idealista_id }}/{{ $('Split Detail Images').item.json.index }}.jpg",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "x-upsert",
+                "value": "true"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "binaryData",
+          "inputDataFieldName": "data",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2992,
+          240
+        ],
+        "name": "Upload Gallery Image",
+        "id": "9d3d8746-8549-483a-bccc-478013aa7550",
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Recibe N items, cada uno con el Key devuelto por Storage tras el upload.\n// Parsea idealista_id e index del Key y agrupa.\nconst base = 'https://supabase-simarro.agentesia.madrid/storage/v1/object/public';\nconst grouped = new Map();\n\nfor (const it of $input.all()) {\n  const j = it.json || {};\n  const key = j.Key || j.key || '';\n  const m = String(key).match(/^gallery\\/([^/]+)\\/(\\d+)\\.jpg$/);\n  if (!m) continue;\n  const id = m[1];\n  const idx = parseInt(m[2], 10);\n  if (!Number.isFinite(idx)) continue;\n  if (!grouped.has(id)) grouped.set(id, []);\n  grouped.get(id)[idx] = `${base}/${key}`;\n}\n\nconst out = [];\nfor (const [id, urls] of grouped.entries()) {\n  const clean = urls.filter(Boolean);\n  if (clean.length === 0) continue;\n  out.push({ json: { idealista_id: id, images_hosted: clean } });\n}\nreturn out;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          3216,
+          240
+        ],
+        "name": "Aggregate Gallery URLs",
+        "id": "6996f34b-5cfe-48f6-afd5-9eaff9725737"
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://supabase-simarro.agentesia.madrid/rest/v1/properties?idealista_id=eq.{{ $json.idealista_id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "supabaseApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Prefer",
+                "value": "return=minimal"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ images_hosted: $json.images_hosted }) }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          3440,
+          240
+        ],
+        "name": "PATCH images_hosted",
+        "id": "6f4d75e6-59ee-4c45-94a6-239df8fa463e",
+        "credentials": {
+          "supabaseApi": {
+            "id": "Wm7JL1tsxiWyElqt",
+            "name": "Supabase Simarro"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.apify.com/v2/acts/dz_omar~idealista-scraper-api/run-sync-get-dataset-items",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer [REDACTED-APIFY_TOKEN]"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ Property_urls: $json.property_urls, desiredResults: 10 }) }}",
+          "options": {
+            "timeout": 180000
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          2208,
+          240
+        ],
+        "name": "Fetch Detail Apify",
+        "id": "5194b74f-3899-4dbe-bea7-d8fd39b49d0c",
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Recibe la response del actor en modo DETAIL (array de items con multimedia.images[]).\n// Emite N×M items con {idealista_id, url, index} para subir al bucket gallery.\nconst out = [];\nfor (const it of $input.all()) {\n  const arr = Array.isArray(it.json) ? it.json : (Array.isArray(it.json?.body) ? it.json.body : [it.json]);\n  for (const item of arr) {\n    if (!item || typeof item !== 'object') continue;\n    const id = item.adid || item.propertyId || item.propertyCode;\n    if (!id) continue;\n    const imgs = item.multimedia?.images || [];\n    if (!Array.isArray(imgs)) continue;\n    imgs.slice(0, 10).forEach((img, index) => {\n      const u = img && img.url;\n      if (typeof u === 'string' && u) {\n        out.push({ json: { idealista_id: String(id), url: u, index } });\n      }\n    });\n  }\n}\nreturn out;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2528,
+          240
+        ],
+        "name": "Split Detail Images",
+        "id": "788e7110-f206-47a1-856d-bf7c2f19d68d"
+      }
+    ],
+    "connections": {
+      "Apify Webhook": {
+        "main": [
+          [
+            {
+              "node": "Fetch Apify Dataset",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fetch Apify Dataset": {
+        "main": [
+          [
+            {
+              "node": "Prepare Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Prepare Items": {
+        "main": [
+          [
+            {
+              "node": "OpenAI Embeddings Batch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Embeddings Batch": {
+        "main": [
+          [
+            {
+              "node": "Merge Embeddings",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge Embeddings": {
+        "main": [
+          [
+            {
+              "node": "Bulk Upsert Supabase",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Bulk Upsert Supabase": {
+        "main": [
+          [
+            {
+              "node": "Sweep Removed",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sweep Removed": {
+        "main": [
+          [
+            {
+              "node": "Fetch Active Properties",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fetch Active Properties": {
+        "main": [
+          [
+            {
+              "node": "Split Properties",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Properties": {
+        "main": [
+          [
+            {
+              "node": "Download Thumbnail",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Aggregate Detail URLs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Thumbnail": {
+        "main": [
+          [
+            {
+              "node": "Upload Thumbnail",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Thumbnail": {
+        "main": [
+          [
+            {
+              "node": "Set thumbnail_hosted",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set thumbnail_hosted": {
+        "main": [
+          [
+            {
+              "node": "Translate Description",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Translate Description": {
+        "main": [
+          [
+            {
+              "node": "Merge Translation",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge Translation": {
+        "main": [
+          [
+            {
+              "node": "PATCH thumbnail_hosted",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "PATCH thumbnail_hosted": {
+        "main": [
+          [
+            {
+              "node": "Write to Sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Gallery Image": {
+        "main": [
+          [
+            {
+              "node": "Upload Gallery Image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Gallery Image": {
+        "main": [
+          [
+            {
+              "node": "Aggregate Gallery URLs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate Gallery URLs": {
+        "main": [
+          [
+            {
+              "node": "PATCH images_hosted",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate Detail URLs": {
+        "main": [
+          [
+            {
+              "node": "Fetch Detail Apify",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fetch Detail Apify": {
+        "main": [
+          [
+            {
+              "node": "Split Detail Images",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Detail Images": {
+        "main": [
+          [
+            {
+              "node": "Download Gallery Image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "PATCH images_hosted": {
+        "main": [
+          [
+            {
+              "node": "Revalidate Web",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "agentesia madrid",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-27T17:14:02.740Z",
+        "id": 826,
+        "workflowId": "nzxtGnblEFwwkofO",
+        "versionId": "599005bc-feae-47d7-a58c-6147be46b677",
+        "event": "deactivated",
+        "userId": "e11c9a81-3802-42a8-8b75-5d3028942946"
+      },
+      {
+        "createdAt": "2026-05-27T17:14:02.753Z",
+        "id": 827,
+        "workflowId": "nzxtGnblEFwwkofO",
+        "versionId": "599005bc-feae-47d7-a58c-6147be46b677",
+        "event": "activated",
+        "userId": "e11c9a81-3802-42a8-8b75-5d3028942946"
+      }
+    ]
+  }
+}
