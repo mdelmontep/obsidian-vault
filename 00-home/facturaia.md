@@ -130,7 +130,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Decisiones pendientes (producto)
 
-- **Caja y cobro (mig 549, 2026-07-23)** — (1) "Resultado neto 3T" resta cobrado (base caja) − gasto (devengo): ¿pasar `gastos_q`/`gasto_mes` a `coalesce(fecha_pago, fecha)` o dejar mixto con tooltip? (2) `fecha_cobro`/`fecha_pago` no se ven ni se editan en ninguna pantalla — ¿mostrarlas en Cobro/Pago del detail-modal con DatePicker de corrección? (3) estado `parcial` sigue fuera del forecast (resto pendiente no se proyecta).
+- ✅ **Caja y cobro (mig 549/550, 2026-07-23) — las 3 RESUELTAS por Manuel misma sesión**: (1) gasto a base caja (PR #1183 + mig 550 aplicada); (2) fecha de cobro/pago visible y corregible en el detalle (`POST /api/facturas/[id]/fecha-cobro`, solo cobros directos); (3) `parcial` se queda fuera del forecast, documentado. Mover a histórico en próximo /obsidian-1.
 - **Ofrecer skin "Cristal" a usuarios** — QA contraste/APCA en pantallas densas OK (2026-07-02, oscuro+claro); queda solo la decisión de negocio de exponerlo.
 
 - ✅ **Cutover cola OCR — RESUELTO (2026-07-08)**: ejecutado por #802 (no #800) — mig 449 aplicada a prod + cron `ocr-dispatcher` dado de alta y verificado. Queda solo el smoke (ver Smoke) y cerrar el PR #800 duplicado. Detalle en NOW.
