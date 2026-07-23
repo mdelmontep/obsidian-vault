@@ -94,6 +94,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **`fix/ingesta-progress-faster-feedback` — audit discriminadores OCR staged, pendiente commit+PR** — prerequisito canary G5 (paths non-success pipeline eran silenciosos). Cambios: shapes ingesta, !res.ok webhook, float clamp progress.ts.
 - **🔴 Smoke «Convertir en recurrente» pendiente** — factura emitida real con SEPA activo → toggle topbar → cadencia/fecha/modo → confirmar entrada en `facturas_recurrentes` + redirect `/recurrentes`. (`27d0c773` en main, no verificado E2E.)
 - ✅ **Dropzone «Importar extracto bancario» (/conciliacion) CERRADA** — 2 PRs (#1148/#1151, 2026-07-22), pieza glass compartida + fix de hueco muerto. [[next-typed-routes-validator-stale-tras-cambio-de-rama]]
+- ✅ **API v1 Obras — 15 endpoints documentados en `openapi.json`, drift-guard cerrado (PR #1192, 2026-07-23)** — hallazgo al arreglar tests rotos preexistentes: los endpoints reales bajo `/api/v1/obras/*` (obras, pedidos, presupuestos, instaladores, materiales, partes, albaranes, salidas, informes) eran invisibles al SDK del portal. Hecho en worktree tras perder el primer intento (agente en background editando `main` compartido, ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]).
 - _Hitos cerrados (PR #607 «Convertir en recurrente» lista+modal+ingesta justificante, toggle topbar `27d0c773`, MCP server LIVE + Directory enviado, Resolver-con-Claude Fase 4, perf merge-train, incidente host OOM, debouncing, emisión web, Copiloto Fase 1+2 + set fiscal, stock lotes, copiloto paridad MCP 001-014, onboarding 021-030, conciliación Fase 2, modelo 349, multiempresa) → [[facturaia-historico-detallado]]._
 ## Bloqueos / esperando a terceros
 
@@ -209,7 +210,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Conciliar "Eliminar movimiento" (#663)** / **"Asignar cliente" en emitida (#659)** — deploy Dokploy confirmado, falta smoke `app.tufacturaia.com`.
 - 🟡 **Drawer notificaciones — badge "Fiscal N" vs render** (2026-07-02, bajo impacto, sin confirmar) — suma de tabs cuadra, probable límite de paginación del drawer.
 - 🟡 **`/login` botón submit programático** (2026-07-05, bajo impacto) — solo responde a Enter, no a click programático.
-- 🔴 **Presupuestos propios en OCR — validar con doc real** — clasificación `doc_type='presupuesto'` no probada con documento real (solo sintético, inconsistente).
+- 🔴 **Presupuestos propios en OCR — validar con doc real** — clasificación `doc_type='presupuesto'` no probada con documento real (solo sintético, inconsistente). El intento real (2026-07-23, `ELPHIS. 23022026 30 días.pdf`) ni siquiera llegó a OCR — lo bloqueó el bug de nombre NFD (ver línea siguiente); repetir tras el fix.
+- 🔴 **Upload con tilde/ñ tras fix NFD (PR #1191, 2026-07-23)** — re-subir `ELPHIS. 23022026 30 días.pdf` desde la bandeja de ingesta en prod y confirmar que ya no da "Error del servidor". Ver [[supabase-storage-rechaza-key-nfd-mac-chrome]].
 - **Búsqueda/filtros Clientes/Proveedores** (`77ba6322`) — falta smoke en prod tras deploy.
 - **PR #609/#608 — soporte + recurrente pill + conciliar modal glass + tour** (2026-06-30) — numeración `#N` en tickets, tour 4 pasos, `/soporte` sin 500.
 - **WhatsApp**: `consultar_vencimientos` sin resultados da alternativa; `factura.por_vencer` cron encola evento; voz multi-org no repite nota; multi-org S3-S5 (crearPresupuesto/Proforma/anularFactura/convertirPresupuesto/cambiarEmpresa) paridad con web.
