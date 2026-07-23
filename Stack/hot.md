@@ -155,6 +155,9 @@ Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo s
 
 ---
 Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mobile, claude-code-gotchas/harness, docker-infra) y transversales en [[index]]. Lo retirado sigue en `knowledge/learnings/`, no se ha borrado ningún learning.
+- **Dedup sin `external_id` por existencia (no conteo)** — dentro de un bucle que también inserta, la 2ª fila idéntica se autodetecta contra la 1ª recién insertada y se pierde. Agrupar por clave y contar antes de insertar. Ver [[hash-dedup-necesita-indice-secuencial-para-movimientos-repetidos]]
+- **Matching de cabecera CSV/XLS: normalizar igual en ambos lados** — si dos funciones comparan texto contra los mismos alias, ambas deben usar la misma normalización (acentos/puntuación/espacios) o una calla en silencio. Ver [[matching-texto-header-debe-normalizar-igual-en-ambos-lados]]
+- **`xlsx` (SheetJS) en npm = CVEs sin parchear, usar su CDN con versión fijada** — `exceljs` no lee el binario BIFF legado. Ver [[sheetjs-xlsx-npm-abandonado-cves-usar-cdn-propio-version-fijada]]
 - **db push "remote versions not found"** — checkout stale o nº migración duplicado, NO `migration repair`. Ver [[db-push-remote-versions-not-found-es-checkout-stale-o-num-duplicado-no-repair]]
 - **Supabase local en FacturaIA** — no hay config.toml: init + puertos 544xx + analytics off + dup 519. Ver [[levantar-supabase-local-en-facturaia-config-puertos-analytics-dup519]]
 - **Lock por conversación (bots chat)** — libéralo tras responder (no tras la extracción CRM lenta) + reintenta en `locked_busy`; si no, el 2º mensaje en ráfaga se descarta y el bot enmudece. Ver [[lock-conversacion-liberar-tras-responder-no-tras-trabajo-post]]
