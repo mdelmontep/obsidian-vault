@@ -119,6 +119,22 @@ git checkout <worktree-branch> -- \
 
 **Fix**: para pasos largos dentro de un subagente (build bajo gate compartido), instruir explícitamente "no uses Monitor ni background para esperar — llama al comando real directamente con Bash, foreground, y si se corta a los 120s (el harness fuerza background pase lo que pase con `timeout`), en cuanto te reanude vuelve a intentar el SIGUIENTE paso pendiente inmediatamente, no repitas comprobaciones de estado". Si aun así hay `stalled`/`killed` repetido, es señal de que la máquina está genuinamente saturada (`uptime` load avg muy por encima de nº de cores) — mejor que el ORQUESTADOR (tú) tome el control directo del gate (commit/push) con `nohup ... &`+`disown` + Monitor propio en primer plano, en vez de seguir relanzando subagentes que van a repetir el mismo fallo.
 
+## Failure mode K: worktree bajo `/private/tmp` puede desaparecer a media sesión (limpieza del SO) — commits sin push se pierden
+
+**Síntoma**: `git worktree list` sigue listando un worktree en `/private/tmp/<nombre>`, pero `ls`/`cd` da "No such file or directory" — el directorio entero desapareció sin que nadie hiciera `rm`. Otro worktree hermano en el mismo `/private/tmp` puede sobrevivir parcialmente con cientos de ficheros en estado `D` (deleted) sin commitear, como si un proceso externo hubiera ido borrando ficheros a medias.
+
+**Causa**: `/private/tmp` está sujeto a barridos de limpieza periódica del sistema; una sesión larga (>1h) puede cruzar ese barrido. Cualquier commit hecho ahí y no pusheado se pierde con el directorio (el ref del branch en el `.git` del repo PRINCIPAL sobrevive si el commit llegó a crearse antes del borrado — verificar con `git branch --list`/`git for-each-ref`; lo que se pierde es el working tree y cualquier intento de commit posterior).
+
+**Fix/blindaje**: para worktrees que vayan a vivir más de unos minutos, usar `~/wt-<nombre>` (home) en vez de `/private/tmp/...`. Si ya estás en `/tmp`, pushea cada commit en cuanto lo hagas en vez de acumular cambios sin subir.
+
+## Failure mode L: diagnóstico/fix multi-agente duplicado — otra sesión paralela ya resolvió el mismo bug minutos antes
+
+**Síntoma**: lanzas 3 agentes Explore en paralelo para diagnosticar la causa raíz de una regresión ya bien acotada (ej. 306 tests rotos con el mismo patrón de error). Los 3 confirman una única causa común — pero al ir a abrir el PR descubres que otra sesión ya diagnosticó y mergeó el fix idéntico ~15 minutos antes de que tu propio diagnóstico terminase.
+
+**Causa**: ningún registro central de "quién está mirando qué bug ahora mismo"; dos sesiones parten del mismo hallazgo (visible en un PR/CI/log compartido) y trabajan en paralelo sin saberlo.
+
+**Fix/blindaje**: antes de lanzar el fan-out de diagnóstico sobre un bug ya bien descrito, `gh issue list --search "<keywords>"` + `gh pr list --search "<keywords>" --state all` (10 segundos) — si ya hay un PR mergeado con las mismas palabras clave, cerrar como duplicado y ahorrarse los agentes. Caso real 2026-07-23: PR #1181 (mock `next/cache` en tests) ya mergeado cuando mi propio diagnóstico independiente (3 agentes) terminó de confirmar la misma causa.
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:
