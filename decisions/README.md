@@ -62,3 +62,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 036 · 2026-07-03 · [[ADR-036-export-contable-libro-registro-sin-pgc|Export contable gestorías: libro registro CSV/XLSX sin cuentas PGC; A3/Sage nativos diferidos]] (TuFacturaIA)
 - 037 · 2026-07-04 · [[ADR-037-whatsapp-verificacion-proveedor-y-cobro-embebido|WhatsApp: verificación de proveedor externo por confirmación manual del admin (no OTP, no solo-NIF) + cobro embebido vía Stripe Connect (no Redsys/Bizum v1)]] (TuFacturaIA)
 - 038 · 2026-07-17 · [[ADR-038-emitidas-importadas-registro-espejo-sin-verifactu|Facturas emitidas importadas de otro SIF: registro espejo contable sin VeriFactu (no re-emitir, no elegir usuario)]] (TuFacturaIA)
+- 039 · 2026-07-25 · [[ADR-039-org-module-config-patch-merge-con-allowlist|org_module_config.config se escribe con PATCH de merge por clave + allowlist del schema resuelto (no replace, no RPC atómica en v1)]] (TuFacturaIA)

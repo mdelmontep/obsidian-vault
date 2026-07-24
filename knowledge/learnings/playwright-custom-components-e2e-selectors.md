@@ -17,6 +17,8 @@ await page.waitForFunction(() => document.querySelectorAll('.disabled-class').le
 
 Nota: en **agent-browser** (CDP) el click sobre `[role="option"]` NO funciona igual — ver [[agent-browser-select-custom-click-opcion-no-registra-usar-teclado]].
 
+⚠️ **2026-07-25 — ese selector es un contrato, y está señalado para morir.** `label.mod-config-toggle` envolviendo el checkbox es exactamente el **doble etiquetado** que hace que el nombre accesible salga "Label Activado" y **cambie al alternarlo**. El saneamiento de módulos IA lo sustituye por `<Toggle>` (`issues/modia-015-*`) y el botón `/guardar/i` del mismo spec desaparece al pasar a autoguardado (`issues/modia-025-*`). Regla que sale de aquí: **un assert de E2E sobre un nombre de clase convierte el markup en contrato**, y el refactor que lo rompa debe actualizar el spec en el MISMO commit. Al escribir el assert, preferir rol + nombre accesible; si hay que usar la clase, dejar comentado por qué.
+
 ## Select con FloatingPortal (Floating UI / shadcn)
 
 El trigger es `<button role="combobox">`. Las opciones se montan async en body via portal.
