@@ -149,8 +149,9 @@ Claude), el runner procesó el ticket real de Borja ("permitir crear cliente sin
 PR #1198 con el diff correcto — quedó en **draft** al fallar su propio gate typecheck (lo
 diagnosticó honestamente en el PR body: deps `xlsx`/`jsdom` del sandbox, no del repo) y **nunca
 auto-mergeó**. Revisado y mergeado a mano tras verificación local. Confirma que el flujo
-completo (webhook→claim→PR→draft-si-falla-gate) funciona sin intermediario. Sigue sin
-verificar solo la atribución de time-tracking a "Manuela" en `/agency/time` (ver [[facturaia]]).
+completo (webhook→claim→PR→draft-si-falla-gate) funciona sin intermediario. **Repetido con un
+2º ticket el mismo día (PR #1199)**, mismo patrón correcto. Sigue sin verificar solo la
+atribución de time-tracking a "Manuela" en `/agency/time` (ver [[facturaia]]).
 
 Operativa ya viva:
 - Pausar el runner sin redeploy: `UPDATE system_config SET value='{"enabled":false}'

@@ -5,20 +5,19 @@ source: claude-code-session
 tags: [facturaia, migraciones, supabase, git]
 ---
 
-PR #1111 (`536_obras_uo_calcular_batch.sql`, creada 21-jul) y PR #1114
-(`536_obras_responsable.sql`, creada 21-jul, mergeada primero el mismo día)
-reservaron el mismo número `536` al abrir rama, y solo se detectó el choque
-al revisar #1111 tres días después, ya mergeada.
+PR #1111 (`536_...`) vs #1114 (`536_...`) Y, la MISMA tarde, PR #1199
+(`553_...`) vs #1111 ya renumerada a `553_...` — 2 choques el mismo día.
+Causa: la convención numera "al abrir el PR", no al crear rama; si dos
+ramas abren casi a la vez, ambas ven el mismo hueco libre.
 
-Por qué: la convención de FacturaIA numera "al abrir el PR", no al crear la
-rama — pero si dos ramas abren PR casi a la vez, ambas pueden ver el mismo
-hueco libre antes de que la primera mergee.
+Fix manual cada vez: `git mv` al primer hueco tras el máximo actual (no
+huecos históricos antiguos) + `grep -rn "mig NNN"` para actualizar solo
+las referencias cruzadas del propio archivo (ojo con otros usos del mismo
+número en comentarios de código no relacionados).
 
-Fix aplicado: `git mv` al primer hueco real tras el máximo actual (no el
-primer hueco histórico — había gaps antiguos sin rellenar) + actualizar
-cabecera del SQL y las referencias cruzadas en comentarios de código
-(`grep -rn "mig 536"` para no tocar referencias al OTRO 536 por error).
-
-Detección: `git ls-files supabase/migrations | grep -oE '/[0-9]{3}_' | sort | uniq -d`
-— correrlo tras cada merge de migración, no solo antes de abrir PR (ya es la
-4ª vez que pasa en este proyecto, ver CLAUDE.md §Migraciones "Caso real").
+**Fix sistémico 2026-07-24**: `.githooks/pre-push` ahora aborta el push si
+detecta el mismo prefijo `NNN` en dos archivos distintos (local ∪
+`origin/main`). Límite conocido: no cubre 2 ramas pusheadas ANTES de que
+cualquiera mergee (el número aún no está en `origin/main`) — solo el
+momento de rebase/push posterior al primer merge, que es cuando se
+detectó en los 2 casos reales de hoy.
