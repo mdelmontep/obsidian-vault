@@ -19,7 +19,10 @@ Dos sesiones Claude Code corriendo simultáneas en el mismo repositorio causan c
 
 6. **Tu cambio sin commitear acaba dentro del commit ajeno** (2026-06-19): la paralela hace `git add -A`/`commit -a` y arrastra tus ficheros modificados-no-staged a SU commit (caso: mi fix de `globals.css` quedó dentro de su `d4a31ad4` "fix(mobile)"). Síntoma: tu `git diff <file>` está **vacío** pero el cambio sí está en el archivo. Confirmar con `git show <hash-ajeno> -- <file>`. No se pierde (vive en su rama); re-aplica el hunk en worktree desde `origin/main` y llévalo a tu PR.
 
+7. **El conflicto de DISEÑO precede al de merge: `git worktree list` no basta, hay que leer los ficheros untracked de las otras ramas** (2026-07-25, facturaia): con 3 worktrees vivos, produje un plan maestro de conciliación que reescribía `compute_sugerencias_for_movimiento`… la misma función que otra rama (`fix/conciliacion-lote-julio`) ya estaba reescribiendo verbatim en un issue **sin commitear** (`issues/conc-fix-002-*.md`, untracked → invisible a `git log --all`). Y el fix P0 que proponía tocaba `src/lib/sepa/remesa.ts` y `src/lib/modules/catalog.ts`, los dos con cambios sin commitear en un tercer worktree. **Antes de PLANIFICAR** (no solo antes de commitear) sobre un módulo: `git worktree list` → por cada worktree ajeno, `git status --porcelain` + leer sus `issues/`/`docs/` untracked + `git log origin/main..HEAD`. El plan debe declarar qué ficheros están reclamados y **partir de la versión de la otra rama**, no de la de `origin/main`; si no, produces trabajo que hay que rehacer o que revierte el suyo al mergear.
+
 **Checklist defensivo en sesiones paralelas**:
+- Antes de PLANIFICAR sobre un módulo: `git worktree list` + `git status --porcelain` y ficheros untracked de cada worktree ajeno (ver punto 7).
 - Antes de commit: `git branch --show-current` (esperar `main` o tu rama). Si no → `git checkout main && git cherry-pick <hash>`.
 - Antes de elegir número de migración: `ls supabase/migrations/0XX*` + `git log --all --pretty=format:'%h %s' -- 'supabase/migrations/0XX*'`.
 - Stage SIEMPRE explícito: `git add file1 file2 file3`, nunca `-A` / `.`.
