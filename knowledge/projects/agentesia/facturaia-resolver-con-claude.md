@@ -144,6 +144,14 @@ Smoke pendiente (suave): abrir un ticket real y ver el **timeline de progreso en
 (Q5) → página `/resolver-con-claude` → encola. Verificar que el job en curso (claim 00:09) cerró
 bien pese al `502` de heartbeat.
 
+**✅ Smoke end-to-end CONFIRMADO 2026-07-24**: tras el fix de PR #1182 (23-jul, trust del CLI de
+Claude), el runner procesó el ticket real de Borja ("permitir crear cliente sin dni") y abrió
+PR #1198 con el diff correcto — quedó en **draft** al fallar su propio gate typecheck (lo
+diagnosticó honestamente en el PR body: deps `xlsx`/`jsdom` del sandbox, no del repo) y **nunca
+auto-mergeó**. Revisado y mergeado a mano tras verificación local. Confirma que el flujo
+completo (webhook→claim→PR→draft-si-falla-gate) funciona sin intermediario. Sigue sin
+verificar solo la atribución de time-tracking a "Manuela" en `/agency/time` (ver [[facturaia]]).
+
 Operativa ya viva:
 - Pausar el runner sin redeploy: `UPDATE system_config SET value='{"enabled":false}'
   WHERE key='resolver_claude_runner';` (reactivar con `true`). Runner vivo en `7884cacc`.
