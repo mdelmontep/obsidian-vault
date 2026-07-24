@@ -8,7 +8,14 @@ tags: [stack, index]
 
 Índice **caliente**: solo lo activo ahora (1 línea + link). El resto vive en `knowledge/learnings/`
 (recall por relevancia) y transversales en [[index]] §Transversales / [[patterns-cross-proyecto]].
-Podado 2026-07-13 (~40→15; lo retirado sigue íntegro en sus learnings, solo sale del índice rápido).
+Podado 2026-07-13 (~40→15) y 2026-07-25 (146→129: fuera las entradas cuyo learning es anterior al
+11-jul). Lo retirado sigue íntegro en `knowledge/learnings/`, solo sale del índice rápido.
+
+⚠️ **Este índice está sobrecargado, y la poda por fecha no lo arregla.** 129 entradas / ~41 KB frente
+a un objetivo de <3 KB, y **127 de ellas son de las últimas dos semanas**: no está viejo, está
+saturado, porque cada entrada ha crecido a 2-4 líneas densas en vez de la línea que pide el formato.
+Cortar por antigüedad solo quitó un 7%. Arreglarlo exige decidir **qué gana un hueco** (p. ej. solo lo
+reutilizado semanalmente, tope ~25 entradas) o partirlo por área — no otra pasada de fechas.
 
 ## Datos compartidos / config (reutilizable)
 - **Columna jsonb con varios escritores: cualquier PATCH parcial es un borrado** — si N sitios escriben la misma columna y uno hace upsert de "lo que yo conozco", borra las claves ajenas. Inventariar escritores por nombre de columna; merge por clave + allowlist + borrado solo explícito. Ver [[jsonb-compartido-varios-escritores-patch-parcial-borra-claves-ajenas]] · [[ADR-039-org-module-config-patch-merge-con-allowlist]].
