@@ -25,6 +25,14 @@ Para QA visual en paralelo se crea un `git worktree` desde `origin/main`, pero:
    `/Users/<user>/<repo>-fb`), no en el scratchpad de `/tmp`. Caso real 2026-07-20:
    push de PR bloqueado hasta mover el worktree de `/private/tmp` a `/Users`.
 
+   **Mejor alternativa (2026-07-25): `cp -al <principal>/node_modules <worktree>/node_modules`.**
+   Hardlinks en vez de symlink: instantáneo (segundos, no los ~2 min de `npm ci`), sin duplicar
+   1,3 GB reales, y Turbopack ve ficheros de verdad, así que funciona **también desde `/tmp`**.
+   Limitación: solo para leer (lint/typecheck/build). Si vas a correr `npm install`/`npm ci` en el
+   worktree, NO uses hardlinks — comparten inodo con el checkout principal. Ahí toca `npm ci` propio.
+   Al limpiar, `rm -rf node_modules` en el worktree ANTES de `git worktree remove`; verificado que el
+   contador de ficheros del principal no cambia (borrar un hardlink solo baja el nº de enlaces).
+
 Cuándo aplica esto: el checkout principal lo van cambiando de rama sesiones
 paralelas y su `.next` lo corrompen builds concurrentes → aislar commit+push en
 worktree propio (ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]).
