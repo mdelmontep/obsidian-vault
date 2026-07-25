@@ -77,6 +77,7 @@ reutilizado semanalmente, tope ~25 entradas) o partirlo por área — no otra pa
 ## Git / worktrees / merge (multi-sesión)
 - **Stash/WIP viejo puede estar ya en main** — con ramas en paralelo se vuelve obsoleto; `git log origin/main -S "<firma>"` antes de reconciliar, y `git apply --3way` con 0 diff = ya aplicado. Ver [[stash-o-wip-viejo-puede-estar-ya-en-main-verificar-antes-de-reconciliar]].
 - **`git worktree remove <path>` desde DENTRO de ese worktree** → `fatal: Unable to read current working directory`; hazlo desde otro cwd + `git worktree prune`. Detalle en `Stack/claude-code-gotchas.md`.
+- **En un worktree `.git` es FICHERO, no directorio** — detectar la raíz con `existsSync('.git')` + `basename(dir)` devuelve la RAMA como nombre de proyecto (rompió el panel de horas). Parsear el `gitdir:`. Ver [[git-worktree-dotgit-es-fichero-basename-devuelve-la-rama]].
 - **Worktree monorepo → symlinkar TAMBIÉN el node_modules anidado** (`dashboard/node_modules`), no solo el raíz; si no, tests del subpaquete fallan (`react/jsx-dev-runtime`) y parece regresión tuya. Ver [[worktree-monorepo-symlink-node-modules-anidado]].
 - **PR stackeada + squash → `rebase --onto <base-vieja>`, no rebase normal** — el squash mete la base con SHA nuevo; un rebase normal la duplica. Luego retarget a main + verificar `baseRefName`. Ver [[rebase-onto-pr-stackeada-squash-no-duplicar]].
 - **Conflicto de rebase en JSON generado (baseline/lockfile) → `checkout --ours` + regenerar con el script, nunca a mano.** Ver [[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]].
