@@ -22,3 +22,5 @@ ROLLBACK;
 - Mejor que crear org sandbox + borrar al final: si el script peta a media, no hay residuo que limpiar.
 - Las RPC no hacen llamadas externas → todo (mfa, triggers, module_events) entra en la txn y se revierte.
 - `psql "$SUPABASE_DB_URL"` (de .env.local) o pooler; el `p_user_id` solo necesita existir en auth.users.
+
+- **Variante para validar una migración ENTERA antes de aplicarla**: `sed 's/^COMMIT;/ROLLBACK;/' 5NN_x.sql > /tmp/dry.sql` y ejecutarla contra prod. El DDL de Postgres es transaccional, así que el `CREATE`/`ALTER` y su guard corren de verdad contra el schema real y se revierten. Cazó un guard que se validaba a sí mismo y un grant indebido (2026-07-25, migs 563-565). Ver [[guard-de-migracion-que-recalcula-la-formula-no-verifica-nada]].

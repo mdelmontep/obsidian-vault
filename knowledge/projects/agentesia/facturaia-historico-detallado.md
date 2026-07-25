@@ -11,3 +11,4 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-eventos]] — entradas de evento puntual con fecha propia en el header, 2026-06-16 a 2026-07-13 (informes de analítica, bug NIF proveedor, stock por lotes, hitos 06-28→07-04, dedup NOTES, ingesta, drawers, cierre de pendientes).
 - [[facturaia-historico-snapshot-2026-07-15]] — poda del NOW del hub a 2026-07-15.
 - [[facturaia-historico-snapshot-2026-07-23]] — poda más reciente del hub a 2026-07-23 (Obras: certificación/ficha/adicionales/retención de garantía, modales adaptables, nombres por UUID).
+- [[facturaia-historico-snapshot-2026-07-25]] — poda del NOW del hub a 2026-07-25: 38 entradas cerradas (Obras completo, unificación UI, Centro Fiscal, billing/cupones, Slack, seguridad npm, ticket-runner, import de extractos, API v1 Obras).
