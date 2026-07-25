@@ -46,3 +46,30 @@ Poda del `## NOW` del hub [[facturaia]] a 2026-07-25: las 38 entradas ya cerrada
 - ✅ **Botón «Enviar a Conciliación» (Bandeja IA) reconectado** (2026-06-30) — endpoint huérfano portado y reescrito, smoke real verificado. [[ocr-clasificacion-doc-type-no-factura-sin-campos]] · [[facturaia-historico-detallado]]
 - ✅ **Dropzone «Importar extracto bancario» (/conciliacion) CERRADA** — 2 PRs (#1148/#1151, 2026-07-22), pieza glass compartida + fix de hueco muerto. [[next-typed-routes-validator-stale-tras-cambio-de-rama]]
 - ✅ **API v1 Obras — 15 endpoints documentados en `openapi.json`, drift-guard cerrado (PR #1192, 2026-07-23)** — hallazgo al arreglar tests rotos preexistentes: los endpoints reales bajo `/api/v1/obras/*` (obras, pedidos, presupuestos, instaladores, materiales, partes, albaranes, salidas, informes) eran invisibles al SDK del portal. Hecho en worktree tras perder el primer intento (agente en background editando `main` compartido, ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]]).
+
+---
+
+## Módulos IA de `/agentes` — detalle cerrado de la auditoría (movido del hub, 2026-07-25)
+
+La auditoría de los 9 módulos y su plan de 27 slices están en el repo: `issues/PRD-modulos-ia-config.md`,
+`issues/modia-000-indice.md` y `issues/modia-0NN-*.md`. Lo que queda cerrado y sale del hub:
+
+- **Los tres P0 tal como se describieron**: (1) el `PATCH /api/modules/[id]` reemplazaba el jsonb entero de
+  `org_module_config` (13 escritores) → guardar la config de tesorería borraba el saldo bancario inicial
+  manual y la previsión se recalculaba desde 0 €; **cerrado en main** por otra sesión. (2) 13 ajustes
+  `implemented:true` sin consumidor, incl. `guardar_historial` (prometía no persistir y persistía),
+  `alerta_bajo_minimo` y el trío `regimen_iva`/`periodicidad_iva`/`estimacion_irpf`, duplicado divergente
+  de la tabla `perfil_fiscal`; los dos primeros cableados en main (`7f0ff046`, `debbdc28`), el trío sigue
+  abierto en `modia-012`. (3) la cadencia de cobros solo se validaba en cliente y la RPC elegía nivel con
+  cascada `>= d3` primero → con 90/3/7 el primer aviso al cliente final era el de "procedimientos de
+  reclamación formales"; auditado contra prod (`modia-024`): **0 orgs afectadas, daño teórico**.
+- **Reverificación tras el merge de SEPA (#1201)**: de 27 citas fichero:línea, 26 exactas y 1 corregida.
+  #1201 ya había adelantado parte del plan (NumberField/Input, vaciar-no-guarda-0, aria-describedby,
+  empty state con 403/error, gate por rol).
+- **Dos fixes de main que salieron de paso**: `/admin/onboarding` se prerenderizaba y llamaba a
+  `createAdminClient()` en build-time, tumbando el build entero y haciendo imposible satisfacer el
+  `pre-push` (`f1b3d3b3`); y 2 tests rojos preexistentes por un mock que no seguía a la RPC batch del
+  #1111 (`5a9e130f`).
+- **Vulnerabilidad high `brace-expansion` GHSA-mh99**: parche INALCANZABLE, probado (5.x rompe
+  `minimatch@3`); aceptada en baseline con explotabilidad nula verificada, 18 entradas documentadas,
+  `audit:check` verde. Ver [[aviso-con-parche-publicado-puede-tener-el-parche-inaplicable]].

@@ -24,5 +24,16 @@ lista es abierta y se rompe con el siguiente que alguien escriba. Un único list
 al recibir Escape, si `defaultPrevented` sale, y si no invoca solo el handler del tope de la pila.
 Cada popover/modal se registra al abrir y se desregistra al cerrar.
 
+**COROLARIO (2026-07-25, encontrado dogfoodeando, no leyendo): durante la migración la pila protege
+menos de lo que parece.** No puede hacer `stopPropagation` (dejaría sordos a los overlays que aún
+escuchan en `window`, que en el burbujeo van DESPUÉS de `document`), y `preventDefault()` **no para a un
+listener HERMANO del mismo nodo**. Si ninguno de los no migrados comprueba `defaultPrevented` —cosa que
+hay que verificar, no suponer— un overlay con listener propio que esté **DEBAJO** de una capa de la pila
+se cierra con el mismo Escape: un Escape, dos capas. Es el bug original en dirección contraria.
+Por eso la lista de pendientes se prioriza por «¿puede tener un `<Modal>` encima?», no por orden
+alfabético: ahí están los pares alcanzables (un `confirm()` sobre el detalle de factura cerraba la
+factura con la edición en curso). Y la lista canónica vive en UN sitio, el propio módulo de la pila:
+dos listas en dos ficheros dieron 8 y 8 sin solaparse cuando el grep real daba 21.
+
 Relacionado: [[migrar-submodal-a-modal-choca-con-escape-del-contenedor]] ·
 [[wcag-2-1-2-no-keyboard-trap-vs-modal-focus-trap]]

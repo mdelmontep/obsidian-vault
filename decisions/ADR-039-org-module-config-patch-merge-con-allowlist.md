@@ -49,4 +49,23 @@ renderiza el resuelto y si no coinciden hay campos que se guardan sin validar.
 - Cierra como opción el upsert de jsonb parcial desde componentes cliente (test estructural que lo
   impide).
 
-Ver [[jsonb-compartido-varios-escritores-patch-parcial-borra-claves-ajenas]] · [[facturaia]]
+## Enmienda (2026-07-25) — la allowlist de ESCRITURA es la unión, no el override
+
+Al endurecer el contrato apareció un efecto no previsto: el schema resuelto es `override ?? catálogo`,
+así que una clave que el override de `module_metadata` **no declara** salía de la allowlist y quedaba
+inescribible mientras el backend la seguía leyendo. Real en prod: el override de `fiscal` tiene 12
+campos y no incluye los 8 `pgc_cuenta_*` del export de asientos → congelados en su default.
+
+Decidido: separar **schema de render** (el override, que sí puede ocultar un campo) del **schema de
+escritura** (`writeSchema` = override ∪ catálogo, ganando el override en el campo que declara). El
+catálogo es el contrato del código; el override personaliza presentación y límites, no puede convertir
+en inescribible algo que el código lee. Descartada la alternativa de arreglar solo el dato en prod: deja
+el footgun abierto para el siguiente override que alguien recorte.
+
+Refuerzos en el mismo sentido: el `PUT /api/admin/modules/[id]` rechaza con 422 un schema que declare
+una clave reservada (antes solo lo impedía el invariante del catálogo, y el schema de BD no pasaba por
+ahí), y deja de estripar `pattern`/`patternMessage`/`maxLength`/`preview`, con un test que compara el
+Zod contra `ModuleConfigFieldDefault`.
+
+Ver [[jsonb-compartido-varios-escritores-patch-parcial-borra-claves-ajenas]] ·
+[[override-de-bd-que-sustituye-al-schema-del-codigo-congela-claves]] · [[facturaia]]
