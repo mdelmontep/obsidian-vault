@@ -26,6 +26,6 @@ Opción 3. El default arregla el caso mayoritario y quien cuadre a mano contra e
 - **Cambia el extracto bancario de las orgs que ya usan el módulo** desde la siguiente remesa: un apunte agregado en vez de uno por recibo.
 - Bastantes entidades españolas ignoran la etiqueta y aplican lo pactado en el contrato de adeudos. Es "pedirlo bien", no garantizarlo.
 - Si un banco netea las devoluciones antes de apuntar el total, el agregado deja de coincidir con `ctrl_sum` y la conciliación falla igual. No observado todavía.
-- Pendiente de confirmar en un extracto real tras la primera remesa post-deploy.
+- Fichero verificado con una remesa real el 2026-07-25 (`BtchBookg` a `true` en el XML). Queda confirmar en el extracto bancario, tras la primera remesa post-deploy, que el banco lo respeta.
 
 Ver [[btchbookg-false-contradice-la-autoconciliacion-lump-sum]] · [[facturaia-modulo-sepa-config]].
