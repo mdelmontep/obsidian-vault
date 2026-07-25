@@ -26,3 +26,8 @@ Ver [[aplicar-migracion-por-psql-y-registrar-version-cuando-el-cli-supabase-esta
 Gotcha operativo: `db push` **no imprime progreso** hasta terminar, así que parece
 colgado. Con `--debug` sí se ve qué migración está aplicando. Un push "colgado" que
 no toca la BD (comprobable con `pg_stat_activity` vacío) es buffering, no un lock.
+
+Desenlace del caso: otra sesión desbloqueó la 558 horas después y su `db push`
+repasó las 559/560 ya aplicadas **sin efecto y registrándolas**, cerrando el hueco
+del historial sin intervención. Escribirlas re-ejecutables no fue una precaución
+teórica: fue lo que hizo que la deuda se arreglase sola.
