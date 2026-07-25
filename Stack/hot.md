@@ -182,3 +182,8 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 ## macOS / utilidades
 - **SwiftBar: icono a puntos=píxeles → fija el bitmap para retina** — un PNG grande sale GIGANTE en la barra (no escala a la altura); `rep.size` en puntos (dpi>72) = pequeño y nítido. Título vacío + `| templateImage=` con espacio; relanzar SwiftBar para cargar plugin nuevo. Ver [[swiftbar-templateimage-tamano-por-puntos-no-pixeles]].
 - **`disablesleep` (dormir al cerrar tapa) no se lee con `pmset -g`** — usar `ioreg -r -c IOPMrootDomain | grep SleepDisabled`. Toggle sin contraseña vía sudoers NOPASSWD acotado. Producto `~/Tapa`. Ver [[macos-disablesleep-no-se-lee-con-pmset-usar-ioreg]].
+
+## Derivar columnas y deploy de migraciones (25-jul)
+- **Antes de derivar una columna, comprueba qué significa el campo base para CADA escritor** — el mismo `total` era bruto por OCR y neto por el form de edición: la derivada restaba dos veces. Acota con `CASE WHEN tipo=…` → NULL fuera de dominio. Ver [[derivar-columna-de-campo-cuya-semantica-cambia-segun-quien-escribe]]
+- **`floor(v*100+0.5)/100` y no `round(v,2)`** para replicar `Math.round` de JS en Postgres: divergen 1 céntimo en negativos (abonos con retención). Ver [[totales-multilinea-redondeo-por-grupo-de-iva-una-sede]]
+- **Un guard de una migración ajena bloquea el `db push` entero**, incluidas las tuyas; y `db push` no imprime progreso sin `--debug` (parece colgado). Ver [[db-push-lo-bloquea-el-guard-de-una-migracion-ajena]]

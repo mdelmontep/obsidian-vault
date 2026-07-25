@@ -13,4 +13,14 @@ Distinto de [[numeric-precision-drift-bruto-neto-iva]] (bruto↔neto) y [[sembra
 
 Recurrencia (#871, 2026-07-13): el `subtotal` NETO por línea persistido en `lineas_factura` es OTRO de esos sitios — el worker XML lo suma crudo por grupo y redondea una vez. `createDocument` (`buildLineasFactura`) lo persistía sin redondear (correcto) pero el editor de borrador (`PATCH /api/facturas/[id]`) lo redondeaba por línea (drift). Fix: exportar `subtotalLinea` y usarlo en ambos caminos. Regla: un campo con >1 camino de escritura → misma sede o diverge.
 
+Recurrencia importe cobrable (PR #1202, 2026-07-25), con la traducción a SQL: para
+que una columna GENERATED cuadre con `Math.round` de JS hay que escribir
+`floor(v * 100 + 0.5) / 100`, **no** `round(v, 2)`. `Math.round` redondea hacia +∞ y
+`round()` de Postgres se aleja del cero → divergen 1 céntimo en negativos (base
+−500,50 al 15%: −75,07 vs −75,08), o sea en abonos con retención. `floor(v + 0.5)`
+es la definición exacta de `Math.round` para todo real. Y el otro eje: la plantilla
+del PDF recomponía base e IVA desde las líneas en float, sin el redondeo por grupo,
+así que imprimía 530,53 donde la BD reclamaba 530,52. Un importe que se PERSISTE no
+se recalcula para mostrarlo: el render recibe los importes persistidos y los pinta.
+
 Recurrencia VeriFactu Fase 5 (PR #947, 2026-07-16): el MISMO Σ estaba duplicado en el trigger SQL (mig 465, que hashea `CuotaTotal` en la huella encadenada) y en el worker `process/route.ts` (que lo emite en el `<CuotaTotal>` del XML). Clave no obvia: **si el resultado de un cálculo entra en un hash encadenado calculado en BD, la réplica en la app debe cuadrar BIT A BIT** — la AEAT reconstruye la huella desde el campo del XML; una divergencia de 1 céntimo (p.ej. `Math.round` hacia +∞ vs `ROUND` numeric away-from-zero en abonos negativos) rompe la reproducción → rechazo del 100%. Fix: helper `src/lib/verifactu/cuota.ts` (`agruparCuota`/`calcularCuotaTotal`/`round2`) + property test contra oráculo que replica el SQL. El trigger SQL NO se toca (fuente del hash); el helper se alinea a él.

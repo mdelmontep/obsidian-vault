@@ -16,4 +16,11 @@ Todo lo que compara importes con el mundo exterior usa el número equivocado:
 
 Fix: **no tocar `total`** (rompe cadena VeriFactu/303/abonos). Añadir un `importe_cobrable` derivado (columna GENERATED STORED, ver [[columna-generada-stored-para-equivalente-derivado]]) y que lo consuman conciliación, SEPA y cobros. Ojo a las fórmulas: IRPF es sobre la **base**; la retención de garantía de obra es sobre el **total con IVA**. Y cuadrar el orden de redondeo con el que ya usa el 111, o los dos divergen al céntimo.
 
+**Resuelto** (PR #1202, migs 559/560 en prod 2026-07-25). Tres cosas que no eran obvias al diseñarlo:
+1. **Dos columnas, no una**: `importe_cobrable` en la divisa del DOCUMENTO (la que consumen PDF y cobros, y la unidad de `obras_retenciones.importe_retenido`) e `importe_cobrable_eur` para agregaciones y SEPA. Con solo la EUR, una factura en USD daba recordatorio 1.144,80 contra un PDF de 1.060,00: el mismo bug trasladado a la divisa.
+2. **Acotar a emitidas**: en recibidas `total` ya viene neto según quién lo escriba → doble resta. Ver [[derivar-columna-de-campo-cuya-semantica-cambia-segun-quien-escribe]].
+3. **El PDF imprime lo persistido**, no lo recalcula: recomponiéndolo en float divergía 1 céntimo del importe reclamado. Ver [[totales-multilinea-redondeo-por-grupo-de-iva-una-sede]].
+
+Y el vocabulario, que evita la mitad de los errores: `total` (fiscal) / `importe_cobrable` (total − IRPF) / `pendiente_cobrable` (menos garantía viva). No mezclarlos nunca en el mismo nombre.
+
 Detección: `grep` de quién lee `total` y clasificar en "fiscal" (correcto) vs "importe a cobrar" (bug). Relacionado: [[conciliacion-multi-señal-vs-importe-bruto-falsos-positivos]] · [[sembrar-base-desde-total-con-iva-pierde-centimo]].

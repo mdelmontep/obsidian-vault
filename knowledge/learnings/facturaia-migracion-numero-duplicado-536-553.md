@@ -21,3 +21,10 @@ detecta el mismo prefijo `NNN` en dos archivos distintos (local ∪
 cualquiera mergee (el número aún no está en `origin/main`) — solo el
 momento de rebase/push posterior al primer merge, que es cuando se
 detectó en los 2 casos reales de hoy.
+
+**Tercer choque (2026-07-25, PR #1202 con 555/556 → 559/560)**: el hook FUNCIONÓ y
+abortó el push. Coste real de renumerar: 13 ficheros, porque las referencias
+`mig NNN` viven en comentarios de código y tests, no solo en el SQL. Trampa propia de
+este caso: las OTRAS ramas habían mergeado también una 555 y una 556, así que un
+`sed` global de "mig 555" habría corrompido SUS referencias. Hay que reemplazar
+fichero a fichero comprobando de qué migración habla cada mención.
