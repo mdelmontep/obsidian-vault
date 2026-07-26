@@ -201,3 +201,4 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 - **RPC con `auth.uid()` + service_role = 'forbidden'** — 3ª vez en 3 meses; ya hay hook en `.githooks/pre-push`. Ver [[rpc-rls-authuid-vacio-en-service-role]]
 - **Universo de datos en dos sitios divergge** — el detector de cambios debe leer el universo de la misma fuente que lo guardó. Ver [[universo-de-datos-reimplementado-en-dos-sitios-divergge]]
 - **FK RESTRICT ≠ regla de negocio** — no distingue estados; la política va en la operación. Ver [[fk-restrict-no-sirve-como-regla-de-negocio-no-distingue-estados]]
+- **"Contenedor recreado, logs limpios" no verifica un cambio de env** — verifica que arrancó. La prueba es una llamada que devuelva el EFECTO (p. ej. el endpoint devuelve bajo qué identidad entra la clave). Ver [[verificar-deploy-de-env-por-comportamiento-no-por-contenedor-recreado]]
