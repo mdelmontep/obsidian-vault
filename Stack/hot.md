@@ -202,3 +202,4 @@ Temas completos por área en `Stack/<tool>.md` (supabase-cloud, frontend-css-mob
 - **Universo de datos en dos sitios divergge** — el detector de cambios debe leer el universo de la misma fuente que lo guardó. Ver [[universo-de-datos-reimplementado-en-dos-sitios-divergge]]
 - **FK RESTRICT ≠ regla de negocio** — no distingue estados; la política va en la operación. Ver [[fk-restrict-no-sirve-como-regla-de-negocio-no-distingue-estados]]
 - **"Contenedor recreado, logs limpios" no verifica un cambio de env** — verifica que arrancó. La prueba es una llamada que devuelva el EFECTO (p. ej. el endpoint devuelve bajo qué identidad entra la clave). Ver [[verificar-deploy-de-env-por-comportamiento-no-por-contenedor-recreado]]
+- **Vigilar cuesta CPU** — la monitorización puede ser el mayor consumidor de la BD; y un dead-man's-switch sin probar es indistinguible de uno roto. Ver [[vigilar-cuesta-cpu-y-puede-costar-mas-que-trabajar]]
