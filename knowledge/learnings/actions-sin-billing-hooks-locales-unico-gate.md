@@ -20,3 +20,7 @@ Reglas mientras Actions siga sin billing:
   emergencia documentada; si el hook falla por algo ajeno a tu diff, arréglalo en su propio PR primero.
 - Para que el pre-push (build) pase en un worktree hay que usar node_modules REAL (`npm ci`),
   no symlink. Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]].
+- PR abierto por un runner/bot (p.ej. "Resolver con Claude") NO pasa por los hooks locales: llega
+  con los 4 checks en rojo muriendo en ~2 s (arranque por billing, no fallos del código). Gate
+  manual antes de mergear = worktree detached sobre la rama + `git merge origin/main` (la rama
+  suele ir varios commits por detrás) + `npm ci` + lint/typecheck/vitest/build.
