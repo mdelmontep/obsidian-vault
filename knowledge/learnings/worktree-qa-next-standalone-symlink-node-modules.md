@@ -33,6 +33,13 @@ Para QA visual en paralelo se crea un `git worktree` desde `origin/main`, pero:
    Al limpiar, `rm -rf node_modules` en el worktree ANTES de `git worktree remove`; verificado que el
    contador de ficheros del principal no cambia (borrar un hardlink solo baja el nº de enlaces).
 
+5. **Monorepo con sub-app (2026-07-27, agh-iberica):** el worktree tampoco trae el `node_modules`
+   de la sub-app (`dashboard/`), que es un install aparte → el gate raíz sale **rojo con 9 ficheros**
+   por `Cannot find package 'react-dom/server'` y parece un fallo del diff. Es ENTORNO: enlazar
+   también `dashboard/node_modules` del checkout principal. Con vitest el symlink basta (el veto de
+   Turbopack del punto 4 no aplica). Comprobar el `.gitignore`: si `node_modules` está SIN barra,
+   el symlink queda ignorado y no se cuela en el commit.
+
 Cuándo aplica esto: el checkout principal lo van cambiando de rama sesiones
 paralelas y su `.next` lo corrompen builds concurrentes → aislar commit+push en
 worktree propio (ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]).

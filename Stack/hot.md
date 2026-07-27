@@ -18,6 +18,10 @@ Cortar por antigüedad solo quitó un 7%. Arreglarlo exige decidir **qué gana u
 reutilizado semanalmente, tope ~25 entradas) o partirlo por área — no otra pasada de fechas.
 
 ## Datos compartidos / config (reutilizable)
+- **El stash es compartido entre worktrees** — una sesión paralela puede recuperar tu stash y dejarte sin fix; cero `stash` en repos con worktrees. Ver [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]]
+- **Subagente que reporta «hecho, verde» sin que exista el código** — `git show --stat` + `grep` del símbolo + rojo-primero repetido por ti. Ver [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]]
+- **Arnés con asserts de eco = mide nada** — verificar contra datos sembrados y payload estructurado, no contra palabras del propio usuario. Ver [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]
+- **Escribir en una fuente y leer de otra** — el agente niega su propia escritura («no me consta» + luego la lista). Ver [[escribir-en-una-fuente-y-leer-de-otra-hace-que-el-agente-se-contradiga]]
 - **Signo que duplica otra columna divergirá** — magnitud + `CHECK (>0)`; el `ABS()` disperso es síntoma, no fix. Ver [[columna-cuyo-signo-duplica-otra-columna-divergira]]
 - **Suma cross-documento siempre sobre `*_eur`** — display del documento en su divisa + equivalente; arreglar la divisa es lo que crea la exposición de los agregados. Ver [[agregacion-monetaria-multidivisa-siempre-sobre-columna-eur]]
 - **Cuota de IVA desde cabecera: contrastar con el total** — 1 de cada 3 cabeceras no cuadra; el 303 no desglosa el soportado por tipos (AEAT). Ver [[derivar-cuota-iva-de-cabecera-contrastar-con-el-total]]

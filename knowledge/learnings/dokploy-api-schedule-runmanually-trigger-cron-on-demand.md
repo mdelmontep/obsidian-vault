@@ -66,6 +66,19 @@ Disparo manual desde la API:
 - Resultado: `true`
 - `cron_runs` 806ms success summary `{total_orgs:5, checked:3, no_alert:1, alerted:0, skipped_no_feature:2, skipped_dedupe:2, errors:0}`.
 
+## `schedule.create` — alta de un cron nuevo (2026-07-25)
+
+`POST /api/schedule.create` funciona (200 + el objeto creado con su `scheduleId`). **No inventes el payload: cópialo de un schedule que ya funciona** en el mismo compose (`schedule.list` → toma uno de molde) y sustituye solo `name`/`cronExpression`/`command`. Así heredas `shellType` y `serviceName`, que son justo los campos que hacen que el cron no se ejecute si faltan (ver [[dokploy-schedule-sin-servicename-no-se-ejecuta]]).
+
+Payload que entró bien en `tufacturaia-app`:
+
+```json
+{"name":"…","cronExpression":"25 * * * *","command":"sh /app/ops/cron/sign-call.sh /api/internal/… POST",
+ "scheduleType":"compose","composeId":"56B2b1ypWx3Xzdr06eYtG","shellType":"bash","serviceName":"facturaia","enabled":true}
+```
+
+Idempotencia: no la da la API. El script debe abortar si el `name` ya está en `schedule.list` — si no, duplica el cron.
+
 ## Cross-ref
 
 - Reference `reference-dokploy-facturaia` en memory del agente — añadir esta sección al endpoint list.

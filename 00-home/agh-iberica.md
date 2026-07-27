@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-22
+updated: 2026-07-27
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,13 +44,27 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-22 tarde) — 2 PRs nuevas de Manu (stress-testing round 2), gate verde
+## Estado (2026-07-27) — análisis de una CALL REAL: 13 fallos, 8 PRs abiertas SIN MERGEAR
 
-**#567 → PR #581** (`meeting.schedule` gana `participants`+`durationMinutes`; `CalendarEventToolInput.body` para participantes dictados sin email resoluble, visibles en el evento M365 en vez de perdidos en silencio, #115) y **#569 → PR #582** (ajuste RELATIVO de valor de oportunidad — «súbele un 20%» ya NO guarda `value:"20%"` literal: `valueAdjustmentPercent` se resuelve en `prepare()` contra el valor ACTUAL leído del store, inyectando el absoluto calculado, mismo patrón que `startAt` en meeting.schedule). Ambas con evals ×3 (prompt tocado, founder override) — casos-oro nuevos 100% limpios en las 3 corridas; el `evals:check` marcó "regresión" en ficheros NO tocados por ninguna de las dos PRs, con la MISMA excepción de red repetida golpeando un fichero entero en una sola corrida — patrón #523 (jitter de modelo/gateway), documentado en ambas PRs, no bloqueante. Gate `agente 1859-1862/188-189/3 · dashboard 322/0/0` en ambas. **Item 3 de #567** (añadir participante a una reunión YA agendada en M365 — precisa PATCH de evento Graph que no existe hoy) separado como **#580** (needs-triage, decisión de diseño). Dani en paralelo: **#568 → PR #579** (email.send cc + reenvío honesto) — Manu corrió sus evals ×3 en worktree aparte (`email-cc-routing-evals` 100%/15-15 en ambas pasadas, `evals:check` incluido; única "regresión" el mismo jitter de `commitment`/#204 sin relación) → reportado VERDE en Slack, solo queda ojo de Dani/Borja al prompt. Ver [[background-bash-io-bound-se-mata-solo-reintentar]] (gotcha de sesión: evals largos matados sin causa aparente, reintentar sin más).
+`main` sigue en **`7023395`** — nada de esto está en prod todavía. Origen: llamada de voz real de Manu (`call_530a8af9…`, 25-jul, 6m28s, **terminó colgando dentro de un bucle**), traída por API de Retell y analizada turno a turno. **Corrige el diagnóstico del 22-jul**: esta vez NO era solo capa de voz — había fallos de brain/datos reales.
 
-## Estado (2026-07-22 mañana) — PROD VIVO · sin PRs abiertas, main al día
+**7 fixes escritos, verificados y esperando merge** (gate propio + rojo-primero comprobado a mano en cada uno; y **composición del lote probada**: las 7 mergean sin conflicto, gate `agente 1758/325/3 · dashboard 321/1/0` con las siete juntas):
+- **PR #594** (#584) el recall por cliente ve las reuniones AGENDADAS — el agente negaba una reunión que él mismo acababa de crear. Causa: [[escribir-en-una-fuente-y-leer-de-otra-hace-que-el-agente-se-contradiga]].
+- **PR #599** (#586) la negación mata el pending + el ruido de ASR no se da de alta (el bucle donde colgó: dijo «no» cinco veces).
+- **PR #596** (#585, `Refs` no `Closes`) `*.update` explícito alcanza su entidad vía `lastWrite` + dedup en `meeting.create`.
+- **PR #595** (#588) desborde a WhatsApp honesto (mandaba 1 ficha de 3 en silencio) y por nº real de items.
+- **PR #597** (#589, encadenada sobre #594) hora heredada de la reunión referida + agenda vacía informativa.
+- **PR #593** (#587) el onboarding ya no guarda «Aquí está» (muletilla del dictado) como nombre del asistente.
+- **PR #598** (#592) el escenario de smoke deja de dar falso verde → [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]. Su primera pasada con modelo real (21/21 turnos, 35/43 checks) **destapó un bug nuevo**: **#600**.
+- **PR #604** docs de cierre (nota de sesión + snapshot).
 
-**22-jul**: `main` en `7023395`, repo limpio, cero PRs abiertas. **#532 CERRADO** (meeting.update `participants` aditivo, PR #578, mergeado por Manu directo tras gate local verde) — decisión de diseño: `topics`/`nextAction` se quedan sustitutivos (contrato de #520), solo `participants` es aditivo. Borja cerró su cola completa desde Slack: **#557 mergeado** (`f41e27f`, #535-G1 confirm+composición), **#537/#558 reconciliadas** (docs stale de `PROJECT-STATUS.md` descartadas, `status-log/` aterrizado), **ojo post-hoc F2/F3 (#529/#530) sin hallazgos**. Queda SOLO para ventana de Borja (su criterio): **#521** (deixis «la última», fork revierte voz-only #247) y **tramo final de #454** (switch `routeTurn`, ya puede rebasar con #557 dentro). Gotcha operativo de la sesión: subagente colgado esperando notificación fantasma de un `npm run gate` backgroundeado — [[subagente-background-bash-no-se-autorreanuda-esperando-notificacion]].
+**SIN resolver, a criterio humano** (los dos primeros son los que más se notarán en una demo con Carlos): **#590** deletreo por defecto dentro del resumen HITL de voz + fragmentos huérfanos tras barge-in · **#591** latencia e2e **p50 3,8s / p90 4,2s** (desglosar STT/brain/LLM/TTS antes de tocar) · **#521** deíctico «los otros dos clientes» convertido en nombre de cliente (repro nuevo anotado) · **#601** corregir un campo en batch MIXTO renombraría al contacto (contrato de #142) · **#602** no existe target agregado multi-cliente · **#603** declarar `meeting.update` en el `SYSTEM_PROMPT` (redacción ya propuesta, lane de Borja) · **#600** el modo `last` del recall narra en pasado una fila con fecha futura.
+
+**Método:** dos subagentes murieron por causas ajenas (límite de gasto de la org, un 529) y **el primer intento de #586 se perdió por un `git stash` cruzado** → [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]] y [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]]. #586 acabó implementado en el hilo principal.
+
+## Estado (2026-07-22) — cerrado
+
+`main` al día y sin PRs propias al cerrar. **#532 CERRADO** (meeting.update `participants` aditivo; `topics`/`nextAction` siguen sustitutivos por contrato de #520). Round 2 de stress-testing dejó **PR #581** (#567 `meeting.schedule` gana participants+durationMinutes) y **PR #582** (#569 valor relativo de oportunidad ya no guarda `"20%"` literal), ambas aún abiertas; **#580** separado (add-after en M365, precisa PATCH de evento Graph). Dani: **PR #579** (#568 email cc), evals ×3 corridas por Manu → verde. Borja cerró su cola: #557 mergeado, #537/#558 reconciliadas, ojo post-hoc F2/F3 sin hallazgos. Gotchas de sesión: [[background-bash-io-bound-se-mata-solo-reintentar]] · [[subagente-background-bash-no-se-autorreanuda-esperando-notificacion]].
 
 ## Estado (2026-07-21) — PROD VIVO · secretaria + audit + self-recipient + coherencia prompt + BORRADO de entidades sueltas (5) + fixes de dogfooding
 

@@ -15,4 +15,6 @@ tags: [dokploy, security, secrets, api]
 - Wrapper `~/.claude/bin/dokploy-safe.sh` hace la llamada y redacta el env (por nombre de campo + por patrón de valor) → devuelve solo metadata. Úsalo para leer appName/deployments/autoDeploy.
 - NUNCA volcar el env real a chat/logs; si hace falta verlo, panel de Dokploy. Tratar la API key Dokploy como secret tier-1.
 
+**HUECO CONFIRMADO en el hook (2026-07-25)**: su regex es `(schedule|compose|application)\.(one|all)`, así que **`schedule.list` no se bloquea** — y sí devuelve el env, como dice el párrafo de arriba. Comprobado: una llamada cruda a `schedule.list` pasó sin aviso, y sus filas traen embebidos `compose`, `application` y `server`. Mitigación usada: filtrar los campos con `python3` **antes** de imprimir, nunca `curl | head`. **Pendiente**: añadir `list` a la alternación del hook y usar el wrapper también para `.list`.
+
 Runbook completo (rotación + sacar secrets del env) en repo TuFacturaIA `ops/security/README.md`. Ver [[docker-infra]] · [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]].
