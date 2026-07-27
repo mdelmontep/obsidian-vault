@@ -18,6 +18,7 @@ Cortar por antigüedad solo quitó un 7%. Arreglarlo exige decidir **qué gana u
 reutilizado semanalmente, tope ~25 entradas) o partirlo por área — no otra pasada de fechas.
 
 ## Datos compartidos / config (reutilizable)
+- **Antes de escribir retención, mira las FK ENTRANTES** — una `ON DELETE CASCADE` desde la auditoría convierte la poda en borrado de la prueba; el alcance del DELETE es el grafo, no la tabla. Ver [[fk-cascade-desde-tabla-de-auditoria-la-poda-borra-la-prueba]] · [[retencion-en-tabla-compartida-por-dos-superficies-una-ventana-borra-la-otra]]
 - **El stash es compartido entre worktrees** — una sesión paralela puede recuperar tu stash y dejarte sin fix; cero `stash` en repos con worktrees. Ver [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]]
 - **Subagente que reporta «hecho, verde» sin que exista el código** — `git show --stat` + `grep` del símbolo + rojo-primero repetido por ti. Ver [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]]
 - **Arnés con asserts de eco = mide nada** — verificar contra datos sembrados y payload estructurado, no contra palabras del propio usuario. Ver [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]
