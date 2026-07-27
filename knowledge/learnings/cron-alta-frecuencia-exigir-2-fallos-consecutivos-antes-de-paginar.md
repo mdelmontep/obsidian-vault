@@ -15,6 +15,10 @@ Patrón durable: exigir **≥2 fallos terminados CONSECUTIVOS** antes de dar
 'rojo'/email. 1 fallo suelto rodeado de éxitos → 'ambar' (panel, sin email).
 `zombie` cuenta como fallo. Un cron que DEJA de dispararse (último éxito más viejo
 que su intervalo) sigue paginando al instante: esa detección NO depende de la racha.
+**Ojo, esa red de seguridad NO cubre la parada por lock in-flight retenido**
+(corregido con datos 2026-07-27): entonces el registro más reciente es el `running`
+colgado, se entra por SU rama y sale 'ambar' — nunca por la del "último éxito viejo".
+Y es el caso más probable de parada larga. Ver [[parada-de-flota-solo-se-ve-en-la-simultaneidad]].
 3ª palanca del mismo tema, complementa
 [[cron-mantenimiento-auto-sanable-no-debe-paginar-severidad-por-criticidad]]
 (criticidad) y [[watchdog-umbral-debe-tolerar-un-tick-perdido]] (umbral).
