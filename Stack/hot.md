@@ -20,6 +20,8 @@ retiraron 116 punteros de gotchas por-stack; ninguno se borró — siguen en `kn
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
+- **Un check de coherencia no puede afirmar un desajuste si no pudo preguntar** — clave ausente/401/429 es "no verificado" (UNA alerta media), no N desajustes altos; la alerta falsa induce a recrear datos que están bien. Delator: fallan TODAS las filas con el MISMO motivo. Ver [[fallo-de-credencial-no-es-dato-ausente-en-un-check-de-coherencia]]
+- **Una clave read-only NO se verifica escribiendo** — el `POST` de prueba que esperaba un 403 devolvió 200 y creó objetos reales en una cuenta live. Lo comprobable leyendo es la CUENTA (`GET /v1/account`), no la ausencia de permiso de escritura. Ver [[no-verificar-una-clave-read-only-escribiendo-con-ella]]
 - **Arnés con asserts de eco = mide nada** — verificar contra datos sembrados y payload estructurado, no contra palabras del propio usuario. Ver [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]
 - **Skips que mienten: el fixture entero puede estar caducado** — 5 de 6 casos saltando por «módulo no disponible» era un sandbox de Supabase por detrás del repo. Verificar el ENTORNO, no solo la precondición. Ver [[e2e-smoke-skip-honesto]].
 - **El stash es compartido entre worktrees** — una sesión paralela puede recuperar tu stash y dejarte sin fix; cero `stash` en repos con worktrees. Ver [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]]

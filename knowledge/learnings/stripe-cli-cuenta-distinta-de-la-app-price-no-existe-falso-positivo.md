@@ -11,3 +11,5 @@ Gotcha real (FacturaIA 2026-07): casi reporto "Plus no comprable / precios rotos
 
 Fix: verifica SIEMPRE contra la cuenta de la app, no la del CLI:
 `curl https://api.stripe.com/v1/account -u "$SK:"` (con la sk_live real de la app) para ver el `acct_` de verdad, y `curl .../v1/prices/<id> -u "$SK:"` para comprobar existencia/importe. Ver [[stripe-connect-signup-gotcha-crear-cuenta-conectada]].
+
+**Reincidencia 2026-07-26, ahora sin CLI de por medio:** una restricted key creada a mano en el dashboard traía el mismo problema, porque el selector de cuenta de arriba a la izquierda estaba en AgentesIA (`acct_1TJrQv…`) y no en Tufacturaia (`acct_1Td5cc…`). Síntoma idéntico (404 en los 12 price IDs de `plan_prices`) y, peor, una escritura de prueba aterrizó en la cuenta ajena. El `GET /v1/account` es de una línea y es lo PRIMERO que hay que hacer con cualquier clave nueva, antes de concluir nada sobre los datos; al crear la key, confirmar la cuenta en la propia pantalla. Ver [[no-verificar-una-clave-read-only-escribiendo-con-ella]].
