@@ -31,6 +31,19 @@ Beneficios sobre flag boolean `LEGACY_ENABLED=true/false`:
 - Si olvidas desactivar, hay deadline real, no flag eterno.
 - Para tests: env con fecha pasada → rechazo limpio sin acoplar lógica de boolean.
 
+⚠️ **El "deadline real" solo existe si alguien pone la variable (auditoría 2026-07-27).**
+Dos meses después, `SIGNING_LEGACY_UNTIL` seguía sin fijarse en Dokploy → `if (!until)
+return true` mantiene la ventana ABIERTA indefinidamente, y como el legacy **no ata
+método, path ni body**, el HMAC v2 queda cosmético: un secreto filtrado sirve contra
+cualquier ruta interna, que es justo el replay horizontal que v2 vino a cerrar.
+El patrón no falla, falla no cerrarlo. Al implementarlo: (1) crear ya la tarea de
+cutover con fecha y dueño, no "cuando migremos"; (2) **persistir** cada uso de legacy
+en una tabla consultable (`admin_audit_log`), no solo `console.warn` — sin ese dato no
+se puede cerrar con seguridad, porque los emisores (n8n, schedules) viven fuera del
+repo y no hay forma de saber desde el código si alguien sigue usándolo; (3) el código
+evolucionó a fail-**closed** ante fecha mal formada, pero sigue fail-**open** ante
+variable ausente: son casos distintos y conviene saberlo.
+
 Secrets distintos (no derivar el nuevo del viejo): un compromiso de la key vieja no permite firmar peticiones nuevas. Cada secret se rota independiente. `openssl rand -hex 32` para el nuevo.
 
 Anti-replay del nuevo formato: tolerancia ±5min sobre `t=<unix>` (mismo modelo que Stripe). HMAC sobre `${t}.${sha256(body)}` — el cuerpo no es manipulable.

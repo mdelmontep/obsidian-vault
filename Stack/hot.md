@@ -57,3 +57,7 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Nadie vigila el EOL del runtime: Dependabot mira CVEs, no fechas** — 88 días con Node EOL en prod sin un aviso, y el bump propuesto llevaba a un tag congelado. Check mensual contra endoflife.date, alojado FUERA de la infra que puede caerse. Ver [[dependabot-no-avisa-de-eol-de-runtime]]
 - **"Cierra #N" no cierra nada: GitHub solo entiende los keywords en inglés** — sistemático si escribes los PR en español; issues dadas por cerradas siguen abiertas. `Closes #N` en el cuerpo. Ver [[cierra-en-espanol-no-cierra-la-issue-de-github]]
 
+- **Un helper de auth que dice "el caller ya validó X" es una fuga esperando** — el gate va DENTRO. Al unificar dos implementaciones divergentes, la más restrictiva suele ser la correcta: compara semántica antes de borrar la "copia". Ver [[helper-de-auth-que-asume-validacion-del-caller]]
+- **madge no ve `import()` con template literal** — arista invisible también para `tsc`; renombrar el destino revienta en runtime, no en el build. Mapa explícito con `satisfies Record<Id,...>`. Ver [[madge-ciclo-import-dinamico-no-rompe-arista]]
+- **Divergencia conocida = test VERDE que la afirma, no rojo permanente** — un rojo se normaliza en dos días y rompe el gate de todos. Ver [[characterization-test-diverge-en-vez-de-rojo-permanente]]
+- **`vi.resetModules()` + import dentro del test agota el testTimeout** — 13 s de transformación cobrados a plazos de 5 s; los fallos parecen de aserción. Ver [[vitest-resetmodules-mas-import-pesado-agota-el-testtimeout]]
