@@ -8,6 +8,8 @@ tags: [cliente, iet, hub]
 
 Empresa de instalaciones eléctricas y telecomunicaciones, Madrid, fundada en 1989. Proyecto actual: **rediseño completo de su web** (la antigua era WordPress 4.9). Web nueva en Astro estática, **en producción en iet.es** con HTTPS activo.
 
+> **Ojo, este cliente tiene dos frentes.** Además de la web, IET es la org REAL del módulo **Obras** de TuFacturaIA ("Instalaciones Eléctricas y de Telecomunicación, S.A.", `is_test=false`, contacto `administracion@iet.es` / Natalia). Sus tickets de soporte del SaaS y su carga inicial (materiales Telematel, instaladores, tarifas) viven en [[facturaia]], no aquí. Primer ticket suyo resuelto: el vencimiento de una recibida ya aprobada (27-jul).
+
 ## Estado actual
 
 - **PRODUCCIÓN ACTIVA** — `https://iet.es` (SFTP sobre servidor IONOS/1&1, SSL Let's Encrypt activo)
