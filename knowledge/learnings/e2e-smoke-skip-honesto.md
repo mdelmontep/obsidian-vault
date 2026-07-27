@@ -39,5 +39,13 @@ Patrón: `test.beforeEach(async ({ request }) => test.skip(!(await featureActive
   detección de 404 grepeando el body buscando "not found", y `test.skip` para cualquier respuesta no-ok
   (un 5xx pasaba por «precondición ausente»). Un spec «escrito y verificado que Playwright lo lista» no
   cuenta como cobertura.
+- **La ORG de test es precondición, no solo el módulo** (2026-07-27): sin NIF en `organizations`,
+  `createDocument` da 422 `emisor.nif_required` y caían **7** smokes de golpe; sin
+  `organizations.sector` caían los **10** de Obras (se gatea por SECTOR, no por feature); el export
+  contable exige suscripción (`isOrgInTrial` → 402) y la org estaba en trial; y faltaba el bucket
+  `facturas` en Storage. Antes de tocar un spec: NIF, sector, features, facturación y buckets.
+- **Punto de entrada detrás de un flag de build**: el botón de feedback vive tras
+  `NEXT_PUBLIC_BETA_FEEDBACK`; sin él el test agotaba 15 s esperando un clic y moría con un mensaje que
+  no nombraba el flag. Si el flag decide si la UI existe, el skip tiene que decirlo.
 
-Ver también [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]].
+Ver también [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] · [[spec-con-ids-de-entorno-cableados-mide-una-org-inexistente]].

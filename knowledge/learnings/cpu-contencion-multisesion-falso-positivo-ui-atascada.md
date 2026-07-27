@@ -22,4 +22,10 @@ Antes de diagnosticar un "atasco" de UI como bug de código:
    `uptime`/`ps aux` ANTES de tocar código, y que reporte "no reproducido" en vez de
    forzar un fix a código que no está roto.
 
-Ver [[facturaia]].
+**También invalida tandas de E2E enteras** (2026-07-27): con `next build` + vitest + Playwright a la
+vez, 41 smokes murieron con `page.goto: Timeout 30000ms` y en aislado pasaban en segundos. Lo hice
+DOS veces en la misma sesión. Corolario: mientras mides, no corres nada más; y si un test pasa solo
+pero falla en la tanda larga, el sospechoso es la máquina. El gate real de una suite así es el
+contenedor oficial, no el portátil.
+
+Ver [[facturaia]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]].

@@ -32,3 +32,45 @@ Extraído del NOW del hub en el `/obsidian-1` del 27-jul: el hub pasaba de 150 K
 
 - 🟢 **Ingesta — UX de subida masiva y revisión EN PROD via PR #811 (mergeado 2026-07-10), pendiente SOLO smoke** — tras el feedback de que "parecía congelado"/confuso: BatchTracker (un solo indicador subiendo→en cola→leyendo→listas, sustituye las 2 barras) · preview "en cola" calmado (adiós al error rojo "No se pudo cargar") · avisos de revisión en español (mapear `total_mismatch` etc. + fallback sin código crudo) · "Eliminar definitivamente" en bloque + barra multi-select con wrap · duplicados por-lote ("Omitir todas"/"Subir todas de nuevo") + fix re-subida (`force` con `file_hash=null`, chocaba con índice único) · errores de servicio del login en español. Artifact de revisión visual entregado. **Smoke Manu**: subir lote grande + probar duplicados/borrado en prod.
 
+
+## Módulos IA de `/agentes` — fases 1 y 2, cierre completo (2026-07-27, tarde)
+
+Los 27 slices abordados y **en producción**: #1221 (fase 1, 18 commits) y #1248 (fase 2, 25 commits)
+mergeadas, migración **574** aplicada y verificada en prod.
+
+Fase 1: pila LIFO de Escape, borrado del editor de voz muerto (2.316 líneas), `FieldRow`/`SaveStatus`/
+`useAutosave` promovidos a `ui/`, WhatsApp con Zod, multiempresa honesta con 409 bajo impersonación.
+Cerrados 3 riesgos de datos: el PUT de `/admin/modules` estripaba `pattern`/`maxLength`/`preview`, una
+clave de sistema en el `config_schema` dejaba la pestaña inguardable, y el override congelaba las 8
+cuentas del asiento contable en prod.
+
+Fase 2: los cuatro tabs de configuración autoguardan por campo con los primitivos compartidos (antes
+eran cuatro dialectos, uno con botón "Guardar cambios"); una sola barra en el modal con pestañas
+sticky y paneles con `hidden`; `TimeField` y `RadioCardGroup` nuevos. Tres bugs de datos: el régimen de
+IVA que el cliente cambiaba en `/agentes` no llegaba al 303 (el dueño es `perfil_fiscal`), una cadencia
+de cobros desordenada mandaba "reclamación formal" como primer aviso, y diez campos pintados que nadie
+leía. Y tres más que destapó el propio gate: cadencia guardada a medias, dígitos intermedios
+persistidos al teclear, y esqueleto infinito ante un 403.
+
+Migración 574 (renumerada 3 veces: 568 → 570 → 574, porque `origin/main` ocupaba el hueco cada vez —
+es exactamente por lo que el número se asigna al ABRIR el PR): borró las 11 claves placebo, los 2
+separadores del copiloto y el override de `fiscal`, y **retiró `omc_insert`/`omc_update`/`omc_delete`**,
+que permitían a un propietario escribir el jsonb directamente por PostgREST con el anon key. Verificado
+en prod: solo queda `omc_select`.
+
+**Incidente**: un `git push --force-with-lease` desde el checkout principal sin fetch previo rebobinó
+`origin/main` 40+ commits (tanda fiscal #1238-#1246, middleware→proxy #1239, fase 1, migraciones
+566-573 ya aplicadas en la BD). Recuperada reconstruyendo `cdf41473 + squash(rama rebasada)` y
+verificando por ÁRBOL, no por log. Ver [[force-with-lease-sin-fetch-no-protege-nada]].
+
+## Suite smoke E2E — de 61 a 105 verdes (2026-07-27)
+
+Correr la suite completa contra una org de verdad (features, sector, NIF, datos) en vez de una vacía
+destapó 2 bugs de producto y 6 derivas UI↔spec. Detalle y los 16 fallos restantes en
+`issues/e2e-001-suite-smoke-contra-sandbox.md` del repo. PRs #1249, #1251 y #1254.
+
+Los dos falsos verdes, que son lo que más importa: en `convertir-presupuesto` el locator muerto vivía
+dentro de un `if (isVisible)` que nunca entraba, y `cierre-cuenta` tenía la org y el usuario cableados
+con UUIDs de otra máquina. Ver
+[[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] ·
+[[spec-con-ids-de-entorno-cableados-mide-una-org-inexistente]].
