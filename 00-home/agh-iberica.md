@@ -44,11 +44,11 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-27) — análisis de una CALL REAL: 13 fallos, 8 PRs abiertas SIN MERGEAR
+## Estado (2026-07-27) — análisis de una CALL REAL: 13 fallos, TODO MERGEADO en main
 
-`main` sigue en **`7023395`** — nada de esto está en prod todavía. Origen: llamada de voz real de Manu (`call_530a8af9…`, 25-jul, 6m28s, **terminó colgando dentro de un bucle**), traída por API de Retell y analizada turno a turno. **Corrige el diagnóstico del 22-jul**: esta vez NO era solo capa de voz — había fallos de brain/datos reales.
+**`main` en `d878578`: las 12 PRs del lote mergeadas con override de founder y gate verde entre cada merge → en prod vía autodeploy.** Conversación medida contra el modelo real: **35/43 → 38/45 checks**, y los 7 rojos que quedan son SOLO los dos huecos de prompt de Borja (#602, #603). Origen: llamada de voz real de Manu (`call_530a8af9…`, 25-jul, 6m28s, **terminó colgando dentro de un bucle**), traída por API de Retell y analizada turno a turno. **Corrige el diagnóstico del 22-jul**: esta vez NO era solo capa de voz — había fallos de brain/datos reales.
 
-**7 fixes escritos, verificados y esperando merge** (gate propio + rojo-primero comprobado a mano en cada uno; y **composición del lote probada**: las 7 mergean sin conflicto, gate `agente 1758/325/3 · dashboard 321/1/0` con las siete juntas):
+**Los 7 fixes, en prod** (gate propio + rojo-primero comprobado a mano en cada uno; y **composición del lote probada**: las 7 mergean sin conflicto, gate `agente 1758/325/3 · dashboard 321/1/0` con las siete juntas):
 - **PR #594** (#584) el recall por cliente ve las reuniones AGENDADAS — el agente negaba una reunión que él mismo acababa de crear. Causa: [[escribir-en-una-fuente-y-leer-de-otra-hace-que-el-agente-se-contradiga]].
 - **PR #599** (#586) la negación mata el pending + el ruido de ASR no se da de alta (el bucle donde colgó: dijo «no» cinco veces).
 - **PR #596** (#585, `Refs` no `Closes`) `*.update` explícito alcanza su entidad vía `lastWrite` + dedup en `meeting.create`.
@@ -59,6 +59,10 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 - **PR #604** docs de cierre (nota de sesión + snapshot).
 
 **SIN resolver, a criterio humano** (los dos primeros son los que más se notarán en una demo con Carlos): **#590** deletreo por defecto dentro del resumen HITL de voz + fragmentos huérfanos tras barge-in · **#591** latencia e2e **p50 3,8s / p90 4,2s** (desglosar STT/brain/LLM/TTS antes de tocar) · **#521** deíctico «los otros dos clientes» convertido en nombre de cliente (repro nuevo anotado) · **#601** corregir un campo en batch MIXTO renombraría al contacto (contrato de #142) · **#602** no existe target agregado multi-cliente · **#603** declarar `meeting.update` en el `SYSTEM_PROMPT` (redacción ya propuesta, lane de Borja) · **#600** el modo `last` del recall narra en pasado una fila con fecha futura.
+
+**Segunda ronda (lo más valioso):** medir contra el modelo real DESPUÉS de mergear destapó tres huecos que los tests verdes no veían — #607 (el modo `detail` del recall repetía el fallo de `last`), #608 (el ruido de ASR se metió como cuerpo de una NOTA al taparle la vía del alta) y #609 (un assert mío mal planteado). Ver [[cada-fix-de-agente-medido-contra-el-modelo-real-destapa-el-siguiente-hueco]]. Gotcha de merge que costó un rescate: [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]].
+
+**Deuda de verificación declarada:** los ~326 tests `*.pg.test.ts` en `skip` y el drift sin correr (sin Docker), con la **migración 0022** dentro del lote → pendiente `gate:full` con el compose arriba.
 
 **Método:** dos subagentes murieron por causas ajenas (límite de gasto de la org, un 529) y **el primer intento de #586 se perdió por un `git stash` cruzado** → [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]] y [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]]. #586 acabó implementado en el hilo principal.
 

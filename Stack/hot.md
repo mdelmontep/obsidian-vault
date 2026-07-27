@@ -20,6 +20,8 @@ retiraron 116 punteros de gotchas por-stack; ninguno se borró — siguen en `kn
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
+- **Una PR encadenada se mergea en su BASE, no en main** — si no borras la rama base al mergear la primera; «MERGED» no significa «en main», verifícalo con grep sobre `origin/main`. Ver [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]]
+- **Cada fix de agente medido contra el modelo real destapa el siguiente hueco** — el ruido busca cualquier `kind`; y si un turno sigue rojo tras el fix, sospecha del assert antes que del código. Ver [[cada-fix-de-agente-medido-contra-el-modelo-real-destapa-el-siguiente-hueco]]
 - **Un check de coherencia no puede afirmar un desajuste si no pudo preguntar** — clave ausente/401/429 es "no verificado" (UNA alerta media), no N desajustes altos; la alerta falsa induce a recrear datos que están bien. Delator: fallan TODAS las filas con el MISMO motivo. Ver [[fallo-de-credencial-no-es-dato-ausente-en-un-check-de-coherencia]]
 - **Una clave read-only NO se verifica escribiendo** — el `POST` de prueba que esperaba un 403 devolvió 200 y creó objetos reales en una cuenta live. Lo comprobable leyendo es la CUENTA (`GET /v1/account`), no la ausencia de permiso de escritura. Ver [[no-verificar-una-clave-read-only-escribiendo-con-ella]]
 - **Arnés con asserts de eco = mide nada** — verificar contra datos sembrados y payload estructurado, no contra palabras del propio usuario. Ver [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]
