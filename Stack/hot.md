@@ -63,5 +63,6 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Divergencia conocida = test VERDE que la afirma, no rojo permanente** — un rojo se normaliza en dos días y rompe el gate de todos. Ver [[characterization-test-diverge-en-vez-de-rojo-permanente]]
 - **`vi.resetModules()` + import dentro del test agota el testTimeout** — 13 s de transformación cobrados a plazos de 5 s; los fallos parecen de aserción. Ver [[vitest-resetmodules-mas-import-pesado-agota-el-testtimeout]]
 - **Un test nuevo no vale hasta que le rompes el código a propósito y falla** — dos minutos de mutación distinguen "pasa" de "vigila algo". Caza el test que se salta solo y el que mide el artefacto vecino. Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]]
+- **Un test nuevo no vale hasta que le rompes el código a propósito y falla** — dos minutos de mutación distinguen "pasa" de "vigila algo". Caza el test que se salta solo y el que mide el artefacto vecino. Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]]
 - **El coste de compilar el módulo se le cobra al PRIMER test y lo saca de su timeout** — 2,8 s en aislado, >10 s con la suite entera; sale como flaky con mensajes de aserción, no de timeout. Precalentar en un `beforeAll` con timeout propio, no subir `testTimeout`. Ver [[el-coste-de-compilar-el-modulo-se-cobra-al-primer-test]]
 
