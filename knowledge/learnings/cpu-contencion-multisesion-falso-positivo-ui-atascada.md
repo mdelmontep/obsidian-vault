@@ -28,4 +28,9 @@ DOS veces en la misma sesión. Corolario: mientras mides, no corres nada más; y
 pero falla en la tanda larga, el sospechoso es la máquina. El gate real de una suite así es el
 contenedor oficial, no el portátil.
 
-Ver [[facturaia]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]].
+**Y las Web Vitals**: el informe de CWV de la suite dio `CLS 0,31` en `/settings` y `0,20` en
+`/dashboard` medidos en esa misma tanda cargada. En silencio son **0,045 y 0,023**: dos de los tres
+"problemas de rendimiento" no existían. Cualquier métrica sensible al hilo principal (CLS, LCP, INP)
+hay que medirla con la máquina libre o no vale.
+
+Ver [[facturaia]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] · [[cero-mientras-carga-no-es-cero-vacio-y-provoca-cls]].
