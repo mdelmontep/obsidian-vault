@@ -49,3 +49,20 @@ Patrón: `test.beforeEach(async ({ request }) => test.skip(!(await featureActive
   no nombraba el flag. Si el flag decide si la UI existe, el skip tiene que decirlo.
 
 Ver también [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] · [[spec-con-ids-de-entorno-cableados-mide-una-org-inexistente]].
+
+**La cara opuesta (2026-07-28): el skip que salta con la precondición PRESENTE.**
+Un skip honesto exige *probar que falta* la precondición. Dos formas de romperlo,
+las dos vistas el mismo día y las dos dejando el test en VERDE sin probar nada:
+
+- **`it.skipIf` se evalúa al RECOLECTAR**, antes de cualquier `beforeAll`. Si la
+  condición la calcula un hook, se lee siempre como "no disponible" y el fichero
+  entero se salta. Síntoma: `6 skipped | 1 passed` en un fichero que debería
+  ejercitar todo. La comprobación va en un `await` de nivel de módulo.
+- **`isVisible()` inmediato tras `networkidle`** en Playwright: la app hidrata
+  después, el locator aún no está y el `test.skip` salta por impaciencia. Se
+  espera con `toBeVisible({ timeout })` y solo se salta lo que de verdad no existe
+  (p. ej. la org de test sin clientes).
+
+Regla: si un smoke sale verde, mirar el desglose de skipped. Un fichero entero
+saltado es un fallo, no una precondición. Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]].
+

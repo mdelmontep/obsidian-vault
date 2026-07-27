@@ -16,11 +16,26 @@ Un locator que resuelve a **0 elementos no es evidencia sobre el producto, es un
 - O **falso verde** si vive dentro de un `if (await x.isVisible())`: el bloque nunca entra y el
   test pasa sin comprobar. Ese es el peligroso.
 
+- **Peor que dentro de un `if`: detrás de un `test.skip(count === 0)`.** Eso no es un rojo que se
+  ignora, es un **verde permanente**. Tres casos así en la misma suite (2026-07-28), y uno tapaba un
+  bug de producto: el microtexto que el test decía cubrir llevaba **oculto por CSS**
+  (`display:none`) desde un PR de junio. Markup que nadie veía y un test que decía verlo.
+- **Y el simétrico: un locator que casa de MÁS.** `getByRole('img', {name: /^Gráfico de cashflow/})`
+  casa también con `"Gráfico de cashflow vacío"`, así que el test pasaría con «Sin datos» pintado.
+  Al escribir un locator, preguntarse con qué OTRA cosa casa, no solo si encuentra la buena.
+
 Reglas:
 - Afirmar por **rol + nombre accesible**, o por el contrato que el componente publica
   (`aria-controls` del trigger, región `aria-live`), nunca por clase de CSS Module ni etiqueta nativa.
 - Ojo con `.last()` sobre roles genéricos: `[role="listbox"]` también lo era la lista de la página,
   siempre visible, así que un `toBeHidden()` esperaba en vano.
+- Ante un spec que SALTA, comprobar que su locator existe hoy en el producto (grep del atributo, no
+  del componente) antes de creerse el verde.
+- **React 19 puede tener dos árboles montados** durante una transición: el locator resuelve a 2 y
+  Playwright aborta por strict mode con la UI pintada y correcta. `:visible` o `.first()`, comentado.
+- **Cuidado al retirar una aserción: puede estar haciendo de espera.** Al quitar la del chip del
+  calendario destapé una carrera de hidratación que ella tapaba con sus 20 s: el clic caía sobre un
+  botón sin manejador y el test moría dos pasos después, lejos de la causa.
 - Al depurar, **mirar el aviso inmediatamente**: concluí que un error no avisaba al usuario porque
   miré los toasts 12 s después del clic; salía a los 750 ms y el producto estaba bien.
 
