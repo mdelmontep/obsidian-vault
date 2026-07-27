@@ -65,3 +65,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 039 · 2026-07-25 · [[ADR-039-org-module-config-patch-merge-con-allowlist|org_module_config.config se escribe con PATCH de merge por clave + allowlist del schema resuelto (no replace, no RPC atómica en v1)]] (TuFacturaIA)
 - 040 · 2026-07-25 · [[ADR-040-btchbookg-apunte-agrupado-por-defecto|BtchBookg a `true` por defecto en remesas SEPA: apunte agregado para que la auto-conciliación case, expuesto como ajuste (no fijo, no dejarlo en false)]] (TuFacturaIA)
 - [ADR-041](ADR-041-recibida-duplicada-se-elimina-no-se-anula.md) — una recibida duplicada se elimina (no se anula: `anulada` no sale del 303 en recibidas)
+- [ADR-042](ADR-042-base-imponible-neta-en-todos-los-tipos.md) — `base` es la base imponible NETA en todos los tipos; presupuestos conservan el descuento en cabecera y facturas lo reparten en líneas (VeriFACTU)

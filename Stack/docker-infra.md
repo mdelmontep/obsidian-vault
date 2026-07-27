@@ -39,6 +39,14 @@ tags: [docker, traefik, dokploy, infra]
 - Workaround si no tienes owner: usar Git + SSH deploy key en lugar de GitHub App (Dokploy → Git → `git@github.com:org/repo.git` → Add SSH Key → añadir public key en GitHub repo Settings → Deploy keys).
 - Caso real TuFacturaIA 2026-05-13: repo en `AgentesIA-MAdrid`, app creada con `mdelmontep` (no owner) → org no aparecía. Fix: crear app logueado como `AgentesIAMadrid` (owner de la org).
 
+## Identidad del build: qué commit hay sirviendo (no ponerlo a mano en el panel)
+
+- Un `NEXT_PUBLIC_APP_VERSION` escrito como literal en el env del panel **se congela en el primer build y miente en todos los deploys siguientes** — peor que no tenerlo, porque invita a confiar en él. `NEXT_PUBLIC_*` se hornea en tiempo de compilación.
+- Que lo calcule el build: `APP_VERSION` como build arg si el orquestador puede inyectar el commit (Dokploy hoy no lo pasa), y si no, marca de tiempo generada en `next.config.ts` y expuesta vía `env:`. No sirve leer el SHA dentro de la imagen: `.git` suele estar fuera del contexto por `.dockerignore`.
+- Verificar que queda **inlined** (`grep` del valor en `.next/server/app/api/health/route.js`), no recalculado al arrancar el contenedor: ahí está la diferencia entre un dato útil y uno inútil.
+- Para qué sirve: al dudar de un despliegue, contrastar `curl /api/health` contra el `finishedAt` del deployment. Sin esto (caso real 27-jul) se gastaron **tres escrituras contra la BD de prod** para averiguar si el contenedor era el nuevo. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]].
+- Metadata de deployments sin volcar secretos: `dokploy-safe.sh "/api/compose.one?composeId=<id>"` → `deployments[]` trae `description: Commit: <sha>`, `status` y `finishedAt`, y `autoDeploy`.
+
 ## `NEXT_PUBLIC_*` vars en Dokploy requieren prefijo exacto
 
 - Son build args en docker-compose, no solo runtime envs. Sin el prefijo `NEXT_PUBLIC_` se inyectan como env runtime pero el bundle del browser las recibe vacías.

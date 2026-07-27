@@ -24,6 +24,7 @@ Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]
 Podar por antigüedad no funcionó dos veces (129→116→159 en dos días): el problema es el criterio de
 entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y en `knowledge/learnings/`.
 
+- **Un fix no está verificado hasta crear una entidad NUEVA tras el deploy** — leer los datos que arregló el backfill no prueba nada del código; el compositor no es el punto de persistencia y la suite verde no cubre el camino que tocas. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]]
 - **Una PR encadenada se mergea en su BASE, no en main** — si no borras la rama base al mergear la primera; «MERGED» no significa «en main», verifícalo con grep sobre `origin/main`. Ver [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]]
 - **Cada fix de agente medido contra el modelo real destapa el siguiente hueco** — el ruido busca cualquier `kind`; y si un turno sigue rojo tras el fix, sospecha del assert antes que del código. Ver [[cada-fix-de-agente-medido-contra-el-modelo-real-destapa-el-siguiente-hueco]]
 - **Un check de coherencia no puede afirmar un desajuste si no pudo preguntar** — clave ausente/401/429 es "no verificado" (UNA alerta media), no N desajustes altos; la alerta falsa induce a recrear datos que están bien. Delator: fallan TODAS las filas con el MISMO motivo. Ver [[fallo-de-credencial-no-es-dato-ausente-en-un-check-de-coherencia]]
