@@ -74,3 +74,42 @@ dentro de un `if (isVisible)` que nunca entraba, y `cierre-cuenta` tenía la org
 con UUIDs de otra máquina. Ver
 [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] ·
 [[spec-con-ids-de-entorno-cableados-mide-una-org-inexistente]].
+
+## Sesión de tarde/noche — repaso de PRs pendientes, runtime fuera de EOL y limpieza del PDF
+
+**23 PRs mergeadas.** Se arrancó revisando las 24 abiertas con TODOS los checks en rojo; el rojo
+era el billing de Actions, no el código, así que la verificación fue manual: worktree de
+integración desde `origin/main`, los 12 PRs de contenido mergeados JUNTOS y un solo gate
+(lint + typecheck + build + 7.534 tests) sobre la composición, no PR a PR.
+
+- **Cazado antes de mergear**: #1226 traía la migración `568`, número ya ocupado en main por
+  `568_recibida_eliminar_borrador_no_bloquea` (main iba por 576). Renumerada a **577**, cabecera y
+  referencia en `gotchas.md` actualizadas. El check del `pre-push` existe pero solo mira al empujar:
+  una rama en review no se revalida cuando otra le ocupa el número.
+- **Dependabot**: mergeadas las 5 seguras tras probarlas (react 19.2.8, ioredis, lucide, jest-dom 7 con
+  la suite entera, los 4 bumps de Actions). Rechazadas con evidencia: eslint 10 **rompe el lint**
+  (`eslint-config-next` trae un `eslint-plugin-react` incompatible), `node:24-alpine3.20` congelado,
+  `@types/node` 26 por delante del runtime, e `impeccable` que no lo usa nadie (+474 líneas de lockfile).
+- **Migración 577 aplicada a prod** y verificada leyendo el `indexdef`: predicado
+  `nif IS NOT NULL AND nif <> ''`. Antes, el segundo cliente sin NIF de una org petaba con duplicate key.
+
+**#1257 — salir de Node 20 (EOL hace 88 días).** Node 24 LTS + Alpine 3.23 en las tres imágenes,
+`@types/node` a la 24, `node-version: '24'` en los 4 workflows. Se instaló colima para construir las
+imágenes de verdad: A/B de 16 PDFs (4 plantillas × 1 y 5 páginas × Chromium 131 vs 149) con páginas,
+tamaño A4 y texto extraído **idénticos**, y 0,000 % de píxeles distintos salvo 195 px de antialiasing
+en el logo de una plantilla. Falso positivo descartado por el camino: el `next build` moría por OOM en
+el contenedor **igual con Node 20**, era el heap de la VM.
+
+**#1261 — la vista previa enseñaba 150 px del A4** desde el 25-may: `flex:1` en un iframe cuyo padre
+no es flex. Verificado en prod con el navegador, generando un PDF real desde `/generar` (que además
+cerró la última pieza de #1257: el render con Chromium 149 en producción).
+
+**#1262 — retirado el microservicio `pdf-renderer`**: no lo importaba nadie y devolvía 500 en todos los
+renders desde el #951. Con él se fue `/render-invoice`, pública sin sesión. El MCP se desplegó a mano
+por `compose.deploy` porque su workflow está muerto con Actions (64 tools, hash `ab0125b5` intactos).
+
+**5 issues de robustez abiertas con números**: #1267 (CI: 235 PRs sin verificar desde el 19-jul, y las
+mitigaciones de incidentes viven dentro de Actions), #1268 (nadie vigila el EOL del runtime), #1269
+(el camino que genera todas las facturas no tiene smoke), #1270 (grafo de dependencias con meses de
+deriva), #1271 (4 ficheros de tests flaky por timeout bajo carga).
+

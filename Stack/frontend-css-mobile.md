@@ -107,3 +107,4 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
 - **Grab-to-scroll (arrastrar con ratón): NO `setPointerCapture` en contenedor con links/botones** — ver [[drag-scroll-no-setpointercapture-en-contenedor-con-links]]
 - **Botón de design-system con `overflow:hidden`: borde/halo animado va en PSEUDOS del botón, no en un `<span>` hijo** — ver [[boton-design-system-overflow-hidden-halo-y-linea-en-pseudos-del-boton]]
 - **Centrar número+sufijo dentro de un input como unidad** — ver [[centrar-numero-mas-sufijo-en-input-field-sizing-fallback-ch]]
+- **Iframe con `flex:1` en un padre que no es flex → 150px (su alto por defecto), parece contenido recortado** — y `min-height` en el ancestro no habilita `height:100%` en el hijo. Ver [[iframe-con-flex-1-en-contenedor-no-flex-cae-a-150px]]

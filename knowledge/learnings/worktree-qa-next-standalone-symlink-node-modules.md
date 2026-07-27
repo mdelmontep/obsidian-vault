@@ -46,3 +46,11 @@ worktree propio (ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]).
 
 Limpieza al acabar: `rm node_modules` (symlink) antes de `git worktree remove --force`.
 Ver [[facturaia]].
+
+6. **Si vas a correr `npm install`/`npm ci` en el worktree (2026-07-27):** ni symlink ni
+   hardlinks. En APFS, `cp -Rc <principal>/node_modules <worktree>/node_modules` hace un
+   **clon copy-on-write**: ~16 s para 1,3 GB, sin ocupar disco real hasta que algo cambia, y
+   son ficheros de verdad (Turbopack contento, y `npm ci` puede reescribir sin tocar el
+   checkout principal). Es la opción segura cuando el worktree va a mutar dependencias, como
+   al probar un bump de Dependabot.
+

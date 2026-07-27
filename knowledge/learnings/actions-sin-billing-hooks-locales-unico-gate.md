@@ -24,3 +24,18 @@ Reglas mientras Actions siga sin billing:
   con los 4 checks en rojo muriendo en ~2 s (arranque por billing, no fallos del código). Gate
   manual antes de mergear = worktree detached sobre la rama + `git merge origin/main` (la rama
   suele ir varios commits por detrás) + `npm ci` + lint/typecheck/vitest/build.
+
+**Alcance medido 2026-07-27.** Último verde no-Dependabot: 19-jul 11:46. Desde entonces
+**235 PRs / 265 commits** a `main` sin CI. Además de lint/build (que cubren los hooks) se
+pierde CodeQL, la regresión visual y la re-ejecución fuera de la máquina de quien commitea.
+
+**Lo grave no es lo que no se verifica: es lo que no se EJECUTA.** Las mitigaciones de
+incidentes pasados viven dentro de Actions y están muertas con ella —`deploy-mcp.yml` (el
+MCP se volvió a quedar sin desplegar, ver [[dokploy-autodeploy-false-desfase-silencioso]])
+y el cron de `scheduler-watchdog`. Y el check de migración duplicada del `pre-push` solo
+mira al empujar: una rama en review no se revalida cuando otra PR le ocupa el número (caso
+#1226, 27-jul).
+
+Efecto cultural: 24 PRs con 4 checks rojos y ninguno significativo. Un guard siempre en
+rojo enseña a ignorar el rojo. Opciones (incl. runner self-hosted, que no gasta minutos
+pero hay que comprobar si el bloqueo es por gasto o por suspensión): issue #1267 del repo.
