@@ -169,3 +169,9 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
 
 - **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — ver [[bigint-literal-tsc-target-es2020]]
 - **SSRF-safe por IP pineada: verifica en el código fuente cómo la librería relaciona `host`/`servername`/flags TLS** — ver [[imapflow-pinning-ip-servername-dostarttls-explicito]]
+
+## Retirados de hot.md el 2026-07-27
+
+- **Rutinas cloud (RemoteTrigger/CCR): egress allowlist + identidad bot** — 403 en CONNECT a host privado → Network access Custom + Allowed domains (aplica a sesiones NUEVAS); postea por webhook, no por conector personal (suplanta). Ver `Stack/claude-code-harness.md` §Rutinas cloud.
+- **`git worktree remove <path>` desde DENTRO de ese worktree** → `fatal: Unable to read current working directory`; hazlo desde otro cwd + `git worktree prune`. Detalle en `Stack/claude-code-gotchas.md`.
+- **`/fia-cierre`/Workflow ignora `cd <worktree>` — recalcula su propio git diff en el checkout equivocado**, incluso pasándole el diff ya volcado en un archivo. Con rama en worktree, usar 2-3 `Agent` sueltos en su lugar (no Workflow). Detalle en `Stack/claude-code-gotchas.md`.
