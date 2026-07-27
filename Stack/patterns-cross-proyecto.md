@@ -162,3 +162,10 @@ Patrones que aplican siempre, no expiran. Lo más reusado.
 - **Enum nuevo en código sin ampliar el CHECK de BD = insert muere mudo** — outbox-first aborta el envío entero; el 200 anti-enum del endpoint lo oculta. Ver [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]]
 - **`ALTER TYPE ADD VALUE IF NOT EXISTS`** — idempotente; el valor nuevo NO es usable hasta commit → suéltalos al inicio del archivo, no en el `BEGIN` que lo use. Ver [[alter-type-add-value-en-migracion-supabase]]
 - **RPC SECURITY DEFINER = ejecutable por anon vía PostgREST** si no revocas (EXECUTE a PUBLIC por defecto) → bypass de pago/IDOR si reciben org_id sin validar. REVOKE FROM PUBLIC, anon; `REVOKE PUBLIC` solo no basta si hay grant individual. Ver [[supabase-rpc-security-definer-execute-public]] · [[postgres-revoke-public-no-elimina-grants-individuales]]
+
+## Punteros recolocados desde hot.md (2026-07-27)
+
+_Salieron del índice caliente al reservarlo a método/riesgo transversal; el learning está íntegro en `knowledge/learnings/`._
+
+- **Literal BigInt (`300000n`) pasa vitest pero rompe tsc <ES2020 (TS2737)** — ver [[bigint-literal-tsc-target-es2020]]
+- **SSRF-safe por IP pineada: verifica en el código fuente cómo la librería relaciona `host`/`servername`/flags TLS** — ver [[imapflow-pinning-ip-servername-dostarttls-explicito]]

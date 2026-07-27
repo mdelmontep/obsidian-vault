@@ -60,3 +60,10 @@ tags: [supabase, saas, facturaia]
 - **`Site URL` es fallback silencioso** — si `redirectTo` enviado por el cliente NO está en la allowlist `Redirect URLs`, Supabase lo descarta y usa Site URL. Si Site URL apunta a `http://0.0.0.0:3000` (config dev olvidada), todos los emails de prod rompen sin error. Ver [[supabase-site-url-fallback-rompe-redirecturl-fuera-de-allowlist]].
 - **Plantillas email Auth en Dashboard están en inglés** — Gmail marca banner rojo "External / Spam" porque dominio remitente + contenido genérico no cuadran. Bypass: `admin.generateLink` + envío propio Resend.
 - **`auth.audit_log_entries` (audit trail nativo de GoTrue) puede estar completamente VACÍO en un proyecto con actividad real** — no asumir que Supabase Auth lo puebla por defecto; verificar con `select count(*) from auth.audit_log_entries` antes de diseñar cualquier feature encima (ej. mostrar logins en un feed de auditoría). Caso real 2026-07-04 (TuFacturaIA, 23 usuarios activos): 0 filas — obligó a descartar el plan de reusar esa tabla y dejar login/logout sin instrumentar hasta decidir una vía manual.
+
+## Punteros recolocados desde hot.md (2026-07-27)
+
+_Salieron del índice caliente al reservarlo a método/riesgo transversal; el learning está íntegro en `knowledge/learnings/`._
+
+- **Borrado masivo por API (PostgREST/MCP) hace timeout con decenas de miles de filas** — ver [[supabase-borrado-masivo-api-timeout-lotes-ctid]]
+- **Un guard de una migración ajena bloquea el `db push` entero** — ver [[db-push-lo-bloquea-el-guard-de-una-migracion-ajena]]

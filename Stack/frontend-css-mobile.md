@@ -97,3 +97,13 @@ tags: [frontend, css, mobile, overflow]
 - **Next 16 + lightningcss: NUNCA escribir `-webkit-backdrop-filter` a mano** junto al `backdrop-filter` estándar. El minificador colapsa el par y deja SOLO el `-webkit-`; Chrome moderno lo IGNORA (usa el sin prefijo) → `backdrop-filter` computa `none` → cero blur en TODA superficie glass/scrim, sin error de build/lint. Regla: escribir **solo `backdrop-filter`**, el build añade el prefijo. Corolario: tokens de blur (`--glass-blur`/`--scrim-blur`) en `:root` base, NO en `[data-theme=light]` (selectores hermanos no heredan → en dark indefinidos → `blur(var(--undef))` inválido → none). Diagnóstico: `curl` el chunk CSS servido (`/_next/static/chunks/src_*._.css`) y mira la regla compilada — headless NO renderiza/reporta backdrop-filter fiable; un `<div>` con `backdrop-filter` inline SÍ (descarta que sea GPU). Caso TuFacturaIA 2026-06-10, costó horas.
 - **Cascada de clases glass decorativas**: shorthand `background:` posterior pisa el `background-image` de una clase compuesta (usar `background-color:`); guards de fallback (`@supports not`/`prefers-reduced-transparency`) al FINAL del archivo o quedan muertos a igual especificidad. Ver [[css-clase-decorativa-compartida-trampas-cascada]]
 - **Selector multi-toggle ≠ `filter-pill.active`** (TuFacturaIA) — `.filter-pill.active` es azul sólido (pensado para selección única, tipo segmented); con N opciones activas a la vez = muro de azul feo. Para multi-select clonar el popover del **Select** del sistema (`composes glass-strong+glass-sheen from global` + `useAnchoredMenu` portado a `<body>` + filas `.option` con punto de color + check), no pills. Caso: selector de "Capas" del calendario (#382).
+
+## Punteros recolocados desde hot.md (2026-07-27)
+
+_Salieron del índice caliente al reservarlo a método/riesgo transversal; el learning está íntegro en `knowledge/learnings/`._
+
+- **Tooltip sobre botón `disabled`** — ver [[tooltip-en-boton-disabled-necesita-pointer-events-none-y-tabindex-wrapper]]
+- **Auditar "0 consumidores" de una clase CSS antes de borrarla: grep `\bclase\b` sin anclar, no solo `className="clase"`** — ver [[grep-classname-plano-subestima-template-literals]]
+- **Grab-to-scroll (arrastrar con ratón): NO `setPointerCapture` en contenedor con links/botones** — ver [[drag-scroll-no-setpointercapture-en-contenedor-con-links]]
+- **Botón de design-system con `overflow:hidden`: borde/halo animado va en PSEUDOS del botón, no en un `<span>` hijo** — ver [[boton-design-system-overflow-hidden-halo-y-linea-en-pseudos-del-boton]]
+- **Centrar número+sufijo dentro de un input como unidad** — ver [[centrar-numero-mas-sufijo-en-input-field-sizing-fallback-ch]]
