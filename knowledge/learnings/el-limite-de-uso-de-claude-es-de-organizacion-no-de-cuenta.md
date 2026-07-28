@@ -13,4 +13,6 @@ La palabra clave es **org's**. El tope es de la organización de Claude, no del 
 
 Corolario de diseño: si el runner elige cuenta por configuración, que registre **qué cuenta usó** en el error y en el log. Sin ese dato, "falló por cuota" no distingue entre "esta cuenta está agotada" y "toda la org lo está", que llevan a acciones opuestas.
 
+Al sacar el token con `claude setup-token`: el navegador devuelve primero un **código de autorización** con forma `codigo#estado`, que NO es el token — hay que pegarlo de vuelta en la terminal que sigue esperando, y entonces la CLI imprime el `sk-ant-oat01-…`. Confundir uno con otro cuesta una vuelta entera.
+
 Caso real 2026-07-28, runner "Resolver con Claude" de TuFacturaIA. Ver [[proceso-que-agota-la-cuota-puede-salir-con-exit-0-y-parecer-sin-cambios]].
