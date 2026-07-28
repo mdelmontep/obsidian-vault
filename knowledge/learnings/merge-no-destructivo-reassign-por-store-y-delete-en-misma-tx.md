@@ -18,3 +18,10 @@ Gotcha peligroso: si el `DELETE` del duplicado corre en OTRA conexión que los `
 Diseño: cada store dueño reasigna su propia tabla (`reassignClient(tenant, from, to, tx)`); un
 executor coordina con un `TransactionRunner`. Scope por `(tenant, parent_id)` = exactamente el set
 que el cascade tocaría → ni huérfanos ni pérdida. (Caso real: `crm.mergeClients`, AGH #245.)
+
+**Corolario de mantenimiento (2026-07-29):** cada tabla hija NUEVA que cuelgue de una entidad
+fusionable obliga a revisar la RPC de merge existente. Si no se toca, el `DELETE` final del
+duplicado se lleva las filas nuevas por `ON DELETE CASCADE` y nadie se entera hasta que alguien
+fusiona. Caso real: TuFacturaIA mig 583 creó `contactos` y `merge_cliente`/`merge_proveedor`
+seguían sin repuntarlos (arreglado en la 585, ver
+[[reemplazar-funcion-sql-extraerla-de-la-bd-no-del-fichero-de-migracion]]).

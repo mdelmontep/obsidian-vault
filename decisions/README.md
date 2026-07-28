@@ -67,3 +67,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - [ADR-041](ADR-041-recibida-duplicada-se-elimina-no-se-anula.md) — una recibida duplicada se elimina (no se anula: `anulada` no sale del 303 en recibidas)
 - [ADR-042](ADR-042-base-imponible-neta-en-todos-los-tipos.md) — `base` es la base imponible NETA en todos los tipos; presupuestos conservan el descuento en cabecera y facturas lo reparten en líneas (VeriFACTU)
 - [[ADR-043-sin-ci-el-gate-local-es-el-contrato]] — sin CI, los hooks locales son el contrato; los workflows dejan de arrancar solos para que el rojo vuelva a significar algo.
+- [[ADR-044-tabla-unica-de-contactos-en-vez-de-una-por-modulo]] — una sola tabla de contactos para toda la app: dos tablas obligan al usuario a una distinción que no tiene en la cabeza, y copiar entre ellas congela el dato.

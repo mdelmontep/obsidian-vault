@@ -13,3 +13,9 @@ Fix: abrir el combobox (`click` en el trigger) → `keyboard type "<texto búsqu
 para filtrar a 1 opción → `press Enter`. Confirmar con `snapshot -i` que el combobox
 muestra el nuevo valor antes de continuar (no asumir que el click bastó).
 En Playwright sí funciona el click directo sobre `[role="option"]" (comportamiento distinto entre herramientas).
+
+**Síntoma que engaña (2026-07-29):** el click sintético deja el combobox con el texto tecleado y
+la app sin cliente seleccionado, así que lo que se ve es "elegí un cliente con 60 días pactados y
+el vencimiento sigue en 30" — idéntico a un bug de producción recién desplegado. Antes de reportar,
+comprobar que el valor del combobox es el de la opción, no el que escribiste: si no lo es, no hubo
+selección y no hay bug que reportar.
