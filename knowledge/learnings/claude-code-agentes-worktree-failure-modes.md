@@ -127,6 +127,8 @@ git checkout <worktree-branch> -- \
 
 **Fix/blindaje**: para worktrees que vayan a vivir más de unos minutos, usar `~/wt-<nombre>` (home) en vez de `/private/tmp/...`. Si ya estás en `/tmp`, pushea cada commit en cuanto lo hagas en vez de acumular cambios sin subir.
 
+**Peor variante (2026-07-28)**: si el agente NUNCA llegó a commitear no queda ref que sobreviva y el código se pierde entero. Lo que sí sobrevive es el transcript de la sesión, con el resultado completo del subagente dentro: se reconstruye la SPEC y se reimplementa. Ver [[transcript-jsonl-sobrevive-al-worktree-borrado]].
+
 ## Failure mode L: diagnóstico/fix multi-agente duplicado — otra sesión paralela ya resolvió el mismo bug minutos antes
 
 **Síntoma**: lanzas 3 agentes Explore en paralelo para diagnosticar la causa raíz de una regresión ya bien acotada (ej. 306 tests rotos con el mismo patrón de error). Los 3 confirman una única causa común — pero al ir a abrir el PR descubres que otra sesión ya diagnosticó y mergeó el fix idéntico ~15 minutos antes de que tu propio diagnóstico terminase.
