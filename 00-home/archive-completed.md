@@ -358,3 +358,4 @@ tags: [home, archivo]
 - 2026-07-28 Clínica Zen — bug recordatorios por task_type: verificado que NO aplica (dispara desde Google Calendar, no desde tareas Kommo); cerrado el cabo cruzado de Simarro
 - 2026-07-28 Clínica Zen — amojo_token manual cada 24h: resuelto sin registrar (token dinámico vía OAuth2 + 20 nodos migrados a salesbot)
 - 2026-07-28 Clínica Zen — feedback de llamada de Gonzalo: dirección corregida en el prompt (4 sitios, referencia de Navalcarbón), voice_speed 1.12→1.05, agente v63 publicado, email interno de la reserva por voz conectado y WhatsApp de confirmación desahuerfanado
+- 2026-07-25 · TuFacturaIA · módulo SEPA: 4 PRs en main (#1201/#1204/#1210/#1215), smoke completo verificado por Manu incluida la remesa real y el XML. Aviso vivo al desplegar: `BtchBookg` cambia el extracto de las orgs que ya domicilian → [[ADR-040-btchbookg-apunte-agrupado-por-defecto]]

@@ -16,6 +16,7 @@ tags: [supabase, saas, facturaia]
 ## Gotchas generales
 
 - **ENABLE RLS obligatorio en toda tabla nueva** — policies sin ENABLE = tabla pública. Verificar en Authentication > Policies. Tablas solo-service_role: ENABLE igualmente, sin policies. Ver [[supabase-enable-rls-olvidado-tabla-publica]]
+- **La política tiene que nombrar la columna que decide visibilidad, y para columnas privadas hacen falta grants** — "el dueño ve su fila" no oculta un `internal=true` dentro de esa fila, y RLS no filtra columnas: `revoke select on t from authenticated` + `grant select (cols públicas)`. Caso real: mensajes internos de soporte legibles por el cliente en prod (mig 582). Ver [[rls-filtra-filas-no-columnas-y-la-politica-debe-nombrar-la-columna-privada]]
 - **Realtime requiere publicación explícita** — `ALTER PUBLICATION supabase_realtime ADD TABLE <tabla>` para cada tabla. Sin esto, los canales se suscriben pero nunca reciben eventos.
 - **SQL functions con SELECT puro → `LANGUAGE sql`, no `plpgsql`** — si el body es un SELECT directo sin BEGIN/END. Con `plpgsql` da `syntax error at or near "SELECT"`.
 - **`signUp` con email existente devuelve UUID falso** — protección anti-enumeración. Crear usuarios server-side con `admin.auth.admin.createUser()` usando service_role.
