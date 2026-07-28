@@ -48,21 +48,23 @@ Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_l
 - **`voice_speed` 1.12 → 1.05**. `ambient_sound` y `volume` se quedan por decisión de Manuel.
 - **La reserva por voz no enviaba NINGÚN email** — la rama de voz nunca tocaba `Build Emails HTML`. Ahora `Pendiente de Asignar A/B` entran en él y el aviso interno sale a `citas@clinicazen.es`. `Build Emails HTML` elige origen con `isExecuted` (chat / voz A / voz B).
 - **IF `¿Hay email de paciente?`** antes del correo al paciente: por voz no se pide dirección, así que sin ella no se intenta el envío. Los dos emailSend con `onError: continueRegularOutput`.
-- **`WA Confirmación Cita A/B` estaban huérfanos** (0 conexiones) — el agente prometía WhatsApp y no salía nada. Conectados a `Create an event Voz`/`Voz2`.
+- **`WA Confirmación Cita A/B` estaban huérfanos** (0 conexiones) — el agente prometía WhatsApp y no salía nada. Conectados a `Create an event Voz`/`Voz2`. Ver [[canal-nuevo-en-workflow-no-hereda-los-side-effects-de-la-rama-original]].
 
 Backup pre-cambio: `cz-pre-email-voz-20260728-1227.json` (scratchpad de sesión, mover a repo).
 
 ## Próximos hitos
 
 1. **Smoke de la reserva por voz (NEXT, bloquea el resto)** — `POST /Reservar_crm` crea contacto+lead reales en Kommo, evento en Calendar y manda correo. Requiere OK y limpieza posterior. Verifica: email interno llega a `citas@clinicazen.es`, WhatsApp del salesbot llega al paciente, cita correcta.
-2. **`salesbot/run` devuelve 400 y se pierde el recordatorio (NEXT)** — hoy 06:30, lead 32984916, `bot_id 63810`, `Some parameters incorrect`. Dos cosas distintas que arreglar:
-   - *Por qué falla*: sospecha = el lead no tiene chat de WhatsApp vinculado (paciente que entró por teléfono). Afecta igual al `bot_id 63814` recién conectado en la reserva por voz.
-   - *Por qué no se reintenta*: `Filtrar y evitar duplicados` marca `staticData.enviados[clave]` **antes** de enviar. Si el envío falla, queda como enviado para siempre y el paciente se queda sin recordatorio en silencio. Marcar después del envío OK.
+2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — tres bugs independientes, todos ABIERTOS (NEXT)**. Salieron de la única ejecución con error del histórico (9407, 28-jul 06:30, lead 32984916, "Julián" `+34617314938`, evento `ejidsbhd41q51j2mqdtu2f7gp8`):
+   - **El de 4h sale por la salida de 24h.** Probado en el `runData`: el item `tipoRecordatorio: "4h"` fue por la rama 0 (1 item) y la rama 1 quedó a 0. Las conditions del Switch `Tipo de recordatorio` no llevan bloque `options`/`combinator`, así que la primera regla se lo traga todo. Consecuencia: los avisos de 4 horas llevan meses saliendo con `bot_id 63810` (plantilla de "mañana tienes cita") en vez de 63808; el 63808 no se usa nunca. Ver [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]].
+   - **Se escribe al paciente de madrugada.** Las 06:30 no eran un fallo: es el aviso de 4h de una cita de 10:30. El `Scanner cada 30min` corre 24/7 sin ventana horaria y la clínica abre a las 10:00, así que toda cita de 10:00-11:00 dispara WhatsApps entre las 06:00 y las 07:00. Ver [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]].
+   - **El fallo de envío no se reintenta jamás.** `Filtrar y evitar duplicados` marca `staticData.enviados[clave]` **antes** de enviar: el 400 de `salesbot/run` dejó a Julián sin recordatorio y la clave puesta. Marcar después del OK. Ver [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]].
+   - *Por qué el 400*: sospecha = el lead no tiene chat de WhatsApp vinculado (entró por teléfono). Afecta igual al `bot_id 63814` recién conectado en la reserva por voz — es lo primero que debe responder el smoke del hito 1.
 3. **Verificar el RAG de Supabase (NEXT)** — es el único corpus que no he podido revisar (self-hosted sin dominio público). Puede seguir teniendo "Europolis" o la dirección vieja. Se comprueba preguntando "¿dónde estáis?" al bot por WhatsApp.
 4. **`emiafd@agentesia.madrid` hardcodeado (LATER)** — en `Especilista Asignado`, `toEmail` = `{{ email }}, emiafd@agentesia.madrid`. Buzón de la agencia recibiendo datos de pacientes en producción. Quitar.
 5. **Tres teléfonos distintos (LATER)** — prompt dice llamadas `629 494 209` y WhatsApp `919 934 582`; la KB dice `91 993 35 69`; las llamadas entran por `919 934 582`. Decidir cuál es cuál y unificar prompt + KB.
-6. **Nitidez de audio (LATER, si Gonzalo insiste)** — medido sobre la grabación: agente −19,8 dBFS, 0 muestras saturadas; el que se oye 5 dB más bajo es el llamante. Candidata real = `ambient_sound: call-center`, que se mezcla después de la grabación y por eso no se oye al escuchar el WAV. Latencia e2e p50 2,35 s / p90 3,35 s también pesa. Prueba: quitar el ambient y llamar.
-7. **Sin repo local (LATER)** — `~/Projects/clinica-zen` está vacío. Cero backup de los 14 workflows. Exportarlos y versionarlos.
+6. **Nitidez de audio (LATER, si Gonzalo insiste)** — medido sobre la grabación: agente −19,8 dBFS, 0 muestras saturadas; el que se oye 5 dB más bajo es el llamante. Candidata real = `ambient_sound: call-center`, que se mezcla después de la grabación y por eso no se oye al escuchar el WAV. Latencia e2e p50 2,35 s / p90 3,35 s también pesa. Prueba: quitar el ambient y llamar. Ver [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]].
+7. **Sin repo local (LATER)** — `~/Projects/clinica-zen` está vacío. Mitigado el 28-jul: los 10 workflows activos + el backup pre-cambio están en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (trackeado por git, excluido de búsqueda vía `.ignore`). Falta decidir si CZ merece repo propio con `ops/`.
 
 ## Bloqueos / esperando a terceros
 

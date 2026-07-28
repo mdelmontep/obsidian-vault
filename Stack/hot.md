@@ -68,3 +68,9 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Worktree en `/private/tmp` sin commitear = código perdido, pero el transcript no** — el `.jsonl` de la sesión guarda el resultado completo de cada subagente: se reconstruye la SPEC y se reimplementa. Ver [[transcript-jsonl-sobrevive-al-worktree-borrado]]
 - **El coste de compilar el módulo se le cobra al PRIMER test y lo saca de su timeout** — 2,8 s en aislado, >10 s con la suite entera; sale como flaky con mensajes de aserción, no de timeout. Precalentar en un `beforeAll` con timeout propio, no subir `testTimeout`. Ver [[el-coste-de-compilar-el-modulo-se-cobra-al-primer-test]]
 
+
+- **Marcar "enviado" antes de enviar = mensaje perdido para siempre** — el dedup escribe la clave, el envío falla después y el siguiente barrido salta. Marcar tras el OK. Ver [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]]
+- **Switch de n8n sin bloque `options` en las conditions manda TODO por la salida 0** — verde por la rama equivocada, solo visible en el `runData` de una ejecución. Ver [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]]
+- **Recordatorio "X horas antes" sin ventana horaria escribe de madrugada** — resta el offset a la hora de apertura: si no lo mandarías tú a mano, está roto. Ver [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]]
+- **Rama de canal nuevo (voz) no hereda los side-effects del final de la vieja (chat)** — la reserva se crea, el email no sale; y un nodo huérfano en workflow activo es una promesa incumplida. Ver [[canal-nuevo-en-workflow-no-hereda-los-side-effects-de-la-rama-original]]
+- **Queja de "no se oye nítido" en Retell: el `ambient_sound` NO está en la grabación** — mide el wav para descartar el TTS y luego audita config (ambient/speed/volume) y latencia e2e. Ver [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]]

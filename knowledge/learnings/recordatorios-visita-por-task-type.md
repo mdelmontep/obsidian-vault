@@ -14,5 +14,7 @@ de otro tipo (el matching pasó su tarea a Follow-up=1) se ignoran. `complete_ti
 exacto) da la precisión 24h/4h que un CF de fecha de texto no da. La tarea lleva el lead
 intrínseco y le aparece al agente en su lista — mejor que escanear un CF.
 
-Kommo Simarro solo tiene 2 task types: 1 Follow-up, 2 Meeting. Blueprint compartido entre
-clientes → revisar [[clinica-zen]] por el mismo bug. Ver [[simarro]] · [[routing-citas-por-agente]].
+Kommo Simarro solo tiene 2 task types: 1 Follow-up, 2 Meeting. **Verificado 2026-07-28: NO
+aplica a [[clinica-zen]]** — allí el escáner lee eventos de Google Calendar (`Lead ID:` en la
+descripción), no tareas, así que el `task_type` no interviene. El blueprint ya había divergido.
+Ver [[simarro]] · [[routing-citas-por-agente]].
