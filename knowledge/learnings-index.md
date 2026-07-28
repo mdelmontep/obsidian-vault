@@ -631,8 +631,9 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[withapiauth-solo-carga-role-con-requirerole-o-requirewrite]] — withApiAuth solo carga `role` si el endpoint declara requireRole/requireWrite
 - [[xss-en-email-html-interpolado-de-bd]] — xss en email html interpolado de bd se subestima — escape obligatorio
 
-## Git / repo / CI (52)
+## Git / repo / CI (53)
 - [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]] — aceptar una sugerencia HITL debe cerrar la decisión o el gate de acierto nunca abre
+- [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]] — «Cierra #N» no cierra el issue: GitHub solo reconoce las keywords en inglés
 - [[asistente-enterprise-natural-pero-grounded-no-llm-libre]] — contestar como ChatGPT" en un asistente enterprise = natural PERO grounded, no LLM libre
 - [[audit-bot-recurrente-idempotencia-por-estado-de-issues]] — bot de auditoría recurrente — la idempotencia vive en el estado de los issues, no en la f…
 - [[audits-cross-pr-vs-per-pr]] — audits cross pr vs per pr
@@ -765,7 +766,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[verifactu-xsd-namespace-suministroinfo-vs-sistemafacturacion]] — verifactu xsd: SistemaFacturacion.xsd (404) — usar SuministroInformacion.xsd + Suministro…
 - [[verificar-modelos-anthropic-vigentes-via-get-v1-models]] — verificar si un modelo anthropic sigue vigente con GET /v1/models
 
-## Docker / Dokploy / deploy / infra (24)
+## Docker / Dokploy / deploy / infra (25)
 - [[alert-collector-cron-vs-live-dedup-gap]] — cron materializador + collector en vivo necesitan dedup en runtime, no filtro de origen
 - [[alpine-docker-sin-bash-ni-curl-anadir-via-dockerfile-para-crons]] — alpine docker sin bash ni curl — añadir via dockerfile para crons
 - [[backblaze-computer-backup-vs-b2-cloud-storage-productos-distintos]] — backblaze computer backup vs b2 cloud storage productos distintos
@@ -775,6 +776,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[cron-health-flapea-con-run-en-vuelo-sobre-error]] — cron health flapea si deduces "recuperado" de "ya no está en rojo" y pillas un run en vue…
 - [[cron-mantenimiento-auto-sanable-no-debe-paginar-severidad-por-criticidad]] — cron de mantenimiento auto-sanable no debe paginar por email — severidad por criticidad,…
 - [[docker-compose-env-not-recreate]] — docker compose up no recrea container si solo cambia el valor de una variable referenciada
+- [[sondear-la-capacidad-real-no-la-presencia-del-binario]] — detectar una dependencia externa sondeando el binario, no la capacidad, elige el camino roto
 - [[docker-layer-cache-persiste-con-contenedor-activo]] — docker layer cache persiste si hay contenedor activo referenciando la capa
 - [[dokploy-api-deployments-sin-ordenar]] — Dokploy API: compose.one devuelve deployments SIN ordenar
 - [[dokploy-api-env-vive-en-composefile-no-en-campo-env]] — dokploy api compose.one — las env viven en composeFile, no en el campo env

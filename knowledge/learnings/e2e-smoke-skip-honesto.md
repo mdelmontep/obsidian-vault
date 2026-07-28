@@ -66,3 +66,19 @@ las dos vistas el mismo día y las dos dejando el test en VERDE sin probar nada:
 Regla: si un smoke sale verde, mirar el desglose de skipped. Un fichero entero
 saltado es un fallo, no una precondición. Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]].
 
+**Tercera cara (2026-07-28): el skip HONESTO que aun así deja el gate sin verificar.**
+Aquí la precondición falta de verdad (los tests se autosaltan sin DB, como deben), pero el
+gate imprime **✓ VERDE** y el número de skips se vuelve decorativo. En agh-iberica tres PRs
+se cerraron con `~343 skipped` porque el puerto 5433 de esa máquina lo ocupaba el Postgres
+de otro proyecto: el autor lo declaró honestamente y, aun así, **nadie había ejecutado un
+solo test de Postgres**. Corridos en otra máquina con el puerto libre: 42 ficheros, 184
+tests, 184 pasando — ninguna de las tres los había probado.
+
+- «No toca SQL ni migraciones» **no es** «los tests de SQL corren»: es una hipótesis sobre el
+  diff, no una verificación.
+- Es **deuda invisible por diseño**: no la ve quien la produce (su gate sale verde) ni quien
+  revisa (lee el ✓). Solo aparece comparando el nº de tests ejecutados entre dos máquinas.
+- Práctico: si el gate reporta skips, **desglosarlos por fichero** antes de decir verde, y
+  separar los opt-in legítimos (evals sin API key) de los que tapan un backstop entero. Un
+  puerto ocupado por otro proyecto es la causa más tonta y la más frecuente.
+

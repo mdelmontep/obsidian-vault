@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-27
+updated: 2026-07-28
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,27 +44,33 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-27) — análisis de una CALL REAL: 13 fallos, TODO MERGEADO en main
+## Estado (2026-07-28) — fallo de `email.send` en prod + revisión cross-PR con Postgres real
 
-**`main` en `d878578`: las 12 PRs del lote mergeadas con override de founder y gate verde entre cada merge → en prod vía autodeploy.** Conversación medida contra el modelo real: **35/43 → 38/45 checks**, y los 7 rojos que quedan son SOLO los dos huecos de prompt de Borja (#602, #603). Origen: llamada de voz real de Manu (`call_530a8af9…`, 25-jul, 6m28s, **terminó colgando dentro de un bucle**), traída por API de Retell y analizada turno a turno. **Corrige el diagnóstico del 22-jul**: esta vez NO era solo capa de voz — había fallos de brain/datos reales.
+**`main` en `5577b07`.** Dos frentes el mismo día.
 
-**Los 7 fixes, en prod** (gate propio + rojo-primero comprobado a mano en cada uno; y **composición del lote probada**: las 7 mergean sin conflicto, gate `agente 1758/325/3 · dashboard 321/1/0` con las siete juntas):
-- **PR #594** (#584) el recall por cliente ve las reuniones AGENDADAS — el agente negaba una reunión que él mismo acababa de crear. Causa: [[escribir-en-una-fuente-y-leer-de-otra-hace-que-el-agente-se-contradiga]].
-- **PR #599** (#586) la negación mata el pending + el ruido de ASR no se da de alta (el bucle donde colgó: dijo «no» cinco veces).
-- **PR #596** (#585, `Refs` no `Closes`) `*.update` explícito alcanza su entidad vía `lastWrite` + dedup en `meeting.create`.
-- **PR #595** (#588) desborde a WhatsApp honesto (mandaba 1 ficha de 3 en silencio) y por nº real de items.
-- **PR #597** (#589, encadenada sobre #594) hora heredada de la reunión referida + agenda vacía informativa.
-- **PR #593** (#587) el onboarding ya no guarda «Aquí está» (muletilla del dictado) como nombre del asistente.
-- **PR #598** (#592) el escenario de smoke deja de dar falso verde → [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]. Su primera pasada con modelo real (21/21 turnos, 35/43 checks) **destapó un bug nuevo**: **#600**.
-- **PR #604** docs de cierre (nota de sesión + snapshot).
+**Frente de Borja — `email.send` ROTO en prod** (determinista, repro en vivo; último borrador OK el 21-jul 14:41 UTC). Diagnóstico sobre trazas Langfuse reales → 4 issues y 3 PRs **sin mergear**: **#628** (#624 observabilidad), **#629** (#625 batch parcial) y **#630** (#626 🔴 el drafter *inventa valoraciones y compromisos* que salen a un tercero). **#627** a humano. El hallazgo que importa de #624: el `errorClass` se calculaba pero `inbound-pipeline` proyectaba solo `{kind,status}` y el error de Graph moría en un catch sin log → **la causa exacta no es determinable con la instrumentación actual**, y no se fabricó.
 
-**SIN resolver, a criterio humano** (los dos primeros son los que más se notarán en una demo con Carlos): **#590** deletreo por defecto dentro del resumen HITL de voz + fragmentos huérfanos tras barge-in · **#591** latencia e2e **p50 3,8s / p90 4,2s** (desglosar STT/brain/LLM/TTS antes de tocar) · **#521** deíctico «los otros dos clientes» convertido en nombre de cliente (repro nuevo anotado) · **#601** corregir un campo en batch MIXTO renombraría al contacto (contrato de #142) · **#602** no existe target agregado multi-cliente · **#603** declarar `meeting.update` en el `SYSTEM_PROMPT` (redacción ya propuesta, lane de Borja) · **#600** el modo `last` del recall narra en pasado una fila con fecha futura.
+**Frente mío — revisión, no implementación** (no había ni un issue `ready-for-agent` libre). Tres agentes de expertises dispares sobre las 4 PRs abiertas, con los hallazgos serios **verificados a mano antes de publicar**:
+- **Gate con Postgres 16 nativo**: las cuatro integran **sin un solo conflicto en cualquier orden**, `agente 1990/208/3 · dashboard 322/0/0 · drift ok`. **Deuda de skips pagada: 42 ficheros `*.pg.test.ts` → 184/184, 0 skips** — Borja las cerró con ~343 en skip porque su 5433 lo ocupaba otro proyecto → [[e2e-smoke-skip-honesto]].
+- **3 serios publicados**: el «enum cerrado» de #628 no lo está en código (el `payload` puede ser **salida cruda del LLM** → texto libre a la traza aunque `traceContent` esté off); en #629, el fallo M365 sigue diciendo «lo reintentamos» con el pending vacío **y el test nuevo cementa el bug** con un `toBe` de identidad; y el rótulo vuelca cuerpo de nota y PII en **24 de los 25** kinds, saliendo por el altavoz pese a `reviewChannelFor`. Todos con la misma raíz de método → [[mock-funcion-compartida-en-test-endpoint-falso-verde-composicion]].
+- **Verificado limpio** lo que se temía: el candado del regex de `error-classifier` intacto, sin fuga de PII por propagación, y el solape `graph-mail-client.ts` (#628 ∩ #579) **combina sin filtrar direcciones**.
+- **#632 → PR #633 (`66026f4`)**, lo único que escribí: el drift-gate sondeaba el binario `docker`, no un Docker usable → [[sondear-la-capacidad-real-no-la-presencia-del-binario]].
+- **#579 de Dani desbloqueada**: mi aviso del 27-jul de que conflictuaría **era falso**; la rebasó el 28-jul 13:27 y no tiene ni un conflicto. Un aviso de conflicto caduca y se vuelve bloqueo fantasma.
+- Gotcha: el issue no se autocerró porque la PR decía «Cierra #632» → [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]].
 
-**Segunda ronda (lo más valioso):** medir contra el modelo real DESPUÉS de mergear destapó tres huecos que los tests verdes no veían — #607 (el modo `detail` del recall repetía el fallo de `last`), #608 (el ruido de ASR se metió como cuerpo de una NOTA al taparle la vía del alta) y #609 (un assert mío mal planteado). Ver [[cada-fix-de-agente-medido-contra-el-modelo-real-destapa-el-siguiente-hueco]]. Gotcha de merge que costó un rescate: [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]].
+**Orden de merge sugerido:** #628 → #630 → #629 → #579 (radio de impacto; sin dependencias duras).
 
-**Deuda de verificación declarada:** los ~326 tests `*.pg.test.ts` en `skip` y el drift sin correr (sin Docker), con la **migración 0022** dentro del lote → pendiente `gate:full` con el compose arriba.
+**A humano, con dueño:** **licencia/buzón M365 en Entra** — *lo único que cierra la causa raíz de #624*; la llamada que falla es `POST /me/messages` con `Mail.ReadWrite`, 880 ms → primer intento, y hay **2ª hipótesis** además del trial caducado: el admin consent de un scope nuevo puede no auto-propagarse (`oauth-flow.ts:38-42`, gotcha #143). Los separa el código de Graph: `MailboxNotEnabledForRESTAPI` 404 = licencia · `ErrorAccessDenied` 403 = consentimiento. · ojo al prompt de #630 · **#590/#591 (voz)** siguen esperando desde el 26-jul · A/B de #627.
 
-**Método:** dos subagentes murieron por causas ajenas (límite de gasto de la org, un 529) y **el primer intento de #586 se perdió por un `git stash` cruzado** → [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]] y [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]]. #586 acabó implementado en el hilo principal.
+## Estado (2026-07-27) — call real: 13 fallos → 25 PRs mergeadas, todo en prod
+
+**`main` `3f674a0`.** De una llamada de voz real de Manu (`call_530a8af9…`, 25-jul, 6m28s, **terminó colgando en un bucle**) salieron 13 fallos + 3 rondas de fixes-de-los-fixes. **Corrigió el diagnóstico del 22-jul**: no era solo capa de voz, había fallos de brain/datos reales — el recall negaba una reunión que el propio agente acababa de crear ([[escribir-en-una-fuente-y-leer-de-otra-hace-que-el-agente-se-contradiga]]), la negación no mataba el pending, el ruido de ASR se daba de alta como cliente, el desborde mandaba 1 ficha de 3 en silencio. Conversación medida: **35/43 → 40/45**. Después se barrieron los issues LIBRES corregibles (#532, #619, #540, #601) y se resolvió **#521** de verdad (ordinales contra la última lista, en código determinista, cero egress).
+
+**Lo más valioso, y es de método:** medir contra el modelo real **DESPUÉS** de mergear destapó tres huecos que los tests verdes no veían → [[cada-fix-de-agente-medido-contra-el-modelo-real-destapa-el-siguiente-hueco]]. Y el arnés de smoke daba **falso verde** con asserts de eco → [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]].
+
+**Gotchas que costaron caro:** [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]] · [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]] · [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]]. Runbook nuevo: gate sin Docker (pg16+pgvector por Homebrew); **dos gates simultáneos contra el mismo 5433 = falso negativo**.
+
+Detalle día a día: `docs/status-log/2026-07-27-*.md` del repo.
 
 ## Estado (2026-07-22) — cerrado
 
