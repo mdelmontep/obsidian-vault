@@ -24,6 +24,7 @@ Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]
 Podar por antigüedad no funcionó dos veces (129→116→159 en dos días): el problema es el criterio de
 entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y en `knowledge/learnings/`.
 
+- **Documentar un hueco no es cerrarlo, y el silencio no es salud** — si el fallo es silencioso (un cron que nunca corrió, un EOL que pasó), la única defensa es código que grite: un "auditar de vez en cuando" en la documentación falla justo cuando hace falta. Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]
 - **Un fix no está verificado hasta crear una entidad NUEVA tras el deploy** — leer los datos que arregló el backfill no prueba nada del código; el compositor no es el punto de persistencia y la suite verde no cubre el camino que tocas. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]]
 - **Una PR encadenada se mergea en su BASE, no en main** — si no borras la rama base al mergear la primera; «MERGED» no significa «en main», verifícalo con grep sobre `origin/main`. Ver [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]]
 - **Cada fix de agente medido contra el modelo real destapa el siguiente hueco** — el ruido busca cualquier `kind`; y si un turno sigue rojo tras el fix, sospecha del assert antes que del código. Ver [[cada-fix-de-agente-medido-contra-el-modelo-real-destapa-el-siguiente-hueco]]
