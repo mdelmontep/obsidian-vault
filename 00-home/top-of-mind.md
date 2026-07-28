@@ -55,6 +55,8 @@ tags: [home, prioridades]
 
 - **TuFacturaIA — la deriva entre el catálogo de crons y Dokploy, cerrada (28-jul, #1300)** — un cron del catálogo (`obras-reservas-reconciliar`, red de seguridad de las reservas de obra) **no se había ejecutado nunca** y era invisible porque "sin runs" no es "rojo"; el hueco estaba documentado con un "auditar de vez en cuando" y mordió igual. Ya hay incidencia `cron_nunca_ejecutado`, los dos crons que faltaban están programados y verificados con run real (0 derivas acumuladas), y otras tres entradas del catálogo mentían. Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]. [[facturaia]]
 
+- **TuFacturaIA — ticket #86: la retención ya se ve en el listado, y un bug latente menos (28-jul, #1296 + #1309)** — los dos importes eran correctos; faltaba enseñar el que se cobra donde el cliente miraba. Investigarlo destapó que el editor rápido guardaba el total neto también en emitidas, con la mig 559 dándole coartada por comentario. Cero filas dañadas. **Pendiente tuyo**: contestar a Borja y pasar el ticket a `resuelto`. Ver [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]. [[facturaia]]
+
 ## Bloqueos (esperando a terceros)
 
 - **TuFacturaIA — Salt Edge Test access (Manu)** — sin esto no se puede validar PR #610 (draft) contra sandbox real; además tiene un bug real de fuga cross-tenant sin resolver (re-revisado 2026-07-05, NO mergeado). Aprobar en dashboard Salt Edge → seguir en [[facturaia]].
