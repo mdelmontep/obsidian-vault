@@ -400,7 +400,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (89)
+## Claude Code / agentes / harness (91)
 - [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
 - [[3-agentes-paralelos-auditoria-cambios-grandes]] — 3 agentes paralelos auditando cambios grandes — security / backend / frontend
 - [[actions-sin-billing-hooks-locales-unico-gate]] — con Actions caído (billing), los git hooks locales son el único gate de lint/build en fac…
@@ -411,6 +411,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[agentes-background-mueren-por-session-limit-reanudar-con-sendmessage]] — agentes background muertos por session limit se reanudan con sendmessage, no relanzando
 - [[apps-limpiadoras-dejan-agentes-y-daemons-persistentes-al-desinstalar]] — apps limpiadoras dejan agentes y daemons persistentes al desinstalar
 - [[audit-3-agentes-paralelos-detecta-vulnerabilidades-cross-sprint]] — Audit con 3 agentes paralelos detecta vulnerabilidades cross-sprint
+- [[brew-expone-python312-no-python3-y-el-python3-del-sistema-es-39]] — brew expone python3.12 pero no python3, y el del PATH es el 3.9 del sistema
 - [[chatwoot-webhook-message-created-no-incluye-labels]] — chatwoot webhook message_created no incluye labels
 - [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]] — chatwoot whatsapp cloud requiere redirigir webhook de meta
 - [[cherry-pick-4-worktrees-agentes-paralelos]] — 4 agentes paralelos en worktrees aislados + cherry-pick combinado a 1 PR
@@ -454,6 +455,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[n8n-webhook-tool-respond-no-hardcodear-exito-gatear-en-error-nodo]] — workflow-webhook que respalda un tool LLM no debe hardcodear éxito en el respond
 - [[nano-banana-vive-en-skill-design-scripts]] — nano banana / gemini image gen vive en ~/.claude/skills/design/scripts
 - [[next-build-lock-huerfano-hace-fallar-pre-push-hook]] — next build lock huérfano hace fallar el pre-push hook con mensaje engañoso
+- [[npx-skills-add-rompe-packs-con-instalador-propio]] — npx skills add rompe packs de skills con instalador propio (scripts/hooks en la raíz del …
 - [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]] — op read — el secreto nunca debe aparecer literal en un comando bash, ni copiado desde mem…
 - [[opt-out-de-setting-en-agentes-cuando-inline-es-suficiente]] — Setting en /agentes vs inline — cuándo elegir cuál
 - [[paginated-hook-dual-index-pattern]] — hook paginado + hook índice separado para views con búsqueda in-memory
