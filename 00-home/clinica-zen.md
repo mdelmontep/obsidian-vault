@@ -68,7 +68,9 @@ Backup pre-cambio: `cz-pre-email-voz-20260728-1227.json` (scratchpad de sesión,
 
 ## Bloqueos / esperando a terceros
 
-Ninguno. El de mayo (ID del status "Cita cancelada") era obsoleto.
+- **Paginalia no entrega el correo saliente a dominios externos (28-jul)** — el SMTP `mail.clinicazen.es:465` acepta y encola (`250 Ok: queued`) pero nada sale. Probado: 3 correos a `@agentesia.madrid` sin llegar; uno al propio `citas@clinicazen.es` **entregado en 4 s**; sonda a una dirección inexistente de Gmail sin rebote a los 7 min (Gmail devolvería `550` en segundos si lo recibiera); 0 rebotes acumulados en el buzón. Descartado todo lo demás: buzón destino existe (`250` al RCPT contra `aspmx.l.google.com`), SPF autoriza la IP de salida por `+mx` y `+a:vps01.paginalia.es`, DKIM `default` publicado, FCrDNS coherente (`185.99.186.74` ↔ `ns1.paginalia.es`), IP limpia en Spamhaus/Spamcop/Barracuda, dominio limpio en DBL.
+  **Acción**: ticket a Paginalia con los IDs de cola `C31C3BD1B2`, `DA84BBFC98`, `7E1ACBFC98`, `2114DBDD65` (externos, no entregados) y `A3247BFC98` (interno, entregado — sirve de contraste).
+  **Consecuencia**: el aviso interno a `citas@clinicazen.es` que conecté hoy SÍ funciona (entrega local); el correo al paciente **no llegará** aunque se cablee, porque los pacientes están en Gmail/Hotmail. Corrobora la queja: en el buzón solo hay 2 avisos de "Nueva cita", ambos de mayo. Ver [[smtp-acepta-con-250-queued-y-no-entrega-fuera]].
 
 ## Links rápidos
 
