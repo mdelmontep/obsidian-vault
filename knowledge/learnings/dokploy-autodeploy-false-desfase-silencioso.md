@@ -34,3 +34,9 @@ Deploy manual por API (sin panel): `curl -X POST .../api/compose.deploy -H "x-ap
 -d '{"composeId":"…"}'`. Verificar SIEMPRE por comportamiento (`/health` con su hash de
 tools), nunca por el `deployments[]`. Ver [[actions-sin-billing-hooks-locales-unico-gate]].
 
+**Corolario con autodeploy SÍ activo** (29-jul, app de facturaia): `git log origin/main..HEAD`
+vacío significa "el push está hecho", no "prod lo sirve". El build tardó ~15 min y el primer
+smoke con navegador auditó el panel ANTERIOR sin que nada avisara — el snapshot era coherente,
+solo que del build viejo. Antes de dar por bueno un smoke, confirmar en la propia página un
+texto que solo exista en el build nuevo (un label renombrado sirve de canario).
+
