@@ -19,3 +19,9 @@ Prueba que lo separa en 3 minutos, sin depender de que nadie mire su bandeja:
 Caso real (Clínica Zen): interno entregado en 4 s, 3 externos encolados y desaparecidos,
 sonda sin rebote → problema del hosting de correo, no del emisor. SPF/DKIM/FCrDNS/RBL
 estaban todos limpios, así que revisarlos primero habría costado la tarde. Ver [[clinica-zen]]
+
+**Corrección (29-jul)**: en el caso que originó esta nota el rebote SÍ existía — tardó 7 min
+y cayó en la carpeta **Spam** del buzón, no en INBOX. Buscarlo a los 2 min y solo en INBOX
+me hizo concluir lo contrario. La sonda es válida; lo que hay que hacer bien es **esperar
+(hasta 15 min) y buscar en TODAS las carpetas**, Spam incluida. Un "no hay rebote" prematuro
+es tan engañoso como no mirar.

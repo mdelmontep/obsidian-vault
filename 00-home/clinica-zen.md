@@ -90,9 +90,10 @@ Todo cruzado contra Kommo, Retell, Google Calendar e IMAP, no leyendo el JSON:
 
 ## Bloqueos / esperando a terceros
 
-- **Paginalia no entrega el correo saliente a dominios externos (28-jul)** — el SMTP `mail.clinicazen.es:465` acepta y encola (`250 Ok: queued`) pero nada sale. Probado: 3 correos a `@agentesia.madrid` sin llegar; uno al propio `citas@clinicazen.es` **entregado en 4 s**; sonda a una dirección inexistente de Gmail sin rebote a los 7 min (Gmail devolvería `550` en segundos si lo recibiera); 0 rebotes acumulados en el buzón. Descartado todo lo demás: buzón destino existe (`250` al RCPT contra `aspmx.l.google.com`), SPF autoriza la IP de salida por `+mx` y `+a:vps01.paginalia.es`, DKIM `default` publicado, FCrDNS coherente (`185.99.186.74` ↔ `ns1.paginalia.es`), IP limpia en Spamhaus/Spamcop/Barracuda, dominio limpio en DBL.
-  **Acción**: ticket a Paginalia con los IDs de cola `C31C3BD1B2`, `DA84BBFC98`, `7E1ACBFC98`, `2114DBDD65` (externos, no entregados) y `A3247BFC98` (interno, entregado — sirve de contraste).
-  **Consecuencia**: el aviso interno a `citas@clinicazen.es` que conecté hoy SÍ funciona (entrega local); el correo al paciente **no llegará** aunque se cablee, porque los pacientes están en Gmail/Hotmail. Corrobora la queja: en el buzón solo hay 2 avisos de "Nueva cita", ambos de mayo. Ver [[smtp-acepta-con-250-queued-y-no-entrega-fuera]].
+- ~~**Paginalia no entrega el correo saliente**~~ **DIAGNÓSTICO ERRÓNEO, corregido 29-jul**. El rebote de la sonda SÍ llegó — a la carpeta **Spam** del buzón, 7 min después del envío; yo lo busqué a los 2 min y solo en INBOX. Gmail respondió `550-5.1.1 ... does not exist`, o sea **la salida externa funciona**. No hay nada que reclamar a Paginalia.
+  **Causa real: reputación.** Cabeceras de un envío propio: `dmarc=pass (p=QUARANTINE)`, `dkim=pass header.d=clinicazen.es` (firma con selector `default`), `spf=pass`. Autenticación impecable — Google los aparca en Spam porque `clinicazen.es` casi no envía correo, sale por IP compartida de un hosting pequeño y escribe a buzones sin historial previo. Las 3 pruebas seguidas con asunto `[TEST]` y sin texto plano tampoco ayudaron.
+  **Mitigaciones**: (1) remitente permitido en Workspace (Admin → Apps → Gmail → Spam) para el correo interno de AgentesIA; (2) para emails a PACIENTES (Gmail/Hotmail), proveedor transaccional con reputación propia (Resend/Brevo/SES) autenticando `clinicazen.es` — es lo estándar y no depende del VPS compartido.
+  **Impacto real ACOTADO**: el aviso interno de la reserva por voz va a `citas@clinicazen.es`, que es **entrega local en el mismo servidor** (probado: 4 s) — no pasa por Google ni por filtro de spam. La clínica sí recibe sus avisos.
 
 ## Links rápidos
 
