@@ -1,6 +1,6 @@
 ---
 title: clinica-zen
-date: 2026-07-28
+date: 2026-07-29
 tags: [cliente, clinica-zen]
 ---
 
@@ -8,7 +8,9 @@ tags: [cliente, clinica-zen]
 
 Clínica dental + estética facial en Las Rozas. Chatbot WhatsApp (Kommo) + agente de voz Retell + recordatorios + emails. Contactos: Gonzalo (legacy), Dani.
 
-Auditado end-to-end el 2026-07-28 vía API (n8n + Retell). Los tres hitos que arrastraba este hub desde mayo estaban ya resueltos en producción; se sustituyen por lo que hay abierto de verdad.
+Auditado end-to-end el 2026-07-28/29 vía API (n8n, Retell, Kommo, Google Calendar, IMAP) y GUI de Kommo. Los tres hitos que arrastraba este hub desde mayo estaban ya resueltos en producción.
+
+**Estado 29-jul: nada bloqueante y nada roto conocido.** Lo corregido está verificado por partes ejecutándose (Switch, Code de ambas ramas de reserva, generador de email, deploy); lo que falta es verlo funcionar de punta a punta con un paciente real — llega solo con el uso: cuando los contadores de los bots `63810`/`63808` dejen de estar a 0 en Kommo, los recordatorios funcionan.
 
 ## Estado (verificado 2026-07-28)
 

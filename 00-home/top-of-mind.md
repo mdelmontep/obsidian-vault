@@ -80,7 +80,7 @@ tags: [home, prioridades]
 | TuFacturaIA | [[facturaia]] | Activo · NEXT/Smoke/LATER en el hub |
 | Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
 | Simarro | [[simarro]] | Matching + voz/WA + outbound |
-| Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · smoke reserva voz + 400 de salesbot |
+| Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
 | Tecnocloud | [[tecnocloud]] | PR #3 voice-webhook + voz Laura |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |

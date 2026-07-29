@@ -359,3 +359,9 @@ tags: [home, archivo]
 - 2026-07-28 Clínica Zen — amojo_token manual cada 24h: resuelto sin registrar (token dinámico vía OAuth2 + 20 nodos migrados a salesbot)
 - 2026-07-28 Clínica Zen — feedback de llamada de Gonzalo: dirección corregida en el prompt (4 sitios, referencia de Navalcarbón), voice_speed 1.12→1.05, agente v63 publicado, email interno de la reserva por voz conectado y WhatsApp de confirmación desahuerfanado
 - 2026-07-25 · TuFacturaIA · módulo SEPA: 4 PRs en main (#1201/#1204/#1210/#1215), smoke completo verificado por Manu incluida la remesa real y el XML. Aviso vivo al desplegar: `BtchBookg` cambia el extracto de las orgs que ya domicilian → [[ADR-040-btchbookg-apunte-agrupado-por-defecto]]
+- 2026-07-29 Clínica Zen — `entity_type` string → entero en los 2 nodos de recordatorio: llevaban desde su creación fallando el 100% de los envíos (0 lanzamientos en Kommo lo confirman)
+- 2026-07-29 Clínica Zen — retención de ejecuciones de n8n: `EXECUTIONS_DATA_MAX_AGE=7` eran 7 HORAS, no 7 días; a 336 + PRUNE_MAX_COUNT, desplegado con 13 s de corte
+- 2026-07-29 Clínica Zen — revertida la conexión de `WA Confirmación Cita A/B` (habría duplicado el WhatsApp: el bot 63814 ya se dispara por etapa)
+- 2026-07-29 Clínica Zen — bots de Kommo verificados en la GUI: los 2 de recordatorio bien montados, con la plantilla correcta cada uno; las 6 plantillas WABA aprobadas
+- 2026-07-29 Clínica Zen — rectificado el falso diagnóstico de Paginalia: el correo saliente funciona, llega a Spam por reputación (dmarc/dkim/spf pass)
+- 2026-07-29 Clínica Zen — Code de reserva por voz probado en runtime (ambas ramas, 5 casos): el nombre inválido se sustituye por el del contacto de Kommo o por `Paciente <tel>`
