@@ -15,8 +15,11 @@ darlo por arreglado fue el error: en Node un `setInterval` no se dispara mientra
 bloqueado por trabajo síncrono (`spawnSync`, `cpSync`). Repro: 4019 ms de trabajo síncrono → **0
 latidos**, cuando tocaban ~20. O sea que el tramo que motivó el cambio, la copia del GB con `cpSync`,
 seguía sin latir. La lección general: un latido por temporizador solo protege los tramos
-asíncronos. Un tramo síncrono largo necesita latido explícito intercalado (trocear y latir entre
-trozos) o volverse asíncrono. Si no, el watchdog mide silencio del loop, no salud del job.
+asíncronos. Un tramo síncrono largo necesita latido explícito intercalado o volverse asíncrono. Si
+no, el watchdog mide silencio del loop, no salud del job.
+Arreglado de las dos formas a la vez (#1358): `cpSync` → `await cp` de `fs/promises` y `heartbeat()`
+intercalado entre los pasos síncronos. Medido: con `cpSync` 0 latidos, con `await cp` 6 de 6. Peaje
+asumido: la copia asíncrona tarda casi el doble, y es eso o que el watchdog mate el job.
 
 Y el motivo de que no se viera en las métricas: **el evento de fase se emite DESPUÉS del tramo caro**,
 así que "preparando" figuraba con 0,0 min de media. Un tramo cuya duración se mide desde su final
