@@ -1,36 +1,56 @@
 ---
 title: hot cache
-date: 2026-07-27
+date: 2026-07-29
 tags: [stack, index]
 ---
 
 # Hot Cache
 
-**Qué entra aquí (regla, no sugerencia):** SOLO **método y riesgo transversal** — lo que no sabes que
-tienes que buscar: trampas de worktrees/subagentes/gate/verificación, y patrones de integridad que se
-repiten entre proyectos. **Un gotcha de un stack concreto NO entra nunca**: su casa es
-`Stack/<tool>.md`, que ya se carga por disparador cuando tocas ese fichero.
+Este fichero se carga **cuando no hay disparador claro** (CLAUDE.md: "Default / dudo → `Stack/hot.md`").
+O sea: es lo que se lee al arrancar sin saber todavía qué se va a tocar. Todo lo que esté aquí se paga
+en contexto en esas sesiones, venga al caso o no.
 
-**Tope: ~45 entradas.** Si para meter una hay que sacar otra, ese es el trabajo — no ampliar el tope.
+**Qué entra:** SOLO **método y riesgo transversal** — lo que no sabes que tienes que buscar: trampas de
+worktrees/subagentes/gate/verificación, y patrones de integridad que se repiten entre proyectos.
+**Un gotcha de un stack concreto NO entra nunca**: su casa es `Stack/<tool>.md`, que ya se carga por
+disparador cuando tocas ese fichero.
 
-Por qué esta regla (2026-07-27): el fichero se podó por fecha dos veces (40→15 el 13-jul, 146→129 el
-25-jul) y **volvió a 159 en dos días**. Podar no arregla un problema de criterio de entrada. Se
-retiraron 116 punteros de gotchas por-stack; ninguno se borró — siguen en `knowledge/learnings/` y los
-9 que no tenían otro enlace entrante quedaron recolocados en su `Stack/<tool>.md`.
+**Qué SALE (lo que faltaba, 29-jul):** una entrada sale de aquí cuando su riesgo pasa a estar
+**bloqueado por una máquina** — hook de git, trinquete, test de conformidad, lint rule. Lo que un hook
+impide no hace falta recordarlo en contexto: el hook lo dirá en el momento exacto. Aquí se queda solo
+lo que **únicamente** existe como advertencia.
+
+> Medido el 29-jul cruzando las 60 entradas contra los 14 gates reales (git-guard, pre-commit,
+> pre-push, semáforo de CPU): **solo 1 estaba cubierta por un hook**. Ese es el hueco real de este
+> fichero — no su tamaño. Cada entrada que reincide y sea comprobable por un comando debería
+> convertirse en hook y salir de aquí. Ver [[claude-code-harness]].
+
+**Tope: 60.** Es el número real de hoy, no un deseo: antes convivían "~45" y "tope duro de 25" en esta
+misma cabecera mientras el fichero tenía 73, y un tope que se incumple 2,4x no ordena nada. La forma de
+bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso ya falló dos veces
+(40→15 el 13-jul, 146→129 el 25-jul, y **de vuelta a 159 en dos días**).
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-**Criterio de entrada (27-jul):** tope duro de **25 entradas**. Para meter una hay que sacar otra.
-Podar por antigüedad no funcionó dos veces (129→116→159 en dos días): el problema es el criterio de
-entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y en `knowledge/learnings/`.
+## Ha vuelto a pasar (7)
+
+Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
+estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
+
+- **Un guard en código que predice una restricción de la BD acaba mirando otro universo** — si la unicidad la impone un índice y el chequeo previo la reescribe en otro lenguaje (o con otro scope), divergen y el `INSERT` revienta en runtime: la consulta del guard debe ser la **expresión literal del índice**. Ver [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
+- **Un comentario que dice "esto es deliberado" solo cubre el caso que su autor tenía delante** — si la justificación es más específica que el `if` que la protege, falta el `if`. Ver [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]
+- **Antes de tocar un ticket, mira si otra sesión ya lo está cerrando** — `gh pr list --state all --search "<área>"`; y al resolver el conflicto quédate las DOS mitades, no elijas lado. Ver [[antes-de-tocar-un-ticket-mira-si-otra-sesion-ya-lo-esta-cerrando]]
+- **Una tanda E2E sin comprobar que el servidor sigue vivo al final no es una medición** — `next dev` se murió tres veces a mitad de tanda y sus `ERR_CONNECTION_REFUSED` son indistinguibles de un bug: empujan a subir timeouts. Medir contra `build`+`start`, arrancarlo con `nohup … & disown`, y cerrar con un `curl`. Ver [[tanda-e2e-sin-comprobar-el-servidor-vivo-al-final-no-es-medicion]]
+- **Un staging deja de ser fuente de verdad tras el commit, y editarlo sigue "guardando"** — el buffer (JSONB de OCR, borrador, import) se copia al registro EN el aprobar/publicar; después, la pantalla del staging persiste con éxito y el registro no cambia. Tras el commit muestra el valor DEL REGISTRO, bloquea con motivo y rechaza en voz alta desde el único punto de escritura. Ver [[staging-deja-de-ser-fuente-de-verdad-tras-el-commit-y-editarlo-no-cambia-nada]] · [[editor-inline-que-compara-contra-el-valor-mostrado-encalla-al-reescribir-lo-mismo]]
+- **Un backfill que no cierra el origen vuelve a morder con la siguiente fila** — si el alta necesita hijas para funcionar, se siembran TODAS en el trigger de alta, no a medias entre trigger y onboarding. Ver [[seed-partido-entre-trigger-y-onboarding-deja-filas-a-medias]]
+- **Si algo se puede reintentar, el callback del intento VIEJO cerrará lo que ya se reabrió** — llega tarde y actúa sobre un estado que no es el que él dejó; la guarda de idempotencia ("no lo hagas dos veces") no cubre la de vigencia ("¿sigo siendo el intento actual?"). Ver [[callback-de-un-intento-viejo-cierra-lo-que-ya-se-reabrio]]
+
+## El resto (53)
 
 - **Sanear el valor y olvidar la clave** — el NOMBRE del parámetro también es entrada del usuario, y un campo que nadie ve como "texto libre" acaba siendo mejor canal de inyección que el que sí lo es, porque solo se valla lo que parece peligroso. Ver [[sanear-el-valor-y-olvidar-la-clave-el-nombre-del-parametro-tambien-es-entrada]]
 - **Migrar a un primitivo compartido puede quitar accesibilidad que venía gratis** — roving tabindex sin selección deja el grupo entero fuera del tabulador; los `<button>` a mano se tabulaban solos. Mira los hermanos de la carpeta antes de tocar el primitivo. Ver [[roving-tabindex-sin-seleccion-deja-el-grupo-fuera-del-tabulador]]
 - **Mide el reparto de fallos antes de arreglar el que te cuentan** — "murió por timeout, mejora el prompt": los timeouts eran 6 de 34 fallos; el resto, config y watchdog. Y con decenas de jobs no distingues prompt v1 de v2, así que "más criterios de calidad" es infalsable. Ver [[mide-el-reparto-de-fallos-antes-de-arreglar-el-que-te-cuentan]]
 - **Una orden imposible en su entorno no hace que el agente diga "no puedo"** — explora hasta que lo matan (captura de pantalla sin navegador, build que revienta por OOM). Y la misma instrucción repetida en dos capas de prompt acaba divergiendo: cada una en un solo sitio. Ver [[orden-imposible-en-su-entorno-el-agente-explora-hasta-que-lo-matan]]
-- **Un guard en código que predice una restricción de la BD acaba mirando otro universo** — si la unicidad la impone un índice y el chequeo previo la reescribe en otro lenguaje (o con otro scope), divergen y el `INSERT` revienta en runtime: la consulta del guard debe ser la **expresión literal del índice**. Ver [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
-- **Un comentario que dice "esto es deliberado" solo cubre el caso que su autor tenía delante** — si la justificación es más específica que el `if` que la protege, falta el `if`. Ver [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]
-- **Antes de tocar un ticket, mira si otra sesión ya lo está cerrando** — `gh pr list --state all --search "<área>"`; y al resolver el conflicto quédate las DOS mitades, no elijas lado. Ver [[antes-de-tocar-un-ticket-mira-si-otra-sesion-ya-lo-esta-cerrando]]
 - **Documentar un hueco no es cerrarlo, y el silencio no es salud** — si el fallo es silencioso (un cron que nunca corrió, un EOL que pasó), la única defensa es código que grite: un "auditar de vez en cuando" en la documentación falla justo cuando hace falta. Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]
 - **Un fix no está verificado hasta crear una entidad NUEVA tras el deploy** — leer los datos que arregló el backfill no prueba nada del código; el compositor no es el punto de persistencia y la suite verde no cubre el camino que tocas. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]]
 - **Una PR encadenada se mergea en su BASE, no en main** — si no borras la rama base al mergear la primera; «MERGED» no significa «en main», verifícalo con grep sobre `origin/main`. Ver [[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]]
@@ -39,7 +59,6 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Una clave read-only NO se verifica escribiendo** — el `POST` de prueba que esperaba un 403 devolvió 200 y creó objetos reales en una cuenta live. Lo comprobable leyendo es la CUENTA (`GET /v1/account`), no la ausencia de permiso de escritura. Ver [[no-verificar-una-clave-read-only-escribiendo-con-ella]]
 - **`--force-with-lease` sin `fetch` no protege nada** — compara contra tu `origin/<rama>` LOCAL, así que un checkout desactualizado autoriza rebobinar `main` 40+ commits. Lease con SHA explícito, y verifica la recuperación por ÁRBOL, no por log. Ver [[force-with-lease-sin-fetch-no-protege-nada]]
 - **Un locator que resuelve a 0 elementos es un test roto, no evidencia** — dentro de un `if (isVisible)` es FALSO VERDE, y detrás de un `test.skip(count === 0)` es verde PERMANENTE (uno tapaba markup oculto por CSS desde hacía un mes). Ojo también al que casa de MÁS. Afirmar por rol/nombre accesible o por el contrato del componente, nunca por clase de CSS Module. Ver [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]]
-- **Una tanda E2E sin comprobar que el servidor sigue vivo al final no es una medición** — `next dev` se murió tres veces a mitad de tanda y sus `ERR_CONNECTION_REFUSED` son indistinguibles de un bug: empujan a subir timeouts. Medir contra `build`+`start`, arrancarlo con `nohup … & disown`, y cerrar con un `curl`. Ver [[tanda-e2e-sin-comprobar-el-servidor-vivo-al-final-no-es-medicion]]
 - **IDs de entorno cableados en un spec miden una org que no existe** — `count` a 0 y `update` que no toca filas, en silencio. Resolver del entorno y fallar con mensaje claro. Ver [[spec-con-ids-de-entorno-cableados-mide-una-org-inexistente]]
 - **`gh pr merge` desde un worktree falla DESPUÉS de mergear en remoto** — el error (`'main' is already used by worktree`) lo da el checkout local posterior, no el merge; comprobar con `gh pr view N --json state` antes de reintentar. Ver [[gh-pr-merge-desde-worktree-falla-despues-de-haber-mergeado]]
 - **El stash es compartido entre worktrees** — una sesión paralela puede recuperar tu stash y dejarte sin fix; cero `stash` en repos con worktrees. Ver [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]]
@@ -48,7 +67,6 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Gate de auto-aplicación: "n≥50 y acierto ≥95%" NO sostiene el 95%** — Wilson con n=50 da [0,851 , 0,984]; una org al 90% real abre el gate el 11% de las veces. Decide por cota inferior, sweep semanal + cooldown, y cobertura como condición aparte (el silencio no es aceptación). Ver [[gate-de-automatizacion-n50-al-95-no-sostiene-el-95-usa-cota-wilson]].
 - **Relajar un filtro duro que además era techo implícito de un score abre una ruta de auto que nadie diseñó** — calcula el máximo alcanzable SIN esa señal antes de tocarlo; separa `umbral_sugerencia` de `elegible_auto` y codifica el invariante, no la constante. Ver [[relajar-filtro-duro-que-era-techo-implicito-abre-automatizacion-no-disenada]].
 - **En un worktree `.git` es FICHERO, no directorio** — detectar la raíz con `existsSync('.git')` + `basename(dir)` devuelve la RAMA como nombre de proyecto (rompió el panel de horas). Parsear el `gitdir:`. Ver [[git-worktree-dotgit-es-fichero-basename-devuelve-la-rama]].
-- **Un staging deja de ser fuente de verdad tras el commit, y editarlo sigue "guardando"** — el buffer (JSONB de OCR, borrador, import) se copia al registro EN el aprobar/publicar; después, la pantalla del staging persiste con éxito y el registro no cambia. Tras el commit muestra el valor DEL REGISTRO, bloquea con motivo y rechaza en voz alta desde el único punto de escritura. Ver [[staging-deja-de-ser-fuente-de-verdad-tras-el-commit-y-editarlo-no-cambia-nada]] · [[editor-inline-que-compara-contra-el-valor-mostrado-encalla-al-reescribir-lo-mismo]]
 - **Un guard que recalcula la fórmula que asegura no verifica nada**: pasa en verde con el cuerpo viejo. Inspecciona `prosrc`/`pg_get_expr` (contiene lo nuevo Y **no** el patrón viejo) + filas reales. Ver [[guard-de-migracion-que-recalcula-la-formula-no-verifica-nada]]
 - **Universo de datos en dos sitios divergge** — el detector de cambios debe leer el universo de la misma fuente que lo guardó. Ver [[universo-de-datos-reimplementado-en-dos-sitios-divergge]]
 - **FK RESTRICT ≠ regla de negocio** — no distingue estados; la política va en la operación. Ver [[fk-restrict-no-sirve-como-regla-de-negocio-no-distingue-estados]]
@@ -60,15 +78,12 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Si un barrido omite una fuente por coste, no puede resolver sus alertas** — ausente-porque-no-se-mira ≠ recuperada. Ver [[lo-que-un-barrido-omite-no-puede-darse-por-recuperado]]
 - **Un camino crítico sin smoke se pudre meses aunque haya miles de tests al lado** — 7.541 unitarios y ninguno arrancaba Chromium: dos fallos de 2 meses en el que genera TODAS las facturas. Si produce el artefacto que ve el cliente y ningún test lo produce de verdad, no está cubierto. Ver [[camino-critico-sin-smoke-se-pudre-meses]]
 - **Cambio de motor de render: A/B con el mismo código, no "el build pasa"** — dos imágenes, payload del repo + variante multipágina, comparar páginas → texto extraído → píxeles. Ver [[validar-cambio-de-motor-de-render-con-ab-de-misma-imagen]]
-
 - **Un helper de auth que dice "el caller ya validó X" es una fuga esperando** — el gate va DENTRO. Al unificar dos implementaciones divergentes, la más restrictiva suele ser la correcta: compara semántica antes de borrar la "copia". Ver [[helper-de-auth-que-asume-validacion-del-caller]]
 - **Divergencia conocida = test VERDE que la afirma, no rojo permanente** — un rojo se normaliza en dos días y rompe el gate de todos. Ver [[characterization-test-diverge-en-vez-de-rojo-permanente]]
 - **Clic por coordenadas tras un salto de layout no cae en el botón** — no pasa nada, sin error ni petición: idéntico a un botón roto. En smokes, clicar por referencia de elemento, y ante un "no hace nada" descartar primero que el clic cayera fuera. Ver [[clic-por-coordenadas-tras-salto-de-layout-no-cae-en-el-boton]]
 - **Un test nuevo no vale hasta que le rompes el código a propósito y falla** — dos minutos de mutación distinguen "pasa" de "vigila algo". Caza el test que se salta solo y el que mide el artefacto vecino. Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]]
 - **Worktree en `/private/tmp` sin commitear = código perdido, pero el transcript no** — el `.jsonl` de la sesión guarda el resultado completo de cada subagente: se reconstruye la SPEC y se reimplementa. Ver [[transcript-jsonl-sobrevive-al-worktree-borrado]]
 - **El coste de compilar el módulo se le cobra al PRIMER test y lo saca de su timeout** — 2,8 s en aislado, >10 s con la suite entera; sale como flaky con mensajes de aserción, no de timeout. Precalentar en un `beforeAll` con timeout propio, no subir `testTimeout`. Ver [[el-coste-de-compilar-el-modulo-se-cobra-al-primer-test]]
-
-
 - **Marcar "enviado" antes de enviar = mensaje perdido para siempre** — el dedup escribe la clave, el envío falla después y el siguiente barrido salta. Marcar tras el OK. Ver [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]]
 - **Recordatorio "X horas antes" sin ventana horaria escribe de madrugada** — resta el offset a la hora de apertura: si no lo mandarías tú a mano, está roto. Ver [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]]
 - **`250 queued` no es entrega** — sonda a una dirección INEXISTENTE de Gmail: si sale de verdad rebota en segundos; sin rebote y sin entrega, el hosting no está sacando el correo. Ver [[smtp-acepta-con-250-queued-y-no-entrega-fuera]]
@@ -80,10 +95,8 @@ entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y 
 - **Tests rojos con los tiempos clavados en 5000 ms = contención, no código** — córrelos aislados antes de diagnosticar nada. Ver [[tests-que-caen-por-contencion-de-cpu-verificalos-aislados-antes-de-diagnosticar]]
 - **Un `pgrep -f` sobre una cadena que acabas de escribir se encuentra a sí mismo** — el bucle no sale y das por vivo un proceso terminado. Ver [[el-bucle-que-espera-con-pgrep-se-encuentra-a-si-mismo]]
 - **Un fake cuya FORMA de retorno satisface la aserción verifica el fake, no el código** — y `toMatchObject` para afirmar AUSENCIA de una clave siempre pasa. Ver [[mock-funcion-compartida-en-test-endpoint-falso-verde-composicion]]
-- **Un backfill que no cierra el origen vuelve a morder con la siguiente fila** — si el alta necesita hijas para funcionar, se siembran TODAS en el trigger de alta, no a medias entre trigger y onboarding. Ver [[seed-partido-entre-trigger-y-onboarding-deja-filas-a-medias]]
 - **Cambiar el destinatario de un envío arrastra su gate de verificación** — decide por CANAL (email sí, WhatsApp solo si ese número está validado), no por persona. Ver [[redirigir-un-envio-sin-mover-su-gate-de-verificacion]]
 - **Un nodo huérfano puede estarlo a propósito** — el efecto puede producirlo otro sistema (bot del pipeline, trigger, cron). Mira su contador de uso en el otro lado ANTES de conectarlo: reconectar duplica el mensaje al cliente. Ver [[nodo-huerfano-puede-estar-desconectado-porque-otro-mecanismo-ya-lo-cubre]]
-- **Si algo se puede reintentar, el callback del intento VIEJO cerrará lo que ya se reabrió** — llega tarde y actúa sobre un estado que no es el que él dejó; la guarda de idempotencia ("no lo hagas dos veces") no cubre la de vigencia ("¿sigo siendo el intento actual?"). Ver [[callback-de-un-intento-viejo-cierra-lo-que-ya-se-reabrio]]
 - **Si la auditoría es la única copia que quedará del dato, no puede ir en fire-and-forget** — al escribir un endpoint destructivo, pregunta qué queda del dato después: si la respuesta es "la fila de auditoría", esa fila es parte de la transacción (antes del borrado y bloqueante). Ver [[auditoria-que-es-la-unica-copia-del-dato-no-puede-ir-en-fire-and-forget]]
 - **Un campo que MUESTRA un formato y GUARDA otro descarta la edición en silencio** — formatter de solo-lectura sobre un input libre + `return` mudo de validación = pérdida de datos que parece guardado. El control lo decide el tipo del dato (fecha → DatePicker compartido), y ninguna rama de guardado sale sin avisar. Ver [[campo-que-muestra-un-formato-y-guarda-otro-descarta-la-edicion-en-silencio]]
 - **Año de dos dígitos en un documento: `DD-MM-YY` o `YY-MM-DD` es indecidible para el modelo** — y si lo persiste al revés, el dato se va a otro ejercicio sin que salte nada. Desambiguar en código por convención local + sanity check contra la fecha de alta. Ver [[ocr-lee-dd-mm-yy-como-yy-mm-dd-y-manda-la-factura-a-otro-ejercicio]]
