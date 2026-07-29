@@ -369,3 +369,7 @@ tags: [home, archivo]
 - 2026-07-29 · AGH · #638 `graph-calendar-client` deja rastro cuando Graph rechaza; `graphErrorCode`/`logGraphRejection` extraídos (PR #639).
 - 2026-07-29 · AGH · #640 el alta consulta el duplicado por TENANT, alineada con el índice único — bug observado en prod (PR #641).
 - 2026-07-29 · AGH · #580 triado a `ready-for-human` con las dos trampas del PATCH de eventos de Graph; #591 medido con datos reales de Langfuse.
+- 2026-07-29 · AGH · #645 la siembra ya no se traga un caso nuevo de la unión (+ `never` en los dos consumidores) · #644 el lote aísla cada alta, la traza cuenta las escrituras y el consejo deja de mentir.
+- 2026-07-29 · AGH · #647 «sigue con lo nuevo» descarta el pending · #650 la propuesta de import consulta la cartera (la falta de serialización del issue era falsa).
+- 2026-07-29 · AGH · #643 🔴 el turno que borra un cliente ya no se envenena a sí mismo (bloqueante de prod, usuaria atrapada 14 min) · #646 cerrado como hipótesis falsa.
+- 2026-07-29 · AGH · #585 dedup de reunión agendada · #668 error-analysis de multi-intent (→ #672).
