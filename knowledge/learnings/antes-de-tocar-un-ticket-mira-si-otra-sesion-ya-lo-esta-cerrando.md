@@ -27,5 +27,15 @@ complementarias (allí: su copy de usuario + mi fuente única del número).
 Y al resolver, grep de las referencias por número de línea (`fichero.tsx:799`) que
 el otro haya dejado en comentarios: si tu rama mueve esa línea, quedan mintiendo.
 
+Tercera ocurrencia (2026-07-29, anchos de columna): la señal NO fue un PR abierto
+—no lo había— sino **cambios sin commitear en el checkout raíz sobre mis mismos
+ficheros**, que solo aparecieron al fallar el `git pull` con "your local changes
+would be overwritten". Añade `git status` del checkout compartido a la
+comprobación de 5 segundos. Las dos ramas llegaron a la misma solución CSS por
+separado; mientras yo fusionaba, el otro mergeó lo suyo (#1338) y mi PR de
+fusión (#1337) nació redundante y se cerró. Antes de cerrarlo: verificar que lo
+que quedó en main es coherente (allí, que ninguna mitad dejara una clase
+referenciada pero inexistente).
+
 Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] ·
 [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]
