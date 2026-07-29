@@ -18,6 +18,8 @@ disponible"). Usar la imagen `pgvector/pgvector:pg16`:
 
 Luego `DATABASE_URL=postgres://user:pass@localhost:5433/<db> npm test`.
 
+**Sin Docker en la máquina** (30-jul): sirven los servicios de Homebrew — `brew services start postgresql@16 redis`, crear el rol/BD y `CREATE EXTENSION vector` (el formula `pgvector` ya trae la extensión para `postgresql@16`). Dos gotchas: el puerto por defecto es **5432**, no el 5433 que espera el test (pasar `DATABASE_URL`/`DRIFT_PG_PORT`), y un gate que hace `pg_dump` **exige la MISMA major que el servidor** — con `postgresql@17` también instalado el PATH resuelve al 17 y aborta, así que `PATH=/opt/homebrew/opt/postgresql@16/bin:$PATH`.
+
 Caso real (2026-07-04, AGH #86): una PR se reportó con "gate verde" pero los `.pg` se
 autosaltaron (sin Docker en esa sesión) → coló una regresión real (el flujo de siembra por
 voz del onboarding roto). El re-run con pg la cazó. Disciplina: tras `npm test`, confirmar
