@@ -95,3 +95,14 @@ Las rutinas de `claude.ai/code` corren en un CCR aislado en la nube de Anthropic
 - **El clasificador de auto-mode BLOQUEA `RemoteTrigger create`** de una rutina que egresa PII a la nube si la única autorización vino de un compañero por Slack, no del **propio usuario en sesión** → hace falta el OK directo del dueño de la cuenta.
 - **Secretos** van en el prompt de la rutina; las respuestas de la API (`get`/`run`) devuelven el prompt COMPLETO con los secretos → quedan en el transcript, rótalos si importa.
 - `RemoteTrigger` (no curl): `list`/`get`/`create`/`update`/`run`. `update` de `job_config` REEMPLAZA el prompt entero (no es patch del texto). No se pueden borrar rutinas por API (UI `claude.ai/code/routines`). Cron en UTC, mínimo 1h.
+
+## Advertencias que pasaron a ser máquina (29-jul)
+
+Las dos reincidieron estando escritas en `hot.md`, así que se automatizaron y **salieron** de
+allí por el criterio de salida nuevo ("lo que un hook impide no hace falta recordarlo en
+contexto"). Aquí quedan documentadas con su gate:
+
+- **Antes de tocar un ticket, mira si otra sesión ya lo está cerrando** — `gh pr list --state all --search "<área>"`; y al resolver el conflicto quédate las DOS mitades, no elijas lado. Ver [[antes-de-tocar-un-ticket-mira-si-otra-sesion-ya-lo-esta-cerrando]]
+  → **Gate**: `~/.claude/hooks/ticket-collision-guard.sh` (UserPromptSubmit). Avisa una vez por sesión de las ramas de worktree con commits sin mergear de las últimas 24 h y **qué ficheros tocan**. Descartadas midiendo dos señales que parecían obvias y no valen: buscar el nº de ticket en GitHub (los PRs del runner lo referencian por UUID) y listar PRs abiertas (11 de 12 eran de dependabot).
+- **Una tanda E2E sin comprobar que el servidor sigue vivo al final no es una medición** — `next dev` se murió tres veces a mitad de tanda y sus `ERR_CONNECTION_REFUSED` son indistinguibles de un bug: empujan a subir timeouts. Medir contra `build`+`start`, arrancarlo con `nohup … & disown`, y cerrar con un `curl`. Ver [[tanda-e2e-sin-comprobar-el-servidor-vivo-al-final-no-es-medicion]]
+  → **Gate**: `tests/e2e/global-teardown.ts` en facturaia (registrado en `playwright.config.ts`). Al terminar la tanda hace un HEAD a `/login` del `baseURL`; si no responde, marca la tanda **NO CONCLUYENTE** y pone `exitCode = 1` sin reventar el proceso, para no esconder el informe HTML.

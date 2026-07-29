@@ -32,20 +32,18 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (7)
+## Ha vuelto a pasar (5)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
 - **Un guard en código que predice una restricción de la BD acaba mirando otro universo** — si la unicidad la impone un índice y el chequeo previo la reescribe en otro lenguaje (o con otro scope), divergen y el `INSERT` revienta en runtime: la consulta del guard debe ser la **expresión literal del índice**. Ver [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
 - **Un comentario que dice "esto es deliberado" solo cubre el caso que su autor tenía delante** — si la justificación es más específica que el `if` que la protege, falta el `if`. Ver [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]
-- **Antes de tocar un ticket, mira si otra sesión ya lo está cerrando** — `gh pr list --state all --search "<área>"`; y al resolver el conflicto quédate las DOS mitades, no elijas lado. Ver [[antes-de-tocar-un-ticket-mira-si-otra-sesion-ya-lo-esta-cerrando]]
-- **Una tanda E2E sin comprobar que el servidor sigue vivo al final no es una medición** — `next dev` se murió tres veces a mitad de tanda y sus `ERR_CONNECTION_REFUSED` son indistinguibles de un bug: empujan a subir timeouts. Medir contra `build`+`start`, arrancarlo con `nohup … & disown`, y cerrar con un `curl`. Ver [[tanda-e2e-sin-comprobar-el-servidor-vivo-al-final-no-es-medicion]]
 - **Un staging deja de ser fuente de verdad tras el commit, y editarlo sigue "guardando"** — el buffer (JSONB de OCR, borrador, import) se copia al registro EN el aprobar/publicar; después, la pantalla del staging persiste con éxito y el registro no cambia. Tras el commit muestra el valor DEL REGISTRO, bloquea con motivo y rechaza en voz alta desde el único punto de escritura. Ver [[staging-deja-de-ser-fuente-de-verdad-tras-el-commit-y-editarlo-no-cambia-nada]] · [[editor-inline-que-compara-contra-el-valor-mostrado-encalla-al-reescribir-lo-mismo]]
 - **Un backfill que no cierra el origen vuelve a morder con la siguiente fila** — si el alta necesita hijas para funcionar, se siembran TODAS en el trigger de alta, no a medias entre trigger y onboarding. Ver [[seed-partido-entre-trigger-y-onboarding-deja-filas-a-medias]]
 - **Si algo se puede reintentar, el callback del intento VIEJO cerrará lo que ya se reabrió** — llega tarde y actúa sobre un estado que no es el que él dejó; la guarda de idempotencia ("no lo hagas dos veces") no cubre la de vigencia ("¿sigo siendo el intento actual?"). Ver [[callback-de-un-intento-viejo-cierra-lo-que-ya-se-reabrio]]
 
-## El resto (53)
+## El resto (52)
 
 - **Sanear el valor y olvidar la clave** — el NOMBRE del parámetro también es entrada del usuario, y un campo que nadie ve como "texto libre" acaba siendo mejor canal de inyección que el que sí lo es, porque solo se valla lo que parece peligroso. Ver [[sanear-el-valor-y-olvidar-la-clave-el-nombre-del-parametro-tambien-es-entrada]]
 - **Migrar a un primitivo compartido puede quitar accesibilidad que venía gratis** — roving tabindex sin selección deja el grupo entero fuera del tabulador; los `<button>` a mano se tabulaban solos. Mira los hermanos de la carpeta antes de tocar el primitivo. Ver [[roving-tabindex-sin-seleccion-deja-el-grupo-fuera-del-tabulador]]
