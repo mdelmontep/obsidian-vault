@@ -39,3 +39,18 @@ referenciada pero inexistente).
 
 Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] ·
 [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]
+
+**Reincidencia 2026-07-29, y no era un ticket sino un ÁREA**: en la misma
+mañana, dos sesiones arreglaron por separado el mismo bug de anchos de columna
+en Materiales (mismo diagnóstico, misma solución `width: 0` + spacer) y otras
+dos implementaron la misma columna fija. Coste: un PR cerrado por duplicado
+(#1337), una rama rehecha desde cero y trabajo tirado. La comprobación vale
+igual para un área de código, no solo para un ticket con número:
+
+```
+gh pr list --state open | grep -i "<área>"
+git log origin/main --oneline -10 -- <ruta del área>
+```
+
+Y el disparador no es "voy a cerrar un issue", es **"voy a tocar estos
+ficheros"**.
