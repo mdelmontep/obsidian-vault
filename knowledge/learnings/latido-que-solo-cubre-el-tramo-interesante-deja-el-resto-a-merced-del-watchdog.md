@@ -31,4 +31,4 @@ Y el motivo de que no se viera en las métricas: **el evento de fase se emite DE
 así que "preparando" figuraba con 0,0 min de media. Un tramo cuya duración se mide desde su final
 es un tramo sin medir. Al instrumentar por fases, marca el inicio, no el fin.
 
-Ver [[orden-imposible-en-su-entorno-el-agente-explora-hasta-que-lo-matan]] · [[turbopack-rechaza-symlink-node-modules-en-worktree]]
+Ver [[autodeploy-sin-watchpaths-mata-el-trabajo-en-vuelo-del-worker]] (la causa real de esos 3 y su arreglo) · [[orden-imposible-en-su-entorno-el-agente-explora-hasta-que-lo-matan]] · [[turbopack-rechaza-symlink-node-modules-en-worktree]]
