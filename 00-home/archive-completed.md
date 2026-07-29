@@ -373,3 +373,5 @@ tags: [home, archivo]
 - 2026-07-29 · AGH · #647 «sigue con lo nuevo» descarta el pending · #650 la propuesta de import consulta la cartera (la falta de serialización del issue era falsa).
 - 2026-07-29 · AGH · #643 🔴 el turno que borra un cliente ya no se envenena a sí mismo (bloqueante de prod, usuaria atrapada 14 min) · #646 cerrado como hipótesis falsa.
 - 2026-07-29 · AGH · #585 dedup de reunión agendada · #668 error-analysis de multi-intent (→ #672).
+- 2026-07-27 · TuFacturaIA · runtime fuera de EOL (Node 24 LTS + Alpine 3.23) y limpieza del camino de PDF: 5 PRs (#1257/#1261/#1262 + #1266-#1271) y las 5 issues de robustez cerradas; vigilante de EOL programado y verificado en Dokploy (28-jul). Ver [[ADR-043-sin-ci-el-gate-local-es-el-contrato]] · [[dependabot-no-avisa-de-eol-de-runtime]]
+- 2026-07-29 · TuFacturaIA · dos tickets del runner ("manuela") en main (#1326 + #1327): la reimportación de tarifa Telematel conserva la vigencia y "Nuevo presupuesto" deja de abrir una factura. El "gate FALLÓ" era un OOM del entorno del runner. Ver [[fia-gate-watchdog-mata-la-cadena-entera-con-un-solo-presupuesto]]
