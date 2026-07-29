@@ -40,4 +40,11 @@ salvo emergencia documentada). Fix: **calienta la caché** (corre `next build` u
 vez hasta poblar `.next`) y luego lanza el `git push` en **background** (no atado
 al timeout de foreground); el build re-usa la caché caliente y completa.
 
+Causa más tonta del mismo síntoma (2026-07-29): lanzar el `git push` **mientras
+tu propio `next build` sigue vivo en ese worktree**. El hook arranca un segundo
+build sobre el mismo `.next` y el push se rechaza con "build con errores" aunque
+el código esté perfecto — el build a solas pasa a la primera. Antes de empujar,
+comprueba que no queda ninguno tuyo corriendo (ojo con
+[[el-bucle-que-espera-con-pgrep-se-encuentra-a-si-mismo]], que te dirá que sí).
+
 Relacionado: [[pre-commit-hook-oom-con-dev-server]].
