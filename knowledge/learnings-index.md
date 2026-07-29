@@ -247,6 +247,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[zod-v4-tojsonschema-nativo-deriva-tool-schema]] — zod v4 trae z.toJSONSchema nativo — deriva el tool-schema del LLM, no lo dupliques a mano
 
 ## Frontend / React / CSS / UI (151)
+
+- [[grid-en-el-li-manda-el-texto-suelto-a-la-columna-del-bullet]] — un contenedor grid/flex no lleva texto suelto: se vuelve ítem anónimo y cae en la columna del bullet
 - [[admin-tooling-para-no-tecnicos-read-only-semaforo-ejemplos]] — admin tooling para owner no-técnico — read-only + semáforo + ejemplos
 - [[agent-browser-cdp-formularios-react-requestsubmit]] — agent-browser (vercel) en formularios react — el click no submite, usar form.requestSubmi…
 - [[agent-browser-select-custom-click-opcion-no-registra-usar-teclado]] — agent-browser — click en opción de Select custom (ARIA combobox) no selecciona; usar tecl…
@@ -401,6 +403,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
 ## Claude Code / agentes / harness (91)
+
+- [[agent-browser-auth-login-sin-session-no-persiste-la-cookie]] — `auth login` cierra su navegador; abrir la sesión nombrada y pasar `--session` en todo
 - [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
 - [[3-agentes-paralelos-auditoria-cambios-grandes]] — 3 agentes paralelos auditando cambios grandes — security / backend / frontend
 - [[actions-sin-billing-hooks-locales-unico-gate]] — con Actions caído (billing), los git hooks locales son el único gate de lint/build en fac…
@@ -842,6 +846,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[zod-strict-bloquea-campos-no-listados-silenciosamente]] — zod strict bloquea campos no listados silenciosamente
 
 ## OCR / ingesta / documentos (16)
+
+- [[pdf-escaneado-sin-capa-de-texto-renderizar-paginas-con-pdftoppm]] — `pdftotext` a 0 líneas = escaneo; renderizar con `pdftoppm` y ojo al desfase de numeración
 - [[documento-dinero-ya-cobrado-debe-marcarse-cobrada-explicito]] — documento que representa dinero ya cobrado debe marcarse cobrada explícito
 - [[flag-de-revision-derivado-solo-se-sube-nunca-se-limpia]] — un flag derivado que solo se escribe al detectar anomalía deja avisos fantasma
 - [[gate-agentico-que-no-dispara-suele-estar-inanido-no-mal-calibrado]] — un gate agéntico/ml que no dispara suele estar inanido en el origen, no mal calibrado
@@ -885,6 +891,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[unidad-compra-convertir-en-insert-no-en-motor]] — unidad de compra (cajas) — convertir en el RPC de inserción, no en el motor de stock
 
 ## Otros (24)
+
+- [[la-copia-durable-de-una-fuente-efimera-se-hace-el-mismo-dia-o-no-se-hace]] — WhatsApp/Downloads no son destinos; ya se perdieron dos fuentes del modelo WAPI
 - [[apps-electron-guardan-cache-en-partitions-service-worker-no-en-root]] — apps electron guardan cache en partitions service worker no en root
 - [[atributo-download-ignorado-en-redirect-cross-origin]] — el atributo download del <a> se ignora en redirects cross-origin
 - [[bullmq-cola-efimera-bd-fuente-de-verdad]] — bullmq es disparador efímero, no almacén — bd fuente de verdad + reconciliación al boot
