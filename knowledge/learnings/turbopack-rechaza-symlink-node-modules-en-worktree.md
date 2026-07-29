@@ -31,6 +31,11 @@ tras un `checkout -b` el symlink puede no volver y `vitest`/`tsc` rompen con
 `Cannot find package 'vitest'`. Recrear el symlink antes de correr tests (o mover cambios
 entre ramas sin `-u`). Ver [[git-stash-sin-u-deja-untracked-y-hook-falla]].
 
+**Contraejemplo del "mismo volumen" (2026-07-29):** worktree en `~/Projects/wt-x` con
+symlink a `~/Projects/repo/node_modules` — mismo disco, mismo `/Users` — y Turbopack lo
+rechaza igual con el mismo FATAL. Co-ubicar en el volumen NO basta. Si el worktree cuelga
+fuera del repo, `cp -al`; el symlink solo vale anidado (abajo).
+
 **Excepción confirmada (2026-07-29, Next 16.2.11):** con el worktree ANIDADO dentro del
 propio repo (`.claude/worktrees/<x>`), el symlink de `node_modules` (+ `.env.local`) SÍ deja
 pasar `next build`: apunta dentro del filesystem root, que es lo único que Turbopack exige.
