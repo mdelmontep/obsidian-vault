@@ -31,4 +31,11 @@ tras un `checkout -b` el symlink puede no volver y `vitest`/`tsc` rompen con
 `Cannot find package 'vitest'`. Recrear el symlink antes de correr tests (o mover cambios
 entre ramas sin `-u`). Ver [[git-stash-sin-u-deja-untracked-y-hook-falla]].
 
+**Excepción confirmada (2026-07-29, Next 16.2.11):** con el worktree ANIDADO dentro del
+propio repo (`.claude/worktrees/<x>`), el symlink de `node_modules` (+ `.env.local`) SÍ deja
+pasar `next build`: apunta dentro del filesystem root, que es lo único que Turbopack exige.
+Gate completo verde sin `npm install` ni `cp -al`. Único ruido: Next avisa de "multiple
+lockfiles" y elige el del repo padre. La regla real no es "symlink no", es "el symlink no
+puede salir del root".
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]].
