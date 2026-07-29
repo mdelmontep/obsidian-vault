@@ -1,29 +1,31 @@
 ---
-title: table-layout fixed con width 100% reparte los px declarados en vez de respetarlos
+title: table-layout fixed reparte los px declarados salvo que la tabla mida width 0
 date: 2026-07-29
 source: claude-code-session
 tags: [css, tablas, frontend]
 ---
 
-Columnas redimensionables con anchos en px (`<th style="width:260px">`) y
-`table-layout: fixed`: si la tabla lleva `width: 100%`, esos px NO son anchos,
-son **proporciones**. El navegador ajusta la suma al ancho del contenedor, así
-que con 2230 px declarados en 1090 de sitio la columna de 260 se queda en 164 y
-recorta con "…" mientras cinco columnas de guiones conservan sus 120-150.
+Con `table-layout: fixed`, si el ancho de la tabla NO coincide con la suma de
+los anchos de columna, el navegador reparte la diferencia **en proporción** a
+los px declarados: dejan de ser anchos y pasan a ser pesos.
 
-Síntoma que despista: "hay sitio de sobra al lado y aun así pone puntos
-suspensivos". No es el padding ni el `text-overflow`.
+`width: 100%` reparte el ancho del contenedor (2230 px declarados en 1090 de
+sitio → la columna de 260 se queda en 164 y recorta con "…"). **`max-content`
+no lo arregla**: reparte el del contenido, que con textos largos es aún mayor
+(2280 px), así que arrastrar una columna a 81 px la dejaba en 232 y no había
+forma de estrecharla. Firma inconfundible: TODAS las columnas escaladas por el
+mismo factor (medido 1,43).
 
 ```css
-.tabla { width: 100%; }                 /* la culpable */
-.tablaResizable { table-layout: fixed; width: max-content; min-width: 100%; }
+.tablaResizable { table-layout: fixed; width: 0; min-width: 100%; }
 ```
 
-`max-content` respeta cada ancho y el wrapper (`overflow-x: auto`) desplaza;
-`min-width: 100%` evita que quede corta si sobra sitio. El precio es scroll
-horizontal permanente en catálogos anchos: si no lo quieres, esconde columnas
-por defecto, no reduzcas anchos.
+`width: 0` es el único valor sin diferencia que repartir: en layout fixed la
+tabla no puede ser más estrecha que sus columnas, así que adopta su suma exacta.
+`min-width: 100%` exige un `<th aria-hidden>` spacer final SIN ancho declarado —
+el sobrante va primero a las columnas sin ancho, así se lo queda entero y las
+demás conservan el suyo. Sin spacer, vuelve el reparto.
 
 Al medir el recorte, mide el nodo del texto, no el `<th>`: si lleva tirador de
-resize, su `scrollWidth` es 3 px mayor siempre y da falso positivo en todas.
-Distinto de [[table-layout-fixed-columnas-porcentaje]], que va de % por variante.
+resize, su `scrollWidth` es 3 px mayor siempre. Distinto de
+[[table-layout-fixed-columnas-porcentaje]], que va de % por variante.

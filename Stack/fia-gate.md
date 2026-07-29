@@ -17,7 +17,8 @@ Vive en `~/.claude/gate/` (impl completa en la memoria del agente, no duplicar a
 - **Badge** SwiftBar (barra de menú): fase en vivo, `corriendo/MAX`, carga+⚠ al saturar, cancelar por job. Dashboard TUI: `node ~/.claude/gate/gate-dash`.
 
 ## Gotchas que salieron (learnings)
-- **Su `reap_orphans` mata jobs vivos de otras sesiones** (heurística "PPID 1 = huérfano") → [[fia-gate-reap-orphans-mata-jobs-de-otras-sesiones]]. Pendiente de arreglar.
+- **El watchdog mataba la cadena entera con un solo presupuesto de 900 s** (`is_simple_chain` no trocea si hay `;`/`|`/comillas) → [[fia-gate-watchdog-mata-la-cadena-entera-con-un-solo-presupuesto]]. **Arreglado 29-jul**: `count_heavy()` escala el presupuesto al nº de comandos pesados del segmento y el watchdog avisa por stderr al matar (antes solo `rc=143` mudo). Verificado A/B con `FIA_GATE_TIMEOUT=60`: n=1 muere a los 60 s, n=2 sobrevive.
+- **Diagnosticar muertes con `state/events.jsonl`, no por hipótesis**: la secuencia `queued/running/phase/timeout/done` + `rc` dice quién mató el job. Sin evento `done` = lo mató el harness, no el gate.
 - Matchear el comando por POSICIÓN, no substring → [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]].
 - Banner UI a medida desde script no es fiable → [[ui-flotante-desde-script-macos-swiftdialog-no-osascript-panel]].
 - BSD sed / while-read → [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]].

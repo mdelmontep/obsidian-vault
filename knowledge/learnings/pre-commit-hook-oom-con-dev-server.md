@@ -18,4 +18,9 @@ Fix: matar el dev server antes de commitear — `lsof -ti:3000 | xargs kill` (+
 cerrar navegadores headless de QA). Reintentar. Aplica a cualquier repo con hook
 pesado + proceso de dev/build paralelo, no solo este.
 
+Secuela (2026-07-29): matar el dev deja `.next/dev/types/validator.ts` escrito a
+medias y el siguiente `typecheck` falla ahí (TS1002/TS1128 en un fichero que no
+escribiste). No es tu código: `rm -rf .next` y repetir. Por lo mismo, `next dev`
+y `next build` NO pueden convivir en el mismo worktree — comparten `.next`.
+
 Relacionado: [[actions-sin-billing-hooks-locales-unico-gate]].
