@@ -43,8 +43,9 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un backfill que no cierra el origen vuelve a morder con la siguiente fila** — si el alta necesita hijas para funcionar, se siembran TODAS en el trigger de alta, no a medias entre trigger y onboarding. Ver [[seed-partido-entre-trigger-y-onboarding-deja-filas-a-medias]]
 - **Si algo se puede reintentar, el callback del intento VIEJO cerrará lo que ya se reabrió** — actúa sobre un estado que no es el que él dejó; la guarda de idempotencia no cubre la de vigencia ("¿sigo siendo el intento actual?"). Ver [[callback-de-un-intento-viejo-cierra-lo-que-ya-se-reabrio]]
 
-## El resto (52)
+## El resto (53)
 
+- **Con dos formas de cerrar algo, ramifica por el mecanismo, no por un campo que suele correlacionar** — si escribes donde el productor de la lista no lee, no cierras: es un `setState` con toast. La prueba es recargar. Ver [[dos-mecanismos-de-cierre-y-la-ui-ofrece-el-que-no-aplica]]
 - **Sanear el valor y olvidar la clave** — el NOMBRE del parámetro también es entrada del usuario, y un campo que nadie ve como "texto libre" acaba siendo mejor canal de inyección que el que sí lo es: solo se valla lo que parece peligroso. Ver [[sanear-el-valor-y-olvidar-la-clave-el-nombre-del-parametro-tambien-es-entrada]]
 - **Migrar a un primitivo compartido puede quitar accesibilidad que venía gratis** — roving tabindex sin selección deja el grupo entero fuera del tabulador; los `<button>` a mano se tabulaban solos. Mira los hermanos de la carpeta antes de tocar el primitivo. Ver [[roving-tabindex-sin-seleccion-deja-el-grupo-fuera-del-tabulador]]
 - **Mide el reparto de fallos antes de arreglar el que te cuentan** — "murió por timeout, mejora el prompt": los timeouts eran 6 de 34 fallos; el resto, config y watchdog. Y con decenas de jobs no distingues prompt v1 de v2, así que "más criterios de calidad" es infalsable. Ver [[mide-el-reparto-de-fallos-antes-de-arreglar-el-que-te-cuentan]]
