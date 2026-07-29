@@ -822,7 +822,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 
 ## Next.js / App Router (19)
 - [[server-component-que-toca-bd-en-su-cuerpo-se-prerenderiza-y-rompe-el-build]] — Server Component que toca la BD en su cuerpo se prerenderiza y tumba el build (recolocado de `hot.md`, poda 29-jul)
-- [[node-modules-por-symlink-en-worktree-rompe-el-build-de-turbopack]] — node_modules por symlink en un worktree pasa lint/tests y muere en `next build`
+- [[turbopack-rechaza-symlink-node-modules-en-worktree]] — node_modules por symlink en un worktree pasa lint/tests y muere en `next build`
 - [[bd-fuente-verdad-via-cache-memoria-hidratar-en-lectura]] — bd como fuente de verdad vía cache en memoria: hidratar en lectura, no solo al escribir
 - [[crypto-modulo-server-only-bloquea-scripts-cli-extraer-primitivas]] — módulo de cifrado con `import 'server-only'` bloquea scripts cli — extraer primitivas
 - [[curl-sf-trata-redirect-3xx-como-exito-en-crons]] — curl -sf trata un redirect 3xx como éxito — cron que reporta verde sin ejecutar nada

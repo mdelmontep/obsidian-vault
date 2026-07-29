@@ -338,3 +338,4 @@ Las expresiones en `workflowInputs` no admiten IIFEs. Si la expresión es comple
 
 ### IMAP trigger deja de hacer polling tras ciclos repetidos deactivate/activate
 `staticData` queda en estado corrompido (`{}`). No llega ninguna ejecución aunque la cred y los filtros sean correctos. Diagnóstico: leer `staticData` del workflow via API. Fix: **reiniciar el contenedor n8n** desde Dokploy (no basta con desactivar/activar el workflow). Ver [[elphis-doctoralia-email-sync-2026-06-11]]
+- **Rama de canal nuevo (voz) no hereda los side-effects del final de la vieja (chat)** — la reserva se crea, el email no sale; y un nodo huérfano en workflow activo es una promesa incumplida. Ver [[canal-nuevo-en-workflow-no-hereda-los-side-effects-de-la-rama-original]]

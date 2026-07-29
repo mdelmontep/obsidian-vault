@@ -12,3 +12,4 @@ Gotchas al montar la plantilla con un enlace personalizado (p.ej. link OAuth):
 - Robustez: intenta freeform y ante `131047` cae a plantilla (más fiable que trackear timestamps).
 - El agente NO debe prometer «te lo mando por WhatsApp» si no es entregable; y debe decir el siguiente paso por el mismo canal (voz), no solo dentro del WhatsApp que puede no llegar.
 Caso real: AGH agente de voz → enlace conectar M365 no llegaba (ventana cerrada). Aplica a cualquier cliente con WhatsApp Cloud API (FacturaIA, Elphis, EcoBox).
+El patrón de quién envía (la app dispara evento → n8n manda la plantilla; decidir por presencia de `conv_id`; postear el saliente en Chatwoot para que quede visible) en [[whatsapp-fuera-ventana-24h-requiere-plantilla-hsm]].

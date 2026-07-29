@@ -43,4 +43,11 @@ Gate completo verde sin `npm install` ni `cp -al`. Único ruido: Next avisa de "
 lockfiles" y elige el del repo padre. La regla real no es "symlink no", es "el symlink no
 puede salir del root".
 
-Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]].
+**Por qué duele tanto (2026-07-29):** el gate pre-push muere en `build`, o sea DESPUÉS de que
+lint, typecheck y tests hayan pasado en verde con el symlink puesto. El error habla de symlinks y
+filesystem root, pero llega en el momento en que uno espera un error de código, así que se lee
+como regresión propia. Si el worktree va a pasar el gate completo, resuelve `node_modules` de
+verdad (anidado + symlink, `cp -al` o `cp -Rc`) antes de escribir la primera línea.
+
+Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
+[[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].

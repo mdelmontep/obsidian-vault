@@ -24,4 +24,4 @@ WA (path `send_to_meta`) → sale Y queda visible en el timeline.
 Caso real: recordatorio de inactividad onboarding agency-portal (PR #95) → workflow
 n8n "AIA Onboarding — Research y arranque", case `event=onboarding_reminder` → nodo
 Meta Cloud API. Elphis 2026-07-21: `book-and-notify` enlace Doctoralia chat→Chatwoot
-/ voz→plantilla `elphis_cita_link`. Ver [[n8n-api-put-workflows-rechaza-settings-desconocidos]].
+/ voz→plantilla `elphis_cita_link`. Ver [[n8n-api-put-workflows-rechaza-settings-desconocidos]]. Los gotchas de montar la plantilla con enlace personalizado (botón-URL de sufijo dinámico, acortador propio, errores `131047`/`2388299`) están en [[whatsapp-cloud-api-fuera-de-ventana-24h-plantilla-y-acortador]].
