@@ -17,9 +17,14 @@ latidos**, cuando tocaban ~20. O sea que el tramo que motivó el cambio, la copi
 seguía sin latir. La lección general: un latido por temporizador solo protege los tramos
 asíncronos. Un tramo síncrono largo necesita latido explícito intercalado o volverse asíncrono. Si
 no, el watchdog mide silencio del loop, no salud del job.
-Arreglado de las dos formas a la vez (#1358): `cpSync` → `await cp` de `fs/promises` y `heartbeat()`
-intercalado entre los pasos síncronos. Medido: con `cpSync` 0 latidos, con `await cp` 6 de 6. Peaje
-asumido: la copia asíncrona tarda casi el doble, y es eso o que el watchdog mate el job.
+Arreglado de las dos formas a la vez (#1359): `cpSync` → `await cp` de `fs/promises` y `heartbeat()`
+intercalado entre los pasos síncronos. Medido: con `cpSync` 0 latidos, con `await cp` 6 de 6.
+CUIDADO con dar el síntoma por cerrado: esa misma noche 3 jobs volvieron a morir como "sin latido",
+pero **en la fase de la sesión**, no en la preparación, y ahí el loop está libre y el intervalo sí
+late. Dos réplicas a 3G copiando un GB cada una en un host compartido: lo más probable es que el
+contenedor se cayera y los jobs en vuelo quedaran huérfanos. "Sin latido" NO significa "bug del
+latido": significa que nadie latió, y el proceso muerto es la causa más simple. Verifica reinicios
+antes de tocar código de latido.
 
 Y el motivo de que no se viera en las métricas: **el evento de fase se emite DESPUÉS del tramo caro**,
 así que "preparando" figuraba con 0,0 min de media. Un tramo cuya duración se mide desde su final
