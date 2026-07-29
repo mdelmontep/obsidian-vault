@@ -24,6 +24,7 @@ Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]
 Podar por antigüedad no funcionó dos veces (129→116→159 en dos días): el problema es el criterio de
 entrada, no la edad. Lo retirado vive íntegro en [[patterns-cross-proyecto]] y en `knowledge/learnings/`.
 
+- **Un guard en código que predice una restricción de la BD acaba mirando otro universo** — si la unicidad la impone un índice y el chequeo previo la reescribe en otro lenguaje (o con otro scope), divergen y el `INSERT` revienta en runtime: la consulta del guard debe ser la **expresión literal del índice**. Ver [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
 - **Un comentario que dice "esto es deliberado" solo cubre el caso que su autor tenía delante** — si la justificación es más específica que el `if` que la protege, falta el `if`. Ver [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]]
 - **Antes de tocar un ticket, mira si otra sesión ya lo está cerrando** — `gh pr list --state all --search "<área>"`; y al resolver el conflicto quédate las DOS mitades, no elijas lado. Ver [[antes-de-tocar-un-ticket-mira-si-otra-sesion-ya-lo-esta-cerrando]]
 - **Documentar un hueco no es cerrarlo, y el silencio no es salud** — si el fallo es silencioso (un cron que nunca corrió, un EOL que pasó), la única defensa es código que grite: un "auditar de vez en cuando" en la documentación falla justo cuando hace falta. Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]

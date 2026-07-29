@@ -365,3 +365,7 @@ tags: [home, archivo]
 - 2026-07-29 Clínica Zen — bots de Kommo verificados en la GUI: los 2 de recordatorio bien montados, con la plantilla correcta cada uno; las 6 plantillas WABA aprobadas
 - 2026-07-29 Clínica Zen — rectificado el falso diagnóstico de Paginalia: el correo saliente funciona, llega a Spam por reputación (dmarc/dkim/spf pass)
 - 2026-07-29 Clínica Zen — Code de reserva por voz probado en runtime (ambas ramas, 5 casos): el nombre inválido se sustituye por el del contacto de Kommo o por `Paciente <tel>`
+- 2026-07-29 · AGH · #636 drift-gate: la sonda pasa a ser el `docker compose exec` real y el puerto sale a `DRIFT_PG_PORT` (PR #637).
+- 2026-07-29 · AGH · #638 `graph-calendar-client` deja rastro cuando Graph rechaza; `graphErrorCode`/`logGraphRejection` extraídos (PR #639).
+- 2026-07-29 · AGH · #640 el alta consulta el duplicado por TENANT, alineada con el índice único — bug observado en prod (PR #641).
+- 2026-07-29 · AGH · #580 triado a `ready-for-human` con las dos trampas del PATCH de eventos de Graph; #591 medido con datos reales de Langfuse.

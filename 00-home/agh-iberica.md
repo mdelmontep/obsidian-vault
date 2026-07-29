@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-28
+updated: 2026-07-29
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -43,6 +43,23 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 ## Arquitectura
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
+
+## Estado (2026-07-29) — el lote a prod, dos residuos de infra y un bug cazado en vivo
+
+**`main` en `87a3d00`, todo desplegado.** Borja mergeó su lote (#628/#629/#630) **arreglando antes los 3 hallazgos serios** de mi revisión del 28, cada uno con rojo reproducido. Aviso de coordinación real: cuando leí Slack, el canal iba **por detrás del repo** — el lote ya estaba mergeado y el mensaje no había salido.
+
+**Mías, 3 PRs con override de founder documentado:**
+- **#636/#637** — los dos residuos que Borja encontró en #632. El primero era **mi propio fallo un escalón más abajo**: sondar `docker compose version` sigue mintiendo si el *servicio* del compose está parado → la sonda pasa a ser el comando exacto. Y `DRIFT_PG_PORT` aplica a los **dos** modos, porque `migrate.ts` corre en el host → [[sondear-la-capacidad-real-no-la-presencia-del-binario]].
+- **#638/#639** — `graph-calendar-client` nacía mudo; `graphErrorCode`+`logGraphRejection` a `graph-errors.ts`. Peor que en correo: los reads de agenda son best-effort, así que un 403 de scope **se veía como agenda vacía**.
+- **#640/#641** — bug **de prod cazado mientras ocurría**, y **nombrado por la instrumentación de #628** (`errorClass=store_error`): el dedup del alta miraba la cartera del owner y el índice único es de tenant → `23505` crudo. Raíz de método: la normalización estaba escrita **dos veces en dos lenguajes** → [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]].
+
+**Sin código, con decisión encima de Borja:** **#580** triado a `ready-for-human` — el PATCH de Graph tiene dos trampas oficiales (el `body` **mata el enlace de Teams**, `attendees` se **reemplaza** y avisa a los borrados) y recomiendo resolver contra el calendario en vez de tabla espejo → [[patch-de-evento-en-graph-reemplaza-attendees-y-puede-matar-el-enlace-de-teams]]. · **#591 MEDIDO**: nuestro tramo es **el 28% del p50 de voz**, el resto es STT/TTS/red → tocar el brain no arregla esa latencia; y el desglose fino **no es medible** sin spans → [[antes-de-optimizar-latencia-mide-tu-tramo-y-restalo-del-e2e]].
+
+**#624 sigue abierto, pero más acotado:** #628 está en prod (verificado) y el token de Borja **se refrescó el 28 a las 11:06 UTC, antes del fallo y vigente** → el refresh funcionaba, el peso se va a las dos hipótesis de Graph. **Solo falta que alguien dicte un correo**: el log únicamente se escribe en el instante del rechazo. Anotado: `m365_credentials` no guarda los scopes concedidos — con el `scp` se resolvería sin repro.
+
+**Accesos (ya no hay que redescubrirlos):** SSH al host va con el ítem 1Password **`ssh AGH`** (el ítem «186» es el del PANEL, `:3000`) y el host **no acepta password de root para `ssh-copy-id`**. **Langfuse es self-hosted en el mismo host** y su ClickHouse se consulta **sin credencial** desde el server — vía práctica para medir trazas.
+
+**A humano:** licencia/buzón M365 en Entra (#624) · el correo dictado · ojo post-hoc a la copia de #640 y su fork B · enfoque de #580 · A/B de #627 · **#579 de Dani sigue abierta, limpia y sin que nadie la mergee** · `RETELL_WS_SECRET` sigue sin definirse en prod.
 
 ## Estado (2026-07-28) — fallo de `email.send` en prod + revisión cross-PR con Postgres real
 
