@@ -9,10 +9,16 @@ desde un módulo marcado `'use client'` (ej. `buttonClassName()` de un
 `components/ui/button` cliente), revienta EN RUNTIME:
 "Attempted to call X from the server but X is on the client."
 
-Lo insidioso: **el `build` de producción NO lo caza** — pasa lint, typecheck y
-build verdes, y solo falla al renderizar la ruta en el navegador. Por eso un
-smoke de navegación real (Playwright/agent-browser) es imprescindible; los
-gates estáticos no bastan para páginas nuevas.
+**MATIZ 2026-07-30 (antes decía que el build nunca lo caza):** depende de si la
+página se prerenderiza en build. Si NO (ruta dinámica, rama gated), el build pasa
+verde y solo revienta en el navegador. Si SÍ (`not-found.tsx`, página estática),
+**el build FALLA** — pero con el mensaje redactado:
+`Error occurred prerendering page "/_not-found" ... digest: '512600845'`, sin
+nombre de función ni fichero. Se ve el error real con
+**`npx next build --debug-prerender`**; ese debe ser el primer paso, no el cuarto.
+Un `not-found.tsx` roto tumba también rutas ajenas (`/design-system` en el mismo
+build), lo que despista sobre quién es el culpable.
+Aun así el smoke real sigue haciendo falta para las ramas no prerenderizadas.
 
 Fix preferido si la función es PURA (devuelve strings, no usa hooks): sácala a
 un módulo SIN `'use client'` (ej. `button-class.ts`) y que el módulo cliente la

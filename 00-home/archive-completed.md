@@ -375,3 +375,7 @@ tags: [home, archivo]
 - 2026-07-29 · AGH · #585 dedup de reunión agendada · #668 error-analysis de multi-intent (→ #672).
 - 2026-07-27 · TuFacturaIA · runtime fuera de EOL (Node 24 LTS + Alpine 3.23) y limpieza del camino de PDF: 5 PRs (#1257/#1261/#1262 + #1266-#1271) y las 5 issues de robustez cerradas; vigilante de EOL programado y verificado en Dokploy (28-jul). Ver [[ADR-043-sin-ci-el-gate-local-es-el-contrato]] · [[dependabot-no-avisa-de-eol-de-runtime]]
 - 2026-07-29 · TuFacturaIA · dos tickets del runner ("manuela") en main (#1326 + #1327): la reimportación de tarifa Telematel conserva la vigencia y "Nuevo presupuesto" deja de abrir una factura. El "gate FALLÓ" era un OOM del entorno del runner. Ver [[fia-gate-watchdog-mata-la-cadena-entera-con-un-solo-presupuesto]]
+
+- 2026-07-30 · TuFacturaIA · ticket resuelto se reabre con Claude y los mensajes del hilo se pueden borrar (#1354 + #1358) — sin acciones pendientes.
+- 2026-07-30 · TuFacturaIA · ticket #102 de Chivite: una línea de factura puede salir de varias partidas (#1347) — smoke y resumen al cliente hechos.
+- 2026-07-30 · TuFacturaIA · cierre del 29-jul con cuatro PRs en prod: tablas densas, Materiales sin scroll, IVA del papel en recibidas, y el cliente ve qué ticket tiene respuesta (#1335/#1338/#1336/#1339).

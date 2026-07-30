@@ -17,13 +17,17 @@ Para QA visual en paralelo se crea un `git worktree` desde `origin/main`, pero:
    lateral (`<a>`) y el toggle de vista (`<button>`) → navega fuera. Scopear por tag:
    `locator('button').filter({hasText:/^Calendario$/})`.
 
-4. Si el gate pre-push (o cualquier `next build` con Turbopack) va a correr en el
-   worktree, este DEBE vivir bajo el MISMO root de filesystem que el `node_modules`
-   real. Un worktree en `/private/tmp/...` con symlink a `/Users/.../node_modules`
-   revienta: `TurbopackInternalError: Symlink node_modules is invalid, it points
-   out of the filesystem root`. Fix: crear el worktree en `/Users/...` (p. ej.
-   `/Users/<user>/<repo>-fb`), no en el scratchpad de `/tmp`. Caso real 2026-07-20:
-   push de PR bloqueado hasta mover el worktree de `/private/tmp` a `/Users`.
+4. **Turbopack NO construye con un `node_modules` symlinkado, esté donde esté.**
+   `TurbopackInternalError: Symlink node_modules is invalid, it points out of the
+   filesystem root`.
+   **CORRECCIÓN 2026-07-30:** esto se atribuyó a cruzar roots de filesystem
+   (worktree en `/private/tmp` → `node_modules` en `/Users`). Causa equivocada:
+   falla igual con los DOS lados bajo `/Users` (`/Users/x/wt-qa-signo-lineas` →
+   `/Users/x/Projects/facturaia/node_modules`), mismo error literal. Mover el
+   worktree a `/Users` no arregla nada; el symlink ES el problema → hardlinks o
+   clonefile (puntos de abajo).
+   Lo caro: `vitest` y `tsc` SÍ resuelven el symlink. Un agente puede entregarte
+   8.500 tests y typecheck verdes en un worktree que no compila.
 
    **Mejor alternativa (2026-07-25): `cp -al <principal>/node_modules <worktree>/node_modules`.**
    Hardlinks en vez de symlink: instantáneo (segundos, no los ~2 min de `npm ci`), sin duplicar
