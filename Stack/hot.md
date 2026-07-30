@@ -43,7 +43,9 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un backfill que no cierra el origen vuelve a morder con la siguiente fila** — si el alta necesita hijas para funcionar, se siembran TODAS en el trigger de alta, no a medias entre trigger y onboarding. Ver [[seed-partido-entre-trigger-y-onboarding-deja-filas-a-medias]]
 - **Si algo se puede reintentar, el callback del intento VIEJO cerrará lo que ya se reabrió** — actúa sobre un estado que no es el que él dejó; la guarda de idempotencia no cubre la de vigencia ("¿sigo siendo el intento actual?"). Ver [[callback-de-un-intento-viejo-cierra-lo-que-ya-se-reabrio]]
 
-## El resto (56)
+## El resto (57)
+
+- **Un guard de drift bidireccional acopla las PRs de sus dos lados** — «todo lo registrado está declarado» hace que la PR que registra sin declarar caiga sola, y excepcionarlo destruye el único test que caza eso. Partir por donde el guard NO mira. Ver [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]]
 
 - **Una aserción de ausencia está verde gratis si el fixture no puede producir la presencia** — al lado de cada «no pasa X», una aserción de que **el camino se recorrió**; y verificar rompiendo el guard. Ver [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]]
 
