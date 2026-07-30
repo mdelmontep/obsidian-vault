@@ -22,6 +22,9 @@ test.** Si la frase merece estar escrita, merece un test que la sostenga; si no 
 test, debería decir "no comprobado" en vez de afirmar.
 
 Al revisar: grepea la afirmación contra el código que la implementa, no contra su
-vecindad. Bonus: el patrón reaparece DENTRO de los fixes (uno apagaba el contador
-de módulos `beta` mientras su comentario decía "próximamente o bloqueado").
+vecindad. El patrón reaparece DENTRO de los fixes (uno apagaba el contador de
+módulos `beta` mientras su comentario decía "próximamente o bloqueado") y dentro
+de las migraciones: la mía afirmaba "el insert se revierte al propagar la
+excepción" — cierto, pero era una afirmación hasta que la medí contra prod
+(intento fallido → stock y contador de movimientos intactos).
 Ver [[defensa-cableada-vs-codigo-muerto]] · [[test-verde-puede-codificar-el-bug-como-esperado]].
