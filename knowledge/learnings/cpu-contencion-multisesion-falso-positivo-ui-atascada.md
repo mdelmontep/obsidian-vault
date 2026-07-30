@@ -33,4 +33,11 @@ contenedor oficial, no el portátil.
 "problemas de rendimiento" no existían. Cualquier métrica sensible al hilo principal (CLS, LCP, INP)
 hay que medirla con la máquina libre o no vale.
 
-Ver [[facturaia]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] · [[cero-mientras-carga-no-es-cero-vacio-y-provoca-cls]].
+**Y el gate local entero** (2026-07-30, AGH): con otro proyecto encima (`next build` + 2 `tsc` +
+`vitest`, load **75** en 10 cores) `npm run gate` tardó **572 s** y dio 24 fallos —todos timeouts de
+hooks `beforeEach` en tests `.pg` que en aislado pasan—. Con la máquina libre: **80 s y verde**. Regla:
+si el gate tarda mucho más de lo habitual, mirar `sysctl -n vm.loadavg` ANTES que el diff; y un gate
+corrido bajo saturación no se documenta en la PR **ni en verde ni en rojo**, porque no mide nada.
+Síntoma de máquina ahogada de verdad: hasta `uptime` tarda >120 s.
+
+Ver [[facturaia]] · [[agh-iberica]] · [[locator-de-test-atado-a-la-implementacion-caduca-y-da-falso-verde]] · [[cero-mientras-carga-no-es-cero-vacio-y-provoca-cls]].

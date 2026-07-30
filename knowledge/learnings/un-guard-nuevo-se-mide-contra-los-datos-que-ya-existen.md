@@ -20,5 +20,17 @@ sitio para explicar nada: el usuario ve el selector limitado, no entiende por qu
 ni intentarlo. Deja que el servidor la imponga y la explique con su 409.
 
 Y no confundas el síntoma: si el guard salta mucho, sospecha del dato contra el que compara
-antes que del dato que entra. Ver
-[[staging-deja-de-ser-fuente-de-verdad-tras-el-commit-y-editarlo-no-cambia-nada]]
+antes que del dato que entra.
+
+**Vale igual para un guard que escanea CÓDIGO** —ahí «los datos que ya existen» son el repo—, y de
+ahí salen dos cosas (2026-07-30, AGH):
+
+- **Escanear solo el lado que ya falló garantiza no encontrar el otro.** El issue daba por hecho que
+  «el otro proyecto no tiene este problema»; el guard se escribió sobre los dos y encontró una
+  violación real ahí, con un comentario que además afirmaba lo contrario de lo que hacía el código.
+- **El primer detector suele ser demasiado estricto, y eso se descubre corriéndolo, no leyéndolo.**
+  El mío exigía un nombre de variable concreto y puso en rojo **diez ficheros correctos** → el guard
+  pasó a ser **de conducta, no de estilo**. Un detector que no ha fallado nunca contra el repo real
+  no está probado.
+
+Ver [[staging-deja-de-ser-fuente-de-verdad-tras-el-commit-y-editarlo-no-cambia-nada]] · [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[agh-iberica]]

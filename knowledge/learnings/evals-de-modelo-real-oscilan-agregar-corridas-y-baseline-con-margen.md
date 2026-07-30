@@ -19,4 +19,10 @@ Fix (infra de medición AGH, `scripts/eval-score.ts`):
 - Coverage-miss: si un eje que el baseline ESPERA deja de correr (0 casos), es regresión, no
   verde silencioso.
 
-Relacionado: [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]]
+**El scorecard agregado no sirve para VERIFICAR la corrida** (2026-07-30): guarda `passed/failed` y
+nada más, así que un caso que nace rojo **a propósito** (eje de cobertura con suelo `minRate: 0`) y
+una caída del gateway se ven **idénticos**. Antes de publicar un `0/N` como medición, correr el
+fichero aparte con `--reporter=verbose` y comprobar que los fallos son de **aserción** (con el
+`got {…}` del modelo), no de red. Si no, publicarías «el proveedor estaba caído» como línea base.
+
+Relacionado: [[senal-de-capacidad-ausente-que-solo-ve-el-target-inventado]] · [[el-caso-que-mide-un-hueco-entra-antes-que-la-capacidad]] · [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]]
