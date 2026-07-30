@@ -28,3 +28,6 @@ de las migraciones: la mía afirmaba "el insert se revierte al propagar la
 excepción" — cierto, pero era una afirmación hasta que la medí contra prod
 (intento fallido → stock y contador de movimientos intactos).
 Ver [[defensa-cableada-vs-codigo-muerto]] · [[test-verde-puede-codificar-el-bug-como-esperado]].
+Prima preventiva: cuando el comentario no afirma una invariante sino una **regla para el
+que llame** («esto no se expone a X»), el fix no es un test sino un tipo →
+[[regla-en-docstring-no-impide-nada-partir-el-interface]].
