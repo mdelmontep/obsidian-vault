@@ -22,6 +22,7 @@ Junio 2026 y anteriores → [[incidents-archive-2026-06]] (82 entradas, archivad
 ## 2026
 
 <!-- añade nuevas entradas aquí debajo -->
+- 2026-07-30 · TuFacturaIA · Chivite no podía emitir una factura, "No se pudo emitir la factura" tras cada reintento y cada relogin (ticket #117) → el `raise sobreventa_lote` del motor de partidas (migs 308/312/388) no estaba mapeado en `emitirBorrador` y salía por el 500 mudo, así que la causa (falta stock en la partida) solo vivía en los logs → 409 `stock_insuficiente` nombrando partida o producto (#1381). El cliente se apañó guardando y reabriendo el borrador, que reasigna partida por FEFO; no entró género → [[workaround-que-le-funciono-al-cliente-no-es-la-explicacion-de-la-causa]]
 
 
 
