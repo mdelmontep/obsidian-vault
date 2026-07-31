@@ -18,3 +18,10 @@ export const TIPOS = Object.keys(SET) as readonly MiUnion[];
 Señales de que falta este candado: un comentario tipo *«keep in sync with X»* (instrucción manual = el mecanismo que falla), o la misma lista escrita dos veces en dos módulos. Verificar el candado añadiendo un miembro falso a la unión y comprobando que **no compila** — si compila, no hay candado.
 
 Relacionado: [[normalizacion-escrita-dos-veces-diverge]] · [[fake-vs-postgres-orden-sort-utf16-vs-collation]] · [[agh-iberica]].
+
+**Confirmado 2026-07-31**: el candado se puso para evitar la PRÓXIMA divergencia y destapó una que ya
+existía. Al atar la lista de estados del listado contra `EstadoRecibida`, el typecheck falló:
+`parcial` estaba en el tipo y no en la lista, así que la query no devolvía una recibida en ese estado
+y **era invisible en la aplicación**. Un candado de exhaustividad no es solo prevención: es un
+inventario de lo que ya se desincronizó.
+

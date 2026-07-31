@@ -89,3 +89,47 @@ El hub se quedó con una línea de cierre. Índice: [[facturaia]].
 **Dos falsos positivos retirados verificando en Postgres**: los agregados negativos de `/recibidas` eran nuestra propia contaminación (`7265064420` con base −50), y el "FALLA" de `qa-022` venía de que el agente grepeó un checkout local desactualizado.
 
 **Método**: agentes de navegador en paralelo exigen `--profile` **y** `--session` propios; uno lanzó `close --all` y mató el smoke de otro.
+
+---
+
+## Cierre de la auditoría funcional — 31-jul (8 PRs, #1423-#1431, mig 604)
+
+**30 de 30 issues.** Los tres que quedaban, cerrados y verificados en producción.
+
+**`qa-030` (#1423)** — el guard de duplicados de `qa-022` colgaba de `review_reasons`, que el OCR
+escribe una vez: cubría **1 de 14** casos. Ahora consulta `facturas` en vivo, contando solo lo que ya
+está en libros (`NOT IN ('sin_aprobar','disputada')`), para que la primera de un par recién subido no
+se bloquee a sí misma. Verificado en prod sobre un caso real: la bandeja `97dbddd2` tiene
+`review_reasons = ["total_mismatch"]`, sin marca de duplicado, y hoy devuelve 409 con las dos gemelas.
+Antes se habría aprobado en silencio. Decisión escrita: la API v1 **no** recibe `confirmar_duplicado`
+(dar a un cliente automático la llave de su propia confirmación vacía el guard).
+
+**`qa-023` (#1424, mig 604)** — el código que nadie encontraba estaba en la RPC SQL
+`resolve_proveedor`, no en TS. Eran **tres** implementaciones del mismo emparejado, no dos, y las tres
+prometían por comentario que el NIF mandaba sin cumplirlo. **92 facturas recibidas atribuidas a otra
+empresa**, 89 por nombre o alias exacto. Verificado contra `pg_proc` (una fila, sin sobrecarga) y con
+consultas reales: NIF inexistente con nombre exacto, parecido o alias ajeno ya no empareja; sin NIF,
+la dedup y el fuzzy siguen vivos. **La reparación de esas 92 filas NO va aquí**: `qa-031`.
+
+**`qa-015` (#1425 · #1426 · #1427 · #1428)** — dos diagnósticos del issue eran incorrectos y esa es la
+parte que valía: los tests "flaky" no dependen del reloj (es el coste de arranque del primer caso
+contra el default de 5 s → `testTimeout` global), y el hydration mismatch no era ninguno de los cuatro
+candidatos que salen leyendo código (era `classList.add` sobre un `className` que gobierna React; con
+atributo tampoco vale, React 19 los diffea). Además: token de Meta en tiempo constante, `/api/health`
+con caché corta y un límite que nunca responde 429, `<DateTimeField>` propio con el selector de eslint
+que faltaba, y guard de cambios sin guardar en `/generar` (probado en navegador, incluido que un
+editor en blanco NO pregunta).
+
+Dos hallazgos colaterales: una recibida en estado `parcial` **era invisible** en el listado (lo delató
+el candado de tipos puesto para el futuro), y dos fallos de fecha en paneles de admin, uno con dos
+horas de desfase entre lo que se ve y lo que se guarda.
+
+**Manuales al día (#1430)**: los 12 de prioridad alta, de los cuales cuatro no eran omisión sino
+afirmaciones falsas (Textos Tipo en Obras, la factura que "no usa Textos Tipo", el copiloto "solo
+consulta", y la promesa de confirmación con botón aplicada también al conector MCP).
+
+Ver [[un-identificador-que-no-casa-tiene-que-vetar-el-respaldo-por-nombre]] ·
+[[marcar-el-dom-por-fuera-de-react-rompe-la-hidratacion-tambien-con-atributos]] ·
+[[un-limite-de-peticiones-en-el-healthcheck-no-puede-responder-429]] ·
+[[beforeunload-no-cubre-el-atras-del-app-router-hace-falta-centinela-de-historial]] ·
+[[guard-colgado-de-un-flag-calculado-una-vez-solo-cubre-ese-instante]]

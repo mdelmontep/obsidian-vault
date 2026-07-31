@@ -15,7 +15,7 @@ OCR matchaba proveedor por `NIF OR nombre ILIKE`. Si el usuario corregía "Amazo
 
 1. **Columna `aliases text[]`** en `proveedores` (mig 244).
 2. **Trigger BEFORE UPDATE** `trg_proveedores_track_nombre`: cuando `NEW.nombre IS DISTINCT FROM OLD.nombre`, hace `NEW.aliases = ARRAY(SELECT DISTINCT val FROM unnest(NEW.aliases || ARRAY[OLD.nombre]) WHERE val <> '' AND val <> NEW.nombre)`. Usa `NEW.aliases` (no `OLD.aliases`) para respetar borrados manuales del usuario en la misma operación.
-3. **Función SQL `resolve_proveedor(org_id, nif, nombre)`** SECURITY INVOKER: prioridad NIF exacto → nombre ilike → alias ilike. `FOUND` tras `RETURN QUERY LIMIT 1` funciona en PL/pgSQL (documentado: FOUND=true si RETURN QUERY devuelve ≥1 fila).
+3. **Función SQL `resolve_proveedor(org_id, nif, nombre)`** SECURITY INVOKER: prioridad NIF exacto → nombre ilike → alias ilike. ⚠️ **CORREGIDO 2026-07-31 (mig 604)**: esa cadena era el bug. "Prioridad" no basta — un NIF informado que no casaba seguía cayendo al nombre y al alias, y enlazó **92 facturas a otra empresa**. Hoy, con NIF informado: match por NIF normalizado (sin puntuación); si no lo hay, solo nombre o alias exacto contra un proveedor SIN NIF; y nada más, sin fuzzy. Sin NIF legible, la cadena de siempre. Ver [[un-identificador-que-no-casa-tiene-que-vetar-el-respaldo-por-nombre]]. `FOUND` tras `RETURN QUERY LIMIT 1` funciona en PL/pgSQL (documentado: FOUND=true si RETURN QUERY devuelve ≥1 fila).
 4. **OCR y pending-action** usan RPC `resolve_proveedor` en lugar del `.or()` PostgREST.
 5. **UI**: modal edición muestra aliases como pills eliminables. Al guardar con rename, el estado React replica la lógica del trigger (`prevNombre !== nextNombre → añade prevNombre al array`).
 
@@ -24,3 +24,4 @@ OCR matchaba proveedor por `NIF OR nombre ILIKE`. Si el usuario corregía "Amazo
 - El índice GIN array_ops NO acelera `lower(a) = ANY(SELECT lower(a) FROM unnest(aliases))`. Para volumen < 1000 proveedores/org el seq scan es aceptable. Si se necesita índice, normalizar aliases a lowercase al almacenar.
 - `REVOKE EXECUTE FROM PUBLIC` en la función SQL para no exponerla vía PostgREST anon.
 - Sincronizar estado React local con lo que hará el trigger en BD (evitar aliases stale hasta el reload).
+- **El alias es un amplificador, no solo una comodidad**: escribir el nombre leído por OCR como alias del proveedor enlazado convierte un enlace equivocado en permanente (a partir de ahí acierta "de libro" y ningún NIF lo desmonta). Solo aliasear si el NIF no contradice.

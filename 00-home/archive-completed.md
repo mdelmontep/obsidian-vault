@@ -382,3 +382,4 @@ tags: [home, archivo]
 - 2026-07-25 · agency-portal `/agency/time` CERRADO en prod — #174/#176/#177 (worktrees resueltos al repo, ventana de activo = gap, hook con fuente única en el runner); heartbeat de turnos largos añadido por Borja (#181-#183, 26-jul). Detalle → [[agentesia]] hito 0.
 - **2026-07-31 · TuFacturaIA** — cola del runner a cero y ticket #115 (IET) cerrado con sus cabos: 9 PRs + migs 595-599 en prod, el `@total@` duplicado (#1412), párrafos del PDF (#1413/#1415), casilla de email desmarcada al emitir (#1419) y el pedido «sin totales» que filtraba el importe (#1417). Sin pendientes.
 
+- 2026-07-31 · TuFacturaIA · auditoría funcional cerrada: 30 de 30 issues (qa-030, qa-023 y qa-015, los tres últimos), manual de usuario al día y 4 hallazgos sueltos convertidos en issues (qa-031..034). 8 PRs #1423-#1431, mig 604.

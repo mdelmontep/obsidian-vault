@@ -16,3 +16,11 @@ Síntomas que despistan:
 Fix: subir el `import` a top-level tras las declaraciones de mocks, y quitar el `resetModules` si el módulo no tiene estado mutable a nivel de módulo (comprobarlo: si solo hay constantes y esquemas, no aislaba nada). En facturaia la suite bajó de 214 s a 122 s.
 
 Antes de culpar a un mock: mide el coste del import con `vi.resetModules()` entre iteraciones. Ver [[e2e-baseline-contra-main-antes-de-culpar-a-tu-rama]].
+
+**Cierre 2026-07-31**: el mismo mecanismo, sin `resetModules` de por medio. Dos ficheros pasaban por
+"flaky por depender del reloj" y ninguno usa timers, `Date.now` ni `sleep`: el primer caso de cada
+fichero paga transform + environment + import (medido, 528 ms y 335 ms frente a 1 ms y 50 ms de sus
+hermanos) y bajo carga rebasa el default de 5 s. **El arreglo tiene que ser global** (`testTimeout` y
+`hookTimeout` en la config), o el siguiente fichero pesado repite el flake. Un gate que se pone rojo
+por causas ajenas al cambio enseña a ignorar los rojos.
+
