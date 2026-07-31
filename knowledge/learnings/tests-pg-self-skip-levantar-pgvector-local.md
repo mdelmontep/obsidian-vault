@@ -26,3 +26,11 @@ voz del onboarding roto). El re-run con pg la cazó. Disciplina: tras `npm test`
 **0 skips** de los `.pg`/`.redis`; y para dirimir "¿lo rompí yo?" correr el test contra
 `origin/main` (pasa en main + falla en la rama ⇒ regresión de la rama, no pre-existente).
 Relacionado: [[vitest-fileparallelism-false-tests-integracion-bd-compartida]].
+
+**Doble invisibilidad (31-jul, FacturaIA)**: además del autoskip, la suite puede estar
+**excluida por config** del gate (`npm run gate` excluye `**/__integration__/**`; van por
+`npm run test:integration`). Al cambiar la FORMA de retorno de una función se actualizaron
+las 8 aserciones `toEqual` del test unitario y no las 5 de la de integración: quedaron rojas
+en `main` y nadie lo vio, porque sin BD se saltan y con BD el gate no las corre. Corolario
+de "cambio en shape compartido = grep TODOS los consumidores": los consumidores incluyen las
+suites que el gate no ejecuta.
