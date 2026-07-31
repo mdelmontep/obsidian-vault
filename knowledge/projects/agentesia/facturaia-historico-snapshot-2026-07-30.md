@@ -136,3 +136,45 @@ Ver [[un-identificador-que-no-casa-tiene-que-vetar-el-respaldo-por-nombre]] ·
 [[un-limite-de-peticiones-en-el-healthcheck-no-puede-responder-429]] ·
 [[beforeunload-no-cubre-el-atras-del-app-router-hace-falta-centinela-de-historial]] ·
 [[guard-colgado-de-un-flag-calculado-una-vez-solo-cubre-ese-instante]]
+
+---
+
+## Cierre real de la sesión — `/fia-cierre` y lo que destapó (31-jul, #1437-#1441)
+
+**Gate de cierre: con reservas, 0 bloqueantes, 23 avisos sobre 14 dimensiones.** Cero
+hallazgos de seguridad, BD limpia (migs 604 y 606 con UNA firma cada una: la lección de la
+sobrecarga de la 601 sí se aplicó).
+
+**qa-032 implementado sin preguntar al cliente** (#1438): se miró cómo lo resuelven Odoo, SAP
+ERP y Dynamics 365 BC y los tres coinciden, así que la pregunta ya tenía respuesta del
+sector. Verificado en prod con datos reales: producto con 3 días de vida útil → partida con
+caducidad a 3 días; sin el flag → NULL. Ver
+[[el-dato-canonico-vive-en-el-lote-y-el-producto-solo-siembra]].
+
+**Los cabos del gate, cerrados** (#1440). El más importante era mío: `qa-030` convirtió el
+409 de duplicado de raro (1 de 14) a frecuente (6 de 24), y dos superficies se quedaron sin
+salida, una de ellas el swipe del móvil, que no aprobaba y no decía nada. Al arreglarlo casi
+entra algo peor: el `MouseEvent` habría entrado como `confirmarDuplicado` y **toda**
+aprobación habría confirmado duplicados en silencio. Ver
+[[un-guard-que-pasa-de-raro-a-frecuente-obliga-a-repasar-sus-superficies]] ·
+[[anadir-un-parametro-a-un-handler-usado-como-onclick-mete-el-evento-dentro]].
+
+**La suite E2E dio su primera tanda concluyente en meses** (#1441): `E2E_BASE_URL` apuntaba a
+un puerto muerto y, como Playwright no levanta el servidor, cada spec agotaba su timeout y la
+tanda acababa en "9 de 13 rojos" tras media hora. Con el preflight puesto: **109 pasan, 8
+fallan, 23 saltados**. De los 8, dos son contención y uno es **preexistente**, comprobado
+levantando un worktree del commit anterior a la sesión y viéndolo fallar igual. El resto, en
+`qa-035`. Ver
+[[un-checker-que-se-pone-rojo-por-la-razon-equivocada-es-peor-que-no-tenerlo]].
+
+**Reparación de IECE ejecutada** (#1437): las dos facturas ya cuelgan de su proveedor real,
+alias de GUARCONSA vacíos, cero discrepancias. Decidido NO avisar al cliente: importe, fecha
+y número siempre fueron correctos, ninguna llegó a una declaración.
+
+
+### Retirado del dashboard del hub el 31-jul (detalle íntegro)
+
+- 🟢 **Dos tickets del runner ("manuela") en main (29-jul, #1326 + #1327)** — reimportar una tarifa ya no borra `vigencia_tarifa`, y "Nuevo presupuesto" deja de abrir una factura. Tickets #97/#98 en `resuelto`, smoke en prod hecho; el "gate FALLÓ" del runner era un OOM de su entorno. **Decisión pendiente**: en prod NINGUNO de los 17.831 materiales tiene `vigencia_tarifa` (el CSV de IET trae la columna vacía), así que el #98 se cierra sin que el cliente note nada → pedirle a IET un export con la fecha, o quitar la promesa de la ficha. Ver [[fia-gate-watchdog-mata-la-cadena-entera-con-un-solo-presupuesto]]
+
+- 🟢 **Ticket #96 (IET) cerrado en código: contactos múltiples + condiciones de pago (28/29-jul, #1324 + #1325, migs 583-587)** — tabla única `contactos` que absorbió los 285 de Obras conservando su id; el vencimiento se pacta en la ficha del cliente con snapshot en la factura. Las revisiones adversariales (50 hallazgos) evitaron tres desastres, uno de ellos que el bloque no llegara al PDF emitido. PDF emitido **verificado por Manu (29-jul)**. **Queda solo** el PR-3 con el DROP de `obras_contactos`. Ver [[ADR-044-tabla-unica-de-contactos-en-vez-de-una-por-modulo]] · [[agent-browser-select-custom-click-opcion-no-registra-usar-teclado]]
+

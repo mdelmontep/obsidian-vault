@@ -384,3 +384,4 @@ tags: [home, archivo]
 
 - 2026-07-31 · TuFacturaIA · auditoría funcional cerrada: 30 de 30 issues (qa-030, qa-023 y qa-015, los tres últimos), manual de usuario al día y 4 hallazgos sueltos convertidos en issues (qa-031..034). 8 PRs #1423-#1431, mig 604.
 - 2026-07-31 · TuFacturaIA · cerrados también qa-033 (el margen de /cashflow dice sobre qué se calcula, #1432) y qa-034 (los tres emails que se saltaban la captura de organizaciones de prueba, #1436, con un `redirectTo` que un cast tiraba en silencio). qa-031 y qa-032 quedan instrumentados con su medición y esperando decisión.
+- 2026-07-31 · TuFacturaIA · gate `/fia-cierre` pasado (0 bloqueantes) y sus cabos cerrados (#1440). qa-032 implementado con el modelo de Odoo/SAP/BC y verificado en prod (#1438). IECE reparado (#1437). La suite E2E vuelve a ser concluyente (#1441): apuntaba a un puerto muerto, así que sus rojos no significaban nada; primera tanda real 109/8/23, con los rojos clasificados en qa-035.
