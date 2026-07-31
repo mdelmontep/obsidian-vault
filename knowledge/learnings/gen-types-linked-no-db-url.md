@@ -1,19 +1,25 @@
 ---
-title: regenerar tipos supabase con --linked, nunca augmentar el Database global a mano
+title: regenerar tipos supabase con --linked, y desde la raíz enlazada — el redirect borra el fichero si falla
 date: 2026-07-03
+updated: 2026-07-31
 source: claude-code-session
 tags: [supabase, typescript, type-safety]
 ---
-Al añadir una columna en TuFacturaIA (o cualquier proyecto con tipos generados):
+Al añadir una columna/tabla en un proyecto con tipos generados:
 
-- Regenerar con `npm run gen:types` (que usa `--linked`), NO con
-  `supabase gen types --db-url`: la variante `--db-url` (CLI vieja) borra el
-  bloque `__InternalSupabase { PostgrestVersion }` de la cabecera → el fichero
-  diverge de lo que produce el drift-check de CI (`gen:types` + `git diff
-  --exit-code`). Con `--linked` el diff son SOLO las columnas nuevas.
-- NO augmentar el tipo `Database` global en `database-overrides.ts` con
-  `Omit<GenTables, 'tabla'> & { tabla: ... }` para una columna nueva: cambia la
-  identidad estructural del tipo y dispara errores de asignabilidad en CASCADA
-  en ficheros ajenos (p. ej. `fiscal_declaracion_snapshot.base_x100`
-  string|number vs number en cashflow/ocr). Regenerar los tipos reales es la
-  vía; overrides solo para los fixes numéricos ya existentes.
+- Regenerar con `npm run gen:types` (usa `--linked`), NO con `--db-url`: la
+  variante vieja borra el bloque `__InternalSupabase { PostgrestVersion }` de la
+  cabecera y el fichero diverge del drift-check de CI. Con `--linked` el diff son
+  SOLO las columnas nuevas.
+- **Correrlo desde la raíz del repo enlazado, nunca desde un worktree**: el
+  worktree no está linkado y el CLI muere con `LegacyProjectNotLinkedError`.
+- **El script redirige con `>`, así que cuando el CLI falla escribe el JSON del
+  error ENCIMA del fichero** y se lleva por delante las ~13.800 líneas de
+  `database.types.ts` (31-jul). No lo delata el código de salida, que el redirect
+  ya consumió: se detecta porque el `grep` de la tabla nueva da 0 en un fichero que
+  debería tenerla. Verificar siempre el resultado, no el "ok".
+- NO augmentar el `Database` global para una tabla o columna nueva: cambia la
+  identidad estructural y dispara errores en CASCADA en ficheros ajenos. El patrón
+  es vista tipada LOCAL al módulo que la escribe, y borrarla cuando `gen:types`
+  traiga la tabla. Ver
+  [[supabase-gen-types-numeric-override-bigint-string]].

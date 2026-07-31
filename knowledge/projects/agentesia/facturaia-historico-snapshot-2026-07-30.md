@@ -53,3 +53,23 @@ El hub se quedó con una línea de cierre. Índice: [[facturaia]].
 **Error de método propio**: la comparación de maquetación antes/después se hizo con `git stash push/pop` y el `pop` **sacó un stash ajeno**, dejando 3 ficheros de otra sesión en conflicto dentro del worktree. Limpiado sin pérdida (los 3 stashes intactos), pero la comparación era inválida: rehecha con un worktree de control, la conclusión se dio la vuelta.
 
 **Cabos que quedan abiertos**: `obra-pedido-pdf.tsx:151` pinta las *observaciones* del pedido a proveedor sin `pre-wrap` y ahí hay **34 de 8.854 `obras_pedidos` con salto de línea en prod** — más impacto real que el bug arreglado, que tenía 0. Un pedido impreso «sin totales» imprime el importe igualmente si el texto usa `@total@` (`pdf-obra-pedido.ts:205-216` no mira `opts.conTotales`). `recordatorio-pago/route.ts:121` manda «1234.50 €» con `toFixed(2)`. `renderPdfFallback` (`send-factura.ts:185`) envía el PDF de rescate sin QR ni leyenda VeriFactu. `manual-usuario.md:3219` afirma que la factura de obra no usa Textos Tipo, desfasado desde las migs 593/596.
+
+---
+
+## Auditoría funcional — segunda tanda (31-jul): de 13 a 21 PRs
+
+**Cerrados**: `qa-009`/`qa-010`/`qa-013` (#1398, la validación que quedó a medias), entregables ronda 2 (#1401), `qa-027` (#1402), `qa-028` + mig 600 (#1404), `gen:types` (#1406), `qa-029` (#1407), `qa-024` (#1408), `qa-020` (#1410), `qa-022` (#1411).
+
+**`qa-027` se validó solo.** El ensanche del `Database` global existía por UN caso local: el insert de snapshot fiscal. Medido antes de rediseñar — quitarlo dejaba 1 error, no los 61 en 43 ficheros que producía el escenario inverso. Al añadir después la tabla del antirreplay, el typecheck dio **un error local** en vez de ~15 en el módulo fiscal: la prueba de que el arreglo funcionaba.
+
+**`qa-029` tenía una tercera salida que el issue no contemplaba.** Planteaba columna nueva en `bandeja_ingesta` o excepción al modelo «el JSONB manda». Ninguna hacía falta: los conceptos del OCR son el *valor por defecto* de la nota, no su dueño, así que basta con no pisar lo que ya hay. Sin migración y sin excepción, y `/ingesta` sigue mostrando solo OCR. Verificado antes de apoyarse en ello: la factura nace con `notas` a null y la derivación existe en un solo sitio del repo.
+
+**`qa-020` tenía una hoja más de la que decía el issue** — `[modelo]/page.tsx` además de `[modelo]/[periodo]/page.tsx`. Apareció grepeando los hermanos: el patrón nº1 alcanzó al propio issue que lo describía. El test recorre el árbol de páginas, no una lista, y exime `fiscal/page.tsx` por derivación (no lee datos fiscales, solo redirige) en vez de por lista blanca.
+
+**`qa-022` destapó tres cosas fuera de su enunciado**: la UI pintaba `posible_duplicado` como severidad media cuando el motor la emite alta (comparados los 19 tipos de los dos mapas: solo esa e `iva_mismatch` divergían, al revés); la rama `res.status === 409` del cliente se tragaba cualquier 409 con el mensaje «ya fue aprobada»; y el mock con proyección real de columnas —lección escrita en `qa-009` dos días antes— cazó que el `select` no pedía `proveedor_id`, así que en prod la búsqueda de colisiones no habría encontrado nada.
+
+**Dos derivaciones propias salieron mal y se cazaron a tiempo**: contar `readonly !== true` daba 53 tools «que escriben» (flag sin dientes, default false); y un test que prohibía la palabra `orgHasFeature` falló contra los comentarios que explican por qué ya no se usa.
+
+**Entorno**: la mitad del tiempo se fue peleando por memoria contra una sesión paralela y Spotlight reindexando. Un push tardó ~25 min con 57 MB libres y uno con 1,85 GB. Serializar sesiones antes de una tanda larga.
+
+**Sin hacer y no maquillado**: los smokes de navegador de los 10 cambios visibles ya mergeados. Y en esta tanda se navegó un rato autenticado con la cuenta personal en vez de la de e2e (cero escrituras, tramo descartado); retomar exige sesión limpia del usuario e2e.
