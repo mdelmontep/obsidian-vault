@@ -7,6 +7,12 @@ tags: [n8n, agentesia, chatbot, workflow, agentes-ia]
 
 Workflow n8n creado el 2026-04-15 para el widget de chat de la web de AgentesIA (`localhost:8080` en desarrollo, `agentesia.madrid` en producción). Replica la funcionalidad del agente de WhatsApp pero adaptado para chat web síncrono.
 
+> [!warning] Corregido 2026-07-31
+> El bot de WhatsApp vivo es **`89B9QN23hOHDq6oP` "ChatBOT mejorado"** (63 nodos, con Chatwoot,
+> Redis y tickets). El `enVlCyi7McKfwkRQ` que se cita abajo está **desactivado desde abril**;
+> las comparaciones de esta nota valen como historia, no como mapa de producción.
+> Ver [[agentesia]].
+
 ## Metadata
 
 - **Nombre**: `Web Chat Agentesia`

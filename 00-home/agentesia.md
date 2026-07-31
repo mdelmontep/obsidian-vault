@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-07-25
+updated: 2026-07-31
 tags: [cliente, agentesia]
 ---
 
@@ -13,7 +13,7 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 
 - **agency-portal** (Borja como reviewer) — Next.js, integra con TuFacturaIA via API v1 (HMAC webhooks + outbox + Stripe-style sync)
 - **`/agency/time`** — dashboard de horas del equipo (Dani/Borja/Manu): ingesta vía hooks locales de Claude Code (`ops/claude-time-tracker`), límites de uso 5h/semanal (+ countdown de reset real, 25-jul, ver hito 0), síntesis IA (gpt-4o-mini) de qué está haciendo cada uno en "Trabajando ahora" (árbol persona→sesión, agrupado por `claudeSessionId` desde PR #166 — antes agrupaba por proyecto y fusionaba sesiones paralelas del mismo proyecto en una sola fila; la fusión de DURACIÓN sigue siendo por sesión, no se pierde). Gráficas "Trabajo del mes" (técnico/proyecto) rediseñadas 25-jul: barras (no líneas) para todas las métricas, panel lateral con total REAL del periodo (no una suma que crece sin techo), 6 rangos (Hoy/Ayer/7 días/Este mes/30 días/Personalizado) × vela 5min-7días — ver hito 0. El nombre de proyecto se deriva del cwd en el hook: normalizado en la ingesta (mismo repo con carpetas distintas por máquina) y, desde 25-jul, los **git worktrees resuelven al repo principal** en vez de a la rama. "Activo ahora" = última actividad hace <15 min (`ACTIVITY_GAP_MS`), y sin heartbeat un turno más largo que eso no aparece.
-- **Chatbot ticketing** desplegado en `89B9QN23hOHDq6oP` n8n
+- **Chatbot propio** — dos workflows vivos en `n8n.agentesia.madrid`: **`89B9QN23hOHDq6oP` "ChatBOT mejorado"** (WhatsApp vía Chatwoot, 63 nodos: captación + soporte/tickets) y **`G8vbSYm0SY3zi912` "Web Chat Agentesia"** (widget de la landing, síncrono, 12 nodos, NO pasa por Chatwoot). `enVlCyi7McKfwkRQ` está **apagado desde abril** pese a que la doc vieja lo señalaba como el vivo. Los dos escriben en el mismo Sheet `Registro de Leads AGENTESIA` distinguidos por `Channel`. Widget en el repo `agentesia-web` → `src/pages/ChatbotPage.tsx:21`. API key n8n en 1Password `N8N API Key - AgentesIA (Claude)` (vault Agentesia)
 - **Slack workspace** activo, canvases por proyecto
 
 ## Próximos hitos
@@ -23,6 +23,8 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 2. **agency-portal — Dani: hook time-tracker no reporta pese a reinstalar** (NOW, 22-jul) — última actividad real de Dani congelada desde hace 45+ min pese a abrir sesión nueva y escribir prompts. Se le pasaron 3 comandos de diagnóstico (config `~/.agentesia-tracker.json`, hook registrado en `~/.claude/settings.json`, test manual POST a `/api/internal/time-ingest`) — pendiente que los corra y comparta la salida (sobre todo el `HTTP_STATUS` del test manual).
 3. **agency-portal — CI (Actions) bloqueado por billing, confirmado también aquí** (recurrente, mismo org que TuFacturaIA) — jobs mueren en 2-4s con "recent account payments have failed". Mismo patrón que TuFacturaIA: verificar local (`lint`+`typecheck`+`test`+`build`) antes de cada merge, `gh pr merge --merge` normal (no hace falta `--admin` aquí, a diferencia de TuFacturaIA). Ver [[github-actions-org-private-free-tier-2000-min]].
 4. **agency-portal — n8n router consulta Supabase como source of truth** (NEXT, arrastrado) — TTL 30d en `aia_ob:{phone}` es tirita. Endpoint `/api/onboarding/is-active-by-phone` + nodo HTTP en `ChatBOT mejorado` antes del IF Activo + Redis a caché con re-seed. Ver [[Stack/n8n]] · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding]]
+
+5. **Chatbot propio — `[FIN]` muerto y chat web sin tráfico** (NOW, 31-jul) — (a) decidir si se cablea `Es FIN` (rama true → limpiar marcador + resolver conversación en Chatwoot) o se quita del prompt y del workflow; hoy no hace nada y hay 12 conversaciones abiertas sin cerrar. (b) `Web Chat Agentesia` no registra una ejecución desde el **19-jul**: o nadie usa el widget o no llega al webhook — sin diagnosticar. (c) el `x-webhook-secret` del toolCode `Crear Ticket` sigue **hardcodeado en el `jsCode`** → a `$env` (exige Save + Deploy en Dokploy, contenedor recreado). (d) pendiente ver la primera ejecución real tras el fix del Sheets. Ver [[if-con-ambas-ramas-al-mismo-nodo-no-hace-nada]]
 
 ## Bloqueos / esperando a terceros
 
@@ -38,6 +40,7 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 
 ## Histórico de hitos
 
+- 2026-07-31: **el chatbot llevaba meses sin guardar un solo lead en la hoja y confirmaba igual** — auditoría sobre las 13 conversaciones reales de Chatwoot, no sobre el prompt en abstracto. `Registro Sheets` del de WhatsApp tenía `columns.value = {}` → error en cada captación, tragado por el AI Agent, ejecución en `success`. Arreglado con las 11 columnas del gemelo web (teléfono desde `chatId`, no del modelo). Prompt web corregido: `Channel (web)`, `urgencia` con valor del enum real, y repregunta obligatoria del sector cuando el cliente responde "negocio propio" (caso Alba, conv 43). `agentesia.world` → `agentesialabs.com` en los dos prompts. Borradas 5 etiquetas residuales de Ecobox en Chatwoot (0 conversaciones las usaban). **Sin verificar todavía**: no ha entrado tráfico desde el fix. Otros huecos medidos y no arreglados: el bot descubre sin cerrar nunca (conv 41, lead CUSTOM perdido tras 5 turnos), promete abrir webs que no puede leer (conv 34) y se va de tema (conv 33, 4 horas hablando de viajes). Ver [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]] · [[if-con-ambas-ramas-al-mismo-nodo-no-hace-nada]]
 - 2026-05-02: integración API v1 ↔ agency-portal viva en prod (7 PRs apilados + 7 fixes auditoría)
 - 2026-06-16: onboarding WhatsApp caído — cuenta OpenAI sin saldo (`429 insufficient_quota`) → webhook 500 silencioso, bot mudo. Diagnóstico vía ejecuciones n8n. Recargado el saldo (revive sin deploy) + PR #86 para que no muera en silencio. Feature secretaría virtual HGH (PR #87) lista y validada con dry-run.
 - 2026-06-22: Pizarra/board (PR #91) + secretaría virtual HGH + fixes de prefill fiscal + extracción onboarding, todo mergeado y cerrado (verificado vía `gh pr view` — el hub llevaba semanas desfasado listándolos como pendientes).

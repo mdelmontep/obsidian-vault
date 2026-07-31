@@ -43,8 +43,10 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un backfill que no cierra el origen vuelve a morder con la siguiente fila** — si el alta necesita hijas para funcionar, se siembran TODAS en el trigger de alta, no a medias entre trigger y onboarding. Ver [[seed-partido-entre-trigger-y-onboarding-deja-filas-a-medias]]
 - **Si algo se puede reintentar, el callback del intento VIEJO cerrará lo que ya se reabrió** — actúa sobre un estado que no es el que él dejó; la guarda de idempotencia no cubre la de vigencia ("¿sigo siendo el intento actual?"). Ver [[callback-de-un-intento-viejo-cierra-lo-que-ya-se-reabrio]]
 
-## El resto (58)
+## El resto (60)
 
+- **Muestra efectiva = periodos, no filas, si comparten régimen** — agrupar y mirar la dispersión ENTRE grupos antes de prometer un plazo. Ver [[muestra-efectiva-son-los-periodos-no-las-observaciones-si-comparten-regimen]]
+- **Renombrar una clave de un dict: el productor sigue verde y el consumidor da 500** — un test del contrato por cada estructura que cruza módulos. Ver [[probar-el-productor-y-no-el-consumidor-deja-un-500-con-la-suite-verde]]
 - **El guard va en la transición única que comparten todos los caminos, no en el endpoint** — si no, faltará en los hermanos. Ver [[el-guard-va-en-la-transicion-unica-que-comparten-todos-los-caminos]]
 - **Un guard de drift bidireccional acopla las PRs de sus dos lados** — «todo lo registrado está declarado» hace que la PR que registra sin declarar caiga sola, y excepcionarlo destruye el único test que caza eso. Partir por donde el guard NO mira. Ver [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]]
 

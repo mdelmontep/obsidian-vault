@@ -379,3 +379,6 @@ tags: [home, archivo]
 - 2026-07-30 · TuFacturaIA · ticket resuelto se reabre con Claude y los mensajes del hilo se pueden borrar (#1354 + #1358) — sin acciones pendientes.
 - 2026-07-30 · TuFacturaIA · ticket #102 de Chivite: una línea de factura puede salir de varias partidas (#1347) — smoke y resumen al cliente hechos.
 - 2026-07-30 · TuFacturaIA · cierre del 29-jul con cuatro PRs en prod: tablas densas, Materiales sin scroll, IVA del papel en recibidas, y el cliente ve qué ticket tiene respuesta (#1335/#1338/#1336/#1339).
+- 2026-07-25 · agency-portal `/agency/time` CERRADO en prod — #174/#176/#177 (worktrees resueltos al repo, ventana de activo = gap, hook con fuente única en el runner); heartbeat de turnos largos añadido por Borja (#181-#183, 26-jul). Detalle → [[agentesia]] hito 0.
+- **2026-07-31 · TuFacturaIA** — cola del runner a cero y ticket #115 (IET) cerrado con sus cabos: 9 PRs + migs 595-599 en prod, el `@total@` duplicado (#1412), párrafos del PDF (#1413/#1415), casilla de email desmarcada al emitir (#1419) y el pedido «sin totales» que filtraba el importe (#1417). Sin pendientes.
+

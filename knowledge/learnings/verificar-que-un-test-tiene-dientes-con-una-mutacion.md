@@ -25,3 +25,10 @@ Disciplina mínima: mutación **en el código de producción**, no en el test; u
 sola mutación por vez; revertir antes de commitear (`git status` limpio salvo el
 test). Y dejar escrito en el PR qué mutación se usó y qué falló — es la evidencia
 de que el test sirve.
+
+**Una mutación PARCIAL da falso verde, y se disfraza de «el test no vale»**
+(31-jul, AGH): para probar que un caso de eval medía de verdad un argumento nuevo
+del prompt, quité su mención de una línea… y el caso siguió 3/3. Parecía que
+pasaba gratis. Había **cuatro** menciones; con las cuatro fuera, 0/3. Antes de
+romper, **cuenta las ocurrencias** (`grep -c`) y comprueba que llegan a cero — si
+no, no has medido el guard, has medido tu `sed`.
