@@ -32,11 +32,12 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (5)
+## Ha vuelto a pasar (6)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
+- **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **Un guard en código que predice una restricción de la BD acaba mirando otro universo** — si la unicidad la impone un índice y el chequeo previo la reescribe con otro scope, divergen y el `INSERT` revienta: la consulta del guard debe ser la **expresión literal del índice**. Ver [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
 - **Un comentario que afirma una invariante es una deuda de test, no un guard** — grepea la afirmación contra el código que la implementa; y si la justificación es más específica que el `if` que la protege, falta el `if`. Por eso sobreviven a varias revisiones: el revisor lee la frase y deja de comprobar. **Gemelo**: el que declara que algo *no se puede arreglar* → cuenta las filas afectadas antes de creerlo. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]] · [[una-prohibicion-escrita-en-un-comentario-merece-medirse-antes-de-aceptarla]] · [[comentario-que-declara-una-formula-deliberada-solo-cubre-su-mitad]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]]
 - **Un staging deja de ser fuente de verdad tras el commit, y editarlo sigue "guardando"** — el buffer (JSONB de OCR, borrador, import) se copia al registro al aprobar; después el staging persiste con éxito y el registro no cambia. Tras el commit: mostrar el valor DEL REGISTRO y rechazar en voz alta. Ver [[staging-deja-de-ser-fuente-de-verdad-tras-el-commit-y-editarlo-no-cambia-nada]] · [[editor-inline-que-compara-contra-el-valor-mostrado-encalla-al-reescribir-lo-mismo]]

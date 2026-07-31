@@ -1,9 +1,19 @@
 ---
 title: al recrear rpc postgres mantener firma idéntica o queda función huérfana
 date: 2026-05-25
+updated: 2026-07-31
 source: claude-code-session
 tags: [postgres, plpgsql, supabase, rpc]
 ---
+
+> **REINCIDIÓ el 31-jul con este learning ya escrito.** Mig 601 de FacturaIA declaró
+> `aplicar_movimientos_lotes(uuid, boolean)` con un `p_revertir` **inventado** que ni aparecía en el
+> cuerpo; la firma real era `(uuid)`. Sobrecarga creada, vieja intacta, y todos los llamantes
+> (`perform ...(p_factura_id)`) siguieron ejecutando la vieja: **el fix se desplegó muerto**.
+> Lo que no avisa: `supabase db push` imprime `Finished` y `migration list` da la migración por
+> aplicada. Solo se ve consultando `pg_proc`, y el síntoma es **dos filas donde debía haber una**.
+> El paso 4 de abajo existía y no se usó: puesto en la 601, la transacción habría fallado en vez de
+> mentir.
 
 `CREATE OR REPLACE FUNCTION nombre(args) RETURNS X` reemplaza la función SOLO si `(nombre, args)` matchea exactamente. Si cambias firma — añades/quitas un arg, cambias tipo, cambias return — Postgres crea una función NUEVA y deja la vieja huérfana. Resultado: callers que invocan la firma antigua siguen ejecutando la vieja; los que usan la nueva ejecutan la nueva. División silenciosa.
 

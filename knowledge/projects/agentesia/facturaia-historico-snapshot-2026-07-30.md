@@ -73,3 +73,19 @@ El hub se quedó con una línea de cierre. Índice: [[facturaia]].
 **Entorno**: la mitad del tiempo se fue peleando por memoria contra una sesión paralela y Spotlight reindexando. Un push tardó ~25 min con 57 MB libres y uno con 1,85 GB. Serializar sesiones antes de una tanda larga.
 
 **Sin hacer y no maquillado**: los smokes de navegador de los 10 cambios visibles ya mergeados. Y en esta tanda se navegó un rato autenticado con la cuenta personal en vez de la de e2e (cero escrituras, tramo descartado); retomar exige sesión limpia del usuario e2e.
+
+---
+
+## Cierre: las dos decisiones, 4 agentes de análisis y 4 de smoke (31-jul)
+
+**`qa-014` — retirada mi propia propuesta.** Iba a bloquear el envío con un estado nuevo `blocked_test`. Un agente adversarial la tumbó y los datos le dieron la razón: de los 89 emails de la sandbox, la mayoría son avisos internos al equipo. `is_test` describe la **organización**; el riesgo lo define el **destinatario**. La condición correcta es la conjunción, y se **redirige** en vez de bloquear (sin migración, sin estado nuevo). Pero el agente proponía usar solo el destinatario, lo que habría capturado también el correo de organizaciones reales: hubo que sintetizarlo críticamente, no obedecerlo. Un segundo agente cruzó sus afirmaciones y corrigió una (`send-emails.ts` **sí** propaga `org_id`) y añadió la decisiva: **tres caminos mandan email sin pasar por `sendEmail`** (`inviteUserByEmail`, el `auth.resend` del navegador, y el Gmail de Workspace).
+
+**`qa-017` — el issue lo describía mal y la medición cambió el marco.** No era un fallo de cliente: el motor SQL tampoco filtraba. Y en producción hay **0 partidas caducadas fuera de la sandbox**, porque el alta por compra **nunca rellena `caducidad`** — la funcionalidad de lotes está inerte. El arreglo es preventivo: el automatismo nunca elige caducado, la elección manual sigue disponible, y se distingue "no hay stock" de "lo que queda está caducado".
+
+**La mig 601 se desplegó muerta.** Firma con un parámetro inventado → sobrecarga → los llamantes seguían en la vieja. `db push` dijo `Finished`. Lo cazó `pg_proc` devolviendo dos filas. Mig 602 lo corrige. El learning existía desde mayo y no estaba en `hot.md`.
+
+**Los smokes encontraron lo que la suite no veía.** El de UI destapó que mi arreglo de `qa-024` estaba a medias: cabecera corregida y **saludo del copiloto** diciendo todavía «Consulto tus datos, no hago cambios», en la misma pantalla. Mi test ataba la cabecera pero no prohibía la frase en el resto del fichero. El de ingesta descubrió que el guard de duplicados cuelga de un flag rancio (`qa-030`).
+
+**Dos falsos positivos retirados verificando en Postgres**: los agregados negativos de `/recibidas` eran nuestra propia contaminación (`7265064420` con base −50), y el "FALLA" de `qa-022` venía de que el agente grepeó un checkout local desactualizado.
+
+**Método**: agentes de navegador en paralelo exigen `--profile` **y** `--session` propios; uno lanzó `close --all` y mató el smoke de otro.
