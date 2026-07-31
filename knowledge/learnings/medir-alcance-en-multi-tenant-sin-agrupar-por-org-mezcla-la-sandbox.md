@@ -23,3 +23,18 @@ por contenido ajeno, hay que ponerlo en que un número no esté inflado por fila
 ajenas. Ver
 [[la-aguja-de-una-asercion-sobre-el-documento-entero-debe-ser-unica-de-la-feature]] ·
 [[smoke-test-mode-contamina-bd-prod-si-la-fn-escribe-bd]]
+
+**Reincidencia 2026-07-31, y con la regla ya escrita aquí.** Un subagente midió el daño de
+`qa-023` y devolvió "92 facturas recibidas atribuidas a otra empresa". Lo publiqué en el informe,
+en el incidente, en un learning y en el hub sin repetir la consulta. Al agruparla por `org_id`:
+**84 eran de la sandbox y 8 de clientes**, y de esas 8 solo **2** eran atribución a otra empresa.
+Inflado 11 veces.
+
+Dos cosas que aprender de la reincidencia:
+- **La regla escrita no se aplica sola a lo que devuelve un subagente.** Una cifra que llega en un
+  informe ajeno pesa igual que una que escribes tú, y se audita igual: pídele el `group by` o
+  repite la consulta antes de citarla.
+- **Un alcance inflado no es "conservador".** Dimensiona mal el trabajo, convierte una reparación
+  de dos filas en un proyecto, y cuando alguien lo comprueba se lleva por delante la credibilidad
+  del resto del informe.
+

@@ -106,8 +106,11 @@ Antes se habría aprobado en silencio. Decisión escrita: la API v1 **no** recib
 
 **`qa-023` (#1424, mig 604)** — el código que nadie encontraba estaba en la RPC SQL
 `resolve_proveedor`, no en TS. Eran **tres** implementaciones del mismo emparejado, no dos, y las tres
-prometían por comentario que el NIF mandaba sin cumplirlo. **92 facturas recibidas atribuidas a otra
-empresa**, 89 por nombre o alias exacto. Verificado contra `pg_proc` (una fila, sin sobrecarga) y con
+prometían por comentario que el NIF mandaba sin cumplirlo. La cifra que di primero, **92 facturas**, era mala: no
+agrupaba por organización. Con `is_test` separado, 84 son de la sandbox y **8 de clientes**, de las que
+**solo 2 son atribución a otra empresa** (IET, en libros y sin entrar en ninguna declaración), 1 es un
+falso positivo (mismo NIF con prefijo `FR`) y 5 están en `sin_aprobar` con el proveedor correcto y un
+NIF mal leído. Verificado contra `pg_proc` (una fila, sin sobrecarga) y con
 consultas reales: NIF inexistente con nombre exacto, parecido o alias ajeno ya no empareja; sin NIF,
 la dedup y el fuzzy siguen vivos. **La reparación de esas 92 filas NO va aquí**: `qa-031`.
 

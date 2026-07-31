@@ -14,8 +14,11 @@ IF FOUND THEN RETURN; END IF; -- ...y si no, sigue buscando por nombre, alias y 
 
 Eso no es "el NIF tiene prioridad", es "si el NIF no casa, da igual el NIF". Un documento con NIF
 `B12345674` acababa colgado de una empresa con NIF `A78875499` porque el nombre coincidía. Medido en
-producción: **92 facturas recibidas atribuidas a otra empresa**, 89 por nombre o alias exacto. Cada
-una es una línea del 303 y del 347 con el NIF de un tercero, y el 347 lo declaran las dos partes.
+producción, y aquí va la segunda lección: la primera consulta dijo **92 facturas** y **no agrupaba por
+organización**, así que mezclaba la sandbox de pruebas con los clientes. Separando `is_test`, eran 8 en
+clientes reales y solo **2** atribuciones a otra empresa. Un alcance inflado 11 veces dimensiona mal el
+trabajo y quema la credibilidad del resto del informe. Aun así, cada una de esas 2 es una línea del 303
+y del 347 con el NIF de un tercero, y el 347 lo declaran las dos partes.
 
 Reglas:
 - Identificador informado que **no** casa → no se empareja. Punto. Solo se acepta el respaldo por
