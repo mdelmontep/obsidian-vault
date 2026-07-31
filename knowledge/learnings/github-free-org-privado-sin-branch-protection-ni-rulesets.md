@@ -27,6 +27,11 @@ el candado duro. Ver [[facturaia-resolver-con-claude]].
 activo (require PR+1 approval, bypass solo team `facturaia-maintainers`); el candado del
 runner ya es por infra, no solo procedural. El learning sigue válido para orgs en Free.
 
+**Update 2026-08-01**: con la org ya en enterprise, forkear un repo privado **sí
+funciona** — es la vía para contribuir desde una cuenta que solo tiene `pull`. El
+permiso, además, es por repo y no por pertenecer a la org: ver
+[[permiso-de-github-es-por-repo-no-por-pertenecer-a-la-org]].
+
 **Update 2026-06-17 (gotcha gh CLI)**: ser miembro del team bypass NO hace que
 `gh pr merge` salte el review — su pre-check ve `BLOCKED` y obliga a `--admin`
 ("base branch policy prohibits the merge"). Vía limpia sin override para PRs de
