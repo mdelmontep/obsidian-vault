@@ -20,3 +20,10 @@ Fix: **siempre** `agent-browser --session <nombre-unico-de-tarea> <comando>` (o
 smoke tests de un solo uso. Cada `--session` es un perfil de Chrome aislado
 (cookies/tabs/refs propios) — sin esto, cualquier smoke con más de una sesión
 Claude Code activa en la máquina es sospechoso de contaminación cruzada.
+
+**Y contamina también los smokes contra PROD** (30-jul): a mitad de un smoke en
+`app.tufacturaia.com` el navegador apareció en `localhost:3002`, el dev server de
+otra sesión. Se detectó porque el snapshot traía "Open Next.js Dev Tools", que en
+prod no existe. Corolario: en un smoke de producción, `agent-browser eval
+"location.href"` **en cada paso que escriba algo** — un `open` que devuelve la URL
+correcta no garantiza que el siguiente comando siga en esa pestaña.

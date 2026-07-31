@@ -22,3 +22,11 @@ Solo para migraciones additivas/`create or replace` (reversibles). No es
 sustituto de `db push` cuando la red no está bloqueada.
 Relacionado: la deuda "reconciliar migs timestamp" del hub venía de aplicar por
 MCP (que grababa timestamp) — este método evita eso.
+
+**El bloqueo es de PUERTO, no de host** (30-jul): con 5432/6543 en timeout,
+`https://<ref>.supabase.co/rest/v1/…` con la service key seguía dando 200. Sirve
+para **verificar sin acceso Postgres**: si una columna existe, o llamando a la
+RPC con datos reales para comprobar el fix. Diagnóstico rápido antes de escalar:
+`nc -z <pooler> 5432` KO + PostgREST 200 = es la red (VPN), no Supabase caído.
+Y `db push` desde un worktree NO enlazado falla con `LegacyProjectNotLinkedError`
+aunque copies `supabase/.temp` — hay que correrlo desde la raíz enlazada.
