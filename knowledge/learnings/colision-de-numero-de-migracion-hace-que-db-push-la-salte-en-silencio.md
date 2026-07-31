@@ -20,9 +20,16 @@ volvió a chocar con 596. Las tres las cazó el hook `pre-push`, no una revisió
 `local` vacío. En el repo:
 `git ls-files supabase/migrations | grep -oE '/[0-9]{3}_' | sort | uniq -d`
 
-**Al renumerar barre TODAS las referencias, no solo el nombre del fichero**:
-cabecera `-- NNN_`, marcadores internos que comprueban las asserciones
-(`mig595palabras`), `COMMENT ON FUNCTION`, mensajes de `RAISE`, comentarios de
-cabecera de rutas, nombres de tests y `gotchas.md`. Una se escapó y solo salió
-con `grep` sobre **todos los ficheros del diff**, no sobre los sitios que uno
-recuerda. Ver [[facturaia-migracion-numero-duplicado-536-553]].
+**Renumerar a mano se deja referencias fuera** (cabecera `-- NNN_`, marcadores
+que comprueban las asserciones, `COMMENT ON FUNCTION`, `RAISE`, tests, docs):
+en julio se escapó una en prosa (`la 596 para el resto`) que solo salió al
+grepear el diff entero. En TuFacturaIA eso ya es un comando (#1405, 31-jul):
+
+    npm run mig:renumerar -- --dry   # qué haría
+    npm run mig:renumerar            # git mv + barrido
+
+Mueve al primer hueco libre, traduce `NNN_slug` / `migNNNtoken` / `mig NNN`, y
+**aborta listando lo que no supo traducir** para cerrarlo a mano. Ese último
+paso es el valor: la lista de sitios hay que generarla, no recordarla. En otro
+repo sin el script, hazlo con `grep` sobre **todos los ficheros del diff**.
+Ver [[facturaia-migracion-numero-duplicado-536-553]].
