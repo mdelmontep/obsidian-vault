@@ -34,3 +34,12 @@ las 8 aserciones `toEqual` del test unitario y no las 5 de la de integración: q
 en `main` y nadie lo vio, porque sin BD se saltan y con BD el gate no las corre. Corolario
 de "cambio en shape compartido = grep TODOS los consumidores": los consumidores incluyen las
 suites que el gate no ejecuta.
+
+**El nº de SKIPS es el termómetro de infra, y hay que leerlo antes que el diff** (31-jul,
+AGH). Dos falsos rojos seguidos, ninguno del código: (1) **dos gates a la vez contra el
+MISMO Postgres** → timeouts de 10 s repartidos por ficheros sin relación entre sí (los `.pg`
+truncan tablas: un servidor por gate, o secuencial); (2) **el runtime de contenedores se
+cayó a media sesión** (Colima) → los skips saltaron de 217 a **436** y 47 ficheros salieron
+en rojo *de colección*, no de aserción. Los dos tells: un salto brusco en la cifra de skips,
+y fallos en ficheros que el diff no toca. Antes de sospechar del cambio: `docker ps`,
+carga de la máquina, y **un solo gate por servidor**.
