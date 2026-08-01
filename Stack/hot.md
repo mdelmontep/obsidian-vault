@@ -33,6 +33,7 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
 ## Ha vuelto a pasar (6)
+- **Una etiqueta nacida de un caso concreto sobrevive a su contexto** — y acaba midiendo otra cosa; los tests unitarios no lo ven por construcción. Ver [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
@@ -72,4 +73,3 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 > todo lo que esté aquí se paga en cada sesión sin disparador. Viven en
 > [[hot-archivo-2026-08-01]] y sus learnings se recuperan igual por wikilink y por grep.
 - **Ese «bloqueante» de arriba no bloquea si el helper se traga los fallos** — supabase-js no lanza en un insert fallido, devuelve `{ error }`: envolverlo en `try/catch` es código muerto. Ver [[supabase-js-no-lanza-en-insert-asi-que-el-try-catch-del-caller-es-codigo-muerto]]
-- **Cast que miente = compilador desactivado: quítalo ANTES de arreglar** — al quitarlo TS enumera los consumidores; el `?.` tapa el que reventó y deja los demás. Ver [[quitar-el-cast-enumera-los-consumidores-el-optional-chaining-tapa-uno]]

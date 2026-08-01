@@ -44,30 +44,34 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-01, madrugada) — la medición no era fiable, y eso reordena el plan
+## Estado (2026-08-01, mañana) — la medición no era fiable, y eso reordena el plan
 
-**`main` en `c98186c`** (Borja mergeó #707 y #722). **8 PRs abiertas, todas nuestras**: mías #737 · #743 · #739 · #740 · #750 · #755 (rebasadas sobre la punta nueva, mergean limpias una a una); de Dani #579 · #746.
+**`main` en `c98186c`.** **11 PRs abiertas, todas nuestras, todas verdes y rebasadas** (verificado una a una). Orden: `#579 → #737 → #743 → #739 → #740 → #746 → #750 → #755 → #757 → #759`, y **#762 (solo-docs) se mergea ya**. ⚠️ #759 va **detrás de #737** (add/add en el enum de `messages.ts` → combinar).
 
 🚨 **La medición no es estacionaria.** Mismo commit, payload idéntico, `temperature: 0` → **0/5 fallos a las 19:00, 3/5 a las 00:40**. `MODEL_ID=gpt-4o` es el de prod: **el agente rutea distinto según la hora**. Invalida comparar corridas de momentos distintos y el baseline de hace semanas. → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · #738 · #748
 
-❌ **Retracté una acusación falsa**: dije que la #579 de Dani regresaba y **no es cierto** (comparé en bloques). Bien medido, `main` 80% y su rama 55% — mide MEJOR. Él ya había actuado. **#579 recupera el primer puesto del tren.**
-
 **Eje `query` 72.7%.** Fase 2A (#737) y Fase 3-A2 (#743) listas sin mergear. Lo que queda —A1/A4 (#742) y Fase 2B (#736)— son cambios de prompt: **no se tocan sin el arnés** (PR #750).
 
-**Tokens (#736):** `SYSTEM_PROMPT` = 13.073 tok = **99,6% del input de cada turno**; tipar sale **+3,7% más caro** → 2B se justifica por corrección, no por ahorro.
+**Tokens (#736):** `SYSTEM_PROMPT` = 13.073 tok = **99,6% del input**; tipar sale **+3,7% más caro** → 2B se justifica por corrección, no por ahorro.
 
-**Issues de la auditoría (3 agentes):** #751 (cambiar `EMBEDDING_MODEL` mata el recall en silencio; el eval no puede verlo por construcción) · #752 (el presenter borra la nota de degradación; flag APAGADO en prod → latente pero bloqueante para encenderlo) · #753 (15 tests verdes por el motivo equivocado, 9 con la misma firma) · #749→PR #750.
+**Auditoría (3 agentes):** #751→#757 · **#752 arreglado dentro de #737** · #753 (8/15 en #755; los 2 de `dashboard/auth` son de Borja) · #749→#750, ya **verificada end-to-end con llamadas reales**.
 
-_Trampa nº1 del entorno:_ **los tres arneses (evals, gate, `.pg`) dieron falsos por ENTORNO en un solo día** — endpoint que deriva, carga >50, y `agh_dev` truncada por sesiones paralelas. Descartar las tres antes de mirar el diff. → [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
+**Panel adversarial de 4 decisiones (20 agentes): me corrigió en TRES.** La decisiva, #752 — mi llave (`signals`) cubría la mitad de los caminos, así que habría cerrado el issue en verde con el bug vivo. Detalle en cada issue.
 
-_Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID**. SSH del host por `askpass` con `op` inline — **`ssh-copy-id` NO funciona** (el host no acepta password de root). → [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
+**#747 → PR #759:** el 32,8% de `clarify` **no medía lo que creíamos** (agrega 4 conductas, excluye 5 caminos que también piden algo). Señal `asked`, 8 razones. Y el punto único de salida del brain ya no **sobreescribe** las señales de las ramas internas.
+
+**Issues nuevos hoy:** **#758** (el guard de grounding no vigila el lead: aprueba **invertir una negación**; y `tasks` tiene el mismo defecto sin nada que lo tape) · **#760** (SSH del host caído) · **#761** (3 asserts anchos que quedan). → [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
+
+_Trampa nº1 del entorno:_ **los cuatro arneses (evals, gate, `.pg`, y el gate otra vez) dieron falsos por ENTORNO en dos días** — endpoint que deriva · carga >50 (load 32 → 16 rojos que en limpio pasan) · `agh_dev` truncada por sesiones paralelas · **rama sin rebasar** (lo delata `dashboard 439` en vez de 472). Descartarlas antes de mirar el diff. → [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
+
+_Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ el título lleva **espacio final**). Con dos cuentas en `op`, **`op signin` exige `--account agentesialab.1password.eu`** o falla con «multiple accounts found». El ítem `Langfuse AGH` es **login web, NO API keys** → leer trazas por HTTP necesita navegador; las keys viven en el env del contenedor (→ SSH o panel). SSH del host por `askpass` con `op` inline — **`ssh-copy-id` NO funciona** (el host no acepta password de root). → [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
 
 ## Bloqueantes
 
-- **Decisiones de Borja pendientes:** #744 (compartir la credencial del gateway) · #738 (política de tolerancia del baseline) · #741 (umbral ASR) · #747 (cómo ver el texto de los clarify) · #752 (arreglar antes de encender el presenter).
+- **Decisiones de Borja pendientes:** #744 (compartir la credencial del gateway) · #738 (tolerancia del baseline — **el hallazgo gordo: el 22% del banco no tiene NINGÚN suelo**) · #741 (umbral: veredicto = 0.75) · **#758 (A: el presenter deja de recibir el lead · B: el guard exige el orden)** · #762 (mergear la regla).
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
 - **#197/#228** (agendar futuro→calendario) — scope Entra `Calendars.ReadWrite` + admin consent (Borja).
-- **SSH al host de prod** con timeouts intermitentes (visto en el drill) → diagnóstico vía panel/API Dokploy mientras.
+- 🔴 **SSH al host CAÍDO** (22 y 5251 sin respuesta, panel y Langfuse a 200 → el host vive). **Causa desconocida, no inventada.** Bloquea leer el texto de los clarify en ClickHouse (#747) y la medición de #741. Vía barata: que Borja pruebe desde su IP. → **#760**
 - Secrets de prod → migrar a 1Password (pendiente recurrente).
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
