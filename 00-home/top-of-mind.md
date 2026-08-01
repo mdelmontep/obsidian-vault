@@ -23,7 +23,7 @@ tags: [home, prioridades]
 - **Centro Elphis — bot WA vivo en producción (23-jul)** — ⚠️ **rotar credenciales del stack n8n** (se volcó el `env` completo en crudo): `POSTGRES_PASSWORD`, `N8N_ENCRYPTION_KEY`, `POSTGRES_AUX_PASSWORD`, `RETELL_WEBHOOK_SECRET`, `CHATWOOT_WEBHOOK_SECRET`, `META_APP_SECRET`. Pendientes menores y limpieza → [[clientes/centro-elphis/index|centro-elphis]]
 - **Agentesia — chatbot propio (31-jul)** — `Registro Sheets` del de WhatsApp arreglado (fallaba en cada lead con la ejecución en `success`) + prompts corregidos; **sin tráfico desde el fix, sin verificar**. Pendiente: decidir el `[FIN]` muerto, el chat web sin ejecuciones desde el 19-jul y sacar el secret del `jsCode`. Hito 5 → [[agentesia]] · [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
 - **agency-portal — `/agency/time`: solo falta que Borja/Dani/Manuela corran `./install.sh`** (el resto cerrado en prod 25-jul, ver histórico). [[agentesia]]
-- **AGH Ibérica — 1-ago: 11 PRs listas y el plan a falta de Fase 2B** (`c98186c`) — el endpoint deriva entre horas, así que 2B y A1/A4 esperan el arnés (#750, ya verificado end-to-end). **Tuyo: que Borja vacíe la cola (#762 solo-docs se mergea ya) + decidir #758 A/B y #738 · y el SSH del host está CAÍDO (#760), lo que bloquea #747 y #741.** → [[agh-iberica]] · [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
+- **AGH Ibérica — 2-ago: 12 PRs listas y el plan a falta de Fase 2B** (`c98186c`) — el endpoint deriva entre horas, así que 2B y A1/A4 esperan el arnés (#750, ya verificado end-to-end). **Tuyo: que Borja vacíe la cola (#762 solo-docs se mergea ya, #763 va la ÚLTIMA) + decidir #758 A/B y #738 · y el SSH del host está CAÍDO (#760), lo que bloquea #747 y #741.** → [[agh-iberica]] · [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]] · [[el-control-que-deja-dentro-el-test-del-cambio-se-mide-a-si-mismo]]
 
 
 - **TuFacturaIA — importe cobrable con retenciones, en prod (25-jul)** — quedan 3 cabos menores. Detalle → [[facturaia]]
@@ -89,7 +89,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`main` `c98186c`) · eje `query` **72.7%** · **11 PRs abiertas, todas verdes** · 🔴 SSH del host caído (#760) · 🚨 **la medición no es estacionaria** → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]] |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`main` `c98186c`) · eje `query` **72.7%** · **12 PRs abiertas, todas verdes** · 🔴 SSH del host caído (#760) · 🚨 **la medición no es estacionaria** → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]] |
 | cryptobruj-bot | [[cryptobruj]] | Propio · `tendencia-1d` en paper (65 pares) · la metodología base no tiene ventaja · 2 pendientes tuyos |
 
 ## Completado reciente

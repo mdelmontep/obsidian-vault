@@ -46,7 +46,7 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 ## Estado (2026-08-01, mañana) — la medición no era fiable, y eso reordena el plan
 
-**`main` en `c98186c`.** **11 PRs abiertas, todas nuestras, todas verdes y rebasadas** (verificado una a una). Orden: `#579 → #737 → #743 → #739 → #740 → #746 → #750 → #755 → #757 → #759`, y **#762 (solo-docs) se mergea ya**. ⚠️ #759 va **detrás de #737** (add/add en el enum de `messages.ts` → combinar).
+**`main` en `c98186c`.** **12 PRs abiertas, todas nuestras, todas verdes y rebasadas** (verificado una a una). Orden: `#579 → #737 → #743 → #739 → #740 → #746 → #750 → #755 → #757 → #759`, y **#762 (solo-docs) se mergea ya**. ⚠️ #759 va **detrás de #737** (add/add en el enum de `messages.ts` → combinar).
 
 🚨 **La medición no es estacionaria.** Mismo commit, payload idéntico, `temperature: 0` → **0/5 fallos a las 19:00, 3/5 a las 00:40**. `MODEL_ID=gpt-4o` es el de prod: **el agente rutea distinto según la hora**. Invalida comparar corridas de momentos distintos y el baseline de hace semanas. → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · #738 · #748
 
@@ -58,11 +58,13 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 **Panel adversarial de 4 decisiones (20 agentes): me corrigió en TRES.** La decisiva, #752 — mi llave (`signals`) cubría la mitad de los caminos, así que habría cerrado el issue en verde con el bug vivo. Detalle en cada issue.
 
-**#747 → PR #759:** el 32,8% de `clarify` **no medía lo que creíamos** (agrega 4 conductas, excluye 5 caminos que también piden algo). Señal `asked`, 8 razones. Y el punto único de salida del brain ya no **sobreescribe** las señales de las ramas internas.
+**#747 → PR #759:** el 32,8% de `clarify` **no medía lo que creíamos** (agrega 4 conductas, excluye 5 caminos). Señal `asked`, 8 razones. Y el punto único de salida del brain ya no **sobreescribe** las señales internas.
+
+**#712 → PR #763:** la raíz recogía `dashboard/test/**` → **38 ficheros corrían DOS veces por gate** (10 `.pg` con TRUNCATE). Arreglado, y el gate **emite** el inventario (`pg: agente 39 · dashboard 10`). ⚠️ **Va la ÚLTIMA del tren** (al entrar, las líneas «agente» de las demás quedan altas). El control pareado dice que en máquina sana `main` **no** oscila → esa mitad del issue queda ABIERTA. → [[el-control-que-deja-dentro-el-test-del-cambio-se-mide-a-si-mismo]]
 
 **Issues nuevos hoy:** **#758** (el guard de grounding no vigila el lead: aprueba **invertir una negación**; y `tasks` tiene el mismo defecto sin nada que lo tape) · **#760** (SSH del host caído) · **#761** (3 asserts anchos que quedan). → [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
 
-_Trampa nº1 del entorno:_ **los cuatro arneses (evals, gate, `.pg`, y el gate otra vez) dieron falsos por ENTORNO en dos días** — endpoint que deriva · carga >50 (load 32 → 16 rojos que en limpio pasan) · `agh_dev` truncada por sesiones paralelas · **rama sin rebasar** (lo delata `dashboard 439` en vez de 472). Descartarlas antes de mirar el diff. → [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
+_Trampa nº1 del entorno:_ **los arneses dieron falsos por ENTORNO cinco veces en dos días** — endpoint que deriva · carga >50 · `agh_dev` truncada por sesiones paralelas · **rama sin rebasar** (lo delata `dashboard 439` vs 472) · y un **control tautológico** propio. Descartarlas antes de mirar el diff. → [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
 
 _Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ el título lleva **espacio final**). Con dos cuentas en `op`, **`op signin` exige `--account agentesialab.1password.eu`** o falla con «multiple accounts found». El ítem `Langfuse AGH` es **login web, NO API keys** → leer trazas por HTTP necesita navegador; las keys viven en el env del contenedor (→ SSH o panel). SSH del host por `askpass` con `op` inline — **`ssh-copy-id` NO funciona** (el host no acepta password de root). → [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
 

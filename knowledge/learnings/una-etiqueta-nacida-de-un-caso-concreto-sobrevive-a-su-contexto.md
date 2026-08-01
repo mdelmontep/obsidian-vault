@@ -14,4 +14,6 @@ Regla: **toda etiqueta que se muestre a un humano declara su criterio en el mism
 
 Corolario de detección: los tests unitarios no lo ven **por construcción** (cubren la estadística, no el criterio). Los tres salieron al ejercitar el camino real: uno recorriendo los 9 caminos del brain, otro añadiendo una señal nueva, el tercero con la primera corrida real de llamadas.
 
+Corolario medido: una cifra que se escribe **a mano** en cada entrega falla en las **dos** direcciones el mismo día — `59 ficheros` cuando eran 49 (un proyecto sumado dos veces) y `20` cuando eran 39 (un `ls test/*.pg.test.ts` que no bajaba a los subdirectorios). Si un número se pega en una PR, que lo **emita la herramienta**.
+
 Primo cercano: [[banner-cuenta-pares-vs-pestana-cuenta-entidades-misma-palabra]] · [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] · [[el-caso-que-mide-un-hueco-entra-antes-que-la-capacidad]]
