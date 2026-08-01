@@ -71,3 +71,5 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 > **Las otras 50 no se han borrado**: siguen igual de vigentes, pero el tope de este fichero es 25 y
 > todo lo que esté aquí se paga en cada sesión sin disparador. Viven en
 > [[hot-archivo-2026-08-01]] y sus learnings se recuperan igual por wikilink y por grep.
+- **Ese «bloqueante» de arriba no bloquea si el helper se traga los fallos** — supabase-js no lanza en un insert fallido, devuelve `{ error }`: envolverlo en `try/catch` es código muerto. Ver [[supabase-js-no-lanza-en-insert-asi-que-el-try-catch-del-caller-es-codigo-muerto]]
+- **Cast que miente = compilador desactivado: quítalo ANTES de arreglar** — al quitarlo TS enumera los consumidores; el `?.` tapa el que reventó y deja los demás. Ver [[quitar-el-cast-enumera-los-consumidores-el-optional-chaining-tapa-uno]]
