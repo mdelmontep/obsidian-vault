@@ -28,3 +28,5 @@ falta `NODE_OPTIONS` explícito dentro del contenedor (probado inyectándolo ví
 `docker exec -e`, no vale con solo aumentar el `--memory` de la VM).
 
 Relacionado (distinto pero cercano): [[pre-commit-hook-oom-con-dev-server]].
+
+**Ampliación 1-ago: el coste no es el rojo, es lo que el rojo bloquea.** El runner de tickets de TuFacturaIA corre el gate y, si falla, **abre el PR en draft** con el log pegado. Un OOM de `tsc` (exit 134, `Ineffective mark-compacts near heap limit`) dejó el #1435 aparcado **dos días** con el trabajo correcto dentro: nadie distinguió «la herramienta se murió» de «el código está mal». Antes de dar por malo un PR del runner, mirar si el fallo es de tipos o de heap y volver a correr el gate en local. Y la salida de fondo es la de arriba: `NODE_OPTIONS=--max-old-space-size` en el gate del runner, no en el criterio de quien revisa.
