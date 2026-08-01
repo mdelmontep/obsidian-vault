@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-07-31
+updated: 2026-08-01
 tags: [cliente, agentesia]
 ---
 
@@ -29,9 +29,11 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 
 6. **agentesia-web — el H1 ya no dice "en Madrid", PR #94 abierto sin mergear (01-ago)** — el hero rezaba "Agentes de IA para PYMEs en Madrid" y la agencia trabaja fuera de Madrid; `titleSeed` pasa a `"PYMEs"` (la señal local se queda en el eyebrow, `seo.ts`, `seoPages.ts` y el `LocalBusiness` de `schemaOrg.ts`). Gates verdes y H1 verificado sobre el `dist/index.html` real. **Bloqueado en el merge**: `mdelmontep` solo tiene `pull` en este repo, así que el PR va desde fork y lo tiene que cerrar `notcapi`. De paso quedó claro por qué desapareció el efecto de tecleo del hero: **no fue reduced-motion, fue el PR #89 del 31-jul** (a11y/SEO), que sacó la animación fuera del heading. Ojo también: el `main` local de `agentesia-web` está **divergido** (4 commits sin push ↔ 3 sin traer) y con `bun.lock` sucio. Ver [[animar-el-texto-de-un-heading-indexable-lo-sirve-a-medias]] · [[permiso-de-github-es-por-repo-no-por-pertenecer-a-la-org]]
 
+7. **agentesia-web — giro a "desarrollo a medida": 16 commits en `feat/foco-desarrollo-a-medida`, worktree SIN mergear (01-ago)** — rama nueva en `~/Projects/agentesia-web-a-medida`. Ruta `/servicios/software-a-medida` (herramientas, fases, stack, "cuándo NO", FAQ con "¿el código es mío?"), `/servicios/tufacturaia` con **capturas reales de la app** (org `FacturaIA Sandbox`), secciones nuevas de producto propio y de redes sociales en la home, hero con ilustración SVG interactiva, `/resultados` distinguiendo *desarrollo a medida* de *implantación*, y "Software a medida" en `/casos-de-uso`. Lint+build verdes en cada commit. **⚠️ La rama nació de un `main` local 4 commits por detrás del remoto** y pisa dos de ellos: #91 (que centralizó las cifras del hero en `PROOF`, y aquí volvieron a escribirse a mano, una sin respaldo) y #89 (que sacó la animación del `h1`). Rebasar sobre `origin/main` **antes** de abrir PR, y ojo: se solapa con el PR #94 ya abierto, que quita "en Madrid" del H1 — lo mismo que hace esta rama. Sin push: `mdelmontep` tiene solo `READ`, va por fork. **Tuyo**: horquilla de precio de "A medida", créditos de Higgsfield para la foto que falta, y desplegar `tufacturaia.com` (responde **404**, la landing está hecha en el repo sin publicar). Ver [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]] · [[palabras-largas-en-un-rotador-de-h1-dejan-hueco-bajo-el-cursor]] · [[capturar-un-saas-para-la-web-publica-exige-mirar-la-organizacion-activa]] · [[los-audios-de-llamadas-reales-llevan-nombres-de-clientes]] · [[update-browserslist-db-mete-caniuse-lite-en-dependencies]]
+
 ## Bloqueos / esperando a terceros
 
-- `notcapi`: mergear PR #94 de `agentesia-web` (ver hito 6)
+- `notcapi`: mergear PR #94 de `agentesia-web` (ver hito 6) — y el PR de la rama `feat/foco-desarrollo-a-medida` cuando se abra (hito 7)
 - Dani: correr diagnóstico del hook de time-tracker (ver hito 2)
 - GitHub org: subir spending limit / esperar reset de cupo Actions (ver hito 3)
 
