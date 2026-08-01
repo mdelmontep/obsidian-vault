@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-07-31
+updated: 2026-08-01
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,26 +44,27 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-07-31, tarde) — el plan de precisión ENTERO en prod salvo Fase 2, y el flake del gate con causa
+## Estado (2026-08-01, madrugada) — la medición no era fiable, y eso reordena el plan
 
-**`main` en `57d75fe`.** **En prod TODO el plan salvo la Fase 2**: Fase 0 (#531) · P1 (#681) · P2 (#692) · Fase 1 código (#688) y prompt (#711) · P3 (#713) · **#715** (el `target` del read viaja a la traza, así que en Langfuse las lecturas dejan de ser indistinguibles). Más la tanda de staffing de Borja (#661-#665, migs 0024-0027).
+**`main` en `c98186c`** (Borja mergeó #707 y #722). **8 PRs abiertas, todas nuestras**: mías #737 · #743 · #739 · #740 · #750 · #755 (rebasadas sobre la punta nueva, mergean limpias una a una); de Dani #579 · #746.
 
-**El termómetro:** eje `query` **`0.0%` → `45.5%`**. Siguen rojas EXACTAMENTE las de fases posteriores (B6/B8 Fase 2 · A1/A2/A4 Fase 3 · D15 Anexo A). `evals:check` completo **sin regresiones**.
+🚨 **La medición no es estacionaria.** Mismo commit, payload idéntico, `temperature: 0` → **0/5 fallos a las 19:00, 3/5 a las 00:40**. `MODEL_ID=gpt-4o` es el de prod: **el agente rutea distinto según la hora**. Invalida comparar corridas de momentos distintos y el baseline de hace semanas. → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · #738 · #748
 
-**Todo lo mío MERGEADO y en prod**: #720 (#701, vencimiento de tareas — `evals:check` sin regresiones) · #729 (#725, migración 0028 que cura las BD envenenadas) · #730 (#726, bytes NUL + candado). Sondas `/health` y `/ready` 200.
+❌ **Retracté una acusación falsa**: dije que la #579 de Dani regresaba y **no es cierto** (comparé en bloques). Bien medido, `main` 80% y su rama 55% — mide MEJOR. Él ya había actuado. **#579 recupera el primer puesto del tren.**
 
-**El flake del gate tenía causa raíz** (#717 → #718, en prod): tres `.pg` re-aplicaban una migración congelada que ESTRECHABA un CHECK, y el `catch` lo disfrazaba de «no hay BD». Mi hipótesis previa (#712) era **falsa**. → [[test-que-reaplica-una-migracion-congelada-estrecha-el-schema]]
+**Eje `query` 72.7%.** Fase 2A (#737) y Fase 3-A2 (#743) listas sin mergear. Lo que queda —A1/A4 (#742) y Fase 2B (#736)— son cambios de prompt: **no se tocan sin el arnés** (PR #750).
 
-**Decidido esta sesión** (detalle en cada issue): #602 → extender `args` de `client.detail` · #698 → mecanizar los evals ×3 en el gate · #712 → re-alcanzado a higiene de métrica · #701 → solo la mitad de LECTURA; dictar un vencimiento reabre la frontera `task.create`/`reminder.schedule` → **#719**.
+**Tokens (#736):** `SYSTEM_PROMPT` = 13.073 tok = **99,6% del input de cada turno**; tipar sale **+3,7% más caro** → 2B se justifica por corrección, no por ahorro.
 
-**En la cola de Borja:** #707 (#665) · #722 (#669) · #723 · #727 (verificación en navegador del lane staffing, deuda declarada 3 veces) · #675 (RGPD, su decisión — la precondición técnica ya no aplica). De Dani: #579.
+**Issues de la auditoría (3 agentes):** #751 (cambiar `EMBEDDING_MODEL` mata el recall en silencio; el eval no puede verlo por construcción) · #752 (el presenter borra la nota de degradación; flag APAGADO en prod → latente pero bloqueante para encenderlo) · #753 (15 tests verdes por el motivo equivocado, 9 con la misma firma) · #749→PR #750.
 
-_Entorno — 4 trampas del gate:_ Homebrew arriba o los `.pg` se autosaltan · BD local atrasada → 500 en cualquier rama (`npm run db:migrate`) · **dos gates a la vez contra el MISMO Postgres** · máquina saturada (load >30 por sesiones ajenas). → [[tests-pg-self-skip-levantar-pgvector-local]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]] · [[cpu-contencion-multisesion-falso-positivo-ui-atascada]]
+_Trampa nº1 del entorno:_ **los tres arneses (evals, gate, `.pg`) dieron falsos por ENTORNO en un solo día** — endpoint que deriva, carga >50, y `agh_dev` truncada por sesiones paralelas. Descartar las tres antes de mirar el diff. → [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
 
-_Creds del gateway (evals):_ 1Password `AGH Iberica` → `Open AI AGH`, **por ID no por nombre** (el título lleva espacio final → variable vacía → 401 que parece regresión). → [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
+_Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID**. SSH del host por `askpass` con `op` inline — **`ssh-copy-id` NO funciona** (el host no acepta password de root). → [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
 
 ## Bloqueantes
 
+- **Decisiones de Borja pendientes:** #744 (compartir la credencial del gateway) · #738 (política de tolerancia del baseline) · #741 (umbral ASR) · #747 (cómo ver el texto de los clarify) · #752 (arreglar antes de encender el presenter).
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
 - **#197/#228** (agendar futuro→calendario) — scope Entra `Calendars.ReadWrite` + admin consent (Borja).
 - **SSH al host de prod** con timeouts intermitentes (visto en el drill) → diagnóstico vía panel/API Dokploy mientras.
@@ -72,6 +73,8 @@ _Creds del gateway (evals):_ 1Password `AGH Iberica` → `Open AI AGH`, **por ID
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 
 ## Historial reciente (condensado — detalle en `docs/status-log/` del repo)
+
+- **31-jul** — plan de precisión entero en prod salvo Fase 2 (#531, P1 #681, P2 #692, Fase 1 #688/#711, P3 #713, #715). Mergeados #720 · #729 (mig 0028) · #730. El flake del gate tenía causa raíz (#717→#718): tres `.pg` re-aplicaban una migración congelada que estrechaba un CHECK, y el `catch` lo disfrazaba de «no hay BD»; mi hipótesis #712 era falsa. → [[test-que-reaplica-una-migracion-congelada-estrecha-el-schema]]
 
 - **21/22-jul — la base que sostiene todo lo de después** (cerrado, detalle en `docs/status-log/` y en el PROJECT-STATUS del repo): épica conversacional #118 (L1/L2a/L2b + anáfora a persona, recall ~100%) · **secretaria #467 completa** (reads fraseados grounded, small-talk, preferencias) · dedup de clientes #245 con `crm.mergeClients` · drill de voz #192 (6 hallazgos) · `ClientIntake` #451 como módulo único de alta · el agente como **2º escritor de `audit_log`** (#485) · self-recipient #482-p1 · módulo temporal único #452 · **épica de arquitectura #457**: gate raíz `npm run gate`, split actor/owner, `createApp` por slices en `src/composition/` (wiring: read/write → `capabilities.ts`, store → `persistence.ts`, env → `config.ts`, worker → `lifecycle.ts`) · Langfuse v3 con rutina de auditoría semanal · #532 (`meeting.update` con `participants` aditivo). Queda de ahí el tramo final de **#454** (switch de `routeTurn`, lane de Borja) y el **smoke conductual del self-recipient** → [[agh-qa-voz-guion-llamada]].
 

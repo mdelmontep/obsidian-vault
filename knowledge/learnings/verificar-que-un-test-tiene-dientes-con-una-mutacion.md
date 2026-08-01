@@ -26,6 +26,22 @@ sola mutación por vez; revertir antes de commitear (`git status` limpio salvo e
 test). Y dejar escrito en el PR qué mutación se usó y qué falló — es la evidencia
 de que el test sirve.
 
+**La firma dominante: aserción negativa sin contraparte positiva** (1-ago, AGH — 15
+casos verificados con mutación, **9 comparten esta forma**). «No ejecuta», «cero
+acciones», «no contiene X» están verdes tanto si el código acierta **como si no hace
+nada**. Ejemplos reales: un test cuyo comentario decía «el pending sigue vivo» solo
+afirmaba «cero ejecutadas» — y eso lo cumple igual el turno retenido (correcto) que el
+que DESCARTA el pending (el bug); otro se llamaba «re-propone» y lo cumplía un brain que
+contestara «no te he entendido», dejando al usuario sin oír nunca la propuesta. El
+arreglo es siempre el mismo: **añadir la mitad positiva** (que el outbound NOMBRE la
+propuesta, que el pending SIGA ahí). Variantes hermanas: fixtures de tamaño 1, fakes
+**ya ordenados** (ordenar por `createdAt` == por `occurredAt` si insertas en orden
+cronológico) y tests **sin un solo `expect`** que cierran con un comentario.
+
+**Y un guard es indetectable si su escenario no se puede construir**: un eval que usa la
+MISMA instancia del proveedor para escribir y para leer nunca podrá detectar un desajuste
+entre ambos — no es que falle, es que es estructuralmente ciego.
+
 **Una mutación PARCIAL da falso verde, y se disfraza de «el test no vale»**
 (31-jul, AGH): para probar que un caso de eval medía de verdad un argumento nuevo
 del prompt, quité su mención de una línea… y el caso siguió 3/3. Parecía que

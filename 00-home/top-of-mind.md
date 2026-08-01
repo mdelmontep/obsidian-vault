@@ -21,7 +21,7 @@ tags: [home, prioridades]
 - **Centro Elphis — bot WA vivo en producción (23-jul)** — ⚠️ **rotar credenciales del stack n8n** (se volcó el `env` completo en crudo): `POSTGRES_PASSWORD`, `N8N_ENCRYPTION_KEY`, `POSTGRES_AUX_PASSWORD`, `RETELL_WEBHOOK_SECRET`, `CHATWOOT_WEBHOOK_SECRET`, `META_APP_SECRET`. Pendientes menores y limpieza → [[clientes/centro-elphis/index|centro-elphis]]
 - **Agentesia — chatbot propio (31-jul)** — `Registro Sheets` del de WhatsApp arreglado (fallaba en cada lead con la ejecución en `success`) + prompts corregidos; **sin tráfico desde el fix, sin verificar**. Pendiente: decidir el `[FIN]` muerto, el chat web sin ejecuciones desde el 19-jul y sacar el secret del `jsCode`. Hito 5 → [[agentesia]] · [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
 - **agency-portal — `/agency/time`: solo falta que Borja/Dani/Manuela corran `./install.sh`** (el resto cerrado en prod 25-jul, ver histórico). [[agentesia]]
-- **AGH Ibérica — agente "Carlos" · 31-jul: el plan de precisión ENTERO en prod salvo Fase 2** (`main` `57d75fe`) — eje `query` **0% → 45.5%**, `evals:check` sin regresiones, **cero PRs mías abiertas**. **Tuyo: pincharle a Borja** (#707 · #722 · #723 · #727 · #675) y decidir si arranca la **Fase 2**. → [[agh-iberica]]
+- **AGH Ibérica — 1-ago: la MEDICIÓN no era fiable** (`c98186c`) — el endpoint deriva entre horas, así que 2B y A1/A4 esperan al arnés (#750). **Tuyo: 6 PRs mías + 5 decisiones de Borja.** → [[agh-iberica]]
 
 
 - **TuFacturaIA — importe cobrable con retenciones, en prod (25-jul)** — quedan 3 cabos menores. Detalle → [[facturaia]]
@@ -89,7 +89,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`main` `57d75fe`) · **plan de precisión entero en prod salvo Fase 2** · eje `query` **45.5%** · cero PRs mías abiertas · **Fase 2 desbloqueada, sin arrancar** · 🔴 #624 falta dictar un correo |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`main` `c98186c`) · eje `query` **72.7%** · **6 PRs mías abiertas** + 5 decisiones de Borja · 🚨 **la medición no es estacionaria** → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] |
 | cryptobruj-bot | [[cryptobruj]] | Propio · `tendencia-1d` en paper (65 pares) · la metodología base no tiene ventaja · 2 pendientes tuyos |
 
 ## Completado reciente
