@@ -66,3 +66,9 @@ antes. Vuelta → [[hot]].
 - **Un worker con `autoDeploy` y `watchPaths` vacío pierde su trabajo en cada push ajeno** — y sin handler de SIGTERM la culpa cae en quien no la tiene ("sin latido" del agente, no "te lo cargó tu deploy"). Cruza el último latido con `deployments[].createdAt`. Ver [[autodeploy-sin-watchpaths-mata-el-trabajo-en-vuelo-del-worker]]
 - **Tu test prueba menos de lo que crees: el caso y el sustrato** — el golden del issue está limpio; el que reproduce el bug es la traza real con su basura. Y si la propiedad depende de que el dato cruce la BD, es `.pg` o no prueba nada. Si pasa a la primera, desactiva el fix y comprueba el rojo. Ver [[el-test-que-prueba-el-bug-es-la-traza-real-no-el-golden-del-issue]]
 - **Un identificador que no casa tiene que VETAR el respaldo por nombre, no solo perder prioridad** — `byNif ?? byNombre` no es "el NIF manda", es "si el NIF no casa da igual el NIF". Y escribir de vuelta el nombre observado como alias hace permanente el enlace erróneo. Ver [[un-identificador-que-no-casa-tiene-que-vetar-el-respaldo-por-nombre]]
+
+
+## Retiradas de hot.md el 01-ago (tope de 25 entradas)
+
+- **Subagente que reporta «hecho, verde» sin que exista el código** — `git show --stat` + `grep` del símbolo + rojo-primero por ti. Si le recortaste el gate por carga, su verde no cubre lo recortado: 3 de 5 fixes no compilaban con 8.500 tests verdes. Ver [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]] · [[gate-parcial-a-subagentes-traslada-el-coste-al-recogedor]]
+- **Si la auditoría es la única copia que quedará del dato, no puede ir en fire-and-forget** — al escribir un endpoint destructivo, pregunta qué queda del dato después: si la respuesta es "la fila de auditoría", esa fila es parte de la transacción (antes del borrado y bloqueante). Ver [[auditoria-que-es-la-unica-copia-del-dato-no-puede-ir-en-fire-and-forget]]

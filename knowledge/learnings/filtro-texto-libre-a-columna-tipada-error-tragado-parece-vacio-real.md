@@ -21,3 +21,12 @@ Dos fallos combinados, arreglar los dos:
 Caso real: FacturaIA `/admin/ia-ops` (#850) — filtro `org_id` aceptaba cualquier
 string y pintaba ceros. Regla general: en agregados, un cero puede ser un error
 enmascarado; el estado "vacío" debe ser distinguible del "falló la query".
+
+**Tercera ocurrencia, 2026-08-01** (#1444): 5 consultas sin destructurar `error` convertían
+un `42703 column does not exist` en «La factura no tiene líneas, apruébala desde la
+bandeja», mandando al usuario a re-aprobar una factura correcta y sin traza en logs. Con la
+migración aún sin aplicar, ese era el 100 % de los casos el día del deploy. Variante en
+cliente el mismo día: un selector se tragaba el fallo de red y decía «Sin resultados» con
+4.940 materiales en catálogo, así que búsqueda rota y búsqueda sin coincidencias se leían
+igual. **Al tercer aviso deja de ser despiste: grep de `const { data } =` sin `error` en
+cada cierre.**
