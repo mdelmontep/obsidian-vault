@@ -39,3 +39,12 @@ mira al empujar: una rama en review no se revalida cuando otra PR le ocupa el n�
 Efecto cultural: 24 PRs con 4 checks rojos y ninguno significativo. Un guard siempre en
 rojo enseña a ignorar el rojo. Opciones (incl. runner self-hosted, que no gasta minutos
 pero hay que comprobar si el bloqueo es por gasto o por suspensión): issue #1267 del repo.
+
+**Coste medido 2026-08-02.** Al retirar el disparador de `ci.yml` (ADR-043), todo gate que
+vivía SOLO ahí dejó de existir — y eso no se auditó gate a gate. `ratchet:design` era uno:
+no es que fallara y nadie lo mirase, **no se ejecutaba**. Entraron **111 ocurrencias de
+deuda** (31 ficheros con `<button>` nativo o hex crudo) en semanas. Los tres trinquetes
+pasan a `.githooks/pre-commit` — cuestan 0,5 s los tres, así que el "no cargues el hook"
+nunca fue el trade-off real. **Al matar un CI, migrar sus gates UNO A UNO al hook**: lo que
+quede allí es documentación, no verificación. Ver
+[[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]].

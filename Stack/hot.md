@@ -41,6 +41,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Rama nueva desde main local sin fetch** — `worktree add ... main` nace vieja y pisa lo ya mergeado; usar `origin/main`. Ver [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]]
 - **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
+- **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino donde no mide y sale con 0, será el de producción. Al matar un CI, migrar sus gates uno a uno. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]]
 
 ## El resto (61)
 
