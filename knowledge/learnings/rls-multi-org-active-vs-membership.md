@@ -28,3 +28,14 @@ CREATE POLICY x ON tabla FOR SELECT USING (
 Para WRITE: combinar con `user_can_write_in_org(org_id, recurso)` o `current_org_role() IN ('propietario','admin','contable')`. Recurso registrado en matriz canónica (mig 121).
 
 **Regla**: cualquier tabla per-org con app multi-org debe usar la función active-org, no la subquery membership. Validar en review de mig nueva.
+
+**Reincidencia al copiar el patrón a un proyecto nuevo (TuCRMIA, 02-ago-2026).** El helper se copió con su
+FORMA y sin su GUARDA: `select active_org_id from profiles where id = auth.uid()`, sin comprobar membresía.
+Como `active_org_id` es escribible por `authenticated` —hace falta para cambiar de organización—, el helper
+devolvía «la organización que el usuario dice». Un ex-miembro que conociera el UUID ajeno hacía un PATCH
+sobre su propio perfil y leía censo, equipos y ajustes de esa organización. Las políticas que además
+comprobaban el rol se salvaron por accidente; las que solo dependían del helper, no.
+
+Regla añadida: la guarda de membresía activa va DENTRO del helper, no en cada política. Y al portar un
+helper de auth entre proyectos, portar su `where`, no su firma.
+

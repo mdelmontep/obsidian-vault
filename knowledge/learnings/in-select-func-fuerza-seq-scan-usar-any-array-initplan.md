@@ -11,3 +11,13 @@ Fix: materializar en array y usar `col = ANY(array(SELECT func(x)))` → InitPla
 Mismo mecanismo (InitPlan) que el truco de RLS de Supabase: envolver funciones de CERO argumentos / constantes-por-statement en `(select f())` (`auth.uid()`, `get_user_org_id()`) para no reevaluarlas por fila. Dos gotchas no obvios: (1) el linter `auth_rls_initplan` NO detecta funciones propias tipo `get_user_org_id()` — hay que buscarlas a mano (grep pg_policies); (2) NUNCA envolver funciones que reciben la columna de la fila (`is_billing_readonly(org_id)`) → serían subconsultas correlacionadas.
 
 Verificar equivalencia por round-trip: quitar los wraps del resultado debe reproducir el original byte a byte (0 mismatch en USING y WITH CHECK) → prueba que solo cambia el plan, no la semántica (ni fuga cross-org en RLS).
+
+**Por qué el wrap es imprescindible y no una optimización (medido en TuCRMIA, 02-ago-2026):** no es que
+ayude al inlining, es que **el inlining nunca ocurre**. `inline_function()` descarta toda función con
+`prosecdef` (security definer) o con `proconfig` (`set search_path`), y un helper de RLS lleva las dos por
+necesidad. Lo único que evita la llamada por fila es la envoltura `(select …)`, que la convierte en
+InitPlan. Comprobación determinista, sin interpretar planes:
+`select proname, prosecdef, proconfig from pg_proc where proname in (…)`.
+Corolario medido: Postgres NO deduplica sublinks idénticas — dos `(select get_user_visibility())` en el
+mismo predicado producen dos InitPlans.
+
