@@ -54,3 +54,13 @@ peticiones. Como los embebidos no cuentan para el cap, pedir los hijos ANIDADOS
 importe al céntimo** (223.295.013,78 €, comparado camino contra camino). Regla:
 si la relación es padre→hijos, embebido; `.in()` troceado solo cuando los ids
 vienen de otra consulta que no se puede expresar como relación.
+
+**Y el `.in()` también rompe los DELETE, con error visible que nadie mira.**
+`logs-retention-sweep` llevaba TRES días en `error` (`api_request_log_delete_
+failed: Bad Request`) con 15.006 filas sin purgar; se vio leyendo `cron_runs`,
+no por una alerta. Trampa en la que caí: bajar el tope de SELECCIÓN de 5.000 a
+1.000 —necesario para que el `break` del bucle funcione— **no arregla el
+borrado**, porque la URL del DELETE sigue llevando mil ids. Dos límites, dos
+arreglos. Corolario para clasificar: un `.limit()` grande solo es bug si además
+AGREGA; en un listado muestra menos filas. Y si no quieres paginar, saca el aviso
+de un `count: 'exact'` (como `/cobros/aging`), nunca de comparar con el cap.
