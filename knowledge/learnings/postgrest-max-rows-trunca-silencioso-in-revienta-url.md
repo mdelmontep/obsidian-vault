@@ -19,3 +19,16 @@ Señal de diagnóstico: si pides `{ count: 'exact' }` el count SÍ es exacto (lo
 calcula la BD), pero el importe (reduce en JS sobre filas truncadas) sale de
 menos → count y cifra €/ quedan incoherentes entre sí; esa discrepancia delata
 el truncado. Como las filas no van ordenadas, además el corte es no determinista.
+
+**Barrido 02-ago: no es puntual, son ~55 sitios en 12 áreas**, escritos por gente
+que conocía el límite (3 helpers paginan bien, con comentarios citando
+`db-max-rows`, y al lado el patrón reintroducido). Lo peor: **cuatro avisos de
+truncado son matemáticamente inalcanzables** porque comparan contra un cap de
+5.000 que PostgREST nunca deja alcanzar (`truncated` en informes de ventas y
+gastos, `capped` en copiloto-purge, el `break` de logs-retention-sweep — que sale
+siempre en la 1ª vuelta y deja 11.158 filas sin purgar). Alarmas que no suenan.
+Medido: el informe de presupuestos agrega 1.000 de 122.432 líneas y muestra <1 %
+del importe; el universo fiscal comparte tope con los cuadres C-0x, así que
+validarían en verde una declaración incompleta. Corolario: caso por caso no
+cierra esto — hace falta guard (lint contra `.limit(n>1000)` + helper que
+devuelva `{rows, complete}`).

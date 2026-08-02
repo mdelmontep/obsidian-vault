@@ -23,3 +23,12 @@ reales, sin poder dar de alta 2ª empresa, con el deploy diciendo OK).
 
 Complementa [[migracion-numerar-contra-prod-schema-migrations]] (allí prod va por delante
 por ramas ajenas; aquí la divergencia la causé yo).
+
+**El otro lado de la misma regla (02-ago)**: aplicar antes cuida el NÚMERO, pero el
+esquema hay que aplicarlo antes por otro motivo — **el código desplegado lo exige**.
+Mergeé dos PRs y dejé el `db push` para el final; entre medias se cayó el pooler y prod
+quedó llamando a una RPC inexistente → `/api/obras/materiales/familias` en 500. Hubo que
+revertir los dos PRs. Orden bueno: `db push` → `migration list` para confirmar → merge.
+Un `db push` que falla es razón para **parar el merge**, no un paso que se apunta para
+luego. Y ojo con el orden inverso: el número se renumera justo antes de cada merge, así
+que en una tanda de varios PRs con migración toca ir de uno en uno.

@@ -30,3 +30,15 @@ RPC con datos reales para comprobar el fix. Diagnóstico rápido antes de escala
 `nc -z <pooler> 5432` KO + PostgREST 200 = es la red (VPN), no Supabase caído.
 Y `db push` desde un worktree NO enlazado falla con `LegacyProjectNotLinkedError`
 aunque copies `supabase/.temp` — hay que correrlo desde la raíz enlazada.
+
+**Cuando psql TAMBIÉN cae (02-ago, red de un túnel de viento): SQL Editor del
+panel**, pero con el `insert` en `schema_migrations` **dentro del mismo
+`begin/commit` de la migración**. Si se registra aparte y algo falla arriba,
+queda registrada sin estar aplicada, que es peor que no registrarla. Prepara un
+fichero por migración (copia del original + el insert antes del `commit`) y una
+consulta de verificación aparte: versiones registradas, que el objeto exista de
+verdad en `pg_proc`/`pg_class`, y que no sea ejecutable por `anon`.
+Gotcha que costó un diagnóstico falso ese día: **`psql -c "…"` con varias
+sentencias es UNA transacción implícita** — si el último `select` falla por un
+nombre de columna, se revierte también el `update` de arriba y parece un bug del
+trigger. Una sentencia por `-c`, o `ON_ERROR_STOP` y fichero.

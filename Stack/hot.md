@@ -68,11 +68,12 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Specs de una rama contra el binario de otra: el marcador sale y no vale** — clasifica un rojo construyendo `origin/main` en el MISMO worktree. Ver [[tanda-e2e-con-specs-de-una-rama-y-binario-de-otra-no-mide-nada]]
 
 - **Ese «bloqueante» de arriba no bloquea si el helper se traga los fallos** — supabase-js no lanza en un insert fallido, devuelve `{ error }`: envolverlo en `try/catch` es código muerto. Ver [[supabase-js-no-lanza-en-insert-asi-que-el-try-catch-del-caller-es-codigo-muerto]]
-- **Tu red de tests puede estar ciega al gesto real** — jsdom no resetea la selección al cambiar `input.type` (dígitos invertidos en el navegador, verde en jsdom) y `fill()` de Playwright escribe `.value` sin teclear. Ver [[jsdom-no-reproduce-el-reset-de-seleccion-al-cambiar-input-type]] · [[playwright-fill-escribe-value-y-deja-obsoleto-el-estado-del-componente]]
-- **Un arreglo se verifica con la fila y el recorrido del caso real** — el apaño del usuario atascado activa el guard nuevo, y un aviso tras un gate que ese caso no cumple no existe. Ver [[el-parche-del-usuario-atascado-dispara-el-guard-del-arreglo]] · [[una-pista-detras-de-un-gate-que-el-caso-afectado-no-cumple-no-existe]]
-- **"Ya comprobé que el hueco de migración está libre" caduca** — se asigna justo antes del merge; si aplicaste a prod antes, repara el ledger. Ver [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
+- **Tu red de tests puede estar ciega al gesto real** — jsdom y `fill()` de Playwright no teclean. Ver [[jsdom-no-reproduce-el-reset-de-seleccion-al-cambiar-input-type]] · [[playwright-fill-escribe-value-y-deja-obsoleto-el-estado-del-componente]]
+- **Un arreglo se verifica recorriendo el caso real** — el apaño del usuario atascado dispara el guard nuevo. Ver [[el-parche-del-usuario-atascado-dispara-el-guard-del-arreglo]] · [[una-pista-detras-de-un-gate-que-el-caso-afectado-no-cumple-no-existe]]
+- **El esquema se aplica ANTES de mergear su código, y el hueco de migración caduca** — si no, prod llama a lo que no existe. Ver [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
 
 > **Las otras 50 no se han borrado**: siguen igual de vigentes, pero el tope de este fichero es 25 y
 > todo lo que esté aquí se paga en cada sesión sin disparador. Viven en
 > [[hot-archivo-2026-08-01]] y sus learnings se recuperan igual por wikilink y por grep.
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
+- **PostgREST corta a 1000 y tus avisos de truncado no pueden dispararse** — ~55 sitios; 4 flags comparan contra un cap de 5.000 inalcanzable. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
