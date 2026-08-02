@@ -16,8 +16,12 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 
 ## Estado (02-ago, tarde)
 
-- **F0: 6 issues cerrados de 16.** Gate con **14 comprobaciones y 205 tests**, más `npm run db:replay`
-  contra un Postgres 17 real en Docker. Desplegado: `/api/health` responde el commit de `origin/main`.
+- **F0: 6 issues cerrados de 16.** Gate con **14 comprobaciones y 209 tests**, más `npm run db:replay`
+  contra un Postgres 17 real en Docker. Todo subido a `origin/main`.
+- 🔴 **Lo desplegado NO es lo del repositorio**: `/api/health` responde `caf598f`, **25 commits por detrás**,
+  13 de ellos con código. Este hub y `ESTADO.md` decían «desplegado y verificado» desde que fue cierto, y
+  nadie lo volvía a comprobar. Ahora lo comprueba `npm run deploy:check`. `git push` **no despliega**:
+  Dokploy despliega desde el panel.
 - **005 cerrado**, con los seis criterios verificados y no supuestos, incluido el plan de ejecución medido
   con 200.000 filas. Auditado después con cinco lentes adversariales: encontraron **una fuga entre clientes
   en la `001`, que ya estaba aplicada**, y un fallo que habría impedido aplicar la `002`. Las dos cerradas,
@@ -28,6 +32,7 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 
 ## Bloqueos
 
+- 🔴 **Un Deploy desde el panel de Dokploy**, y averiguar por qué `autoDeploy` no dispara.
 - 🔴 **El token de la Management API de Supabase.** Es lo único que separa el 005 de estar en producción:
   `SUPABASE_ACCESS_TOKEN=$(op read "op://…") node scripts/apply-migration.mjs --check`. El procedimiento ya
   no es tácito (aplica y registra la versión en la misma transacción); falta de dónde sale el token.
