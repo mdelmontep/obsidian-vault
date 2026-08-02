@@ -26,3 +26,9 @@ Qué hacer:
 - El nombre del fichero suele confirmar (`Facturas_0481_230626.PDF` es el mismo `DDMMYY`).
 
 Ver [[campo-que-muestra-un-formato-y-guarda-otro-descarta-la-edicion-en-silencio]] · [[dos-campos-confundibles-pide-los-dos-y-cruzalos-en-codigo]] · [[facturaia]]
+
+**Cerrado el 1-ago (PR #1457).** REGLA 23 + campo `fecha_literal` (la cadena impresa, sin reordenar) y `resolverFechaEmision`, que la reinterpreta como DD-MM-YY cuando el año viene en dos dígitos y **manda sobre la lectura del modelo**, con anomalía para que el cambio de ejercicio quede en la traza.
+
+Lo que más enseña es por qué llegó a prod: **el colador ya existía**. `buildAnomalies` tenía `date_too_old`… con umbral de **10 años** y severidad **`low`**. Un salto de tres años pasaba por debajo, y un `low` no para el item. Un control calibrado para un fallo que no es el que ocurre no es un control. Ahora: 18 meses, `medium` y en `FORCE_REVIEW_TYPES`. Y se descartó añadir un segundo colador dentro del guard nuevo: serían dos sistemas opinando distinto del mismo campo.
+
+Repaso de daño en prod tras el arreglo: quedan **5 recibidas** con la fecha >180 días desviada, todas de Laserys, todas `sin_aprobar` y subidas el mismo día — tienen pinta de carga histórica real, no de mala lectura. Las 2 de Chivite que sí lo eran están corregidas (10422P en 2026-06-23).
