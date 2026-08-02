@@ -58,7 +58,7 @@ tags: [home, prioridades]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
-- **cryptobruj-bot — la metodología no tiene ventaja; hay una estrategia nueva en paper (30/31-jul)** — medido limpio, Cryptobruj da **−0,180R sobre 8.982 operaciones** y ninguna de 500 configuraciones supera el margen. `scalp-5m` (real, ~87 USDT) **pausada a mano**. Lo nuevo es `tendencia-1d`, familia opuesta (SMA 10/40 diario, 65 pares, paper): **+0,229R en 992 operaciones fuera de muestra**, pero **t=1,12 — no probada**, y saber si gana pide ~15 meses. **Tuyo: rotar `ADMIN_TOKEN`** (se usó en claro) y **crear el webhook de GitHub** (todo despliegue es manual). → [[cryptobruj]]
+- 🔴 **cryptobruj-bot — el bot lleva 32 h en `live`, no en paper: −1.613 USDT (01-ago)** — operando las 5 estrategias Cryptobruj, ya medidas como perdedoras (451 ops, −0,244R, PF 0,58). Despliegue de `ce89e3f` **abortado**. **Tuyo: mirar el saldo real en BingX** (`/config/live` dice `max_notional 10` y hay posiciones de 1.632 USDT — no cuadra) y decidir si se paran. Lo bueno: `tendencia-obj-1d` (2R + brecha 2%) es lo único que aguanta en reserva ciega — cartera CAGR 5,12%→6,66%, caída −23%→−20%; en `main`, sin desplegar. → [[cryptobruj]]
 
 - **TuFacturaIA — la deriva entre el catálogo de crons y Dokploy, cerrada (28-jul, #1300)** — un cron del catálogo (`obras-reservas-reconciliar`, red de seguridad de las reservas de obra) **no se había ejecutado nunca** y era invisible porque "sin runs" no es "rojo"; el hueco estaba documentado con un "auditar de vez en cuando" y mordió igual. Ya hay incidencia `cron_nunca_ejecutado`, los dos crons que faltaban están programados y verificados con run real (0 derivas acumuladas), y otras tres entradas del catálogo mentían. Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]. [[facturaia]]
 
@@ -90,7 +90,7 @@ tags: [home, prioridades]
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`main` `c98186c`) · eje `query` **72.7%** · **12 PRs abiertas, todas verdes** · 🔴 SSH del host caído (#760) · 🚨 **la medición no es estacionaria** → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]] |
-| cryptobruj-bot | [[cryptobruj]] | Propio · `tendencia-1d` en paper (65 pares) · la metodología base no tiene ventaja · 2 pendientes tuyos |
+| cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` sin querer, −1.613 USDT** · `tendencia-obj-1d` (2R) valida en reserva ciega, en `main` sin desplegar · 4 pendientes tuyos |
 
 ## Completado reciente
 
