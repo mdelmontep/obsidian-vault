@@ -23,3 +23,11 @@ acertar 8/8 **por casualidad** (esas pasadas perdían además un código suelto)
 se midió sobre el JSON crudo cuando producción evalúa las líneas ya saneadas.
 Medir sobre el artefacto que usa prod, y con un caso donde el hueco sea legítimo.
 Ver [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]].
+
+**Confirmado en prod (02-ago)**: una pasada real que perdió una columna dejó
+`refs_columna_perdida — «la cabecera declara 3 columnas y ninguna línea trae más
+de 2»` en `ocr_extraction_audit`; la pasada anterior con el prompt viejo no la
+tiene. Al emitirse `low` **no llega al usuario**: `review_reasons` solo se
+escribe si algo fuerza revisión, así que la etiqueta de UI únicamente se pinta
+cuando concurre con otra anomalía seria. Un control que solo deja rastro en el
+audit es un control **para nosotros**, no para quien mira la factura.
