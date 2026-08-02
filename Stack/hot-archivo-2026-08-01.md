@@ -74,3 +74,8 @@ antes. Vuelta → [[hot]].
 - **Si la auditoría es la única copia que quedará del dato, no puede ir en fire-and-forget** — al escribir un endpoint destructivo, pregunta qué queda del dato después: si la respuesta es "la fila de auditoría", esa fila es parte de la transacción (antes del borrado y bloqueante). Ver [[auditoria-que-es-la-unica-copia-del-dato-no-puede-ir-en-fire-and-forget]]
 - **`gh pr merge` desde un worktree falla DESPUÉS de mergear en remoto** — el error (`'main' is already used by worktree`) lo da el checkout local posterior, no el merge; comprobar con `gh pr view N --json state` antes de reintentar. Ver [[gh-pr-merge-desde-worktree-falla-despues-de-haber-mergeado]]
 - **En un worktree `.git` es FICHERO, no directorio** — detectar la raíz con `existsSync('.git')` + `basename(dir)` devuelve la RAMA como nombre de proyecto (rompió el panel de horas). Parsear el `gitdir:`. Ver [[git-worktree-dotgit-es-fichero-basename-devuelve-la-rama]].
+
+<!-- retiradas de hot.md el 2026-08-02: método de testing ya asentado, se recuperan por wikilink -->
+- **Una etiqueta nacida de un caso concreto sobrevive a su contexto** — y acaba midiendo otra cosa; los tests unitarios no lo ven por construcción. Ver [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
+- **Una aserción de ausencia está verde gratis si el fixture no puede producir la presencia** — al lado de cada «no pasa X», una aserción de que **el camino se recorrió**; y verificar rompiendo el guard. Ver [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]]
+- **Un checker vale por CÓMO se pone rojo** — el que no puede fallar no verifica nada: provoca el fallo antes de confiar en el verde. Ver [[un-checker-vale-por-como-se-pone-rojo]]

@@ -33,7 +33,6 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
 ## Ha vuelto a pasar (6)
-- **Una etiqueta nacida de un caso concreto sobrevive a su contexto** — y acaba midiendo otra cosa; los tests unitarios no lo ven por construcción. Ver [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
@@ -46,9 +45,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 ## El resto (61)
 
 
-- **Una aserción de ausencia está verde gratis si el fixture no puede producir la presencia** — al lado de cada «no pasa X», una aserción de que **el camino se recorrió**; y verificar rompiendo el guard. Ver [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]]
 
-- **Un checker vale por CÓMO se pone rojo** — el que no puede fallar no verifica nada: provoca el fallo antes de confiar en el verde. Ver [[un-checker-vale-por-como-se-pone-rojo]]
 - **Un fix no está verificado hasta crear una entidad NUEVA tras el deploy** — leer los datos que arregló el backfill no prueba nada del código; el compositor no es el punto de persistencia y la suite verde no cubre el camino que tocas. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]]
 - **Un check de coherencia no puede afirmar un desajuste si no pudo preguntar** — clave ausente/401/429 es "no verificado" (UNA alerta media), no N desajustes altos; la alerta falsa induce a recrear datos que están bien. Delator: fallan TODAS las filas con el MISMO motivo. Ver [[fallo-de-credencial-no-es-dato-ausente-en-un-check-de-coherencia]]
 - **Una clave read-only NO se verifica escribiendo** — el `POST` de prueba que esperaba un 403 devolvió 200 y creó objetos reales en una cuenta live. Lo comprobable leyendo es la CUENTA (`GET /v1/account`), no la ausencia de permiso de escritura. Ver [[no-verificar-una-clave-read-only-escribiendo-con-ella]]
@@ -76,4 +73,5 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 > todo lo que esté aquí se paga en cada sesión sin disparador. Viven en
 > [[hot-archivo-2026-08-01]] y sus learnings se recuperan igual por wikilink y por grep.
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
-- **PostgREST corta a 1000 y tus avisos de truncado no pueden dispararse** — ~55 sitios; 4 flags comparan contra un cap de 5.000 inalcanzable. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
+- **PostgREST corta a 1000 y tus avisos de truncado no pueden dispararse** — el caso peor NO lleva `.limit()`; el `.in()` grande además revienta el DELETE con un 400. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
+- **Antes de preguntarle un DATO al cliente, míralo en su sistema origen** — 3 veces en un día íbamos a pedir lo que ya teníamos en su backup. Las preguntas legítimas son de decisión. Ver [[antes-de-preguntar-al-cliente-mira-si-el-dato-esta-en-el-sistema-origen]]

@@ -20,3 +20,11 @@ Gotchas:
 **Cuándo NO usarla**: si el derivado depende de otra tabla o tiene **ciclo de vida propio** (ej. una retención de garantía que pasa de `retenida` a `liberada`), no cabe en una generada — va por `LEFT JOIN` al ledger que la posee. Un snapshot estático en la fila rompe single-source-of-truth y congela un valor que debía cambiar.
 
 Cierra el agujero típico: una capa nueva (web, voz, API) inserta saltándose el helper canónico y olvida el campo derivado. Con generada, no hay nada que olvidar. Relacionado: [[cifras-derivadas-en-capa-ia-reusan-filtro-canonico]] · [[importe-fiscal-no-es-importe-a-cobrar-retenciones]].
+
+**Y un gotcha al LEERLAS (02-ago)**: una generada a 0 no significa que falte el
+dato. `precio_lista_base` = `tarifa / unidad_precio`, y un servicio propio no
+tiene tarifa (no se le compra a nadie), así que sale 0 mientras su precio real
+vive en otra derivada, `precio_venta_calculado`. Leer solo la primera hizo creer
+que 105 artículos no tenían precio; les faltaba a 20. Antes de dar un 0 por
+ausencia, mira de qué es función esa columna. Ver
+[[antes-de-preguntar-al-cliente-mira-si-el-dato-esta-en-el-sistema-origen]].
