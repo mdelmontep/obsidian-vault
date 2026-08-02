@@ -32,3 +32,25 @@ del importe; el universo fiscal comparte tope con los cuadres C-0x, así que
 validarían en verde una declaración incompleta. Corolario: caso por caso no
 cierra esto — hace falta guard (lint contra `.limit(n>1000)` + helper que
 devuelva `{rows, complete}`).
+
+**Hecho el 02-ago (#1475, #1477), y con dos correcciones al diagnóstico:**
+1. **El caso peor no lleva `.limit()`**, así que un guard que busque límites
+   grandes no lo ve: una query sin límite se corta a 1.000 igual. Era el
+   informe de presupuestos — tres lecturas sin límite sobre 122.432 líneas.
+2. **No mostraba «<1 % del importe», mostraba 0 €.** El `.in()` con ~1.000 ids
+   devolvía **400** y el `(await …).data ?? []` de al lado lo convertía en cero
+   filas. Medido: 500 ids (18,5 KB de URL) pasan, 700 (25,9 KB) no → chunk 300.
+   El `?? []` sobre una lectura sin mirar `error` es el multiplicador del daño.
+3. **Los fakes de test tienen que reproducir los dos límites** (servir 1.000
+   como máximo, 400 con ids largos). Sin eso el test no distingue paginar de
+   truncar y pasa con el bug dentro: por eso llevaba tanto sin verse. Los dos
+   tests nuevos fallan sin el fix (`1000 to be 1200`, `+0 to be 12000`).
+
+**Y el corolario que más ahorra: paginar + trocear por `.in()` es CORRECTO y
+carísimo.** El informe pasó de rápido-y-falso a correcto-en-56,6 s con 222
+peticiones. Como los embebidos no cuentan para el cap, pedir los hijos ANIDADOS
+(`presupuestos?select=…,nodos(…,lineas(…))`) baja lo mismo en **3 peticiones y
+5,7 s** — solo pagina la tabla raíz. Mismos 2.380/37.139/122.432 y **el mismo
+importe al céntimo** (223.295.013,78 €, comparado camino contra camino). Regla:
+si la relación es padre→hijos, embebido; `.in()` troceado solo cuando los ids
+vienen de otra consulta que no se puede expresar como relación.
