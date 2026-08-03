@@ -32,4 +32,13 @@ abrir un popup en jsdom: 569 ms), no hay nada que mover y lo correcto sí es un
 timeout mayor **en ese test concreto**, documentando la medida. Diagnóstico
 primero: `--reporter=verbose` y mirar la duración del primero contra el resto.
 
+**Tercer caso (3-ago, TuCRMIA): el test invoca un proceso externo a propósito.** Los
+tests de conformidad de lint corren el ESLint REAL con la config real —que es el punto
+entero, porque una regla se muere al reorganizar la config plana y el lint sigue
+verde—, y eso cuesta segundos incluso caliente. Ahí van **las dos cosas**: `beforeAll`
+de precalentado (paga config + plugins una vez) **y** `testTimeout` declarado en el
+fichero (`vi.setConfig`). Con los 5 s por defecto, el gate bloqueó un commit por un
+motivo que no era el suyo con tres agentes y dos `next build` en vuelo — y un gate que
+falla por algo que no vigila enseña a ignorar el rojo.
+
 Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]]

@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-02
+updated: 2026-08-03
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,31 +14,40 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (02-ago, tarde)
+## Estado (03-ago)
 
-- **F0: 6 issues cerrados de 16.** Gate con **14 comprobaciones y 209 tests**, más `npm run db:replay`
-  contra un Postgres 17 real en Docker. Todo subido a `origin/main`.
-- 🔴 **Lo desplegado NO es lo del repositorio**: `/api/health` responde `caf598f`, **25 commits por detrás**,
-  13 de ellos con código. Este hub y `ESTADO.md` decían «desplegado y verificado» desde que fue cierto, y
-  nadie lo volvía a comprobar. Ahora lo comprueba `npm run deploy:check`. `git push` **no despliega**:
-  Dokploy despliega desde el panel.
-- **005 cerrado**, con los seis criterios verificados y no supuestos, incluido el plan de ejecución medido
-  con 200.000 filas. Auditado después con cinco lentes adversariales: encontraron **una fuga entre clientes
-  en la `001`, que ya estaba aplicada**, y un fallo que habría impedido aplicar la `002`. Las dos cerradas,
-  la fuga con un test que se pone rojo sin el arreglo.
-- Plan salido de 28 agentes + 3 críticos: 77 épicas en 5 fases. El hito que importa es **F2**, cuando el
-  inbox sustituye a Kommo.
-- Siguiente: issue **006**, el disparo trazador de la API pública.
+- **F0: 6 issues cerrados de 16.** El **006** completo salvo enchufar la idempotencia, y el **007** y el
+  **008** construidos casi enteros. Gate con **17 comprobaciones y 673 tests**, `db:replay` contra un
+  Postgres 17 real y un **smoke de 14 comprobaciones contra el servidor desplegado**.
+- ✅ **Las trece migraciones aplicadas y verificadas EN PRODUCCIÓN**, preguntándole a la base y no fiándose
+  del script: `service_role` inserta en `audit_log` y no puede `update` ni `delete`, `authenticated` no ve
+  `cron_runs`, y el enum `audit_actor_type` trae los nueve actores del catálogo.
+- ✅ **`autoDeploy` funciona desde hoy, y era un problema de TLS, no de Dokploy.** Al panel le faltaba el
+  certificado intermedio: GitHub rechazaba el webhook con `x509` y `curl` en macOS lo salvaba, engañando.
+  Cinco entregas muertas. Ver [[cadena-tls-incompleta-curl-en-macos-la-salva-y-engana]] y
+  [[dokploy-guarda-en-su-bd-y-no-toca-el-disco]] — el arreglo estuvo **guardado e inerte** hasta la recarga.
+- ✅ **El 405 y el 404 dejaron de salir de Next**, mudos y sin `X-Request-Id`. Ahora las tres cosas que
+  responden bajo `/api/v1` comparten pipeline. Ver
+  [[next-registra-handlers-exportados-por-desestructuracion]].
+- ✅ **Leído Dolibarr por dentro** (411 tablas, 20 años en producción) para preguntarle qué le faltaba a
+  nuestro modelo, no para copiarle nada: **siete huecos reales**, el peor que no había país en ningún sitio
+  y `phone_e164` —la identidad del contacto y la clave de enrutado de WhatsApp— derivaba de una regla sin
+  país. Cuatro tablas nuevas en F1. De ahí sale
+  [[una-columna-deprecada-conserva-su-unique-y-sigue-rechazando-inserts]], con gate.
+- Los tres agentes en paralelo **murieron mientras mutaban su implementación** y dejaron código roto en el
+  disco: una mutación olvidada de nueve. Disciplina en [[claude-code-harness]].
 
 ## Bloqueos
 
-- 🔴 **Un Deploy desde el panel de Dokploy**, y averiguar por qué `autoDeploy` no dispara.
-- 🔴 **El token de la Management API de Supabase.** Es lo único que separa el 005 de estar en producción:
-  `SUPABASE_ACCESS_TOKEN=$(op read "op://…") node scripts/apply-migration.mjs --check`. El procedimiento ya
-  no es tácito (aplica y registra la versión en la misma transacción); falta de dónde sale el token.
-- 🟠 **Antes del issue 006**: decidir si el recurso `webhook` del catálogo se parte en `integration`. De ahí
-  se derivan los scopes de la API pública y un scope publicado es contrato con clientes.
-- 🟠 Sesión de diseño (índigo exacto, densidad, 4 pantallas) → bloquea issues 009 y 011.
+- 🟠 **Rotar la clave de la API de Dokploy**, que quedó en el historial de una conversación.
+- 🟠 Sesión de diseño (índigo exacto, densidad, 4 pantallas) → bloquea issues **009** y **011**.
+- 🟠 **Cinco decisiones en `PREGUNTAS-PARA-MANUEL.md` §5.bis/§5.ter**: dirección postal y
+  `contacts.tax_id` (**tomadas provisionalmente y ya aterrizadas en el plan** — cambiarlas cambia una
+  migración de F1), obligatoriedad de `expected_close_date`, dueño del consentimiento, jerarquía de
+  empresas.
+- 🟠 **La app sigue en HTTP** (cupo de Let's Encrypt de `traefik.me` agotado; se arregla con dominio
+  propio). Mientras siga así **no entran datos reales de clientes**, y las claves emitidas hasta entonces
+  hay que rotarlas.
 - 🟠 Registrar `tucrmia.com`, App Review y Access Verification de Meta → bloquean F2, no antes.
 
 ## Decisiones

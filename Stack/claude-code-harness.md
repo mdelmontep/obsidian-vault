@@ -106,3 +106,21 @@ contexto"). Aquí quedan documentadas con su gate:
   → **Gate**: `~/.claude/hooks/ticket-collision-guard.sh` (UserPromptSubmit). Avisa una vez por sesión de las ramas de worktree con commits sin mergear de las últimas 24 h y **qué ficheros tocan**. Descartadas midiendo dos señales que parecían obvias y no valen: buscar el nº de ticket en GitHub (los PRs del runner lo referencian por UUID) y listar PRs abiertas (11 de 12 eran de dependabot).
 - **Una tanda E2E sin comprobar que el servidor sigue vivo al final no es una medición** — `next dev` se murió tres veces a mitad de tanda y sus `ERR_CONNECTION_REFUSED` son indistinguibles de un bug: empujan a subir timeouts. Medir contra `build`+`start`, arrancarlo con `nohup … & disown`, y cerrar con un `curl`. Ver [[tanda-e2e-sin-comprobar-el-servidor-vivo-al-final-no-es-medicion]]
   → **Gate**: `tests/e2e/global-teardown.ts` en facturaia (registrado en `playwright.config.ts`). Al terminar la tanda hace un HEAD a `/login` del `baseURL`; si no responde, marca la tanda **NO CONCLUYENTE** y pone `exitCode = 1` sin reventar el proceso, para no esconder el informe HTML.
+
+## Agentes en paralelo: lo que falla de verdad (3-ago, TuCRMIA)
+
+- **Un agente muere por vigilancia de inactividad y deja la mutación PUESTA.** Los tres agentes de esa
+  sesión murieron justo mientras mutaban su implementación para demostrar el rojo: el árbol quedó con
+  código deliberadamente roto. Regla: en el prompt, «**restaura antes de informar**»; y el hilo principal
+  **revalida siempre** (`typecheck` + suite completa) antes de creerse una entrega. De nueve mutaciones,
+  una quedó olvidada — sin revalidar se habría commiteado.
+- **Por eso NO un `/loop` de construcción desatendido**: la iteración N+1 hereda lo que rompió la N y su
+  gate falla por un motivo que no es el suyo. El loop vale donde cada iteración es pequeña y verificable
+  sola (cerrar hallazgos de una lista), no para construir.
+- **Techo de tres.** Más agentes no es más trabajo hecho: es más probabilidad de que uno muera a medias.
+- **Un fichero, un agente.** Dos sobre el mismo `.sql` de asserts es conflicto garantizado: al segundo se
+  le da un fichero aparte y lo fusiona el hilo principal.
+- **Ningún agente verifica a otro, ninguno commitea, ninguno corre el gate entero** (tarda y hay trabajo
+  concurrente).
+- **Sintetizar críticamente**: uno afirmó que un flujo «no se puede completar» cuando en realidad se
+  completa **duplicando en silencio**, que es peor. Verificar sus afirmaciones contra el repo.
