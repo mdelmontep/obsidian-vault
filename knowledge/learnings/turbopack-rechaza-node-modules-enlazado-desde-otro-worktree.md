@@ -19,4 +19,8 @@ Salida real: `npm ci --prefer-offline --no-audit --no-fund` dentro del worktree 
 caliente, ~1 GB). Presupuéstalo al abrir un worktree que vaya a empujar, junto con copiar `.env.local`
 (tampoco lo hereda, y el build lo necesita).
 
+Lo que lo hace confuso (03-ago): **`vitest`, `tsc --noEmit` y `eslint` sí resuelven con el symlink**.
+Puedes tener tests, tipos y lint en verde y creer que el worktree está montado; solo revienta al
+llegar al `build` o al levantar `dev`. Si vas a mirar algo en el navegador, el `npm ci` no es opcional.
+
 Ver [[limpiar-root-checkout-viejo-con-worktrees-stash-selectivo-ff-only]]
