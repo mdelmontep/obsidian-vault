@@ -49,5 +49,11 @@ filesystem root, pero llega en el momento en que uno espera un error de código,
 como regresión propia. Si el worktree va a pasar el gate completo, resuelve `node_modules` de
 verdad (anidado + symlink, `cp -al` o `cp -Rc`) antes de escribir la primera línea.
 
+**También revienta `next dev`, no solo el build (2026-08-03):** mismo FATAL al levantar el
+servidor, así que el symlink tampoco vale si vas a mirar algo en el navegador. Y ojo al dejarlo
+puesto: un `npm install` lanzado desde el worktree escribe en el `node_modules` del repo padre.
+Coste real del `npm ci` en el worktree: ~2 min con caché caliente y ~1 GB. Copia también
+`.env.local`, que no se hereda y el build lo necesita.
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
 [[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].
