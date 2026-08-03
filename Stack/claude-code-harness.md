@@ -9,6 +9,19 @@ tags: [claude-code, harness, loops, automatizacion]
 
 Detalle operativo; el resumen vive en el CLAUDE.md global. Ver también [[claude-code-gotchas]].
 
+## Dos ejes, no una escalera (3-ago-2026)
+
+La escalada `prompt → /loop → /schedule → Workflow` mezcla dos preguntas independientes.
+Separarlas evita el error caro: montar un loop donde tocaba un grafo, o al revés.
+
+| | Pregunta | Piezas |
+|---|---|---|
+| **Tiempo** | ¿cuántas VECES se ejecuta? | una (prompt) · N con gate (`/loop`) · N sin ti delante (`/schedule`) |
+| **Topología** | ¿cuántos AGENTES dentro de una vez? | uno (prompt) · varios con reparto fijo (`Workflow`) |
+
+Se combinan: un loop cuyo cuerpo es un grafo es normal, y caro. Un grafo suelto sin loop
+también. Meter un cuerpo mejor en un reloj sin gate no arregla el reloj.
+
 ## ¿Vale la pena un loop?
 
 Solo si se cumplen los 4:
@@ -19,7 +32,66 @@ Solo si se cumplen los 4:
 
 Si falta uno → prompt manual.
 
+**La prueba de la cuenta atrás.** Un loop CONVERGE; no descompone, no explora, no decide.
+¿El rojo del gate baja de forma monótona? "23 tests fallan → 19 → 14" es un loop. "La feature
+funciona: no / no / no / sí" no lo es: es un reintento caro con supervisión intermitente.
+En implementación grande el fallo típico es ese — el problema no es "el output fue rechazado,
+reintenta", es "todavía no sé qué significa terminado", y a eso no se le pone gate.
+
+Sí son loop: suite roja→verde (el gate cuenta fallos), migración sobre N llamadas (cuenta
+sitios sin migrar), matar flaky tests, cerrar issues ya escritas de una en una.
+Para lo grande la secuencia es otra: descomponer (`/prd-to-issues`) → grillar la
+DESCOMPOSICIÓN, no el código (`/grill-me`) → construir issue a issue, y ahí sí un loop por
+issue → grafo solo donde hay abanico real.
+
 **Orden de construcción:** manual confiable → skill → loop (con gate) → schedule. Nunca schedulear algo que no probaste a mano.
+
+## ¿Cuándo grafo?
+
+Las tres a la vez; si falla una, no es grafo:
+
+1. **Las piezas no se hablan entre sí.** Seis lentes de auditoría, cinco enfoques compitiendo.
+   "Lee el schema → escribe la migración → corre el test" es una cadena, no un grafo.
+2. **Quieres perspectivas que un solo contexto no puede tener a la vez.** La independencia de
+   contexto es lo único que compra un grafo y un prompt largo no. El que escribió el código es
+   mal juez de ese código.
+3. **El reparto lo decides tú.** Si te da igual, deja que Opus 5 orqueste subagentes solo, que
+   ya lo hace bien. El grafo se paga cuando la topología es una decisión que quieres idéntica
+   cada vez: dos refutadores siempre, jueces en Opus siempre, tope de ocho siempre.
+
+**El grafo NUNCA es el checker.** Puede ser maker, diagnóstico cuando el gate falla, o
+explorador. El veto lo tiene siempre algo determinista. Un panel de jueces LLM como condición
+de parada es un agente autoaprobándose con quórum: más caro y más convincente, igual de ciego.
+Dentro de un loop, dispararlo condicionalmente —cuando el gate determinista ya falló—, nunca
+en cada iteración: 6 lentes × 8 hallazgos × 2 jueces son 96 agentes por pasada.
+
+Implementación de referencia: `~/.claude/workflows/audit-graph.js`, lanzable con `/audit-graph`.
+
+## El GOAL
+
+No es una alternativa a loop ni a grafo: es lo que hace el loop TERMINABLE. Sin él no hay
+parada, hay agotamiento.
+
+**La prueba: un comando con exit code decide si es verdad.** No tú leyéndolo, no el modelo
+evaluándose. Si no puedes escribir ese comando, no es un GOAL, es una intención.
+
+Y el gate tiene que medir la condición, no un proxy suyo. Caso real (cryptobruj, 3-ago): el
+GOAL pedía "≥10 reglas verificables" y el gate era `grep -c "##"` — ocho encabezados vacíos lo
+pasaban. Ni siquiera hace falta que el modelo quiera hacer trampa: el gate ya la regala.
+
+**Una ronda adversarial no basta.** Contra la guarda de cryptobruj: la 1ª ronda encontró 15
+bypasses, se endureció, y la 2ª —contra la versión ya dura, y sin dejarle ver la suite de
+tests, que si no audita lo que ya sabes— encontró 7 más y 6 falsos positivos nuevos. Tres de
+los agujeros los había introducido yo al endurecer. La regla: al segundo pase se le oculta la
+suite, y "todos los casos pasan" solo significa que pasa los casos que se te ocurrieron. Todo
+hook de seguridad va con suite de regresión propia; sin ella es otra casilla que se marca a ojo.
+
+Corolario del mismo día: **un comando dentro de una celda markdown no es un gate.** El
+escapado de `\|` convirtió la alternancia de un regex en barra literal y dejó el gate de
+secretos verde pase lo que pase; `python` a secas no existía en la máquina; y una tubería se
+tragaba el exit code del comando de la izquierda, así que el gate pasaba cuando el backtest
+reventaba. Los gates van en un `.sh` ejecutable, con exit `2` reservado a "no evaluable" —que
+nunca cuenta como verde— y con suite de regresión propia. El `.md` solo describe qué miden.
 
 ## LOOP SPEC mínimo
 
