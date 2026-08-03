@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-01
+updated: 2026-08-03
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,33 +44,24 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-01, mañana) — la medición no era fiable, y eso reordena el plan
+## Estado (2026-08-03, noche) — Fase 3 dentro; lo que bloqueaba era el harness
 
-**`main` en `c98186c`.** **12 PRs abiertas, todas nuestras, todas verdes y rebasadas** (verificado una a una). Orden: `#579 → #737 → #743 → #739 → #740 → #746 → #750 → #755 → #757 → #759`, y **#762 (solo-docs) se mergea ya**. ⚠️ #759 va **detrás de #737** (add/add en el enum de `messages.ts` → combinar).
+**`main` en `55f4db8`. CERO PRs abiertas.** 22 PRs en la sesión (override de founder; ojo post-hoc de Borja pendiente en todas).
 
-🚨 **La medición no es estacionaria.** Mismo commit, payload idéntico, `temperature: 0` → **0/5 fallos a las 19:00, 3/5 a las 00:40**. `MODEL_ID=gpt-4o` es el de prod: **el agente rutea distinto según la hora**. Invalida comparar corridas de momentos distintos y el baseline de hace semanas. → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · #738 · #748
+**Eje `query` 72.7% → 81.8%.** Fase 3 con **A1, A2, A4 y #733 dentro**. **#742 sigue ABIERTO a propósito**: A4 entrega el código y su caso del eje **sigue rojo, correctamente** — falta la mitad de prompt. **D15** bloqueado por RGPD. **Fase 2B (#736) sin arrancar** (toca el camino de *todos* los turnos → ventana propia).
 
-**Eje `query` 72.7%.** Fase 2A (#737) y Fase 3-A2 (#743) listas sin mergear. Lo que queda —A1/A4 (#742) y Fase 2B (#736)— son cambios de prompt: **no se tocan sin el arnés** (PR #750).
+⏳ **Las DOS mitades de prompt (A4 + #733) están escritas y SIN aplicar** (PRs #824/#825), para una **sola** corrida de evals.
+⚠️ **Trampa para esa corrida:** el eje acepta `from/to/desde/periodo` y el descriptor **sólo honra `range`** → **un caso puede salir VERDE mientras el código degrada**. Mirar **el texto**, no el veredicto.
 
-**Tokens (#736):** `SYSTEM_PROMPT` = 13.073 tok = **99,6% del input**; tipar sale **+3,7% más caro** → 2B se justifica por corrección, no por ahorro.
+🔧 **Tres de las cinco PRs de código eran deuda de HARNESS bloqueando producto** (`#806 → #803` · `#808 → A4` · `A4 → #733`). Los dos guards fallaban **por contenido en vez de por contexto**, sobre premisas escritas en el repo que nadie volvió a comprobar. El arreglo bueno **no fue una lista mejor, fue una invariante cruzada** — una lista sólo protege el pasado. → [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]
 
-**Auditoría (3 agentes):** #751→#757 · **#752 arreglado dentro de #737** · #753 (8/15 en #755; los 2 de `dashboard/auth` son de Borja) · #749→#750, ya **verificada end-to-end con llamadas reales**.
-
-**Panel adversarial de 4 decisiones (20 agentes): me corrigió en TRES.** La decisiva, #752 — mi llave (`signals`) cubría la mitad de los caminos, así que habría cerrado el issue en verde con el bug vivo. Detalle en cada issue.
-
-**#747 → PR #759:** el 32,8% de `clarify` **no medía lo que creíamos** (agrega 4 conductas, excluye 5 caminos). Señal `asked`, 8 razones. Y el punto único de salida del brain ya no **sobreescribe** las señales internas.
-
-**#712 → PR #763:** la raíz recogía `dashboard/test/**` → **38 ficheros corrían DOS veces por gate** (10 `.pg` con TRUNCATE). Arreglado, y el gate **emite** el inventario (`pg: agente 39 · dashboard 10`). ⚠️ **Va la ÚLTIMA del tren** (al entrar, las líneas «agente» de las demás quedan altas). El control pareado dice que en máquina sana `main` **no** oscila → esa mitad del issue queda ABIERTA. → [[el-control-que-deja-dentro-el-test-del-cambio-se-mide-a-si-mismo]]
-
-**Issues nuevos hoy:** **#758** (el guard de grounding no vigila el lead: aprueba **invertir una negación**; y `tasks` tiene el mismo defecto sin nada que lo tape) · **#760** (SSH del host caído) · **#761** (3 asserts anchos que quedan). → [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]]
-
-_Trampa nº1 del entorno:_ **los arneses dieron falsos por ENTORNO cinco veces en dos días** — endpoint que deriva · carga >50 · `agh_dev` truncada por sesiones paralelas · **rama sin rebasar** (lo delata `dashboard 439` vs 472) · y un **control tautológico** propio. Descartarlas antes de mirar el diff. → [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
-
-_Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ el título lleva **espacio final**). Con dos cuentas en `op`, **`op signin` exige `--account agentesialab.1password.eu`** o falla con «multiple accounts found». El ítem `Langfuse AGH` es **login web, NO API keys** → leer trazas por HTTP necesita navegador; las keys viven en el env del contenedor (→ SSH o panel). SSH del host por `askpass` con `op` inline — **`ssh-copy-id` NO funciona** (el host no acepta password de root). → [[op-read-secreto-nunca-en-comando-bash-ni-desde-memoria]]
+_Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ título con **espacio final**). **`opsa`, nunca `op`**; `opsa item get` **exige `--vault`**. ⚠️ El hook salta también si el comando se **menciona en texto** (un `grep`, un mensaje de commit).
 
 ## Bloqueantes
 
-- **Decisiones de Borja pendientes:** #744 (compartir la credencial del gateway) · #738 (tolerancia del baseline — **el hallazgo gordo: el 22% del banco no tiene NINGÚN suelo**) · #741 (umbral: veredicto = 0.75) · **#758 (A: el presenter deja de recibir el lead · B: el guard exige el orden)** · #762 (mergear la regla).
+- **Decisiones de Borja pendientes:** #738 (tolerancia del baseline — **el hallazgo gordo: el 22% del banco no tiene NINGÚN suelo**) · #741 (umbral: veredicto = 0.75). _(#744, #758 y #762 ya CERRADOS.)_
+- **Decisión de LOS TRES (#806, media hecha):** las BD auxiliares ya no se pisan entre worktrees, pero la **`agh_dev` compartida sigue igual** → dos gates simultáneos aún necesitan `DATABASE_URL` propia. La propuesta grande —**una BD por corrida**, medida en **1,3 s** (125 ms crear + 1141 ms migrar), que arreglaría #717/#725 por construcción— sigue **sin decidir**.
+- 🔴 **#817 — fidelidad, la que yo miraría primero:** «la semana que viene» se contesta con **ESTA** semana. `matchEnumValue` resuelve por **raíz**, así que entra como `ok` (ni `notfound` ni `ambiguous`): **el resolutor sabe decir cuál de sus valores es, pero nunca «ninguno»**. No falla — **acierta otra pregunta**. Contrato compartido (misma exposición en el descriptor de oportunidad con «la semana pasada») y **reincidencia de #114**, cerrada el 4-jul por otro camino. Con ella: **#818** (`client.prep` con el mismo agujero que #733 cerró) · **#819** · **#820**.
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
 - **#197/#228** (agendar futuro→calendario) — scope Entra `Calendars.ReadWrite` + admin consent (Borja).
 - 🔴 **SSH al host CAÍDO** (22 y 5251 sin respuesta, panel y Langfuse a 200 → el host vive). **Causa desconocida, no inventada.** Bloquea leer el texto de los clarify en ClickHouse (#747) y la medición de #741. Vía barata: que Borja pruebe desde su IP. → **#760**
@@ -79,6 +70,9 @@ _Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ el título
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 
 ## Historial reciente (condensado — detalle en `docs/status-log/` del repo)
+
+- **3-ago (22 PRs, todo en prod)** — Fase 3 cerrada en código (A1/A2/A4 + #733, eje `query` **72.7% → 81.8%**) y el rediseño del dashboard con los cortes 01-04 dentro (#768-#771 + #812 + el seed #773). **Lo que se lleva la sesión no es el código: es que tres de las cinco PRs eran deuda de HARNESS bloqueando producto**, y las dos premisas que lo permitían estaban **escritas en el repo dándose por buenas**. → [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]
+- **1/2-ago** — #747 (el 32,8% de `clarify` no medía lo que creíamos: agregaba 4 conductas y excluía 5 caminos) · #712 (la raíz recogía `dashboard/test/**` → 38 ficheros corrían **dos veces** por gate) · #758 (el guard de grounding no vigilaba el lead: aprobaba **invertir una negación**) · #760 (SSH del host caído). Y la trampa que más costó: **los arneses dieron falsos por ENTORNO cinco veces en dos días** — endpoint que deriva entre horas, carga >50, `agh_dev` truncada por sesiones paralelas, rama sin rebasar (lo delata `dashboard 439` vs 472) y un control tautológico propio. → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · [[el-control-que-deja-dentro-el-test-del-cambio-se-mide-a-si-mismo]] · [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
 
 - **31-jul** — plan de precisión entero en prod salvo Fase 2 (#531, P1 #681, P2 #692, Fase 1 #688/#711, P3 #713, #715). Mergeados #720 · #729 (mig 0028) · #730. El flake del gate tenía causa raíz (#717→#718): tres `.pg` re-aplicaban una migración congelada que estrechaba un CHECK, y el `catch` lo disfrazaba de «no hay BD»; mi hipótesis #712 era falsa. → [[test-que-reaplica-una-migracion-congelada-estrecha-el-schema]]
 
