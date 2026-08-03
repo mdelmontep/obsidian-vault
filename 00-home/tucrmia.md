@@ -14,40 +14,47 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (03-ago)
+## Estado (03-ago, tarde)
 
-- **F0: 6 issues cerrados de 16.** El **006** completo salvo enchufar la idempotencia, y el **007** y el
-  **008** construidos casi enteros. Gate con **17 comprobaciones y 673 tests**, `db:replay` contra un
-  Postgres 17 real y un **smoke de 14 comprobaciones contra el servidor desplegado**.
-- ✅ **Las trece migraciones aplicadas y verificadas EN PRODUCCIÓN**, preguntándole a la base y no fiándose
-  del script: `service_role` inserta en `audit_log` y no puede `update` ni `delete`, `authenticated` no ve
-  `cron_runs`, y el enum `audit_actor_type` trae los nueve actores del catálogo.
-- ✅ **`autoDeploy` funciona desde hoy, y era un problema de TLS, no de Dokploy.** Al panel le faltaba el
-  certificado intermedio: GitHub rechazaba el webhook con `x509` y `curl` en macOS lo salvaba, engañando.
-  Cinco entregas muertas. Ver [[cadena-tls-incompleta-curl-en-macos-la-salva-y-engana]] y
-  [[dokploy-guarda-en-su-bd-y-no-toca-el-disco]] — el arreglo estuvo **guardado e inerte** hasta la recarga.
-- ✅ **El 405 y el 404 dejaron de salir de Next**, mudos y sin `X-Request-Id`. Ahora las tres cosas que
-  responden bajo `/api/v1` comparten pipeline. Ver
-  [[next-registra-handlers-exportados-por-desestructuracion]].
-- ✅ **Leído Dolibarr por dentro** (411 tablas, 20 años en producción) para preguntarle qué le faltaba a
-  nuestro modelo, no para copiarle nada: **siete huecos reales**, el peor que no había país en ningún sitio
-  y `phone_e164` —la identidad del contacto y la clave de enrutado de WhatsApp— derivaba de una regla sin
-  país. Cuatro tablas nuevas en F1. De ahí sale
-  [[una-columna-deprecada-conserva-su-unique-y-sigue-rechazando-inserts]], con gate.
-- Los tres agentes en paralelo **murieron mientras mutaban su implementación** y dejaron código roto en el
-  disco: una mutación olvidada de nueve. Disciplina en [[claude-code-harness]].
+- **F0: 9 issues cerrados de 17** (eran «16»: había DOS issues numerados `015` y el del correo no figuraba
+  en el roadmap). Gate con **18 comprobaciones y 758 tests**, `db:replay` contra un Postgres 17 real,
+  **smoke de 16 contra el servidor desplegado** y el flujo de acceso verificado de punta a punta.
+- ✅ **YA SE PUEDE ENTRAR.** Era el agujero de fondo: `ADR-002` delegó el alta en «la plataforma», que **no
+  está construida**, así que con la API en producción y 705 tests en verde no había forma de que entrara
+  nadie. Ahora hay alta manual (`scripts/alta-organizacion.mjs`, idempotente y verificada dos veces contra
+  la base) y login por enlace de un solo uso. La primera pantalla enseña la organización **leída por el
+  usuario con RLS filtrando**: primera vez que la base decide lo que ve una persona.
+  Ver [[un-plan-que-delega-en-un-sistema-que-no-existe-deja-el-producto-sin-puerta]].
+- ✅ **`truncate` tiraba el append-only de la evidencia**, y lo tenían los tres roles en las doce tablas.
+  Migración `014`. Y el hallazgo de segundo orden es peor: **`db:replay` era ciego** porque su Postgres
+  arrancaba más limpio que producción. Ver [[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]]
+  y [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]].
+- ✅ **El límite de tasa llevaba dos días construido y NO enchufado**, con todo en verde. Enchufado, y con
+  gate estático porque ningún test puede cazarlo. Issue 008 cerrado.
+  Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]].
+- ✅ **Las 14 migraciones aplicadas y verificadas EN PRODUCCIÓN**, preguntándole a la base y no fiándose del
+  script. ✅ `autoDeploy` funciona desde hoy (era el intermedio TLS del panel, no Dokploy). ✅ Leído Dolibarr:
+  siete huecos en el modelo, cuatro tablas nuevas en F1.
+- **Issue `015` (aprovisionamiento desde la plataforma) POSTERGADO**: dos tercios son código que lee lo que
+  manda otro sistema, y sin un payload real el parser se inventa (I4).
 
 ## Bloqueos
 
+- 🟠 **`NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Dokploy** — sin ella el login responde
+  `no_configurado` en el despliegue. Es **pública por diseño** (viaja al navegador). Un minuto, y el
+  contenedor necesita redespliegue. La API v1 no se ve afectada, y eso es deliberado.
 - 🟠 **Rotar la clave de la API de Dokploy**, que quedó en el historial de una conversación.
-- 🟠 Sesión de diseño (índigo exacto, densidad, 4 pantallas) → bloquea issues **009** y **011**.
-- 🟠 **Cinco decisiones en `PREGUNTAS-PARA-MANUEL.md` §5.bis/§5.ter**: dirección postal y
-  `contacts.tax_id` (**tomadas provisionalmente y ya aterrizadas en el plan** — cambiarlas cambia una
-  migración de F1), obligatoriedad de `expected_close_date`, dueño del consentimiento, jerarquía de
-  empresas.
-- 🟠 **La app sigue en HTTP** (cupo de Let's Encrypt de `traefik.me` agotado; se arregla con dominio
-  propio). Mientras siga así **no entran datos reales de clientes**, y las claves emitidas hasta entonces
-  hay que rotarlas.
+- 🟠 Sesión de diseño (índigo exacto, densidad, 4 pantallas) → bloquea el **009**. Manuel eligió que le
+  prepare el material y elegir en 20 minutos.
+- 🟠 **`ADR-004` está tomado provisionalmente**: confirmar que el acceso sin contraseña vale para sus
+  clientes, y cuánto dura la sesión.
+- 🟠 **P22 · los topes de la API ya activos en producción**: 600/min por clave y 1.200/min por organización.
+  Confirmados provisionalmente; subir un tope no rompe a nadie, bajarlo sí.
+- 🟠 Tres decisiones de `PREGUNTAS-PARA-MANUEL.md` §5.ter: obligatoriedad de `expected_close_date`, dueño
+  del consentimiento y jerarquía de empresas. (Las dos de §5.bis siguen provisionales y ya aterrizadas.)
+- 🟠 **La app sigue en HTTP**. Decidido el camino: **subdominio de un dominio propio en IONOS** con wildcard
+  al VPS, en vez de esperar a `tucrmia.com`. Mientras siga en HTTP **no entran datos reales**, y las claves
+  emitidas hasta entonces hay que rotarlas.
 - 🟠 Registrar `tucrmia.com`, App Review y Access Verification de Meta → bloquean F2, no antes.
 
 ## Decisiones
@@ -55,6 +62,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `ADR-001` — sin número de WhatsApp compartido: capacidades W0 (sandbox por org) y W2 (canal dedicado).
 - `ADR-002` — es un módulo activable de una plataforma: alta, login y cobro dejan de ser nuestros.
 - `ADR-003` — el CRM **no cobra**. Cierra P21, que ya no bloquea F1.
+- `ADR-004` — **identidad propia por enlace de un solo uso** mientras no exista la plataforma. Sin
+  contraseñas, que era el espíritu del `ADR-002`. Cuando la plataforma exista, la federación se añade **al
+  lado** y este camino se queda como acceso de soporte. *Provisional.*
 
 ## Learnings de este proyecto
 
@@ -65,7 +75,14 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[pooler-supabase-inalcanzable-aplicar-migracion-por-management-api]] ·
 [[pipe-a-tail-enmascara-el-exit-code-del-comando]] ·
 [[traefik-me-no-emite-certificado-por-cupo-compartido-agotado]] ·
-[[dig-ns-vacio-no-significa-que-el-dominio-este-libre]]
+[[dig-ns-vacio-no-significa-que-el-dominio-este-libre]] ·
+[[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]] ·
+[[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]] ·
+[[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]] ·
+[[request-url-detras-de-un-proxy-trae-el-host-interno-del-contenedor]] ·
+[[membresia-invitada-con-politicas-que-exigen-activa-entra-y-no-ve-nada]] ·
+[[enlace-de-acceso-canjeado-en-el-servidor-con-hashed-token]] ·
+[[un-plan-que-delega-en-un-sistema-que-no-existe-deja-el-producto-sin-puerta]]
 
 ## Trampas conocidas
 
@@ -73,3 +90,5 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   versión a mano**.
 - `application.one` de Dokploy **devuelve los secretos en claro**; usar `dokploy-safe.sh`.
 - Mientras la URL sea HTTP, **sin datos reales de clientes**.
+- El alta manual exige `CRM_BASE_URL` **sin defecto**: con uno, se emite un enlace a `localhost` para un
+  cliente, o contra producción desde una prueba local.

@@ -239,3 +239,8 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 - Aislar un stack pesado (Langfuse/ClickHouse) del resto: `mem_limit` por servicio + rotación de logs (`logging: max-size/max-file`) — protege a los demás containers del box. Ver [[langfuse-v3-selfhost-deploy-gotchas]].
 - **Colima solo comparte `$HOME`**: un bind mount desde `/tmp` no falla, crea un DIRECTORIO vacío y el error sale luego como `MODULE_NOT_FOUND`. Comprobar con `ls -la` dentro del contenedor. Incluye receta de instalación y el OOM de `next build` por heap topado a 2 GB. Ver [[colima-solo-monta-home-el-bind-mount-de-tmp-crea-un-directorio]]
 - **Nadie vigila el EOL del runtime: Dependabot mira CVEs, no fechas** — 88 días con Node EOL en prod sin un aviso, y el bump propuesto llevaba a un tag congelado. Check mensual contra endoflife.date, alojado FUERA de la infra que puede caerse. Ver [[dependabot-no-avisa-de-eol-de-runtime]]
+
+- **Detrás de Traefik, `request.url` de un route handler trae el host INTERNO del contenedor**: un redirect
+  construido con su `origin` sale como `Location: http://0.0.0.0:3000/…`. En local es invisible porque los
+  dos hosts coinciden. Usar `Location` **relativo**, nunca `X-Forwarded-Host` (la escribe quien esté
+  delante). Ver [[request-url-detras-de-un-proxy-trae-el-host-interno-del-contenedor]]

@@ -42,9 +42,11 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino donde no mide y sale con 0, será el de producción. Al matar un CI, migrar sus gates uno a uno. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]]
 
-## El resto (61)
+## El resto (63)
 
 
+- **Protección construida y no enchufada: ningún test la caza** — el doble de la prueba ES el relleno. Señal: módulo con tests y cero consumidores. Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]]
+- **Un entorno de pruebas más limpio que producción es ciego** — y su verde se cita como prueba. Ver [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]]
 
 - **Mover un token de `style` inline a una hoja de estilos cambia quién gana la cascada** — `:root{--x}` (0,1,0) pierde contra `:root[data-theme=…]` (0,2,0): el valor llega al DOM, se ve en el inspector y no hace nada. Solo lo caza leer el valor COMPUTADO en un navegador; los unitarios validan la cadena y siguen verdes. Ver [[style-inyectado-con-root-pierde-contra-root-data-theme]]
 - **Preferencia por tenant restaurada desde un `localStorage` global se filtra entre organizaciones** — el switch de empresa recarga el documento y el cliente aplica la clave del tenant anterior. Sembrar en servidor sobre un SELECT que ya se hiciera. Encender una restauración muerta es un cambio de comportamiento, no un arreglo. Ver [[localstorage-global-en-app-multitenant-filtra-entre-organizaciones]]

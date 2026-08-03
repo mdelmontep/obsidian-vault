@@ -21,3 +21,8 @@ Lo que desbloquea, y es lo que lo hace rentable:
 Dos gotchas: esperar a una consulta real, no a `pg_isready` (durante initdb el servidor temporal responde
 que está listo y la base aún no existe); y `pg_jsonschema` no existe fuera de Supabase, se omite y **se
 avisa por pantalla** en vez de callarlo.
+
+**Ampliado el 03-ago**: el bootstrap tiene que reproducir también los **privilegios por defecto** del
+proveedor. Sin ellos el replay arranca más limpio que producción y es ciego a toda una clase de fallo
+—ver [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]] y
+[[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]]—.

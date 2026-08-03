@@ -87,3 +87,19 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
 - **Un worktree por PR = el CLI de Supabase ve divergencia y aborta el push** — ninguno tiene la foto completa de migraciones, y el link vive en `supabase/.temp` (gitignored). Ver [[migraciones-repartidas-entre-worktrees-dan-falsa-divergencia]]
 
 - **Un `update` que afecta a cero filas NO devuelve error.** RLS que filtra la fila, `id` inexistente o estado ya cambiado → 204 con `error === null`, y el endpoint responde `{ok:true}` sobre una escritura que no ocurrió. El update tiene que pedir la fila de vuelta (`.select('id').maybeSingle()`) y tratar `data === null` como conflicto. Ver [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]]
+
+## Privilegios y RLS (03-ago-2026)
+
+- **`TRUNCATE` no pasa por RLS** y sobrevive a un `revoke update, delete`: vacía la tabla de todas las
+  organizaciones. Revocar los cuatro DML **enumerados** sobre el `grant all` de Supabase deja vivos
+  `TRUNCATE`, `REFERENCES`, `TRIGGER` y `MAINTAIN`. Los privilegios se conceden por enumeración, **no se
+  quitan** por enumeración: `revoke all` y conceder lo justo, cerrando también los `alter default
+  privileges`. Comprobar el ACL efectivo (`relacl`), nunca el texto de la migración. Ver
+  [[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]]
+- **Una membresía `'invited'` con políticas que exigen `'active'`**: el usuario entra con sesión válida y
+  ve **cero filas**, sin error. Mirar qué exige la política antes de elegir el estado inicial. Ver
+  [[membresia-invitada-con-politicas-que-exigen-activa-entra-y-no-ve-nada]]
+- **`generate_link` devuelve `action_link` y `hashed_token`, y no dan lo mismo**: el primero resuelve la
+  sesión en el navegador (fragmento `#access_token`), el segundo permite canjearla en el servidor con
+  `verifyOtp` y dejarla en cookies `HttpOnly`. Ver
+  [[enlace-de-acceso-canjeado-en-el-servidor-con-hashed-token]]
