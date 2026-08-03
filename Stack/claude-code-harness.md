@@ -79,6 +79,22 @@ Y el gate tiene que medir la condición, no un proxy suyo. Caso real (cryptobruj
 GOAL pedía "≥10 reglas verificables" y el gate era `grep -c "##"` — ocho encabezados vacíos lo
 pasaban. Ni siquiera hace falta que el modelo quiera hacer trampa: el gate ya la regala.
 
+**La guarda tiene que estar en la capa que ejecuta, no solo en la que teclea.** Un hook de
+Claude Code protege de lo que escribe Claude. No protege del operador, ni del panel de
+Dokploy, ni de un `docker exec`. En cryptobruj la cadena acabó siendo tres capas
+independientes: hook (bloquea el comando) → gate G5 (verifica contra el bot vivo) → el propio
+proceso, que aborta el arranque si falta la segunda llave. Solo la tercera es inesquivable.
+Y la auditoría de esa capa destapó lo peor de todo el día: `uvicorn src.api:app` levantaba la
+API sin pasar por `main()`, y `POST /test-order` abría una posición **real** mirando solo si
+había claves, sin consultar el modo — la bifurcación paper/live vivía en `place_order`, que
+ese camino no usaba. Regla: al añadir una guarda, buscar TODOS los caminos que llegan al
+efecto peligroso, no solo el que tienes delante.
+
+**La llave de autorización se ata a lo que autoriza, para que caduque sola.** `LIVE_CONFIRMED`
+no vale `1`: tiene que ser igual al nombre de la estrategia que va a operar. Un `=1` en un
+panel sobrevive para siempre y deja de significar nada; atarlo al contenido hace que cambiar
+la estrategia invalide el permiso.
+
 **Una ronda adversarial no basta.** Contra la guarda de cryptobruj: la 1ª ronda encontró 15
 bypasses, se endureció, y la 2ª —contra la versión ya dura, y sin dejarle ver la suite de
 tests, que si no audita lo que ya sabes— encontró 7 más y 6 falsos positivos nuevos. Tres de

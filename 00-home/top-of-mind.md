@@ -10,7 +10,6 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟢 **TuFacturaIA — las 3 incidencias del panel, resueltas y ninguna era lo que decía (03-ago, #1492)** — un `400` de OpenAI por UN documento tratado como caída del OCR (mis dos hipótesis, falsas) y `example.com` exento de la captura, que Resend rechaza. **Tuyo: nada**, solo que pasen dos crons (hub §Smoke). → [[facturaia]]
 - 🟠 **TuCRMIA — 006 cerrado, 007 y 008 casi enteros; `autoDeploy` arreglado (03-ago)** — 13 migraciones aplicadas y verificadas en producción, gate a 17 comprobaciones y 673 tests, smoke de 14 contra el servidor. El `autoDeploy` que nunca disparó era el intermedio TLS del panel. Leído Dolibarr: 7 huecos en el modelo, 4 tablas nuevas en F1. **Tuyo: rotar la clave de Dokploy, la sesión de diseño (bloquea 009 y 011) y 5 decisiones de §5.bis/§5.ter.** → [[tucrmia]]
 
 - 🟢 **TuFacturaIA — truncado a 1.000 filas: cerrado donde importa (02-ago, #1475→#1483)** — helper + trinquete en el hook; arreglado todo lo que da una cifra falsa a un cliente o a Hacienda (Obras, fiscal 303/libro/390, cobros, aging, ventas, gastos, objetivos, copiloto). El informe de presupuestos pasó de **0 €** a 223.295.014 € verificados en prod. Destapó un fallo activo: el cron de retención llevaba **3 días roto**. Corte medido el 03-ago (300 ids pasan, 800 no) y #1481 desplegado; **queda ver el run de las 03:45** con 16.481 filas por barrer. Quedan 30 lecturas de panel admin y listados, en baseline y por criterio. → [[facturaia]] · [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]

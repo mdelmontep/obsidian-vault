@@ -8,6 +8,9 @@ tags: [git, worktrees, housekeeping, agentes-paralelos]
 Rama es borrable si **cualquiera** de estas da vacío (evidencia, no fecha):
 - `git cherry origin/main rama | grep '^+'` → 0 (patch-equivalente, detecta squash-merge)
 - `git diff origin/main rama -- <paths que toca>` vacío (contenido mergeado por otra vía aunque cherry marque `+`)
+- lo más barato con muchas ramas: `gh pr list --state merged --limit 400 --json headRefName` una vez y cruzar con `comm`. Un PR mergeado es prueba directa; 43 ramas en un `comm` en vez de 43 comprobaciones.
+
+**El comando `clean_gone` (repo de comandos propio) NO es seguro tal cual** (3-ago): hace `git branch -D` sobre TODAS las `[gone]` y `git worktree remove --force` de sus worktrees. Ese día una `[gone]` (`chore/types-obras-irpf`) estaba checkouteada en el worktree de otra sesión → le habría borrado el directorio con su WIP. Y `git branch --merged origin/main` daba **0 de 44** por el squash, así que ni siquiera servía como guarda. Usar la evidencia de arriba + saltar toda rama que aparezca en `git worktree list --porcelain`.
 
 Worktree con lock: leer el PID del mensaje de error y `ps -p <pid>` — si está muerto, el lock es huérfano y `git worktree remove -f -f` es seguro. Nunca forzar con PID vivo (sesión/agente activo).
 
