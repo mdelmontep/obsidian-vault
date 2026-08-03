@@ -16,9 +16,16 @@ las dos direcciones, y la segunda es la peligrosa:
   como ejemplo en la prosa de cabecera: `EXECUTE` a `PUBLIC` con el gate en verde. Esta
   dirección no molesta a nadie, así que nadie la mira.
 
+- **La variante más vil (3-ago): el comentario que EXPLICA la regla la satisface.** Un gate nuevo
+  comprobaba que la app escribiera `data-theme`; al mutar el layout para enseñar el rojo **siguió
+  verde**, porque el comentario recién escrito para justificar el atributo contiene la palabra
+  `data-theme`. Sin correr la mutación se commitea como protección. En TS/TSX hay que escanear
+  respetando cadenas: distinguir el `//` de `'https://…'` del que abre comentario no lo hace una
+  regex.
+
 **La regla: dos pasadas.** Sin comentarios para buscar SENTENCIAS; en crudo para buscar
-MARCADORES (`rls-regime:`, `rls-helper`, `token-entrada:`), que viven dentro de un comentario a
-propósito. Quitarlos a secas arregla un lado y rompe el otro.
+MARCADORES (`rls-regime:`, `rls-helper`, `token-entrada:`, `selector-entrada:`), que viven dentro
+de un comentario a propósito. Quitarlos a secas arregla un lado y rompe el otro.
 
 Y al escribir el comentario: describe el patrón prohibido, no lo cites literalmente.
 

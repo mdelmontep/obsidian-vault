@@ -21,6 +21,13 @@ leyó el código encontró una frase tranquilizadora y no verificó la frase.
 test.** Si la frase merece estar escrita, merece un test que la sostenga; si no hay
 test, debería decir "no comprobado" en vez de afirmar.
 
+Reincidió el 3-ago (TuCRMIA): `jobs.ts` decía «que las dos expresiones digan lo mismo lo
+comprueba un test», hablando de su copia en TS del `check` de una migración. **No existía** — el
+test que había corría esa copia contra los nombres declarados, que no compara nada con el SQL.
+Coste de creérselo: un `insert` reventando con `23514` de madrugada, con el cron corriendo y sin
+dejar constancia. La afirmación se vuelve test leyendo el **fichero de la migración**; comparar
+dos constantes de TS sería la tautología de siempre.
+
 Al revisar: grepea la afirmación contra el código que la implementa, no contra su
 vecindad. El patrón reaparece DENTRO de los fixes (uno apagaba el contador de
 módulos `beta` mientras su comentario decía "próximamente o bloqueado") y dentro

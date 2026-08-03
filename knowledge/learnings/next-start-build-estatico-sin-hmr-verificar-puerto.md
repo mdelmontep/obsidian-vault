@@ -20,6 +20,14 @@ infinito sin error visible en pantalla (solo en `network requests`/`errors`).
 Fix: tras cualquier `npm run build` de verificación (typecheck/lint/pre-push),
 matar y **reiniciar** el `next start` antes de dar por bueno un QA visual en ese puerto.
 
+Y la variante que arruina un SMOKE, no un pantallazo (2026-08-03, TuCRMIA): en :3111
+llevaba **día y medio** un `next-server` sirviendo desde `.next/standalone`, contestando
+`200` en `/api/health`. Un smoke de 31 comprobaciones contra él habría dado 31 verdes
+que no significaban nada — es F19 («no medir contra `next dev`») con otra cara: **el
+servidor que responde no es necesariamente el que acabas de construir**. Antes de
+cualquier smoke: `lsof -ti:PORT` (¿hay UNO?) + `lsof -a -p PID -d cwd` (¿de qué árbol?),
+matar y levantar el build de ahora.
+
 QA con agent-browser (2026-07-09): `screenshot` (Page.captureScreenshot CDP) se
 CUELGA (timeout 2 min) contra `next dev` — el websocket de HMR mantiene la red sin
 quedar nunca idle. `eval`/`snapshot` sí funcionan en dev. Para capturas: usar build

@@ -14,45 +14,55 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (03-ago, madrugada)
+## Estado (03-ago, noche)
 
-- **F0: 9 issues cerrados de 17; el panel VERIFICADO contra un servidor y la pantalla de salud
-  construida.** Gate **22/973**, smoke de **16 contra el despliegue** y otro de **25 del panel**,
-  18 migraciones aplicadas y verificadas contra el ACL efectivo. Desplegado: `80c4f59f`.
-- ✅ **El panel (013), verificado de verdad: 25 de 25** contra `next start` y la base real. Y el
-  bloqueo que lo tenía parado **no existía**: la Management API sirve las claves del proyecto con
-  el PAT que ya estaba en 1Password. Ver
-  [[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]].
-- ⚠️ El smoke encontró **dos fallos en sí mismo**: sembraba `auth.users` con SQL, produciendo
-  cuentas que salen en el censo y **no pueden entrar** sin un solo error
-  ([[insertar-en-auth-users-a-mano-crea-cuentas-que-no-pueden-entrar]]), y una comprobación
-  colgaba del `default` de una columna.
-- ✅ **Pantalla de salud del sistema (014)**: build, crons con los cinco estados, el límite de tasa
-  tal como está compuesto, y **lo que todavía no mira** como bloque de primera clase. Tres de los
-  cinco bloques no tienen tabla y se declaran con un candado que obliga a borrarlos el día que
-  exista.
-- 🔴 **NADIE DISPARA NINGÚN CRON**, y lo destapó construir esa pantalla. Las tres purgas no las
-  llama nadie, así que **`api_request_log` crece sin tope**. La pantalla lo dice en la cara desde
-  hoy; el arreglo espera OK (P23).
-- ✅ **Auditoría adversarial de composición**: 64 hallazgos, 13 supervivientes. **Seis gates decían
-  proteger y protegían menos**, incluidos un `revoke` COMENTADO que satisfacía a G-S1 y acciones de
-  superadmin sin permiso que se escapaban por la forma de exportarlas. Ver
-  [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]] ·
-  [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]].
-- ⚠️ **Quedan 49 hallazgos SIN REFUTAR**, dichos como «ni confirmados ni descartados». No darlos
-  por buenos ni por descartados sin pasarlos por refutación.
-- ✅ **Dos fallos silenciosos de meses**: el panel entero sin su tipografía —tres tokens que no
-  existen, [[un-var-de-css-que-no-existe-no-falla-se-queda-con-lo-heredado]]— y la lista de
-  pendientes mintiendo sobre el despliegue por mirar el entorno local. Gate nuevo **G-TOKENS**.
-- ✅ **La auditoría dejó de dispararse por calendario**: `npm run auditoria:alcance` decide por lo
-  que ha cambiado y sabe decir que no hace falta. Falta correr la lente `interfaz`, que nunca ha
-  corrido.
-- ✅ **La capa de derechos (012)** enchufada a los DOS canales con `G-S5`. ✅ **YA SE PUEDE ENTRAR**
-  (alta manual + login por enlace de un solo uso). ✅ `truncate` tiraba el append-only en las doce
-  tablas (migración `014`). ✅ El límite de tasa estuvo dos días construido y sin enchufar.
-  ✅ `autoDeploy` funciona. ✅ Leído Dolibarr: siete huecos, cuatro tablas nuevas en F1.
-- **Issue `015` POSTERGADO** y **`016` (correo) también**: los dos por I4, sin payload real el
-  parser se lo inventa.
+- **F0: 10 issues cerrados de 17.** Gate **22/983**, smoke de **16 contra el despliegue** y otro
+  de **31 del panel**, 18 migraciones aplicadas y verificadas contra el ACL efectivo. Desplegado y
+  comprobado: `ce8e4436`.
+- 🔴 **El sistema visual entero NO se aplicaba, desde el commit 1.** Los 86 tokens de color,
+  radio, sombra y `--focus-ring` viven bajo `:root[data-theme="…"]` y nadie escribía el atributo:
+  `/login` servía `<html lang="es">`. `tokens:check` estaba verde y tenía razón — comprobaba que
+  estuvieran **escritos**, no **enchufados**. Arreglado, con la segunda mitad del gate. Lo encontró
+  la lente `interfaz`, que corría por primera vez. Ver
+  [[un-token-definido-bajo-un-selector-que-nadie-produce-no-existe]].
+- ✅ **012 CERRADO**: los dos canales verificados contra un servidor levantado (6 comprobaciones
+  nuevas, `smoke:admin` 31/31). La sección de planes del panel **ya existía** desde `0409ad5c` y
+  `ESTADO.md` no lo contaba.
+- ✅ **Auditoría del 4-ago: 55 hallazgos, 22 refutados y los 22 sobreviven** (tope subido de 15 a
+  22: lo que faltaba era cobertura, no effort). Cerrados además: las dos cerraduras de la frontera
+  del cliente que se salta RLS —ruta relativa y reexport,
+  [[no-restricted-imports-compara-el-texto-cierra-por-importnames]]—, los dos gates que sólo
+  miraban la primera composición
+  ([[el-recuento-de-un-gate-sale-de-la-funcion-rota-y-miente-igual]]), el perímetro de G-S1 y
+  G-D11, y un comentario que prometía un test inexistente.
+- ⚠️ **Quedan 6 hallazgos confirmados sin cerrar y 33 sin refutar**, listados en `ESTADO.md` →
+  «Hallazgos abiertos»: cuatro gates que comparan texto en vez de procedencia, G-S6 sin mirar los
+  comodines, G-ACCESS-DRIFT inerte ante un segundo dueño, G-COLUMNAS-REALES, el doble dueño del
+  régimen append-only, y que el panel no tiene `error.tsx` y colapsa cuatro motivos en
+  `notFound()`.
+
+### Hitos anteriores, condensados
+
+- ✅ **013 · panel de plataforma** verificado contra `next start` y la base real. El bloqueo que lo
+  tenía parado no existía: la Management API sirve las claves con el PAT que ya estaba en 1Password
+  ([[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]]). Su smoke encontró dos
+  fallos en sí mismo, el peor sembrar `auth.users` con SQL
+  ([[insertar-en-auth-users-a-mano-crea-cuentas-que-no-pueden-entrar]]).
+- ✅ **014 · pantalla de salud**, y lo que destapó construirla: 🔴 **nadie dispara ningún cron**, así
+  que las tres purgas no corren y `api_request_log` crece sin tope (P23). Los tres bloques sin tabla
+  se declaran con candado en vez de pintarse vacíos.
+- ✅ **Auditoría del 3-ago**: 64 hallazgos, **seis gates decían proteger y protegían menos**
+  ([[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]] ·
+  [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]]). Y el panel entero sin
+  su tipografía por tres tokens que no existen → gate **G-TOKENS**
+  ([[un-var-de-css-que-no-existe-no-falla-se-queda-con-lo-heredado]]).
+- ✅ **La auditoría decide su alcance por lo que cambió**, no por calendario, y una lente nueva entra
+  aunque su territorio no se haya tocado — que es lo que trajo el hallazgo del sistema visual.
+- ✅ **Ya se puede entrar** (alta manual + enlace de un solo uso). ✅ `truncate` tiraba el append-only
+  en las doce tablas (migración `014`). ✅ El límite de tasa estuvo dos días construido y sin
+  enchufar. ✅ `autoDeploy` funciona. ✅ Leído Dolibarr: siete huecos, cuatro tablas nuevas en F1.
+- **`015` POSTERGADO** y **`016` (correo) también**: los dos por I4, sin payload real el parser se
+  lo inventa.
 
 ## Bloqueos
 
@@ -60,9 +70,12 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   tope. Recomendado: `pg_cron` para las purgas (son SQL puro, la base se llama a sí misma) y el
   mecanismo de TuFacturaIA para los diez crons de §14. **Falta tu OK a programar un borrado
   periódico en producción.**
-- 🟠 **P24 · el proveedor de correo del 016** — propuesto Resend, que TuFacturaIA ya tiene rodado
-  con su receptor de entregas. Sin clave no se manda un correo, y sin payload real el receptor
-  choca con I4 igual que el 015.
+- 🟠 **P24 · el correo del 016 — el proveedor ya está decidido, faltan TRES cosas.** Resend está en
+  casa y sus dos claves viven en 1Password (bóveda `FacturAIA`), pero **las dos son de solo envío**:
+  `GET /domains` devuelve `401 restricted_api_key`, así que no se puede listar el dominio remitente,
+  ni crear el webhook, ni leer su secreto de firma. Y el receptor de TuFacturaIA **no trae payload
+  real** (sus tests escriben el cuerpo a mano), así que citarlo no cierra I4. Hace falta: clave de
+  acceso completo, dominio remitente verificado y secreto del webhook.
 - 🟠 **`NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Dokploy** — sin ella el login responde
   `no_configurado` en el despliegue. Es **pública por diseño** (viaja al navegador). Un minuto, y el
   contenedor necesita redespliegue. La API v1 no se ve afectada, y eso es deliberado.
@@ -114,7 +127,10 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[insertar-en-auth-users-a-mano-crea-cuentas-que-no-pueden-entrar]] ·
 [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] ·
 [[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]] ·
-[[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]]
+[[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]] ·
+[[un-token-definido-bajo-un-selector-que-nadie-produce-no-existe]] ·
+[[no-restricted-imports-compara-el-texto-cierra-por-importnames]] ·
+[[el-recuento-de-un-gate-sale-de-la-funcion-rota-y-miente-igual]]
 
 ## Trampas conocidas
 
