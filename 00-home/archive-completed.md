@@ -397,3 +397,6 @@ tags: [home, archivo]
 - 2026-08-01 · TuFacturaIA · auditoría funcional qa-035 + `/admin`, onboarding y multiempresa cerrada y en prod (#1443 + #1445); 3 bugs que nadie buscaba y 2 sospechas refutadas. Residuos vivos en [[facturaia]].
 - 2026-08-02 · TuFacturaIA · ticket nº130 (Chivite) cerrado de punta a punta: borrar una recibida revierte inventario y coste medio (#1447 + #1450, mig 620). Sin pendientes; detalle en [[facturaia-historico-snapshot-2026-08-01]].
 - 2026-08-01 · TuFacturaIA · ticket #104 (Chivite): la decisión de abrir la corrección de `fecha` en recibidas aprobadas queda cerrada en NO — el camino bueno (borrar y reaprobar) funciona desde la mig 620, y el OCR ya no produce el fallo (#1457).
+- 2026-07-29 · TuFacturaIA · Materiales y cambio de empresa en prod (verificado el 01-ago con las dos pestañas). Solo quedaba mirar Materiales con los anchos guardados; detalle en [[facturaia]].
+- 2026-07-25 · TuFacturaIA · importe cobrable con retenciones en prod. Los 3 cabos menores viven en [[facturaia]].
+- 2026-07 · TuFacturaIA · UI polish sidebar/clientes/facturas en prod (#882/#883/#884). Su smoke vive en [[facturaia]] §Smoke.
