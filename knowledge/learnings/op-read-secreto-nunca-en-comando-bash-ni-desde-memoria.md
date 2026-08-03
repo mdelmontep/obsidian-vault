@@ -4,6 +4,11 @@ date: 2026-07-04
 source: claude-code-session
 tags: [seguridad, 1password, credenciales, claude-code]
 ---
+> **Desde 2026-08-03 el comando es `opsa`, no `op`** (service account, sin Touch ID; hook global
+> `op-guard.sh` bloquea el `op` de lectura). Todo lo de abajo sigue vigente palabra por palabra —
+> solo cambia el binario. Gotchas del sustituto y qué NO cubre:
+> [[service-account-de-1password-exige-vault-explicito-en-item-get]].
+
 El clasificador de seguridad de Claude Code bloquea cualquier comando bash que contenga un secreto en texto plano — incluso un simple `curl` de solo lectura — si el JWT/API key aparece literal en el comando, venga de donde venga (pegado a mano, o copiado de un memory file de sesiones previas).
 
 Fix: consumir SIEMPRE `op read "op://vault/item/campo"` inline dentro del mismo comando que lo usa (`TOKEN=$(op read ...) && curl -H "X-KEY: $TOKEN" ...`), nunca en dos pasos donde el valor quede visible en un comando intermedio o en el transcript.
