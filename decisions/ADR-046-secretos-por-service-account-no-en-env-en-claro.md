@@ -26,7 +26,8 @@ valores (A) cambia una molestia recurrente por una fuga permanente.
 
 ## Consecuencias
 Nos compromete a renovar el token el **2026-11-01** (al caducar, el sign in vuelve de golpe en todo y
-el síntoma no dirá "caducado"). Escribir en 1Password y leer de `my.1password.com` /
+el síntoma no dirá "caducado" — por eso el aviso vive en el propio wrapper y no en un recordatorio:
+[[lo-que-caduca-avisa-desde-la-herramienta-no-desde-el-calendario]]). Escribir en 1Password y leer de `my.1password.com` /
 `Private`/`Employee`/`Shared` siguen exigiendo `op` con huella — el hook los deja pasar a propósito.
 Un secreto que quiera ser automatizable tiene que vivir en una bóveda de `agentesialab.1password.eu`,
 lo que convierte "¿dónde guardo esto?" en una decisión con consecuencias, no en un detalle.
