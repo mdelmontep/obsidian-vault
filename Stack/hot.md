@@ -45,7 +45,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino donde no mide y sale con 0, será el de producción. Al matar un CI, migrar sus gates uno a uno. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
-## El resto (63)
+## El resto (36)
 
 
 - **Protección construida y no enchufada: ningún test la caza** — el doble de la prueba ES el relleno. Señal: módulo con tests y cero consumidores. Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]]
@@ -80,6 +80,10 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 
 > **Las otras 50 no se han borrado**: siguen vigentes en [[hot-archivo-2026-08-01]] y se recuperan por
 > wikilink y por grep. (El tope vigente es el de la cabecera, no el "25" que decía aquí.)
+>
+> Los contadores de las dos secciones decían 7 y **63** con 7 y **36** reales: un número que nadie
+> recalcula al añadir una entrada miente a la primera. Corregidos el 3-ago; si vuelven a divergir, el
+> arreglo es contarlos con un comando, no a mano.
 - **Fail-closed sobre INICIAR lo peligroso, nunca sobre SUPERVISAR lo que ya está en vuelo** — abortar el arranque mata también el plano de control y deja sin vigilancia lo que sigue abierto; la guarda va en el cuello de la acción, no en el arranque. Ver [[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]]
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
 - **PostgREST corta a 1000 y tus avisos de truncado no pueden dispararse** — el caso peor NO lleva `.limit()`; el `.in()` grande además revienta el DELETE con un 400. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
@@ -89,3 +93,4 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Navegación apilada = UN solo modal con la pila dentro** — dos que se desmontan en el mismo commit dejan el `<body>` sin scroll para siempre, sin error. Ver [[dos-modales-que-se-cierran-a-la-vez-dejan-el-body-sin-scroll]]
 - **Tercera variante de la misma regla en un detector: para** — enumerar sintaxis se queda corto (S19); comprueba la identidad. Ver [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]]
 - **Un bloqueo ANOTADO no es un bloqueo comprobado** — mira si otra credencial que ya tienes sirve para pedir la que «falta». Se hereda y nadie lo recuestiona. Ver [[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]]
+- **Un baseline capturado de la página equivocada pasa SIEMPRE** — si la ruta redirige, `--update-snapshots` guarda el destino y el gate compara login contra login. Asierta dónde aterrizaste ANTES de capturar. Ver [[baseline-de-screenshot-capturado-de-la-pagina-equivocada-es-verde-para-siempre]]

@@ -67,6 +67,49 @@ en cada iteración: 6 lentes × 8 hallazgos × 2 jueces son 96 agentes por pasad
 
 Implementación de referencia: `~/.claude/workflows/audit-graph.js`, lanzable con `/audit-graph`.
 
+### Y CUÁNDO no: el alcance se decide por lo que cambió (3-ago-2026, TuCRMIA)
+
+La regla con la que se venía disparando era de calendario —«cada 3-4 issues cerrados»— y esa
+regla **no sabe mirar el trabajo**: manda seis lentes contra un árbol donde puede que nadie
+haya tocado una hoja de estilos ni una migración. No es más riguroso: es más caro, tarda más y
+su informe se lee **peor**, porque el hallazgo real se pierde entre confirmaciones de lo que ya
+estaba bien. Un informe que enseña a saltárselo es P5 con otra ropa.
+
+- **Cada lente declara su TERRITORIO** (globs) y corre solo si algo de ese territorio cambió
+  desde la última auditoría **registrada**. Si no cambió nada de ninguna: no hay auditoría.
+- **El territorio es generoso, y no es el diff.** Estas auditorías buscan fallos en las JUNTAS,
+  y una junta se rompe desde cualquiera de sus dos lados: tocar la API puede romper su
+  composición con el panel sin que el panel cambie. Recortarlo al diff la convierte en una
+  revisión de diff, que ya hace el gate.
+- **Una lente que NUNCA ha corrido entra aunque su territorio no haya cambiado.** «¿Ha cambiado
+  algo desde la última vez?» da por hecho que hubo una última vez; para una lente nueva su
+  territorio está sin mirar entero. Apareció a los diez minutos de escribir el registro.
+- **El guion se PARA sin alcance.** Ante la duda no audita todo: eso es el calendario otra vez.
+- **Registro en el repo** (`docs/plan/auditorias.json`): commit, fecha, lentes, hallazgos. Se
+  escribe DESPUÉS de correr, nunca antes, o el árbol dice que se miró algo que nadie miró.
+
+Implementación: `scripts/auditoria-alcance.mjs` + `.claude/workflows/auditoria-composicion.js`
+en TuCRMIA. Con test de que un cambio de CSS dispara la lente de interfaz **y ninguna más**: su
+primera versión reclamaba todo `src/` para la lente de ramas mudas, o sea el mismo despilfarro
+que venía a corregir.
+
+### Reparto de modelo dentro del abanico, y el barrido de effort (3-ago-2026)
+
+- **Opus busca y sintetiza; Sonnet refuta.** La refutación es el eslabón de VOLUMEN y su
+  trabajo es acotado: abrir el fichero y ver si la afirmación se sostiene. El juicio —qué es
+  grave, qué duplica a qué— se queda en Opus.
+- **Tope declarado, y lo que queda fuera se NOMBRA.** Sin él, 6 lentes × N hallazgos × 3
+  escépticos se va a ~150 agentes sin que nadie elija ese número. Lo no refutado se reporta
+  como «ni confirmado ni descartado», jamás en silencio: un tope callado se lee como «lo
+  miramos todo».
+- **Dos refutadores, no tres, y matar exige que los DOS refuten.** El error cae del lado de
+  dejar vivo un falso positivo antes que de enterrar un hallazgo real; el filtro fino es la
+  síntesis.
+- **Buscadores a effort `medium`: NO se pierde profundidad.** Medido con 64 hallazgos: los
+  supervivientes traen reproducción ejecutable, fichero:línea y la comprobación de qué otra
+  capa podría salvarlos. Lo que falta con `medium` es **cobertura**, no calidad. La palanca no
+  es subir a `high`: es subir el tope de refutaciones.
+
 ## El GOAL
 
 No es una alternativa a loop ni a grafo: es lo que hace el loop TERMINABLE. Sin él no hay

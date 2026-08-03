@@ -14,48 +14,55 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (03-ago, noche)
+## Estado (03-ago, madrugada)
 
-- **F0: 9 issues cerrados de 17; el 013 y el 012 construidos y desplegados.** Gate con **21 comprobaciones
-  y 916 tests**, `db:replay`, **smoke de 16 contra el servidor desplegado** y las **18 migraciones aplicadas
-  y verificadas preguntándole el ACL efectivo a la base**.
-- ✅ **El panel de plataforma (013)**: censo, ficha, suspender/reactivar, `is_test`, personas, el alta como
-  pantalla y los planes con excepciones. La frontera la impone el **compilador** —el cliente del panel no
-  puede nombrar una tabla de dominio— y llegar a los datos exige pasar por la puerta que ya escribió la fila
-  de `access_log`. Ver [[acotar-por-tipo-que-tablas-puede-tocar-una-zona-del-codigo]] y
-  [[una-accion-de-servidor-de-next-es-un-endpoint-publico]], que fue el agujero menos evidente: el guard del
-  layout protege lo que se pinta, no lo que se puede llamar.
-- ✅ **La capa de derechos (012)** enchufada a los DOS canales con `G-S5`, que es lo que impide el fallo de
-  TuFacturaIA —gate en el wrapper web, API pública saltándoselo, 13 de 90 rutas—. Motivo y caducidad de una
-  excepción son `not null` en la BASE, no en un formulario.
-- ⚠️ **`smoke:admin` está escrito (14 comprobaciones) y NUNCA ejecutado**: necesita la clave de servicio. El
-  013 está construido y probado en unidad, **no verificado**. Es lo primero al retomar.
-- ⚠️ **Regresión mía desplegada y corregida el mismo día**: el límite por IP contaba todas las peticiones y
-  dejaba inalcanzable el de 600/min por clave. Ver
-  [[un-limite-por-ip-que-cuenta-todas-las-peticiones-anula-el-limite-por-credencial]].
-- **`npm run pendientes`** dice qué falta con una comprobación que se ejecuta, así que **se corrige solo**.
-  **`npm run evals`** monta el harness de A16 y falla a propósito: el conjunto está vacío.
-- ✅ **YA SE PUEDE ENTRAR.** Era el agujero de fondo: `ADR-002` delegó el alta en «la plataforma», que **no
-  está construida**, así que con la API en producción y 705 tests en verde no había forma de que entrara
-  nadie. Ahora hay alta manual (`scripts/alta-organizacion.mjs`, idempotente y verificada dos veces contra
-  la base) y login por enlace de un solo uso. La primera pantalla enseña la organización **leída por el
-  usuario con RLS filtrando**: primera vez que la base decide lo que ve una persona.
-  Ver [[un-plan-que-delega-en-un-sistema-que-no-existe-deja-el-producto-sin-puerta]].
-- ✅ **`truncate` tiraba el append-only en las doce tablas, y `db:replay` era ciego** (migración `014`).
-  Ver [[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]] ·
-  [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]].
-- ✅ **El límite de tasa estuvo dos días construido y sin enchufar**, con todo en verde. Issue 008 cerrado,
-  con gate estático. Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]].
-- ✅ **Las 18 migraciones aplicadas y verificadas EN PRODUCCIÓN**, preguntándole a la base y no fiándose del
-  script. ✅ `autoDeploy` funciona desde hoy (era el intermedio TLS del panel, no Dokploy). ✅ Leído Dolibarr:
-  siete huecos en el modelo, cuatro tablas nuevas en F1.
-- **Issue `015` (aprovisionamiento desde la plataforma) POSTERGADO**: dos tercios son código que lee lo que
-  manda otro sistema, y sin un payload real el parser se inventa (I4).
+- **F0: 9 issues cerrados de 17; el panel VERIFICADO contra un servidor y la pantalla de salud
+  construida.** Gate **22/973**, smoke de **16 contra el despliegue** y otro de **25 del panel**,
+  18 migraciones aplicadas y verificadas contra el ACL efectivo. Desplegado: `80c4f59f`.
+- ✅ **El panel (013), verificado de verdad: 25 de 25** contra `next start` y la base real. Y el
+  bloqueo que lo tenía parado **no existía**: la Management API sirve las claves del proyecto con
+  el PAT que ya estaba en 1Password. Ver
+  [[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]].
+- ⚠️ El smoke encontró **dos fallos en sí mismo**: sembraba `auth.users` con SQL, produciendo
+  cuentas que salen en el censo y **no pueden entrar** sin un solo error
+  ([[insertar-en-auth-users-a-mano-crea-cuentas-que-no-pueden-entrar]]), y una comprobación
+  colgaba del `default` de una columna.
+- ✅ **Pantalla de salud del sistema (014)**: build, crons con los cinco estados, el límite de tasa
+  tal como está compuesto, y **lo que todavía no mira** como bloque de primera clase. Tres de los
+  cinco bloques no tienen tabla y se declaran con un candado que obliga a borrarlos el día que
+  exista.
+- 🔴 **NADIE DISPARA NINGÚN CRON**, y lo destapó construir esa pantalla. Las tres purgas no las
+  llama nadie, así que **`api_request_log` crece sin tope**. La pantalla lo dice en la cara desde
+  hoy; el arreglo espera OK (P23).
+- ✅ **Auditoría adversarial de composición**: 64 hallazgos, 13 supervivientes. **Seis gates decían
+  proteger y protegían menos**, incluidos un `revoke` COMENTADO que satisfacía a G-S1 y acciones de
+  superadmin sin permiso que se escapaban por la forma de exportarlas. Ver
+  [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]] ·
+  [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]].
+- ⚠️ **Quedan 49 hallazgos SIN REFUTAR**, dichos como «ni confirmados ni descartados». No darlos
+  por buenos ni por descartados sin pasarlos por refutación.
+- ✅ **Dos fallos silenciosos de meses**: el panel entero sin su tipografía —tres tokens que no
+  existen, [[un-var-de-css-que-no-existe-no-falla-se-queda-con-lo-heredado]]— y la lista de
+  pendientes mintiendo sobre el despliegue por mirar el entorno local. Gate nuevo **G-TOKENS**.
+- ✅ **La auditoría dejó de dispararse por calendario**: `npm run auditoria:alcance` decide por lo
+  que ha cambiado y sabe decir que no hace falta. Falta correr la lente `interfaz`, que nunca ha
+  corrido.
+- ✅ **La capa de derechos (012)** enchufada a los DOS canales con `G-S5`. ✅ **YA SE PUEDE ENTRAR**
+  (alta manual + login por enlace de un solo uso). ✅ `truncate` tiraba el append-only en las doce
+  tablas (migración `014`). ✅ El límite de tasa estuvo dos días construido y sin enchufar.
+  ✅ `autoDeploy` funciona. ✅ Leído Dolibarr: siete huecos, cuatro tablas nuevas en F1.
+- **Issue `015` POSTERGADO** y **`016` (correo) también**: los dos por I4, sin payload real el
+  parser se lo inventa.
 
 ## Bloqueos
 
-- 🔴 **`SUPABASE_SERVICE_ROLE_KEY` en `.env.local`** — desbloquea `smoke:admin` y con él la verificación del
-  013 entero. Está en el panel de Supabase, no en 1Password. Los scripts leen `.env.local` solos.
+- 🔴 **P23 · nadie dispara los crons** — las tres purgas no se ejecutan y `api_request_log` crece sin
+  tope. Recomendado: `pg_cron` para las purgas (son SQL puro, la base se llama a sí misma) y el
+  mecanismo de TuFacturaIA para los diez crons de §14. **Falta tu OK a programar un borrado
+  periódico en producción.**
+- 🟠 **P24 · el proveedor de correo del 016** — propuesto Resend, que TuFacturaIA ya tiene rodado
+  con su receptor de entregas. Sin clave no se manda un correo, y sin payload real el receptor
+  choca con I4 igual que el 015.
 - 🟠 **`NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Dokploy** — sin ella el login responde
   `no_configurado` en el despliegue. Es **pública por diseño** (viaja al navegador). Un minuto, y el
   contenedor necesita redespliegue. La API v1 no se ve afectada, y eso es deliberado.
@@ -102,7 +109,12 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[request-url-detras-de-un-proxy-trae-el-host-interno-del-contenedor]] ·
 [[membresia-invitada-con-politicas-que-exigen-activa-entra-y-no-ve-nada]] ·
 [[enlace-de-acceso-canjeado-en-el-servidor-con-hashed-token]] ·
-[[un-plan-que-delega-en-un-sistema-que-no-existe-deja-el-producto-sin-puerta]]
+[[un-plan-que-delega-en-un-sistema-que-no-existe-deja-el-producto-sin-puerta]] ·
+[[un-var-de-css-que-no-existe-no-falla-se-queda-con-lo-heredado]] ·
+[[insertar-en-auth-users-a-mano-crea-cuentas-que-no-pueden-entrar]] ·
+[[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] ·
+[[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]] ·
+[[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]]
 
 ## Trampas conocidas
 

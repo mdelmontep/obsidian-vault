@@ -1,23 +1,27 @@
 ---
-title: un trinquete que cuenta por regex también cuenta lo que hay en los comentarios
+title: un gate que lee por regex también lee los comentarios, y falla en las dos direcciones
 date: 2026-08-03
 source: claude-code-session
-tags: [tooling, ratchets, linters, hooks]
+tags: [tooling, ratchets, linters, hooks, gates]
 ---
 
-Un trinquete casero (contar `style={{`, `<button`, hex crudos y compararlo con un
-baseline) cuenta ocurrencias en el **texto**, no en el AST. Consecuencia práctica y
-absurda: **explicar por escrito que evitaste el patrón rompe el commit**.
+Un gate que busca en el **texto** y no en el AST cuenta lo que hay en los comentarios. Falla en
+las dos direcciones, y la segunda es la peligrosa:
 
-Caso real: un comentario que decía «se resuelve con selector de atributo porque un
-`style={{ paddingLeft }}` aquí rompería el trinquete» hizo subir el contador de ese
-fichero de 0 a 1 y abortó el commit. El código estaba bien; lo que sobraba era la cita.
+- **Falso positivo (benigno, bloquea).** Un trinquete que cuenta `style={{`, `<button` o hex
+  crudos sube el contador con un comentario que **cita** el patrón prohibido: explicar por
+  escrito que lo evitaste rompe el commit. Suele fallar cuando la línea no **empieza** por `//`.
+- **Falso negativo (mudo, deja pasar).** Un gate que exige que una migración revoque `EXECUTE`
+  daba por buena una función `security definer` cuyo `revoke` estaba **comentado**, o citado
+  como ejemplo en la prosa de cabecera: `EXECUTE` a `PUBLIC` con el gate en verde. Esta
+  dirección no molesta a nadie, así que nadie la mira.
 
-Dos lecturas, y las dos importan:
-- Al escribir el comentario, no cites el patrón prohibido literalmente. Descríbelo.
-- Si el trinquete es tuyo, quítale comentarios antes de contar. Y si ya lo hace, revisa
-  el caso: suele fallar cuando la línea no **empieza** por `//` (comentario indentado, o
-  comentario de bloque en JSX).
+**La regla: dos pasadas.** Sin comentarios para buscar SENTENCIAS; en crudo para buscar
+MARCADORES (`rls-regime:`, `rls-helper`, `token-entrada:`), que viven dentro de un comentario a
+propósito. Quitarlos a secas arregla un lado y rompe el otro.
 
-El fallo es benigno (bloquea, no deja pasar) pero desconcierta, porque el diff que ves no
-tiene nada malo. Ver [[reglas-duras-en-prosa-acaban-en-hook]].
+Y al escribir el comentario: describe el patrón prohibido, no lo cites literalmente.
+
+Ver [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] ·
+[[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]] ·
+[[reglas-duras-en-prosa-acaban-en-hook]]
