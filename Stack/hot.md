@@ -32,13 +32,14 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (6)
+## Ha vuelto a pasar (7)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
 - **Una ejecución en verde no prueba que el efecto ocurriera** — `success` = "no explotó"; mide que el nodo de efecto CORRIÓ (268 verdes y cero envíos). Ver [[ejecucion-en-verde-no-prueba-el-efecto]]
-- **Rama nueva desde main local sin fetch** — `worktree add ... main` nace vieja y pisa lo ya mergeado; usar `origin/main`. Ver [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]]
+- **Rama nueva desde main local sin fetch** — `worktree add ... main` nace vieja y pisa lo ya mergeado; usar `origin/main`. Al integrarla: fichero reescrito >2 veces → merge, no rebase; y sus rojos se clasifican (copy → actualizar esperado, regla del repo → arreglar código). Ver [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]] · [[rama-que-reescribe-el-mismo-fichero-varias-veces-se-integra-con-merge]] · [[los-tests-rojos-que-hereda-un-merge-se-clasifican-uno-a-uno]]
+- **Al partir una pila en PRs, el fix va con el commit que lo causa** — si no, mergear el primero publica el fallo; con datos personales el hueco entre merges ES la exposición. Ver [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]]
 - **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino donde no mide y sale con 0, será el de producción. Al matar un CI, migrar sus gates uno a uno. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]]
@@ -77,9 +78,8 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un arreglo se verifica recorriendo el caso real** — el apaño del usuario atascado dispara el guard nuevo. Ver [[el-parche-del-usuario-atascado-dispara-el-guard-del-arreglo]] · [[una-pista-detras-de-un-gate-que-el-caso-afectado-no-cumple-no-existe]]
 - **El esquema se aplica ANTES de mergear su código, y el hueco de migración caduca** — si no, prod llama a lo que no existe. Ver [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
 
-> **Las otras 50 no se han borrado**: siguen igual de vigentes, pero el tope de este fichero es 25 y
-> todo lo que esté aquí se paga en cada sesión sin disparador. Viven en
-> [[hot-archivo-2026-08-01]] y sus learnings se recuperan igual por wikilink y por grep.
+> **Las otras 50 no se han borrado**: siguen vigentes en [[hot-archivo-2026-08-01]] y se recuperan por
+> wikilink y por grep. (El tope vigente es el de la cabecera, no el "25" que decía aquí.)
 - **Fail-closed sobre INICIAR lo peligroso, nunca sobre SUPERVISAR lo que ya está en vuelo** — abortar el arranque mata también el plano de control y deja sin vigilancia lo que sigue abierto; la guarda va en el cuello de la acción, no en el arranque. Ver [[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]]
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
 - **PostgREST corta a 1000 y tus avisos de truncado no pueden dispararse** — el caso peor NO lleva `.limit()`; el `.in()` grande además revienta el DELETE con un 400. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
@@ -87,3 +87,5 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Escribir la doc de exportación de un sistema lo audita entero** — «¿qué copio?» recorre todo; «¿qué arreglo?» no. Siete defectos en un barrido; PRs separados. Ver [[escribir-la-doc-de-exportacion-de-un-sistema-lo-audita-entero]]
 - **Worktree que vaya a empujar: `npm ci` + `.env.local`, sin atajo** — Turbopack revienta con un `node_modules` enlazado fuera de la raíz. Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]]
 - **Navegación apilada = UN solo modal con la pila dentro** — dos que se desmontan en el mismo commit dejan el `<body>` sin scroll para siempre, sin error. Ver [[dos-modales-que-se-cierran-a-la-vez-dejan-el-body-sin-scroll]]
+- **Tercera variante de la misma regla en un detector: para** — enumerar sintaxis se queda corto (S19); comprueba la identidad. Ver [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]]
+- **Un bloqueo ANOTADO no es un bloqueo comprobado** — mira si otra credencial que ya tienes sirve para pedir la que «falta». Se hereda y nadie lo recuestiona. Ver [[las-claves-de-un-proyecto-supabase-se-piden-con-el-token-de-cuenta]]

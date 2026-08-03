@@ -17,3 +17,5 @@ Reglas antes de subir audio de llamadas:
 - Preferir llamadas cuyo interlocutor sea del propio equipo.
 - Si no, cortar antes de la identificación (el fragmento se entiende igual: el problema
   se cuenta antes que el nombre).
+
+- Ver también [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]]: el fix que quitaba estos nombres vivía en otra rama que los commits que publicaban el audio.

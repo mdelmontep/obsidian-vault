@@ -19,3 +19,10 @@ dentro.
 Fix: `git fetch && git worktree add -b <rama> <ruta> origin/main`. Y antes de tocar un
 componente compartido, `git log main..origin/main -- <fichero>` para ver quién ha
 pasado por ahí. Ver [[antes-de-arrancar-un-fix-mirar-el-log-del-area]]
+
+Desenlace (03-ago): las dos regresiones se cazaron al integrar, y no leyendo el diff sino con la
+**suite que `main` traía de nuevas** — los mismos PRs que la rama pisaba habían dejado un test de
+integridad del heading y otro de prueba social. Un arreglo con test se defiende solo del trabajo
+paralelo; sin test se pierde en el siguiente merge sin que nadie lo note. Ver
+[[los-tests-rojos-que-hereda-un-merge-se-clasifican-uno-a-uno]] ·
+[[rama-que-reescribe-el-mismo-fichero-varias-veces-se-integra-con-merge]]
