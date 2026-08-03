@@ -41,6 +41,8 @@ tags: [frontend, motion, performance, framer]
 
 - **Patrón**: asignar `animation-delay` por elemento vía selectores CSS directos. Cero JS, cero re-renders. Ejemplo: `.auth-card h1 { animation-delay: 0s }`, `.auth-card .subtitle { animation-delay: 0.07s }`, etc.
 - **`prefers-reduced-motion` debe listar cada selector animado explícitamente** — no basta con deshabilitar un keyframe global. Cada `animation` declarada en otro selector debe ser reseteada individualmente en el bloque `@media (prefers-reduced-motion: reduce)`.
+- **Ese bloque `reduce` no lo mira nadie, y por eso pudre**: ningún test lo ejecuta, ninguna captura lo enseña. Tres defectos vivos salieron de ahí en un solo barrido (3-ago-26). Y ojo al criterio: `reduce` quita movimiento DECORATIVO, no información — una barra de progreso congelada al 100% mientras el temporizador sigue en JS miente sobre el tiempo que queda; ocúltala o ralentízala, nunca la congeles. Ver [[lo-que-vive-dentro-de-prefers-reduced-motion-no-lo-mira-nadie]]
+- **No intentes unificar `@keyframes` duplicados entre CSS Modules**: el `animation-name` se hashea aunque la keyframes sea global, así que el refactor para todas las animaciones en silencio. El conteo por grep parece deuda y no lo es. Ver [[css-modules-hashea-el-nombre-de-la-animacion-aunque-la-keyframes-sea-global]]
 - **Easing recomendado**: `cubic-bezier(0.22,1,.36,1)` (ease-out-expo) a 450-550ms para entradas. Para pings/loops infinitos: `animation-iteration-count: infinite` animando solo `opacity` y `transform`.
 
 ## Auditoría rápida de una sección con jank
