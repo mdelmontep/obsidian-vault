@@ -76,6 +76,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 > **Las otras 50 no se han borrado**: siguen igual de vigentes, pero el tope de este fichero es 25 y
 > todo lo que esté aquí se paga en cada sesión sin disparador. Viven en
 > [[hot-archivo-2026-08-01]] y sus learnings se recuperan igual por wikilink y por grep.
+- **Fail-closed sobre INICIAR lo peligroso, nunca sobre SUPERVISAR lo que ya está en vuelo** — abortar el arranque mata también el plano de control y deja sin vigilancia lo que sigue abierto; la guarda va en el cuello de la acción, no en el arranque. Ver [[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]]
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
 - **PostgREST corta a 1000 y tus avisos de truncado no pueden dispararse** — el caso peor NO lleva `.limit()`; el `.in()` grande además revienta el DELETE con un 400. Ver [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
 - **Antes de preguntarle un DATO al cliente, míralo en su sistema origen** — 3 veces en un día íbamos a pedir lo que ya teníamos en su backup. Las preguntas legítimas son de decisión. Ver [[antes-de-preguntar-al-cliente-mira-si-el-dato-esta-en-el-sistema-origen]]

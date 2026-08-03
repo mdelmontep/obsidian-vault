@@ -83,8 +83,10 @@ pasaban. Ni siquiera hace falta que el modelo quiera hacer trampa: el gate ya la
 Claude Code protege de lo que escribe Claude. No protege del operador, ni del panel de
 Dokploy, ni de un `docker exec`. En cryptobruj la cadena acabó siendo tres capas
 independientes: hook (bloquea el comando) → gate G5 (verifica contra el bot vivo) → el propio
-proceso, que aborta el arranque si falta la segunda llave. Solo la tercera es inesquivable.
-Y la auditoría de esa capa destapó lo peor de todo el día: `uvicorn src.api:app` levantaba la
+código, que RECHAZA abrir posiciones si falta la segunda llave. Solo la tercera es inesquivable.
+Y ojo con el modo de fallar: **fail-closed sobre iniciar lo peligroso, nunca sobre supervisar
+lo que ya está en vuelo** — [[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]].
+La auditoría de esa capa destapó además lo peor de todo el día: `uvicorn src.api:app` levantaba la
 API sin pasar por `main()`, y `POST /test-order` abría una posición **real** mirando solo si
 había claves, sin consultar el modo — la bifurcación paper/live vivía en `place_order`, que
 ese camino no usaba. Regla: al añadir una guarda, buscar TODOS los caminos que llegan al
@@ -102,7 +104,8 @@ los agujeros los había introducido yo al endurecer. La regla: al segundo pase s
 suite, y "todos los casos pasan" solo significa que pasa los casos que se te ocurrieron. Todo
 hook de seguridad va con suite de regresión propia; sin ella es otra casilla que se marca a ojo.
 
-Corolario del mismo día: **un comando dentro de una celda markdown no es un gate.** El
+Corolario del mismo día: **un comando dentro de una celda markdown no es un gate**
+([[un-comando-dentro-de-una-celda-markdown-no-es-un-gate]]). El
 escapado de `\|` convirtió la alternancia de un regex en barra literal y dejó el gate de
 secretos verde pase lo que pase; `python` a secas no existía en la máquina; y una tubería se
 tragaba el exit code del comando de la izquierda, así que el gate pasaba cuando el backtest

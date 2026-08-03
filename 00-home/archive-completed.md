@@ -247,6 +247,10 @@ tags: [home, archivo]
 - TuFacturaIA: rediseño visual completo
 - CLAUDE.md global optimizado
 
+- 2026-07-28 · TuFacturaIA · deriva catálogo de crons vs Dokploy cerrada (#1300): un cron nunca ejecutado e invisible porque "sin runs" no es "rojo". Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]
+
+- 2026-08-03 · TuFacturaIA · cerrados #1457 (fecha del OCR), #1459 (OOM del gate del runner), #132 (#1464) y #133 (#1491, en prod)
+
 ## 2026-05-21
 
 - TuFacturaIA — UX anular factura desde menú ⋯ de fila `/emitidas` (commit `270d110`, componente reutilizable `anular-confirm-modal.tsx`)

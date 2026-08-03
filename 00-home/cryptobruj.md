@@ -1,7 +1,7 @@
 ---
 title: cryptobruj-bot
 date: 2026-07-31
-updated: 2026-08-02
+updated: 2026-08-03
 tags: [proyecto, trading, python, dokploy]
 ---
 
@@ -11,20 +11,34 @@ Bot de trading algorítmico propio. Python 3.11 + ccxt + FastAPI + PostgreSQL, D
 Dokploy. **Exchange: BingX.** Panel en `https://cryptobruj-bot.185.99.186.76.sslip.io`.
 Despliegue = webhook de Dokploy con `X-GitHub-Event: push`. **`autoDeploy` está a true pero
 el repo no tiene webhook**: todos los despliegues son manuales.
-⚠️ **La URL del webhook está perdida**: la memoria apunta a un vault `Agentesia` que ya no
-existe (hoy son Private / FacturAIA / Shared / Trading) y el ID guardado no resuelve. Sin
-ella no se puede desplegar.
+✅ **El webhook NO estaba perdido** (03-ago): el item vive en el vault `Agentesia`, que sí
+existe, y resuelve. Lo que de verdad falta es peor: **`ADMIN_TOKEN` no está en 1Password**
+(el vault `Trading` que citaba la nota no existe) y **la contraseña del panel guardada da
+401**. Con eso, la única credencial operativa es el webhook — y redesplegar NO cambia el
+modo, porque el env vive en el panel. Nadie puede parar el bot sin Manu.
 
-## 🔴 ABIERTO — el bot está en `live`, no en paper (01-ago)
+## 🔴 ABIERTO — sigue en `live`, y son 76 horas, no 32 (03-ago)
 
-`curl /health` → `{"mode":"live","uptime":116868}`. **32 horas** con las 5 estrategias
-Cryptobruj operando: **451 ops, expectancy −0,244R, PF 0,58, −1.613,33 USDT**. Exactamente
-lo que predijo el backtest. Nadie lo puso en la sesión y el checklist pre-deploy daba verde
-(mira el compose y el `.env.example`, no el sistema vivo).
-Pendiente de decidir: **(1)** confirmar en BingX si es dinero real —`/config/live` dice
-`max_notional 10` pero hay posiciones de 1.632 USDT, no cuadra—; **(2)** si se paran las 5;
-**(3)** desplegar solo con el modo donde toca. Despliegue de `ce89e3f` **abortado** por esto.
-Ver [[no-hardcodear-el-modo-lo-hace-inverificable-desde-el-repo]]
+`/health` → `{"mode":"live","uptime":273000}`: opera en real **sin interrupción desde ~31-jul**.
+El incidente del 01-ago nunca se cerró, solo se abortó el despliegue de `ce89e3f`.
+Medido entonces: 451 ops, −0,244R, PF 0,58, **−1.613,33 USDT**.
+
+**La que opera en real es `scalp-5m`** —`LIVE_STRATEGY` en el panel—, no `conservador-1h`
+(el default del código). Es la de 5 minutos, medida en **−0,515R**, la que esta misma nota
+recomendaba dejar pausada. Tiene **1 posición abierta**. El resto va en paper:
+`swing-1h` 3 abiertas, `tendencia-1d` 65, `conservador-1h` 2.
+
+**Orden correcto para pararlo — no es "poner paper":**
+1. `POST /strategies/scalp-5m/stop` (necesita `X-Admin-Token`). Corta entradas nuevas y
+   **sigue gestionando salidas y reponiendo el SL de emergencia** (`main.py:806`). Reversible
+   con `/resume`, y persiste a reinicios.
+2. Solo con esa posición ya cerrada, `TRADING_MODE=paper` en el panel + Deploy. Hacerlo antes
+   deja la posición real huérfana: el bot pasaría a tratarlo todo como paper y nadie la vigila.
+
+Sigue pendiente confirmar en BingX el nocional real (`/config/live` dice `max_notional 10`
+frente a posiciones de 1.632 USDT).
+Ver [[no-hardcodear-el-modo-lo-hace-inverificable-desde-el-repo]] ·
+[[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]]
 
 ## Lo que hay que saber antes de tocar nada
 

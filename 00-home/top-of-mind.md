@@ -57,13 +57,14 @@ tags: [home, prioridades]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
-- 🔴 **cryptobruj-bot — el bot lleva 32 h en `live`, no en paper: −1.613 USDT (01-ago)** — operando las 5 estrategias Cryptobruj, ya medidas como perdedoras (451 ops, −0,244R, PF 0,58). Despliegue de `ce89e3f` **abortado**. **Tuyo: mirar el saldo real en BingX** (`/config/live` dice `max_notional 10` y hay posiciones de 1.632 USDT — no cuadra) y decidir si se paran. Lo bueno: `tendencia-obj-1d` (2R + brecha 2%) es lo único que aguanta en reserva ciega — cartera CAGR 5,12%→6,66%, caída −23%→−20%; en `main`, sin desplegar. → [[cryptobruj]]
+- 🔴 **cryptobruj-bot — SIGUE en `live`: 76 h, no 32 (03-ago)** — opera `scalp-5m` (−0,515R, la peor) con 1 posición abierta; el resto en paper. **Tuyo y solo tuyo**: sin `ADMIN_TOKEN` (no está en 1Password) y con la contraseña del panel dando 401, nadie más puede pararlo. Orden: `POST /strategies/scalp-5m/stop` (corta entradas, sigue gestionando la salida) y SOLO con la posición cerrada, `TRADING_MODE=paper` + Deploy — al revés la deja huérfana. Pendiente también el nocional real en BingX. → [[cryptobruj]]
 
-- **TuFacturaIA — la deriva entre el catálogo de crons y Dokploy, cerrada (28-jul, #1300)** — un cron del catálogo (`obras-reservas-reconciliar`, red de seguridad de las reservas de obra) **no se había ejecutado nunca** y era invisible porque "sin runs" no es "rojo"; el hueco estaba documentado con un "auditar de vez en cuando" y mordió igual. Ya hay incidencia `cron_nunca_ejecutado`, los dos crons que faltaban están programados y verificados con run real (0 derivas acumuladas), y otras tres entradas del catálogo mentían. Ver [[estar-en-el-catalogo-de-crons-no-es-estar-programado]]. [[facturaia]]
 
-- 🟢 **TuFacturaIA — cerrados el 01-ago: la fecha del OCR y el gate del runner (#1457, #1459)** — el año de dos dígitos ya no manda la factura tres ejercicios atrás, y el gate del runner deja de morir de OOM (era lo que aparcó dos días un PR correcto). Desplegado y verificado (el autodeploy del merge mató el job del #132 con el SIGTERM esperado). **Cerrado el 03-ago**: #132 resuelto (#1464) y #133 resuelto y en prod (#1491). **Vivos**: los tickets **136 y 137**, contestados al cliente pero en `en_revision` porque su fondo sigue abierto (el aviso de partidas sin descuento). → [[facturaia]]
+- **TuFacturaIA — tickets 136 y 137 vivos (03-ago)** — contestados al cliente pero en `en_revision`: su fondo sigue abierto (aviso de partidas sin descuento). Lo demás del bloque (#1457, #1459, #132, #133) cerrado y en prod. → [[facturaia]]
 - **Claude Code — validar el effort de Opus 5 en trabajo real (01-ago)** — `effortLevel` ya en `high` (`settings.json:182`); falta la medición: correr la próxima auditoría/review grande a `medium`, comparar y ajustar el default. Ver [[default-global-en-settings-anula-la-regla-condicional-del-claude-md]] · [[guia-de-migracion-de-modelo-no-es-lista-de-borrados-grep-antes]]
 
+- **cryptobruj-bot — guardar `ADMIN_TOKEN` en 1Password y arreglar la contraseña del panel (03-ago)** — hoy el bot no se puede parar sin ti; el webhook de deploy sí resuelve (vault `Agentesia`) pero redesplegar no cambia el modo. → [[cryptobruj]]
+- **cryptobruj-bot — decidir el diff del harness (03-ago)** — 3 capas contra operar en real (hook con 85 casos, `scripts/gates.sh`, y `place_order` que exige `LIVE_CONFIRMED`), más el agujero real que salió auditando: `/test-order` abría posición real sin mirar el modo. Sin commitear. Ojo: `LIVE_CONFIRMED` no existe en el panel, así que al desplegar el bot arrancará sin abrir entradas. → [[cryptobruj]] · [[claude-code-harness]]
 ## Bloqueos (esperando a terceros)
 
 - **TuFacturaIA — Salt Edge Test access (Manu)** — sin esto no se puede validar PR #610 (draft) contra sandbox real; además tiene un bug real de fuga cross-tenant sin resolver (re-revisado 2026-07-05, NO mergeado). Aprobar en dashboard Salt Edge → seguir en [[facturaia]].
@@ -89,7 +90,7 @@ tags: [home, prioridades]
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`main` `c98186c`) · eje `query` **72.7%** · **12 PRs abiertas, todas verdes** · 🔴 SSH del host caído (#760) · 🚨 **la medición no es estacionaria** → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · [[una-etiqueta-nacida-de-un-caso-concreto-sobrevive-a-su-contexto]] |
-| cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` sin querer, −1.613 USDT** · `tendencia-obj-1d` (2R) valida en reserva ciega, en `main` sin desplegar · 4 pendientes tuyos |
+| cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente
 
