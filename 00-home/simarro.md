@@ -27,6 +27,18 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **Matching multi-pool (2026-06-02)** — el pool ya son **3 etapas en 3 embudos** (Ventas `106971083` + Capacidad de compra `105358051` + Personal Shopper `105358071`), editado en `Reconcile lead_preferences`. Verificado E2E (llegó el WhatsApp del piso de Pozuelo).
 - **Recordatorios de visita (2026-06-02)** — anclados a una **tarea Meeting (type 2)** que la reserva crea con `complete_till`=hora de visita; el matching pasó su tarea a Follow-up (1) y Recordatorios filtra solo type 2 → mata el recordatorio falso del matching y habilita los recordatorios reales (antes no existían). Ver [[recordatorios-visita-por-task-type]].
 
+## 🔴 Detectado el 3-ago por el check de efecto (sin confirmar)
+
+Cuatro workflows de **cron** sin ejecutarse en lo retenido: `Matching semanal (Flujo A)`,
+`Reconcile lead_preferences`, `Llamadas_outbound (reactivacion)` y `Leads cambio de fecha o anulacion`.
+El outbound se sabía (espera los consentimientos que marca Ramón); el **matching semanal es producto
+vendido** y no constaba parado. **Ojo antes de dar nada por muerto:** "en lo retenido" depende de
+`EXECUTIONS_DATA_MAX_AGE` de esa instancia, que NO está verificado — en Clínica Zen resultó estar en
+7 horas creyendo que eran días ([[n8n-executions-data-max-age-va-en-horas-no-en-dias]]).
+
+Y `Recordatorios` repite el patrón de Clínica Zen: 15 ejecuciones en 7 días y los nodos de envío
+(24h/4h/48h) sin correr ni una vez. Ver [[ejecucion-en-verde-no-prueba-el-efecto]].
+
 ## ⚠ PENDIENTE BLOQUEANTE — reorden recheck en VOZ (no tocar a ciegas)
 
 **Bug del orden (confirma antes de validar)**: el flujo de reserva confirmaba la cita (salesbot Kommo + respuesta al cliente) ANTES del recheck de disponibilidad → con buffer 60 confirma slots ocupados y NO crea el evento. **WhatsApp YA arreglado** (2026-06-01: recheck antes de `Update leads`/crear evento; solo confirma si libre). **VOZ PENDIENTE**: el respond-fast (`Respond FAST`, atado al timeout 6s de Retell) confirma de inmediato, y `Create new leads3/2` crea el lead en **Lead Caliente (105137095)** → salesbot dispara al crear, antes del recheck. Arreglarlo = (1) crear lead en status neutro y mover a Lead Caliente solo en rama libre, (2) recheck antes del respond-fast. NO hacer PUT a ciegas: toca automations de Kommo no inspeccionables + timeout Retell; **requiere test de llamada real tras el cambio**.

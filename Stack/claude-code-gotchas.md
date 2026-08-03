@@ -77,3 +77,34 @@ tags: [claude-code, gotchas, github, plugins]
 - **El classifier bloquea un bucle que hace N acciones destructivas de golpe pero deja pasar la misma acción lanzada una a una** — un `for id in 3 4 5 6 7; do curl -X DELETE ...; done` sobre la API de Chatwoot fue denegado; los cinco `DELETE` sueltos, idénticos, pasaron sin fricción. No es una vía de escape a documentar como truco: lo que evalúa es el patrón de barrido, así que si el borrado masivo NO está justificado, el bloqueo tenía razón. Comprobar antes que el destino está muerto (0 usos) y decirlo. Caso Agentesia 2026-07-31 (5 etiquetas residuales de Ecobox en Chatwoot).
 
 - **Un trinquete casero que cuenta por regex también cuenta lo que hay en los comentarios**: explicar por escrito que evitaste el patrón prohibido rompe el commit. Ver [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]]
+
+## `Explore` dejó de ser barato — y los subagentes propios heredan Opus (3-ago-2026)
+
+Dos fugas de coste en el mismo sitio, el frontmatter de los subagentes:
+
+1. **El `Explore` integrado ya NO corre en Haiku.** Desde Claude Code v2.1.198 hereda el modelo de
+   la conversación (en la API de Anthropic, capado a Opus). Es decir: cada exploración se paga a
+   precio de Opus sin que nada lo indique. Se recupera definiendo un subagente **de usuario** con
+   ese mismo nombre — tiene prioridad sobre el built-in y conserva su propio `model`. Hecho en
+   `~/.claude/agents/Explore.md` con `model: haiku`, `effort: low`.
+2. **El campo `model` del frontmatter tiene default `inherit`.** Todos los agentes propios que no
+   lo declaran corren en el modelo de la sesión: los 12 de `facturaia` y `panel-tecnocloud` estaban
+   en Opus + effort de sesión. Los agentes de packs externos (el de SEO) sí traían `model: sonnet`,
+   así que el contraste no se veía.
+
+Valores válidos: `sonnet` · `opus` · `haiku` · `fable` · ID completo · `inherit`. Y hay **`effort`**
+en el frontmatter (`low`…`max`), que sobrescribe el de la sesión — la palanca que faltaba para no
+pagar `high` en trabajo mecánico. Otros campos útiles del mismo bloque: `maxTurns`, `skills`
+(precarga el contenido entero, no solo la descripción), `isolation: worktree`, `disallowedTools`.
+
+Reparto aplicado, siguiendo la doctrina del CLAUDE.md: construir → `sonnet`/`medium` · juzgar
+(`qa-reviewer`, `security-compliance-reviewer`) → `opus`/`high` · planear (`solution-architect`,
+`product-analyst`) → `fable`. `ticketing-domain-lead` se dejó en `sonnet` y no en `fable` porque
+decide sobre la máquina de estados leyendo código real, no solo diseñando.
+
+**Ojo con los worktrees:** `facturaia-sepa` y `facturaia-conciliacion` comparten el `.git` de
+`facturaia` y `.claude/agents` está versionado — editar los tres crea tres versiones divergentes
+del mismo fichero. Se toca solo el checkout principal.
+
+Límite de todo esto: fija el modelo **una vez elegido el agente**. Qué agente se elige lo sigue
+decidiendo el modelo leyendo las `description`; eso no lo impone un hook.

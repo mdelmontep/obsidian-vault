@@ -37,6 +37,7 @@ Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
+- **Una ejecución en verde no prueba que el efecto ocurriera** — `success` = "no explotó"; mide que el nodo de efecto CORRIÓ (268 verdes y cero envíos). Ver [[ejecucion-en-verde-no-prueba-el-efecto]]
 - **Rama nueva desde main local sin fetch** — `worktree add ... main` nace vieja y pisa lo ya mergeado; usar `origin/main`. Ver [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]]
 - **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]

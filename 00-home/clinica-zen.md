@@ -39,45 +39,57 @@ Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_l
 
 **Observabilidad**: los 9 workflows activos (todos menos el propio handler) tienen `errorWorkflow: FMotimghgUBzEgdm`, y ese handler **sí notifica**: `Error Trigger` → `Preparar contexto` → POST a `https://n8n-borja.tecnocloud.es/webhook/incidencia` con cliente/workflow/nodo/error. El fallo del 28-jul a las 06:30 disparó la incidencia correctamente (ejec 9408 en success). O sea, el hueco no es de instrumentación sino de **que nadie mira ese colector** — el error llevaba 7 horas reportado cuando lo encontré a mano. Pendiente: saber quién vigila las incidencias que llegan ahí (¿Borja? [[tecnocloud]]).
 
-### Resuelto sin registrar (se creía abierto)
+### Trabajo cerrado (28/29-jul) — detalle en [[clinica-zen-historico]]
 
-- **status_id Kommo 'Cita cancelada'** — `Update leads1` usa `status_id: 143` + `pipeline_id: 13495347`. El 104115987 heredado de Gonzalo ya no está. Arreglado el 2026-05-10. **El bloqueo "pedir el ID a quien gestiona Kommo" era obsoleto.**
-- **Retell en leads entrantes** — en producción y verificado con llamada real (`call_a398cee3465ea4472f9a9464ba3`, 28-jul): tool `Reservar` OK, ejecuciones n8n 9422/9423 en success, cita creada.
-- **Bug recordatorios por task_type** — **no aplica a CZ**. El blueprint de Simarro dispara desde tareas de Kommo; CZ dispara desde eventos de Google Calendar que llevan `Lead ID:` en la descripción. Cerrado el cabo cruzado de [[simarro]]. Ver [[recordatorios-visita-por-task-type]].
-- **amojo_token manual que expiraba cada 24h** — resuelto. El chatbot obtiene el token dinámicamente (`GET /api/v4/account?with=amojo_id` con OAuth2) y 20 de sus nodos ya van por salesbot.
+Auditoría end-to-end contra las APIs reales (Kommo, Retell, Calendar, IMAP), los tres hitos que el hub
+arrastraba desde mayo ya estaban resueltos en producción, y los cuatro bugs de `Recordatorios`
+corregidos: Switch sin `options` que mandaba los de 4 h por la rama de 24 h · envíos de madrugada
+(ventana 08:00–21:30) · marcado previo al envío que impedía todo reintento · y la causa raíz del 400,
+`entity_type` como string en vez de entero — por la que **los recordatorios de WhatsApp no habían
+funcionado nunca**. Más el email interno de la reserva por voz, que no salía.
 
-### Hecho el 2026-07-28 (feedback de llamada de Gonzalo)
+## Verificación por API del 2026-08-03 (read-only, sin tocar nada)
 
-- **Dirección**: el prompt decía "Polígono Européolis" en 4 sitios. Los 3 que se hablan pasan a *"calle Castillo de Atienza, uno bis, frente al edificio de correos de la dehesa de Navalcarbón"*; el bloque de datos conserva `Pol. Europolis` con la grafía correcta. La KB de Retell ya estaba limpia y ningún workflow lo mencionaba.
-- **`voice_speed` 1.12 → 1.05**. `ambient_sound` y `volume` se quedan por decisión de Manuel.
-- **La reserva por voz no enviaba NINGÚN email** — la rama de voz nunca tocaba `Build Emails HTML`. Ahora `Pendiente de Asignar A/B` entran en él y el aviso interno sale a `citas@clinicazen.es`. `Build Emails HTML` elige origen con `isExecuted` (chat / voz A / voz B).
-- **IF `¿Hay email de paciente?`** antes del correo al paciente: por voz no se pide dirección, así que sin ella no se intenta el envío. Los dos emailSend con `onError: continueRegularOutput`.
-- ~~**`WA Confirmación Cita A/B` estaban huérfanos**~~ **REVERTIDO 29-jul**: los conecté a `Create an event Voz`/`Voz2` creyendo que el agente prometía un WhatsApp que nadie enviaba. **Falso**: el salesbot `63814` "Confirmacion cita" ya se dispara solo con el trigger *"lead movido o creado en la etapa pENDIENTE DE ASIGNAR"* — justo lo que hace la rama de voz — y llevaba **104 lanzamientos** en Kommo. Mi conexión habría mandado la confirmación **dos veces** al paciente. Los nodos vuelven a estar desconectados, como estaban. El contador de lanzamientos del bot solo se ve en la GUI, no por API. Ver [[nodo-huerfano-puede-estar-desconectado-porque-otro-mecanismo-ya-lo-cubre]].
+Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[agentes-cliente-tres-capas]].
 
-Backup pre-cambio: `cz-pre-email-voz-20260728-1227.json` (scratchpad de sesión, mover a repo).
-
-### Auditoría de funcionamiento (28-jul) — verificado contra las APIs reales
-
-Todo cruzado contra Kommo, Retell, Google Calendar e IMAP, no leyendo el JSON:
-
-- **Kommo — todo existe y cuadra.** Pipeline `13495347` y los 6 status usados ✓. Los 7 campos personalizados usados existen con el nombre esperado (`1828338` Nombre, `1828340` Fuente de entrada, `1828342` motivo, `1828350` Apagar IA?, `1864817` Día de preferencia, `1864879` Email, `1903454` Respuesta_bot) ✓. Los 4 bots referenciados existen y están **activos** (`63808` recordatorios 4h, `63810` Recordatorio 24h, `63814` Confirmacion cita, `68822` Enviar Respuesta Bot) ✓. Los 2 webhooks de Kommo apuntan a n8n y están activos ✓.
-- **Retell — las 4 tools apuntan a webhooks que existen** (`/Reservar_crm`, `/mirar_disponibilidad`, `/cancelar_cita`, `/derivar_humano`) y los 4 workflows leen los argumentos en `body.args.*`, que es como Retell los envía (`args_at_root: false`) ✓. `Derivar_agente` y `Cancelar_cita` no declaran `method`, pero POST es el default documentado ✓. `transfer_call` ya apunta al definitivo `+34629494209` (el hub viejo lo daba por provisional) ✓.
-- **El número `+34919934582` no tiene `inbound_agent_id`** y aun así entran llamadas: es `phone_number_type: custom` (SIP trunk de Netelip + LiveKit, visible en las dynamic vars `lk-*`). No es un fallo, pero en el panel se ve "sin agente".
-- **Segundo agente no documentado**: `agent_c4cbf4ce04538c867996bfc18a` "Sara Queja" (existe, v5), que `Derivacion Humano` usa para llamar a la clínica vía `create-phone-call` cuando hay queja en horario.
-- **Google Calendar responde** ✓, un único calendario `99e8af26…@group.calendar.google.com` compartido por 5 workflows, con la credencial **"Cuenta Gonzalo"** (dependencia de una cuenta personal del contacto legacy; se mantiene por decisión de Manuel).
-- **Corregido el mismo día**: `Especilista Asignado / Create new tasks` creaba la cita como `task_type_id: 1` (Follow-up) con `duration: 3600`. Pasa a `2` (Meeting, que existe en la cuenta) y `1800`, que es lo que dura el evento en Calendar.
-- **El agente reservaba sin nombre**: en la llamada real llamó a `Reservar` con `"name":"No proporcionado"` — literal que no está ni en n8n ni en el prompt, se lo inventó al saltarse el paso 3 del guion. El lead `33137378` quedó llamado así, y eso es lo que ve la clínica en su agenda, **teniendo el contacto identificado en Kommo como `Gonzalo Riera / +34 609 779 229`**. Doble fix: regla dura en el prompt (v64 publicada) que prohíbe rellenar `name` con texto inventado y exige nombre antes de reservar; y fallback en `Preparar Datos Voz`/`Voz2` que usa el nombre del contacto de Kommo y, en último término, `Paciente <9 dígitos>`. Regex probada contra 10 casos con `node`.
+- **Recordatorios: el fix del `entity_type` SIGUE SIN VERIFICAR en producción.** Inspeccionadas una a
+  una las **268 ejecuciones retenidas** de `PJBMjLLE0vNJjZH8` (29-jul 02:30 → 3-ago 16:00), todas en
+  `success`: **ninguna pasó de `Filtrar y evitar duplicados`**. Ni el Switch ni los dos nodos
+  `WhatsApp Recordatorio 24h/4h` se ejecutaron una sola vez. No es un bug — es que no ha habido
+  ninguna cita cruzando la ventana: los únicos dos eventos del calendario están a más de 24 h.
+  **Las 268 ejecuciones en verde no prueban absolutamente nada**, que es justo el punto.
+  - **Primera oportunidad real de verificarlo: el 4-ago sobre las 11:30** (recordatorio de 24 h del
+    evento del 5-ago 11:30, lead 33137378). El de 4 h de esa cita caería a las 07:30 → **se suprime
+    por la ventana 08:00–21:30**, por diseño. Segunda y tercera: 5-ago ~17:30 (24 h) y 6-ago ~13:30
+    (4 h, esta sí dentro de ventana) para el evento del 6-ago 17:30.
+- 🔴 **El fix del nombre inventado NO funcionó — reincidió el 2-ago con la v64 ya publicada.** En la
+  llamada `call_f730941298c987b1fbbf9f0a913` (2-ago 12:38, desde `+34609779229`) el agente **nunca
+  preguntó el nombre** — el transcript va servicio → primera vez → día → hora → teléfono →
+  consentimiento → reservar — y llamó a `Reservar` con `"name":"Paciente nuevo"`. Antes inventaba
+  `"No proporcionado"`; ahora inventa `"Paciente nuevo"`. La cita del 6-ago 17:30 figura en la agenda
+  de la clínica como *"Odontología - Valoración - Paciente nuevo"* (lead `37513628`), con el teléfono
+  identificado en Kommo.
+  - El fallback de `Preparar Datos Voz`/`Voz2` **no puede entrar**: solo actúa si `name` viene vacío o
+    ausente, y el LLM manda siempre un string plausible.
+  - Es exactamente [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]]: un invariante de
+    dominio no se defiende con una regla del prompt. **Arreglo correcto**: validar en el Code node —
+    si `name` falta **o casa una lista de genéricos** (`No proporcionado`, `Paciente nuevo`, `Paciente`,
+    `Cliente`, `Sin nombre`…), resolver contra el contacto de Kommo por teléfono y, en último término,
+    `Paciente <9 dígitos>`. Y en general no fiarse del `name` del LLM cuando el teléfono ya identifica
+    al contacto ([[dos-campos-confundibles-pide-los-dos-y-cruzalos-en-codigo]]).
+- **La dirección vieja se sigue diciendo.** En esa misma llamada: *"Estamos en la calle Castillo de
+  Atienza, uno bis, **en el Polígono Européolis** de Las Rozas"*. El fix del 28-jul dejó `Pol. Europolis`
+  en el bloque de datos por considerarlo no hablado — se habla. Es literalmente lo que pidió corregir
+  Gonzalo.
+- **Volumen real, para calibrar**: el agente de voz lleva **50 llamadas en total desde mayo**, y las de
+  julio/agosto son casi todas desde el móvil de Gonzalo (`+34609779229`) o el de Manu (`+34617314938`).
+  Sin tráfico de pacientes no hay forma de que un fallo aflore solo: por eso hace falta el check de
+  efecto, no esperar a que salte algo.
 
 ## Próximos hitos
 
 1. **Smoke de la reserva por voz (NEXT, bloquea el resto)** — `POST /Reservar_crm` crea contacto+lead reales en Kommo, evento en Calendar y manda correo. Requiere OK y limpieza posterior. Verifica: email interno llega a `citas@clinicazen.es`, WhatsApp del salesbot llega al paciente, cita correcta.
-2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — tres bugs CORREGIDOS el 28-jul, falta el 400 de Kommo**. Salieron de la única ejecución con error del histórico (9407, 28-jul 06:30, lead 32984916, "Julián" `+34617314938`, evento `ejidsbhd41q51j2mqdtu2f7gp8`):
-   - ✅ **El de 4h salía por la salida de 24h.** Probado en el `runData`: el item `tipoRecordatorio: "4h"` fue por la rama 0 y la rama 1 quedó a 0 items — las conditions del Switch no llevaban `options`/`combinator`, así que la primera regla se lo tragaba todo. Los avisos de 4 horas llevaban meses saliendo con `bot_id 63810` (plantilla de "mañana tienes cita") en vez de 63808. **Fix**: bloque `options` (`typeValidation: strict`, `version: 2`) + `combinator` + `typeVersion 3.2`. **Verificado en ejecución** con banco de pruebas: `24h`→salida 0, `4h`→salida 1. Ver [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]].
-   - ✅ **Se escribía al paciente de madrugada.** Las 06:30 no eran un fallo: es el aviso de 4h de una cita de 10:30, con el scanner corriendo 24/7 y la clínica abriendo a las 10:00. **Fix**: ventana de emisión 09:00–21:30 (Europe/Madrid) en el Code de filtrado; fuera de ella no se envía. **Decisión tomada**: se suprime, no se pospone — el de 24h ya avisó y un "faltan 4 horas" enviado a las 09:00 para una cita de las 10:30 sería falso. Si prefieres posponer en vez de suprimir, hay que rehacer la lógica de ventanas. Ver [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]].
-   - ✅ **Un fallo de envío no se reintentaba jamás.** `Filtrar y evitar duplicados` marcaba `staticData.enviados[clave]` antes de enviar. **Fix**: el marcado sale del filtro y pasa a dos nodos `Marcar enviado 24h`/`4h` (modo `runOnceForEachItem`) colgados de cada emisor, que solo escriben si el item no trae `error`; los HTTP llevan `onError: continueRegularOutput`. Además `MARGEN` 15→30 min, para que la ventana (60 min) supere al intervalo del scanner (30 min) y cada evento caiga en DOS pasadas: un envío fallido tiene segunda oportunidad. Ver [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]].
-   - ✅ **CAUSA RAÍZ del 400 encontrada (no era el chat de WhatsApp).** `entity_type` iba como **string** `"2"` en los dos nodos de Recordatorios; la API lo exige **entero**. Probado contra Kommo con IDs inexistentes (sin enviar nada a nadie): `entity_type: 2` → `403 Entity not found` (pasa validación); `entity_type: "2"` → `400 Invalid field: entity_type` (idéntico al de producción). **Consecuencia: los recordatorios de WhatsApp NUNCA han funcionado**, ni los de 24h ni los de 4h, y el marcado previo al envío lo ocultó desde el primer día. Los otros 13 nodos `salesbot/run` del sistema (chatbot, reenganche, confirmación de cita) ya usaban entero y sí funcionan. **Fix**: `"2"` → `2`. Ver [[kommo-salesbot-run-entity-type-debe-ser-entero-no-string]].
-   - ⚠️ **Corrección de la hora**: el intento fallido fue a las **08:30 de Madrid**, no a las 06:30 (eso era UTC). La cita era a las 12:30. El caso malo real es una cita a las 10:00 (apertura), cuyo aviso de 4h cae a las **06:00**. Por eso `HORA_MIN` quedó en **08:00**, no en 09:00: con 09:00 se habría suprimido un aviso legítimo de las 08:30. Simulado: cita 12:30→envía, 10:00→suprime, 16:00→envía.
-   Backup pre-fix: `cz-recordatorios-pre-fix-20260728-1339.json`.
+2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — los 4 bugs corregidos el 28-jul, pendiente de verse en vivo.** Detalle en [[clinica-zen-historico]]. El fix de la causa raíz (`entity_type` string→entero, [[kommo-salesbot-run-entity-type-debe-ser-entero-no-string]]) **sigue sin ejecutarse ni una vez**: ver la verificación del 3-ago arriba. Learnings: [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]] · [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]] · [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]]. Backup pre-fix: `cz-recordatorios-pre-fix-20260728-1339.json`.
 3. **Verificar el RAG de Supabase (NEXT)** — es el único corpus que no he podido revisar (self-hosted sin dominio público). Puede seguir teniendo "Europolis" o la dirección vieja. Se comprueba preguntando "¿dónde estáis?" al bot por WhatsApp.
 4. **`emiafd@agentesia.madrid` hardcodeado (LATER)** — en `Especilista Asignado`, `toEmail` = `{{ email }}, emiafd@agentesia.madrid`. Buzón de la agencia recibiendo datos de pacientes en producción. Quitar.
 5. **Tres teléfonos distintos (LATER)** — prompt dice llamadas `629 494 209` y WhatsApp `919 934 582`; la KB dice `91 993 35 69`; las llamadas entran por `919 934 582`. Decidir cuál es cuál y unificar prompt + KB.

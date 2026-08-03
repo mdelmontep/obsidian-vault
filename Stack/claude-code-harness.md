@@ -136,6 +136,50 @@ Sin VERIFY explícito no hay loop, hay agente autoaprobándose.
 
 No envuelvo un paso, envuelvo el ciclo: `/loop` que encadena `/prd-to-issues` → `/grill-me` → build → tests+`/fia-verify` → PR → `/fia-cierre`, cada eslabón en su carril de modelo. **Gate "solo sugerencias documentadas":** en el grill auto-acepta una propuesta solo con respaldo real — **Haiku TRAE la fuente, Opus DECIDE si de verdad la respalda** (el juicio de evidencia no va al modelo más débil); sin respaldo → a revisión humana. Maker/checker aplicado a las DECISIONES, no solo al código. No es raíl fijo: los eslabones se combinan según la sesión, el pipeline completo es el máximo no el mínimo. Codificado en el CLAUDE.md global como patrón nombrado para que Claude lo reconozca y lo sugiera.
 
+## El hook que faltaba: no dejar PARAR (3-ago-2026)
+
+Los 5 guards globales eran todos `PreToolUse:Bash` — impiden que Claude **haga** algo malo. Ninguno
+impedía que Claude **pare** antes de tiempo, que es lo que hace falta para delegar de verdad: la
+autonomía no se compra con permisos, se compra no dejando cerrar el turno hasta que algo determinista
+diga que sí.
+
+El `Stop` hook admite `{"decision":"block","reason":"…"}` (equivalente a `exit 2`) y el input trae
+`stop_hook_active` para no entrar en bucle. Eso convierte «Claude cree que ha terminado» en «el gate
+dice que ha terminado». Los eventos que admiten bloqueo son `PreToolUse`, `PostToolUse`,
+`UserPromptSubmit`, `Stop`, `SubagentStop`, `PreCompact` y varios más; `SessionEnd` y `Notification`
+NO (solo efectos secundarios).
+
+Implementado en `~/.claude/hooks/stop-gate.sh` (+ suite propia en `hooks/tests/stop-gate.test.sh`,
+20 casos). Decisiones que importan, todas con caso de regresión:
+
+- **Bloquea una sola vez por turno.** Si tras un ciclo sigue rojo, decide el humano, no el bucle.
+- **«No evaluable» nunca cuenta como verde** — timeout o comando ausente NO bloquea (infra rota no
+  debe secuestrarte el turno) pero **no toca el marcador** y avisa por `additionalContext`. Es la
+  misma regla del exit 2 de los gates en `.sh`.
+- **Cede ante el hook de proyecto**: si el repo ya tiene su `hooks.Stop`, el genérico se calla. Sin
+  esto, en facturaia corrían los dos y bloqueaban por duplicado.
+- Detecta código **por extensión, no por directorio** (menos frágil entre Next/Astro/Python/SQL), y
+  usa el semáforo `fia-gate` si existe para no saturar la CPU con varias sesiones.
+- Escape `CLAUDE_STOP_GATE=off`; no corre en `main`/`master`.
+
+Y el de facturaia, `fia-cierre-reminder.sh`, **pasó de avisar a bloquear**: imprimía un
+`systemMessage` y hacía `exit 0` siempre — la casilla marcada a ojo que la propia doctrina condena.
+
+**Corrección el mismo día, y es la lección que queda:** ese hook se colgó primero de cada turno, y
+`/fia-cierre` es un gate DE SESIÓN que levanta un Workflow multi-agente (≈12 dimensiones + agent-browser
++ smoke). En una sesión de 8 turnos editando `src/` lo habría pedido 8 veces. Ahora bloquea **una vez
+por sesión** (marcador `.git/fia-cierre-sesiones/<session_id>`, escrito ANTES de emitir para que
+ignorarlo no lo repita) y elige modo por tamaño del diff (`rapido` con ≤3 archivos).
+
+**La distinción general:** un gate **determinista** (lint/typecheck/tests) cuesta CPU y CERO tokens →
+puede correr en cada turno. Un gate **multi-agente** cuesta decenas de agentes → una vez por sesión, o
+mejor atado al `git push`, que es cuando el trabajo sale de tu máquina. Enganchar el caro a un evento
+de turno es el error caro de este patrón.
+
+**Corolario para el grafo:** el graph engineering NO es la palanca de la autonomía. El grafo reparte
+trabajo; lo que te deja irte de casa es el checker determinista. Coherente con «el grafo NUNCA es el
+checker».
+
 ## Dónde vive cada pieza del harness (jul 2026)
 
 | Pieza | Dónde | Cuándo carga |

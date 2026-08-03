@@ -20,6 +20,11 @@ Para lo reciente (< 2 semanas), ver [[hot]].
 - [[supabase-cloud]] — proyectos SaaS (TuFacturaIA), psql, connection pooler, RLS
 - [[supabase-selfhosted]] — vector store para RAG, pgvector, LangChain schema
 
+## Agentes en producción
+
+- [[agentes-cliente-tres-capas]] — ficha por cliente (harness / loop / grafo), en qué capa cae cada fallo y el check de efecto que falta
+- [[claude-code-harness]] — harness, loops y grafos de Claude Code (mi herramienta, no la del cliente)
+
 ## Voice / Retell
 
 - [[retell/retell-sdk-patterns]] — SDK, webhooks, parameter_type, checklist pre-deploy

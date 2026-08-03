@@ -341,3 +341,25 @@ Las expresiones en `workflowInputs` no admiten IIFEs. Si la expresión es comple
 - **Rama de canal nuevo (voz) no hereda los side-effects del final de la vieja (chat)** — la reserva se crea, el email no sale; y un nodo huérfano en workflow activo es una promesa incumplida. Ver [[canal-nuevo-en-workflow-no-hereda-los-side-effects-de-la-rama-original]]
 - **Un tool que falla dentro de un AI Agent NO marca la ejecución como fallida** — el agente captura el error, sigue conversando y la ejecución sale `success`. Auditar por `runData['<nodo tool>'][0].error`, nunca por el `status`. Un `googleSheetsTool` con `mappingMode: defineBelow` y `columns.value = {}` lanza en cada llamada y nadie se entera. Ver [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
 - **Un `IF` con las dos ramas conectadas al mismo nodo no hace nada** — leer `connections`, no el canvas. Y un marcador de control (`[FIN]`, `[HANDOFF]`) hay que medirlo dos veces: que el modelo lo emite y que el cableado difiere por rama. Ver [[if-con-ambas-ramas-al-mismo-nodo-no-hace-nada]]
+
+## API: `?status=crashed` NO filtra (verificado 3-ago-2026)
+
+`GET /api/v1/executions?status=crashed` **ignora el filtro y devuelve TODAS las ejecuciones**,
+incluidas las que están en `success`. Comprobado en Clínica Zen: la ejecución `10049` aparecía en
+ese listado y su `status` real era `success`. Solo `status=error` filtra de verdad (`status=chorizo`
+devuelve vacío, así que el parámetro se valida a medias). 
+
+Consecuencia práctica: un monitor que confíe en ese filtro reporta el 100% de las ejecuciones como
+caídas. En el primer intento del check de efecto salieron **~200 rojos falsos** en dos clientes.
+Regla: usar `status=error` y **revalidar el campo `status` de cada item en cliente**
+(parse-don\'t-trust) — un filtro que miente en silencio es peor que no filtrar.
+
+Corolario del mismo día: para decidir si un workflow activo «está muerto» hay que separar los de
+**cron/schedule** (si no corren, están roto) de los de **webhook/chat/form** (si no corren, es que
+nadie ha escrito al bot). En clientes de volumen bajo lo segundo es lo normal y tratarlo como avería
+llena el informe de rojos que se aprenden a ignorar. Se clasifica leyendo los `type` de los nodos
+del workflow (`scheduleTrigger`/`cron` vs `webhook`/`chatTrigger`/`formTrigger`, `errorTrigger` aparte:
+que el error handler no dispare es buena señal).
+
+Implementación: `~/.claude/scripts/agentes-check.py` (cron semanal, lunes 09:00). Ver
+[[agentes-cliente-tres-capas]].

@@ -56,6 +56,7 @@ registrados) y avise cuando el contador se queda a cero.
 | **Grafo** | 10 workflows activos + `FMotimghgUBzEgdm` como `errorWorkflow` de los 9 restantes |
 | **Loop** | reintento de recordatorios arreglado 28-jul (marcado sale del filtro, margen 30 min → cada evento cae en dos pasadas) + ventana horaria 08:00–21:30 |
 | **Falla hoy en** | **Harness (vigilancia)**: el colector de incidencias apunta a `n8n-borja.tecnocloud.es` y no está decidido quién lo mira. **Loop (evidencia)**: falta el smoke E2E de la reserva por voz, y la prueba de que los recordatorios ya salen es «cuando los contadores de `63810`/`63808` dejen de estar a 0». |
+| **Medido el 3-ago** | 268 ejecuciones retenidas de `PJBMjLLE0vNJjZH8`, **todas en `success`, cero envíos**: ninguna pasó del nodo de filtrado. No es bug (no hay citas en ventana), pero deja el fix del `entity_type` **sin verificar** desde el 28-jul. Y el fix del nombre inventado **reincidió** el 2-ago con la v64 publicada: `Reservar` se llamó con `"name":"Paciente nuevo"`. Detalle en [[clinica-zen]]. |
 | **Riesgo de harness sin cerrar** | credencial de Calendar de una cuenta personal ajena; `emiafd@agentesia.madrid` hardcodeado recibiendo datos de pacientes |
 
 → [[clinica-zen]]
@@ -142,3 +143,26 @@ resultado de negocio, no el estado HTTP.
   de selección; y en Flex, más tokens compilados ([[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]]).
 - **No usar un LLM como checker** de estos flujos. El veto lo tiene el sistema de destino: Calendar,
   Kommo, Clientify. Es la misma regla que en [[claude-code-harness]].
+
+## Primer run del check (3-ago-2026) — dos hallazgos que nadie tenía fichados
+
+`~/.claude/scripts/agentes-check.py` sobre los 4 clientes con n8n accesible:
+
+- 🔴 **Centro Elphis — `chatwoot-event` lleva 65 ejecuciones con ERROR en 7 días** (de ~300, o sea
+  ~1 de cada 5), la última el 3-ago a las 18:29. Nodo `Persist ids conv_state`, error
+  `invalid input syntax for type bigint: "null"`. Es el bot de WhatsApp VIVO en el 659, con
+  pacientes reales: los nodos ejecutados llegan hasta `Lock eval`, así que revienta **después** de
+  coger el lock de conversación. Hermano del incidente del 21-jul ([[lock-conversacion-liberar-tras-responder-no-tras-trabajo-post]]).
+  Sin diagnosticar aún — mirar qué id llega como `"null"` (string, no NULL) y de dónde sale.
+- 🔴 **Simarro — 4 workflows de CRON sin ejecutarse en lo retenido**: `Matching semanal (Flujo A)`,
+  `Reconcile lead_preferences`, `Llamadas_outbound (reactivacion)` y `Leads cambio de fecha o
+  anulacion`. El outbound se sabía (espera los consentimientos que marca Ramón), pero el **matching
+  semanal es producto vendido** y no consta que estuviera parado. Ojo al matiz: "en lo retenido"
+  depende de `EXECUTIONS_DATA_MAX_AGE` de esa instancia, que no está verificado — puede ser una
+  ventana corta. Confirmar antes de dar por muerto nada.
+- 🟠 **Simarro repite el patrón de Clínica Zen**: `Recordatorios` con 15 ejecuciones y el nodo de
+  envío sin correr ni una vez. Puede ser falta de visitas en ventana, como en CZ, o el mismo tipo
+  de fallo silencioso. Es justo lo que el check está para destapar.
+
+Lección: el primer día de una medición de efecto encuentra cosas que meses de «está todo en verde»
+no encontraron. No porque nadie mirara, sino porque se miraba el indicador equivocado.
