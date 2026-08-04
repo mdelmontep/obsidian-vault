@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-03
+updated: 2026-08-04
 tags: [hub, tucrmia, crm]
 ---
 
@@ -96,6 +96,14 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   al VPS, en vez de esperar a `tucrmia.com`. Mientras siga en HTTP **no entran datos reales**, y las claves
   emitidas hasta entonces hay que rotarlas.
 - 🟠 Registrar `tucrmia.com`, App Review y Access Verification de Meta → bloquean F2, no antes.
+- 🟠 **Onboarding Dani y Borja (04-ago)**: GitHub OK (`tecnocloudes`→write, `notcapi`→admin ya
+  estaba) y claves de `tucrmia-prod` compartidas en 1Password (vault `TUCRMIA`, no en
+  `Compartida Agentesia`). Trabajan los tres contra el único proyecto —sin datos reales de
+  cliente todavía, así que el coste de compartirlo es bajo; revisar antes de F2/HTTPS. Falta:
+  invitar a Borja al dashboard de Supabase (Dani ya está), confirmar que ambos son miembros del
+  vault `TUCRMIA`, y que cada uno genere su propio `SUPABASE_ACCESS_TOKEN` en su vault personal
+  —nunca en el compartido, ver
+  [[guardar-token-personal-en-vault-compartido-de-equipo-comparte-tu-identidad]].
 
 ## Decisiones
 
@@ -130,7 +138,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]] ·
 [[un-token-definido-bajo-un-selector-que-nadie-produce-no-existe]] ·
 [[no-restricted-imports-compara-el-texto-cierra-por-importnames]] ·
-[[el-recuento-de-un-gate-sale-de-la-funcion-rota-y-miente-igual]]
+[[el-recuento-de-un-gate-sale-de-la-funcion-rota-y-miente-igual]] ·
+[[guardar-token-personal-en-vault-compartido-de-equipo-comparte-tu-identidad]] ·
+[[op-item-move-destination-vault-no-vault-private-resuelve-al-vault-real]]
 
 ## Trampas conocidas
 

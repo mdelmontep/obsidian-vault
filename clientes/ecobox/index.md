@@ -8,6 +8,8 @@ tags: [cliente, ecobox, hub]
 
 Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas (Madrid). Onboarding 2026-05-20, despliegue 21-22, voz E2E funcional 2026-05-25, **chat WhatsApp E2E real funcional 2026-06-01**.
 
+**Estimación de horas** (2026-08-04, retroactiva, sin time-tracking — método en [[estimar-horas-retroactivas-sin-time-tracking-cruzar-git-y-hub-cliente]]): web ~5-6h (autor `notcapi`, vía git log del repo `ecobox`) · automatización n8n/Retell/WhatsApp/Chatwoot/GCal ~24-32h (Manuel, estimado por densidad del hub + 3 ADRs del 22-may). Total proyecto ~29-38h, 20-may a 2-jun.
+
 ## Sesión 2026-06-02 — 2ª ronda test E2E (voz): transfer, doble-booking, fecha, sustitución
 
 Tras checklist E2E (chat A1-A12 OK; voz B1-B3 OK) salieron 3 fallos en voz, todos corregidos y verificados:
