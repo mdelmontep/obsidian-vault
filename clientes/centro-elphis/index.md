@@ -9,7 +9,16 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-07-23
+## Estado actual · 2026-08-04
+
+- **Bot de chat respondía a preguntas de composición/efectos de sustancias (reportado por Alba: contestó que el tussi lleva heroína) + no avisaba al equipo cuando alguien decía "ya tuve visita/ya hablé con vosotros" — ambos corregidos y desplegados en `router-ia` (`7huQC9GWl12SpYaE`).**
+  - Composición/dosis/efectos de sustancias: regla dura en el prompt (`Build LLM call 1`) → respuesta fija de bloqueo. Probado en vivo contra la API real (clave `OpenAI Elphis API`) con la frase exacta reportada + variantes + intento de jailbreak: 4/4 correctas. Al ser solo cara al usuario (sin acción externa), el prompt-only es fiable aquí.
+  - "Contacto previo" (ya tuvo primera visita / ya habló con el equipo antes): el fix de prompt-only NO garantizaba el aviso — el LLM daba el texto bien pero no siempre llamaba a `pause_bot` (probado: 0/3 y 1/2 en dos batches reales), así que el email al equipo se perdía en la mayoría de casos. Solución: nodo determinista nuevo `Contacto previo pre-check` (regex, mismo patrón que `Crisis pre-check`) + `If contacto previo` + rama dedicada a `registrar-lead`, sin pasar por el LLM. Verificado con 9/9 casos de prueba (incluye no-falsos-positivos). Ver [[prompt-only-no-garantiza-tool-call-para-aviso-obligatorio]].
+  - El email al equipo para estos casos **ya existía y funcionaba** (pipeline `registrar-lead` → `Enviar email notif` → `info@centroelphis.com`, confirmado activo desde el 22-jul); el gap era solo que el bot no disparaba ese pipeline para "contacto previo".
+  - Lista de regex de "contacto previo" es una primera pasada (mismo caveat que los triggers de crisis en [[protocolo-crisis-elphis]]) — revisar con conversaciones reales cuando haya volumen.
+  - Pendiente: el agente de voz Retell (Laura) probablemente tiene el mismo hueco de composición de sustancias — no se tocó porque no hay `RETELL_LLM_ID`/agent ID de Elphis a mano (solo login del dashboard en 1Password, no API key de esa cuenta ni IDs específicos). Revisar si procede.
+
+## Histórico
 
 - 🔴 **`chatwoot-event` falla 1 de cada 5 ejecuciones (detectado 3-ago, SIN diagnosticar)** — 65 ejecuciones en ERROR en 7 días (de ~300), la última el 3-ago 18:29. Nodo `Persist ids conv_state`, `invalid input syntax for type bigint: "null"` — llega un `"null"` como STRING donde se espera un bigint. Los nodos ejecutados llegan hasta `Lock eval`, así que revienta DESPUÉS de coger el lock de conversación. Es el bot vivo del 659 con pacientes reales. Salió del check de efecto ([[agentes-cliente-tres-capas]]), no del error handler: `error-handler-global` existe y nadie mira lo que reporta. Siguiente paso: qué id llega como `"null"` y de dónde sale.
 - **23-jul: agente de chat "Laura" dado de alta en el portal AgentesIA (`clientes.agentesia.madrid`), visible para Alba** — WhatsApp, 659 877 708, workflow `chatwoot-event`, modelo `gpt-4o-mini`. Verificado vía Graph API (no memoria) que el 659 está ya en producción real para chat: `subscribed_apps` + `callback_url` de la app "Centro Elphis" apuntan al mismo endpoint n8n (`/webhook/wa-inbound`) que procesa el chat — corrige un supuesto viejo de que seguía sobre el número de pruebas Agentesia (`+34 910 05 49 50`, ahora legacy/solo pruebas internas).
