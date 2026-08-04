@@ -121,3 +121,25 @@ depende del VPS compartido.
 **Impacto real acotado**: el aviso interno de la reserva por voz va a `citas@clinicazen.es`, que
 es entrega local en el mismo servidor (probado: 4 s) — no pasa por Google ni por filtro de spam.
 La clínica sí recibe sus avisos.
+
+### Reenganche disparando sobre conversaciones ya cerradas (04-ago)
+
+Reportado por Manuel vía WhatsApp real: reservó cita, se despidió ("Gracias!" → "A ti. Que
+tengas buen día, Manu."), y 70 min después `bfc4dWuztZsWfb4Q` le escribió "¿Sigues por ahí? Si
+tienes alguna pregunta o necesitas algo más, aquí estoy." como si hubiera abandonado la conversación.
+
+**Causa**: la query de `Buscar Conversaciones Abandonadas` solo miraba que el último mensaje de la
+sesión fuera de tipo `ai` y que hubieran pasado 60min–24h. Esa condición es un falso positivo
+estructural — TODA conversación bien cerrada también termina con el bot hablando último (la
+despedida) y luego silencio; es indistinguible de un abandono real sin mirar el contenido.
+
+**Fix**: la query ahora arrastra también el último mensaje del paciente (`msg_type = 'human'`) vía
+un `DISTINCT ON` y excluye la sesión si ese mensaje es un cierre corto reconocible (regex anclado
+`^(gracias|vale gracias|adiós|nada más|...)\W*$`). Si el bot se quedó esperando un dato real
+(nombre, hora, confirmación) el reenganche sigue disparando igual — solo se corrige el caso de
+"el paciente ya se despidió". No toca el nodo del AI Agent ni añade estado nuevo, solo la
+condición SQL. Backup: `reenganche-pre-fix-farewell-20260804-1237.json`. Verificado: posiciones
+de nodos sin drift tras el PUT. Pendiente confirmar en la ejecución de después (~11:00 UTC) que
+corre sin error de sintaxis SQL — no se pudo probar contra la base directamente (self-hosted, sin
+dominio público). Learning transversal →
+[[reenganche-por-ultimo-mensaje-del-bot-dispara-tambien-en-conversaciones-bien-cerradas]].

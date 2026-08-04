@@ -42,9 +42,12 @@ Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_l
 ### Trabajo cerrado (04-ago) — detalle en [[clinica-zen-historico]]
 
 Pase de tono menos formal en chat (en vivo) y voz (v66 publicada): saludo, petición de nombre,
-cierre y repetición de teléfono, por iteraciones sucesivas de Manuel. Más el fix del link roto de
+cierre y repetición de teléfono, por iteraciones sucesivas de Manuel. Fix del link roto de
 Google Maps (Firebase Dynamic Links) en 3 workflows — pendiente el mismo link en un Salesbot de
-Kommo, fuera de n8n.
+Kommo, fuera de n8n. Y fix de `bfc4dWuztZsWfb4Q` (Reenganche): disparaba también sobre
+conversaciones ya cerradas bien (paciente se despidió con "gracias", el reenganche le escribió
+igual 70 min después) — ahora mira el último mensaje del paciente y excluye cierres reconocibles.
+Ver [[reenganche-por-ultimo-mensaje-del-bot-dispara-tambien-en-conversaciones-bien-cerradas]].
 
 ### Trabajo cerrado (28/29-jul) — detalle en [[clinica-zen-historico]]
 
@@ -107,6 +110,7 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 
 10. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
 11. **Publicar o descartar Retell v67 (NEXT)** — draft con la frase de repetición de teléfono ("Te repito el número para confirmar: ..."), pendiente de OK de Manuel.
+12. **Verificar el fix de `bfc4dWuztZsWfb4Q` en su primera ejecución real (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Revisar la ejecución de ~11:00 UTC del 04-ago: que corra sin error SQL y que no reabra conversaciones ya cerradas.
 
 *Descartado tras revisión de Manuel (28-jul)*: que el calendario tenga 2 eventos en 21 días es **normal** para el volumen actual, no hay riesgo de doble reserva. La credencial de Calendar "Cuenta Gonzalo" se mantiene por ahora.
 
@@ -123,7 +127,7 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 
 ## Histórico de hitos
 
-- 2026-08-04: pase de tono en chat+voz (v66 Retell publicada) + fix link roto de Google Maps en 3 workflows
+- 2026-08-04: pase de tono en chat+voz (v66 Retell publicada) + fix link roto de Google Maps en 3 workflows + fix reenganche disparando sobre conversaciones ya cerradas
 - 2026-07-28: auditoría completa + fixes del feedback de Gonzalo (dirección, voice_speed, email interno de voz, WhatsApp de voz)
 - 2026-07-20/21: pasada sobre chatbot, recordatorios, reenganche y derivación humano
 - 2026-05-10: cancelación por status 143 + pipeline 13495347
