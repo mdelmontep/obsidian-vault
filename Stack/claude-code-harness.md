@@ -302,3 +302,18 @@ contexto"). Aquí quedan documentadas con su gate:
   concurrente).
 - **Sintetizar críticamente**: uno afirmó que un flujo «no se puede completar» cuando en realidad se
   completa **duplicando en silencio**, que es peor. Verificar sus afirmaciones contra el repo.
+
+## Medir el coste de un prompt: el recibo, no el proxy (4-ago-2026, AGH #736)
+
+- **La cifra sale del `usage` de la API, nunca de un tokenizador offline.** Contar el JSON de los
+  `tools` con `gpt-tokenizer` **sobre-estima ×2,6** lo que cobran: decía **+1.071** tokens por turno y
+  el `usage.prompt_tokens` real dio **+415** (+3,0%). La API serializa las definiciones de tools a su
+  manera. El conteo offline sigue valiendo para el `SYSTEM_PROMPT` a secas (ahí sí cuadra), no para
+  tools.
+- **No extrapolar un coste por-unidad medido en otro régimen.** Con UNA tool y un prompt minúsculo,
+  `strict` parecía costar +55 tok/tool → «+700 en 14 tools». Medido sobre la superficie real: **+50 en
+  total** (+0,36%). El sobrecoste de `strict` es del `required` completo y las uniones nullables, y no
+  escala por tool como parecía.
+- Corolario de método: **nombra la cantidad exacta que vas a afirmar antes de medirla**, y mídela en la
+  misma unidad en que se factura. Las dos correcciones de esa sesión fueron proxies, no errores de
+  razonamiento.

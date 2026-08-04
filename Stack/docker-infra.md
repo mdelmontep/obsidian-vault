@@ -244,3 +244,14 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
   construido con su `origin` sale como `Location: http://0.0.0.0:3000/…`. En local es invisible porque los
   dos hosts coinciden. Usar `Location` **relativo**, nunca `X-Forwarded-Host` (la escribe quien esté
   delante). Ver [[request-url-detras-de-un-proxy-trae-el-host-interno-del-contenedor]]
+
+## Operar un stack: las dos que no estaban escritas (movidas del CLAUDE.md global, 4-ago-2026)
+
+Vinieron del `CLAUDE.md` global al podarlo. La tercera de aquella terna —«200 + releer OK ≠ aplicado»—
+**ya estaba** aquí y mejor contada (§ del `reloadTraefik`), así que no se duplica.
+
+- **El compose y el env de un stack se editan EN EL PANEL** + Save + Deploy. Editar el fichero en el
+  disco por SSH es temporal: Dokploy lo **regenera desde su BD** y el cambio desaparece sin avisar.
+- **El env de un orquestador son 3 capas y hay que verificar las tres**: (1) el manifest/panel,
+  (2) el container **RECREADO** —no `restart`, que conserva el env viejo— y (3) `docker exec <c> env`,
+  que es la única que dice qué ve el proceso.

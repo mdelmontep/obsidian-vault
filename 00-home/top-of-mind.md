@@ -26,7 +26,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — barrido de 8 PRs en prod (28-jul)** — queda que la UI no refresca tras «Marcar cuadrada». → [[facturaia]]
 - **Centro Elphis — bot WA vivo en producción (23-jul)** — ⚠️ **rotar credenciales del stack n8n** (se volcó el `env` completo en crudo): `POSTGRES_PASSWORD`, `N8N_ENCRYPTION_KEY`, `POSTGRES_AUX_PASSWORD`, `RETELL_WEBHOOK_SECRET`, `CHATWOOT_WEBHOOK_SECRET`, `META_APP_SECRET`. Pendientes menores y limpieza → [[clientes/centro-elphis/index|centro-elphis]]
 - **Agentesia — chatbot propio (31-jul)** — `Registro Sheets` del de WhatsApp arreglado (fallaba en cada lead con la ejecución en `success`) + prompts corregidos; **sin tráfico desde el fix, sin verificar**. Pendiente: decidir el `[FIN]` muerto, el chat web sin ejecuciones desde el 19-jul y sacar el secret del `jsCode`. Hito 5 → [[agentesia]] · [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
-- **AGH Ibérica — 4-ago: Fase 3 CERRADA, cero PRs abiertas** (`5564f7e`). **Tuyo: (1) #736 Fase 2B — la ÚNICA fase que queda del plan, la más arriesgada, NO se parte y exige corrida completa (~11,7 $); (2) #858 2/2 adaptativas (−59 % de llamadas; ⚠️ re-baselinea todos los suelos en silencio si la tasa no pasa a media por caso); (3) con Borja: #846 (el eje tiene un falso rojo), #847 (suelo de `commitment` por encima de su propio caso), 2ª mitad de #806.** → [[agh-iberica]] · [[un-prompt-es-una-superficie-con-localidad-no-un-documento]]
+- **AGH Ibérica — 4-ago cierre: el plan de precisión ENTERO salvo lo que espera permiso** (`5564f7e`, **2 PRs abiertas: #868 Fase 2B y #871**). **Tuyo: (1) revisar/mergear #868 y #871; (2) #851 es una DECISIÓN medida y sin resolver (el trade está acoplado: la redacción que compra la capacidad baja el repro #157 de 24/25 a 20/25); (3) con Borja: #846, #847, 2ª mitad de #806.** Lo único implementable que queda del plan es **#819** (mío, tras #868). ⛔ Anexo A sigue bloqueado por RGPD. 🚨 Tres rojos CRÓNICOS de `main` destapados hoy: **#869→#871** (una lectura dentro de `writes`, 25/25, **lo metió #743**), **#870** (#105 a 0/25) y el flake de #237 con personas. → [[agh-iberica]] · [[una-regla-de-prompt-que-el-modelo-cumple-a-medias-suele-ser-decidible-en-codigo]]
 
 
 
@@ -95,7 +95,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`5564f7e`) · **Fase 3 CERRADA**, cero PRs abiertas · queda **#736** (única fase, la más arriesgada) · #858 2/2 adaptativas · evals: caching **98,5 %**, ~11,7 $/corrida · ⚠️ **n≥25 entrelazado** para comparar variantes (n=10 deja pasar una caída de 96→48 %) → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]] · [[evidencia-fechada-por-reloj-muere-en-un-rebase]] |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`5564f7e`) · **plan de precisión ENTERO** salvo Anexo A (RGPD) · **2 PRs esperando merge: #868 (Fase 2B) y #871** · queda #819 (tras #868) y la decisión #851 |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente

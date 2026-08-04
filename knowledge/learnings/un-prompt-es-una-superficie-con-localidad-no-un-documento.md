@@ -12,11 +12,8 @@ aplica (25/25); movida a una nota de frontera **posterior** a la viñeta, no se 
 absoluto** (0/12). Si añades una regla de routing, va DENTRO de su viñeta.
 
 **2 · Un literal JSON con valor concreto en una viñeta de READ sangra al esquema de WRITE.**
-Poner `"client":"Odeon"` como ejemplo hizo que una consulta se emitiera como *write*:
-```
-got {"kind":"write","writes":[{"kind":"client.detail","fields":{"args":{"client":"Odeon"}}}]}
-```
-1/25. No es «peor routing»: es otra categoría — una lectura inocente entrando en el camino de
+Poner `"client":"Odeon"` como ejemplo hizo que una consulta se emitiera como *write*
+(`{"kind":"write","writes":[{"kind":"client.detail","fields":{"args":{…}}}]}`): 1/25. No es «peor routing»: es otra categoría — una lectura inocente entrando en el camino de
 confirmación. Tercera reincidencia de la misma causa en ese repo. Los ejemplos van en prosa;
 las declaraciones de esquema (`"campo":"<placeholder>"`) sí pueden llevar comillas.
 
@@ -24,3 +21,11 @@ las declaraciones de esquema (`"campo":"<placeholder>"`) sí pueden llevar comil
 idéntica a otra pregunta («¿qué tengo en cada cliente?» vs «qué tengo con el cliente X») tira
 del vecino: 96 % → 48 % en el vecino. Y no siempre hay salida: allí, toda redacción fuerte
 para comprar la capacidad costaba el vecino, y toda redacción suave no compraba nada.
+
+**4 · QUITAR un bloque grande mueve reglas que no has tocado** (4-ago, n=25 por lado). Sacar el
+catálogo de lecturas del prompt (−2.483 tok, −17,8 %) degradó dos reglas lejanas: un guardarraíl de
+anáfora (15/25 → 1/25) y un batch de tres writes que empezó a repetir el sobre dentro de `fields`. **No
+era el modo `strict`** —contrafáctico: 1/25 vs 4/25, indistinguible—: era la posición de todo lo que
+venía después. Al mover o quitar un bloque, presupuesta el contraste de las reglas LEJANAS, que son
+las que se rompen. Y cuando la regla degradada sea decidible, arréglala en código:
+[[una-regla-de-prompt-que-el-modelo-cumple-a-medias-suele-ser-decidible-en-codigo]].
