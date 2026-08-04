@@ -2,7 +2,7 @@
 title: tool description generica no fuerza ejecucion de tool critica
 date: 2026-04-19
 source: claude-code-session
-tags: [n8n, ai-agent, tool-calling, bug]
+tags: [n8n, ai-agent, tool-calling, bug, retell, elphis]
 ---
 
 El nodo `Reservar_cita` (toolWorkflow) tenía una descripción de 74 caracteres: "Usa esta herramienta para reservar cita, una vez confirmada por el usuario". El LLM (GPT-5.1) generó texto de confirmación ("Te reservo a las 11:00") **sin ejecutar la tool**. La cita nunca se registró.
@@ -30,3 +30,11 @@ Una descripción genérica de una línea no es suficiente — el LLM la trata co
 ## Complemento (2026-05-03)
 
 Si la description ya es agresiva pero el agente sigue fabulando (ej. inventa slots de calendario sin llamar `Mirar_disponibilidad`): bajar `temperature` a `0`. Síntoma diagnóstico: ejecución con `intermediateSteps=0` cuando debería haber al menos 1 tool call.
+
+## Complemento (2026-08-04) — ni reforzando el prompt se garantiza
+
+Caso Elphis: regla dura en el prompt ("di EXACTAMENTE X y llama YA a pause_bot") con instrucción muy directiva. Probado en vivo contra la API real (gpt-4o-mini): el modelo decía el texto correcto la mayoría de las veces, pero en la mayoría de esas veces **no llamaba a la tool** — content y tool_call parecen mutuamente excluyentes en una misma respuesta cuando el modelo "decide hablar". 0/3 y 1/2 en dos tandas de prueba con frases casi idénticas.
+
+Cuando la tool dispara un efecto externo obligatorio (email, webhook, CRM) y el fallo silencioso importa, no hay cantidad de prompt engineering que lo garantice — hace falta mover la detección a código determinista **antes** del LLM (mismo patrón que ya usa este proyecto para crisis: regex pre-check → si hay match, ni se llama al LLM, se fuerza la acción). Si la regla es solo cara al usuario sin acción externa (ej. bloquear una respuesta), el prompt-only SÍ es fiable — 4/4 en el mismo caso real, jailbreak incluido.
+
+En Retell Conversation Flow (a diferencia de n8n) no existe esa capa de código — las transiciones son siempre `type: prompt` evaluadas por el modelo. Ahí el máximo disponible es ampliar las condiciones de transición + ejemplos few-shot, sin garantía dura.

@@ -32,7 +32,7 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (7)
+## Ha vuelto a pasar (8)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
@@ -45,6 +45,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino donde no mide y sale con 0, será el de producción. Al matar un CI, migrar sus gates uno a uno. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
+- **Ni reforzando el prompt se garantiza que el LLM llame a una tool crítica** — content y tool_call son mutuamente excluyentes en una misma respuesta; si la tool tiene efecto externo obligatorio (email, CRM), pre-check determinista antes del LLM, no más prompt. Ver [[tool-description-generica-no-fuerza-ejecucion-de-tool-critica]]
 
 ## El resto (37)
 
