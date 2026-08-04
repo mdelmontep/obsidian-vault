@@ -48,3 +48,12 @@ del prompt, quité su mención de una línea… y el caso siguió 3/3. Parecía 
 pasaba gratis. Había **cuatro** menciones; con las cuatro fuera, 0/3. Antes de
 romper, **cuenta las ocurrencias** (`grep -c`) y comprueba que llegan a cero — si
 no, no has medido el guard, has medido tu `sed`.
+
+**Y el arnés puede mentir en la otra dirección: «mutación SIN VÍCTIMA» falsa** (4-ago, AGH). Mi
+script imprimió `77 passed` para una mutación que borraba una entrada de un mapa — o sea «este test
+no protege nada». A mano, esa mutación tumbaba su caso y solo el suyo: la causa era un problema de
+comillas en el heredoc, y **el fichero nunca cambió**. Es el espejo del verde falso, y llega en el
+peor momento: mientras redactas la PR. Exígele al arnés **un control que falle** y comprueba que el
+fichero cambió de verdad antes de anotar nada. Corolario honesto del mismo día: hay mutaciones
+**equivalentes** que ningún test puede matar (sustituir un early-return por una comparación consigo
+misma da el mismo resultado) — ésas se **declaran** como tal, no se cuentan como cubiertas.

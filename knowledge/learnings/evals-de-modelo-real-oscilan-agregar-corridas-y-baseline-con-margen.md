@@ -26,3 +26,13 @@ fichero aparte con `--reporter=verbose` y comprobar que los fallos son de **aser
 `got {…}` del modelo), no de red. Si no, publicarías «el proveedor estaba caído» como línea base.
 
 Relacionado: [[senal-de-capacidad-ausente-que-solo-ve-el-target-inventado]] · [[el-caso-que-mide-un-hueco-entra-antes-que-la-capacidad]] · [[recall-semantico-sin-umbral-es-confidently-wrong]] · [[asistente-enterprise-natural-pero-grounded-no-llm-libre]]
+
+**n=10 NO basta para comparar dos variantes, y el agregado es estructuralmente ciego a un caso**
+(4-ago, AGH). Medí un caso sospechoso con n=10: `10/10 vs 8/10`, Fisher p≈0,47 — se lee como ruido.
+Con n=25: `24/25 vs 12/25`. La caída era **real (96 % → 48 %)** y n=10 la habría dejado mergear.
+Y el `evals:check` completo imprimió **`✓ sin regresiones` con esa caída dentro**: un caso son 3
+muestras de 651 = **1,4 puntos** contra una tolerancia de **10**, así que ninguna tasa por eje puede
+moverse — no es afinar el umbral, corras ×3 o ×30 sigue siendo ciego. **Lee los CASOS, no la tasa.**
+Peor aún, el agregado puede tapar dos cambios que se cruzan: un eje marcó 81,8 % antes y después
+mientras un caso se ponía verde y otro rojo. Arreglado en ese repo imprimiendo el **diff caso a caso
+contra la corrida anterior** (coste 0 $: los datos ya estaban en el artefacto).

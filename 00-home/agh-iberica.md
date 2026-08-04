@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-03
+updated: 2026-08-04
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,34 +44,38 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-03, noche) — Fase 3 dentro; lo que bloqueaba era el harness
+## Estado (2026-08-04) — Fase 3 CERRADA; queda una sola fase del plan
 
-**`main` en `55f4db8`. CERO PRs abiertas.** 22 PRs en la sesión (override de founder; ojo post-hoc de Borja pendiente en todas).
+**`main` en `5564f7e`. CERO PRs abiertas.** Prod verificada **por contenido del container** y con control negativo (lo mergeado a 1, lo aún abierto a 0 — sin ese 0, el 1 no prueba nada).
 
-**Eje `query` 72.7% → 81.8%.** Fase 3 con **A1, A2, A4 y #733 dentro**. **#742 sigue ABIERTO a propósito**: A4 entrega el código y su caso del eje **sigue rojo, correctamente** — falta la mitad de prompt. **D15** bloqueado por RGPD. **Fase 2B (#736) sin arrancar** (toca el camino de *todos* los turnos → ventana propia).
+**Fase 3 CERRADA (#742):** entró la mitad de prompt de A4 y su caso pasa de **0/10 a 10/10**. **Queda UNA sola fase: #736 (2B)** — sin assignee, desbloqueada desde el 31-jul, **la más arriesgada** (toca *todos* los turnos, exige corrida completa) y **no se parte**: su punto 3 depende del 1. Ventana propia con presupuesto.
 
-⏳ **Las DOS mitades de prompt (A4 + #733) están escritas y SIN aplicar** (PRs #824/#825), para una **sola** corrida de evals.
-⚠️ **Trampa para esa corrida:** el eje acepta `from/to/desde/periodo` y el descriptor **sólo honra `range`** → **un caso puede salir VERDE mientras el código degrada**. Mirar **el texto**, no el veredicto.
+❌ **La mitad de prompt de #733 NO entró — decisión MEDIDA** (→ **#851**, con su eval ya escrito): cinco redacciones a n=25 y el trade está **acoplado** — la que compra la capacidad baja el repro #157 de 24/25 a 20/25; la que no lo toca no compra nada. El código de #733 sigue en `main` **inalcanzable**. → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]]
 
-🔧 **Tres de las cinco PRs de código eran deuda de HARNESS bloqueando producto** (`#806 → #803` · `#808 → A4` · `A4 → #733`). Los dos guards fallaban **por contenido en vez de por contexto**, sobre premisas escritas en el repo que nadie volvió a comprobar. El arreglo bueno **no fue una lista mejor, fue una invariante cruzada** — una lista sólo protege el pasado. → [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]
+⚠️ **El eje `query` marca 81,8 % antes y después y eso NO es que no sirviera:** A4 se puso verde cuando C14 se puso rojo — misma tasa, otra composición. Y C14 es **falso rojo** → **#846**.
 
-_Creds:_ 1Password `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ título con **espacio final**). **`opsa`, nunca `op`**; `opsa item get` **exige `--vault`**. ⚠️ El hook salta también si el comando se **menciona en texto** (un `grep`, un mensaje de commit).
+🧰 **Instrumento arreglado; los tres lo notan al rebasar sin hacer nada:** la evidencia de evals ya **no muere por un rebase** (#855) y el scorecard **imprime los casos que han MOVIDO** (#858 1/2). Falta **#858 2/2** (adaptativas, ~11,7 $ → ~4,8 $). Coste medido: caching al **98,5 %**, la ×3 son **~11,7 $** y no 19 → `llamadas × prompt`, la única palanca es menos llamadas.
+
+🔴 **Lección: el instrumento miente en la dirección que te deja mergear** — cuatro veces el mismo día (agregado del eje · suelo de `commitment` con regresión ajena → **#847** · arnés de mutación con víctima falsa · `✓ sin regresiones` con una caída de 96 % → 48 % dentro). Y **n=10 la habría dejado pasar** (`10/10 vs 8/10`, p≈0,47); con n=25, `24/25 vs 12/25`. → [[evals-de-modelo-real-oscilan-agregar-corridas-y-baseline-con-margen]] · [[evidencia-fechada-por-reloj-muere-en-un-rebase]] · [[una-suite-de-evals-cuesta-llamadas-por-prompt-mide-el-cache-antes-de-proponerlo]]
+
+_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ título con **espacio final**). **`opsa`, nunca `op`**; `item get` exige `--vault`. ⚠️ El hook salta si el comando se **menciona en texto**.
 
 ## Bloqueantes
 
 - **Decisiones de Borja pendientes:** #738 (tolerancia del baseline — **el hallazgo gordo: el 22% del banco no tiene NINGÚN suelo**) · #741 (umbral: veredicto = 0.75). _(#744, #758 y #762 ya CERRADOS.)_
-- **Decisión de LOS TRES (#806, media hecha):** las BD auxiliares ya no se pisan entre worktrees, pero la **`agh_dev` compartida sigue igual** → dos gates simultáneos aún necesitan `DATABASE_URL` propia. La propuesta grande —**una BD por corrida**, medida en **1,3 s** (125 ms crear + 1141 ms migrar), que arreglaría #717/#725 por construcción— sigue **sin decidir**.
-- 🔴 **#817 — fidelidad, la que yo miraría primero:** «la semana que viene» se contesta con **ESTA** semana. `matchEnumValue` resuelve por **raíz**, así que entra como `ok` (ni `notfound` ni `ambiguous`): **el resolutor sabe decir cuál de sus valores es, pero nunca «ninguno»**. No falla — **acierta otra pregunta**. Contrato compartido (misma exposición en el descriptor de oportunidad con «la semana pasada») y **reincidencia de #114**, cerrada el 4-jul por otro camino. Con ella: **#818** (`client.prep` con el mismo agujero que #733 cerró) · **#819** · **#820**.
+- **Decisión de LOS TRES (#806, media hecha):** las auxiliares ya no se pisan, pero la **`agh_dev` compartida sigue igual** → dos gates simultáneos aún necesitan `DATABASE_URL` propia. La propuesta grande (**una BD por corrida**, 1,3 s medidos, arreglaría #717/#725 por construcción) sigue **sin decidir**.
+- **Rastro de #817/#853 (ya cerrados), abierto:** **#818** (`client.prep` con el agujero que #733 cerró) · **#819** (dos filtrados conviviendo; **LIBRE y con el diseño ya escrito en el issue**) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
 - **#197/#228** (agendar futuro→calendario) — scope Entra `Calendars.ReadWrite` + admin consent (Borja).
-- 🔴 **SSH al host CAÍDO** (22 y 5251 sin respuesta, panel y Langfuse a 200 → el host vive). **Causa desconocida, no inventada.** Bloquea leer el texto de los clarify en ClickHouse (#747) y la medición de #741. Vía barata: que Borja pruebe desde su IP. → **#760**
+- ⚠️ **SSH al host: la premisa de #760 ya NO se sostiene.** El 4-ago responde por el **5251** (clave no autorizada → password del ítem 1Password `ssh AGH` vía `SSH_ASKPASS`; el 22 sigue muerto). Con eso se desbloquea leer ClickHouse para #747 y la medición de #741.
 - Secrets de prod → migrar a 1Password (pendiente recurrente).
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 
 ## Historial reciente (condensado — detalle en `docs/status-log/` del repo)
 
-- **3-ago (22 PRs, todo en prod)** — Fase 3 cerrada en código (A1/A2/A4 + #733, eje `query` **72.7% → 81.8%**) y el rediseño del dashboard con los cortes 01-04 dentro (#768-#771 + #812 + el seed #773). **Lo que se lleva la sesión no es el código: es que tres de las cinco PRs eran deuda de HARNESS bloqueando producto**, y las dos premisas que lo permitían estaban **escritas en el repo dándose por buenas**. → [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]
+- **4-ago (Manu; 7 PRs mías)** — Fase 3 cerrada (#742), #817 y su cara B #853 dentro, y el instrumento de evals arreglado por dos sitios (#855 hash, #858 1/2 diff por caso). **Lo que se lleva la sesión: cuatro instrumentos mintieron en la dirección que deja mergear**, y `n=10` habría dejado pasar una caída real de 96 % → 48 % (con n=25 salió `24/25 vs 12/25`). Coste de evals medido: caching al 98,5 %, ~11,7 $/corrida. → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]] · [[evidencia-fechada-por-reloj-muere-en-un-rebase]] · [[una-suite-de-evals-cuesta-llamadas-por-prompt-mide-el-cache-antes-de-proponerlo]]
+- **3-ago (22 PRs)** — Fase 3 en código (A1/A2/A4 + #733; eje `query` 72.7 % → 81.8 %) y cortes 01-04 del rediseño. La lección: **tres de las cinco PRs eran deuda de HARNESS bloqueando producto**, sobre premisas escritas en el repo que nadie comprobaba. → [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]
 - **1/2-ago** — #747 (el 32,8% de `clarify` no medía lo que creíamos: agregaba 4 conductas y excluía 5 caminos) · #712 (la raíz recogía `dashboard/test/**` → 38 ficheros corrían **dos veces** por gate) · #758 (el guard de grounding no vigilaba el lead: aprobaba **invertir una negación**) · #760 (SSH del host caído). Y la trampa que más costó: **los arneses dieron falsos por ENTORNO cinco veces en dos días** — endpoint que deriva entre horas, carga >50, `agh_dev` truncada por sesiones paralelas, rama sin rebasar (lo delata `dashboard 439` vs 472) y un control tautológico propio. → [[medir-un-cambio-contra-un-llm-entrelazado-no-en-bloques]] · [[el-control-que-deja-dentro-el-test-del-cambio-se-mide-a-si-mismo]] · [[cpu-contencion-multisesion-falso-positivo-ui-atascada]] · [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]]
 
 - **31-jul** — plan de precisión entero en prod salvo Fase 2 (#531, P1 #681, P2 #692, Fase 1 #688/#711, P3 #713, #715). Mergeados #720 · #729 (mig 0028) · #730. El flake del gate tenía causa raíz (#717→#718): tres `.pg` re-aplicaban una migración congelada que estrechaba un CHECK, y el `catch` lo disfrazaba de «no hay BD»; mi hipótesis #712 era falsa. → [[test-que-reaplica-una-migracion-congelada-estrecha-el-schema]]
