@@ -45,9 +45,10 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino donde no mide y sale con 0, será el de producción. Al matar un CI, migrar sus gates uno a uno. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
-## El resto (36)
+## El resto (37)
 
 
+- **"Quién usa X ahora" en columna escalar (`used_by`) pierde con 2+ actores a la vez** — el último que reporta pisa al anterior sin error visible. Modelar como fila-por-actor, PK `(recurso, actor)`. Ver [[atribucion-quien-usa-x-ahora-columna-escalar-pierde-bajo-concurrencia]]
 - **Protección construida y no enchufada: ningún test la caza** — el doble de la prueba ES el relleno. Señal: módulo con tests y cero consumidores. Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]]
 - **Un entorno de pruebas más limpio que producción es ciego** — y su verde se cita como prueba. Ver [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]]
 

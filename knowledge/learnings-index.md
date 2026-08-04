@@ -890,10 +890,11 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]] — subida en lote cliente backoff sobre rate limit servidor
 - [[unidad-compra-convertir-en-insert-no-en-motor]] — unidad de compra (cajas) — convertir en el RPC de inserción, no en el motor de stock
 
-## Otros (24)
+## Otros (25)
 
 - [[la-copia-durable-de-una-fuente-efimera-se-hace-el-mismo-dia-o-no-se-hace]] — WhatsApp/Downloads no son destinos; ya se perdieron dos fuentes del modelo WAPI
 - [[apps-electron-guardan-cache-en-partitions-service-worker-no-en-root]] — apps electron guardan cache en partitions service worker no en root
+- [[atribucion-quien-usa-x-ahora-columna-escalar-pierde-bajo-concurrencia]] — atribución de "quién usa X ahora" en columna escalar pierde bajo uso concurrente — modela…
 - [[atributo-download-ignorado-en-redirect-cross-origin]] — el atributo download del <a> se ignora en redirects cross-origin
 - [[bullmq-cola-efimera-bd-fuente-de-verdad]] — bullmq es disparador efímero, no almacén — bd fuente de verdad + reconciliación al boot
 - [[caller-timeout-debe-cubrir-peor-caso-del-retry-interno]] — el timeout del caller debe cubrir el peor caso acumulado del retry interno del callee
