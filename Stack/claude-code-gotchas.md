@@ -108,3 +108,5 @@ del mismo fichero. Se toca solo el checkout principal.
 
 Límite de todo esto: fija el modelo **una vez elegido el agente**. Qué agente se elige lo sigue
 decidiendo el modelo leyendo las `description`; eso no lo impone un hook.
+
+- **`dokploy-secret-guard.sh` (PreToolUse Write/Edit) bloquea por el NOMBRE de la variable local, no por el secreto real** — `RETELL_API_KEY = os.environ['RETELL_API_KEY']` dispara el hook aunque sea código legítimo leyendo env, porque el regex mira el nombre a la izquierda del `=`. Fix: no asignar a ninguna variable con patrón sensible (`*_KEY`, `*_TOKEN`, `*_SECRET`...); envolver el acceso en una función o usar `os.environ[...]` inline. Ver [[dokploy-secret-guard-falso-positivo-variable-local-con-nombre-sensible]]

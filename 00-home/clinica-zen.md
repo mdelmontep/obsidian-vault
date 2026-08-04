@@ -33,11 +33,18 @@ Auditado end-to-end el 2026-07-28/29 vía API (n8n, Retell, Kommo, Google Calend
 
 Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_leads_entrantes_v2 · `sIjznBan8THkEbcx` meter info rag · `5ecU1EI4DSs0SPWT` Chabot Laserys (ajeno, borrable).
 
-**Retell** — agente `agent_350620f6b3044226efaeba9111`, LLM `llm_271c1594207dffae30974c56b5e6`, **v63 publicada** (28-jul). Voz `custom_voice_c3e5212df87e5341a06ad66e66` (eleven_flash_v2_5, es-ES), `ambient_sound: call-center`, `voice_speed 1.05`, `volume 0.84`. Entra por `+34919934582`. Tools: `Mirar_disponibilidad`, `Reservar`, `Cancelar_cita`, `end_call`, `transfer_call`.
+**Retell** — agente `agent_350620f6b3044226efaeba9111`, LLM `llm_271c1594207dffae30974c56b5e6`, **v66 publicada** (04-ago, pase de tono). **v67 en draft sin publicar** (frase de repetición de teléfono, pendiente OK de Manuel). Voz `custom_voice_c3e5212df87e5341a06ad66e66` (eleven_flash_v2_5, es-ES), `ambient_sound: call-center`, `voice_speed 1.05`, `volume 0.84`. Entra por `+34919934582`. Tools: `Mirar_disponibilidad`, `Reservar`, `Cancelar_cita`, `end_call`, `transfer_call`.
 
 **Salud**: 1 sola ejecución con error en todo el histórico retenido — la de recordatorios de hoy (ver hitos). El resto en verde.
 
 **Observabilidad**: los 9 workflows activos (todos menos el propio handler) tienen `errorWorkflow: FMotimghgUBzEgdm`, y ese handler **sí notifica**: `Error Trigger` → `Preparar contexto` → POST a `https://n8n-borja.tecnocloud.es/webhook/incidencia` con cliente/workflow/nodo/error. El fallo del 28-jul a las 06:30 disparó la incidencia correctamente (ejec 9408 en success). O sea, el hueco no es de instrumentación sino de **que nadie mira ese colector** — el error llevaba 7 horas reportado cuando lo encontré a mano. Pendiente: saber quién vigila las incidencias que llegan ahí (¿Borja? [[tecnocloud]]).
+
+### Trabajo cerrado (04-ago) — detalle en [[clinica-zen-historico]]
+
+Pase de tono menos formal en chat (en vivo) y voz (v66 publicada): saludo, petición de nombre,
+cierre y repetición de teléfono, por iteraciones sucesivas de Manuel. Más el fix del link roto de
+Google Maps (Firebase Dynamic Links) en 3 workflows — pendiente el mismo link en un Salesbot de
+Kommo, fuera de n8n.
 
 ### Trabajo cerrado (28/29-jul) — detalle en [[clinica-zen-historico]]
 
@@ -95,20 +102,17 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 5. **Tres teléfonos distintos (LATER)** — prompt dice llamadas `629 494 209` y WhatsApp `919 934 582`; la KB dice `91 993 35 69`; las llamadas entran por `919 934 582`. Decidir cuál es cuál y unificar prompt + KB.
 6. **Nitidez de audio (LATER, si Gonzalo insiste)** — medido sobre la grabación: agente −19,8 dBFS, 0 muestras saturadas; el que se oye 5 dB más bajo es el llamante. Candidata real = `ambient_sound: call-center`, que se mezcla después de la grabación y por eso no se oye al escuchar el WAV. Latencia e2e p50 2,35 s / p90 3,35 s también pesa. Prueba: quitar el ambient y llamar. Ver [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]].
 7. **Sin repo local (LATER)** — `~/Projects/clinica-zen` está vacío. Mitigado el 28-jul: los 10 workflows activos + el backup pre-cambio están en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (trackeado por git, excluido de búsqueda vía `.ignore`). Falta decidir si CZ merece repo propio con `ops/`.
-8. ~~**n8n solo retiene las ejecuciones del día**~~ **RESUELTO 29-jul**: la causa era `EXECUTIONS_DATA_MAX_AGE=7` **dentro del `composeFile`** del stack (no en el Environment, donde no había ninguna `EXECUTIONS_*`). La variable va en **horas**, no en días: quien la puso quiso decir 7 días y dejó 7 horas. Corregido a `336` (14 días, el default oficial) + `EXECUTIONS_DATA_PRUNE_MAX_COUNT=10000`, aplicado por la API de Dokploy y desplegado (corte real de 13 s, 10:06:05→10:06:18 UTC; los 10 workflows activos volvieron íntegros). Backup: `cz-compose-n8n-pre-retencion-20260729-1203.yml`. Ver [[n8n-executions-data-max-age-va-en-horas-no-en-dias]].
-   *Detalle previo (obsoleto)*: **n8n solo retenía las ejecuciones del día (NEXT)** — las 44 retenidas son todas del 28-jul, ni una de días anteriores, cuando los defaults oficiales de n8n son `EXECUTIONS_DATA_MAX_AGE=336` (14 días) y `EXECUTIONS_DATA_PRUNE_MAX_COUNT=10000`: alguien los bajó. Sin histórico no se detecta un fallo recurrente — el 400 de los recordatorios se cazó por horas, el mismo día en que se produjo. **Bloqueado**: la clave SSH de Manu no está autorizada en `185.47.13.168:5251`; hace falta `ssh-copy-id` y luego editar el env en *panel Dokploy → Environment* (nunca en disco, Dokploy lo regenera).
-9. ~~**Bots del Digital Pipeline sin verificar en la GUI**~~ **VERIFICADO 29-jul en la GUI**. Los 8 bots, con sus lanzamientos históricos: `Enviar Respuesta Bot` 350 · `Confirmacion cita` 104 (trigger etapa pENDIENTE DE ASIGNAR, plantilla *Confirmación Cita*) · `especilista asignado` 17 (trigger etapa) · `Formulario web` 10 (trigger etapa) · `vALORACION SERVICIO` 3 · **`Recordatorio 24 horas antes` 0** · **`recordatorios 4 horas antes` 0** · `NPS Bot` 0. Los dos de recordatorio **nunca se habían ejecutado**: confirmación en el propio Kommo del bug del `entity_type`. Ambos están bien montados — sin disparador propio (los lanza n8n), plantilla correcta cada uno (`Envia Recordatorio` el de 24h, *"Te esperamos hoy"* / 79254 el de 4h) y rama de error. No hay nada que tocar en los bots. Las **6 plantillas WABA están Aprobadas** (WABA ID `2697891833940384`); 5 en Marketing y `Doctor Asignado` en Utility.
-   **DECISIÓN (Manuel, 29-jul): NO recategorizar a Utility.** Lo propuse por regla general, pero la evidencia lo desmiente: `Confirmacion cita` entrega con 94% sobre 104 envíos, y es Meta quien fija la categoría (recategoriza sola si cree que está mal). El ahorro de coste a este volumen es de céntimos y los límites de marketing por usuario no muerden. En contra pesa más: **editar una plantilla WABA la manda de vuelta a revisión de Meta**, y a esta cuenta ya le rechazaron plantillas el 21-jul (avisos de `support@kommo.com` en el buzón de `citas@`; las actuales son del 23 por eso). No tocar lo que entrega.
-   *Entrada previa (obsoleta)*: **Bots del Digital Pipeline sin verificar en la GUI (LATER)** — 4 de los 8 bots de Kommo no los lanza n8n sino el Digital Pipeline por cambio de estado: `63804` NPS Bot, `63812` especilista asignado, `64322` vALORACION SERVICIO, `69536` Formulario web. Todos activos, y el reparto tiene sentido (el bot manda WhatsApp, n8n manda email). El único a confirmar es `63812`, que se dispara con el mismo estado `104115983` que el workflow `qBUnBCRxKJEOJGFv`: comprobar en la GUI que no mandan lo mismo dos veces. El enganche bot↔estado no es consultable por API.
+8. ~~**n8n solo retiene las ejecuciones del día**~~ **RESUELTO 29-jul**: `EXECUTIONS_DATA_MAX_AGE=7` iba en horas, no en días. Corregido a `336` (14 días). Detalle → [[clinica-zen-historico]] · [[n8n-executions-data-max-age-va-en-horas-no-en-dias]].
+9. ~~**Bots del Digital Pipeline sin verificar en la GUI**~~ **VERIFICADO 29-jul**: los 8 bots bien montados, nada que tocar. Decisión de Manuel: no recategorizar `Confirmacion cita` a Utility. Detalle → [[clinica-zen-historico]].
+
+10. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
+11. **Publicar o descartar Retell v67 (NEXT)** — draft con la frase de repetición de teléfono ("Te repito el número para confirmar: ..."), pendiente de OK de Manuel.
 
 *Descartado tras revisión de Manuel (28-jul)*: que el calendario tenga 2 eventos en 21 días es **normal** para el volumen actual, no hay riesgo de doble reserva. La credencial de Calendar "Cuenta Gonzalo" se mantiene por ahora.
 
 ## Bloqueos / esperando a terceros
 
-- ~~**Paginalia no entrega el correo saliente**~~ **DIAGNÓSTICO ERRÓNEO, corregido 29-jul**. El rebote de la sonda SÍ llegó — a la carpeta **Spam** del buzón, 7 min después del envío; yo lo busqué a los 2 min y solo en INBOX. Gmail respondió `550-5.1.1 ... does not exist`, o sea **la salida externa funciona**. No hay nada que reclamar a Paginalia.
-  **Causa real: reputación.** Cabeceras de un envío propio: `dmarc=pass (p=QUARANTINE)`, `dkim=pass header.d=clinicazen.es` (firma con selector `default`), `spf=pass`. Autenticación impecable — Google los aparca en Spam porque `clinicazen.es` casi no envía correo, sale por IP compartida de un hosting pequeño y escribe a buzones sin historial previo. Las 3 pruebas seguidas con asunto `[TEST]` y sin texto plano tampoco ayudaron.
-  **Mitigaciones**: (1) remitente permitido en Workspace (Admin → Apps → Gmail → Spam) para el correo interno de AgentesIA; (2) para emails a PACIENTES (Gmail/Hotmail), proveedor transaccional con reputación propia (Resend/Brevo/SES) autenticando `clinicazen.es` — es lo estándar y no depende del VPS compartido.
-  **Impacto real ACOTADO**: el aviso interno de la reserva por voz va a `citas@clinicazen.es`, que es **entrega local en el mismo servidor** (probado: 4 s) — no pasa por Google ni por filtro de spam. La clínica sí recibe sus avisos.
+- ~~**Paginalia no entrega el correo saliente**~~ **DIAGNÓSTICO ERRÓNEO, corregido 29-jul**: la salida externa funciona, el rebote llegó a Spam. Causa real: reputación (dominio nuevo enviando poco). Mitigación pendiente si se quiere entregar a bandeja de pacientes: proveedor transaccional (Resend/Brevo/SES). El aviso interno a `citas@clinicazen.es` es entrega local y no le afecta. Detalle → [[clinica-zen-historico]].
 
 ## Links rápidos
 
@@ -119,6 +123,7 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 
 ## Histórico de hitos
 
+- 2026-08-04: pase de tono en chat+voz (v66 Retell publicada) + fix link roto de Google Maps en 3 workflows
 - 2026-07-28: auditoría completa + fixes del feedback de Gonzalo (dirección, voice_speed, email interno de voz, WhatsApp de voz)
 - 2026-07-20/21: pasada sobre chatbot, recordatorios, reenganche y derivación humano
 - 2026-05-10: cancelación por status 143 + pipeline 13495347
