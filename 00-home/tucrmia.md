@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-04
+updated: 2026-08-04 (noche)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,34 +14,38 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (03-ago, noche)
+## Estado (04-ago, noche)
 
-- **F0: 10 issues cerrados de 17.** Gate **22/983**, smoke de **16 contra el despliegue** y otro
-  de **31 del panel**, 18 migraciones aplicadas y verificadas contra el ACL efectivo. Desplegado y
-  comprobado: `ce8e4436`.
-- 🔴 **El sistema visual entero NO se aplicaba, desde el commit 1.** Los 86 tokens de color,
-  radio, sombra y `--focus-ring` viven bajo `:root[data-theme="…"]` y nadie escribía el atributo:
-  `/login` servía `<html lang="es">`. `tokens:check` estaba verde y tenía razón — comprobaba que
-  estuvieran **escritos**, no **enchufados**. Arreglado, con la segunda mitad del gate. Lo encontró
-  la lente `interfaz`, que corría por primera vez. Ver
-  [[un-token-definido-bajo-un-selector-que-nadie-produce-no-existe]].
-- ✅ **012 CERRADO**: los dos canales verificados contra un servidor levantado (6 comprobaciones
-  nuevas, `smoke:admin` 31/31). La sección de planes del panel **ya existía** desde `0409ad5c` y
-  `ESTADO.md` no lo contaba.
-- ✅ **Auditoría del 4-ago: 55 hallazgos, 22 refutados y los 22 sobreviven** (tope subido de 15 a
-  22: lo que faltaba era cobertura, no effort). Cerrados además: las dos cerraduras de la frontera
-  del cliente que se salta RLS —ruta relativa y reexport,
-  [[no-restricted-imports-compara-el-texto-cierra-por-importnames]]—, los dos gates que sólo
-  miraban la primera composición
-  ([[el-recuento-de-un-gate-sale-de-la-funcion-rota-y-miente-igual]]), el perímetro de G-S1 y
-  G-D11, y un comentario que prometía un test inexistente.
-- ⚠️ **Quedan 6 hallazgos confirmados sin cerrar y 33 sin refutar**, listados en `ESTADO.md` →
-  «Hallazgos abiertos»: cuatro gates que comparan texto en vez de procedencia, G-S6 sin mirar los
-  comodines, G-ACCESS-DRIFT inerte ante un segundo dueño, G-COLUMNAS-REALES, el doble dueño del
-  régimen append-only, y que el panel no tiene `error.tsx` y colapsa cuatro motivos en
-  `notFound()`.
+- **F0: 11 issues cerrados de 17.** Gate **22 comprobaciones, 1219 tests**. El **006** (primer
+  endpoint público) cerró de verdad: la idempotencia llevaba semanas construida y sin que nada la
+  llamara —mismo patrón que el límite de tasa antes del 008—, enchufada tras autenticar y tras el
+  handler.
+- ✅ **009 portado** (sesión previa, sin registrar hasta hoy): los 45 componentes puros de
+  `components/ui/` desde TuFacturaIA, con `G-UI-PRIMITIVOS` (ningún `<button>`/`<select>`/`<input>`
+  nativo fuera de `ui/`) y página de muestra en `/admin/design-system`. **No cierra**: sigue
+  bloqueado por la sesión de diseño con `impeccable`.
+- 🟡 **017 nuevo — outbox y webhooks salientes**, escrito porque el **014** señaló que la épica
+  E1.13 tenía especificación en el plan maestro y ningún issue. Mecanismo construido y probado
+  (`core/webhooks/`: cifrado AES-256-GCM del secreto, firma HMAC `t=…,v1=…`, decisión de
+  reintento/pausa, dispatcher saliendo solo por `core/http/outbound.ts`), migración **019 aplicada
+  a `tucrmia-prod`**. **Falta**: los endpoints `v1/webhooks`. Sin trigger de dominio a propósito —
+  lo añade el primer issue de entidad, no éste (I4).
+- ✅ **013 · impersonación**: la decisión (quién puede empezar sesión, 15 min de caducidad, el
+  contrato de elevación para escribir) construida y probada. Banner y `G-IMP` esperan a que F1 dé
+  una pantalla de dominio real — construirlos antes habría sido inventar el destino.
+- **016 (correo) sigue postergado**, sin llamante real. **Proveedor decidido: SMTP genérico con
+  `nodemailer`** (como TuFacturaIA), no Resend — corrige el P24 de abajo, que ya no aplica.
+- ⚠️ Sigue pendiente de la auditoría del 4-ago: **6 hallazgos confirmados sin cerrar y 33 sin
+  refutar**, en `ESTADO.md` → «Hallazgos abiertos» (sin tocar esta sesión).
 
 ### Hitos anteriores, condensados
+
+- ✅ **012 CERRADO** (3-ago): planes verificados contra servidor, `smoke:admin` 31/31.
+- ✅ **El sistema visual no se aplicaba desde el commit 1** (3-ago): los 86 tokens colgaban de
+  `:root[data-theme]` sin que nadie escribiera el atributo. Ver
+  [[un-token-definido-bajo-un-selector-que-nadie-produce-no-existe]].
+- ✅ **Auditoría del 4-ago: 55 hallazgos, 22 refutados y sobreviven** (tope subido de 15 a 22:
+  faltaba cobertura, no effort).
 
 - ✅ **013 · panel de plataforma** verificado contra `next start` y la base real. El bloqueo que lo
   tenía parado no existía: la Management API sirve las claves con el PAT que ya estaba en 1Password
@@ -70,12 +74,11 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   tope. Recomendado: `pg_cron` para las purgas (son SQL puro, la base se llama a sí misma) y el
   mecanismo de TuFacturaIA para los diez crons de §14. **Falta tu OK a programar un borrado
   periódico en producción.**
-- 🟠 **P24 · el correo del 016 — el proveedor ya está decidido, faltan TRES cosas.** Resend está en
-  casa y sus dos claves viven en 1Password (bóveda `FacturAIA`), pero **las dos son de solo envío**:
-  `GET /domains` devuelve `401 restricted_api_key`, así que no se puede listar el dominio remitente,
-  ni crear el webhook, ni leer su secreto de firma. Y el receptor de TuFacturaIA **no trae payload
-  real** (sus tests escriben el cuerpo a mano), así que citarlo no cierra I4. Hace falta: clave de
-  acceso completo, dominio remitente verificado y secreto del webhook.
+- ✅ **P24 SUPERADA (4-ago): el correo del 016 va por SMTP genérico (`nodemailer`), no Resend.**
+  El bloqueo de la clave de solo-envío de Resend ya no aplica — se decidió no usar un proveedor con
+  webhooks de entrega. Coste aceptado: el criterio de rebote del 016 sólo caza el rechazo SMTP
+  síncrono, nunca el diferido. El 016 sigue postergado igual, pero por falta de llamante real, no
+  por esto.
 - 🟠 **`NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Dokploy** — sin ella el login responde
   `no_configurado` en el despliegue. Es **pública por diseño** (viaja al navegador). Un minuto, y el
   contenedor necesita redespliegue. La API v1 no se ve afectada, y eso es deliberado.
@@ -140,7 +143,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[no-restricted-imports-compara-el-texto-cierra-por-importnames]] ·
 [[el-recuento-de-un-gate-sale-de-la-funcion-rota-y-miente-igual]] ·
 [[guardar-token-personal-en-vault-compartido-de-equipo-comparte-tu-identidad]] ·
-[[op-item-move-destination-vault-no-vault-private-resuelve-al-vault-real]]
+[[op-item-move-destination-vault-no-vault-private-resuelve-al-vault-real]] ·
+[[guard-de-secretos-por-nombre-de-clave-bloquea-palabras-espanolas-que-contienen-la-inglesa]] ·
+[[supabase-js-select-con-embeds-necesita-string-literal-no-concatenado]]
 
 ## Trampas conocidas
 
