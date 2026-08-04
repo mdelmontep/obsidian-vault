@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-04 (noche)
+updated: 2026-08-04 (noche, cierre)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,29 +14,36 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (04-ago, noche)
+## Estado (04-ago, cierre de sesión)
 
-- **F0: 11 issues cerrados de 17.** Gate **22 comprobaciones, 1219 tests**. El **006** (primer
-  endpoint público) cerró de verdad: la idempotencia llevaba semanas construida y sin que nada la
-  llamara —mismo patrón que el límite de tasa antes del 008—, enchufada tras autenticar y tras el
-  handler.
-- ✅ **009 portado** (sesión previa, sin registrar hasta hoy): los 45 componentes puros de
-  `components/ui/` desde TuFacturaIA, con `G-UI-PRIMITIVOS` (ningún `<button>`/`<select>`/`<input>`
-  nativo fuera de `ui/`) y página de muestra en `/admin/design-system`. **No cierra**: sigue
-  bloqueado por la sesión de diseño con `impeccable`.
-- 🟡 **017 nuevo — outbox y webhooks salientes**, escrito porque el **014** señaló que la épica
-  E1.13 tenía especificación en el plan maestro y ningún issue. Mecanismo construido y probado
-  (`core/webhooks/`: cifrado AES-256-GCM del secreto, firma HMAC `t=…,v1=…`, decisión de
-  reintento/pausa, dispatcher saliendo solo por `core/http/outbound.ts`), migración **019 aplicada
-  a `tucrmia-prod`**. **Falta**: los endpoints `v1/webhooks`. Sin trigger de dominio a propósito —
-  lo añade el primer issue de entidad, no éste (I4).
-- ✅ **013 · impersonación**: la decisión (quién puede empezar sesión, 15 min de caducidad, el
-  contrato de elevación para escribir) construida y probada. Banner y `G-IMP` esperan a que F1 dé
-  una pantalla de dominio real — construirlos antes habría sido inventar el destino.
+- **F0: 11 issues cerrados de 17. F1 arrancado: primer issue de dominio real cerrado (018,
+  pipelines y etapas).** Gate **22 comprobaciones, 1247 tests**, veinte migraciones aplicadas y
+  registradas. Desplegado y comprobado: `a67e83db`.
+- ✅ **017 CERRADO — outbox y webhooks salientes**: los cuatro endpoints que faltaban
+  (`GET/POST /v1/webhooks`, `GET /v1/webhooks/{id}`, `POST /v1/webhooks/{id}/test`) construidos con
+  `withApiV1`, firma HMAC, secreto cifrado en reposo, y 9 comprobaciones nuevas en `smoke:v1`
+  contra la base real.
+- 🔴 **Incidente cerrado: el despliegue automático llevaba 17 commits fallando en silencio** —
+  `package-lock.json` pinnaba un paquete npm (`flat-cache@6.1.24`) que su autor retiró del
+  registro; invisible en local porque el build de aquí nunca vuelve a bajarlo. Diagnosticado
+  leyendo los logs reales del build, no adivinado. Ver [[incidents]] y
+  [[lockfile-pinna-paquete-npm-retirado-del-registro-build-limpio-lo-revela]].
+- ✅ **018 CERRADO — pipelines y etapas (E1.1)**: migración `020` (columnas nuevas en `pipelines`,
+  tabla `pipeline_stages` entera con únicos parciales won/lost y RLS escrita a mano,
+  `leads.stage_id` con FK compuesta), CRUD con TDD, pantalla de configuración, verificado en el
+  navegador contra `tucrmia-prod` con una organización de prueba real. El propio issue documenta
+  que `pipelines`/`pipeline_permissions` ya existían desde la 002 — solo completaba lo que su
+  comentario de cabecera dejaba anotado como pendiente.
+- ✅ **009 portado** (sesión previa): los 45 componentes puros de `components/ui/` desde
+  TuFacturaIA, con `G-UI-PRIMITIVOS` y página de muestra en `/admin/design-system`. **No cierra**:
+  sigue bloqueado por la sesión de diseño con `impeccable`.
+- ✅ **013 · impersonación**: la decisión construida y probada. Banner y `G-IMP` esperan a que F1
+  dé una pantalla de dominio real.
 - **016 (correo) sigue postergado**, sin llamante real. **Proveedor decidido: SMTP genérico con
   `nodemailer`** (como TuFacturaIA), no Resend — corrige el P24 de abajo, que ya no aplica.
 - ⚠️ Sigue pendiente de la auditoría del 4-ago: **6 hallazgos confirmados sin cerrar y 33 sin
-  refutar**, en `ESTADO.md` → «Hallazgos abiertos» (sin tocar esta sesión).
+  refutar**, en `ESTADO.md` → «Hallazgos abiertos». **No corrida tras 017/018**: `auditoria:alcance`
+  dirá qué lentes tocan (RLS nueva de `pipeline_stages`, endpoint público nuevo de webhooks).
 
 ### Hitos anteriores, condensados
 
@@ -145,7 +152,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[guardar-token-personal-en-vault-compartido-de-equipo-comparte-tu-identidad]] ·
 [[op-item-move-destination-vault-no-vault-private-resuelve-al-vault-real]] ·
 [[guard-de-secretos-por-nombre-de-clave-bloquea-palabras-espanolas-que-contienen-la-inglesa]] ·
-[[supabase-js-select-con-embeds-necesita-string-literal-no-concatenado]]
+[[supabase-js-select-con-embeds-necesita-string-literal-no-concatenado]] ·
+[[lockfile-pinna-paquete-npm-retirado-del-registro-build-limpio-lo-revela]] ·
+[[exactoptionalpropertytypes-con-css-module-string-o-undefined-exige-coalescer]]
 
 ## Trampas conocidas
 
