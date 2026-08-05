@@ -1,33 +1,24 @@
 ---
-title: el rojo de CI tiene dos causas y se distinguen contando pasos ejecutados
+title: clasifica el rojo de CI contando pasos ejecutados, y fecha la frontera antes de hablar de causas
 date: 2026-08-05
 source: claude-code-session
 tags: [ci, github-actions, metodo, verificacion]
 ---
-«El CI está en rojo» no es una causa. Hay **al menos dos** y se tratan al revés, así que la regla del
-equipo tiene que discriminarlas o no se puede aplicar. La discriminación más barata no es leer el log:
-es **contar pasos ejecutados** por la API.
+«El CI está en rojo» no es una causa. La discriminación más barata no es leer el log: es **contar pasos
+ejecutados** por la API — `gh api repos/O/R/actions/runs/<id>/jobs --jq '.jobs[]|[.steps[]]|length'`
 
-Caso real (agh-iberica, 5-ago), dos runs del mismo repo el mismo día:
+- **0 pasos** → el job nunca arrancó. Rojo estructural, no dice nada del diff, y **no hay log que mirar**:
+  una regla del tipo «confirma que es el flake conocido» es inaplicable aquí.
+- **≥1 paso, 0 tests fallidos** → flake de infraestructura (teardown, BD efímera).
+- **≥1 paso, ≥1 test fallido** → **rojo REAL**, el que una doc mal escrita hace ignorar.
 
-| run | duración | pasos ejecutados | qué es |
-|---|---|---|---|
-| PR ajena | 3 m 8 s | **13** | corrió: 0 tests fallidos, y el exit 1 lo pone un `57P01` de teardown → flake conocido |
-| mi PR | **11 s** | **0** | el job **nunca arrancó** (cuota/runner/permisos): no hay tests ni teardown que interpretar |
+⚠️ **Corrección del 05-ago, y es la parte que costó:** esta nota decía «hay DOS causas conviviendo», a
+partir de dos runs del mismo día (uno de 13 pasos, otro de 0). **Falso.** Recorriendo la serie completa
+salieron **12 runs consecutivos a 0 pasos**, con frontera exacta —el último que ejecutó algo fue el 04-ago
+22:38:58, justo el de 13 pasos que se citaba de contraste— y la anotación literal: *«The job was not
+started because recent account payments have failed»*. Es **una sola causa con fecha de inicio**.
 
-```bash
-gh api repos/OWNER/REPO/actions/runs/<id>/jobs --jq '.jobs[]|"pasos: \([.steps[]]|length)"'
-```
-
-- **0 pasos** → rojo estructural. No dice nada del diff.
-- **≥1 paso y 0 tests fallidos** → flake de infraestructura (teardown, BD efímera).
-- **≥1 paso y ≥1 test fallido** → **rojo REAL**. Es el caso que una doc mal escrita hace ignorar.
-
-Por qué importa: el mismo día, el equipo corrigió la doc que decía «Actions no arranca por billing,
-ignora su rojo» —era falsa, corría en 3 m— y la sustituyó por «confirma que es el flake». Esa regla
-**no se puede aplicar a un run de 11 s**: no hay log de tests que mirar. Una regla de clasificación que
-no cubre uno de los casos empuja a mergear a ciegas exactamente igual que la que sustituyó.
-
-Y el corolario que se lleva la señal gratis: si el CI monta la BD real, **es la única superficie que
-ejecuta los tests que el gate local se autosalta sin base de datos**. Ignorar su rojo por costumbre es
-tirar la única cobertura de esos tests.
+**Por qué el marco importa más que el dato:** con «dos causas» se buscan dos arreglos; con «un antes y un
+después» se mira *Billing* y se acaba. **Dos runs no son una serie** — fecha la frontera antes de nombrar
+causas. Corolario: si el CI monta la BD real es la **única** superficie que corre los tests que el gate
+local autosalta sin base de datos (medido: 226 skips con BD, **423** sin ella).

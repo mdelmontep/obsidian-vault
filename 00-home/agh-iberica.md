@@ -44,29 +44,30 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-05, tarde) — el escalón LLM decidido · solo PR #920 (docs)
+## Estado (2026-08-05, noche) — SEIS PRs listas y cero mergeadas
 
-**`main` en `ad07315`.** Las tres PRs del día dentro (#896/#892/#890).
+**`main` en `6072645`.** El merge lo bloquea el **harness** (su clasificador rechaza `gh pr merge`), no la convención → lo ejecuta Borja.
 
-✅ **Escalón LLM: OpenAI (1), provisional** → [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]]. ⚠️ **Elegir proveedor NO autoriza el egress de filas** — eso es de AGH/Carlos. `READ_PRESENTER_ENABLED` apagado y **Anexo A bloqueado** por alcance del piloto + DPA + slot-filling → **#917** (llevaba 25 días sin issue). → [[una-decision-pendiente-sin-issue-no-esta-en-ninguna-cola]]
+📌 **Tren, con el orden ya justificado: `#920 → #926 → #922 → #924 → #928 → #932`.** #926 temprano porque sella la base y desde ahí las líneas siguientes se auto-documentan; **#928 última porque lleva evals ×3 validados por huella** — la huella son **5 ficheros** y ninguna de las otras los toca, así que el orden correcto ahorra una corrida (~19 $).
 
-🎯 **#747 cerrado y su «pendiente» no existía**: el texto de las trazas vive en `traces.input/output`, no en `observations`. → [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]]
+✅ **Escalón LLM: OpenAI (1), provisional** → [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]]. ⚠️ **Elegir proveedor NO autoriza el egress de FILAS** — es de AGH/Carlos. `READ_PRESENTER_ENABLED` apagado, **Anexo A bloqueado** por alcance del piloto + DPA + slot-filling → **#917**. → [[una-decision-pendiente-sin-issue-no-esta-en-ninguna-cola]]
 
-⚠️ **Dos trampas de arnés:** la línea del gate muere cuando `main` avanza (#897) · el rojo de Actions tiene DOS causas, se distinguen contando pasos ejecutados → [[el-rojo-de-ci-tiene-dos-causas-cuenta-los-pasos-ejecutados]]
+🔒 **Anexo A — su mitad SIN permiso, hecha** (#927 / PR #928): el contexto del turno entra al prompt acotado. Eran **siete** puntos sin escape, no uno; `message.text` fuera a propósito → **#929**. → [[el-delimitador-se-elige-contra-el-dato-real-no-a-gusto]]
 
-🧠 **Memoria conversacional: el cuello de botella no es el cap de 4 turnos** — la ventana no lleva la respuesta del agente (#909) y falta la dimensión que permite medirlo (**#910, primero**). → [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
+🧠 **Memoria conversacional: #910 HECHO** (PR #924) — ya existe el denominador para poder medir #627 y #909. → [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
 
-**Contexto vivo:** plan de precisión **cerrado al 100 % salvo el Anexo A** · Borja arrancó la **épica #900** (reemplazo del design system, 6 cortes; #767 superseded) → *no tocar `dashboard/` mientras esté en vuelo*.
+⚠️ **Arnés:** la línea del gate ya sella su base (#926 — 5ª aparición del fallo) · **Actions no arranca desde el 04-ago 22:38** por billing: **una sola causa con fecha, no dos** → [[el-rojo-de-ci-tiene-dos-causas-cuenta-los-pasos-ejecutados]] · sin BD el gate salta **423** tests en vez de 226.
+
+**Contexto vivo:** plan de precisión **cerrado salvo Anexo A** (verificado issue a issue, no por el snapshot) · Borja en la **épica #900**, ya por el corte 2 (#902) → *no tocar `dashboard/`*. Cola nueva: **#929** · **#930** · **#931**; sigue #912 · #913.
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
 ## Bloqueantes
 
-- **Decisiones de Borja pendientes:** #738 (tolerancia del baseline — **el 22% del banco no tiene NINGÚN suelo**) · #846 · #847 · #863 · #884 (la confirmación de borrado miente: `tasks … ON DELETE SET NULL`). _(#744, #758, #762, #851, #819 y **#747** ya CERRADOS — el «tracing de contenido» de #747 se retiró: la premisa era falsa.)_
-- **Fixes sin dueño (de la auditoría #668):** **#741** (ASR "Grabados"/"Dragados", golden ya escrito). _#875 ya tiene PR (#890)._
-- **De la sesión del 05-ago, sin dueño:** **#893** (el eyebrow de `FeatureCard` pinta los `-500` como TEXTO: **los seis incumplen AA**, yellow a 1,58:1) · **#894** (la tabla de pares del candado de contraste no se deriva del código: un par en uso puede faltar, y pasó) · **#897** (la línea del gate no dice su base) · **#898** (dos colas de turno por (tenant,usuario) activas a la vez, cae en #454).
-- **Memoria conversacional, sin dueño (5-ago):** **#910** (dimensión de traza, **el primero**) · **#909** · **#916** · **#915**. **#627** espera decisión A/B de Borja (rec. **B**; el `kind` de `lastFailure` depende de #911, taxonomía a medio migrar). ⚠️ **`lastClientId` no caduca NUNCA** y se proyecta como entidad activa cada turno, mientras las oportunidades del mismo array sí pasan el TTL de 30 min → 2ª causa raíz del paso 5 de **#535**, que su caso-oro nº2 no cubre.
-- **Rastro de #817/#853 (ya cerrados), abierto:** **#818** (`client.prep` con el agujero que #733 cerró en `client.detail`) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
+- **Decisiones de Borja:** #738 (tolerancia del baseline — **el 22 % del banco no tiene NINGÚN suelo**) · #846 · #847 · #863 · #884 (la confirmación de borrado miente: `tasks … ON DELETE SET NULL`) · **#627** A/B (rec. **B**) · **#929** (`message.text`, toca prompt).
+- **Sin dueño:** **#741** (ASR "Grabados"/"Dragados", golden escrito) · **#898** (dos colas de turno por (tenant,usuario), cae en #454) · **#909** · **#916** · **#912** · **#913** · **#930** · **#931**.
+- ⚠️ **`lastClientId` no caduca NUNCA** y se proyecta como entidad activa cada turno, mientras las oportunidades del mismo array sí pasan el TTL de 30 min → 2ª causa raíz del paso 5 de **#535**, que su caso-oro nº2 no cubre.
+- **Rastro de #817/#853:** **#818** (`client.prep` con el agujero que #733 cerró en `client.detail`) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
 - **#870** — rojo crónico, task.create mete el contexto del mensaje en el título, 0/25 en `main`.
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
 - **SSH al host** responde por el **5251** (password del ítem 1Password `ssh AGH` vía `SSH_ASKPASS`; el 22 sigue muerto) → ya usado para las auditorías #747/#668 de esta sesión. Detalle en **#760**.
