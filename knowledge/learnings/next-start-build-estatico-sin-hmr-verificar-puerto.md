@@ -33,3 +33,13 @@ CUELGA (timeout 2 min) contra `next dev` — el websocket de HMR mantiene la red
 quedar nunca idle. `eval`/`snapshot` sí funcionan en dev. Para capturas: usar build
 de producción (`node .next/standalone/server.js`, tras copiar `.next/static`+`public`
 al dir del standalone), no `next dev`.
+
+Y la variante que da `no_configurado`/500 en vez de servir nada (2026-08-05, TuCRMIA):
+`node .next/standalone/server.js` **no lee `.env.local` solo** — arrancarlo con
+`node .next/standalone/server.js` a secas deja `NEXT_PUBLIC_*` fuera del `process.env`
+del proceso. Para código de **cliente**, Next los inlinea en build y da igual; pero
+un **Route Handler** (`route.ts`) corre solo en servidor y nunca se bundlea para el
+navegador, así que Next no tiene motivo para inlinear ahí — `process.env.NEXT_PUBLIC_X`
+en un route handler es una lectura de entorno normal, y sin él en el proceso real
+falla en silencio con el mensaje de "faltan variables" que el propio código ya prevé.
+Fix: `node --env-file-if-exists=.env.local .next/standalone/server.js`.

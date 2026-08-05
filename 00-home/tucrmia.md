@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-05 (madrugada, cierre)
+updated: 2026-08-05 (cierre, 019)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -16,9 +16,22 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 
 ## Estado (04/05-ago, cierre de sesión)
 
-- **F0: 11 issues cerrados de 17. F1 arrancado: primer issue de dominio real cerrado (018,
-  pipelines y etapas).** Gate **22 comprobaciones, 1250 tests**, veinte migraciones aplicadas y
-  registradas. Desplegado y comprobado: `76461cc6`.
+- **F0: 11 issues cerrados de 17. F1 con DOS issues de dominio cerrados (018 pipelines/etapas, 019
+  leads/kanban).** Gate **22 comprobaciones, 1266 tests**, veintidós migraciones aplicadas y
+  registradas. Desplegado y comprobado: `e28aae20`.
+- ✅ **019 CERRADO — leads y kanban (E1.2)**: migración `022` (`position numeric(20,10)` X30,
+  `status`, `amount`, `custom_fields`...), `moveLeadToStage()` (D6/D8), kanban con arrastre HTML5
+  nativo (sin librería nueva) y rollback visual (F3) probado con un test de componente. **X30
+  medido de verdad**: `npm run smoke:x30` siembra 1.000 leads en producción y confirma que
+  arrastrar la última a la primera posición escribe una sola fila (`updated_at` intacto en las
+  999 restantes), rojo demostrado forzando el rebalanceo siempre. Verificado en el navegador con
+  una organización real — encontró que `crearLead` no fijaba `owner_id`, bloqueado en silencio por
+  RLS con la visibilidad por defecto. Ver
+  [[rls-insert-con-visibilidad-own-por-defecto-exige-owner-id-del-que-escribe]].
+- ✅ **`ADR-005` cerrado**: un usuario no puede estar activo/invitado en dos organizaciones a la
+  vez — índice único parcial en `org_members` (migración 021), no `unique` a secas (una baja se
+  conserva como historial). Cierra la puerta a un flujo de multi-organización por usuario que
+  nunca se llegó a construir.
 - ✅ **017 CERRADO — outbox y webhooks salientes**: los cuatro endpoints que faltaban, firma HMAC,
   secreto cifrado en reposo, 9 comprobaciones nuevas en `smoke:v1` contra la base real.
 - 🔴 **Incidente cerrado: el despliegue automático llevaba 17 commits fallando en silencio** —
@@ -46,6 +59,10 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - ⚠️ **Backlog de la auditoría del 3-ago sigue abierto aparte**: 6 hallazgos confirmados sin
   cerrar y 33 sin refutar de esa tanda anterior, en `ESTADO.md` → «Hallazgos abiertos». No se ha
   tocado esta sesión — es distinto del backlog de 9 de la auditoría nueva de arriba.
+- 🟠 **El tablero visual (artifact) quedó desactualizado desde `ad29217a`**: no se puede republicar
+  desde esta cuenta — se publicó en su día desde otra, y esta sesión no es su dueña (rechazo
+  confirmado 5 veces, no transitorio). `docs/plan/ESTADO.md` es la fuente real y sí está al día.
+  Ver [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]].
 
 ### Hitos anteriores, condensados
 
@@ -125,6 +142,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `ADR-004` — **identidad propia por enlace de un solo uso** mientras no exista la plataforma. Sin
   contraseñas, que era el espíritu del `ADR-002`. Cuando la plataforma exista, la federación se añade **al
   lado** y este camino se queda como acceso de soporte. *Provisional.*
+- `ADR-005` — **un usuario, una organización activa a la vez**: índice único parcial en `org_members`
+  (`where status <> 'disabled'`, no `unique` a secas — una baja se conserva como historial). Cierra
+  `issues/011` sobre "cambio de organización activa": con esta decisión, no hace falta esa pantalla.
 
 ## Learnings de este proyecto
 
@@ -158,7 +178,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[lockfile-pinna-paquete-npm-retirado-del-registro-build-limpio-lo-revela]] ·
 [[exactoptionalpropertytypes-con-css-module-string-o-undefined-exige-coalescer]] ·
 [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]] ·
-[[workflow-tool-args-array-llega-como-string-json-pasa-csv-plano]]
+[[workflow-tool-args-array-llega-como-string-json-pasa-csv-plano]] ·
+[[rls-insert-con-visibilidad-own-por-defecto-exige-owner-id-del-que-escribe]] ·
+[[artifact-solo-lo-republica-la-cuenta-que-lo-publico]]
 
 ## Trampas conocidas
 
