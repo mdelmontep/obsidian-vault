@@ -111,3 +111,4 @@ Límite de todo esto: fija el modelo **una vez elegido el agente**. Qué agente 
 decidiendo el modelo leyendo las `description`; eso no lo impone un hook.
 
 - **`dokploy-secret-guard.sh` (PreToolUse Write/Edit) bloquea por el NOMBRE de la variable local, no por el secreto real** — `RETELL_API_KEY = os.environ['RETELL_API_KEY']` dispara el hook aunque sea código legítimo leyendo env, porque el regex mira el nombre a la izquierda del `=`. Fix: no asignar a ninguna variable con patrón sensible (`*_KEY`, `*_TOKEN`, `*_SECRET`...); envolver el acceso en una función o usar `os.environ[...]` inline. Ver [[dokploy-secret-guard-falso-positivo-variable-local-con-nombre-sensible]]
+- **`slack_create_canvas` no liga el canvas a ningún canal, y no hay tool de pin** — hay que compartir el link con `slack_send_message` y pedirle a alguien del equipo que lo fije a mano (⋯ → Fijar en el canal). Ver [[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]]

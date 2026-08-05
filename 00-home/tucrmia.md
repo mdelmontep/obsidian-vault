@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-05 (cierre, 019)
+updated: 2026-08-05 (cierre, dos auditorías de composición + coordinación por Slack)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -17,8 +17,33 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 ## Estado (04/05-ago, cierre de sesión)
 
 - **F0: 11 issues cerrados de 17. F1 con DOS issues de dominio cerrados (018 pipelines/etapas, 019
-  leads/kanban).** Gate **22 comprobaciones, 1266 tests**, veintidós migraciones aplicadas y
-  registradas. Desplegado y comprobado: `e28aae20`.
+  leads/kanban).** Gate **22 comprobaciones, 1289 tests**, veintidós migraciones aplicadas y
+  registradas. Desplegado y comprobado: `923734cf`.
+- ✅ **Dos auditorías de composición del 5-ago, sobre el árbol que dejó el 019 y sobre un backlog
+  viejo del 4-ago sin cerrar**: la nueva —7 lentes, 16 hallazgos, los 16 refutados y 14 sobreviven,
+  **primera vez que el cupo de refutación no se agota**— cerró G-S5 (procedencia del `plan` de
+  `V1Deps` colaba con un import señuelo de entitlements — comprobaba «¿existe algún import del
+  módulo?», no «¿viene ESTE valor de ahí?»), G-S4 (evadible renombrando el secreto antes de
+  comparar; regla ESLint nueva con scope de una sola pasada, 3 falsos positivos reales
+  encontrados y corregidos al correrla contra el código) y G-ADMIN-SQL (RPC por variable/import).
+  La segunda, sobre «Hallazgos abiertos» del 4-ago (mismo patrón, «comprueba presencia, no
+  identidad»): G-ROUTE-WRAPPER (comentario colaba un envoltorio impostor), G-ADMIN-ACCION (los
+  tres fallos documentados), G-S6 (no veía dos endpoints declarados fuera de `withApiV1`), y
+  G-ACCESS-DRIFT (el "ganador" se elegía solo entre migraciones con marcador — el primer borrador
+  del arreglo se disparó de más sobre `pipeline_stages`, que escribe su RLS a mano a propósito
+  porque no es del catálogo; corregido comparando por tabla contra la salida real del generador).
+  Ver [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] ·
+  [[typescript-import-type-y-declaracion-local-mismo-nombre-si-conflictan]] (verificación de un
+  hallazgo CONTESTADO con `tsc`, resultó falso). **Quedan 2** con decisión de producto pendiente
+  (`PREGUNTAS-PARA-MANUEL.md` 23/24: escrituras silenciosas sin `ToastProvider`, `quedaCuota()`
+  sin enforcement) y **G-COLUMNAS-REALES + dos dueños del `append-only` + `notFound()` colapsando
+  4 motivos**, sin tocar.
+- ✅ **Tablero volvió a ser publicable**: URL nueva desde esta cuenta
+  (`f2541d7c-44ef-4db3-a6f2-818f64827b00`), tres referencias del repo actualizadas. Ver
+  [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]].
+- ✅ **Coordinación de equipo por Slack, desde el 5-ago**: canal `#crm-agentesia`, canvas de
+  referencia. Reclamar issue antes de empezar, avisar con el resultado al terminar/bloquear — regla
+  en `CLAUDE.md`. Ver [[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]].
 - ✅ **019 CERRADO — leads y kanban (E1.2)**: migración `022` (`position numeric(20,10)` X30,
   `status`, `amount`, `custom_fields`...), `moveLeadToStage()` (D6/D8), kanban con arrastre HTML5
   nativo (sin librería nueva) y rollback visual (F3) probado con un test de componente. **X30
@@ -56,13 +81,12 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - ✅ **013 · impersonación**: la decisión construida y probada. Banner y `G-IMP` esperan a F1.
 - **016 (correo) sigue postergado**, sin llamante real. **Proveedor decidido: SMTP genérico**
   (`nodemailer`, como TuFacturaIA), no Resend.
-- ⚠️ **Backlog de la auditoría del 3-ago sigue abierto aparte**: 6 hallazgos confirmados sin
-  cerrar y 33 sin refutar de esa tanda anterior, en `ESTADO.md` → «Hallazgos abiertos». No se ha
-  tocado esta sesión — es distinto del backlog de 9 de la auditoría nueva de arriba.
-- 🟠 **El tablero visual (artifact) quedó desactualizado desde `ad29217a`**: no se puede republicar
-  desde esta cuenta — se publicó en su día desde otra, y esta sesión no es su dueña (rechazo
-  confirmado 5 veces, no transitorio). `docs/plan/ESTADO.md` es la fuente real y sí está al día.
-  Ver [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]].
+- ⚠️ **Backlogs viejos de auditorías del 3-ago, sin tocar y probablemente IRRECUPERABLES**: 49
+  hallazgos sin refutar de una tanda y 33 de otra (mal etiquetada "4-ago" en la prosa de
+  `ESTADO.md`, pero es del 3-ago por commit). Comprobado el 5-ago: la lista real de candidatos no
+  se persistió en ningún fichero, solo el recuento — "refutarlos" hoy sería auditar desde cero,
+  no reanudar. Distinto de los 9 de la auditoría del 4-ago (esos sí tienen decisión de ALCANCE
+  pendiente, no de refutación, y están en `ESTADO.md` → «Ahora mismo»).
 
 ### Hitos anteriores, condensados
 
@@ -180,7 +204,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]] ·
 [[workflow-tool-args-array-llega-como-string-json-pasa-csv-plano]] ·
 [[rls-insert-con-visibilidad-own-por-defecto-exige-owner-id-del-que-escribe]] ·
-[[artifact-solo-lo-republica-la-cuenta-que-lo-publico]]
+[[artifact-solo-lo-republica-la-cuenta-que-lo-publico]] ·
+[[typescript-import-type-y-declaracion-local-mismo-nombre-si-conflictan]] ·
+[[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]]
 
 ## Trampas conocidas
 

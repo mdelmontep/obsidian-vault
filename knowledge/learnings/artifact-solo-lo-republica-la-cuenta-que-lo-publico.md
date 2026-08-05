@@ -18,5 +18,10 @@ reales:
 2. Publicar una URL nueva desde la cuenta actual y actualizar la referencia donde se
    documente esa URL (el contenido fuente en el repo no se pierde; solo cambia el link).
 
+**Salida (2) confirmada funcionando el mismo día** (mismo caso, tablero de TuCRMIA): publicar
+sin `url:` mintó `f2541d7c…`, y republicar después pasando ESA URL como `url:` actualizó el
+mismo artifact sin crear uno nuevo — el flujo normal de "publicar/actualizar" funciona con
+normalidad una vez se parte de una URL que la cuenta actual sí posee.
+
 Antes de asumir "fallo de la plataforma" tras 2-3 reintentos idénticos con el mismo
 error, preguntar si el artifact se publicó alguna vez desde otra cuenta/sesión.

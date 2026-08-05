@@ -9,22 +9,21 @@ Es S19 —«los privilegios se conceden por enumeración y **no se quitan** por 
 aplicado a un detector: enumerar FORMAS de escribir algo es una lista que siempre se queda
 corta, y cada agujero se descubre de uno en uno.
 
-Casos, todos encontrados por auditoría adversarial, nunca por revisión normal:
+Casos, todos por auditoría adversarial, nunca por revisión normal: G-SSRF (alias de `fetch`,
+arreglo real `no-restricted-globals` por REFERENCIA) · gate de acciones (`export const` dejaba
+pasar `export { X }`/`default`/`let`/`var`/`function*`) · 4-ago: G-D11 (tabla entrecomillada),
+G-S4 (secreto por corchetes), G-TOKENS (substring sin límite de palabra).
 
-- **G-SSRF**: `fetch` vigilado por nombre, rodeado con `const traer = fetch`; al cerrarlo,
-  `function f(x = fetch)` y `export { fetch }` seguían colando. Arreglo real:
-  `no-restricted-globals`, que marca la REFERENCIA, no la forma.
-- **Gate de acciones de servidor**: buscaba `export const`; se le escapaban `export { X }`,
-  `default`, `let`, `var`, `function*` — Next expone las cinco igual.
-- **4-ago, tres más en una sola auditoría**: G-D11 no veía una tabla entrecomillada
-  (`"profiles"`) en el SQL; G-S4 no veía un secreto accedido por corchetes
-  (`fila['token_hash']`, el selector solo miraba `.name`, no `.value` de un `Literal`);
-  G-TOKENS daba por escrito `data-theme` con solo `.includes()`, que un futuro
-  `data-theme-preview` habría satisfecho sin límite de palabra.
+**Variante hallada el 5-ago, misma familia con otra cara**: comprobar la PRESENCIA de un import
+del módulo correcto en el fichero no es comprobar que ESE VALOR concreto venga de ahí — un
+import señuelo sin relación con el relleno lo satisfacía (G-S5: `plan` de `V1Deps`; G-ROUTE-
+WRAPPER y G-ADMIN-ACCION: un comentario citando el import bastaba, sin quitar comentarios antes
+de buscar; G-ACCESS-DRIFT: una política manual más reciente que el "ganador" no entraba en la
+comparación). Arreglo real: trazar identificador→asignación→llamada→import, no solo "¿existe el
+import en algún sitio del fichero?".
 
-**La señal de parar: cuando estás añadiendo la tercera variante de la misma regla.** Ahí toca
-una comprobación que no dependa de la forma (símbolo resuelto, import, identidad), no un caso
-más.
+**Señal de parar: la tercera variante de la misma regla.** Ahí toca identidad (símbolo resuelto,
+import trazado), no un caso más.
 
 Ver [[un-guard-enumera-la-clase-que-la-regla-escrita-solo-documenta]] ·
 [[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]]

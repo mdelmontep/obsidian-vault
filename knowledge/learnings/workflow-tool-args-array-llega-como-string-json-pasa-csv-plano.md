@@ -12,7 +12,8 @@ como el string traía corchetes y comillas, el split produjo claves corruptas
 (`'["a"'`, `' "b"'`, …) y el guion se paró con `lente_desconocida` sin gastar un solo agente:
 protección correcta, síntoma confuso.
 
-Reproducido dos veces (con y sin `resumeFromRunId`), mismo resultado las dos.
+Reproducido dos veces el 4-ago (con y sin `resumeFromRunId`) y otra vez el 5-ago en la misma
+auditoría de composición de TuCRMIA — recurrente, no un fallo puntual.
 
 **Workaround que funcionó**: pasar `args` como un STRING plano separado por comas
 (`"a,b,c"`, sin corchetes ni comillas) en vez de un array — el propio fallback del script lo
