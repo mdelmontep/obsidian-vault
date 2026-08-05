@@ -1,59 +1,34 @@
 ---
 title: un test nuevo no vale hasta que le rompes el código a propósito y falla
 date: 2026-07-28
+updated: 2026-08-05
 source: claude-code-session
 tags: [testing, qa, metodo, verificacion]
 ---
+Que un test pase no demuestra nada: puede saltarse, medir otra cosa o afirmar algo siempre cierto.
+Rompe **a propósito** lo que dice vigilar y confirma el rojo. Dos minutos. Disciplina: mutar
+**producción** (no el test), una por vez, revertir desde copia (nunca `git checkout --`), y dejar en
+la PR qué mutación se usó y qué falló.
 
-Que un test pase no demuestra nada: puede estar saltándose, midiendo otra cosa o
-afirmando algo que siempre es cierto. La comprobación barata es **romper a
-propósito lo que dice vigilar** y confirmar que se pone rojo. Dos minutos.
+**La firma dominante — aserción negativa sin contraparte positiva** (AGH: 15 casos medidos, **9** así).
+«No ejecuta», «cero acciones», «no contiene X» están verdes tanto si el código acierta **como si no
+hace nada**. Un test llamado «re-propone» lo cumplía un brain que contestara «no te he entendido».
+Arreglo: **añadir la mitad positiva** (que el outbound NOMBRE la propuesta, que el pending SIGA ahí).
+Hermanas: fixture de tamaño 1 · fake **ya ordenado** (ordenar por `createdAt` == por `occurredAt` si
+insertas en orden cronológico) · test **sin un solo `expect`** que cierra con un comentario · guard
+cuyo escenario **no se puede construir** (mismo proveedor para escribir y leer = ciego por estructura).
 
-Casos reales del mismo día en TuFacturaIA:
-- Smoke de render de PDF: mutando `format: 'A4'` → `'A5'` en el renderer, **5 de
-  7 tests** en rojo. Sin la mutación, solo sabía que 7 pasaban.
-- Smoke del visor: reintroduciendo el bug exacto que lo motivaba (`flex: 1` sin
-  altura en el iframe), falla con *"el visor mide 146px de alto"* — el 150 del bug
-  original. Después, `git checkout` del fichero mutado.
+**El arnés miente en las dos direcciones:**
+- *Falso verde:* mutación **parcial**. Quité 1 de **4** menciones y el caso siguió 3/3. `grep -c` antes
+  de romper y comprueba que llega a cero — si no, mediste tu `sed`.
+- *Falso «sin víctima»*, y tiene **cuatro** causas; saltamos a la peor («no protege nada»): (1) la
+  mutación no se aplicó (heredoc/comillas: el fichero nunca cambió); (2) el símbolo mutado **no está en
+  el camino de ese test** (mutar `serialized-brain.ts` no tumba un test que construye `HitlBrain` a
+  pelo); (3) es equivalente **solo con los datos de hoy** — tras arreglar un token, reintroducir un
+  redondeo ya no tumba nada porque no queda dato en el filo, y eso se cierra con un **fixture en el
+  filo**, no declarando equivalencia (ver [[un-candado-que-redondea-el-valor-que-compara-mueve-su-umbral]]);
+  (4) el hueco real. Hay mutaciones **genuinamente equivalentes** (early-return por comparación consigo
+  misma): ésas se **declaran por escrito**, no se cuentan como cubiertas.
 
-Dos cosas que esto caza y el verde no:
-- El test que **se salta** sin que nadie lo note (ver [[e2e-smoke-skip-honesto]]).
-- El test que mide un artefacto vecino y no el que crees (el visor y el PDF son
-  dos cosas distintas: uno puede estar perfecto y el otro roto dos meses).
-
-Disciplina mínima: mutación **en el código de producción**, no en el test; una
-sola mutación por vez; revertir antes de commitear (`git status` limpio salvo el
-test). Y dejar escrito en el PR qué mutación se usó y qué falló — es la evidencia
-de que el test sirve.
-
-**La firma dominante: aserción negativa sin contraparte positiva** (1-ago, AGH — 15
-casos verificados con mutación, **9 comparten esta forma**). «No ejecuta», «cero
-acciones», «no contiene X» están verdes tanto si el código acierta **como si no hace
-nada**. Ejemplos reales: un test cuyo comentario decía «el pending sigue vivo» solo
-afirmaba «cero ejecutadas» — y eso lo cumple igual el turno retenido (correcto) que el
-que DESCARTA el pending (el bug); otro se llamaba «re-propone» y lo cumplía un brain que
-contestara «no te he entendido», dejando al usuario sin oír nunca la propuesta. El
-arreglo es siempre el mismo: **añadir la mitad positiva** (que el outbound NOMBRE la
-propuesta, que el pending SIGA ahí). Variantes hermanas: fixtures de tamaño 1, fakes
-**ya ordenados** (ordenar por `createdAt` == por `occurredAt` si insertas en orden
-cronológico) y tests **sin un solo `expect`** que cierran con un comentario.
-
-**Y un guard es indetectable si su escenario no se puede construir**: un eval que usa la
-MISMA instancia del proveedor para escribir y para leer nunca podrá detectar un desajuste
-entre ambos — no es que falle, es que es estructuralmente ciego.
-
-**Una mutación PARCIAL da falso verde, y se disfraza de «el test no vale»**
-(31-jul, AGH): para probar que un caso de eval medía de verdad un argumento nuevo
-del prompt, quité su mención de una línea… y el caso siguió 3/3. Parecía que
-pasaba gratis. Había **cuatro** menciones; con las cuatro fuera, 0/3. Antes de
-romper, **cuenta las ocurrencias** (`grep -c`) y comprueba que llegan a cero — si
-no, no has medido el guard, has medido tu `sed`.
-
-**Y el arnés puede mentir en la otra dirección: «mutación SIN VÍCTIMA» falsa** (4-ago, AGH). Mi
-script imprimió `77 passed` para una mutación que borraba una entrada de un mapa — o sea «este test
-no protege nada». A mano, esa mutación tumbaba su caso y solo el suyo: la causa era un problema de
-comillas en el heredoc, y **el fichero nunca cambió**. Es el espejo del verde falso, y llega en el
-peor momento: mientras redactas la PR. Exígele al arnés **un control que falle** y comprueba que el
-fichero cambió de verdad antes de anotar nada. Corolario honesto del mismo día: hay mutaciones
-**equivalentes** que ningún test puede matar (sustituir un early-return por una comparación consigo
-misma da el mismo resultado) — ésas se **declaran** como tal, no se cuentan como cubiertas.
+Caza además el test que **se salta** sin que nadie lo note ([[e2e-smoke-skip-honesto]]) y el que mide
+un artefacto vecino (el visor y el PDF son dos cosas: una perfecta y la otra rota dos meses).

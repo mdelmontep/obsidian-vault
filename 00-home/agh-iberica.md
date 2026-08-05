@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-04
+updated: 2026-08-05
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,30 +44,25 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-04, noche) — el plan de precisión CERRADO salvo el Anexo A (RGPD)
+## Estado (2026-08-05) — tres PRs esperando ojo
 
-**`main` en `872e589`.** Sesión (Claude·Manu) que cerró TODO lo que quedaba del cierre anterior de hoy: #868 (Fase 2B) · #871 (#869) · #819 (unifica A2/A4 de `ClientsReadTool` bajo el mismo `runEntityQuery`) · **#851 resuelto** (ver abajo) · #858 2/2 (evals adaptativos) · #751 (guard de `EMBEDDING_MODEL`) · #747 y #668 cerrados por auditoría (sin fix).
+**`main` en `509cef8`.** Dentro: #878 (higiene + #747 cerrado) y #899 (cierre). **Tres PRs abiertas** (Manu), rebasadas sobre `8f87dbc` con gate re-corrido, ninguna toca prompt → **cero coste de evals**: **#890** (#875, el confirm de `crm.createClient` deja de invitar a re-dictar) · **#892** (#753, los diez tests verdes por el motivo equivocado, cero producción) · **#896** (#881, el candado de contraste deja de redondear y el naranja deja de incumplir AA).
 
-**El plan de precisión completo:** P1 · P2 · P3 · Fase 0 · Fase 1 · Fase 2A · Fase 2B · Fase 3 ✅ en prod. Solo **Anexo A** ⛔ RGPD sigue bloqueado.
+🔑 **El hilo de la sesión: un candado que EXISTE no es un candado que MUERDE** — #881 redondeaba a 2 decimales · #753 tenía 9 aserciones negativas sin contraparte · #875 consultaba el guard al proponer y nada lo repetía al confirmar. → [[un-candado-que-redondea-el-valor-que-compara-mueve-su-umbral]] · [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] · [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
 
-📌 **#851 — el trade SÍ tenía salida, pero no la que #851 buscaba**: medido con prosa-JSON, activar «cartera agregada» (#733) costaba SIEMPRE el repro #157 (acoplados, sin redacción que no cueste algo). Tras #868 (tool-calling) se remidió: **25/25 la capacidad, 25/25 intacto #157** — el tool-calling separa «qué herramienta» de «qué argumento» y el acoplamiento de prosa desaparece. Entró con UNA frase de prompt, no la superficie nueva (`clients.detail.all`) que #851 dejaba como plan B. → [[tool-calling-separa-que-herramienta-de-que-argumento-y-puede-romper-un-acoplamiento-de-prosa]]
+🎯 **#747 CERRADO y su «pendiente de Borja» NO existía** — el tracing de contenido llevaba activo desde julio; el texto vive en `traces.input/output`, **no en `observations`**. Raíz arreglada en el runbook de auditoría, no en una nota. → [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]]
 
-🔬 **#668 (auditoría multi-intent) encontró la causa real de "se pierde con altas múltiples" — y corrigió una conclusión propia de #747**: la traza del 29-jul decía "el lote de 3 altas se ejecutó entero"; contra ClickHouse de verdad, el 3er `crm.createClient` FALLÓ (`store_error`) y el usuario reintentó 4 veces más antes de que entrara. Causa raíz → **#875** (nueva, sin dueño): el guard de duplicado (#640/#227) se consulta al PROPONER, nada lo repite al CONFIRMAR. **#741** (ASR "Grabados"/"Dragados" bajo el umbral 0.85) confirmado con golden, también sin dueño.
+⚠️ **`origin/main` avanzó a mitad de sesión y las líneas de gate de mis TRES PRs murieron a la vez** — nada avisa → **#897**. Hasta que entre: `git fetch && git log --oneline origin/main -1` antes de pegar la línea.
 
-🎯 **#747 (rachas de clarify) cerrada sin fix**: el breaker de #511 exige texto IDÉNTICO consecutivo (`CLARIFY_LOOP_ESCALATE_AT=3`); las rachas medidas (hasta 9 seguidas) probablemente lo esquivan por ser preguntas distintas — confirmado en traza que ninguna lleva la señal de escalado. **Decisión pendiente de Borja**: activar tracing de contenido en ventana acotada.
+**Hitos previos** (detalle en `docs/status-log/` del repo): plan de precisión **CERRADO salvo el Anexo A** ⛔RGPD · **#851** resuelto con una frase de prompt tras #868 → [[tool-calling-separa-que-herramienta-de-que-argumento-y-puede-romper-un-acoplamiento-de-prosa]] · **#858 2/2** evals adaptativos, −64 % → [[repeticiones-desiguales-por-caso-sesgan-la-tasa-pooled-compara-con-media-por-caso]] · **#891** (Borja) tipografía de la ficha + primer candado de `styles.css`.
 
-📏 **#858 2/2 cerrado**: diff caso a caso (0$) + repeticiones adaptativas + `caseRate` (media por caso, evita rebaselinizar en silencio con muestreo desigual). Ahorro real: 64%. → [[repeticiones-desiguales-por-caso-sesgan-la-tasa-pooled-compara-con-media-por-caso]]
-
-🚨 **Rojos crónicos de `main` sin dueño**: **#870** (#105 a 0/25) · el flake de #237 con personas (ajeno).
-
-🟠 **Decisiones vivas de Borja**: **#846** (C14 falso rojo) · **#847** (suelo de `commitment` por encima de lo que rinde) · **#741** y **#875** (fixes sin dueño) · **#747** (tracing de contenido).
-
-_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ título con **espacio final**). **`opsa`, nunca `op`**; `item get` exige `--vault`. ⚠️ El hook salta si el comando se **menciona en texto**.
+_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final en el título). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
 ## Bloqueantes
 
-- **Decisiones de Borja pendientes:** #738 (tolerancia del baseline — **el 22% del banco no tiene NINGÚN suelo**) · #846 · #847 · #747 (tracing de contenido para clasificar rachas de clarify). _(#744, #758, #762, #851 y #819 ya CERRADOS.)_
-- **Fixes sin dueño (de la auditoría #668, 4-ago):** **#741** (ASR "Grabados"/"Dragados", golden ya escrito) · **#875** (carrera propose→confirm en `crm.createClient`, golden ya escrito, necesita Postgres real).
+- **Decisiones de Borja pendientes:** #738 (tolerancia del baseline — **el 22% del banco no tiene NINGÚN suelo**) · #846 · #847 · #863 · #884 (la confirmación de borrado miente: `tasks … ON DELETE SET NULL`). _(#744, #758, #762, #851, #819 y **#747** ya CERRADOS — el «tracing de contenido» de #747 se retiró: la premisa era falsa.)_
+- **Fixes sin dueño (de la auditoría #668):** **#741** (ASR "Grabados"/"Dragados", golden ya escrito). _#875 ya tiene PR (#890)._
+- **De la sesión del 05-ago, sin dueño:** **#893** (el eyebrow de `FeatureCard` pinta los `-500` como TEXTO: **los seis incumplen AA**, yellow a 1,58:1) · **#894** (la tabla de pares del candado de contraste no se deriva del código: un par en uso puede faltar, y pasó) · **#897** (la línea del gate no dice su base) · **#898** (dos colas de turno por (tenant,usuario) activas a la vez, cae en #454).
 - **Rastro de #817/#853 (ya cerrados), abierto:** **#818** (`client.prep` con el agujero que #733 cerró en `client.detail`) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
 - **#870** — rojo crónico, task.create mete el contexto del mensaje en el título, 0/25 en `main`.
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
