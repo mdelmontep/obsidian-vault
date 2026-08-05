@@ -81,6 +81,8 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Tu red de tests puede estar ciega al gesto real** — jsdom y `fill()` de Playwright no teclean. Ver [[jsdom-no-reproduce-el-reset-de-seleccion-al-cambiar-input-type]] · [[playwright-fill-escribe-value-y-deja-obsoleto-el-estado-del-componente]]
 - **Un arreglo se verifica recorriendo el caso real** — el apaño del usuario atascado dispara el guard nuevo. Ver [[el-parche-del-usuario-atascado-dispara-el-guard-del-arreglo]] · [[una-pista-detras-de-un-gate-que-el-caso-afectado-no-cumple-no-existe]]
 - **El esquema se aplica ANTES de mergear su código, y el hueco de migración caduca** — si no, prod llama a lo que no existe. Ver [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
+- **Un bloque que un gate compara byte a byte contra un generador nunca se transcribe de memoria** — captura el stdout exacto y empálmalo, verificado por igualdad de string. Ver [[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]]
+- **Clave única compuesta `(org_id, business_key)` desde el diseño elimina el guard de upsert cross-tenant** — decide la composición del índice ANTES de escribir el upsert, no después. Ver [[clave-compuesta-por-tenant-elimina-el-guard-de-upsert-cross-tenant]]
 
 > **Las otras 50 no se han borrado**: siguen vigentes en [[hot-archivo-2026-08-01]] y se recuperan por
 > wikilink y por grep. (El tope vigente es el de la cabecera, no el "25" que decía aquí.)

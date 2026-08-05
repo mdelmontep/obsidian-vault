@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-05 (cierre, dos auditorías de composición + coordinación por Slack)
+updated: 2026-08-05 (cierre, 020 contactos/empresas + backlogs viejos cerrados)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,33 +14,43 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (04/05-ago, cierre de sesión)
+## Estado (05-ago, cierre de sesión)
 
-- **F0: 11 issues cerrados de 17. F1 con DOS issues de dominio cerrados (018 pipelines/etapas, 019
-  leads/kanban).** Gate **22 comprobaciones, 1289 tests**, veintidós migraciones aplicadas y
-  registradas. Desplegado y comprobado: `923734cf`.
-- ✅ **Dos auditorías de composición del 5-ago, sobre el árbol que dejó el 019 y sobre un backlog
-  viejo del 4-ago sin cerrar**: la nueva —7 lentes, 16 hallazgos, los 16 refutados y 14 sobreviven,
-  **primera vez que el cupo de refutación no se agota**— cerró G-S5 (procedencia del `plan` de
-  `V1Deps` colaba con un import señuelo de entitlements — comprobaba «¿existe algún import del
-  módulo?», no «¿viene ESTE valor de ahí?»), G-S4 (evadible renombrando el secreto antes de
-  comparar; regla ESLint nueva con scope de una sola pasada, 3 falsos positivos reales
-  encontrados y corregidos al correrla contra el código) y G-ADMIN-SQL (RPC por variable/import).
-  La segunda, sobre «Hallazgos abiertos» del 4-ago (mismo patrón, «comprueba presencia, no
-  identidad»): G-ROUTE-WRAPPER (comentario colaba un envoltorio impostor), G-ADMIN-ACCION (los
-  tres fallos documentados), G-S6 (no veía dos endpoints declarados fuera de `withApiV1`), y
-  G-ACCESS-DRIFT (el "ganador" se elegía solo entre migraciones con marcador — el primer borrador
-  del arreglo se disparó de más sobre `pipeline_stages`, que escribe su RLS a mano a propósito
-  porque no es del catálogo; corregido comparando por tabla contra la salida real del generador).
-  Ver [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] ·
-  [[typescript-import-type-y-declaracion-local-mismo-nombre-si-conflictan]] (verificación de un
-  hallazgo CONTESTADO con `tsc`, resultó falso). **Quedan 2** con decisión de producto pendiente
-  (`PREGUNTAS-PARA-MANUEL.md` 23/24: escrituras silenciosas sin `ToastProvider`, `quedaCuota()`
-  sin enforcement) y **G-COLUMNAS-REALES + dos dueños del `append-only` + `notFound()` colapsando
-  4 motivos**, sin tocar.
-- ✅ **Tablero volvió a ser publicable**: URL nueva desde esta cuenta
-  (`f2541d7c-44ef-4db3-a6f2-818f64827b00`), tres referencias del repo actualizadas. Ver
+- **F0: 11 issues cerrados de 17. F1 con TRES issues de dominio cerrados (018 pipelines/etapas, 019
+  leads/kanban, 020 contactos/empresas).** Gate **1332 tests**, veintitrés migraciones aplicadas y
+  registradas. Desplegado y comprobado: `77db909f`.
+- ✅ **020 CERRADO — contactos y empresas (E1.3)**: migración 023 (`countries`/`contact_roles`
+  globales, `contacts`/`companies` con `phone_e164` normalizado, `company_contacts`/`lead_contacts`
+  con `is_primary` único parcial), aislamiento del teléfono entre organizaciones **por clave
+  compuesta `(org_id, phone_e164)`** en vez de un guard de upsert — ver
+  [[clave-compuesta-por-tenant-elimina-el-guard-de-upsert-cross-tenant]]. **Encontrado y arreglado
+  navegando, no leyendo código**: la edición inline del teléfono borraba email/NIF/dirección en
+  cada envío parcial (F12 del catálogo, palabra por palabra). Verificado en el navegador contra
+  `tucrmia-prod` con organización real de punta a punta.
+- ✅ **Los dos backlogs viejos de auditorías (9 hallazgos de alcance del 4-ago, 49+33 sin refutar
+  del 3-ago) y G-COLUMNAS-REALES, cerrados** por su proceso propio: los 9 con decisión documentada
+  (2 quedan como `PREGUNTAS-PARA-MANUEL.md` 23/24, producto), los 49+33 declarados
+  IRRECUPERABLES (la lista de candidatos nunca se persistió, solo el recuento — "reanudar" habría
+  sido auditar desde cero) con la cifra que faltaba para decidir si vale la pena: **141 ficheros de
+  aquellos dos audits siguen byte a byte idénticos hoy**, sin que ninguna auditoría de alcance
+  posterior los haya vuelto a mirar (`PREGUNTAS-PARA-MANUEL.md` 25, tu decisión de coste). Y un
+  hallazgo nuevo y crítico de la sesión: el test que dice comprobar `crm_can()` contra fugas
+  cross-org es tautológico —compara dos constantes del propio test, nunca evalúa el SQL real—
+  porque el evaluador JS del repo no sabe interpretar el guard de membresía todavía
+  (`PREGUNTAS-PARA-MANUEL.md` 26, también tuya).
+  Ver [[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]] (lección de la
+  migración 023, al empalmar el bloque `crm_can()` generado).
+- ⚠️ **Tablero caído por segunda vez el 5-ago, sin resolver** — el servicio de Artifacts devolvía
+  "could not verify..." incluso al publicar sin URL previa (no es problema de propiedad, es el
+  servicio). `ESTADO.md`/`tablero.html` están al día en el repo (`77db909f`); falta reintentar
+  `Artifact publish` cuando el servicio vuelva. Ver
   [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]].
+- ✅ **Dos auditorías de composición del 5-ago (sesión anterior), sobre el árbol del 019 y sobre
+  «Hallazgos abiertos» del 4-ago**: cerraron G-S5, G-S4 (ESLint de una pasada), G-ADMIN-SQL,
+  G-ROUTE-WRAPPER, G-ADMIN-ACCION, G-S6 y G-ACCESS-DRIFT (comparar por tabla contra la salida real
+  del generador, no solo entre migraciones con marcador). Ver
+  [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] ·
+  [[typescript-import-type-y-declaracion-local-mismo-nombre-si-conflictan]].
 - ✅ **Coordinación de equipo por Slack, desde el 5-ago**: canal `#crm-agentesia`, canvas de
   referencia. Reclamar issue antes de empezar, avisar con el resultado al terminar/bloquear — regla
   en `CLAUDE.md`. Ver [[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]].
@@ -206,7 +216,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[rls-insert-con-visibilidad-own-por-defecto-exige-owner-id-del-que-escribe]] ·
 [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]] ·
 [[typescript-import-type-y-declaracion-local-mismo-nombre-si-conflictan]] ·
-[[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]]
+[[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]] ·
+[[clave-compuesta-por-tenant-elimina-el-guard-de-upsert-cross-tenant]] ·
+[[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]]
 
 ## Trampas conocidas
 
