@@ -44,19 +44,23 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-05) — tres PRs esperando ojo
+## Estado (2026-08-05, tarde) — cero PRs abiertas y el escalón LLM decidido
 
-**`main` en `509cef8`.** Dentro: #878 (higiene + #747 cerrado) y #899 (cierre). **Tres PRs abiertas** (Manu), rebasadas sobre `8f87dbc` con gate re-corrido, ninguna toca prompt → **cero coste de evals**: **#890** (#875, el confirm de `crm.createClient` deja de invitar a re-dictar) · **#892** (#753, los diez tests verdes por el motivo equivocado, cero producción) · **#896** (#881, el candado de contraste deja de redondear y el naranja deja de incumplir AA).
+**`main` en `ad07315`.** Las tres PRs dentro (#896 la mergeó Borja, prerrequisito de su #901; #892 y #890 con founder override y gate re-corrido entre merge y merge).
 
-🔑 **El hilo de la sesión: un candado que EXISTE no es un candado que MUERDE** — #881 redondeaba a 2 decimales · #753 tenía 9 aserciones negativas sin contraparte · #875 consultaba el guard al proponer y nada lo repetía al confirmar. → [[un-candado-que-redondea-el-valor-que-compara-mueve-su-umbral]] · [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] · [[guard-en-codigo-que-predice-un-indice-unico-de-sql-diverge]]
+🔑 **Un candado que EXISTE no es un candado que MUERDE** (el hilo de los tres): #881 redondeaba, #753 aseveraba en negativo sin contraparte, #875 no repetía el guard al confirmar. → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] (que enlaza los otros dos)
 
-🎯 **#747 CERRADO y su «pendiente de Borja» NO existía** — el tracing de contenido llevaba activo desde julio; el texto vive en `traces.input/output`, **no en `observations`**. Raíz arreglada en el runbook de auditoría, no en una nota. → [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]]
+🔬 **Método nuevo que rindió: revisar mis PROPIAS PRs con agentes instruidos para ATACAR mis afirmaciones y recalcular mis números** — cazó dos errores de contabilidad míos, una copia ambigua y dos ratios medidos a ojo. → [[el-gate-verde-no-sustituye-una-revision-adversarial-antes-de-mergear]]
 
-⚠️ **`origin/main` avanzó a mitad de sesión y las líneas de gate de mis TRES PRs murieron a la vez** — nada avisa → **#897**. Hasta que entre: `git fetch && git log --oneline origin/main -1` antes de pegar la línea.
+✅ **Escalón LLM: OpenAI (1), provisional** → [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]]. ⚠️ **Elegir proveedor NO autoriza el egress de filas** — eso es de AGH/Carlos. `READ_PRESENTER_ENABLED` apagado y **Anexo A bloqueado** por alcance del piloto + DPA + slot-filling → **#917** (llevaba 25 días sin issue). → [[una-decision-pendiente-sin-issue-no-esta-en-ninguna-cola]]
 
-**Hitos previos** (detalle en `docs/status-log/` del repo): plan de precisión **CERRADO salvo el Anexo A** ⛔RGPD · **#851** resuelto con una frase de prompt tras #868 → [[tool-calling-separa-que-herramienta-de-que-argumento-y-puede-romper-un-acoplamiento-de-prosa]] · **#858 2/2** evals adaptativos, −64 % → [[repeticiones-desiguales-por-caso-sesgan-la-tasa-pooled-compara-con-media-por-caso]] · **#891** (Borja) tipografía de la ficha + primer candado de `styles.css`.
+🎯 **#747 cerrado y su «pendiente» no existía**: el texto de las trazas vive en `traces.input/output`, no en `observations`. → [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]]
 
-_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final en el título). **`opsa`, nunca `op`**; `item get` exige `--vault`.
+⚠️ **Dos trampas de arnés:** la línea del gate muere cuando `main` avanza (#897) · el rojo de Actions tiene DOS causas, se distinguen contando pasos ejecutados → [[el-rojo-de-ci-tiene-dos-causas-cuenta-los-pasos-ejecutados]]
+
+**Contexto vivo:** plan de precisión **cerrado al 100 % salvo el Anexo A** · Borja arrancó la **épica #900** (reemplazo del design system, 6 cortes; #767 superseded) → *no tocar `dashboard/` mientras esté en vuelo*.
+
+_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
 ## Bloqueantes
 

@@ -15,3 +15,16 @@ Reglas que funcionan:
 - Va **antes** de la PR, no después de mergear: después ya es un incidente.
 
 Ver [[audits-cross-pr-vs-per-pr]] · [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]].
+
+**Y funciona igual —o mejor— sobre tus PROPIAS PRs, con una instrucción distinta** (agh, 5-ago, tres
+PRs mías): no «revisa esto» sino **«ataca mis afirmaciones y recalcula mis números»**. Lo que cazó y yo
+no: dos **errores de contabilidad** en la descripción («7 de los 15» cuando eran nueve — y el número
+sostenía mi argumento); una **copia ambigua** que en el caso de su propio golden mandaba al usuario a
+buscar en el sitio equivocado; **dos ratios de fixture medidos a ojo** en una PR cuya tesis era «no
+aproximes». Y confirmó midiendo un flake que yo temía sin datos (10/10 con la CPU al 92 %). Dos
+detalles que lo hacen rendir: pedirle que **recalcule desde cero** lo que la PR afirma (aquí, la
+fórmula WCAG entera) en vez de leer mis cifras, y decirle **qué NO entra** para que no arregle nada.
+
+**Corolario que salió de ahí:** una **magnitud** escrita a ojo cuesta lo mismo de medir que de
+afirmar. Escribí «alinear el fake toca todos los tests de brain»; eran **6** — y al medirlo apareció el
+hallazgo de verdad, que esos 6 protegían un estado que una migración ya hace **imposible**.
