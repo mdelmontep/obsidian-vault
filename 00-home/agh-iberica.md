@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-05
+updated: 2026-08-06
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,21 +44,19 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-05, noche) — SEIS PRs listas y cero mergeadas
+## Estado (2026-08-06) — tren completo, `main` en `d35c8c3`, CERO PRs abiertas
 
-**`main` en `6072645`.** El merge lo bloquea el **harness** (su clasificador rechaza `gh pr merge`), no la convención → lo ejecuta Borja.
+🎉 **Tren de 6 completo** (#920→#926→#922→#924→#928→#932), gate verde entre merges; #911/#910/#915/#897/#927 cerrados solos. **La línea del gate ya sella su base sola** (#926 se estrenó en su propio tren) y **el orden salvó la corrida de evals** (~19 $): la evidencia por huella sobrevivió al rebase. Criterio reusable → una PR entra sin re-correr si lo intermedio es solo-docs; si es código, se rebasa y re-corre.
 
-📌 **Tren, con el orden ya justificado: `#920 → #926 → #922 → #924 → #928 → #932`.** #926 temprano porque sella la base y desde ahí las líneas siguientes se auto-documentan; **#928 última porque lleva evals ×3 validados por huella** — la huella son **5 ficheros** y ninguna de las otras los toca, así que el orden correcto ahorra una corrida (~19 $).
+⚠️ **Proceso:** 4 merges se ejecutaron **antes de anunciarlos** con #902 en vuelo, y la PR de cierre decía «cero mergeadas» cuando ya era falso. → [[el-cierre-escrito-antes-de-acabar-la-sesion-caduca-en-su-propia-pr]]
 
-✅ **Escalón LLM: OpenAI (1), provisional** → [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]]. ⚠️ **Elegir proveedor NO autoriza el egress de FILAS** — es de AGH/Carlos. `READ_PRESENTER_ENABLED` apagado, **Anexo A bloqueado** por alcance del piloto + DPA + slot-filling → **#917**. → [[una-decision-pendiente-sin-issue-no-esta-en-ninguna-cola]]
+✅ **Escalón LLM: OpenAI (1), provisional** → [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]]. ⚠️ **Elegir proveedor NO autoriza el egress de FILAS** — es de AGH/Carlos. `READ_PRESENTER_ENABLED` apagado, **Anexo A bloqueado** (alcance del piloto + DPA + slot-filling) → **#917**, el techo real. → [[una-decision-pendiente-sin-issue-no-esta-en-ninguna-cola]]
 
-🔒 **Anexo A — su mitad SIN permiso, hecha** (#927 / PR #928): el contexto del turno entra al prompt acotado. Eran **siete** puntos sin escape, no uno; `message.text` fuera a propósito → **#929**. → [[el-delimitador-se-elige-contra-el-dato-real-no-a-gusto]]
+🔒 **Anexo A: su mitad SIN permiso ya está** — el contexto del turno entra acotado al prompt (eran **siete** puntos sin escape, no uno); `message.text` fuera → **#929**. → [[el-delimitador-se-elige-contra-el-dato-real-no-a-gusto]] · **#910 dentro**: ya hay denominador para medir #627/#909 → [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
 
-🧠 **Memoria conversacional: #910 HECHO** (PR #924) — ya existe el denominador para poder medir #627 y #909. → [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
+⚠️ **Arnés:** **Actions no arranca desde el 04-ago 22:38** por billing — una sola causa con fecha, no dos → [[el-rojo-de-ci-tiene-dos-causas-cuenta-los-pasos-ejecutados]] · **sin BD el gate salta 423 tests en vez de 226**, y la línea sale igual de verde.
 
-⚠️ **Arnés:** la línea del gate ya sella su base (#926 — 5ª aparición del fallo) · **Actions no arranca desde el 04-ago 22:38** por billing: **una sola causa con fecha, no dos** → [[el-rojo-de-ci-tiene-dos-causas-cuenta-los-pasos-ejecutados]] · sin BD el gate salta **423** tests en vez de 226.
-
-**Contexto vivo:** plan de precisión **cerrado salvo Anexo A** (verificado issue a issue, no por el snapshot) · Borja en la **épica #900**, ya por el corte 2 (#902) → *no tocar `dashboard/`*. Cola nueva: **#929** · **#930** · **#931**; sigue #912 · #913.
+**Contexto vivo:** plan de precisión **cerrado salvo Anexo A** (verificado issue a issue) · Borja en la **épica #900**, corte 2 (#902) → *no tocar `dashboard/`*. Cola: **#930** · **#931** (baratos, sin prompt) · **#929** (prompt, Borja) · #912 · #913 · #909 · #916.
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
@@ -70,10 +68,10 @@ _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`o
 - **Rastro de #817/#853:** **#818** (`client.prep` con el agujero que #733 cerró en `client.detail`) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
 - **#870** — rojo crónico, task.create mete el contexto del mensaje en el título, 0/25 en `main`.
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
-- **SSH al host** responde por el **5251** (password del ítem 1Password `ssh AGH` vía `SSH_ASKPASS`; el 22 sigue muerto) → ya usado para las auditorías #747/#668 de esta sesión. Detalle en **#760**.
-- Secrets de prod → migrar a 1Password (pendiente recurrente).
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
+
+**Acceso / infra (referencia):** **SSH al host** responde por el **5251** (password del ítem 1Password `ssh AGH` vía `SSH_ASKPASS`; el 22 sigue muerto) → ya usado para las auditorías #747/#668 de esta sesión. Detalle en **#760**. · Secrets de prod → migrar a 1Password (pendiente recurrente).
 
 ## Historial reciente (condensado — detalle en `docs/status-log/` del repo)
 

@@ -31,7 +31,7 @@ tags: [home, prioridades]
 
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
-- **AGH Ibérica — 6 PRs listas, cero mergeadas (5-ago noche)** — el merge lo bloquea el harness, no Borja. Tren: `#920→#926→#922→#924→#928→#932` (#928 última: sus evals se validan por huella de 5 ficheros → el orden ahorra ~19 $). Egress de FILAS sigue en #917 (Carlos). **Siguiente: #930/#931 (baratos) o slot-filling (carril Borja).** → [[agh-iberica]]
+- **AGH Ibérica — tren completo, `main` en `d35c8c3`, CERO PRs abiertas (6-ago)** — las seis dentro con gate verde entre merges; #926 se estrenó en su propio tren y el orden salvó la corrida de evals (~19 $). Techo del Anexo A sigue en **#917** (Carlos). **Siguiente: #930/#931 (baratos, sin prompt) · #929 toca prompt (Borja).** → [[agh-iberica]]
 - 🟢 **TuFacturaIA — el sistema de diseño, documentado para exportar y de paso auditado (03-ago, #1499 · #1500)** — la referencia visual completa en `docs/design/sistema-de-diseno.html`: 21 secciones, offline, sin una sola petición a la red. Escribirla destapó siete defectos vivos ya en prod (el color de marca por org no llegaba a los textos, 47 azules a mano lo ignoraban, «Anular factura» no parecía destructivo y **tres fallos dentro de `prefers-reduced-motion`**, ramal que ningún test ejercita). Cerrado el #1504 (sparklines azules con la marca en verde). **El «PR pendiente» de los keyframes queda DESCARTADO, no aplazado**: CSS Modules hashea el `animation-name` aunque la keyframes sea global, así que unificar los 20 spinners los habría parado en silencio. No era deuda, era el scoping. Ver [[css-modules-hashea-el-nombre-de-la-animacion-aunque-la-keyframes-sea-global]]. → [[facturaia]] · [[escribir-la-doc-de-exportacion-de-un-sistema-lo-audita-entero]] · [[lo-que-vive-dentro-de-prefers-reduced-motion-no-lo-mira-nadie]]
 - 🟢 **TuFacturaIA — auditoría del guardado silencioso en prod, quedan 3 cabos (30-jul)** — **pendientes**: enganchar los E2E a algún CI (hoy el crawler falla y nadie se entera), burndown de 67 casts ciegos y la alerta 61 de Dependabot. Prompt listo en `docs/architecture/prompt-burndown-guardado-silencioso.md`. Detalle → [[facturaia]]
 - 🟢 **TuFacturaIA — ticket #86 de Borja: solo queda contestar y pasarlo a `resuelto`** — todo lo técnico en prod (28/29-jul), ambos importes correctos. Detalle → [[facturaia]]
@@ -96,7 +96,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`6072645`) · plan de precisión CERRADO salvo Anexo A (#917, Carlos) · **6 PRs listas sin mergear** (tren ordenado) · #910 hecho |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`d35c8c3`) · plan de precisión CERRADO salvo Anexo A (#917, Carlos) · **cero PRs abiertas** · cola #930/#931/#929 |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente
