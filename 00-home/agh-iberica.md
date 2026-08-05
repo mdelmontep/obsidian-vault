@@ -44,19 +44,17 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-05, tarde) — cero PRs abiertas y el escalón LLM decidido
+## Estado (2026-08-05, tarde) — el escalón LLM decidido · solo PR #920 (docs)
 
-**`main` en `ad07315`.** Las tres PRs dentro (#896 la mergeó Borja, prerrequisito de su #901; #892 y #890 con founder override y gate re-corrido entre merge y merge).
-
-🔑 **Un candado que EXISTE no es un candado que MUERDE** (el hilo de los tres): #881 redondeaba, #753 aseveraba en negativo sin contraparte, #875 no repetía el guard al confirmar. → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] (que enlaza los otros dos)
-
-🔬 **Método nuevo que rindió: revisar mis PROPIAS PRs con agentes instruidos para ATACAR mis afirmaciones y recalcular mis números** — cazó dos errores de contabilidad míos, una copia ambigua y dos ratios medidos a ojo. → [[el-gate-verde-no-sustituye-una-revision-adversarial-antes-de-mergear]]
+**`main` en `ad07315`.** Las tres PRs del día dentro (#896/#892/#890).
 
 ✅ **Escalón LLM: OpenAI (1), provisional** → [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]]. ⚠️ **Elegir proveedor NO autoriza el egress de filas** — eso es de AGH/Carlos. `READ_PRESENTER_ENABLED` apagado y **Anexo A bloqueado** por alcance del piloto + DPA + slot-filling → **#917** (llevaba 25 días sin issue). → [[una-decision-pendiente-sin-issue-no-esta-en-ninguna-cola]]
 
 🎯 **#747 cerrado y su «pendiente» no existía**: el texto de las trazas vive en `traces.input/output`, no en `observations`. → [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]]
 
 ⚠️ **Dos trampas de arnés:** la línea del gate muere cuando `main` avanza (#897) · el rojo de Actions tiene DOS causas, se distinguen contando pasos ejecutados → [[el-rojo-de-ci-tiene-dos-causas-cuenta-los-pasos-ejecutados]]
+
+🧠 **Memoria conversacional: el cuello de botella no es el cap de 4 turnos** — la ventana no lleva la respuesta del agente (#909) y falta la dimensión que permite medirlo (**#910, primero**). → [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
 
 **Contexto vivo:** plan de precisión **cerrado al 100 % salvo el Anexo A** · Borja arrancó la **épica #900** (reemplazo del design system, 6 cortes; #767 superseded) → *no tocar `dashboard/` mientras esté en vuelo*.
 
@@ -67,6 +65,7 @@ _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`o
 - **Decisiones de Borja pendientes:** #738 (tolerancia del baseline — **el 22% del banco no tiene NINGÚN suelo**) · #846 · #847 · #863 · #884 (la confirmación de borrado miente: `tasks … ON DELETE SET NULL`). _(#744, #758, #762, #851, #819 y **#747** ya CERRADOS — el «tracing de contenido» de #747 se retiró: la premisa era falsa.)_
 - **Fixes sin dueño (de la auditoría #668):** **#741** (ASR "Grabados"/"Dragados", golden ya escrito). _#875 ya tiene PR (#890)._
 - **De la sesión del 05-ago, sin dueño:** **#893** (el eyebrow de `FeatureCard` pinta los `-500` como TEXTO: **los seis incumplen AA**, yellow a 1,58:1) · **#894** (la tabla de pares del candado de contraste no se deriva del código: un par en uso puede faltar, y pasó) · **#897** (la línea del gate no dice su base) · **#898** (dos colas de turno por (tenant,usuario) activas a la vez, cae en #454).
+- **Memoria conversacional, sin dueño (5-ago):** **#910** (dimensión de traza, **el primero**) · **#909** · **#916** · **#915**. **#627** espera decisión A/B de Borja (rec. **B**; el `kind` de `lastFailure` depende de #911, taxonomía a medio migrar). ⚠️ **`lastClientId` no caduca NUNCA** y se proyecta como entidad activa cada turno, mientras las oportunidades del mismo array sí pasan el TTL de 30 min → 2ª causa raíz del paso 5 de **#535**, que su caso-oro nº2 no cubre.
 - **Rastro de #817/#853 (ya cerrados), abierto:** **#818** (`client.prep` con el agujero que #733 cerró en `client.detail`) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
 - **#870** — rojo crónico, task.create mete el contexto del mensaje en el título, 0/25 en `main`.
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
@@ -77,6 +76,7 @@ _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`o
 
 ## Historial reciente (condensado — detalle en `docs/status-log/` del repo)
 
+- **5-ago (Manu; 3 PRs + análisis de memoria)** — #896/#892/#890 dentro. El hilo de las tres: **un candado que EXISTE no es un candado que MUERDE** (#881 redondeaba, #753 aseveraba en negativo sin contraparte, #875 no repetía el guard al confirmar). Método que rindió: **revisar mis propias PRs con agentes instruidos para ATACAR mis afirmaciones** — cazó dos errores de contabilidad míos, una copia ambigua y dos ratios medidos a ojo. Y auditando mis propios issues de memoria, dos afirmaciones mías eran falsas y una **cambió el diseño** de #910. → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] · [[el-gate-verde-no-sustituye-una-revision-adversarial-antes-de-mergear]] · [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
 - **4-ago noche (Manu; 6 PRs + 2 auditorías, tanda final del día)** — #868/#871/#819/#851/#858/#751 mergeadas, #747/#668 cerradas por auditoría. El hallazgo del día: **#851 no necesitaba la superficie nueva que dejaba planteada** — el trade que #851 midió sin salida (prosa-JSON) desapareció al remedirlo bajo tool-calling (#868), 25/25 en los dos lados con una sola frase. Y **#668 corrigió una conclusión propia de #747** con la traza real delante en vez de darla por buena: el "lote de 3 altas ejecutado entero" era falso, había un `store_error` y 4 reintentos — causa raíz real en **#875** (carrera propose→confirm). 4 PRs revisadas y mergeadas por mí mismo (con OK explícito del founder para saltarme la espera a Borja), dos de ellas producto de agentes lanzados en paralelo (cada uno en su worktree). → [[tool-calling-separa-que-herramienta-de-que-argumento-y-puede-romper-un-acoplamiento-de-prosa]] · [[repeticiones-desiguales-por-caso-sesgan-la-tasa-pooled-compara-con-media-por-caso]]
 - **4-ago (Manu; 9 PRs mías)** — Fase 3 cerrada (#742), #817 y su cara B #853 dentro, y el instrumento de evals arreglado por dos sitios (#855 hash, #858 1/2 diff por caso). **Lo que se lleva la sesión: cuatro instrumentos mintieron en la dirección que deja mergear**, y `n=10` habría dejado pasar una caída real de 96 % → 48 % (con n=25 salió `24/25 vs 12/25`). Coste de evals medido: caching al 98,5 %, ~11,7 $/corrida. **Y en la segunda tanda, Fase 2B (#868) y #869 (#871)**: la corrida ×3 encontró dos regresiones que el agregado no veía y las dos se arreglaron con código determinista, no con redacciones. → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]] · [[evidencia-fechada-por-reloj-muere-en-un-rebase]] · [[una-suite-de-evals-cuesta-llamadas-por-prompt-mide-el-cache-antes-de-proponerlo]]
 - **3-ago (22 PRs)** — Fase 3 en código (A1/A2/A4 + #733; eje `query` 72.7 % → 81.8 %) y cortes 01-04 del rediseño. La lección: **tres de las cinco PRs eran deuda de HARNESS bloqueando producto**, sobre premisas escritas en el repo que nadie comprobaba. → [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]

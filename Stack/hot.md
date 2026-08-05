@@ -47,9 +47,10 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 - **Ni reforzando el prompt se garantiza que el LLM llame a una tool crítica** — content y tool_call son mutuamente excluyentes en una misma respuesta; si la tool tiene efecto externo obligatorio (email, CRM), pre-check determinista antes del LLM, no más prompt. Ver [[tool-description-generica-no-fuerza-ejecucion-de-tool-critica]]
 
-## El resto (37)
+## El resto (38)
 
 
+- **Antes de decir «esto no se puede medir», enumera la taxonomía cerrada** — suele estar ya partido, y su comentario dice qué se decidió NO medir. Y decide señal (excepción → numerador) vs dimensión por evento (tasa → denominador). Ver [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
 - **"Quién usa X ahora" en columna escalar (`used_by`) pierde con 2+ actores a la vez** — el último que reporta pisa al anterior sin error visible. Modelar como fila-por-actor, PK `(recurso, actor)`. Ver [[atribucion-quien-usa-x-ahora-columna-escalar-pierde-bajo-concurrencia]]
 - **Protección construida y no enchufada: ningún test la caza** — el doble de la prueba ES el relleno. Señal: módulo con tests y cero consumidores. Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]]
 - **Un entorno de pruebas más limpio que producción es ciego** — y su verde se cita como prueba. Ver [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]]
