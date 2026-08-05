@@ -36,3 +36,5 @@ TS: `admin.rpc('create_x_with_y', { p_x: {...}, p_y: [...] })`.
 Tests: mockear `admin.rpc.mockResolvedValueOnce({ data: {...}, error: null })` en lugar de 2 `queueResponse` separados.
 
 Caso real TuFacturaIA: mig 094 cerró race A-fiscal #2 entre INSERT facturas (huella `total-base`) e INSERT lineas (recálculo huella con Σ). Ver [[unique-index-concurrently-parcial-para-idempotencia-bd]] para el patrón hermano que blinda race a nivel de constraint.
+
+**Variante `SECURITY INVOKER`, no `DEFINER` (TuCRMIA, 6-ago)**: si las dos escrituras deben respetar la RLS de sesión del usuario (no un escritor de servicio), el RPC va `security invoker` — sigue siendo UNA transacción (misma garantía de atomicidad), pero no hace falta reimplementar autorización dentro: la RLS de cada tabla aplica exactamente igual que si el cliente llamara directo. Caso: `write_lead_custom_fields()` escribe `custom_fields` jsonb y su índice derivado tipado en la misma llamada — ver [[clave-compuesta-por-tenant-elimina-el-guard-de-upsert-cross-tenant]] para el hermano de diseño de esquema del mismo issue.
