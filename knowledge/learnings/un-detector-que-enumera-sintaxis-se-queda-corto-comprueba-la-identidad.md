@@ -9,20 +9,22 @@ Es S19 —«los privilegios se conceden por enumeración y **no se quitan** por 
 aplicado a un detector: enumerar FORMAS de escribir algo es una lista que siempre se queda
 corta, y cada agujero se descubre de uno en uno.
 
-Dos casos el mismo día, los dos encontrados por una auditoría adversarial:
+Casos, todos encontrados por auditoría adversarial, nunca por revisión normal:
 
-- **G-SSRF** vigilaba `fetch(...)` y `globalThis.fetch`. Se rodeaba con `const traer = fetch`
-  (verificado: `eslint` daba **cero** errores). Al cerrar el alias aparecieron `function f(x =
-  fetch)` y `export { fetch }`. La salida no era el selector número quince: fue
-  `no-restricted-globals`, que marca cualquier **referencia** al global mire donde mire.
-- **Un gate de acciones de servidor** buscaba `export const`. Se le escapaban `export { X }`,
-  `export default`, `export let`, `var` y `function*` — y Next expone las cinco igual como
-  endpoints invocables.
+- **G-SSRF**: `fetch` vigilado por nombre, rodeado con `const traer = fetch`; al cerrarlo,
+  `function f(x = fetch)` y `export { fetch }` seguían colando. Arreglo real:
+  `no-restricted-globals`, que marca la REFERENCIA, no la forma.
+- **Gate de acciones de servidor**: buscaba `export const`; se le escapaban `export { X }`,
+  `default`, `let`, `var`, `function*` — Next expone las cinco igual.
+- **4-ago, tres más en una sola auditoría**: G-D11 no veía una tabla entrecomillada
+  (`"profiles"`) en el SQL; G-S4 no veía un secreto accedido por corchetes
+  (`fila['token_hash']`, el selector solo miraba `.name`, no `.value` de un `Literal`);
+  G-TOKENS daba por escrito `data-theme` con solo `.includes()`, que un futuro
+  `data-theme-preview` habría satisfecho sin límite de palabra.
 
-**La señal de parar: cuando estás añadiendo la tercera variante de la misma regla.** Ahí ya no
-toca un caso más, toca una comprobación que no dependa de la forma (el símbolo resuelto, el
-import, la procedencia). Los selectores por sintaxis se quedan solo para lo que la
-comprobación por identidad no ve.
+**La señal de parar: cuando estás añadiendo la tercera variante de la misma regla.** Ahí toca
+una comprobación que no dependa de la forma (símbolo resuelto, import, identidad), no un caso
+más.
 
 Ver [[un-guard-enumera-la-clase-que-la-regla-escrita-solo-documenta]] ·
 [[truncate-salta-rls-y-sobrevive-al-revoke-de-update-y-delete]]

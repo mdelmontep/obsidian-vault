@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-04 (noche, cierre)
+updated: 2026-08-05 (madrugada, cierre)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,36 +14,38 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (04-ago, cierre de sesión)
+## Estado (04/05-ago, cierre de sesión)
 
 - **F0: 11 issues cerrados de 17. F1 arrancado: primer issue de dominio real cerrado (018,
-  pipelines y etapas).** Gate **22 comprobaciones, 1247 tests**, veinte migraciones aplicadas y
-  registradas. Desplegado y comprobado: `a67e83db`.
-- ✅ **017 CERRADO — outbox y webhooks salientes**: los cuatro endpoints que faltaban
-  (`GET/POST /v1/webhooks`, `GET /v1/webhooks/{id}`, `POST /v1/webhooks/{id}/test`) construidos con
-  `withApiV1`, firma HMAC, secreto cifrado en reposo, y 9 comprobaciones nuevas en `smoke:v1`
-  contra la base real.
+  pipelines y etapas).** Gate **22 comprobaciones, 1250 tests**, veinte migraciones aplicadas y
+  registradas. Desplegado y comprobado: `76461cc6`.
+- ✅ **017 CERRADO — outbox y webhooks salientes**: los cuatro endpoints que faltaban, firma HMAC,
+  secreto cifrado en reposo, 9 comprobaciones nuevas en `smoke:v1` contra la base real.
 - 🔴 **Incidente cerrado: el despliegue automático llevaba 17 commits fallando en silencio** —
-  `package-lock.json` pinnaba un paquete npm (`flat-cache@6.1.24`) que su autor retiró del
-  registro; invisible en local porque el build de aquí nunca vuelve a bajarlo. Diagnosticado
-  leyendo los logs reales del build, no adivinado. Ver [[incidents]] y
+  `package-lock.json` pinnaba un paquete npm (`flat-cache@6.1.24`) retirado del registro;
+  invisible en local porque el build de aquí nunca vuelve a bajarlo. Ver [[incidents]] y
   [[lockfile-pinna-paquete-npm-retirado-del-registro-build-limpio-lo-revela]].
-- ✅ **018 CERRADO — pipelines y etapas (E1.1)**: migración `020` (columnas nuevas en `pipelines`,
-  tabla `pipeline_stages` entera con únicos parciales won/lost y RLS escrita a mano,
-  `leads.stage_id` con FK compuesta), CRUD con TDD, pantalla de configuración, verificado en el
-  navegador contra `tucrmia-prod` con una organización de prueba real. El propio issue documenta
-  que `pipelines`/`pipeline_permissions` ya existían desde la 002 — solo completaba lo que su
-  comentario de cabecera dejaba anotado como pendiente.
-- ✅ **009 portado** (sesión previa): los 45 componentes puros de `components/ui/` desde
-  TuFacturaIA, con `G-UI-PRIMITIVOS` y página de muestra en `/admin/design-system`. **No cierra**:
+- ✅ **018 CERRADO — pipelines y etapas (E1.1)**: migración `020`, CRUD con TDD, pantalla de
+  configuración, verificado en el navegador contra `tucrmia-prod` con una organización real.
+- ✅ **Auditoría de composición del 4-ago (noche), registrada en `auditorias.json`**: 7 lentes
+  sobre los 216 ficheros cambiados desde el 3-ago, **15 hallazgos y los 15 sobreviven** a dos
+  escépticos independientes cada uno — ninguno refutado. Seis cerrados en la misma sesión: G-D11
+  (identificador de tabla entrecomillado), G-S4 (secreto por corchetes), G-TOKENS (substring sin
+  límite de palabra), un test tautológico del catálogo, la portada de `/admin` con el 012/014
+  dados por pendientes, y tres mutaciones de pipelines sin `.select()` tras el `update` — mismo
+  patrón D8 de TuFacturaIA, primera vez que reincide en este proyecto. Ver
+  [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]] y
+  [[un-detector-que-enumera-sintaxis-se-queda-corto-comprueba-la-identidad]] (las tres del gate).
+  **Quedan 9** que piden decisión de alcance, no arreglo mecánico — el mayor: el worker de
+  entrega de webhooks del 017 no lo invoca nada del producto todavía.
+- ✅ **009 portado** (sesión previa): los 45 componentes puros de `components/ui/`. **No cierra**:
   sigue bloqueado por la sesión de diseño con `impeccable`.
-- ✅ **013 · impersonación**: la decisión construida y probada. Banner y `G-IMP` esperan a que F1
-  dé una pantalla de dominio real.
-- **016 (correo) sigue postergado**, sin llamante real. **Proveedor decidido: SMTP genérico con
-  `nodemailer`** (como TuFacturaIA), no Resend — corrige el P24 de abajo, que ya no aplica.
-- ⚠️ Sigue pendiente de la auditoría del 4-ago: **6 hallazgos confirmados sin cerrar y 33 sin
-  refutar**, en `ESTADO.md` → «Hallazgos abiertos». **No corrida tras 017/018**: `auditoria:alcance`
-  dirá qué lentes tocan (RLS nueva de `pipeline_stages`, endpoint público nuevo de webhooks).
+- ✅ **013 · impersonación**: la decisión construida y probada. Banner y `G-IMP` esperan a F1.
+- **016 (correo) sigue postergado**, sin llamante real. **Proveedor decidido: SMTP genérico**
+  (`nodemailer`, como TuFacturaIA), no Resend.
+- ⚠️ **Backlog de la auditoría del 3-ago sigue abierto aparte**: 6 hallazgos confirmados sin
+  cerrar y 33 sin refutar de esa tanda anterior, en `ESTADO.md` → «Hallazgos abiertos». No se ha
+  tocado esta sesión — es distinto del backlog de 9 de la auditoría nueva de arriba.
 
 ### Hitos anteriores, condensados
 
@@ -154,7 +156,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[guard-de-secretos-por-nombre-de-clave-bloquea-palabras-espanolas-que-contienen-la-inglesa]] ·
 [[supabase-js-select-con-embeds-necesita-string-literal-no-concatenado]] ·
 [[lockfile-pinna-paquete-npm-retirado-del-registro-build-limpio-lo-revela]] ·
-[[exactoptionalpropertytypes-con-css-module-string-o-undefined-exige-coalescer]]
+[[exactoptionalpropertytypes-con-css-module-string-o-undefined-exige-coalescer]] ·
+[[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]] ·
+[[workflow-tool-args-array-llega-como-string-json-pasa-csv-plano]]
 
 ## Trampas conocidas
 
