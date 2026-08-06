@@ -68,3 +68,11 @@ Trece dimensiones en paralelo. Cuatro defectos gordos, los cuatro reproducidos e
 - **Doble clic = doble cobro**: el guard de concurrencia vivía de que ese UPDATE escribiera `estado`, y al pasar a derivada dejó de serializar. 2.662 € sobre una factura de 1.331.
 
 Verificación final sin muestrear: 1.444 cobradas/pagadas de prod recomputadas, 0 cambian. Suite Playwright: 125 pasan, incluidas las tres de conciliación (el camino bancario).
+
+### Ledger fase 1 — cierre completo 06-ago (PRs #1520 + #1522)
+
+PR #1520 mergeado con un bloqueante a sabiendas (código preexistente, las migs ya estaban en prod). Al revisar las 9 ramas/worktrees con trabajo sin mergear, encontré el checkout raíz con 3 días de WIP suelta (56 ficheros) mezclando dos cosas: una versión anterior y con bugs de trabajo YA mergeado (contraste AA, orden de providers, CSS movido a módulo compartido — descartada, verificada archivo a archivo), y una feature real sin equivalente en main (SkeletonTable en Obras+dashboard, fix `opsa` en agentes, docs de `cron_runs`, y el hook `/fia-cierre` que se disparó de verdad sobre mí en esta misma sesión). La real se organizó en 5 commits atómicos y se mergeó como PR #1522.
+
+Al hacer inventario de las 87 ramas locales sin worktree, dos métodos rápidos (`git cherry`, diff de tres puntos) dieron falsos positivos por el mismo motivo: ninguno compara árboles actuales, y este repo hace squash-merge. Con el método correcto (árbol actual vs árbol actual, solo en los ficheros tocados), las 87 salieron confirmadas redundantes — 3 de ellas eran borradores anteriores de un informe QA que main ya tiene completo, así que mergearlas habría sido un retroceso. Ver [[tres-puntos-y-git-cherry-mienten-en-ramas-squash-mergeadas]].
+
+Queda abierto el issue #1521: `importar_emitida_externa` es un tercer escritor de `facturas.estado` que regenera la misma mina que las migs 644/645 acabaron de desactivar. Prompt de continuación entregado con el fix ubicado línea a línea.
