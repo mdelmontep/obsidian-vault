@@ -31,7 +31,7 @@ tags: [home, prioridades]
 
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
-- **AGH Ibérica — 5 defectos de VOZ reales en cola, uno salta el HITL (6-ago)** — **#945 primero**: un «¿Vale?» EJECUTA el lote pendiente. Los otros 4 pierden dato dictado (#937/#938/#939/#940). No son 5 bugs, son 3 categorías de *conversation repair*: `pending` es un slot, no una pila. → [[agh-iberica]] · [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]]
+- **AGH Ibérica — el bypass del HITL YA ESTÁ DENTRO; lo que bloquea ahora es humano (6-ago)** — tren de 7 merges cerrado (`76b31e8`): #945, #953, #930, #931 y #936 dentro. 🔴 **#952 es tuyo y nadie más puede**: dar de alta la plantilla `hilos_pendientes` en la cuenta Meta del cliente, o el digest sigue sin entregar. Y **prod sin verificar por contenido** (el harness bloqueó el SSH). Quedan 4 defectos de voz que PIERDEN dato (#937/#938/#939/#940). → [[agh-iberica]] · [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]]
 - 🟢 **TuFacturaIA — el sistema de diseño, documentado para exportar y de paso auditado (03-ago, #1499 · #1500)** — la referencia visual completa en `docs/design/sistema-de-diseno.html`: 21 secciones, offline, sin una sola petición a la red. Escribirla destapó siete defectos vivos ya en prod (el color de marca por org no llegaba a los textos, 47 azules a mano lo ignoraban, «Anular factura» no parecía destructivo y **tres fallos dentro de `prefers-reduced-motion`**, ramal que ningún test ejercita). Cerrado el #1504 (sparklines azules con la marca en verde). **El «PR pendiente» de los keyframes queda DESCARTADO, no aplazado**: CSS Modules hashea el `animation-name` aunque la keyframes sea global, así que unificar los 20 spinners los habría parado en silencio. No era deuda, era el scoping. Ver [[css-modules-hashea-el-nombre-de-la-animacion-aunque-la-keyframes-sea-global]]. → [[facturaia]] · [[escribir-la-doc-de-exportacion-de-un-sistema-lo-audita-entero]] · [[lo-que-vive-dentro-de-prefers-reduced-motion-no-lo-mira-nadie]]
 - 🟢 **TuFacturaIA — auditoría del guardado silencioso en prod, quedan 3 cabos (30-jul)** — **pendientes**: enganchar los E2E a algún CI (hoy el crawler falla y nadie se entera), burndown de 67 casts ciegos y la alerta 61 de Dependabot. Prompt listo en `docs/architecture/prompt-burndown-guardado-silencioso.md`. Detalle → [[facturaia]]
 - 🟢 **TuFacturaIA — ticket #86 de Borja: solo queda contestar y pasarlo a `resuelto`** — todo lo técnico en prod (28/29-jul), ambos importes correctos. Detalle → [[facturaia]]
@@ -96,7 +96,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`52d8056`) · 🔴 **el digest semanal NUNCA ha entregado: #952 (plantilla, humano en Meta) + #953, en ese orden** · 5 defectos de voz, #945 salta el HITL · Anexo A en #917 (Carlos) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`76b31e8`) · 🔴 **#952 (plantilla Meta) es el único bloqueante del digest — humano** · prod sin verificar por contenido · 4 defectos de voz que pierden dato · Anexo A en #917 (Carlos) |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente

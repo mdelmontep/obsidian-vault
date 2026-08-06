@@ -21,3 +21,9 @@ lo pusiste en una hoja.
 Aplicado dos veces con el mismo resultado: guard de importes negativos (`qa-009`,
 #1398) y de posible duplicado (`qa-022`, #1411).
 Relacionado: [[auditar-un-lado-de-par-simetrico-revisar-el-espejo]].
+
+Tercer caso, otro dominio (AGH #945, 6-ago): un turno interrogativo («¿Vale?», muletilla de acuse)
+ejecutaba el lote pendiente. El issue pedía el guard «antes de consultar los sets» — ahí cubría
+**una de cuatro** puertas al atajo determinista. Puesto en la costura donde se DECIDE la respuesta,
+cubre las cuatro. La pregunta útil no es «¿dónde está el bug?» sino **«¿quién más decide esto sin
+pasar por el control?»**.
