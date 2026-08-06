@@ -96,7 +96,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Go-live (externos) |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`52d8056`) · tren de 6 mergeado · **5 defectos de voz en cola, #945 salta el HITL** · Anexo A en #917 (Carlos) |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · **PROD VIVO** (`52d8056`) · 🔴 **el digest semanal NUNCA ha entregado: #952 (plantilla, humano en Meta) + #953, en ese orden** · 5 defectos de voz, #945 salta el HITL · Anexo A en #917 (Carlos) |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente
