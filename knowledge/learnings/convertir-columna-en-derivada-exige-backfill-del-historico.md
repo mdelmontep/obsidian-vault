@@ -12,7 +12,8 @@ no tienen evento detrás, así que el primer recálculo las pone a cero **en sil
 Caso TuFacturaIA (mig 640 → 644): el ledger `factura_pagos` hizo de
 `facturas.estado` una columna derivada. Las cobradas de antes no tenían fila:
 **15 de 15 pasaron `cobrada` → `pendiente` con `fecha_cobro` a NULL** al recomputar,
-sobre 1.385 de 1.403 (98,7%). Lo dispara cualquier trigger de la tabla de eventos.
+sobre 1.385 de 1.403 (98,7%) más 95 con total negativo que la primera pasada del
+backfill no vio. Lo dispara cualquier trigger de la tabla de eventos.
 Y el daño no es la etiqueta: `fecha_cobro` alimentaba cashflow, KPI y base caja.
 
 - **Censo antes de escribir la migración**: `count(*)` de filas con el estado que
@@ -21,6 +22,9 @@ Y el daño no es la etiqueta: `fecha_cobro` alimentaba cashflow, KPI y base caja
   (`'importado'` + `nota='backfill-mig-NNN'`) → reversible con un `DELETE … WHERE nota=`.
 - Importe/valor a insertar: pedirlo a **la misma función que usa el recompute**, no
   a una resta escrita en la migración, o discrepan por céntimos.
+- **El objetivo tiene que ser la MAGNITUD**, no el importe firmado: con un total
+  negativo (abonos, rectificativas) ninguna suma lo alcanza y el documento cae para
+  siempre, y además el ledger suele prohibir importes negativos.
 - **La verificación es volver a derivar y comprobar que nada se mueve.** Contar
   filas insertadas no prueba nada. Ver [[verificar-un-backfill-con-el-predicado-que-lo-filtro-se-valida-a-si-mismo]].
 - Descartar el guard «si no hay evidencia no la toques»: perpetúa N filas sin

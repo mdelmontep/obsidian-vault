@@ -45,3 +45,15 @@ del `top-of-mind`.
 <!-- RESUELTO 2026-06-22 (verificado por screenshot): Supabase Auth URL Config OK — Site URL = https://app.tufacturaia.com + 5 redirect URLs (app.tufacturaia.com/**, /invitacion, /invitacion?org=*, /api/auth/callback, /api/auth/callback?type=*). NO se añade localhost:3000 a un proyecto PROD (superficie de ataque innecesaria; el wildcard de prod ya cubre, y el reset usa admin.generateLink con URL propia). Cerrado. -->
 - **Reempaquetado planes — casi cerrado** (act. 2026-06-26): mig 399 (#509) + Fase 2B (#513) aplicadas a prod ya cubrieron ~~grandfathering~~ ✅ (PASO 1, override `source='grandfathered'`), ~~Starter canónico 14€~~ ✅ (PASO 0, reconciliado desde 19), ~~sidebar candado~~ ✅ (#513). **Queda vivo**: (1) ~~crear prices Stripe live de Plus~~ ✅ hechos y activos (verificado 29-jul por API); (2) verificar que `stock` en beta no se cobra como add-on de pago (mig 399 PASO 6 tocó incoherencias de add-ons — confirmar). Detalle: [[facturaia-reempaquetado-planes]]
 
+
+### Pagadores fase 1 — cerrada 2026-08-06 (migs 640→645, PR #1520)
+
+Ledger `factura_pagos` para cobros sin movimiento bancario, `factura_cobros_resumen` como fuente única de la suma, `recompute_factura_estado` como único escritor del estado. Historial de cobros en la ficha y señal `pagador` en el score de conciliación.
+
+Tres incidencias de la propia fase, todas encontradas por el gate de cierre y corregidas:
+
+- **mig 643** — la 641 había hecho `GRANT EXECUTE ... TO authenticated` sobre `factura_cobros_resumen`, SECURITY DEFINER sin filtro de org: PostgREST la exponía con el anon key del bundle. Reproducido en prod. 6ª reincidencia del patrón → cerrado además con el hook `revoke-guard`.
+- **mig 644** — la 640 convirtió `facturas.estado` en derivada sin backfill: 1.385 de 1.403 cobradas volvían a `pendiente` con `fecha_cobro` a NULL en cualquier recálculo (15 de 15 medidas). 1.312 filas de respaldo.
+- **mig 645** — el backfill de la 644 se acotó con `pendiente_eur > tolerancia` y su verificación preguntaba lo mismo, así que se validó a sí misma: quedaban 99 de 108 negativas cayendo (88 emitidas históricas con total negativo + 7 abonos + 4 vencidas), no «7» como se reportó al muestrear las 60 más recientes. `target_eur` pasa a `ABS(...)` y 95 filas más de respaldo.
+
+Estado final verificado sin muestrear: 1.444 cobradas/pagadas de producción recomputadas, 0 cambian de estado.
