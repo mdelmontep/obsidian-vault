@@ -42,3 +42,15 @@ Gotcha que costó un diagnóstico falso ese día: **`psql -c "…"` con varias
 sentencias es UNA transacción implícita** — si el último `select` falla por un
 nombre de columna, se revierte también el `update` de arriba y parece un bug del
 trigger. Una sentencia por `-c`, o `ON_ERROR_STOP` y fichero.
+
+**Y pasó de verdad (6-ago): registrada sin aplicar.** El riesgo de arriba dejó de
+ser teórico. Cómo se detecta y cómo se sale:
+- No preguntes por la FILA, pregunta por el CONTENIDO:
+  `pg_get_functiondef(p.oid) ILIKE '%<expresión nueva de esa migración>%'`, o la
+  columna/constraint concreta. La versión en `schema_migrations` no prueba nada.
+- Salida: `DELETE FROM supabase_migrations.schema_migrations WHERE version='NNN'`
+  → aplicar el fichero → volver a registrar. **Aplicar primero, registrar
+  después**, siempre.
+- Y captura un hash de control antes/después de lo que NO debe moverse
+  (`md5(string_agg(id||':'||precio, ',' ORDER BY id))`): una suma total puede
+  compensar cambios entre sí, un hash no.
