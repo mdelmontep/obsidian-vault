@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- 2026-08-06 · infra · **Acceso SSH documentado de los 4 Dokploy de la tanda `185.47.13.x`** (Elphis .173, Simarro .169, tufacturaia .170, Clínica Zen .168) — nunca tuvieron "clave SSH", se operaban por contraseña root; la de la tanda es compartida (misma que Clínica Zen), puerto 5251. Cada host tiene ya en su vault documento con clave dedicada `<host>_root` (ed25519, compartida) + ítem SERVER, y alias `ssh <host>`. Origen: Dani pedía la clave SSH de Elphis que "faltaba" en 1Password. Ver [[vps-dokploy-de-una-tanda-comparten-password-root]].
 - 2026-08-04 · agency-portal · **`./install.sh` corrido por Borja/Dani/Manu para el hook de time-tracker** — pendiente arrastrado desde el 25-jul (hito 0 del hub), superado hace días por varias rondas más de reinstalación (última hoy, para el header `x-tracker-reporter-key` de PR #206/#209). Retirado el "solo falta que corran install.sh" de top-of-mind, que llevaba semanas describiendo un estado ya resuelto.
 - **TuFacturaIA — gobernanza de fronteras (02-ago, #1452)** — frontera de `components/ui/` en ESLint, trinquete de CSS global y `nucleo-vs-dominio.md` (62 % de `src/lib` sobrevive sin facturación). Destapó que los trinquetes vivían en `ci.yml` sin disparador y no se ejecutaban; ya en `pre-commit`.
 
