@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-06 (sesión en curso: harness cerrado + 021 esquema aplicado)
+updated: 2026-08-06 (sesión en curso: 021 motor completo, falta la UI)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -17,23 +17,28 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 ## Estado (06-ago, sesión EN CURSO — no es un cierre)
 
 - **F0: 11/17. F1 con TRES issues cerrados (018/019/020) y el CUARTO, 021 (campos personalizados,
-  E1.4), a medias: esquema aplicado, capa de aplicación sin empezar.** Gate **1342 tests**,
-  veinticuatro migraciones. Desplegado: `e787c391`.
+  E1.4), con el MOTOR ENTERO construido y desplegado — solo falta la UI.** Gate **1373 tests**,
+  veinticinco migraciones. Desplegado: `9e37fc62`.
 - ✅ **El estudio de harness que el 05-ago quedó encargado, hecho**: describe tautológico de
   `crm_can` eliminado, `scripts/sql/replay-asserts.sql` deja de ser territorio ciego de
   `auditoria:alcance`, gate nuevo **G-REPLAY-VIVO**, y `.githooks/pre-push` exige `db:replay` en
   verde al tocar esquema/acceso (fail-closed). Ver
   [[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]].
-- 🟡 **021 en curso**: migración 024 aplicada a `tucrmia-prod` — cinco tablas de campos
-  personalizados + el índice derivado `custom_field_index` (G2, jsonb como única verdad, índice
-  tipado sin migración por cliente). **Encontrado por `db:replay` antes de aplicar**: un régimen
-  mal etiquetado (`append-only` puesto en una tabla que sí concede `select`/`insert` por sesión —
-  en este repo `append-only` implica REVOKE total, patrón `audit_log`). Corregido a `user-write`.
-  **Bloqueado en un diseño ya tomado, sin construir todavía**: escribir el jsonb y el índice
-  derivado en la MISMA transacción (D6) exige una función Postgres —dos llamadas PostgREST no
-  comparten transacción—; decidido usar tres funciones concretas por tabla, `security invoker`,
-  en vez de una con SQL dinámico (menos superficie de ataque). Detalle exacto de por dónde seguir
-  en `docs/plan/PROMPT-CONTINUACION.md`.
+- ✅ **021, motor completo**: migración 024 (esquema: cinco tablas + índice derivado
+  `custom_field_index`, G2) y migración 025 (`write_lead/contact/company_custom_fields()`,
+  `security invoker`, D6 resuelto con función Postgres porque dos llamadas PostgREST no comparten
+  transacción — tres funciones concretas, no SQL dinámico). `validateCustomFields()` +
+  `writeCustomFields()` + gate **G-D10** + `custom-field-operators.ts` + integración completa en
+  `moveLeadToStage()` (modal de campos faltantes en el kanban, F3/F13), todo con TDD real y
+  mutación demostrada. **Encontrado y corregido en el camino**: régimen `append-only` mal
+  etiquetado (en este repo implica REVOKE total, patrón `audit_log`; corregido a `user-write`), dos
+  falsos positivos del gate G-D10 propio (comentarios que solo mencionaban la tabla — ver
+  [[gate-por-git-ls-files-no-ve-un-fichero-nuevo-sin-git-add]] para el hallazgo de verificación
+  detrás—, y una lectura legítima resuelta moviéndola al módulo en vez de ampliar el allowlist).
+  Ver también [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] (variante security
+  invoker, añadida esta sesión). **Falta solo `/ajustes/campos` y la sección de campos en las
+  fichas** — sin la primera no hay forma de crear una definición, así que nada es verificable en
+  el navegador todavía. Punto exacto de retomada en `docs/plan/PROMPT-CONTINUACION.md`.
 - ✅ **020 CERRADO — contactos y empresas (E1.3)**: migración 023 (`countries`/`contact_roles`
   globales, `contacts`/`companies` con `phone_e164` normalizado, `company_contacts`/`lead_contacts`
   con `is_primary` único parcial), aislamiento del teléfono entre organizaciones **por clave
@@ -234,7 +239,8 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 [[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]] ·
 [[clave-compuesta-por-tenant-elimina-el-guard-de-upsert-cross-tenant]] ·
 [[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]] ·
-[[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] (variante security invoker)
+[[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] (variante security invoker) ·
+[[gate-por-git-ls-files-no-ve-un-fichero-nuevo-sin-git-add]]
 
 ## Trampas conocidas
 

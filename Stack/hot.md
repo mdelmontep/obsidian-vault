@@ -85,6 +85,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un bloque que un gate compara byte a byte contra un generador nunca se transcribe de memoria** — captura el stdout exacto y empálmalo, verificado por igualdad de string. Ver [[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]]
 - **Clave única compuesta `(org_id, business_key)` desde el diseño elimina el guard de upsert cross-tenant** — decide la composición del índice ANTES de escribir el upsert, no después. Ver [[clave-compuesta-por-tenant-elimina-el-guard-de-upsert-cross-tenant]]
 - **Dos escrituras a tablas distintas que deben ser atómicas exigen un RPC, nunca dos llamadas REST/supabase-js** — cada `.from(x).insert()` es su propia transacción. `SECURITY DEFINER` si escribe con privilegio de servicio, `INVOKER` si debe respetar la RLS de sesión igual que el cliente. Ver [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]]
+- **Un gate que enumera con `git ls-files` no ve un fichero nuevo sin `git add` antes** — el "verde" de un gate recién escrito puede significar solo "no vio el árbol", no "el árbol está limpio". `git add` primero, gate después. Ver [[gate-por-git-ls-files-no-ve-un-fichero-nuevo-sin-git-add]]
 
 > **Las otras 50 no se han borrado**: siguen vigentes en [[hot-archivo-2026-08-01]] y se recuperan por
 > wikilink y por grep. (El tope vigente es el de la cabecera, no el "25" que decía aquí.)
