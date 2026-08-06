@@ -176,3 +176,8 @@ Conversation Flow tiene 2 modos compilación. Flex compila TODO (nodos + edges +
 **Regla**: por defecto Rigid. Flex solo si necesitas context-switching real entre tareas Y has medido token count en simulator Retell (<3.000 para tener margen).
 
 Ver [[retell-conversation-flow-flex-vs-rigid-coste-token-scaling]]
+
+## Números y teléfonos: NO uses SSML (06-ago-2026)
+
+Para que un número se lea dígito a dígito, el marcado no es una opción en este stack — Retell no lo documenta, el frame del Custom-LLM WebSocket solo lleva texto, y con streaming un `<break>` puede **leerse en voz alta**. Se rinden los dígitos como PALABRAS en código propio, con comas como pausa. Detalle y fuentes: [[ssml-no-existe-en-tts-de-streaming-usa-texto-plano-normalizado]].
+

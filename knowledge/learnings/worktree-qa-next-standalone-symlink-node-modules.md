@@ -1,6 +1,7 @@
 ---
 title: qa visual en git worktree de un proyecto next necesita node_modules y dev (no next start con output standalone)
 date: 2026-07-19
+updated: 2026-08-06
 source: claude-code-session
 tags: [git-worktree, nextjs, qa, playwright]
 ---
@@ -57,4 +58,14 @@ Ver [[facturaia]].
    son ficheros de verdad (Turbopack contento, y `npm ci` puede reescribir sin tocar el
    checkout principal). Es la opción segura cuando el worktree va a mutar dependencias, como
    al probar un bump de Dependabot.
+
+5. **⚠️ El symlink puede apuntar a un `node_modules` YA CADUCO — y engaña al preflight**
+   (06-ago-2026). El del checkout principal se queda atrás en cuanto una PR ajena añade una
+   dependencia: en agh-iberica le faltaba `playwright` desde hacía días, así que `npm run gate`
+   salía ROJO ahí sobre `main` limpio, y parecía un fallo de código. Al symlinkar un worktree
+   nuevo a ese árbol, el fallo se hereda.
+   Un preflight que comprueba que `node_modules` **exista** (no que esté al día) lo da por
+   bueno: el symlink lo satisface trivialmente. Regla: en un worktree que vaya a correr el
+   gate, `npm ci` de verdad — el symlink solo para inspección rápida. Y al ver un rojo,
+   descartarlo primero contra `main` antes de sospechar del diff.
 
