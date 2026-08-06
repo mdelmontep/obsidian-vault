@@ -25,3 +25,8 @@ normalidad una vez se parte de una URL que la cuenta actual sí posee.
 
 Antes de asumir "fallo de la plataforma" tras 2-3 reintentos idénticos con el mismo
 error, preguntar si el artifact se publicó alguna vez desde otra cuenta/sesión.
+
+**Diagnóstico rápido (reincidió una TERCERA vez, 06-ago, mismo tablero):** publicar SIN
+`url` (mintar nuevo) primero. Si funciona a la primera, el servicio está arriba y es la
+URL vieja la huérfana — no reintentar la vieja más veces. Si la publicación nueva
+TAMBIÉN falla, ahí sí es el servicio caído (pasó una vez, 05-ago noche).

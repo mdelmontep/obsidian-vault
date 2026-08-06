@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-06 (sesión en curso: 021 motor completo, falta la UI)
+updated: 2026-08-06 (021 CERRADO — UI + dos bugs reales encontrados navegando + auditoría de composición)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,31 +14,73 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (06-ago, sesión EN CURSO — no es un cierre)
+## Estado (06-ago)
 
-- **F0: 11/17. F1 con TRES issues cerrados (018/019/020) y el CUARTO, 021 (campos personalizados,
-  E1.4), con el MOTOR ENTERO construido y desplegado — solo falta la UI.** Gate **1373 tests**,
-  veinticinco migraciones. Desplegado: `9e37fc62`.
+- **F0: 11/17. F1 con CUATRO issues de dominio cerrados (018/019/020/021).** Gate **1386 tests**,
+  veinticinco migraciones. Desplegado: `9eb31cb7`.
+- ✅ **021 CERRADO — campos personalizados (E1.4)**: sobre el motor ya construido (validación por
+  delta, escritura canónica, gate G-D10), esta sesión construyó lo que faltaba para que fuera
+  verificable en el navegador: pantalla `/ajustes/campos` (definiciones por tipo de entidad,
+  opciones para select/multiselect con `key`/`data_type`/`code` inmutables tras el alta — D9,
+  nunca se borra una opción —, y para leads una matriz pipeline×etapa que fija required/hidden) y
+  botón "Campos" en la ficha de lead/contacto/empresa (oculto si la org no tiene ninguna
+  definición), reusando `CampoPersonalizadoInput` ya existente. Construido con dos agentes en
+  paralelo sobre ficheros disjuntos (pantalla de ajustes vs. fichas), núcleo de escritura y
+  verificación por el hilo principal.
+  **Dos bugs reales, encontrados verificando en el navegador contra `tucrmia-prod` con una
+  organización de prueba real, no leyendo código**: `listarOpcionesDeCampos()` no filtraba
+  `archived_at is null` (a diferencia de su hermana de un solo campo) — una opción archivada
+  seguía ofreciéndose como elegible en la pantalla y en los modales; la escritura nunca estuvo en
+  riesgo (`validateCustomFields()` ya la excluye por su cuenta), pero la UI mentía sobre qué estaba
+  archivado. Y el modal de la ficha mandaba siempre el snapshot COMPLETO de valores al guardar, no
+  el delta: `validateCustomFields()` revalida cualquier clave PRESENTE en el payload, así que
+  reabrir la ficha de un lead con un valor bajo una opción ya archivada y pulsar "Guardar" sin
+  tocar nada lo rechazaba — y de paso bloqueaba también cualquier otro campo del mismo formulario.
+  Arreglado calculando el delta real contra los valores con los que se abrió el modal, con test de
+  regresión en las tres features. Ver
+  [[modal-que-reenvia-snapshot-completo-revalida-de-balde-valores-sin-tocar]].
+  También encontrado antes de la UI: `OpcionDeCampo`/`listarOpciones()` no exponían `color`/`sort`
+  reales (solo las mutaciones los aceptaban) — expuestos en el núcleo antes de delegar la pantalla.
+- ✅ **Auditoría de composición del 6-ago, sobre los 80 ficheros del 021**: 19 hallazgos, los 19
+  refutados, **17 sobreviven**. Cinco mecánicos arreglados en la misma sesión — el más
+  transferible: **G-S4-ALIAS (ESLint) solo miraba el OBJETO de una llamada a método
+  (`secreto.trim()`), nunca el nombre del MÉTODO** — `fila.obtenerTokenHash() === entrada`, con
+  `fila` sin raíz sospechosa, pasaba limpio. Ver
+  [[regla-eslint-de-secreto-en-llamada-a-metodo-debe-mirar-tambien-el-nombre-del-metodo]]. Los
+  otros cuatro: estado vacío de `/leads` sin CTA, dos tablas sin wrapper accesible
+  (`role="region" tabIndex={0}`), las siete subrutas de `/admin` sin `loading.tsx`, un comentario
+  de `pii.ts` que afirmaba una cobertura RGPD que el array real no tenía.
+  **Uno verificado con evidencia real y descartado, no en disputa ya**: si `DbDeCenso` puede
+  llamar cualquier RPC de dominio sin GRANT — probado contra `tucrmia-prod` con la propia
+  `service_role` key llamando `write_lead_custom_fields`: `42501 permission denied`. Hueco de
+  tipos (TypeScript deja escribir lo que Postgres ya rechaza), no vía de escritura real.
+  **Doce sin tocar, documentados en `PREGUNTAS-PARA-MANUEL.md` #27**: tres gates de seguridad
+  (`admin-check.mjs`, `ratelimit-check.mjs`/`s5-check.mjs`) resuelven la procedencia por texto en
+  todo el fichero, no por ámbito — misma familia que ya costó cara con G-RL-ENCHUFADO, exige AST y
+  tests adversariales nuevos, no parche de una noche; dos latentes sin caso real
+  (`s6-check.mjs`/`tokens-check.mjs`); uno de producto (kanban de leads sin alternativa de teclado
+  a drag&drop).
+- ✅ **Artifact huérfano, TERCERA vez, mismo patrón que `da457fcf…` en su día**: `f2541d7c…` no
+  figuraba en `Artifact({action:'list'})` de esta cuenta, y republicar sobre esa URL fallaba con
+  «could not verify the target page is not a review page» — pero mintar una publicación NUEVA sin
+  `url` funcionó a la primera, confirmando que el servicio estaba arriba: era la URL, no el
+  servicio (a diferencia de la rotura anterior del 5-ago, que sí era el servicio caído). Nueva URL
+  `3204ff62…`, referencias actualizadas en `ESTADO.md`/`PROMPT-CONTINUACION.md`. **Lección
+  aplicable a otros proyectos**: ante «could not verify...», probar SIEMPRE primero una
+  publicación sin `url` antes de asumir servicio caído — si esa funciona, es la URL vieja la
+  huérfana. Ver [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]].
 - ✅ **El estudio de harness que el 05-ago quedó encargado, hecho**: describe tautológico de
   `crm_can` eliminado, `scripts/sql/replay-asserts.sql` deja de ser territorio ciego de
   `auditoria:alcance`, gate nuevo **G-REPLAY-VIVO**, y `.githooks/pre-push` exige `db:replay` en
   verde al tocar esquema/acceso (fail-closed). Ver
   [[bloque-generado-para-gate-byte-a-byte-nunca-se-transcribe-de-memoria]].
-- ✅ **021, motor completo**: migración 024 (esquema: cinco tablas + índice derivado
-  `custom_field_index`, G2) y migración 025 (`write_lead/contact/company_custom_fields()`,
-  `security invoker`, D6 resuelto con función Postgres porque dos llamadas PostgREST no comparten
-  transacción — tres funciones concretas, no SQL dinámico). `validateCustomFields()` +
-  `writeCustomFields()` + gate **G-D10** + `custom-field-operators.ts` + integración completa en
-  `moveLeadToStage()` (modal de campos faltantes en el kanban, F3/F13), todo con TDD real y
-  mutación demostrada. **Encontrado y corregido en el camino**: régimen `append-only` mal
-  etiquetado (en este repo implica REVOKE total, patrón `audit_log`; corregido a `user-write`), dos
-  falsos positivos del gate G-D10 propio (comentarios que solo mencionaban la tabla — ver
-  [[gate-por-git-ls-files-no-ve-un-fichero-nuevo-sin-git-add]] para el hallazgo de verificación
-  detrás—, y una lectura legítima resuelta moviéndola al módulo en vez de ampliar el allowlist).
-  Ver también [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] (variante security
-  invoker, añadida esta sesión). **Falta solo `/ajustes/campos` y la sección de campos en las
-  fichas** — sin la primera no hay forma de crear una definición, así que nada es verificable en
-  el navegador todavía. Punto exacto de retomada en `docs/plan/PROMPT-CONTINUACION.md`.
+- ✅ **021, motor (sesión previa a esta)**: migración 024 (esquema: cinco tablas + índice derivado
+  `custom_field_index`, G2) y 025 (`write_lead/contact/company_custom_fields()`, `security
+  invoker`, D6 resuelto con función Postgres). `validateCustomFields()` + `writeCustomFields()` +
+  gate G-D10 + `custom-field-operators.ts` + integración en `moveLeadToStage()`. Ver también
+  [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] (variante security invoker).
+  La UI que le faltaba a esto y los dos bugs que salieron al construirla están arriba, en el
+  cierre del 021.
 - ✅ **020 CERRADO — contactos y empresas (E1.3)**: migración 023 (`countries`/`contact_roles`
   globales, `contacts`/`companies` con `phone_e164` normalizado, `company_contacts`/`lead_contacts`
   con `is_primary` único parcial), aislamiento del teléfono entre organizaciones **por clave
