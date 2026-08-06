@@ -24,6 +24,17 @@ reales, sin poder dar de alta 2ª empresa, con el deploy diciendo OK).
 Complementa [[migracion-numerar-contra-prod-schema-migrations]] (allí prod va por delante
 por ramas ajenas; aquí la divergencia la causé yo).
 
+**Quinta vez, y con motivo legítimo (06-ago, mig 651)**: apliqué como `650` para poder
+`gen:types` y typecheckear contra el esquema nuevo. Mientras tanto se mergeó otra `650`
+(obras), el `pre-push` obligó a renumerar a `651` y prod quedó con **una fila `650` cuyo
+contenido era el de OTRA migración**. `migration list` no lo ve: compara versiones, no
+contenidos. Lo que sí vale es comprobar **por catálogo** — `information_schema.columns` para
+columnas y `pg_get_functiondef()` buscando una cadena única del cuerpo nuevo para funciones.
+Prod tenía las dos, y la `651` se aplicó luego como no-op. Si necesitas los tipos antes del
+merge: **`mig:renumerar` PRIMERO, `db push` después**. Y reaplicar solo es inocuo si la
+migración es idempotente entera (`if not exists`, CHECK con guard, `is null` en cada paso del
+backfill); si no lo es, no la apliques hasta después del merge.
+
 **El otro lado de la misma regla (02-ago)**: aplicar antes cuida el NÚMERO, pero el
 esquema hay que aplicarlo antes por otro motivo — **el código desplegado lo exige**.
 Mergeé dos PRs y dejé el `db push` para el final; entre medias se cayó el pooler y prod

@@ -29,6 +29,10 @@ Para QA visual en paralelo se crea un `git worktree` desde `origin/main`, pero:
    clonefile (puntos de abajo).
    Lo caro: `vitest` y `tsc` SÍ resuelven el symlink. Un agente puede entregarte
    8.500 tests y typecheck verdes en un worktree que no compila.
+   **El `pre-push` lo canta como «Push bloqueado: build con errores»** (06-ago, dos
+   veces en la misma sesión), que se lee como defecto del diff cuando es el entorno.
+   Si lo que empujas no toca código de la app —dos JSON de baseline y un `.md`—,
+   sospechar del `node_modules` antes que del cambio.
 
    **Mejor alternativa (2026-07-25): `cp -al <principal>/node_modules <worktree>/node_modules`.**
    Hardlinks en vez de symlink: instantáneo (segundos, no los ~2 min de `npm ci`), sin duplicar
