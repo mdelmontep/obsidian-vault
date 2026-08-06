@@ -38,3 +38,10 @@ del `top-of-mind`.
 - **[03-ago, `obras-095`, #1514, ADR-obras-008, migs 630-636] El descuento cuelga del fabricante, en prod** — clave `(org, proveedor, familia, marca)`, gana la más específica y un material sin marca no hereda. Desbloqueó `obras-091`. Al aplicar no se movió ni un precio: el ADR predecía 11.595 materiales subiendo y esa sandbox tenía 0 enlaces material-proveedor. Ver [[una-prevision-de-impacto-que-no-mira-el-join-que-conecta-sobreestima]]
 - **[08-jul, #802, mig 449] Cutover de la cola de OCR, resuelto** — cron `ocr-dispatcher` dado de alta y verificado. Lo que quedaba vivo (el smoke) sigue en la sección Smoke del hub.
 
+
+## Movido del hub en el cierre del 2026-08-06 (poda por trinquete de contexto)
+
+- ~~PR #851 (v1 rechaza `tipo:'abono'`)~~ ✅ **RESUELTO 2026-07-13** — decisión Manu: agency-portal NO crea abonos vía `POST /api/v1/facturas` → mergeado (`d5bb63a4`). Canal correcto = `POST /v1/facturas/{id}/anular`.
+<!-- RESUELTO 2026-06-22 (verificado por screenshot): Supabase Auth URL Config OK — Site URL = https://app.tufacturaia.com + 5 redirect URLs (app.tufacturaia.com/**, /invitacion, /invitacion?org=*, /api/auth/callback, /api/auth/callback?type=*). NO se añade localhost:3000 a un proyecto PROD (superficie de ataque innecesaria; el wildcard de prod ya cubre, y el reset usa admin.generateLink con URL propia). Cerrado. -->
+- **Reempaquetado planes — casi cerrado** (act. 2026-06-26): mig 399 (#509) + Fase 2B (#513) aplicadas a prod ya cubrieron ~~grandfathering~~ ✅ (PASO 1, override `source='grandfathered'`), ~~Starter canónico 14€~~ ✅ (PASO 0, reconciliado desde 19), ~~sidebar candado~~ ✅ (#513). **Queda vivo**: (1) ~~crear prices Stripe live de Plus~~ ✅ hechos y activos (verificado 29-jul por API); (2) verificar que `stock` en beta no se cobra como add-on de pago (mig 399 PASO 6 tocó incoherencias de add-ons — confirmar). Detalle: [[facturaia-reempaquetado-planes]]
+

@@ -26,3 +26,5 @@ Lo que sí verifica:
 Regla: si el guard no puede fallar cuando la migración no hace nada, no es un guard.
 
 Relacionado: [[smoke-prod-en-transaccion-rollback]] · [[postgres-revoke-public-no-elimina-grants-individuales]] · [[defensa-cableada-vs-codigo-muerto]]
+
+Variante en backfills, más difícil de ver: el check usa el MISMO predicado que acotó el INSERT → [[verificar-un-backfill-con-el-predicado-que-lo-filtro-se-valida-a-si-mismo]].

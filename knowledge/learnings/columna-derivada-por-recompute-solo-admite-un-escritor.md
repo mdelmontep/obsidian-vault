@@ -25,3 +25,5 @@ hilo: el dato sobrevive solo hasta que algo dispare el recálculo.
 
 Inverso de [[agregado-cacheado-sobre-ledger-recompute-trigger]] · relacionado con
 [[postgres-guard-transition-no-persiste-en-recompute-chain]] · [[triggers-bd-sync-son-antipatron]]
+
+**Y no basta con arreglar el futuro**: las filas que ya tenían el valor escrito a mano quedan sin evento y el primer recálculo las pone a cero → [[convertir-columna-en-derivada-exige-backfill-del-historico]].
