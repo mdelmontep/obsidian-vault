@@ -1,7 +1,7 @@
 ---
 title: un test nuevo no vale hasta que le rompes el código a propósito y falla
 date: 2026-07-28
-updated: 2026-08-05
+updated: 2026-08-07
 source: claude-code-session
 tags: [testing, qa, metodo, verificacion]
 ---
@@ -32,3 +32,10 @@ cuyo escenario **no se puede construir** (mismo proveedor para escribir y leer =
 
 Caza además el test que **se salta** sin que nadie lo note ([[e2e-smoke-skip-honesto]]) y el que mide
 un artefacto vecino (el visor y el PDF son dos cosas: una perfecta y la otra rota dos meses).
+
+**Y antes de creerte una mutación SIN víctima, sospecha del arnés: medido 3 de cada 4** (AGH, 7-ago).
+Los tres modos: mutar **la aparición equivocada** del literal (el fichero cambia, pero no la línea que
+importa) · apuntar a **un artefacto que esa ruta ni ejecuta** (mutar la migración cuando el bootstrap
+aplica el schema) · lanzar el arnés **sin el entorno de la medición** (sin `DATABASE_URL`, contra otra
+BD). La cuarta sí era del test, y era real: **no era re-ejecutable** — sembraba en la 1ª corrida lo
+que la 2ª daba por hecho. Un test que solo mide la primera vez es un candado que se abre solo.
