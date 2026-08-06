@@ -57,3 +57,14 @@ Tres incidencias de la propia fase, todas encontradas por el gate de cierre y co
 - **mig 645** — el backfill de la 644 se acotó con `pendiente_eur > tolerancia` y su verificación preguntaba lo mismo, así que se validó a sí misma: quedaban 99 de 108 negativas cayendo (88 emitidas históricas con total negativo + 7 abonos + 4 vencidas), no «7» como se reportó al muestrear las 60 más recientes. `target_eur` pasa a `ABS(...)` y 95 filas más de respaldo.
 
 Estado final verificado sin muestrear: 1.444 cobradas/pagadas de producción recomputadas, 0 cambian de estado.
+
+### Lo que destapó el /fia-cierre de la fase 1 (06-ago, PR #1520 mergeado en 00862a33)
+
+Trece dimensiones en paralelo. Cuatro defectos gordos, los cuatro reproducidos en producción antes de tocarlos y ninguno cazado por una revisión humana:
+
+- **Fuga cross-tenant de LECTURA** (mig 643): la 641 concedió `factura_cobros_resumen` a `authenticated`; PostgREST la exponía con el anon key del bundle. 6ª reincidencia del patrón → cerrada además con el hook `revoke-guard` en pre-commit.
+- **1.407 cobradas a un trigger de volver a `pendiente`** (migs 644+645): la 640 convirtió `estado` en derivada sin backfill. Y el primer backfill se verificó con el mismo predicado que lo filtró, así que dejó 99 negativas fuera diciendo que quedaban 0.
+- **Escritura cross-tenant** (mig 646): la política validaba `org_id`, la columna que el atacante escribe, y nada ataba `factura_id`. Un usuario podía marcar cobrada la factura de otra empresa.
+- **Doble clic = doble cobro**: el guard de concurrencia vivía de que ese UPDATE escribiera `estado`, y al pasar a derivada dejó de serializar. 2.662 € sobre una factura de 1.331.
+
+Verificación final sin muestrear: 1.444 cobradas/pagadas de prod recomputadas, 0 cambian. Suite Playwright: 125 pasan, incluidas las tres de conciliación (el camino bancario).
