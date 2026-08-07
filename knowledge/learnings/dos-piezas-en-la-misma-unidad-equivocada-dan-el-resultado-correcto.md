@@ -22,6 +22,15 @@ el coste real del instalador: 16,35 €/h. Escribirlo tal cual habría inflado e
 coste previsto de cada partida un **49 %**, y con el coste inflado se descartan
 obras que sí eran rentables. El valor correcto en la unidad vigente era 10,96.
 
+**Y al corregir, el sentido de la conversión se equivoca solo.** Al proponer la
+normalización escribí «bajar el precio de 34 a 22,79» cuando era **subirlo a
+50,72**: dividí donde había que multiplicar. Escribe la regla como una igualdad
+con unidades y compruébala con un valor que ya conozcas:
+`valor_en_unidades_origen = valor_por_hora_real / factor` → 50,72 / 1,4918 = 34,00,
+que es justo lo que hay en la BD. Si el despeje no reproduce el valor actual, el
+sentido está invertido. Y exige el invariante: **el resultado de negocio no se
+mueve** (la venta de una hora real seguía siendo 50,7 € antes y después).
+
 **Cómo se detecta, y es barato.** Busca en el propio catálogo la fila que se
 autodescribe y comprueba que vale lo que dice. Aquí la tabla de tipos tenía una
 fila literalmente llamada `TIEMPO 1 HORA`: valía **1,4920**. Una consulta.
