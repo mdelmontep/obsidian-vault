@@ -131,3 +131,47 @@ comprobados el mismo día:**
 Orden correcto: `list` (limit 50) → `WebFetch` de la elegida → `Artifact` con `url:`.
 Y si la URL vigente cambia, corregir en el mismo commit el fichero que la declara: dejarla
 apuntando a la vieja es exactamente cómo se fabricaron las huérfanas.
+
+## Mensajería entre sesiones: el `[ref]` es obligatorio la primera vez (7-ago-2026)
+
+La doc de *cross-session messaging* dice que el ` [ref]` que `ListAgents` imprime tras cada
+nombre solo hace falta **cuando dos filas comparten nombre**. Medido: **también hace falta
+la primera vez que escribes a una sesión que no es tuya, sin que haya colisión ninguna.**
+
+Con un único par local llamado `facturaia-2c`, `SendMessage({to: "facturaia-2c"})` devolvió:
+
+```
+'facturaia-2c' is not an agent in this conversation. Re-send with the ref to confirm you mean:
+  facturaia-2c [f5d57d] — Claude session, on this machine, active 4m ago
+```
+
+Reenviar con `to: "facturaia-2c [f5d57d]"` funcionó. O sea: no es desambiguación, es una
+**confirmación de que de verdad quieres salir de tu conversación**. Consecuencia práctica:
+el ref hay que leerlo de un `ListAgents` reciente — uno recordado de otra sesión no resuelve,
+y los nombres de las sesiones interactivas se derivan del directorio, así que varios
+worktrees del mismo repo salen como `agh-iberica-3f` / `agh-iberica-a1`. Ponles nombre con
+`/rename` o `--name` si vas a coordinarlas.
+
+Lo otro que conviene saber antes de apoyarse en esto:
+
+- **Las sesiones de Remote Control (web / otra máquina) son reply-only.** En el listado de
+  ese día salían 17 pares y **16 eran de esas**: solo se les puede contestar si escriben
+  primero. Lo utilizable de verdad es sesión-local ↔ sesión-local, o sea worktrees.
+- **La barra lateral de la app NO es la lista de destinatarios, y los nombres no coinciden.**
+  De 7 conversaciones visibles en la sidebar, solo **2** tenían socket vivo. El censo real es
+  `ls /tmp/cc-socks/*.sock` y resolver cada PID a su directorio:
+  `lsof -a -p <pid> -d cwd -Fn`. Y la misma sesión lleva **dos etiquetas distintas**: en la
+  sidebar sale con el título de la conversación («Agregar descarga en Excel a documentos») y
+  en `ListAgents` con el nombre derivado del directorio (`facturaia-2c`) — **solo el segundo
+  es dirección postal**. Con tres sesiones del mismo repo eso es indistinguible a ojo: por
+  eso `/rename` (o `--name` al arrancar) deja de ser cosmético.
+- **No interrumpe: se lee entre tool calls.** El mensaje de prueba tardó **47 min** en tener
+  respuesta porque la otra sesión estaba en una tanda larga. Es bueno (no rompe trabajo ajeno)
+  y es la limitación (no sirve para urgencias).
+- **No sustituye al ciclo de Slack** de `agh-iberica` (ANUNCIAR / LEER / CERRAR). Un mensaje
+  entre sesiones es texto plano, no deja rastro que un tercero pueda leer después y solo
+  llega a lo que esté vivo en ese instante. Donde sí gana es en el hueco que Slack no cubre:
+  el aviso inmediato a media tarea (toco `capabilities.ts`, o «ya está en `main`, rebasa»),
+  porque entra entre tool calls en vez de esperar a que alguien lea el canal.
+- **`isolatePeerMachines: true`** en `~/.claude/settings.json` exige aprobación explícita
+  antes de que un mensaje salga de la máquina. Puesto el 7-ago.

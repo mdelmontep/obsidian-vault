@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-07 (HTTPS, 5 issues, cimientos visuales, 3 CVE + CI por primera vez · tuyo: facturación de Actions)
+updated: 2026-08-07 noche (cola de webhooks vaciándose, armazón, kanban accesible, PALETA DECIDIDA · tuyo: Storage §29, rotar claves, facturación de Actions)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,39 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (07-ago, noche) — cuatro tracks, la paleta y el cierre de la crítica
+
+- ✅ **La cola de webhooks YA SE VACÍA** (issue 044, migración `049`). Era la **tercera** vez del
+  mismo patrón —el limitador con la puerta abierta, las ocho purgas sin barrido— y esta vez el
+  silencio era literal. `pg_cron` + `pg_net` despiertan una ruta de la aplicación; la credencial no
+  es un secreto compartido sino la fila de `cron_runs`, que vale una vez. **Verificado sembrando una
+  entrega pendiente y viéndola salir**: con la cola vacía el verde no distingue un worker que
+  funciona de uno que nadie llama.
+- ✅ **Al producto se llega desde sí mismo**: `querySelectorAll('a')` daba CERO en `/leads`. Barra
+  lateral, superior y barra inferior en móvil, con las pantallas en un route group `(app)`.
+- ✅ **El tablero se usa con teclado y con el dedo**: la tarjeta pasa a enlace real, la etapa se
+  cambia desde la propia tarjeta (el arrastre HTML5 no dispara en táctil), `aria-live` + Deshacer, y
+  `/leads/[id]` con panel lateral. 404 tanto si no existe como si RLS no lo deja ver.
+- ✅ **PALETA DECIDIDA por Manuel: el azul del LOGOTIPO** (`#83b9ff`), sacado del PDF de marca —la
+  familia entera vive en el tono 255,3°. Lo que lo hace usable es que lleva **tinta oscura encima**
+  (la contraforma del propio logo): con blanco da 2,03:1, con `#292a30` da 7,05:1. Comparte tono con
+  TuFacturaIA, así que ya NO se distinguen por el color sino por cómo lo usan — corregido en
+  `03-DESIGN-CONTEXT` en vez de maquillado. Y con ella: `--danger-strong` para el botón de peligro
+  (3,61 → 5,29) y la rampa `--stage-*` del embudo, consumida de verdad.
+- ✅ **Crítica de diseño cerrada**: un solo formateador de dinero (había tres), una sola altura de
+  control (había cuatro — los tokens existían desde el issue 009 y **no los leía nadie**), la barra
+  de filtros deja de gastar un tercio del móvil en decir «ninguno», /tareas deja de desbordar 37px, y
+  el rebote sale del token donde se heredaba a todo. Gates nuevos: **G-FORMATO**, **G-MARCA-TINTA**,
+  trinquete `ratchet:ui` (3 primitivos sin llamante, con motivo escrito, que no suban).
+- ⚠️ **Lo que NO está verificado, y conviene saberlo**: los 37px de /tareas no los midió nadie en la
+  pantalla real; la paleta en kanban y listados no la ha visto nadie (necesitan sesión); del worker
+  se probó una entrega que FALLA, no una que llega bien.
+- ⚠️ **Tres tracks de agentes se perdieron enteros** al retirar los worktrees con `--force` antes de
+  commitear en ellos; rehechos a mano desde los informes. Ver
+  [[claude-code-agentes-worktree-failure-modes]] (failure mode M).
+- ⚠️ **El verde de la suite dependía de la carga del portátil** hasta este cierre. Ver
+  [[tests-que-caen-por-contencion-de-cpu-verificalos-aislados-antes-de-diagnosticar]].
 
 ## Estado (07-ago) — la jornada más larga del proyecto
 

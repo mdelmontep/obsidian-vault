@@ -137,6 +137,30 @@ git checkout <worktree-branch> -- \
 
 **Fix/blindaje**: antes de lanzar el fan-out de diagnóstico sobre un bug ya bien descrito, `gh issue list --search "<keywords>"` + `gh pr list --search "<keywords>" --state all` (10 segundos) — si ya hay un PR mergeado con las mismas palabras clave, cerrar como duplicado y ahorrarse los agentes. Caso real 2026-07-23: PR #1181 (mock `next/cache` en tests) ya mergeado cuando mi propio diagnóstico independiente (3 agentes) terminó de confirmar la misma causa.
 
+## Failure mode M: el ORQUESTADOR borra el trabajo al retirar los worktrees antes de commitear en ellos
+
+**Síntoma**: tres agentes entregan informes detallados y correctos. Retiro los worktrees con
+`git worktree remove --force` para poder mover HEAD en `main` (el git-guard bloquea commit/merge en
+main con worktrees vivos), y después `git merge <rama-agente>` dice **"Already up to date"** en las
+tres. El trabajo no está en ninguna parte: las ramas apuntan al commit base.
+
+**Causa**: el prompt les decía —a propósito— "NO hagas `git commit`", para que el hilo principal
+revisara antes de integrar. Sus cambios vivían **sin commitear y sin `git add`** en el working tree
+de cada worktree. `--force` es exactamente la opción que permite borrar un worktree sucio.
+
+**Lo que NO recupera**: sin `git add` no hay blob. Lo comprobé contra los 17.923 objetos colgantes
+del repo (`git fsck --lost-found` + `git cat-file -p` buscando marcas del código) — cero. Con `git
+add` sí habría blobs recuperables; ésa es toda la diferencia.
+
+**Fix**: commitear DENTRO de cada worktree antes de retirarlo (la tanda anterior del mismo día lo
+hizo y no perdió nada — la diferencia está en el orden, no en la suerte). Si el prompt prohíbe que
+el agente commitee, **commitea tú en su worktree** al revisar, y sólo entonces `worktree remove`.
+
+**Blindaje**: `git worktree list` + `git -C <wt> status --porcelain` de cada uno ANTES de cualquier
+`remove`; si alguno tiene cambios, commitear o `git -C <wt> add -A` como mínimo. Nunca encadenar
+`remove --force` en un bucle sobre varios worktrees sin ese check. Caso real 2026-08-07 (TuCRMIA,
+3 tracks rehechos a mano desde los informes). Relacionado: [[transcript-jsonl-sobrevive-al-worktree-borrado]].
+
 ## Checklist pre-lanzamiento de tandas multi-agente
 
 Antes de lanzar N agentes paralelos:

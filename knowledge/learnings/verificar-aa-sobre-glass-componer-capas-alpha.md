@@ -16,3 +16,8 @@ Claves:
   (doc §3 glassmorphism: cristal y texto desacoplados).
 - Si un token falla también sobre fondo sólido (ej. danger small-text 3.5:1) es baseline pre-existente
   de la app, no regresión del glass — no "arreglarlo" tocando el glass.
+
+**Y sobre el fondo REAL de la página, no sobre blanco puro** (7-ago): calculé una tinta de marca
+y una rampa contra `#ffffff` cuando `--bg` es `#f8f8fa`; al pintarse, 4,35:1 y 2,93:1 — los dos
+por debajo del mínimo. Los cazó medirlo en un navegador componiendo con `canvas`, no el cálculo.
+Ver [[una-rampa-de-color-validada-contra-el-fondo-no-dice-si-los-pasos-se-distinguen]].
