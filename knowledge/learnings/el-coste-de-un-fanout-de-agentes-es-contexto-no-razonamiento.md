@@ -23,6 +23,10 @@ que ya sabes.** Inyecta el diff en el prompt (10K tokens cacheados una vez contr
 236 exploraciones), agrupa dimensiones por dónde vive el riesgo en vez de por
 cómo se llama la preocupación, y pon un presupuesto explícito de tool calls.
 
+**Medido después de aplicarlo**, no estimado: 9 agentes → 5, **236 tool calls →
+60**, cache read 25,3 M → 8,7 M, y **$34,72 → $5,29** (−85 %) en 8 minutos en vez
+de 19. Con 0 bloqueantes y cazando dos bugs reales, o sea sin perder mordiente.
+
 **Cómo medirlo**: `usage` de los `agent-*.jsonl` del run. Contar prompts offline
 no vale — ver [[medir-el-coste-de-un-prompt-el-recibo-no-el-proxy]].
 
