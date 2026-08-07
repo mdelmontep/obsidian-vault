@@ -27,7 +27,16 @@ después de 2015 y **no están documentados**: la lectura es del nombre del camp
 |---|---|---|
 | Margen Obra `36` | % de beneficio sobre la M.O. de todos los materiales. **Se congela en cada obra** al crearla (Estado de Obras muestra «el % con la que se creó») | Sin multiplicador equivalente. `obras_settings.margen_min_pct` (15) es solo **umbral de aviso** del copiloto |
 | Precio Mat. `34 %` | % sobre el precio NETO de compra | `obras_settings.incremento_precio_material_pct` (**33**) |
-| Precio M.O. `34 €/h` | Precio de **venta** de la hora. Multiplica `Tiempo Mano de Obra` del material (horas decimales) | `obras_settings.precio_hora_mo` (33) |
+| Precio M.O. `34 €/h` | Precio de **venta** por unidad de tiempo. Multiplica `Tiempo Mano de Obra` del material, que **NO está en horas** (ver ⚠️ abajo) | `obras_settings.precio_hora_mo` (33) |
+
+> ⚠️ **Corrección del 07-ago-2026: «horas decimales» era falso.** `Tiempo Mano de
+> Obra` viene en una unidad propia del ERP. Lo demuestra su propia tabla de tipos:
+> la fila `TIEMPO 1 HORA` vale **1,4920**, no 1. El precio de venta sale correcto
+> porque `Precio M.O.` está en esa misma unidad y se compensan, pero el número no
+> se puede leer como horas. Y **el factor no es único**: despejándolo de las 52
+> filas que declaran sus horas en la descripción salen dos familias (1,4204 en
+> 2.568 materiales, 1,4917 en 346), así que no se puede normalizar hasta saber por
+> qué. Documentado en las migs 653/654/655 y en `gotchas.md` §Obras.
 | Día Cálculo Estadísticas `15` | Día en que se LANZA el cálculo. La foto es siempre a último día del mes anterior → cambiarlo no mueve cifras | No aplica (informes en vivo) |
 | Días aviso Cierre obras `35` | Obras facturadas al 100 % aún abiertas. Corre los **domingos**, avisa al gestor | `obras_settings.dias_aviso_cierre` (vacío = apagado) |
 | Días aviso Inactividad `30` | Obra abierta sin apunte/pedido/factura-proveedor/factura emitida. También domingos | `obras_settings.dias_aviso_inactividad` (30) |
