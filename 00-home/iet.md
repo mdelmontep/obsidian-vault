@@ -8,7 +8,7 @@ tags: [cliente, iet, hub]
 
 Empresa de instalaciones eléctricas y telecomunicaciones, Madrid, fundada en 1989. Proyecto actual: **rediseño completo de su web** (la antigua era WordPress 4.9). Web nueva en Astro estática, **en producción en iet.es** con HTTPS activo.
 
-> **Ojo, este cliente tiene dos frentes.** Además de la web, IET es la org REAL del módulo **Obras** de TuFacturaIA ("Instalaciones Eléctricas y de Telecomunicación, S.A.", `is_test=false`, contacto `administracion@iet.es` / Natalia). Sus tickets de soporte del SaaS y su carga inicial (materiales Telematel, instaladores, tarifas) viven en [[facturaia]], no aquí. Primer ticket suyo resuelto: el vencimiento de una recibida ya aprobada (27-jul).
+> **Ojo, este cliente tiene dos frentes.** Además de la web, IET es la org REAL del módulo **Obras** de TuFacturaIA ("Instalaciones Eléctricas y de Telecomunicación, S.A.", `is_test=false`, contacto `administracion@iet.es` / Natalia). Sus tickets de soporte del SaaS y su carga inicial (materiales Telematel, instaladores, tarifas) viven en [[facturaia]], no aquí. Primer ticket suyo resuelto: el vencimiento de una recibida ya aprobada (27-jul). El 139, la descarga en Excel, destapó que el módulo Obras se había quedado fuera de la tanda: [[una-tanda-para-todos-los-documentos-salta-el-que-no-encaja-en-el-contrato]].
 >
 > **Su software legado es WAPI** (`ietpdc/home.asp`). Manual oficial (dic-2015) durable en
 > `knowledge/projects/agentesia/wapi-manual/` de este vault; las 12 constantes globales y su
