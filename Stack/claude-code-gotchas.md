@@ -112,3 +112,22 @@ decidiendo el modelo leyendo las `description`; eso no lo impone un hook.
 
 - **`dokploy-secret-guard.sh` (PreToolUse Write/Edit) bloquea por el NOMBRE de la variable local, no por el secreto real** — `RETELL_API_KEY = os.environ['RETELL_API_KEY']` dispara el hook aunque sea código legítimo leyendo env, porque el regex mira el nombre a la izquierda del `=`. Fix: no asignar a ninguna variable con patrón sensible (`*_KEY`, `*_TOKEN`, `*_SECRET`...); envolver el acceso en una función o usar `os.environ[...]` inline. Ver [[dokploy-secret-guard-falso-positivo-variable-local-con-nombre-sensible]]
 - **`slack_create_canvas` no liga el canvas a ningún canal, y no hay tool de pin** — hay que compartir el link con `slack_send_message` y pedirle a alguien del equipo que lo fije a mano (⋯ → Fijar en el canal). Ver [[slack-create-canvas-no-se-liga-a-un-canal-ni-hay-tool-de-pin]]
+
+## Republicar un Artifact: el listado no basta, hace falta `WebFetch` antes (7-ago-2026)
+
+La regla que salía de las cinco URL huérfanas del tablero de TuCRMIA era «pide
+`Artifact({action:'list'})` y usa una URL que aparezca». **Incompleta, en dos puntos
+comprobados el mismo día:**
+
+- **La pertenencia al listado no es estable.** Por la mañana el listado incluía
+  `689ef079…` y no `460ab415…`; por la noche, al revés. Cambia entre sesiones del mismo
+  día y en los dos sentidos, así que se pide siempre y no se recuerda — pero tampoco es
+  una garantía.
+- **Publicar sobre una URL listada falla igual** con «this session hasn't viewed the
+  latest version». Lo desbloquea un `WebFetch` de la URL antes de publicar. Y ese
+  `WebFetch` es además **la única forma de ver si la copia publicada va por detrás del
+  fichero local** — si lo está, publicar sin mirar pisaría el trabajo de otra sesión.
+
+Orden correcto: `list` (limit 50) → `WebFetch` de la elegida → `Artifact` con `url:`.
+Y si la URL vigente cambia, corregir en el mismo commit el fichero que la declara: dejarla
+apuntando a la vieja es exactamente cómo se fabricaron las huérfanas.

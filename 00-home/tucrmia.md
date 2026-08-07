@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-07 (HTTPS, 5 issues, cimientos visuales · pendiente: cola del outbox sin vaciar)
+updated: 2026-08-07 (HTTPS, 5 issues, cimientos visuales, 3 CVE + CI por primera vez · tuyo: facturación de Actions)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -36,9 +36,29 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   Arreglado, con gate G-FUENTES. Ver [[el-gate-escrito-justo-despues-del-arreglo-mide-cero-casos]].
 - 🔴 **PENDIENTE Y NUEVO: la cola del outbox se llena y no la vacía nadie** (issue 044). El reparto
   crea las entregas y nada invoca `procesarPendientes`. Es el mismo fallo un escalón más abajo.
-- 🔴 **Tuyo**: el `grant` de Storage (pasos en `PREGUNTAS-PARA-MANUEL.md` §29), rotar las claves
+- ✅ **3 CVE graves en dependencias, y el punto ciego que los dejó entrar.** Los encontró Borja con
+  `npm` a mano: `postcss@8.4.31` y `sharp@0.34.5`, las dos pinneadas por `next@16.2.11`. Cerrados con
+  `overrides` sin subir Next (16.2.12 seguía en 8.4.31), verificado con `npm ci` en árbol vacío —
+  `npm ls` mentía porque el lockfile iba desfasado. **Lo grave era el hueco**: `npm audit` no estaba
+  en ninguno de los 34 gates y `audit-ratchet.mjs` estaba especificado en el plan **y nunca escrito**,
+  porque «patrón ya reusado 3×» describía a TuFacturaIA. Ver
+  [[un-plan-que-hereda-patrones-de-un-repo-hermano-da-por-existente-lo-que-solo-existe-alli]] ·
+  [[npm-overrides-necesario-cuando-dependencia-fija-optionaldependency-vieja]].
+- ✅ **Y con ellos, CI por primera vez.** Hasta hoy los 34 gates solo corrían en el portátil de quien
+  commitea — un hook se salta, y un clon sin `npm install` no tiene ni `core.hooksPath`. Entran
+  `gate.yml` (push/PR) y `seguridad-dependencias.yml` (G-AUDIT **diario**, porque un CVE se publica
+  solo), **G-BASE-FIJADA** (digest multiarch, validado desplegando en el amd64 de Dokploy),
+  **G-BASE-FRESCURA** (30 días) y `--ignore-scripts`. Y el aviso por Slack pasa de norma escrita a
+  hook. Ver [[al-fijar-imagen-base-por-digest-usar-el-del-indice-multiarquitectura]] ·
+  [[el-install-script-que-declara-el-registro-npm-puede-no-estar-en-el-tarball-real]].
+- 🔴 **Tuyo**: **habilitar la facturación de GitHub Actions** (org en plan free con 24 repos privados;
+  los workflows disparan pero GitHub no los ejecuta, y cada push deja dos aspas rojas que NO son
+  código roto), el `grant` de Storage (pasos en `PREGUNTAS-PARA-MANUEL.md` §29), rotar las claves
   emitidas mientras estuvo en HTTP y la de Dokploy, y **elegir paleta** (pediste verla antes).
-- ⚠️ **Dos sesiones en el mismo checkout, dos veces.** Un commit ajeno se llevó un fichero mío dentro.
+- ⚠️ **Dos sesiones en el mismo checkout, ya cuatro veces.** Un commit ajeno se llevó un fichero mío
+  dentro; y el 7-ago por la tarde una sesión paralela **borró mis `overrides` sin commitear** y
+  después **empujó mis commits a `origin/main`** dentro de su propio push. Ninguna hizo daño, las
+  cuatro dicen lo mismo: un worktree por sesión.
   Ver [[commit-por-ruta-no-te-aisla-de-otra-sesion-con-el-indice-cargado]].
 
 ## Estado (06-ago)
@@ -252,6 +272,9 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 
 ## Learnings de este proyecto
 
+[[un-plan-que-hereda-patrones-de-un-repo-hermano-da-por-existente-lo-que-solo-existe-alli]] ·
+[[al-fijar-imagen-base-por-digest-usar-el-del-indice-multiarquitectura]] ·
+[[el-install-script-que-declara-el-registro-npm-puede-no-estar-en-el-tarball-real]] ·
 [[test-de-equivalencia-entre-artefactos-generados-es-tautologia-sobre-la-definicion]] ·
 [[el-entorno-de-un-test-que-evalua-sql-emitido-no-se-escribe-a-mano]] ·
 [[replay-de-migraciones-contra-un-postgres-desechable-en-docker]] ·
