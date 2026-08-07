@@ -18,6 +18,16 @@ salieron **12 runs consecutivos a 0 pasos**, con frontera exacta —el último q
 22:38:58, justo el de 13 pasos que se citaba de contraste— y la anotación literal: *«The job was not
 started because recent account payments have failed»*. Es **una sola causa con fecha de inicio**.
 
+⚠️ **La duración NO clasifica** (07-ago): `0 pasos` se ha visto en **3-4 s** (billing) y también en
+**15 m 02 s** con `cancelled` (*«not acquired by Runner of type hosted»*, `log not found`). Quince minutos
+en rojo se leen como quince minutos de tests fallando. Solo cuentan los PASOS: ni el color —los dos modos
+salen rojos— ni el reloj.
+
+📊 **Barrido de jornada COMPLETA (07-ago): 41 runs de 41 a 0 pasos**, 19 ramas. Lo que el muestreo por tus
+propias PRs no ve: **12 de esos runs son `push` a `main`**, o sea que las 10 PRs del día se mergearon con
+un CI que no ejecutó nada. Barrer la serie entera es lo que hace visible el coste real. El riesgo caro no
+es esperar un verde que no llega: es **normalizar «0 pasos»** y comerse un rojo real cuando vuelva.
+
 **Por qué el marco importa más que el dato:** con «dos causas» se buscan dos arreglos; con «un antes y un
 después» se mira *Billing* y se acaba. **Dos runs no son una serie** — fecha la frontera antes de nombrar
 causas. Corolario: si el CI monta la BD real es la **única** superficie que corre los tests que el gate

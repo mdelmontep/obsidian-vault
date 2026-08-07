@@ -5,9 +5,18 @@ source: claude-code-session
 tags: [git, worktrees, housekeeping, agentes-paralelos]
 ---
 
+🚫 **`[ahead N]` NO es evidencia de nada** (7-ago, AGH): mide contra el upstream de ESA rama
+(`origin/<rama>`), no contra `main`. Con rebase-antes-de-mergear, una rama mergeada queda casi siempre
+«ahead» de su propio remoto —el remoto se rebasó durante la review y tu copia local guarda los commits
+pre-rebase—. Reporté «trabajo sin empujar, se puede perder» en 11 ramas y **lo rescatable era CERO**. Lo
+caro no es el trabajo perdido: es la falsa alarma que manda a auditar ramas de hace un mes.
+
 Rama es borrable si **cualquiera** de estas da vacío (evidencia, no fecha):
-- `git cherry origin/main rama | grep '^+'` → 0 (patch-equivalente, detecta squash-merge)
-- `git diff origin/main rama -- <paths que toca>` vacío (contenido mergeado por otra vía aunque cherry marque `+`)
+- `git cherry origin/main rama | grep '^+'` → 0 (patch-equivalente). ⚠️ **Fiable solo si el repo mergea
+  con merge commit o rebase**; con **squash** da falsos `+` masivos (37 de 85 en facturaia) porque N
+  commits colapsan en uno y ningún patch-id casa → [[tres-puntos-y-git-cherry-mienten-en-ramas-squash-mergeadas]].
+  Mirar la estrategia del repo antes de fiarse: en AGH (merge commits) el embudo 79→28→15→5→**0** salió limpio.
+- `git diff origin/main rama -- <paths que toca>` vacío (contenido mergeado por otra vía aunque cherry marque `+`) — **el único inmune a la estrategia de merge**
 - lo más barato con muchas ramas: `gh pr list --state merged --limit 400 --json headRefName` una vez y cruzar con `comm`. Un PR mergeado es prueba directa; 43 ramas en un `comm` en vez de 43 comprobaciones.
 
 **El comando `clean_gone` (repo de comandos propio) NO es seguro tal cual** (3-ago): hace `git branch -D` sobre TODAS las `[gone]` y `git worktree remove --force` de sus worktrees. Ese día una `[gone]` (`chore/types-obras-irpf`) estaba checkouteada en el worktree de otra sesión → le habría borrado el directorio con su WIP. Y `git branch --merged origin/main` daba **0 de 44** por el squash, así que ni siquiera servía como guarda. Usar la evidencia de arriba + saltar toda rama que aparezca en `git worktree list --porcelain`.
