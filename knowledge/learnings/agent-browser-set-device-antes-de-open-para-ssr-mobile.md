@@ -19,3 +19,12 @@ de producto, era orden de comandos.
 Fix: `close --all` → `open about:blank` → `set device "iPhone 14"` (+ `set media dark`
 si aplica) → **entonces** `open <url>`. El dispositivo debe estar seteado ANTES de la
 primera navegación real. Ver [[facturaia]].
+
+**El FLAG `--device` sobre una sesión ya abierta se ignora en silencio** (8-ago): no
+avisa, no falla, y `innerWidth` se queda en 1280 — parece que la emulación no existe y
+se acaba dando el smoke móvil por imposible. Es `set device` (subcomando), no
+`--device` (flag), y con la sesión recién creada. Salida cuando hace falta puntero
+grueso de verdad: exportar la sesión con `agent-browser state save auth.json` y conducir
+Playwright con `newContext({ ...devices['iPhone 13'], storageState })` — da viewport Y
+`pointer: coarse`, que es lo que se necesita para medir tap targets. Ver
+[[columna-que-aloja-un-control-necesita-un-ancho-por-tipo-de-puntero]].

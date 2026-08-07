@@ -25,3 +25,10 @@ queda igual o mejor que antes (subir solo el alto deja el objetivo en 38×44).
 Antes de tocar padding, mide quién manda: recorre los hijos de la fila y quédate
 con el más alto (`getBoundingClientRect().height`). Ahí sale el culpable en un
 vistazo, y te ahorra el commit inútil de "bajar el padding" que no mueve nada.
+
+**Redescubierto de cero el 8-ago** en la rejilla de presupuestos de obra (50 → 34
+px) sin que esta nota apareciera: solo la enlazaban `frontend-css-mobile` y un
+histórico. Un learning al que no apunta el hub del proyecto donde nació no se
+recupera navegando, solo por búsqueda difusa — y nadie busca en difuso un problema
+cuyo nombre no conoce. Enlázalo desde el hub el mismo día que lo escribas.
+Corolario del ANCHO: [[columna-que-aloja-un-control-necesita-un-ancho-por-tipo-de-puntero]].
