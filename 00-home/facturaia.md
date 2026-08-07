@@ -173,6 +173,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 
+- 🔴 **Obras-IA + WhatsApp + MCP (19-20 jul)** — smokes de Manu que solo vivían en `top-of-mind`, trasladados aquí el 08-ago: presupuesto conversacional por WhatsApp, MCP con token, pedido/salida/albarán, foto de factura sin caption → factura, y confirmar visualmente los precios recalculados tras #1100.
 - 🔴 **[08-ago] Pulido de la rejilla de partidas SIN COMMITEAR en `main`** — `presupuesto-detail-view.{tsx,module.css}` + su test + los dos manuales. Fila 50 → 34 px (el suelo era el `min-height` del botón `sm`, ver [[el-tap-target-del-boton-compartido-es-el-suelo-de-la-altura-de-fila]]), capítulo vacío en un renglón, ancho de columna por puntero. Verificado en local (227 tests, escritorio y 390 px con Playwright); **falta commit + smoke en prod**: abrir un presupuesto de obra real y comprobar densidad, capítulo vacío y que teclear una cantidad no recorta la cifra.
 - 🟠 **[03-ago] Los tests de `__integration__` necesitan `--no-file-parallelism`** — comparten org y dos ficheros borran los `obras_settings` en su teardown, que un tercero necesita. Y no corren contra la sandbox grande: el trigger de settings recalcula sus 11.595 materiales fila a fila y salta el `statement_timeout`. Arreglados de paso un año 3000 contra un `CHECK` que topa en 2200 y una semilla que el trigger pisaba ([[sembrar-una-columna-calculada-en-el-insert-la-pisa-el-trigger]]).
 
