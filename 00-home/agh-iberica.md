@@ -58,7 +58,7 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 🧰 **Herramientas, tres defectos propios encontrados al usarlas** (todos en la dirección peligrosa, decir «vigilado» sin serlo): un mutante que **revienta** se contaba como víctima · ficheros en rojo con **cero tests** en rojo también · y el barrido **dejaba código de producción mutado en el árbol** si lo matabas — los traps de señal NO sirven ahí → [[un-trap-de-senal-no-corre-mientras-execsync-bloquea]]. Van en #1059. Y `~/.claude/bin/mutate` daba **víctimas falsas** con `exit=127`, arreglado globalmente.
 
-📝 **Pendiente de cierre de sesión (no hecho el 7-ago, por ninguno de los dos):** nota en `docs/status-log/2026-08-07-manu-*.md` y `docs/PROJECT-STATUS.md`, que va por el **6-ago** con 10 merges de por medio. Prompt de continuación redactado.
+📝 **Cierre hecho** (PR #1063): nota `2026-08-07-manu-noche-el-arnes-que-caza-lo-que-no-se-te-ocurre.md` + snapshot con los dos bloqueantes nuevos, podado a 149 líneas. ⚠️ Y una corrección: llegué a afirmar que no había notas del 7-ago y que el snapshot iba por el 6-ago — **falso**, leí el checkout principal 12 commits por detrás. Hay cinco notas del día. Es [[auditar-sobre-origin-main-worktree-no-cwd-stale]] otra vez.
 
 ✅ **Prod verificada por CONTENIDO el 7-ago**, con #973 (la tarea cuelga de la ficha y «última actividad» se mueve) y #974 (`reminder|create` en `audit_log`) cerradas con un turno real de voz. El contenedor corre desde `src/` vía tsx, así que los conteos coinciden con `origin/main`.
 
