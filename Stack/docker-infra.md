@@ -7,6 +7,28 @@ tags: [docker, traefik, dokploy, infra]
 
 # Docker / Infraestructura
 
+## El `env` está CIFRADO en la base de Dokploy — la receta de leer-fusionar-escribir no vale
+
+- `application.update` reemplaza el bloque entero, pero **no hay forma de leerlo**: la API lo devuelve en
+  claro y el wrapper lo borra; su propia base lo guarda cifrado (460 caracteres sin un `=`).
+- Sustituto probado (7-ago): reconstruir el bloque desde la fuente local, y **antes de escribir** comparar
+  la huella SHA-256 de cada variable ya presente en el contenedor (`docker exec … printenv`, por SSH)
+  contra la tuya. Coinciden → reconstruir no pierde nada. Ver
+  [[dokploy-guarda-el-env-cifrado-la-receta-de-leer-fusionar-escribir-no-vale]].
+- El guion corre EN EL HOST y sólo imprime nombres, longitudes y huellas: ningún valor cruza a la sesión.
+- Verificar siempre en el plano de datos, no en el de control. Y el contenedor no lo toma al vuelo.
+
+## El `env` está CIFRADO en la base de Dokploy — la receta de leer-fusionar-escribir no vale
+
+- `application.update` reemplaza el bloque entero, pero **no hay forma de leerlo**: la API lo devuelve en
+  claro y el wrapper lo borra; su propia base lo guarda cifrado (460 caracteres sin un `=`).
+- Sustituto probado (7-ago): reconstruir el bloque desde la fuente local y, **antes de escribir**, comparar
+  la huella SHA-256 de cada variable ya presente en el contenedor (`docker exec … printenv`, por SSH)
+  contra la tuya. Coinciden → reconstruir no pierde nada. Ver
+  [[dokploy-guarda-el-env-cifrado-la-receta-de-leer-fusionar-escribir-no-vale]].
+- El guion corre EN EL HOST y sólo imprime nombres, longitudes y huellas: ningún valor cruza a la sesión.
+- Verificar en el plano de datos, no en el de control. Y el contenedor no lo toma al vuelo.
+
 ## API Dokploy: `compose.one` y `schedule.one` devuelven el `env` COMPLETO
 
 - Ambos endpoints incluyen el bloque `env` entero del compose (todos los secrets: DB, API keys de terceros, tokens) en la respuesta, aunque solo se pida para leer metadata (autoDeploy, appName, último deploy).

@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-06 (021 CERRADO — UI + dos bugs reales encontrados navegando + auditoría de composición)
+updated: 2026-08-07 (HTTPS, 5 issues, cimientos visuales · pendiente: cola del outbox sin vaciar)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,33 +14,41 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
+## Estado (07-ago) — la jornada más larga del proyecto
+
+- **F1 con NUEVE issues de dominio cerrados.** Gate **2.488 tests**, **49 migraciones** aplicadas.
+  Desplegado y verificado en `https://tucrmia.185.99.186.76.sslip.io`, `smoke:v1` 57/57 y
+  `smoke:admin` 32/32 contra el despliegue.
+- ✅ **HTTPS, tras cuatro días bloqueado por una deducción de más.** El cupo agotado era el de
+  `traefik.me`; de ahí se concluyó «hace falta dominio propio» y era falso — otra app del MISMO host
+  llevaba desde junio con certificado real sobre `sslip.io`. Puerta en claro borrada. Ver
+  [[traefik-me-no-emite-certificado-por-cupo-compartido-agotado]] y
+  [[un-no-se-puede-heredado-caduca-como-cualquier-otra-frase]].
+- ✅ **Las tres variables de Dokploy, puestas por SSH.** El `env` está cifrado en su base, así que la
+  receta de leer-fusionar-escribir no era ejecutable; se sustituyó por huellas SHA-256. Ver
+  [[dokploy-guarda-el-env-cifrado-la-receta-de-leer-fusionar-escribir-no-vale]].
+- ✅ **Entraron**: candado del módulo en la base (`050`), barrido de retención con `pg_cron` (`052`),
+  contador de tasa duradero (`044`), hora en la zona de la organización, vínculos heredando la
+  visibilidad de su ficha (`042`), reparto de `outbox_events` (`045`), ciclo de vida del módulo
+  (`047`), búsqueda y timeline por la API v1 (`048`).
+- ✅ **Sesión de `impeccable` (16/40)**: el producto se pintaba con la FUENTE DEL SISTEMA sobre blanco
+  de navegador — `body` no consumía los tokens y las tres familias nombradas no las cargaba nadie.
+  Arreglado, con gate G-FUENTES. Ver [[el-gate-escrito-justo-despues-del-arreglo-mide-cero-casos]].
+- 🔴 **PENDIENTE Y NUEVO: la cola del outbox se llena y no la vacía nadie** (issue 044). El reparto
+  crea las entregas y nada invoca `procesarPendientes`. Es el mismo fallo un escalón más abajo.
+- 🔴 **Tuyo**: el `grant` de Storage (pasos en `PREGUNTAS-PARA-MANUEL.md` §29), rotar las claves
+  emitidas mientras estuvo en HTTP y la de Dokploy, y **elegir paleta** (pediste verla antes).
+- ⚠️ **Dos sesiones en el mismo checkout, dos veces.** Un commit ajeno se llevó un fichero mío dentro.
+  Ver [[commit-por-ruta-no-te-aisla-de-otra-sesion-con-el-indice-cargado]].
+
 ## Estado (06-ago)
 
 - **F0: 11/17. F1 con CUATRO issues de dominio cerrados (018/019/020/021).** Gate **1386 tests**,
   veinticinco migraciones. Desplegado: `9eb31cb7`.
-- ✅ **021 CERRADO — campos personalizados (E1.4)**: sobre el motor ya construido (validación por
-  delta, escritura canónica, gate G-D10), esta sesión construyó lo que faltaba para que fuera
-  verificable en el navegador: pantalla `/ajustes/campos` (definiciones por tipo de entidad,
-  opciones para select/multiselect con `key`/`data_type`/`code` inmutables tras el alta — D9,
-  nunca se borra una opción —, y para leads una matriz pipeline×etapa que fija required/hidden) y
-  botón "Campos" en la ficha de lead/contacto/empresa (oculto si la org no tiene ninguna
-  definición), reusando `CampoPersonalizadoInput` ya existente. Construido con dos agentes en
-  paralelo sobre ficheros disjuntos (pantalla de ajustes vs. fichas), núcleo de escritura y
-  verificación por el hilo principal.
-  **Dos bugs reales, encontrados verificando en el navegador contra `tucrmia-prod` con una
-  organización de prueba real, no leyendo código**: `listarOpcionesDeCampos()` no filtraba
-  `archived_at is null` (a diferencia de su hermana de un solo campo) — una opción archivada
-  seguía ofreciéndose como elegible en la pantalla y en los modales; la escritura nunca estuvo en
-  riesgo (`validateCustomFields()` ya la excluye por su cuenta), pero la UI mentía sobre qué estaba
-  archivado. Y el modal de la ficha mandaba siempre el snapshot COMPLETO de valores al guardar, no
-  el delta: `validateCustomFields()` revalida cualquier clave PRESENTE en el payload, así que
-  reabrir la ficha de un lead con un valor bajo una opción ya archivada y pulsar "Guardar" sin
-  tocar nada lo rechazaba — y de paso bloqueaba también cualquier otro campo del mismo formulario.
-  Arreglado calculando el delta real contra los valores con los que se abrió el modal, con test de
-  regresión en las tres features. Ver
-  [[modal-que-reenvia-snapshot-completo-revalida-de-balde-valores-sin-tocar]].
-  También encontrado antes de la UI: `OpcionDeCampo`/`listarOpciones()` no exponían `color`/`sort`
-  reales (solo las mutaciones los aceptaban) — expuestos en el núcleo antes de delegar la pantalla.
+- ✅ **021 · campos personalizados (E1.4)** — pantalla `/ajustes/campos` + botón «Campos» en las tres
+  fichas, sobre el motor ya existente. Dos bugs reales cazados NAVEGANDO, no leyendo: opción archivada
+  que seguía elegible, y el modal mandando el snapshot completo en vez del delta (revalidaba de balde y
+  bloqueaba el formulario entero). Detalle en el `status-log` del repo.
 - ✅ **Auditoría de composición del 6-ago, sobre los 80 ficheros del 021**: 19 hallazgos, los 19
   refutados, **17 sobreviven**. Cinco mecánicos arreglados en la misma sesión — el más
   transferible: **G-S4-ALIAS (ESLint) solo miraba el OBJETO de una llamada a método

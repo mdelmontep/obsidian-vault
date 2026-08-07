@@ -1,32 +1,19 @@
 ---
-title: un artifact de Claude solo se puede republicar desde la cuenta que lo publicó
-date: 2026-08-05
-source: claude-code-session — tablero de TuCRMIA
-tags: [claude-code, artifact, gotcha]
+title: republicar un artifact: el listado no basta — haz WebFetch de la URL antes de publicar
+date: 2026-08-07
+source: claude-code-session
+tags: [claude-code, artifacts]
 ---
+Un tablero republicado desde muchas sesiones acumuló **seis URL huérfanas**. Las reglas que se fueron
+probando, y por qué las dos primeras no bastaban:
 
-`Artifact` con `action: publish` y `url:` de un artifact existente falla siempre con
-«could not verify the target page is not a review page (... served to you as a public
-(non-member) reader ...)» si la sesión actual usa una cuenta DISTINTA de la que lo
-publicó originalmente — no es un fallo transitorio de la plataforma, es que esa cuenta
-no es la dueña. Confirmado con cinco reintentos idénticos, con y sin `?org=`.
+1. ~~«solo lo republica la cuenta que lo publicó»~~ — describe el síntoma, no da acción.
+2. `Artifact({action:'list'})` antes de republicar. Evita mintar a ciegas, **pero la pertenencia al
+   listado NO ES ESTABLE**: cambia entre sesiones del mismo día, en los dos sentidos. Una URL listada
+   por la mañana puede no estarlo por la tarde, y al revés.
+3. **`WebFetch` de la URL antes de publicar.** Es lo que desbloquea el republicado —si no, falla con
+   «this session hasn't viewed the latest version»— y además **es lo único que enseña si la copia
+   publicada va por detrás del fichero local**, que es el fallo silencioso de verdad: el tablero
+   mintiendo por omisión mientras nadie mira.
 
-No hay mecanismo para transferir la propiedad ni para que otra cuenta gane permiso de
-publish sobre un artifact ajeno (compartir desde el menú da solo lectura). Salidas
-reales:
-1. Republicar desde la cuenta original.
-2. Publicar una URL nueva desde la cuenta actual y actualizar la referencia donde se
-   documente esa URL (el contenido fuente en el repo no se pierde; solo cambia el link).
-
-**Salida (2) confirmada funcionando el mismo día** (mismo caso, tablero de TuCRMIA): publicar
-sin `url:` mintó `f2541d7c…`, y republicar después pasando ESA URL como `url:` actualizó el
-mismo artifact sin crear uno nuevo — el flujo normal de "publicar/actualizar" funciona con
-normalidad una vez se parte de una URL que la cuenta actual sí posee.
-
-Antes de asumir "fallo de la plataforma" tras 2-3 reintentos idénticos con el mismo
-error, preguntar si el artifact se publicó alguna vez desde otra cuenta/sesión.
-
-**Diagnóstico rápido (reincidió una TERCERA vez, 06-ago, mismo tablero):** publicar SIN
-`url` (mintar nuevo) primero. Si funciona a la primera, el servicio está arriba y es la
-URL vieja la huérfana — no reintentar la vieja más veces. Si la publicación nueva
-TAMBIÉN falla, ahí sí es el servicio caído (pasó una vez, 05-ago noche).
+Regla operativa: `WebFetch` → publicar con `url:` → si falla, `list` y elegir una que aparezca.
