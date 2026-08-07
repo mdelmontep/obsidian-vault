@@ -21,3 +21,7 @@ muestreo dirigido a casos "sospechosos", weighted sampling), NUNCA compares/agre
 `pasadas/muestras` crudo — usa la media de la tasa POR ÍTEM. Y verifica con la función/fórmula REAL
 del sistema que mides, no con una cuenta mental rápida: la lectura ingenua aquí habría bloqueado un
 PR bueno por un "problema" que no existía.
+
+Hermana con la otra mitad del mismo mecanismo: aquí el problema es **cómo se comparan** las tasas;
+en [[repeticiones-adaptativas-dan-menos-muestras-de-las-que-pides]], **cuántas muestras obtienes de
+verdad** cuando vas a DERIVAR un umbral (spoiler: n=8 donde el flag decía ×5 → Wilson 0.63 vs 0.91).

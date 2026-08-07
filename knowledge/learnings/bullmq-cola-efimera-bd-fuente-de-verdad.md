@@ -21,3 +21,10 @@ Gotchas:
   sobre store in-memory = jobs que sobreviven pero apuntan a filas que ya no existen.
 - Fallo transitorio (5xx/red) → rethrow para que reintente (attempts+backoff); permanente
   (sin destinatario) → marca failed sin reintentar.
+
+**Corolario que abarata cancelar (AGH 7-ago):** si el worker **relee la fila** antes de actuar, un
+`UPDATE ... SET status='cancelled'` es suficiente **y correcto** — el job huérfano dispara, ve el
+estado y es no-op. O sea que **otro proceso** (un dashboard que no habla con Redis) puede cancelar
+sin tocar la cola. Lo único que pierde es la limpieza cosmética. Ojo a la dirección contraria:
+**reprogramar NO es simétrico** —cambiar `fire_at` sí exige re-encolar— y el borrado del job debe ir
+**después del COMMIT**: antes deja una fila `scheduled` sin quien la dispare.

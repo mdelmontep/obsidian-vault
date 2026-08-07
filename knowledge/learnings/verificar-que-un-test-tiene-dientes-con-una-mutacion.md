@@ -39,3 +39,9 @@ importa) · apuntar a **un artefacto que esa ruta ni ejecuta** (mutar la migraci
 aplica el schema) · lanzar el arnés **sin el entorno de la medición** (sin `DATABASE_URL`, contra otra
 BD). La cuarta sí era del test, y era real: **no era re-ejecutable** — sembraba en la 1ª corrida lo
 que la 2ª daba por hecho. Un test que solo mide la primera vez es un candado que se abre solo.
+
+**Quinto modo, y no se arregla con más casos: la VARIANTE DETERMINISTA deja moldes ciegos.** Si el
+código elige entre N redacciones hasheando el contenido (para que la medición sea reproducible), un
+payload dado ejercita **siempre la misma**: mutar las otras no mata a nadie. Añadir casos solo tapa
+las que se te ocurran hoy. Lo cierra una **invariante sobre el POOL** («ningún molde contiene "voy
+a"»), que cubre además el molde que alguien añada mañana. AGH 7-ago: 2 de 4 moldes ciegos.
