@@ -63,6 +63,7 @@ Cambios aplicados sin probar en vivo:
 - Borrar embudo vacío `13862727` ("Compradores en búsqueda") en Kommo UI.
 - Rotar key Supabase (cred `Wm7JL1tsxiWyElqt` usa la demo de self-hosted) a producción.
 - `contratos-enviar-firma`: cambiar cuenta Documenso de prueba a la real (TODO en Build Recipients).
+- **Documenso no sobrevive a los reboots (07-ago)** — su compose no trae `restart:`, así que los dos contenedores nacían con policy `no`. Parcheado en caliente con `docker update --restart unless-stopped`, pero **eso se pierde en el próximo redeploy desde el panel**: hay que añadir `restart: unless-stopped` a los dos servicios del compose en Dokploy. El host no está expuesto a la carrera de la overlay (en su `dokploy-network` solo hay servicios de Swarm). → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]]
 - Meter leads al pool "Buscando vivienda" desde chatbot/voz tras opt-in (hoy lo mueve el agente a mano en Kommo).
 - Crear salesbot para plantilla `72645` Solicitud_recibida (resto de formTypes del formulario web; relacionado con la verificación del bot `88575` de arriba).
 - Latencia voz opcional: quitar embedding de `Buscar_viviendas` + `begin_message_delay_ms` 1000→400.

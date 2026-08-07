@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-08-04
+updated: 2026-08-07
 tags: [cliente, agentesia]
 ---
 
@@ -35,6 +35,15 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
    - **PR #99** (`feat/foco-desarrollo-a-medida`, DRAFT hasta que entre el #97) — los 16 commits del worktree: `/servicios/software-a-medida`, `/servicios/tufacturaia` con capturas reales de la app, hero con ilustración SVG interactiva, sección de redes, `/resultados` y `/casos-de-uso`. **Las dos regresiones anunciadas eran reales y están resueltas**: el titular volvía a teclearse dentro del `<h1>` (lo que cerró el #89) y las stats a mano resucitaban el "+35% Más conversión" que el #91 retiró por no tener respaldo. Ahora el H1 es estable ("Desarrollamos herramientas a medida"), los ejemplos rotan fuera del heading con `aria-hidden` y las tres cifras vuelven a `PROOF`. Integrado con **merge, no rebase** (16 commits y `HeroSection.tsx` reescrito 5 veces → un solo punto de resolución); backup previo en `backup/foco-a-medida-prerebase`. Gates: **vitest 76/76**, lint 0 errores, build SSG con las tres rutas prerenderizadas.
    - **Tuyo**: horquilla de precio de "A medida", créditos de Higgsfield para la foto que falta, desplegar `tufacturaia.com` (sigue en **404**) y decidir si el titular recupera el tecleo — si sí, hay que decidir antes qué pasa con `heading-text-integrity`. Las capturas (desktop fullPage + móvil de las 3 rutas) se arrastran a mano a un comentario del #99: `gh` no las sube.
    - Ver [[rama-que-reescribe-el-mismo-fichero-varias-veces-se-integra-con-merge]] · [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]] · [[los-tests-rojos-que-hereda-un-merge-se-clasifican-uno-a-uno]] · [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]] · [[los-audios-de-llamadas-reales-llevan-nombres-de-clientes]] · [[capturar-un-saas-para-la-web-publica-exige-mirar-la-organizacion-activa]]
+
+## Infraestructura — el monitor del portal (`/agency/infrastructure`)
+
+El alta de un servidor **solo se hace desde el formulario del portal**: el único punto de entrada es el Server Action `createServerAction` (`src/lib/dokploy/actions.ts`), y bajo `src/app/api` lo único de Dokploy es el cron `internal/collect-dokploy-metrics`. No hay API de alta, así que no se puede scriptear.
+
+- Clave del monitor: **`~/.ssh/dokploy_portal_monitor`** (ed25519, sin passphrase, una sola para todos los hosts). La genera y autoriza `~/.claude/skills/dokploy-backup-monitor/scripts/monitor-onboard.sh <alias-ssh>`, que además deja la privada en el portapapeles. Creada el 07-ago; antes no existía.
+- **No pegar la clave root del host** (la de parchear/reiniciar): el portal solo lee métricas.
+- **Pendiente**: DOKPLOYMANU (`185.99.186.76:5251`) ya tiene la pública autorizada y verificada, falta crearlo en el formulario. → [[tecnocloud]]
+- Un n8n de Agentesia vive en ese host de Tecnocloud y se cayó en su reboot del 07-ago → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]]
 
 ## Bloqueos / esperando a terceros
 

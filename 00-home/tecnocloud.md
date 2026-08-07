@@ -1,8 +1,8 @@
 ---
 title: tecnocloud
 date: 2026-05-07
-updated: 2026-05-25
-tags: [cliente, tecnocloud, retell, voice]
+updated: 2026-08-07
+tags: [cliente, tecnocloud, retell, voice, dokploy]
 ---
 
 # Tecnocloud
@@ -21,6 +21,17 @@ También tiene agente de voz Retell propio (Laura) para soporte técnico inbound
 
 1. **WhatsApp en TuFacturaIA** (LATER) — obtener `phone_number_id` de Meta Business → guardar en `organizations.settings.whatsapp.phone_number_id` → webhook override en n8n receptor v2
 2. **PR #3 voice-webhook-tickets** (NEXT) — pendiente review Dani. Tras merge → smoke E2E con llamada real.
+
+## Servidor DOKPLOYMANU — el Dokploy de Tecnocloud (07-ago-2026)
+
+Host **`185.99.186.76`, puerto SSH 5251** (alias local `ssh tucrmia`, clave `~/.ssh/tucrmia_root`; documentado en 1Password, bóveda TUCRMIA). Proveedor distinto al de la tanda `185.47.13.x`, pero **misma contraseña root** — ver [[vps-dokploy-de-una-tanda-comparten-password-root]].
+
+Ojo al alcance: aquí no solo vive lo de Tecnocloud. **20 contenedores**, entre ellos [[tucrmia|TuCRMIA]], un n8n de Agentesia, Chatwoot y notcaido. Un reboot los tira todos ~1 min, así que la ventana se acuerda con ellos.
+
+- **07-ago**: parcheado (18 updates), kernel `5.15.0-174`, reiniciado, 20/20 arriba.
+- El n8n de Agentesia no volvió solo tras ese reboot: **carrera con la overlay `dokploy-network`**, no su restart policy. Guardián systemd instalado y `enabled` (`/usr/local/bin/dokploy-restart-orphans.sh`, log en `/var/log/dokploy-restart-orphans/`), validado en sus dos ramas; **falta verlo en un reboot real**. → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]]
+- **Pendiente**: darlo de alta en `/agency/infrastructure` del portal — clave del monitor ya autorizada en el host, falta pegarla en el formulario. → [[agentesia]]
+- Sin backups a Wasabi configurados; nunca se auditaron (`dokploy-backup-monitor` los cubre).
 
 ## Agente de voz Laura — Retell
 

@@ -414,3 +414,5 @@ tags: [home, archivo]
 - 2026-08-06 · TuFacturaIA · tickets 133-138 cerrados y respondidos (6/6 `resuelto`, #1525-#1527). El 136 y el 137 llevaban desde el 03-ago en `en_revision`. → [[facturaia]]
 - 2026-08-07 · AGH — prod verificada por CONTENIDO tras el tren de diez merges; #973 y #974 cerradas con un turno real de voz (tarea en la ficha de Dragados + `reminder|create` en `audit_log`). El SSH sí abría: lo que fallaba era el clasificador de permisos, no la red.
 - 2026-08-07 · AGH — #1015, #1007, #1002, #1028, #972 y #1030 (anáfora) implementadas y en PR, todas con gate verde y mutaciones con víctima.
+- 2026-08-07 · Tecnocloud — DOKPLOYMANU (`185.99.186.76`) parcheado (18 updates), kernel `5.15.0-174`, reiniciado y 20/20 contenedores arriba; SSH documentado en 1Password (bóveda TUCRMIA) y alias `ssh tucrmia`. → [[tecnocloud]]
+- 2026-08-07 · Infra — guardián de la overlay instalado y `enabled` en DOKPLOYMANU y validado en sus dos ramas con contenedor de juguete; los dos `documenso` de Simarro pasados a `unless-stopped`. → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]]
