@@ -20,16 +20,20 @@ worktree `~/wt-390` estaba en `main` y **no** tenía el bloque. Copia del diff e
 `facturaia-pedido-movil-390-issue-1541.patch`, junto a este archivo.
 
 Horas después otra sesión lo mergeó por su cuenta en #1551, así que el rescate no
-hizo falta. Pero la lección sí:
+hizo falta.
 
-**`refs/stash` es por worktree, no por repositorio.** `wt-deuda` tenía su propio
-stash con esta etiqueta y el repo raíz otro distinto con la MISMA, y
-`git worktree remove` se lleva los refs por worktree — es decir, **borrar un
-worktree puede destruir un stash** que solo vivía ahí. Se detectó porque
-`git stash show --stat stash@{0}` daba 1 fichero desde `wt-deuda` y 5 ficheros
-distintos desde el raíz. Corolario práctico: antes de `git worktree remove`,
-`git -C <worktree> stash list`; y no fiarse de la etiqueta de un stash para
-decidir si sobra — mirar el contenido.
+**CORRECCIÓN (mismo día).** Esta nota afirmaba que «`refs/stash` es por worktree y
+`git worktree remove` se lo lleva». **Es falso**, medido en un repo de prueba:
+`refs/stash` vive en el `.git` común y sobrevive a `worktree remove --force`
+(git 2.50.1). La anomalía que lo motivó —`git stash show --stat stash@{0}` daba
+1 fichero desde `wt-deuda` y 5 distintos desde el raíz, con el reflog intacto y
+sin drops— **sigue sin explicación**, y así se queda: inventarle un mecanismo es
+lo que propagó la falsedad a cuatro documentos y a un mensaje de hook.
+Ver [[dos-salidas-contradictorias-no-son-un-mecanismo-hasta-que-lo-reproduces]].
+
+Lo que sí vale de aquí: **no fiarse de la etiqueta de un stash para decidir si
+sobra** — este se llamaba «restos-obsoletos» y tenía 78 líneas de trabajo que no
+estaban en ninguna rama. Mirar el contenido.
 
 ## Qué resolvía (por si hay que volver a razonarlo)
 

@@ -116,7 +116,7 @@ unidad de medida en las cuatro pantallas del pedido con fuente única de resoluc
 El gate corrió 4 rondas: la 2 salió **no listo** con 2 bloqueantes. En la 4, `datos` agotó los
 reintentos de `StructuredOutput` y `codigo` devolvió `"test"` como resumen — registrado en
 `cierres.json` por lo que corrió de verdad, no por lo que se invocó.
-→ [[refs-stash-es-por-worktree-y-worktree-remove-se-lo-lleva]] · artifact `d50dd108`
+→ [[dos-salidas-contradictorias-no-son-un-mecanismo-hasta-que-lo-reproduces]] · artifact `d50dd108`
 
 ### Cifras completas del catálogo de IET (medido 07-ago-2026, en prod por organización)
 
@@ -131,9 +131,16 @@ históricos, solo **525** apuntan a un material que hoy existe en su org. Casan 
 `cod_almacen` (5,6 %)** y el casado es real: mismo artículo con distinta nomenclatura. Lo que SÍ está
 correcto en su org son los **745 tipos de mano de obra** con sus horas.
 
-### 2026-08-08 · La fila del pedido en móvil (#1541/#1551), y el stash que casi se pierde
+### 2026-08-08 · La fila del pedido en móvil (#1541/#1551), y una falsedad que casi shipeo
 
-Resuelto y en `main` (`bc90dcd8`). Se documenta aparte porque la lección no es el CSS:
-el trabajo vivía en un stash etiquetado «restos-obsoletos» y `refs/stash` es por worktree, así que
-borrar el worktree se lo habría llevado. Crónica y diff → [[facturaia-pedido-movil-390-issue-1541]] ·
-[[refs-stash-es-por-worktree-y-worktree-remove-se-lo-lleva]]
+Resuelto y en `main` (`bc90dcd8`). Se documenta aparte por dos cosas, y ninguna es el CSS:
+
+1. El trabajo vivía en un stash etiquetado **«restos-obsoletos»** con 78 líneas razonadas que no
+   estaban en ninguna rama. No fiarse de la etiqueta: mirar el contenido.
+2. De una anomalía al leer ese stash inferí un mecanismo de git («`refs/stash` es por worktree»),
+   lo escribí en cuatro documentos y estuve a punto de shipear un hook con él. **Era falso**, y lo
+   refutó un repo de prueba de 60 segundos. Lo que sí sobrevivió, porque estaba medido, es la regla
+   6 de `git-guard.sh`: `worktree remove` con cambios sin commitear, con 5 casos en su suite.
+
+Crónica y diff → [[facturaia-pedido-movil-390-issue-1541]] ·
+[[dos-salidas-contradictorias-no-son-un-mecanismo-hasta-que-lo-reproduces]]
