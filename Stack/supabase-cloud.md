@@ -103,3 +103,9 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
   sesión en el navegador (fragmento `#access_token`), el segundo permite canjearla en el servidor con
   `verifyOtp` y dejarla en cookies `HttpOnly`. Ver
   [[enlace-de-acceso-canjeado-en-el-servidor-con-hashed-token]]
+- **Leer prod sin poder escribir: `BEGIN READ ONLY`, no `SET SESSION`** — con el pooler ni `SET SESSION
+  characteristics` ni `options=-c` persisten, así que el candado que crees puesto no está. Prueba el
+  candado con una escritura REAL sobre una tabla de negocio, no con un `CREATE TEMP TABLE` (que un
+  read-only sí permite y te da un falso verde). Y el rol de lectura `claude_runner_ro` NO sirve para
+  medir: sin `BYPASSRLS`, las tablas con RLS devuelven **0 filas en silencio**. Ver
+  [[set-session-read-only-no-persiste-en-el-pooler-usa-begin-read-only]]
