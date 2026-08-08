@@ -1,0 +1,97 @@
+diff --git a/src/components/obras/pedido-detail-view.module.css b/src/components/obras/pedido-detail-view.module.css
+index 113310ee..6dc04944 100644
+--- a/src/components/obras/pedido-detail-view.module.css
++++ b/src/components/obras/pedido-detail-view.module.css
+@@ -154,6 +154,78 @@
+    desbordamiento que arregló el #1538. */
+ .lineaActions { display: inline-flex; gap: 2px; justify-content: flex-end; }
+ 
++/* De aquí abajo la fila deja de ser UNA línea (issue #1541).
++   Lo que se medía a 390 px con la fila en una línea: pide 472 px de ancho (533
++   con la fila tocada, que es cuando aparece «Guardar»), y el navegador móvil no
++   saca scroll horizontal — ENSANCHA el layout viewport a 509 px. Por eso no se
++   notaba: no hay barra que avise, simplemente se ve todo más pequeño de lo que
++   debería, y las cifras de un pedido son justo lo que no conviene leer chico.
++
++   La salida NO es encoger los campos. A 390 px, repartiendo las pistas `fr`,
++   a cantidad le tocarían 42 px y a precio 48, de los que 20 son relleno: entra
++   una cifra, dos con suerte. Se quedan en sus 90 y 100 px y la fila se parte:
++
++     línea 1   nombre ······································  importe
++     línea 2   cantidad   precio  ························  acciones
++
++   Cuenta a 390 px de pantalla: 338 px útiles dentro del relleno de
++   `.lineasWrap` (16+16) y de la fila (10+10). La segunda línea pide
++   90 + 100 + 90 (dos botones táctiles de 44 más su hueco) + 16 de huecos = 296.
++   Entra, y entra el caso peor, que es la fila tocada con el dedo.
++
++   Las columnas las comparten las dos líneas, así que la tercera mide
++   `max(importe, acciones)` = 90: el importe no se recorta, que es el número por
++   el que se mira una línea de pedido.
++
++   Los rótulos se ocultan a propósito: sin columnas alineadas debajo no rotulan
++   nada. Ya eran `aria-hidden`, decoración pura, así que no se pierde semántica.
++
++   `overflow-wrap: anywhere` en el nombre es el seguro del cálculo: una
++   denominación con una palabra larguísima (las referencias de material las
++   tienen) empujaría las dos primeras pistas por encima de sus 190 px y volvería
++   a desbordar. Con eso puede partir por donde haga falta. */
++@media (max-width: 720px) {
++  /* La cabecera son pares de campos en dos columnas fijas a cualquier ancho: a
++     390 px tocan 167 por columna, y ahí no cabe ni un `<Select>` de delegación
++     ni el estado vacío de contacto. En vertical cada campo tiene su ancho. */
++  .formRow { grid-template-columns: 1fr; }
++
++  .lineasWrap { grid-template-columns: 1fr; }
++  .lineasHead { display: none; }
++
++  .lineaRow {
++    grid-template-columns: auto auto 1fr;
++    grid-template-areas:
++      'nombre nombre importe'
++      'cantidad precio acciones';
++    row-gap: 6px;
++  }
++  .lineaName {
++    grid-area: nombre;
++    min-width: 0;
++    overflow-wrap: anywhere;
++  }
++  .lineaCantidad { grid-area: cantidad; }
++  .lineaPrecio { grid-area: precio; }
++  .lineaImporte { grid-area: importe; }
++  .lineaActions { grid-area: acciones; }
++}
++
++/* El único tramo donde los campos SÍ ceden ancho, y con la cuenta delante: por
++   debajo de 360 px de pantalla quedan 268 útiles y la segunda línea pide 296
++   con la fila tocada (medido en un iPhone SE de 320: el viewport se ensanchaba
++   a 353). 76 y 84 px dejan 56 y 64 de campo descontando el relleno, que son
++   cinco cifras largas — lejos de los 42 px que salían de repartir las pistas
++   `fr`, y solo en pantallas de 2016. Por encima de 360 no se toca nada. */
++@media (max-width: 360px) {
++  .lineaCantidad :global(.set-input) { width: 76px; }
++  .lineaPrecio :global(.set-input) { width: 84px; }
++  /* Y los últimos píxeles salen del relleno, no del campo: en un 320 la fila
++     tocada seguía pidiendo tres más de los que había. */
++  .lineasWrap { padding-left: 10px; padding-right: 10px; }
++  .lineaRow { padding: 8px 8px; column-gap: 6px; }
++}
++
+ .addValidezRow {
+   display: flex;
+   align-items: center;
+@@ -229,7 +301,12 @@
+ 
+ .contactoVacio span {
+   flex: 1;
+-  min-width: 220px;
++  /* `min-width: 220px` a pelo era un suelo que la columna no podía honrar: en la
++     cabecera son dos columnas de 167 px a 390 de pantalla, así que el bloque se
++     salía de su pista y arrastraba la tarjeta entera fuera de la ventana (medido:
++     el borde derecho caía en 444 con el shell acabando en 374). Con `min()` el
++     suelo sigue siendo 220 donde hay sitio y cede donde no lo hay. */
++  min-width: min(220px, 100%);
+ }
+ 
+ .contactoLink {

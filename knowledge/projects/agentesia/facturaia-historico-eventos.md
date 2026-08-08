@@ -88,3 +88,52 @@ Triaje: el hub NOW/WIP estaba muy stale — decenas de PRs marcados 🔴/🟡 ya
 - **PR #872 (crons)** — cableados `ocr-dispatcher` + `copiloto-insights` en el switch `loadHandler` de `/api/admin/crons/run` (estaban en CRON_REGISTRY sin case → "Run Now" 500 + test `registry-wired` rojo, único fallo de la suite en main). Mergeado `--admin --squash`. Suite verde.
 - **Limpieza de worktrees**: de ~20 a 5. Borrados 14 verificados como merged (0 ahead) o squash-merged (PR MERGED confirmado por `gh pr view`: #641/#754/#851/#787/#798/#772). Conservados: `saltedge-psd2` (#610 draft), `fix-gestor-externo-ux` + `informes-selector` (trabajo real sin PR, flageados en hub WIP), `agent-a80ef300` (detached huérfano). Cuidado con el falso positivo de squash (`ahead>0` ≠ sin mergear) → ver [[git-merge-base-is-ancestor-falso-negativo-con-squash]].
 
+
+## 2026-08-08 · Las 12 quejas de UI de Obras (#1546 + #1550)
+
+Doce defectos visuales del presupuesto de obra y del pedido, todos cerrados. Lo que merece
+recordarse son las tres cosas que aparecieron al verificarlos con medidas en vez de a ojo, ninguna
+pedida:
+
+1. **La recepción de albarán rotulaba «Material» en casi toda recepción real.** Traía el catálogo
+   completo con `GET /api/obras/materiales` para traducir `material_id`, y ese endpoint pagina a 50:
+   **50 de 11.595** en la org de pruebas, y el material de la 1ª línea de un pedido real no estaba en
+   esa página. Fix por eliminación: `getPedidoDetail` ya devolvía `material_denominacion`.
+   → [[resolver-label-nombre-en-cliente-contra-endpoint-paginado-cae-al-uuid]]
+2. **El trinquete de estilos en línea se podía esquivar** sacando el objeto de `style={{…}}` a una
+   variable. Aguja a `/(?<![\w-])style=\{/g`, baseline 770 → 895 (125 que ya existían y no se veían).
+   → [[un-guard-cuya-aguja-cubre-una-sola-forma-sintactica-se-esquiva-refactorizando]]
+3. **Una «fuente única» de formateo dentro de un módulo `server-only`**, que por construcción no
+   podía serla: export sin consumidor mientras cada pantalla concatenaba a mano. Silencioso — un
+   export sin usar compila. → [[crypto-modulo-server-only-bloquea-scripts-cli-extraer-primitivas]]
+
+Lo entregado: densidad unificada en `--control-h-md` (36 px) en toda la app, `ColumnPicker` sobre la
+rejilla de costes (18 columnas → las que quieras; cada una descontada resta su ancho + 6 px de hueco,
+de 768 a 122 px de exceso), cabecera y filas con `subgrid` para que no puedan desalinearse, y la
+unidad de medida en las cuatro pantallas del pedido con fuente única de resolución
+(`lib/obras/unidad-material.ts`) y de formateo (`lib/obras/unidad-formato.ts`).
+
+El gate corrió 4 rondas: la 2 salió **no listo** con 2 bloqueantes. En la 4, `datos` agotó los
+reintentos de `StructuredOutput` y `codigo` devolvió `"test"` como resumen — registrado en
+`cierres.json` por lo que corrió de verdad, no por lo que se invocó.
+→ [[refs-stash-es-por-worktree-y-worktree-remove-se-lo-lleva]] · artifact `d50dd108`
+
+### Cifras completas del catálogo de IET (medido 07-ago-2026, en prod por organización)
+
+Corrige un diagnóstico anterior que decía «falta el tiempo de MO en 7.683 materiales»: no faltaban
+tiempos, faltaba el catálogo. Los 7.683 de su org son **dos tarifas de fabricante y nada más**:
+SIMON 6.387 + GENERAL CABLE 1.296. Su catálogo de trabajo real vive en la org sandbox
+`Obras tufacturaia sandbox`, del volcado de WAPI del 21-jul: **11.595 materiales con 7.871 tiempos de
+MO** y **3.945 unidades de obra con 13.083 líneas**.
+
+Cobertura ponderada por uso: **0,9 %**. De las 59.220 líneas de material de sus 2.380 presupuestos
+históricos, solo **525** apuntan a un material que hoy existe en su org. Casan **433 por
+`cod_almacen` (5,6 %)** y el casado es real: mismo artículo con distinta nomenclatura. Lo que SÍ está
+correcto en su org son los **745 tipos de mano de obra** con sus horas.
+
+### 2026-08-08 · La fila del pedido en móvil (#1541/#1551), y el stash que casi se pierde
+
+Resuelto y en `main` (`bc90dcd8`). Se documenta aparte porque la lección no es el CSS:
+el trabajo vivía en un stash etiquetado «restos-obsoletos» y `refs/stash` es por worktree, así que
+borrar el worktree se lo habría llevado. Crónica y diff → [[facturaia-pedido-movil-390-issue-1541]] ·
+[[refs-stash-es-por-worktree-y-worktree-remove-se-lo-lleva]]

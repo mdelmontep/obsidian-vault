@@ -302,6 +302,15 @@ contexto"). Aquí quedan documentadas con su gate:
   concurrente).
 - **Sintetizar críticamente**: uno afirmó que un flujo «no se puede completar» cuando en realidad se
   completa **duplicando en silencio**, que es peor. Verificar sus afirmaciones contra el repo.
+- **Una dimensión puede caerse o devolver RELLENO, y las dos formas se leen como «revisado»**
+  (8-ago-2026, FacturaIA #1550, ronda 4 de `/fia-cierre`). `datos` agotó los cinco reintentos de
+  `StructuredOutput` y volvió como `no-ejecutada`; `codigo` devolvió `status: ok`, `summary: "test"` y
+  cero hallazgos — sintácticamente válido, sin auditar nada. **Antes de registrar un cierre, contar
+  resultados y mirar los `summary`**: un resumen de una palabra o un `findings: []` con `summary` que no
+  describe el diff es relleno. Y **registrar por lo que corrió, no por lo que se invocó**: el script se
+  llamó con las cuatro y anotarlas habría dejado el árbol diciendo que se miró algo que nadie miró.
+  El sintetizador sí lo reportó honestamente (`no-ejecutada` + «el hueco es de bajo riesgo pero no está
+  medido») — leer esa nota, no solo el veredicto.
 
 ## Medir el coste de un prompt: el recibo, no el proxy (4-ago-2026, AGH #736)
 
