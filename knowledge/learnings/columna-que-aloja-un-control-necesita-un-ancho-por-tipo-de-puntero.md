@@ -25,4 +25,13 @@ No se ve en revisión: el desarrollo es con ratón, y el contexto roto es el otr
   tocar la fila): no está en el DOM en reposo, así que ni captura ni smoke normal
   lo ven. Hay que teclear de verdad para medirlo.
 
-Ver [[facturaia]].
+**Solo aplica si la columna tiene ancho DECLARADO.** Si la pista es `auto`, la
+fila es flex o es un `<td>` de tabla real, se dimensiona sola y copiar aquí el
+desdoble por puntero son dos números que mantener a mano sin motivo (medido el
+8-ago en pedido y objetivos: ninguna lo necesitaba). Lo que sí conviene es
+atornillar esa premisa en el test — que la pista siga terminando en `auto` —
+porque cambiarla por un ancho fijo reproduce el desbordamiento sin avisar.
+
+Ver [[un-guard-sobre-el-minimo-no-acota-la-magnitud]] · [[facturaia]].
+
+**Y el censo de dónde está el patrón, a máquina.** El mismo rastreo se hizo a mano tres veces el 8-ago y salieron tres listas distintas (2, 10 y 16), todas incompletas por lo mismo: `<Button[^>]*>` no cruza el `=>` de un `onClick`, así que los botones de varias líneas con manejador inline son invisibles. Hay que cerrar la etiqueta CONTANDO LLAVES. El censo real eran 51. Ver [[un-grep-de-jsx-con-clase-de-caracteres-negada-no-cruza-la-flecha-de-un-onclick]].

@@ -25,6 +25,9 @@ queda igual o mejor que antes (subir solo el alto deja el objetivo en 38×44).
 Antes de tocar padding, mide quién manda: recorre los hijos de la fila y quédate
 con el más alto (`getBoundingClientRect().height`). Ahí sale el culpable en un
 vistazo, y te ahorra el commit inútil de "bajar el padding" que no mueve nada.
+**Vuelve a medir DESPUÉS: el suelo se mueve.** En la línea de pedido de obra el
+botón dejó la fila en 50 y no en 44, porque el más alto pasó a ser el
+`NumberField` (34). Prometer 44 al migrar en lote es prometer lo que no hay.
 
 **Redescubierto de cero el 8-ago** en la rejilla de presupuestos de obra (50 → 34
 px) sin que esta nota apareciera: solo la enlazaban `frontend-css-mobile` y un
