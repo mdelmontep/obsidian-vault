@@ -32,6 +32,6 @@ desdoble por puntero son dos números que mantener a mano sin motivo (medido el
 atornillar esa premisa en el test — que la pista siga terminando en `auto` —
 porque cambiarla por un ancho fijo reproduce el desbordamiento sin avisar.
 
-Ver [[un-guard-sobre-el-minimo-no-acota-la-magnitud]] · [[facturaia]].
+Ver [[un-guard-sobre-el-minimo-no-acota-la-magnitud]] · [[facturaia]] · [[la-maqueta-se-mide-con-el-motor-no-se-modela-sumando-anchos]].
 
 **Y el censo de dónde está el patrón, a máquina.** El mismo rastreo se hizo a mano tres veces el 8-ago y salieron tres listas distintas (2, 10 y 16), todas incompletas por lo mismo: `<Button[^>]*>` no cruza el `=>` de un `onClick`, así que los botones de varias líneas con manejador inline son invisibles. Hay que cerrar la etiqueta CONTANDO LLAVES. El censo real eran 51. Ver [[un-grep-de-jsx-con-clase-de-caracteres-negada-no-cruza-la-flecha-de-un-onclick]].
