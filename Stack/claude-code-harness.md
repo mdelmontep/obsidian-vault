@@ -223,6 +223,23 @@ de turno es el error caro de este patrón.
 trabajo; lo que te deja irte de casa es el checker determinista. Coherente con «el grafo NUNCA es el
 checker».
 
+## Lo que un hook PUEDE ver, por evento (8-ago-2026)
+
+- **`PreToolUse` evalúa el estado PREVIO.** Un compuesto que ensucia y descarta en la misma llamada
+  —`printf >> f && … && git checkout -- f`— pasa sin bloquear, porque cuando el guard mira, `f` todavía
+  está limpio. Comprobado: el mismo compuesto SÍ bloquea si el fichero venía sucio. No es un fallo del
+  guard, es el evento: **protege del descuido entre turnos, no de una línea que se autodestruye dentro
+  de un turno.** Si necesitas lo segundo, el sitio es `PostToolUse`, no un `PreToolUse` más listo.
+- **`Stop` es donde va «¿de verdad has terminado?»**, y hay dos reglas que se pagan caras si faltan:
+  `stop_hook_active` para bloquear UNA vez por turno (sin él, bucle), y una variable de escape. Con dos
+  Stop hooks que bloqueen, el ORDEN decide qué mensaje ve el turno primero: primero el gate del repo
+  (¿está verificado?), después el arnés (¿está guardado?).
+- **Un Stop hook que devuelve JSON mal formado es peor que uno que no dispara**: el turno recibe basura
+  donde espera un veredicto. Falla abierto y valida tu propia salida antes de emitirla.
+- **Coste**: corre en cada turno, así que mídelo antes de aceptarlo. `git status` en un `~/.claude` de
+  5,5 GB son 10 ms **porque** el `.gitignore` de lista blanca deja saltar los directorios grandes; con
+  una lista negra ese mismo chequeo sería otra cosa.
+
 ## `~/.claude` está versionado desde el 8-ago-2026 · `mdelmontep/claude-harness` (privado)
 
 Hasta ese día **no lo estaba**, y dentro vivían sin copia el `git-guard` que impide perder trabajo, el
@@ -239,9 +256,13 @@ nuevo y preguntarse dónde quedaba respaldado: en ningún sitio.
   `dokploy-secret-guard` y sus fixtures, verificadas una a una como sintéticas.
 - **Las skills del equipo NO van aquí** → `AgentesIA-MAdrid/agentesia-skills`, que se instalan
   enlazadas. Este repo es el arnés personal.
-- **Suites: 130 casos** (dokploy-secret 28, git-guard 27, paid-measure+issue-dup 15, stop-gate 31,
-  subagent 18, ticket-collision 11). **Sin CI**: el billing de Actions sigue caído y un check que no se
+- **Suites: 141 casos** en 7 guards (dokploy-secret 28, git-guard 27, harness-commit 11,
+  paid-measure+issue-dup 15, stop-gate 31, subagent 18, ticket-collision 11). **Sin CI**: el billing de Actions sigue caído y un check que no se
   ejecuta es peor que ninguno — mismo error que dejó entrar 111 ocurrencias de deuda en TuFacturaIA.
+- **`harness-commit-guard` cierra el círculo**: Stop hook que bloquea si el arnés queda sin commitear
+  (avisa, no bloquea, si falta el `push`: eso depende de la red). Porque versionarlo sin obligar a
+  subirlo era el mismo agujero con apariencia de resuelto. NUNCA commitea solo: con sesiones
+  paralelas lo sucio puede ser el trabajo a medias de otra.
 
 ## Dónde vive cada pieza del harness (jul 2026)
 
