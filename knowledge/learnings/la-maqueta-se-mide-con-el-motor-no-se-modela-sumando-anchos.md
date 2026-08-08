@@ -20,11 +20,21 @@ IMPORTARSE sin `.env.test`).
 Nació rojo y cazó un desbordamiento que la aritmética daba por bueno: otro PR
 había metido un código de unidad de 10 px por celda que nadie sumó.
 
-Tres cosas que cuestan una tarde si no se saben:
+**Y el fixture tiene que reproducir el MARCO de la página, no solo el
+componente.** El primero colgaba la tarjeta del `<body>` sin el relleno del
+shell: 32 px de más, o sea un guard que podía dar verde con 32 px de
+desbordamiento real — y los dio. Con el marco puesto salió que la fila seguía
+desbordando en el ancho de móvil más común. Si no puedes reproducir la cadena
+entera, resta un colchón medido y que el fixture peque de estrecho: optimista es
+peor que inexistente.
+
+Tres cosas más que cuestan una tarde si no se saben:
 - **Sin `<meta viewport>` la emulación móvil maqueta contra 980 px** y ninguna
   media query aplica: el fixture aprueba una fila que en un móvil no cabe.
-- Una fila con `align-items: center` NO comparte `top` entre celdas del mismo
-  renglón: compara centros, o inventas renglones.
+- «Mismo renglón» se decide por SOLAPE vertical de los rangos. Ni `top` (una
+  fila con `align-items: center` no lo comparte) ni el centro (que se desplaza
+  en cuanto una celda envuelve en tres líneas y su vecina no). Las dos me dieron
+  renglones inventados.
 - El fixture necesita candado contra la deriva: comparar sus celdas con las que
   pinta hoy el JSX. Si no, mides una maqueta que ya no existe.
 
