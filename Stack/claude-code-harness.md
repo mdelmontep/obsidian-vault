@@ -223,6 +223,26 @@ de turno es el error caro de este patrón.
 trabajo; lo que te deja irte de casa es el checker determinista. Coherente con «el grafo NUNCA es el
 checker».
 
+## `~/.claude` está versionado desde el 8-ago-2026 · `mdelmontep/claude-harness` (privado)
+
+Hasta ese día **no lo estaba**, y dentro vivían sin copia el `git-guard` que impide perder trabajo, el
+arnés `mutate` y el `CLAUDE.md` que gobierna todas las sesiones. Se descubrió al ir a apuntar un hook
+nuevo y preguntarse dónde quedaba respaldado: en ningún sitio.
+
+- **`.gitignore` de lista BLANCA** (ignora `/*`, reincluye lo autoral). No es cosmética: el directorio
+  tiene 5,5 GB, de los que 3,7 GB son transcripciones con salidas de comandos reales. Una lista negra
+  se deja algo dentro, y aquí «algo» puede ser una credencial que se imprimió en un log. Verificado en
+  los dos sentidos con `git check-ignore` antes del primer commit.
+- **61 ficheros, 290 KB.** Fuera: `projects/`, `history.jsonl`, `skills/`, `plugins/`,
+  `file-history/`, `sessions/`, `config.json` (guarda respuestas a peticiones de API key) y los `.bak`.
+- **Barrido de secretos antes de commitear**: 11 coincidencias, todas en el propio
+  `dokploy-secret-guard` y sus fixtures, verificadas una a una como sintéticas.
+- **Las skills del equipo NO van aquí** → `AgentesIA-MAdrid/agentesia-skills`, que se instalan
+  enlazadas. Este repo es el arnés personal.
+- **Suites: 130 casos** (dokploy-secret 28, git-guard 27, paid-measure+issue-dup 15, stop-gate 31,
+  subagent 18, ticket-collision 11). **Sin CI**: el billing de Actions sigue caído y un check que no se
+  ejecuta es peor que ninguno — mismo error que dejó entrar 111 ocurrencias de deuda en TuFacturaIA.
+
 ## Dónde vive cada pieza del harness (jul 2026)
 
 | Pieza | Dónde | Cuándo carga |
