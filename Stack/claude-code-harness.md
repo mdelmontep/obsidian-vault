@@ -302,6 +302,14 @@ contexto"). Aquí quedan documentadas con su gate:
   concurrente).
 - **Sintetizar críticamente**: uno afirmó que un flujo «no se puede completar» cuando en realidad se
   completa **duplicando en silencio**, que es peor. Verificar sus afirmaciones contra el repo.
+- **La referencia `fichero:línea` de un agente puede estar INVENTADA aunque su conclusión sea
+  correcta** (8-ago-2026, ronda 5 del gate de FacturaIA). El auditor de `datos` citó
+  `unidad-material.ts:401-424` y `pedidos-db.ts:266-279`; el fichero tiene 102 líneas y la función
+  está en la 52. El fondo era cierto y el veredicto bueno, pero las coordenadas no existían. Lo pilló
+  el sintetizador porque **abrió el fichero en vez de creerse la cita** — y eso es lo que hay que
+  exigirle al sintetizador, no solo que deduplique. Corolario para uno mismo: al copiar una `ruta:línea`
+  de un informe a un commit o a un manual, ábrela; si no, propagas una coordenada falsa con la
+  autoridad de un hallazgo verificado.
 - **Una dimensión puede caerse o devolver RELLENO, y las dos formas se leen como «revisado»**
   (8-ago-2026, FacturaIA #1550, ronda 4 de `/fia-cierre`). `datos` agotó los cinco reintentos de
   `StructuredOutput` y volvió como `no-ejecutada`; `codigo` devolvió `status: ok`, `summary: "test"` y
