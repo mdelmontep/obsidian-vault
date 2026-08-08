@@ -256,13 +256,22 @@ nuevo y preguntarse dónde quedaba respaldado: en ningún sitio.
   `dokploy-secret-guard` y sus fixtures, verificadas una a una como sintéticas.
 - **Las skills del equipo NO van aquí** → `AgentesIA-MAdrid/agentesia-skills`, que se instalan
   enlazadas. Este repo es el arnés personal.
-- **Suites: 141 casos** en 7 guards (dokploy-secret 28, git-guard 27, harness-commit 11,
+- **Suites: 180 casos** en 7 guards (dokploy-secret 28, git-guard 51, harness-commit 26,
   paid-measure+issue-dup 15, stop-gate 31, subagent 18, ticket-collision 11). **Sin CI**: el billing de Actions sigue caído y un check que no se
   ejecuta es peor que ninguno — mismo error que dejó entrar 111 ocurrencias de deuda en TuFacturaIA.
+  El salto de 141 a 180 en un día no es cobertura nueva: son dos reglas del `git-guard` que cubrían
+  **una sola forma sintáctica** de lo que prohibían, con la suite en verde. Ver
+  [[un-guard-cuya-aguja-cubre-una-sola-forma-sintactica-se-esquiva-refactorizando]].
 - **`harness-commit-guard` cierra el círculo**: Stop hook que bloquea si el arnés queda sin commitear
   (avisa, no bloquea, si falta el `push`: eso depende de la red). Porque versionarlo sin obligar a
   subirlo era el mismo agujero con apariencia de resuelto. NUNCA commitea solo: con sesiones
   paralelas lo sucio puede ser el trabajo a medias de otra.
+- **Y por eso mismo tuvo que aprender de QUIÉN es lo sucio** (9-ago): `~/.claude` es global, así que
+  bloqueaba a la sesión que iba a cerrar por lo que había ensuciado otra — el caso normal con sesiones
+  en paralelo. Ahora la propiedad se decide con el `transcript_path` del input: es mío si esta sesión
+  lo escribió y nadie lo tocó después (`mtime <= mi última escritura + 60 s`, tolerancia medida: mis
+  ficheros +4/+23 s, los de la otra sesión +342/+558 s). Lo ajeno avisa, y sin transcript se falla
+  CERRADO. Ver [[hook-sobre-recurso-compartido-bloquea-a-quien-cierra-no-a-quien-ensucia]].
 
 ## Dónde vive cada pieza del harness (jul 2026)
 
