@@ -39,4 +39,11 @@ Reglas:
 - Al depurar, **mirar el aviso inmediatamente**: concluí que un error no avisaba al usuario porque
   miré los toasts 12 s después del clic; salía a los 750 ms y el producto estaba bien.
 
-Ver [[e2e-smoke-skip-honesto]] · [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]] · [[facturaia]]
+**Reincidió a los 13 días, y la escribí yo (9-ago, #1576→#1577)**: un smoke nuevo localizaba
+`table.set-table.audit`, y al día siguiente el PR que hasheaba `.audit` dejó ese locator muerto —
+`count() === 0`, que ese test lee como «no hay tabla», no como «test roto». La regla de arriba
+(«nunca por clase de CSS Module») estaba escrita, era reciente y no frenó nada. **Al hashear una
+clase, grep de su nombre en `tests/` EN EL MISMO PR** — y el check pide ser mecánico, no prosa.
+
+Ver [[e2e-smoke-skip-honesto]] · [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]] ·
+[[empate-de-especificidad-entre-globals-y-un-module-lo-decide-el-orden-de-inyeccion]] · [[facturaia]]
