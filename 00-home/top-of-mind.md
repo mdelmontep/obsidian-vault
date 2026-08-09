@@ -6,7 +6,7 @@ tags: [home, prioridades]
 
 # Top of Mind
 
-Índice transversal multi-proyecto. **NOW** = en lo que estás (máx 5). **NEXT** = lo inminente próximas 2 semanas, cross-cliente (1 línea + link al hub; el detalle vive en el hub). **Bloqueos** = esperando a terceros. El backlog completo de cada proyecto vive en su hub (ver `Vistas por cliente`), no aquí. Reestructurado 2026-06-26 (poda: backlog por-cliente devuelto a cada hub; backup en `00-home/archive/top-of-mind-pre-poda-2026-06-26.md`). Podado 2026-07-25: retiradas 19 entradas de TuFacturaIA cuyo único pendiente era un smoke YA registrado en la sección Smoke del hub (verificado id a id: PR/migración presente en el hub y el pendiente vivo en Smoke o NOW). Backup en `00-home/archive/top-of-mind-pre-poda-2026-07-25.md`. Podado 2026-08-08: retiradas 5 entradas de TuFacturaIA duplicadas en el §Smoke del hub (verificado id a id imprimiendo la línea del hub que las respalda). La de Obras-IA/WhatsApp/MCP no estaba allí y se trasladó primero. NO se tocaron «skin Cristal» (decisión de negocio, no smoke) ni «retirada n8n» (arrastra la Fase 6).
+Índice transversal multi-proyecto. **NOW** = en lo que estás (máx 5). **NEXT** = lo inminente próximas 2 semanas, cross-cliente (1 línea + link al hub; el detalle vive en el hub). **Bloqueos** = esperando a terceros. El backlog completo de cada proyecto vive en su hub (ver `Vistas por cliente`), no aquí. Bitácora de podas de este índice → [[facturaia-historico-detallado]].
 
 ## NOW (máx 5)
 
@@ -27,10 +27,8 @@ tags: [home, prioridades]
 - **Centro Elphis — bot WA vivo en producción (23-jul)** — ⚠️ **rotar credenciales del stack n8n** (se volcó el `env` completo en crudo): `POSTGRES_PASSWORD`, `N8N_ENCRYPTION_KEY`, `POSTGRES_AUX_PASSWORD`, `RETELL_WEBHOOK_SECRET`, `CHATWOOT_WEBHOOK_SECRET`, `META_APP_SECRET`. Pendientes menores y limpieza → [[clientes/centro-elphis/index|centro-elphis]]
 - **Agentesia — chatbot propio (31-jul)** — `Registro Sheets` del de WhatsApp arreglado (fallaba en cada lead con la ejecución en `success`) + prompts corregidos; **sin tráfico desde el fix, sin verificar**. Pendiente: decidir el `[FIN]` muerto, el chat web sin ejecuciones desde el 19-jul y sacar el secret del `jsCode`. Hito 5 → [[agentesia]] · [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
 
-
-
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
-- 🟠 **TuFacturaIA — higiene cerrada, 19 commits en prod (09-ago, `93fcfd8c`)** — 6º trinquete (−6.016 líneas), redondeo unificado ([[ADR-051-el-redondeo-de-importes-sube-el-medio-centimo]]), D9, 0 vulnerabilidades, y al cierre #1575/#1576/#1577: alias de tipo único, el último `<style jsx>` del repo y `.audit` fuera del espacio global. **Tuyo**: `/admin/marketing` (3 subpáginas vivas sin enlace) ¿se enlaza o se retira? → [[facturaia]] §NEXT
+- 🟠 **TuFacturaIA — higiene cerrada, 20 commits en prod (09-ago, `db49ed70`)** — 6º trinquete (−6.016 líneas), redondeo unificado ([[ADR-051-el-redondeo-de-importes-sube-el-medio-centimo]]), D9, 0 vulnerabilidades, y al cierre #1575-#1578: alias de tipo único, el último `<style jsx>` del repo, `.audit` fuera del global y el 7º trinquete. **Tuyo**: `/admin/marketing` (3 subpáginas vivas sin enlace) ¿se enlaza o se retira? → [[facturaia]] §NEXT
 - 🟠 **TuFacturaIA — censo de filas densas clasificado entero (PRs #1547/#1548): quedan 15 filas por arreglar (08-ago)** — no eran 8 ni 33; el grep a mano fallaba. Issues #1540 y #1541. → [[facturaia]] §NEXT
 - **Infra — reboots: 2 cabos, ambos atajados (07-ago)** — **tuyo**: `restart: unless-stopped` al compose de documenso en el panel Dokploy (el `docker update` de hoy se pierde al redesplegar) y mirar `/var/log/dokploy-restart-orphans/` tras el próximo reboot de Tecnocloud, única prueba en camino real del guardián. → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]] · [[tecnocloud]] · [[simarro]]
 - **agency-portal — dar de alta DOKPLOYMANU en `/agency/infrastructure` (07-ago)** — clave ya autorizada y verificada; falta pegarla en el formulario (no hay API de alta). → [[agentesia]]
