@@ -43,7 +43,13 @@ Reglas:
 `table.set-table.audit`, y al día siguiente el PR que hasheaba `.audit` dejó ese locator muerto —
 `count() === 0`, que ese test lee como «no hay tabla», no como «test roto». La regla de arriba
 («nunca por clase de CSS Module») estaba escrita, era reciente y no frenó nada. **Al hashear una
-clase, grep de su nombre en `tests/` EN EL MISMO PR** — y el check pide ser mecánico, no prosa.
+clase, grep de su nombre en `tests/` EN EL MISMO PR**. **YA ES MECÁNICO** (#1578,
+`scripts/locator-guard.mjs` en `pre-commit`): bloquea si un selector-string de `tests/e2e/**` usa
+una clase que solo existe en `*.module.css`; con un `*.module.css` staged barre TODOS los specs,
+porque el commit que mata el locator puede no tocar ninguno. Dos avisos del montaje: su primera
+versión **salía verde sobre un repo con 2 hallazgos** (el contenido del string excluía toda comilla
+y cortaba en `'[role="dialog"], .modal'`), y las clases que viven en global Y en módulo no bloquean
+a propósito — un guard que adivina genera falsos positivos, y esos se desactivan.
 
 Ver [[e2e-smoke-skip-honesto]] · [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]] ·
 [[empate-de-especificidad-entre-globals-y-un-module-lo-decide-el-orden-de-inyeccion]] · [[facturaia]]
