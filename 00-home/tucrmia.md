@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-09, dos sesiones en paralelo · **tarde**: YA SE ENTRA (contraseña, Google y enlace verificados contra el despliegue; registro público cerrado) · **cierre**: capa agéntica del plan reescrita, A140-A180 y 41 gates · tuyo: tucrmia.com, sitio de Turnstile, cuenta con buzón real, PLAN SUPABASE FREE, los 4 endpoints de FacturaIA, el número del techo de IA
+updated: 2026-08-09 noche (plan revisado con 8 lentes + COPIAS: cifradas, diarias, fuera de la máquina y restauración probada · tuyo: política del bucket propio, 4 endpoints de FacturaIA, Pro solo con el primer cliente)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -85,6 +85,26 @@ clic sino un agente en su nombre —el nuestro, y **el suyo**, contra la API—.
   `PREGUNTAS-PARA-MANUEL` §13 y el tablero, que llevaban desde el principio diciendo lo contrario.
 - ⚠️ **Nada de esto está construido**: es plan. Y hay **otra sesión en el mismo repo** (copias de
   seguridad) que dejó el índice de git cargado; no se commiteó nada.
+
+## Copias de seguridad (09-ago) — de no existir a probadas de punta a punta
+
+- ✅ **La base de producción NO tenía copia de ninguna clase.** Supabase en plan **free**, que no las
+  incluye, mientras `ESTADO.md` decía «Pro sin PITR». Ahora: `npm run copia` (cifrada X25519+AES-GCM
+  **sólo con la clave pública**: el proceso que copia no puede leerla), `copia:drill` (Postgres 17
+  desechable, 59 migraciones, reinyecta y **compara recuentos**) y `copia:estado`. Diaria en `launchd`,
+  `G-SEC-RESTORE` en `pre-push`, y los rojos demostrados uno a uno.
+- ✅ **Sale de la máquina**: se sube cifrada a Wasabi `eu-west-2` (bucket del Dokploy, prefijo
+  `crm-supabase/`), y lo que lo demuestra es que **se bajó de allí y se restauró** — 1.607 filas + 8
+  usuarios. → [[firma-sigv4-consulta-sin-codificar-devuelve-cero-con-200]] ·
+  [[buckets-con-puntos-obligan-a-path-style-por-el-wildcard-tls]]
+- ✅ **La clave privada vive sólo en 1Password** (`op://Agentesia/krtkmll2u5zlzgflpkwdhanxka/credencial`,
+  **por ID: el guión largo del título invalida la referencia**). Probado tras borrar el fichero local.
+- 🔴 **Tuyo**: adjuntar la política IAM al bucket propio `crm-supabase.agentesia.madrid` (opcional, hoy no
+  hay hueco: las copias salen igual) · los **4 endpoints de FacturaIA** (#33) · **Pro NO se paga hasta el
+  primer cliente real** (#32, decidido con las cifras: 18 MB de 500, 7 usuarios de 50.000).
+- ⚠️ **Incidente de la sesión paralela**: el repo apareció en `core.bare=true` por pruebas de hooks de git
+  sobre el árbol real; restaurado, nada perdido, nada llegó al remoto. →
+  [[probar-hooks-de-git-en-el-repo-real-lo-deja-en-core-bare]]
 
 ## Estado (09-ago, noche) — el plan revisado contra Kommo, y lo que no existía
 
@@ -404,6 +424,9 @@ clic sino un agente en su nombre —el nuestro, y **el suyo**, contra la API—.
 
 ## Learnings de este proyecto
 
+[[firma-sigv4-consulta-sin-codificar-devuelve-cero-con-200]] ·
+[[buckets-con-puntos-obligan-a-path-style-por-el-wildcard-tls]] ·
+[[probar-hooks-de-git-en-el-repo-real-lo-deja-en-core-bare]] ·
 [[una-afirmacion-repetida-no-es-una-verificacion]] ·
 [[un-limite-delante-de-tu-accion-no-protege-si-la-operacion-es-publica]] ·
 [[sslip-io-y-nip-io-no-estan-en-la-public-suffix-list]] ·
