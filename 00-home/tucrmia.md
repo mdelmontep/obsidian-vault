@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-09 noche (plan revisado contra Kommo vivo con 8 lentes: 8 secciones nuevas 23-30, 24 épicas · tuyo: PLAN SUPABASE FREE = SIN COPIAS, los 4 endpoints de FacturaIA)
+updated: 2026-08-09, dos sesiones en paralelo · **tarde**: YA SE ENTRA (contraseña, Google y enlace verificados contra el despliegue; registro público cerrado) · **cierre**: capa agéntica del plan reescrita, A140-A180 y 41 gates · tuyo: tucrmia.com, sitio de Turnstile, cuenta con buzón real, PLAN SUPABASE FREE, los 4 endpoints de FacturaIA, el número del techo de IA
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,78 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (09-ago, tarde) — YA SE ENTRA AL CRM
+
+Hasta hoy el producto **se podía montar y no se podía entrar**: única vía el enlace por correo, y sin SMTP
+propio el remitente de Supabase sólo entrega a miembros del equipo del proyecto. Ahora tres vías, verificadas
+**contra el despliegue** y no con dobles:
+
+- **Contraseña** — mala → `credenciales`; **undécimo intento → `demasiados_intentos`** (el contador de
+  Postgres persiste entre peticiones en el proceso desplegado).
+- **Google** — cliente y proyecto propios (`crmia-505008`), llega a la pantalla de consentimiento; sin
+  cabecera `Origin` la ruta falla cerrado. Declarado ANTES de encenderlo, así que el gate lo vigila.
+- **Enlace** — SMTP propio autenticado (`235`). **Sin verificar que un correo LLEGUE**: falta cuenta con
+  buzón real.
+
+**Registro público CERRADO** (`signup_disabled`): estaba abierto con la clave anónima. Config de Auth
+declarada en el repo y cruzada contra el despliegue (G-AUTH-DERIVA): 27 ajustes coincidiendo, **2 declarados
+y bloqueados por plan** (HIBP exige Pro, hook antifuerza bruta exige Teams) — impresos en cada corrida, no
+bajados de valor para poner el gate en verde. Ver
+[[un-limite-delante-de-tu-accion-no-protege-si-la-operacion-es-publica]].
+
+**La cookie de sesión no era `HttpOnly`** y llevaba dentro el token de refresco, con cuatro comentarios del
+repo afirmando que sí lo era → [[una-afirmacion-repetida-no-es-una-verificacion]].
+
+También: **meter a una segunda persona en una organización** (las 5 membresías de prod eran 5 propietarios,
+así que la visibilidad por rol y equipo no la podía ejercer nadie), rastro de accesos, poner/cambiar
+contraseña, embudo por defecto, accesibilidad del armazón. Migraciones 061/062/064 aplicadas; 065 escrita y
+**declarada bloqueada** por plan.
+
+**Tuyo**: registrar `tucrmia.com` (Meta/Google F2 + SPF/DKIM), crear el sitio de **Turnstile** (decidido:
+gratis sin límite, invisible, no monetiza datos), y una cuenta con buzón real. Pendiente y no construido a
+propósito: prefijo `__Host-` en la cookie, que mitiga `sslip.io` sin esperar al dominio →
+[[sslip-io-y-nip-io-no-estan-en-la-public-suffix-list]].
+
+## Estado (09-ago, cierre) — la capa agéntica, reescrita para cuando el usuario sea una máquina
+
+Premisa del encargo: dentro de dos años el trabajo dentro del CRM no lo hará una persona haciendo
+clic sino un agente en su nombre —el nuestro, y **el suyo**, contra la API—. Se editaron
+`docs/plan/{27,05}` y §11/§15.3/§16 del maestro: **A140-A180 con 41 gates `G-AGT-*`**, clasificados
+(20 estáticos · 17 de suite · 4 en CI) y registrados con su fase de nacimiento.
+
+- 🔴 **El hallazgo caro: «95 % sobre 50 decisiones» no se podía demostrar, y estaba en cinco
+  documentos.** 50 aciertos de 50 dan cota inferior de Wilson del 92,9 %; leído como demostrado la
+  puerta no abría nunca, leído como porcentaje son 48/50 con tasa real posible del 87 %. Redefinido
+  sin cambiar el nombre: **95 es la confianza, 90 la cota**. Y **el learning ya existía desde el
+  25-jul** y no lo aplicó nadie porque no tenía un enlace entrante desde ningún hub →
+  [[gate-de-automatizacion-n50-al-95-no-sostiene-el-95-usa-cota-wilson]].
+- ✅ **No existía puerta de CIERRE de la autonomía.** Con «nada de interruptor» prohibido —con razón—,
+  lo único capaz de cerrar era lo prohibido. Añadida, **asimétrica a propósito** (abrir exige
+  demostrar, cerrar exige sospechar; un fallo grave cierra con N=1) más caducidad por falta de
+  evidencia fresca. Y la unidad pasa a **(organización × clase de decisión)** →
+  [[la-unidad-de-acumulacion-decide-si-una-puerta-de-calidad-es-alcanzable]].
+- ✅ **La caja negra del turno, y es lo primero de todo**: `prompt_versions` (identidad calculada del
+  contenido, como `BUILD_COMMIT`), `ai_turn_snapshots` (contexto congelado) y `ai_feedback_events`
+  (veredicto **derivado del acto que el usuario ya iba a hacer**, sin pulgares). Misma familia que
+  `persistReferral()` y el consentimiento: lo que no se persiste en el momento no se recupera nunca.
+  Épica **E2.24, antes de E2.15** → [[una-aceptacion-no-es-senal-hasta-que-envejece-sin-ser-contradicha]].
+- ✅ **La trampa del bucle, con corte mecánico**: troncal humano inmutable, tope del 60 % de casos
+  cosechados, y **troncal a la baja con aceptación al alza congela la cosecha** →
+  [[un-golden-set-que-se-nutre-de-produccion-necesita-troncal-inmutable]].
+- ✅ **MCP remoto se queda en F4; lo que sube es su factura.** Lo caro es el authorization server
+  (I17). Lo que llega tarde es el **contrato**: precondición sobre `row_version` (nunca `updated_at`),
+  idempotencia en todo verbo, límites en cabecera, errores con el scope que faltaba,
+  `GET /v1/events?since=` sobre `activity_events` heredando visibilidad por fila, y **credencial que
+  propone y no ejecuta**. Épica **E1.26**, y son rompedores en cuanto haya un integrador: la v1 ya
+  sirve siete recursos.
+- ✅ **Lista cerrada de lo que NUNCA se agentiza** (15 entradas con motivo), incluidos el desenlace del
+  lead —porque es la variable que puntúa al agente— y **los mandos del propio sistema** (A180).
+- ✅ **P13 deja de bloquear**: el techo en € necesita libro de tarifas con vigencia y tarifa congelada
+  en la fila, que es la pieza que E2.6 ya construye para WhatsApp. Corregido en `ESTADO.md`,
+  `PREGUNTAS-PARA-MANUEL` §13 y el tablero, que llevaban desde el principio diciendo lo contrario.
+- ⚠️ **Nada de esto está construido**: es plan. Y hay **otra sesión en el mismo repo** (copias de
+  seguridad) que dejó el índice de git cargado; no se commiteó nada.
 
 ## Estado (09-ago, noche) — el plan revisado contra Kommo, y lo que no existía
 
@@ -332,6 +404,10 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 
 ## Learnings de este proyecto
 
+[[una-afirmacion-repetida-no-es-una-verificacion]] ·
+[[un-limite-delante-de-tu-accion-no-protege-si-la-operacion-es-publica]] ·
+[[sslip-io-y-nip-io-no-estan-en-la-public-suffix-list]] ·
+[[formaction-con-server-action-secuestra-el-name-del-boton]] ·
 [[el-plan-gratuito-del-proveedor-se-manifiesta-como-fallos-dispersos]] ·
 [[el-referral-de-click-to-whatsapp-solo-existe-en-la-ingesta]] ·
 [[gmail-restricted-scopes-exigen-evaluacion-de-seguridad-si-almacenas]] ·

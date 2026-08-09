@@ -20,4 +20,6 @@ Correcciones baratas:
 - Descontar el sello de goma: confirmaciones en bloque y clics a <3 s no entran en el denominador (excluirlas, no contarlas como fallo).
 - Umbral propio por dominio: uno que muta estado fiscal no puede compartir el de uno cosmético; añade veto duro por un solo fallo con efecto visible al cliente.
 
-Relacionado: [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]] · [[gate-agentico-que-no-dispara-suele-estar-inanido-no-mal-calibrado]] · [[watchdog-umbral-debe-tolerar-un-tick-perdido]].
+**REINCIDIÓ el 9-ago, y el porqué vale más que el caso.** El plan de TuCRMIA escribió su puerta de autonomía como «≥50 decisiones, acuerdo ≥95 %» —el estimador puntual otra vez— y una semana después seguía así **en cinco documentos**. No fue descuido: este learning salió de `hot.md` al archivo el 1-ago y **no tenía un solo enlace entrante desde ningún hub vivo**, así que sólo se recuperaba por búsqueda difusa, y nadie busca lo que no sabe que existe. La lección no es estadística: **un learning sin wikilink entrante desde el hub del proyecto que lo necesita está escrito, no disponible.** Corregido enlazándolo desde [[tucrmia]].
+
+Relacionado: [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]] · [[gate-agentico-que-no-dispara-suele-estar-inanido-no-mal-calibrado]] · [[watchdog-umbral-debe-tolerar-un-tick-perdido]] · [[una-aceptacion-no-es-senal-hasta-que-envejece-sin-ser-contradicha]] · [[la-unidad-de-acumulacion-decide-si-una-puerta-de-calidad-es-alcanzable]].
