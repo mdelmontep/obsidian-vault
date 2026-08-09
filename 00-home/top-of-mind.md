@@ -30,6 +30,7 @@ tags: [home, prioridades]
 
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
+- 🟠 **TuFacturaIA — higiene cerrada, 16 commits en prod (09-ago)** — 6º trinquete (−6.016 líneas), redondeo unificado ([[ADR-051-el-redondeo-de-importes-sube-el-medio-centimo]]), D9, 0 vulnerabilidades. **Tuyo**: `/admin/marketing` (3 subpáginas vivas sin enlace) ¿se enlaza o se retira? → [[facturaia]] §NEXT
 - 🟠 **TuFacturaIA — censo de filas densas clasificado entero (PRs #1547/#1548): quedan 15 filas por arreglar (08-ago)** — no eran 8 ni 33; el grep a mano fallaba. Issues #1540 y #1541. → [[facturaia]] §NEXT
 - **Infra — reboots: 2 cabos, ambos atajados (07-ago)** — **tuyo**: `restart: unless-stopped` al compose de documenso en el panel Dokploy (el `docker update` de hoy se pierde al redesplegar) y mirar `/var/log/dokploy-restart-orphans/` tras el próximo reboot de Tecnocloud, única prueba en camino real del guardián. → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]] · [[tecnocloud]] · [[simarro]]
 - **agency-portal — dar de alta DOKPLOYMANU en `/agency/infrastructure` (07-ago)** — clave ya autorizada y verificada; falta pegarla en el formulario (no hay API de alta). → [[agentesia]]
