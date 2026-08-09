@@ -433,3 +433,4 @@ tags: [home, archivo]
 
 - **TuFacturaIA — Obras: sistema de diseño, QA y pasada UI, todo EN PROD (19-20 jul, #1014–#1057)** — solo quedaba un smoke visual, nunca reportado en tres semanas. → [[facturaia-historico-detallado]] _(retirada de top-of-mind el 08-ago: su único pendiente era un smoke visual de hace tres semanas, ya en el §Smoke del hub.)_
 - 2026-08-08 · TuFacturaIA · ticket 135 (IET): el Excel del presupuesto de OBRA, el único documento con árbol que la tanda de #1461 se saltó. En prod y contestado (#1537). → [[una-tanda-para-todos-los-documentos-salta-el-que-no-encaja-en-el-contrato]]
+- 2026-08-09 · TuCRMIA · verificadas en pantalla las deudas visuales del 07-ago: tema oscuro alcanzable, píldora del kanban a 6,71:1, `/tareas` sin desbordamiento, `not-found.tsx` existiendo. Y una entrega de webhook que LLEGA, con el HMAC rehecho desde el cuerpo recibido (16/17).

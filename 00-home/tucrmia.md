@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-07 noche (cola de webhooks vaciándose, armazón, kanban accesible, PALETA DECIDIDA · tuyo: Storage §29, rotar claves, facturación de Actions)
+updated: 2026-08-09 noche (plan revisado contra Kommo vivo con 8 lentes: 8 secciones nuevas 23-30, 24 épicas · tuyo: PLAN SUPABASE FREE = SIN COPIAS, los 4 endpoints de FacturaIA)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,33 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (09-ago, noche) — el plan revisado contra Kommo, y lo que no existía
+
+- ✅ **Ocho lentes en paralelo sobre el PLAN** (no sobre el código), contrastadas con la superficie
+  funcional viva de Kommo de agosto 2026: salieron **8 secciones nuevas** en `docs/plan/23-30`
+  (~3.000 líneas), **24 épicas** repartidas por fase y ~130 invariantes con gate. El plan maestro las
+  cita desde cabecera y el `CLAUDE.md` del repo las enruta por disparador.
+- ✅ **Cinco áreas que el plan no nombraba en ninguna fase**: difusiones —que la carta fundacional
+  promete y ninguna épica construía—, captación web, atribución de anuncios, reservas y consentimiento.
+  `channels.kind` ya admitía `webform` desde el primer diseño **sin épica que lo construyera**.
+- ✅ **Tres movimientos de calendario con motivo escrito**: reservas de «sin fecha» a **F2** (la demanda
+  ya factura: los clientes de la casa son negocios de cita), voz Retell a épica de **F3** (lo único que
+  Kommo no puede copiar), correo por **IMAP/SMTP en F3** y OAuth a F4 →
+  [[gmail-restricted-scopes-exigen-evaluacion-de-seguridad-si-almacenas]].
+- ✅ **La frontera con TuFacturaIA, diseñada leyendo el repo hermano y no su documentación**: dueño por
+  columna, alta sin GET previo (su `POST /v1/clientes` ya es find-or-create por NIF), proyección de
+  documentos en tabla propia, y su firma en base64url que **no se puede reutilizar** con la de salida.
+- 🔴 **Tuyo, y es lo caro: la base de producción NO tiene copia de seguridad.** Organización Supabase en
+  plan **free**, comprobado contra la Management API. El `ESTADO.md` decía «Pro sin PITR» sobre una
+  cuenta free. Pregunta #32 → [[el-plan-gratuito-del-proveedor-se-manifiesta-como-fallos-dispersos]].
+- 🔴 **Tuyo: los 4 endpoints que faltan en `facturaia`** (pregunta #33). Sin el primero, activar el
+  paquete lleva dentro una intervención manual nuestra por cada cliente, para siempre.
+- ⚠️ **Lo urgente de verdad es de orden, no de esfuerzo**: `persistReferral()` va DENTRO de la ingesta
+  de E2.2 → [[el-referral-de-click-to-whatsapp-solo-existe-en-la-ingesta]].
+- 📌 **Divergencia muda por resolver**: §13 pide `@dnd-kit` y el árbol usa arrastre nativo. NO es fallo
+  de accesibilidad —el `<Select>` por tarjeta es la alternativa que WCAG 2.5.7 exige, y está puesta a
+  propósito— pero el plan pide una cosa y el código hace otra sin decisión escrita.
 
 ## Estado (07-ago, noche) — cuatro tracks, la paleta y el cierre de la crítica
 
@@ -305,6 +332,11 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 
 ## Learnings de este proyecto
 
+[[el-plan-gratuito-del-proveedor-se-manifiesta-como-fallos-dispersos]] ·
+[[el-referral-de-click-to-whatsapp-solo-existe-en-la-ingesta]] ·
+[[gmail-restricted-scopes-exigen-evaluacion-de-seguridad-si-almacenas]] ·
+[[agentes-paralelos-de-diseno-colisionan-en-la-numeracion-de-invariantes]] ·
+[[un-hallazgo-que-solo-vive-en-el-resumen-no-existe]] ·
 [[un-plan-que-hereda-patrones-de-un-repo-hermano-da-por-existente-lo-que-solo-existe-alli]] ·
 [[al-fijar-imagen-base-por-digest-usar-el-del-indice-multiarquitectura]] ·
 [[el-install-script-que-declara-el-registro-npm-puede-no-estar-en-el-tarball-real]] ·
