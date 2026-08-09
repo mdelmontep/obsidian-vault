@@ -1,42 +1,40 @@
 ---
 title: daily briefing
-date: 2026-07-04
+date: 2026-08-09
 tags: [home, briefing]
 ---
 
-# 🌅 Briefing 04-jul
+# 🌅 Briefing 09-ago
 
-## ✅ Lo que cerraste ayer
+## ✅ Lo que cerraste ayer y anteayer
 
-**Auditoría TuFacturaIA: trazabilidad legal en las operaciones críticas**
+**Sprint de infra + horas reales en FacturaIA**
 
-7 PRs cerrados hoy (bloques 1-3): cualquier mutación en la API v1, conciliación y RPCs deja rastro explícito — fecha, usuario y acción legible. Antes esas operaciones eran invisibles. Al pasar a prod detectaste y corregiste un bug propio: el campo "acción" mostraba el slug técnico en vez del texto humanizado. Bloque 4 (cobros y remesas) pendiente, baja prioridad.
+El 7 fue fontanería pura: parches de seguridad en cinco servidores Dokploy, SSH de cada host en 1Password y guardián de overlay instalado para que los contenedores vuelvan solos tras un reboot. También desbloqueaste el HTTPS de TuCRMIA —el límite era de traefik.me, no código tuyo— y cerraste la mig 656: la mano de obra en FacturaIA ya usa horas reales, no estimadas.
+
+El 8 fue corto: el Excel del presupuesto de OBRA de IET arreglado y contestado en el día (#1537).
 
 **Cómo lo usas en la práctica:**
-- Un cliente discute quién cambió algo → historial de auditoría: timestamp y usuario exactos.
-- Inspección o reclamación → log explícito de cada operación, sin reconstruir nada.
-- La UI ya muestra la acción en castellano, no el slug crudo.
-
-Además, ayer cerraste el **Export gestoría v1.5**: la IA revisa el export (contrapartes sin NIF, facturas sin líneas) y lo manda por WhatsApp a tu gestoría con enlace de un solo uso.
+- El próximo reboot de Tecnocloud o Simarro no te deja con Dokploy vacío: los contenedores arrancan solos.
+- Cuando IET saca un presupuesto de obra, el Excel ya cuadra con el árbol de líneas completo.
 
 ## 🎯 Hoy en orden de prioridad
 
-1. **CI Actions — subir límite de gasto (Manu)** — Mismo bloqueo billing de ayer. Settings → Billing de la org GitHub (AgentesIA-MAdrid). 5 min o los merges siguen yendo todos con `--admin`.
-2. **Centro Elphis — empujar go-live** — Código terminado. Escríbele hoy a Enrique: arrancar verificación número real + decidir si migras 659→Cloud API o coexistes con BSP.
-3. **agency-portal — PR #67 extracción onboarding** — Confirma en prod que "Progreso por sección" y "Respuestas extraídas" se actualizan en cada turno. Si ves `onboarding.extraction_failed`, abre issue.
+1. **Centro Elphis — bot WhatsApp falla 1 de cada 5 veces** — `invalid input syntax for type bigint: "null"` en `conv_state`. 65 errores en 7 días, los pacientes lo notan. Sin diagnosticar aún.
+2. **Clínica Zen — el fix del nombre reincidió el 2-ago** — Con la v64 volvió a usar `"Paciente nuevo"` y "Polígono Európolis". El fallo está en el Code node. Tienes OK de Gonzalo para tocar el workflow.
+3. **TuFacturaIA — confirmar tickets 142-145 con IET** — En prod (#1543). Pídele que los repase; el 144 cambiaba el precio de la partida seleccionada.
 
 ## ⏳ Pendientes y bloqueos
 
-- **Acción Manu — GitHub Actions billing**: CI caído desde 03-jul (recurrente). Límite en Settings → Billing org GitHub.
-- **Acción Manu — Salt Edge Test access**: sin esto, PR #610 conexión bancaria no se puede validar. Aprobar en dashboard Salt Edge.
-- **Esperando a Borja**: AGH Ibérica PR-2 (#87) y PR-3 (#88) en review. Sin fecha.
-- **Esperando a Gonzalo**: .p12 para smoke PRE Verifactu (~semana que viene).
+- **Esperando a notcapi**: PRs Agentesia web #97 y #99 — el #97 lleva el fix que oculta nombres reales en los audios. Urgente.
+- **Esperando a Borja**: agency-portal PR #209 + 6 PRs de AGH Ibérica + CI muerto (41/41 runs con 0 pasos ejecutados).
+- **Tuyo — Salt Edge PR #610**: sin tocar desde el 27-jul. Apruébalo o ciérralo hoy.
 
 ## 💡 Quick win sugerido
 
-**Activar skin "Cristal"** — QA de contraste hecho el 02-jul sin fallos (luz+oscuro, pantallas densas). Solo falta tu decisión. Si dices sí, un flag activa el look en prod sin tocar código.
+**Canal de aviso del check de efecto semanal** — El script ya detecta fallos (pilló el de Elphis). Solo falta una línea de config: Slack `#01-incidencias` o Telegram. 15 minutos.
 
 ## ⚠️ Stale (>7 días)
 
-- **Simarro — E2E reserva (25-jun, 9 días)**: Haz 2 reservas reales ahora (1 voz + 1 WA) y comprueba evento con calle+location+tarea Meeting+email. Si pasan, ciérralo.
-- **agentesia-skills PR #3**: Sin reviewer asignado desde hace días. Mándaselo directamente a alguien del equipo hoy.
+- **SEPA y Stripe cobran importe bruto** (desde 25-jul, +15 días) — Remesas y Payment Link siguen usando el total con retención. Empujar `PR-0c` o acordar con Borja quién lo cierra.
+- **cryptobruj-bot en LIVE sin freno** (desde 03-ago) — Sigue en real. Primero `POST /strategies/scalp-5m/stop`; solo con la posición cerrada, `TRADING_MODE=paper` + redeploy.
