@@ -109,3 +109,20 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
   read-only sí permite y te da un falso verde). Y el rol de lectura `claude_runner_ro` NO sirve para
   medir: sin `BYPASSRLS`, las tablas con RLS devuelven **0 filas en silencio**. Ver
   [[set-session-read-only-no-persiste-en-el-pooler-usa-begin-read-only]]
+- **Un ajuste de Auth se acepta con 200 y NO se aplica.** `security_update_password_require_current_password`
+  volvió `false` al releer, sin error. La regla que ya teníamos para Dokploy —«200 y releer no significa
+  aplicado»— vale igual aquí: **relee siempre tras escribir en `PATCH /v1/projects/<ref>/config/auth`**.
+  El hueco lo cubre `security_update_password_require_reauthentication`, que sí se aplica.
+- **`smtp_port` se tipa como TEXTO** («expected string, received number») y es el único numérico que lo hace
+  —`password_min_length`, `mailer_otp_exp` y `rate_limit_email_sent` sí son números—. Declararlo como número
+  falla al escribir Y deja cualquier comparador en rojo permanente si el `GET` devuelve `"587"`.
+- **Dos protecciones son de pago**: `password_hibp_enabled` (contraseñas ya filtradas) exige **Pro** (402), y
+  `hook_password_verification_attempt` exige **Teams**. En plan free, contra la fuerza bruta sólo queda su
+  límite por IP o un captcha. Ver [[un-limite-delante-de-tu-accion-no-protege-si-la-operacion-es-publica]]
+- **Sin SMTP propio el correo NO llega a un cliente**: el remitente integrado sólo entrega a miembros del
+  equipo del proyecto, y con `rate_limit_email_sent: 2` **dos peticiones agotan la cuota de todo el proyecto
+  durante una hora** — denegación de servicio trivial y sin autenticar. Comprobar credenciales SMTP sin
+  enviar nada: handshake `EHLO`/`STARTTLS`/`AUTH LOGIN` y esperar `235`.
+- **`disable_signup: false` es el defecto y deja `POST /auth/v1/signup` ABIERTO** con la clave anónima.
+  Discriminar sin crear usuario: mandar una contraseña de un carácter — si contesta `weak_password`, el
+  registro está abierto; si contesta `signup_disabled`, cerrado.
