@@ -143,3 +143,48 @@ de nodos sin drift tras el PUT. Pendiente confirmar en la ejecución de después
 corre sin error de sintaxis SQL — no se pudo probar contra la base directamente (self-hosted, sin
 dominio público). Learning transversal →
 [[reenganche-por-ultimo-mensaje-del-bot-dispara-tambien-en-conversaciones-bien-cerradas]].
+
+### Segunda ronda de correcciones al prompt de voz (05-ago)
+
+Dos correcciones más sobre el mismo prompt de Retell, pedidas por Manuel tras revisar el draft:
+
+**1. "Europolis" seguía sonando pese al fix del 28-jul.** La causa: el fix de julio cambió las 3
+frases YA GUIONADAS (confirmación de cita, "¿Dónde están?", cierre) a "frente al edificio de
+correos de la dehesa de Navalcarbón", pero dejó intacto el dato crudo en el bloque de contexto:
+
+```
+- **Dirección**: C/ Castillo de Atienza, 1 bis, 28232 Las Rozas de Madrid (Pol. Europolis)
+```
+
+Cuando el paciente preguntaba algo que no calzaba exactamente con ninguna de las 3 frases
+guionadas, el modelo improvisaba leyendo ese dato tal cual, paréntesis incluido — de ahí que
+reincidiera el 2-ago en una llamada real ("Estamos en la calle Castillo de Atienza, uno bis, en
+el Polígono Européolis de Las Rozas"). Fix: anclar la instrucción de pronunciación EN LA MISMA
+LÍNEA del dato:
+
+```
+- **Dirección** (di SIEMPRE "frente al edificio de correos en la dehesa de Navalcarbón"; NUNCA
+  menciones "Europolis" ni "polígono"): C/ Castillo de Atienza, 1 bis, 28232 Las Rozas de Madrid
+```
+
+De paso se corrigió la preposición en las 4 apariciones de la frase guionada: "de la dehesa" →
+"en la dehesa" (petición explícita de Manuel). Learning transversal (aplica a cualquier AI Agent
+con bloque de datos separado del guion) →
+[[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]].
+
+**2. El agente ofrecía "medicina estética" de forma proactiva.** La pregunta de apertura cuando no
+se sabía el servicio era "¿Vienes por odontología, estética facial, o por algo concreto?" — Manuel
+pidió que solo se mencione si el paciente la pide explícitamente o pregunta por los servicios en
+general. Cambiado en ambos canales:
+
+- Voz (Retell): `"¿Vienes por odontología, estética facial, o por algo concreto?"` →
+  `"¿Qué tratamiento tienes en mente?"` + regla explícita de no nombrar "estética facial"/"medicina
+  estética" salvo petición directa o pregunta general de servicios. También se quitó la línea
+  redundante `Solo pregunta "¿es dental o estética?" cuando realmente no quede claro.` que repetía
+  el mismo patrón proactivo.
+- Chat (n8n, `u0AQPe9pxN79dbFa`): `"¿Es por tema dental o medicina estética?"` → `"¿Qué tratamiento
+  tienes en mente?"` con la misma regla añadida inline.
+
+Ambos canales verificados sin drift de posición tras el PUT/PATCH. Voz: draft v67 (que ya llevaba
+la frase de repetición de teléfono de la ronda anterior) → publicado con estos dos fixes añadidos
+en la misma versión. Chat: aplicado directo, en vivo.

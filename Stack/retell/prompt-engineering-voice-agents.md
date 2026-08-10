@@ -281,6 +281,12 @@ Siempre exactamente **2 opciones** concretas. Nunca decir "tengo todo libre" ni 
 ### Nuevo vs. existente
 En clínicas/centros con historial de pacientes: preguntar siempre si es primera vez. Existente que llama a reservar → `transfer_call` inmediato (no gestionar tú).
 
+### Un dato "solo de referencia" en el bloque de contexto se lee igual si el modelo improvisa
+Poner una nota interna entre paréntesis junto a un dato (dirección, teléfono...) no lo saca de lo
+que el modelo puede decir en voz alta — solo lo guioneado en frases exactas está garantizado.
+Ancla la instrucción de qué decir/no decir EN LA MISMA LÍNEA del dato, no en una sección aparte.
+Ver [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]] (caso Clínica Zen).
+
 ---
 
 ## Checklist antes de publicar

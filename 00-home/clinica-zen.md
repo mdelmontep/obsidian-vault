@@ -33,21 +33,20 @@ Auditado end-to-end el 2026-07-28/29 vía API (n8n, Retell, Kommo, Google Calend
 
 Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_leads_entrantes_v2 · `sIjznBan8THkEbcx` meter info rag · `5ecU1EI4DSs0SPWT` Chabot Laserys (ajeno, borrable).
 
-**Retell** — agente `agent_350620f6b3044226efaeba9111`, LLM `llm_271c1594207dffae30974c56b5e6`, **v66 publicada** (04-ago, pase de tono). **v67 en draft sin publicar** (frase de repetición de teléfono, pendiente OK de Manuel). Voz `custom_voice_c3e5212df87e5341a06ad66e66` (eleven_flash_v2_5, es-ES), `ambient_sound: call-center`, `voice_speed 1.05`, `volume 0.84`. Entra por `+34919934582`. Tools: `Mirar_disponibilidad`, `Reservar`, `Cancelar_cita`, `end_call`, `transfer_call`.
+**Retell** — agente `agent_350620f6b3044226efaeba9111`, LLM `llm_271c1594207dffae30974c56b5e6`, **v67 publicada** (05-ago: dirección sin "Europolis" + "en la dehesa" + no mencionar estética proactivamente + repetición de teléfono). Voz `custom_voice_c3e5212df87e5341a06ad66e66` (eleven_flash_v2_5, es-ES), `ambient_sound: call-center`, `voice_speed 1.05`, `volume 0.84`. Entra por `+34919934582`. Tools: `Mirar_disponibilidad`, `Reservar`, `Cancelar_cita`, `end_call`, `transfer_call`.
 
 **Salud**: 1 sola ejecución con error en todo el histórico retenido — la de recordatorios de hoy (ver hitos). El resto en verde.
 
 **Observabilidad**: los 9 workflows activos (todos menos el propio handler) tienen `errorWorkflow: FMotimghgUBzEgdm`, y ese handler **sí notifica**: `Error Trigger` → `Preparar contexto` → POST a `https://n8n-borja.tecnocloud.es/webhook/incidencia` con cliente/workflow/nodo/error. El fallo del 28-jul a las 06:30 disparó la incidencia correctamente (ejec 9408 en success). O sea, el hueco no es de instrumentación sino de **que nadie mira ese colector** — el error llevaba 7 horas reportado cuando lo encontré a mano. Pendiente: saber quién vigila las incidencias que llegan ahí (¿Borja? [[tecnocloud]]).
 
-### Trabajo cerrado (04-ago) — detalle en [[clinica-zen-historico]]
+### Trabajo cerrado (04/05-ago) — detalle en [[clinica-zen-historico]]
 
-Pase de tono menos formal en chat (en vivo) y voz (v66 publicada): saludo, petición de nombre,
-cierre y repetición de teléfono, por iteraciones sucesivas de Manuel. Fix del link roto de
-Google Maps (Firebase Dynamic Links) en 3 workflows — pendiente el mismo link en un Salesbot de
-Kommo, fuera de n8n. Y fix de `bfc4dWuztZsWfb4Q` (Reenganche): disparaba también sobre
-conversaciones ya cerradas bien (paciente se despidió con "gracias", el reenganche le escribió
-igual 70 min después) — ahora mira el último mensaje del paciente y excluye cierres reconocibles.
-Ver [[reenganche-por-ultimo-mensaje-del-bot-dispara-tambien-en-conversaciones-bien-cerradas]].
+Pase de tono en chat+voz (saludo, nombre, cierre, teléfono) · fix link roto de Google Maps en 3
+workflows (pendiente el mismo link en un Salesbot de Kommo, fuera de n8n) · fix de
+`bfc4dWuztZsWfb4Q` (reenganche disparaba sobre conversaciones ya cerradas bien) · "Europolis"
+seguía sonando en voz porque el dato crudo del bloque de contexto se lee igual al improvisar, no
+solo lo guionado (ver [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]])
+· estética facial deja de ofrecerse proactivamente. Voz: v66→v67 publicada. Chat: en vivo.
 
 ### Trabajo cerrado (28/29-jul) — detalle en [[clinica-zen-historico]]
 
@@ -87,10 +86,9 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
     `Cliente`, `Sin nombre`…), resolver contra el contacto de Kommo por teléfono y, en último término,
     `Paciente <9 dígitos>`. Y en general no fiarse del `name` del LLM cuando el teléfono ya identifica
     al contacto ([[dos-campos-confundibles-pide-los-dos-y-cruzalos-en-codigo]]).
-- **La dirección vieja se sigue diciendo.** En esa misma llamada: *"Estamos en la calle Castillo de
-  Atienza, uno bis, **en el Polígono Européolis** de Las Rozas"*. El fix del 28-jul dejó `Pol. Europolis`
-  en el bloque de datos por considerarlo no hablado — se habla. Es literalmente lo que pidió corregir
-  Gonzalo.
+- ~~**La dirección vieja se sigue diciendo.**~~ **RESUELTO 05-ago**: el fix del 28-jul dejó `Pol.
+  Europolis` en el bloque de datos "por considerarlo no hablado" — se hablaba igual al improvisar.
+  Ver [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]].
 - **Volumen real, para calibrar**: el agente de voz lleva **50 llamadas en total desde mayo**, y las de
   julio/agosto son casi todas desde el móvil de Gonzalo (`+34609779229`) o el de Manu (`+34617314938`).
   Sin tráfico de pacientes no hay forma de que un fallo aflore solo: por eso hace falta el check de
@@ -109,8 +107,8 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 9. ~~**Bots del Digital Pipeline sin verificar en la GUI**~~ **VERIFICADO 29-jul**: los 8 bots bien montados, nada que tocar. Decisión de Manuel: no recategorizar `Confirmacion cita` a Utility. Detalle → [[clinica-zen-historico]].
 
 10. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
-11. **Publicar o descartar Retell v67 (NEXT)** — draft con la frase de repetición de teléfono ("Te repito el número para confirmar: ..."), pendiente de OK de Manuel.
-12. **Verificar el fix de `bfc4dWuztZsWfb4Q` en su primera ejecución real (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Revisar la ejecución de ~11:00 UTC del 04-ago: que corra sin error SQL y que no reabra conversaciones ya cerradas.
+11. **Verificar el fix de `bfc4dWuztZsWfb4Q` en ejecuciones reales (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Confirmar que corre sin error SQL y que no reabre conversaciones ya cerradas.
+12. **Comprobar en llamada real que ya no se menciona "Europolis" ni estética proactiva (NEXT)** — fix del 05-ago sobre el mismo patrón que ya había reincidido una vez (28-jul → 2-ago).
 
 *Descartado tras revisión de Manuel (28-jul)*: que el calendario tenga 2 eventos en 21 días es **normal** para el volumen actual, no hay riesgo de doble reserva. La credencial de Calendar "Cuenta Gonzalo" se mantiene por ahora.
 
@@ -127,6 +125,7 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 
 ## Histórico de hitos
 
+- 2026-08-05: dirección sin "Europolis"/"en la dehesa" + no mencionar estética proactiva (v67 Retell publicada, chat en vivo)
 - 2026-08-04: pase de tono en chat+voz (v66 Retell publicada) + fix link roto de Google Maps en 3 workflows + fix reenganche disparando sobre conversaciones ya cerradas
 - 2026-07-28: auditoría completa + fixes del feedback de Gonzalo (dirección, voice_speed, email interno de voz, WhatsApp de voz)
 - 2026-07-20/21: pasada sobre chatbot, recordatorios, reenganche y derivación humano
