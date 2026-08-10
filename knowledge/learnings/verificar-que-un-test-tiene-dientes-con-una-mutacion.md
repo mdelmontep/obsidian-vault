@@ -60,6 +60,21 @@ ausencia de éxito.
 asserciones ejecutadas, y el resumen dice «129 passed». Todo candado derivado necesita un **suelo de
 tamaño** (`expect(n).toBeGreaterThan(500)`) como primer caso.
 
+**Noveno — el proceso bajo prueba SIRVE el código viejo.** Distinto de «la mutación no se aplicó»:
+el fichero cambia y el símbolo sí está en el camino, pero el servidor de larga vida no lo recarga.
+FacturaIA 10-ago: Turbopack **no hot-reloada el proxy** (`proxy.ts` y lo que importa), así que mutar
+el gate de `/admin` y correr el E2E midió el binario anterior → falso «sin víctima». Con cualquier
+arnés que hable con un servidor/worker/contenedor vivo, **reinícialo dentro del comando de test**,
+igual en el control que en el mutante.
+
+**Décimo — no hay víctima porque hay DOS puertas.** Antes de declarar hueco, busca la guarda de
+abajo: si el invariante está defendido en dos capas independientes, quitar una no cambia el
+resultado y el mutante es equivalente **por defensa en profundidad**, que es la respuesta correcta y
+conviene saberla antes de que alguien «simplifique» quitando una. Dos casos el mismo día
+(FacturaIA 10-ago): el PDF de presupuesto (el handler filtra por org y el render vuelve a filtrar) y
+`/admin` (proxy `isAdminRoute` + `AdminGuardedShell` en el layout). Se confirma mutando **las dos a
+la vez**: ahí sí cae, y eso es lo que se documenta.
+
 **Octavo, y este no es del test ni del arnés: el INFORME miente.** El reporter JSON de Playwright
 recortó las anotaciones a los **14 primeros casos de 78** — y eran exactamente las primeras por orden
 alfabético, con la forma creíble que tiene un dato verdadero. Cualquier cifra de cobertura sacada de

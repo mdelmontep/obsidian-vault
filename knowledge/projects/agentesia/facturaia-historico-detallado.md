@@ -216,5 +216,10 @@ Reestructurado 2026-06-26 (poda: backlog por-cliente devuelto a cada hub; backup
   prod con backfill de 12 filas; y la suite completa en **430/0** tras arreglar 5 rojos que **no** eran
   de carga. Al servidor lo mataba otra sesión con `pkill -f "next-server"` — cambiar de puerto no
   protege. Guard nuevo: el teardown compara los PIDs anotados al abrir.
+- **Mergeado a main (411434ad, 94139195)** e issue #1584 cerrado. Perímetro de `/admin` medido con
+  28 casos (`admin-perimetro.spec.ts`) y **ADR-011**: la suite E2E no lleva sesión superadmin —ese
+  privilegio gobierna la plataforma y la suite corre contra el proyecto de producción—, así que las
+  24 páginas de admin no se smokean y se cubren por contrato + expulsión. De la mutación salió que
+  hay **dos puertas independientes** (proxy + `AdminGuardedShell`): quitar una no da víctima.
 - **Cerrado 07/08-ago**: panel de tickets, soporte 133-138, ticket 135, tanda 142-145 y tap target del
   `Segmented`.
