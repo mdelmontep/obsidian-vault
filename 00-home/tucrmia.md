@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-10 madrugada (tres noches de arnés: repo restaurado, 6 gates nuevos, `npm run meta` como condición de parada · F1 sin tocar, y la siguiente iteración va ahí · tuyo: los 4 trámites de acceso en `docs/plan/TRAMITES-DE-MANUEL.md`)
+updated: 2026-08-10 tarde (seis épicas de F1 en paralelo, 11 migraciones aplicadas, desplegado y con cuenta real dentro · 5 hallazgos de auditoría confirmados y 119 sin refutar · tuyo: ticket de Storage y el registro de correo de Workspace)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,36 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (10-ago, tarde) — F1 de verdad, desplegado, y la auditoría que no llegó a juzgar
+
+**Seis épicas de F1 en un día, doce agentes en paralelo sobre ficheros disjuntos**: formulario web
+con consentimiento versionado (`E1.21`), doble factor y sesiones (`E1.23`), exportación y retención
+(`E1.24`), catálogo de 37 métricas (`E1.25`), contrato v1 operable (`E1.26`), infraestructura de
+integraciones (`E1.22`). Más `013`, `048`, `053`, `056`, `058`, `066`, `067`. **11 migraciones
+aplicadas**, gate de 52 pasos y 4.205 pruebas, desplegado y verificado.
+
+**Manuel tiene cuenta de superadmin y está dentro.** Producción limpia: de 15 organizaciones a 2.
+
+**Dónde aparecieron los fallos, que es la lección**: los doce agentes cerraron en verde y luego
+`db:replay` hizo falta cuatro veces, `gen:types` destapó 22 errores y la suite cazó tres pantallas
+sin enlace. Ver [[una-suite-en-verde-no-prueba-el-camino-real]].
+
+**Auditoría de composición: 124 hallazgos y MURIÓ SIN REFUTAR** (límite de sesión). Devolvió
+`sobreviven: 0`, que no significa limpio — ver [[un-workflow-que-muere-a-mitad-devuelve-cero-y-cero-no-es-limpio]].
+Volcados en `docs/plan/auditorias/2026-08-10-composicion-sin-refutar.md`. **Cinco verificados a mano,
+cinco ciertos**: dos gates que no corría nadie ([[un-gate-que-cruza-dos-listas-es-ciego-a-lo-que-no-esta-en-ninguna]]),
+el importe corrompido ([[parsefloat-sobre-importe-en-formato-espanol-corrompe-en-silencio]]), el
+selector de orden que no ordenaba, el formulario público inalcanzable, y el censo con `rpc` abierto
+([[recortar-las-tablas-de-un-cliente-no-acota-las-funciones-que-puede-llamar]]). **Quedan 119.**
+
+**Decisiones de Manuel**: correo desde `info@agentesia.madrid`, **`tucrmia.com` NO se compra** —lo
+que convierte el plantado de cookie de `sslip.io` en exposición aceptada y deja a `ADR-006` sin su
+precondición—, y Resend como proveedor cuando toque, derogando el SMTP genérico de P21.
+
+**Sin cerrar**: el rastro de accesos no lo escribe nadie (`issues/074`), la descarga de exportación
+espera el `grant` de Storage —comprobado imposible por SQL, hace falta ticket—, y el correo entra en
+Google y no sale (falta mirar el *Email Log Search*).
 
 ## Estado (10-ago, madrugada) — el arnés cerrado, y F1 sin tocar
 

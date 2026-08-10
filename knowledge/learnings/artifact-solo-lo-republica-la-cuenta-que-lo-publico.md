@@ -16,4 +16,10 @@ probando, y por qué las dos primeras no bastaban:
    publicada va por detrás del fichero local**, que es el fallo silencioso de verdad: el tablero
    mintiendo por omisión mientras nadie mira.
 
-Regla operativa: `WebFetch` → publicar con `url:` → si falla, `list` y elegir una que aparezca.
+**Y el 10-ago, la vuelta que remata la regla: las URL ALTERNAN, en menos de una hora.** Una se
+republicó con éxito a mediodía y a la hora daba 404 no transitorio; otra que esa mañana no contestaba
+—ya dada por huérfana— aceptó la republicación. Publicar desde la conversación que creó la URL
+tampoco la salva.
+
+Regla operativa, **sin memoria de lo que pasó la vez anterior**: `list` → `WebFetch` de la candidata →
+publicar sobre la que conteste → mintar nueva sólo si ninguna contesta. Cada vez, entera.
