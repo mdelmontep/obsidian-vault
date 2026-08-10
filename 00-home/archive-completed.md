@@ -438,3 +438,5 @@ tags: [home, archivo]
 - 2026-08-09 · TuCRMIA · capa agéntica del plan reescrita bajo la premisa de que el trabajo lo hará un agente y no un clic: A140-A180 con 41 gates `G-AGT-*`, puerta de autonomía redefinida por cota de Wilson y con cierre y caducidad, contrato v1 operable por máquinas (E1.26), caja negra del turno (E2.24) y lista cerrada de lo que nunca se agentiza. → [[tucrmia]]
 - 2026-08-10 · AGH Ibérica · **#952 cerrado: el digest semanal entregó por primera vez desde que existe** (3 filas de `error` a `delivered`). Hicieron falta código + alta de la plantilla en Meta + dos envs, en ese orden. Y 17 PRs mergeadas en dos días (6 de Borja + 11 con override de founder).
 - 2026-08-10 · AGH Ibérica · **#1088 hecho**: hook global que bloquea la keyword de cierre cualificada o citada, tras 3 reincidencias con la regla escrita las tres veces.
+- 2026-08-11 · Aula · publicada en dokploymanu con Supabase autoalojado (4 contenedores), contenido mudado, nivel de las lecciones reescrito y tres gates propios (enlaces, móvil, gate). Ver [[aula]]
+

@@ -120,3 +120,21 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
 - **Una celda `sticky` no tapa por estar fijada: tiene que medir toda la fila Y ganar al `z-index` del primitivo que pasa por debajo** — si la fila centra sus celdas, la fijada mide su contenido y deja dos bandas; y el `<input>` `opacity:0` de un Checkbox (`z-index:2`) le roba el clic desde el contexto del contenedor. `align-self: stretch` + `isolation: isolate` en la fila. Se ve con `elementFromPoint`, no con una captura. Ver [[columna-congelada-se-tapa-con-altura-y-con-apilado]]
 - **En un control con riel + opciones, el objetivo táctil es la OPCIÓN, no el riel** — el riel cumplía 28px y la opción medía 20. Se extiende el área pulsable con un pseudo del hijo, SOLO en vertical (a lo ancho se pisarían las opciones adyacentes) y sin salirse de la caja del control (fuera le roba el toque al vecino). Y el guard debe resolver el alto desde lo que la talla DECLARA, no desde el token que se supone que usa. Ver [[el-objetivo-tactil-de-un-control-compuesto-es-su-hijo]]
 - **`:root{--x}` (0,1,0) pierde contra `:root[data-theme=…]` (0,2,0)** — un token inyectado en `:root` no pisa al del tema: el valor llega al DOM, se ve en el inspector y no pinta. Solo lo caza el valor COMPUTADO en un navegador de verdad; los unitarios validan la cadena de CSS y siguen verdes. Ver [[style-inyectado-con-root-pierde-contra-root-data-theme]]
+
+## Ancho y desbordamiento (11-ago)
+
+- **`word-break: break-word` NO evita que la página se dibuje más ancha que el teléfono.** No reduce
+  el *ancho mínimo intrínseco*, que es con lo que el navegador decide el ancho de layout. Hace falta
+  `overflow-wrap: anywhere`, en todo lo que lleve rutas, identificadores o URLs.
+- El síntoma no es scroll lateral: es **todo el texto encogido**, sin barra que lo delate. A ojo
+  parece "letra pequeña". Ver [[overflow-wrap-anywhere-no-break-word-o-el-movil-encoge-el-texto]]
+- Se mide con el ancho de layout de `<html>` contra el del dispositivo — **nunca**
+  `window.innerWidth`, que en emulación reporta el área desplazable y da falso positivo con
+  cualquier bloque que tenga scroll propio.
+- Culpable difícil de ver → bisección del DOM: ocultar elementos uno a uno y mirar el `scrollWidth`.
+- **Migrar CSS a un `.module.css` pierde estilos SIN error**, y un empate de especificidad contra
+  `globals.css` lo decide el orden de los chunks: haz LOCAL el modificador (el rival desaparece, no
+  le ganas) y verifica con estilos computados indexados por RUTA de DOM.
+  Ver [[empate-de-especificidad-entre-globals-y-un-module-lo-decide-el-orden-de-inyeccion]] ·
+  [[baseline-de-estilos-computados-por-ruta-de-dom-para-migrar-css-sin-e2e]]
+
