@@ -17,3 +17,7 @@ trees»** porque el índice cambiaba durante los dos minutos que tarda un pre-co
 
 Dos reglas: los hooks se prueban en un repo desechable (`git init` en `/tmp`), y la segunda
 sesión sobre un repo va en `git worktree`. Ver [[antes-de-tocar-un-ticket-mira-si-otra-sesion-ya-lo-esta-cerrando]].
+
+**Reincidió el 10-ago y esa vez llegó al remoto**: mismo test, mismos dos ficheros, y un
+commit que borró 1.082 ficheros de `origin/main`. El aislamiento por `cwd` no basta —
+ver [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]] para las doce variables.

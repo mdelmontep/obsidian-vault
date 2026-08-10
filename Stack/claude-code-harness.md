@@ -384,3 +384,41 @@ contexto"). Aquí quedan documentadas con su gate:
 - Corolario de método: **nombra la cantidad exacta que vas a afirmar antes de medirla**, y mídela en la
   misma unidad en que se factura. Las dos correcciones de esa sesión fueron proxies, no errores de
   razonamiento.
+
+## Métrica de un loop: contar deuda abierta penaliza descubrir (10-ago-2026)
+
+El `meta` de TuCRMIA cuenta, entre otras señales, los issues abiertos. En la iteración que más cerró
+—cuatro gates, dos issues de producto, una migración— **subió de 141 a 143**, porque escribir un issue
+por cada cosa encontrada suma en la cola.
+
+No es un fallo de la métrica: la deuda encontrada es deuda real, y pasar de invisible a contada es
+progreso. El fallo sería leerlo como retroceso, porque entonces **el loop aprende a no descubrir**: deja
+de escribir issues, la métrica baja sola y el producto empeora. Es P5 con la aritmética a favor.
+
+La ley que funciona: **el número baja en las iteraciones que NO auditan**; en las que auditan, lo que
+tiene que bajar es el número de hallazgos SIN destino (arreglado · con issue · refutado). Un hallazgo con
+issue ya está contado; uno sin destino no está en ningún sitio.
+
+Y el corolario de diseño, que costó una corrección sobre la marcha: **una señal que no puede ponerse
+verde hace la meta inalcanzable por construcción**. Si el dato para contestarla no existe, la respuesta
+no es «roja para siempre» sino crear el campo que la contesta y contar aparte el «no consta» — un rojo
+que alguien puede apagar mirando, frente a uno permanente que enseña a ignorar el rojo.
+
+## Repartir N agentes sin que se pisen (10-ago-2026, 14 en una noche)
+
+Seis reglas, todas de haberlas incumplido primero:
+
+- **Un fichero, un dueño por iteración.** El reparto es por CONJUNTO DE FICHEROS disjunto, no por tema:
+  dos agentes «que no se van a tocar» acaban los dos en `package.json`.
+- **Nadie commitea, nadie hace `git add`, nadie corre el gate** salvo quien orquesta. Tres gates en
+  paralelo son tres builds compitiendo.
+- **Dile quién es el dueño del dato.** Un agente al que no le dijeron que el plan maestro manda eligió
+  identificadores «libres según la tabla» que el plan ya tenía ocupados para otra cosa.
+- **Exige el comando de comprobación en el propio encargo**, con su salida pegada en el informe. No
+  «comprueba que cuadra»: el `for` exacto que lo demuestra.
+- **Verifica su informe ejecutando, no leyendo.** De cuatro informes honestos, uno se había saltado un
+  paso del protocolo de publicación y otro dejó dos números fuera de alcance.
+- **Lo que un agente declare «fuera de alcance», lo cierras tú.** «Queda como inconsistencia conocida» es
+  deuda con permiso.
+
+Ver [[una-suite-en-verde-no-prueba-el-camino-real]].

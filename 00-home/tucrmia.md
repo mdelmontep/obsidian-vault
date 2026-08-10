@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-09 noche (plan revisado con 8 lentes + COPIAS: cifradas, diarias, fuera de la máquina y restauración probada · tuyo: política del bucket propio, 4 endpoints de FacturaIA, Pro solo con el primer cliente)
+updated: 2026-08-10 madrugada (tres noches de arnés: repo restaurado, 6 gates nuevos, `npm run meta` como condición de parada · F1 sin tocar, y la siguiente iteración va ahí · tuyo: los 4 trámites de acceso en `docs/plan/TRAMITES-DE-MANUEL.md`)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,26 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (10-ago, madrugada) — el arnés cerrado, y F1 sin tocar
+
+**Lo que hay que saber para retomar**: `npm run meta` es la condición de parada del bucle (`docs/plan/
+LOOP-CIERRE.md`); hoy da **152 rojas**. Sube cuando se descubre, y eso es correcto — ver la ley 5 del
+contrato y [[claude-code-harness]].
+
+- **El repositorio se vació y se restauró.** Un commit borró 1.082 ficheros de `origin/main`; el árbol de
+  un portátil era la única copia. Causa raíz cerrada: [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]].
+- **Seis gates nuevos**, todos de fallos ya ocurridos: `epicas` (el tablero declaraba 59 épicas con 90 en
+  el plan), `cola` (12 de 23 issues «abiertos» estaban hechos), `gates` (la tabla documentaba 26 de 46),
+  `lentes`, `git-aislado`, y `zona` sin su punto ciego (tres recortes de ISO en verde, uno pintando la
+  caducidad de un derecho un día antes).
+- **Producto**: telemetría de uso (mig. **066 aplicada**) — el panel llamaba «inactiva» a una organización
+  que entra a diario; `052` (una segunda ruta devolvía 200 donde debía 404); `063` (cuatro campos que se
+  editaban sin dejar rastro del fallo).
+- **Lo que más enseñó**: cinco de siete hallazgos los encontró EJECUTAR, no leer.
+  [[una-suite-en-verde-no-prueba-el-camino-real]] · [[una-asercion-deja-de-medir-cuando-cambia-su-fuente]].
+- **Deuda de rumbo, dicha en voz alta**: tres iteraciones seguidas de arnés y **ninguna épica de producto
+  entera**. La siguiente va a F1.
 
 ## Estado (09-ago, tarde) — YA SE ENTRA AL CRM
 
