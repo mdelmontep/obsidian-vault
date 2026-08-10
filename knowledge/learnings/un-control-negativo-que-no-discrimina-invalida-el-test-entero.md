@@ -23,6 +23,15 @@ la versión ROTA**. Si pasa, el instrumento no sirve para esa pregunta. Y si el 
 prueba no es el de producción, el test mide una propiedad distinta — dilo dentro del
 fichero. Ver [[el-fallo-real-no-era-acustico-era-un-camino-sin-cablear]].
 
+**Variante (10-ago-2026, eje cross-org de TuFacturaIA)**: el control POSITIVO pasaba y aun así la
+sonda no servía. La sonda leía el recurso con un id propio (200 ✓) y con uno de otra organización,
+esperando 404. Entró como sonda un `GET /clientes/{id}/mandatos`, que es una **colección anidada**:
+con un cliente ajeno filtra por `org_id` y devuelve **200 con lista vacía**. El eje cantó 4 fugas
+cross-org que no existían. Falta un tercer punto de control, el de la ausencia: pedir la sonda con un
+id que **no existe en ninguna parte** y exigir 404. Si ahí responde 200, no distingue «no existe» de
+«no es tuyo», y entonces ni su 404 prueba la valla ni su 200 prueba una fuga. Regla corta: una señal
+negativa solo prueba algo cuando has descartado que salga por otro motivo.
+
 **Variante (9-ago-2026, `harness-commit-guard`)**: el caso negativo EXISTÍA y pasaba, pero usaba una
 forma inofensiva. Probaba que `git diff <ruta>` y `stat <ruta>` no cuentan como escribir en esa ruta
 — y la forma que sí se colaba era un `python3` que solo medía mtimes, porque `python3` estaba en mi

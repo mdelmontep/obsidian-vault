@@ -20,3 +20,9 @@ nombre de proceso. Matar por puerto sí acota, y es lo que la línea siguiente y
 **Arnés que lo delata**: anotar en `globalSetup` los PIDs del puerto y compararlos en el teardown →
 distinguir «vivo el mismo» / «no responde nadie» / **«responde pero es OTRO proceso»**. `npm run dev`
 deja **dos** PIDs en el puerto: comparar conjuntos, no «el primero», o el guard da falsos positivos.
+
+**Reincidencia (10-ago-2026)**: pasó dos veces en la misma sesión. La segunda, a mitad de la tanda de
+cierre (caso 50 de 629): murió la tanda **y** el servidor con ella (`curl` → `000`, sin PID en el
+puerto). Corolario para el que mide: **relanza en vez de dar por bueno lo medido hasta ahí**, y no
+interpretes la parada como un rojo del producto. Lo que sí quedó demostrado ese día es que las
+mediciones por pieza (spec a spec) sobreviven a esto y la tanda completa no.

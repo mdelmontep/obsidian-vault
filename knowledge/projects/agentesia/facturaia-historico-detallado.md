@@ -223,3 +223,47 @@ Reestructurado 2026-06-26 (poda: backlog por-cliente devuelto a cada hub; backup
   hay **dos puertas independientes** (proxy + `AdminGuardedShell`): quitar una no da víctima.
 - **Cerrado 07/08-ago**: panel de tickets, soporte 133-138, ticket 135, tanda 142-145 y tap target del
   `Segmented`.
+
+## 10-ago (tarde) · La cola del barrido, cerrada entera (PRs #1592, #1593, #1594)
+
+- **Eje cross-org: 29 → 59 endpoints medidos**, 0 fugas, **0 no concluyentes**, 0 filas de la otra
+  organización modificadas. Dos palancas. (1) Cuerpo válido en `CUERPOS_PARAM` para los 18 no
+  concluyentes de Obras: los 16 handlers se abrieron uno a uno y comparten el orden **Zod (422) →
+  tenancy del PATH (404) → recursos del CUERPO (422)**, que es lo que hace que el caso corte en la
+  valla; los UUID del cuerpo son inexistentes a propósito, porque no llegan a resolverse y un id real
+  le daría a una fuga algo que romper. (2) **Sonda hermana**: `sondaLecturaDe` solo aceptaba `GET`
+  que TERMINAN en el parámetro, y eso dejaba sin medir las nueve escrituras de `facturas/{id}/*`
+  aunque `facturas/{id}/pagos` exista.
+- **El fallo de método que pagó la corrida**: al ampliar la sonda entró `GET /clientes/{id}/mandatos`,
+  que es una **colección anidada** y devuelve **200 con lista vacía** para un cliente de otra org. El
+  eje cantó **4 fugas cross-org que no existían** (sin escribir nada: la sonda corta antes). El
+  arreglo no fue una lista negra sino exigirle a la sonda que **demuestre que sabe fallar** — se pide
+  con un id inexistente y, si no da 403/404, el caso se declara no medido. Mismo error de fondo que
+  el `>= 400` del corte anterior. Ver [[un-control-negativo-que-no-discrimina-invalida-el-test-entero]].
+- **Fuera del eje (b) con motivo, en lista APARTE de las exclusiones** para no perderlas en la
+  dirección (a): las dos fusiones cliente/proveedor (eliminan el origen) y `PATCH facturas/[id]` (no
+  hay cuerpo inerte: `lineas` es obligatorio y el handler las reemplaza).
+- **Los 24 sin sonda: fuera de alcance por escrito**, con las dos salidas descartadas y su motivo —
+  un `GET` de colección no discrimina (medido) y usar la escritura como control positivo exige
+  escribir en la org A, sin vuelta atrás para los 18 DELETE.
+- **Los 2 rojos que quedaban NO se reproducen**: ni encadenados con su fichero vecino (24/24) ni en
+  tanda completa sobre main (**493 verdes, 0 rojos, 125 saltados, 21,5 min**). Sin tocar ningún tope,
+  y `workers: 1` ya descartaba que «carga» pudiera ser concurrencia interna.
+- **Páginas 55 → 66/97**: las 5 de `/informes`, 4 sueltas y `/login` + `/verificar-telefono`. De
+  `/login` faltaban los **bordes** (el camino feliz lo recorre `auth.setup.ts`): credenciales
+  inexistentes con el mensaje concreto, envío sin email y el `?redirect=`. **Hallazgo**: el registro
+  daba `/verifactu` por «panel de cumplimiento AEAT» y es la **landing pública de captación**; el
+  motivo escrito describía otra página.
+- **Dos mutaciones sin víctima seguidas, dos causas distintas** (el orden de sospecha del CLAUDE.md,
+  literal): primero el arnés —`mutate` no reinicia el servidor y **Turbopack no recarga el proxy**—,
+  después dos guardas —el proxy pone `redirect` en dos sitios y se mutó el del step-up 2FA en vez del
+  de sesión ausente—. Con el correcto: víctima.
+- **La tanda de cierre destapó un rojo REAL (issue #1595)**, y es el hallazgo con más valor del día:
+  `recibida-vencimiento` › «el vencimiento corregido tras aprobar llega a la factura» falla **2 de 3
+  pases AISLADO**. Lo que discrimina: invirtiendo el orden de las aserciones para consultar la BD
+  antes que el toast, cuando falla sale `NO_LLEGO_A_BD` — **no es un toast efímero, es el guardado
+  que no ocurre**, sin aviso de éxito ni de error. El input muestra la fecha y la base no la tiene.
+  El silencio nace en `ui/date-picker.tsx` › `commitDraft()`: su rama `else` ni llama a `onChange` ni
+  avisa. El `toHaveValue` intermedio que se añadió el 10-ago por la mañana para cerrar esta carrera
+  **no basta**: pasa, y el dato se pierde igual. No se arregló en el momento a propósito —
+  `ui/date-picker.tsx` es el componente de fecha de TODA la app— y es misma familia que qa-002/003/008.
