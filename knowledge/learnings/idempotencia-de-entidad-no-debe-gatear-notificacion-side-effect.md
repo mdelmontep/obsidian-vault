@@ -15,4 +15,11 @@ tags: [n8n, idempotencia, notificaciones, elphis, anti-patron]
 
 **Regla general:** antes de reusar un guard anti-duplicado existente para gatear un nuevo side-effect, pregunta "¿el TTL/scope de este guard tiene sentido para lo nuevo que quiero bloquear?". Si no, key nueva con su propio TTL — no acoples.
 
-Relacionado: [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] · [[dedup-key-no-debe-incluir-contenido-volatil]]
+**Secuela (10-ago) — leer antes de fiarse del fix de arriba:** colgar la notificación de
+`destino !== 'none'` movió el silencio de sitio en vez de quitarlo. El `else` de `Decidir etapa`
+ponía `destino='none'` por defecto, así que el 89% de los leads siguió sin avisar otras dos
+semanas, sin errores y con todo en `success`. Cambiar el gate de un side-effect a otra condición
+obliga a auditar **todos** los caminos que producen esa condición.
+Ver [[el-else-de-un-clasificador-que-rellena-un-llm-debe-avisar-no-callar]].
+
+Relacionado: [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] · [[dedup-key-no-debe-incluir-contenido-volatil]] · [[do-update-reescribe-created-at-la-fecha-no-es-la-del-primer-sello]]

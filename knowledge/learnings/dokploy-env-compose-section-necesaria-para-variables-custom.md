@@ -22,4 +22,12 @@ Caso 2026-06-02 Elphis: `ELPHIS_NOTIF_RECEPCION` visible en panel pero `''` en
 runtime. `ELPHIS_NOTIF_INGRESO` sí funcionaba porque fue añadida en sesión anterior
 donde también se editó el compose. Dos deploys sin efecto hasta añadir la línea.
 
+Segundo modo de fallo, más tonto y más frecuente (10-ago, mismas vars): **Deploy sin Save
+previo sale VERDE sin aplicar nada** («Compose deployed successfully», 0s). El panel no
+persiste los cambios de Environment al navegar a otra pestaña. El tell no es el toast: es
+que el container **no se recrea**. Si sigue en `Up 3 days`, no se aplicó nada.
+Gate real, en este orden: `grep NOMBRE /etc/dokploy/compose/<stack>/code/.env` → uptime del
+container → `docker exec <container> printenv NOMBRE`. Y ojo: ese `.env` de disco lo regenera
+el panel, editarlo a mano no sirve.
+
 Hermano de [[dokploy-env-clave-dos-puntos-no-se-parsea]].

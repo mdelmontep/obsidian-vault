@@ -1,7 +1,7 @@
 ---
 title: un test nuevo no vale hasta que le rompes el código a propósito y falla
 date: 2026-07-28
-updated: 2026-08-07
+updated: 2026-08-10
 source: claude-code-session
 tags: [testing, qa, metodo, verificacion]
 ---
@@ -45,3 +45,26 @@ código elige entre N redacciones hasheando el contenido (para que la medición 
 payload dado ejercita **siempre la misma**: mutar las otras no mata a nadie. Añadir casos solo tapa
 las que se te ocurran hoy. Lo cierra una **invariante sobre el POOL** («ningún molde contiene "voy
 a"»), que cubre además el molde que alguien añada mañana. AGH 7-ago: 2 de 4 moldes ciegos.
+
+**Sexto modo — la aserción es un RANGO tan ancho que incluye el fallo.** No es la negativa sin
+contraparte: aquí hay aserción positiva, pero admite el modo de fallo. FacturaIA 10-ago: el eje de
+permisos exigía `status >= 400` para «un rol de solo lectura no puede escribir». Quité el
+`requireWrite` de un endpoint y **siguió verde**, porque sin gate la validación del cuerpo devuelve
+**422** — también 4xx. El test probaba «no es 2xx», no «está protegido». Se cierra exigiendo el
+código CONCRETO de la defensa (401/403), y entonces un 400/422 dice lo que es: el permiso no se ha
+probado. Regla: cuando el candado vigila una decisión, aserta **la señal de esa decisión**, no la
+ausencia de éxito.
+
+**Séptimo — universo vacío en un candado que se DERIVA del repo.** Un contrato que recorre
+`git ls-files` con 129 casos pasa entero en verde si el comando falla: cero elementos, cero
+asserciones ejecutadas, y el resumen dice «129 passed». Todo candado derivado necesita un **suelo de
+tamaño** (`expect(n).toBeGreaterThan(500)`) como primer caso.
+
+**Octavo, y este no es del test ni del arnés: el INFORME miente.** El reporter JSON de Playwright
+recortó las anotaciones a los **14 primeros casos de 78** — y eran exactamente las primeras por orden
+alfabético, con la forma creíble que tiene un dato verdadero. Cualquier cifra de cobertura sacada de
+la salida de una herramienta ajena hay que contrastarla con un **marcador propio** (una línea por
+caso a un fichero que escribes tú, tras un flag de entorno). Corolario del arnés: si `mutate` avisa
+de «sin resumen de tests reconocible», eso NO es un resultado — es que no pudo confirmar que los
+tests corrieran.
+

@@ -36,7 +36,7 @@ Negocio KISAMU verificado + cliente OK → **vía A (migración)**: borrar cuent
 ## Pendiente con Alba (no bloquea Fase 0)
 
 1. **Spiroox**: dos admins externos (Laura Spiroox, Pepe Framis) con acceso completo a Clientify. ¿Tienen automatizaciones activas que no debamos pisar? Confirmar antes de crear custom fields o tocar pipeline.
-2. **Número directo de la recepcionista**: el onboarding dice «ella tiene número propio» pero no lo escribe. Es el destino del WhatsApp interno cuando el bot deriva caso no-ingreso.
+2. ~~**Número directo de la recepcionista**~~ ✅ **CERRADO 10-ago**: es el **`+34687448210`** de Alba, que llevaba en el hub (§Datos clave) desde el 18-may — este punto siguió listado como pendiente casi tres meses mientras el dato ya estaba en el vault, y entretanto los avisos internos se quedaron en el móvil del dev. Ya puesto en `ELPHIS_NOTIF_INGRESO`/`_RECEPCION`. **Al cerrar un pendiente de este tipo, mirar primero §Datos clave del hub.**
 3. **IMAP `info@centroelphis.com`**: NO es cuenta Google — es email de dominio propio. Necesito host IMAP del hosting (probar `mail.centroelphis.com`), puerto y contraseña real. La que pasó Alba (`psw`) no conecta. Mientras, `doctoralia-email-sync` (n8n `3mykMD5qzQLUHDC1`) está importado pero desactivado.
 4. **Formulario web**: ¿la web `centroelphis.com` tiene formulario activo hoy? ¿A dónde llegan los datos? ¿Quieren además widget de chat embebido?
 5. **Meta Business Manager**: ¿cuenta API ya creada? ¿negocio verificado? (campos vacíos en onboarding §4).
