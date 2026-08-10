@@ -203,3 +203,18 @@ Seguían en el dashboard semanas después. Ninguna era bloqueante activo; los pe
 Vivía en el preámbulo del propio índice, o sea que sus 1.071 bytes de historia se cargaban en CADA arranque de sesión. Es historia, no índice.
 
 Reestructurado 2026-06-26 (poda: backlog por-cliente devuelto a cada hub; backup en `00-home/archive/top-of-mind-pre-poda-2026-06-26.md`). Podado 2026-07-25: retiradas 19 entradas de TuFacturaIA cuyo único pendiente era un smoke YA registrado en la sección Smoke del hub (verificado id a id: PR/migración presente en el hub y el pendiente vivo en Smoke o NOW). Backup en `00-home/archive/top-of-mind-pre-poda-2026-07-25.md`. Podado 2026-08-08: retiradas 5 entradas de TuFacturaIA duplicadas en el §Smoke del hub (verificado id a id imprimiendo la línea del hub que las respalda). La de Obras-IA/WhatsApp/MCP no estaba allí y se trasladó primero. NO se tocaron «skin Cristal» (decisión de negocio, no smoke) ni «retirada n8n» (arrastra la Fase 6).
+
+## 10-ago · Motor de contrato y cierre de su cola (PRs #1583, #1585, #1587)
+
+- **#1583 + #1585 (en prod)**: perímetro de auth de las 630 rutas (0 workers dormidos), rol de las 177
+  escrituras sin parámetro (72/72 con 403) y de las 148 con parámetro (132/132), scopes de v1 + 64 tools
+  MCP, espejo `MCP_RESOURCES` con `Record<Union,true>`. Registro en `docs/qa/funcional/`. **13 «hallazgos
+  críticos» de la primera medición eran falsos**, y el falso positivo cross-org llegó a dañar la sandbox.
+- **#1587 (sin mergear)**: cross-org de rutas con parámetro medido (29 de 149 con 403/404, **0 fugas y 0
+  filas ajenas tocadas**, sonda de lectura antes de cada escritura y restauración verificada); páginas
+  33 → 55 de 97; mig 657 para el descarte del banner **por miembro** (#1584), aplicada y verificada en
+  prod con backfill de 12 filas; y la suite completa en **430/0** tras arreglar 5 rojos que **no** eran
+  de carga. Al servidor lo mataba otra sesión con `pkill -f "next-server"` — cambiar de puerto no
+  protege. Guard nuevo: el teardown compara los PIDs anotados al abrir.
+- **Cerrado 07/08-ago**: panel de tickets, soporte 133-138, ticket 135, tanda 142-145 y tap target del
+  `Segmented`.
