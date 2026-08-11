@@ -43,3 +43,10 @@ navegador, así que Next no tiene motivo para inlinear ahí — `process.env.NEX
 en un route handler es una lectura de entorno normal, y sin él en el proceso real
 falla en silencio con el mensaje de "faltan variables" que el propio código ya prevé.
 Fix: `node --env-file-if-exists=.env.local .next/standalone/server.js`.
+
+Y el corolario que engaña al revés (2026-08-11, TuCRMIA): un **307 no prueba que la ruta
+exista**. Sondeando sin sesión una ruta nueva bajo un layout con guard, el redirect a `/login`
+sale ANTES de resolver el segmento, así que `/ajustes/api` contestaba 307 tanto sirviendo el
+build viejo —donde no existía— como sirviendo el nuevo. La respuesta que discrimina es la que
+se pide YA autenticado: ahí el build viejo devolvió 404. Para saber qué sirve un puerto sin
+sesión: `ps -o command -p $(lsof -ti:PORT)` → `npm run start` (build congelado) vs `next dev`.

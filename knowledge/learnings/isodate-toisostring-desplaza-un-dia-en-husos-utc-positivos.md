@@ -15,3 +15,10 @@ tags: [javascript, timezone, dates, facturaia]
 **Test de regresión**: forzar `process.env.TZ = 'Europe/Madrid'` explícitamente — un CI en UTC no detecta esta clase de bug (el patrón buggy da el mismo resultado que el correcto en offset 0).
 
 **Alcance más amplio**: el mismo patrón (`Date` local + `.toISOString()`) apareció en un grep de ~20 archivos más del repo, mayoría server-side (Dokploy corre en UTC → no manifiesta ahí). No auditado — candidato a barrido dedicado si se prioriza.
+
+**Variante inversa, y muerde en los arneses (2026-08-11, TuCRMIA)**: una fecha-calendario escrita
+A MANO en un registro (`"fecha": "2026-08-11"` de una corrida) comparada contra un INSTANTE
+(`ahora - new Date(fecha)`). `new Date('2026-08-11')` es medianoche **UTC**, así que anotar el día
+LOCAL de una corrida nocturna (01:2x CEST = 23:2x UTC del día anterior) deja la corrida «en el
+futuro» y el check en rojo durante dos horas cada noche. Un `edad < 0` en un check de frescura no
+es «caducado»: es esta confusión. Anotar el día en la misma escala en la que se compara.

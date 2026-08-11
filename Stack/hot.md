@@ -32,7 +32,7 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (8)
+## Ha vuelto a pasar (23)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
@@ -41,7 +41,6 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un «no se puede» heredado caduca** — pregunta POR QUÉ, no SI: el booleano envejece, el hecho no. Ver [[un-no-se-puede-heredado-caduca-como-cualquier-otra-frase]]
 - **`cmd > fichero` vacía el fichero antes de arrancar `cmd`** — un generador que falla borra su propia fuente de verdad, sin propagar el exit code. Ver [[redirigir-con-mayor-que-destruye-el-fichero-antes-de-arrancar-el-comando]]
 - **El gate escrito justo tras el arreglo mide cero casos** — demuestra el rojo contra el árbol ANTERIOR. Ver [[el-gate-escrito-justo-despues-del-arreglo-mide-cero-casos]]
-- **`git commit -- <ruta>` no te aísla** si otra sesión tiene el índice cargado en el mismo checkout. Ver [[commit-por-ruta-no-te-aisla-de-otra-sesion-con-el-indice-cargado]]
 - **Un gate sobre el RESULTADO no valida la transformacion** — si reescalas dos campos a la vez (uno /f, otro xf), el producto es invariante **por construccion para cualquier f**: el gate que compara el resultado antes y despues pasa en verde con f=10. Ataca el PARAMETRO, no el resultado. Test para saber si tu gate es gate: ¿con que valor fallaria? Si no encuentras ninguno, no es un gate. Ver [[un-gate-sobre-el-resultado-no-valida-la-transformacion]]
 - **El coste de un fan-out de agentes es CONTEXTO, no razonamiento** — 94 % en cache read/write, 6 % en output. La palanca no es bajar effort: es inyectarles lo que ya sabes en vez de que lo redescubran. Ver [[el-coste-de-un-fanout-de-agentes-es-contexto-no-razonamiento]]
 - **Redondea antes de decidir la frontera, no despues** — si no, salen «5 h 60 min» y «60 s». Y pruebalo con un BARRIDO: con casos elegidos (59 y 60) la banda de en medio pasa. Ver [[decidir-una-frontera-con-el-valor-crudo-produce-imposibles]]
@@ -59,10 +58,10 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Al partir una pila en PRs, el fix va con el commit que lo causa** — si no, mergear el primero publica el fallo; con datos personales el hueco entre merges ES la exposición. Ver [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]]
 - **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
-- **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino en el que no encuentra nada y sale con 0, no es un gate: es un adorno. Fail-closed. Ver [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[gate-con-ruta-relativa-no-corre-desde-subdirectorio-y-sale-verde]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]] · [[una-suite-en-verde-no-prueba-el-camino-real]] · [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]]
+- **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino en el que no encuentra nada y sale con 0, no es un gate: es un adorno. Fail-closed — y vale para el TEARDOWN de un smoke: si avisa por `stderr` y no por el exit code, no avisa. Ver [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[gate-con-ruta-relativa-no-corre-desde-subdirectorio-y-sale-verde]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]] · [[una-suite-en-verde-no-prueba-el-camino-real]] · [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
-## El resto (38)
+## El resto (37)
 
 
 - **Antes de decir «esto no se puede medir», enumera la taxonomía cerrada** — suele estar ya partido, y su comentario dice qué se decidió NO medir. Y decide señal (excepción → numerador) vs dimensión por evento (tasa → denominador). Ver [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]

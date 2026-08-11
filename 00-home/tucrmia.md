@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-10 tarde (seis épicas de F1 en paralelo, 11 migraciones aplicadas, desplegado y con cuenta real dentro · 5 hallazgos de auditoría confirmados y 119 sin refutar · tuyo: ticket de Storage y el registro de correo de Workspace)
+updated: 2026-08-11 noche (los 124 hallazgos juzgados y 123 cerrados · la API v1 ya tiene por dónde emitir una credencial · tuyo: borrar 7 orgs de prueba de producción, el ticket de Storage y el registro de correo de Workspace)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,42 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (11-ago) — los 124 hallazgos juzgados, y la API v1 con puerta de entrada
+
+**De 124 hallazgos sin juzgar a 1 abierto, en cuatro iteraciones del bucle.** 120 escépticos en
+tres tandas, dos por hallazgo con ángulos distintos: **76 en pie por unanimidad, 23 divididos, 25
+refutados**. Falsos positivos reales del 20 %, no el 50 % que suponíamos — y la prueba de que
+medía el árbol de hoy es que los cuatro que los commits del día anterior ya habían arreglado
+salieron refutados solos. Queda `#13`: la impersonación que ninguna superficie usa.
+
+**La API v1 tenía 27 rutas y ninguna forma de pedir una llave** (`issues/077`): `issueApiKey` la
+llamaban sólo los dos scripts de smoke. Séptima aparición de «escrito no es enchufado» y la más
+cara — lo desenchufado era la entrada de una épica entera. Ya está en `/ajustes/api`: la
+credencial se enseña **una vez** porque la base sólo guarda el hash, el derecho vive en la ACCIÓN
+y no en el layout, y la pantalla **avisa cuando el alcance elegido no alcanza ninguna fila** (una
+clave válida que devuelve listas vacías con 200 se lee igual que «no hay nada»).
+
+**Cinco gates nuevos en cuatro noches**, todos de fallos ya ocurridos: `ratchet:tamano`
+(G-TAMANO) y `tipos:check` (G-TIPOS-CERRADOS) —los dos llevaban tiempo escritos en el plan **sin
+existir en el disco**, el patrón P8—, `deps-v1:check` (G-DEPS-ENCHUFADOS), más G-CAT R5 y
+G-CRON-DESPROGRAMADO. Y una lección de método:
+[[un-gate-de-enchufado-no-se-copia-entre-huecos-que-se-rellenan-distinto]].
+
+**Lo que encontró EJECUTAR y no leer, tres veces seguidas**: `smoke:x30` llevaba semanas sin
+arrancar (su resolutor no conocía el alias `@/`, moría en el `import`); la frontera entre zonas se
+saltaba con una ruta relativa mientras el alias sí se bloqueaba; y 🔴 **el smoke de la v1 llevaba
+desde la migración 066 dejando en producción todo lo que sembraba** →
+[[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]]. El recorrido en navegador aportó lo
+suyo: [[rejilla-de-casillas-con-el-distintivo-en-un-span-hermano-deja-n-controles-con-el-mismo-nombre]].
+
+**Decisiones del bucle sin Manuel**: `ADR-007` (un trabajo periódico sin nada que hacer se
+desprograma — escribía 96 filas `failed` al día) y `ADR-008` (cuándo puede subir la línea base de
+un trinquete, con lo que NO autoriza escrito).
+
+🔴 **Tuyo**: borrar las **7 organizaciones de prueba** que quedaron en producción — `npm run copia`
+primero y deja de ser irreversible (`issues/082`) —, el ticket del `grant` de Storage, el *Email
+Log Search* de Workspace y el secreto viejo de Google.
 
 ## Estado (10-ago, tarde) — F1 de verdad, desplegado, y la auditoría que no llegó a juzgar
 
@@ -30,25 +66,20 @@ sin enlace. Ver [[una-suite-en-verde-no-prueba-el-camino-real]].
 
 **Auditoría de composición: 124 hallazgos y MURIÓ SIN REFUTAR** (límite de sesión). Devolvió
 `sobreviven: 0`, que no significa limpio — ver [[un-workflow-que-muere-a-mitad-devuelve-cero-y-cero-no-es-limpio]].
-Volcados en `docs/plan/auditorias/2026-08-10-composicion-sin-refutar.md`. **Cinco verificados a mano,
-cinco ciertos**: dos gates que no corría nadie ([[un-gate-que-cruza-dos-listas-es-ciego-a-lo-que-no-esta-en-ninguna]]),
-el importe corrompido ([[parsefloat-sobre-importe-en-formato-espanol-corrompe-en-silencio]]), el
-selector de orden que no ordenaba, el formulario público inalcanzable, y el censo con `rpc` abierto
-([[recortar-las-tablas-de-un-cliente-no-acota-las-funciones-que-puede-llamar]]). **Quedan 119.**
+*(Juzgados y cerrados el 11-ago: ver el bloque de arriba.)*
 
 **Decisiones de Manuel**: correo desde `info@agentesia.madrid`, **`tucrmia.com` NO se compra** —lo
 que convierte el plantado de cookie de `sslip.io` en exposición aceptada y deja a `ADR-006` sin su
 precondición—, y Resend como proveedor cuando toque, derogando el SMTP genérico de P21.
 
-**Sin cerrar**: el rastro de accesos no lo escribe nadie (`issues/074`), la descarga de exportación
-espera el `grant` de Storage —comprobado imposible por SQL, hace falta ticket—, y el correo entra en
-Google y no sale (falta mirar el *Email Log Search*).
+**Sin cerrar entonces**: el rastro de accesos sin llamante *(cerrado el 11-ago)*, la descarga de
+exportación esperando el `grant` de Storage, y el correo que entra en Google y no sale.
 
 ## Estado (10-ago, madrugada) — el arnés cerrado, y F1 sin tocar
 
-**Lo que hay que saber para retomar**: `npm run meta` es la condición de parada del bucle (`docs/plan/
-LOOP-CIERRE.md`); hoy da **152 rojas**. Sube cuando se descubre, y eso es correcto — ver la ley 5 del
-contrato y [[claude-code-harness]].
+**Lo que hay que saber para retomar**: `npm run meta` es la condición de parada del bucle
+(`docs/plan/LOOP-CIERRE.md`) — **121 rojas el 11-ago**. Sube cuando se descubre, y eso es correcto:
+ver la ley 5 del contrato y [[claude-code-harness]].
 
 - **El repositorio se vació y se restauró.** Un commit borró 1.082 ficheros de `origin/main`; el árbol de
   un portátil era la única copia. Causa raíz cerrada: [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]].
@@ -145,7 +176,10 @@ clic sino un agente en su nombre —el nuestro, y **el suyo**, contra la API—.
   `G-SEC-RESTORE` en `pre-push`, y los rojos demostrados uno a uno.
 - ✅ **Sale de la máquina**: se sube cifrada a Wasabi `eu-west-2` (bucket del Dokploy, prefijo
   `crm-supabase/`), y lo que lo demuestra es que **se bajó de allí y se restauró** — 1.607 filas + 8
-  usuarios. → [[firma-sigv4-consulta-sin-codificar-devuelve-cero-con-200]] ·
+  usuarios. → [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] ·
+[[un-gate-de-enchufado-no-se-copia-entre-huecos-que-se-rellenan-distinto]] ·
+[[rejilla-de-casillas-con-el-distintivo-en-un-span-hermano-deja-n-controles-con-el-mismo-nombre]] ·
+[[firma-sigv4-consulta-sin-codificar-devuelve-cero-con-200]] ·
   [[buckets-con-puntos-obligan-a-path-style-por-el-wildcard-tls]]
 - ✅ **La clave privada vive sólo en 1Password** (`op://Agentesia/krtkmll2u5zlzgflpkwdhanxka/credencial`,
   **por ID: el guión largo del título invalida la referencia**). Probado tras borrar el fichero local.
