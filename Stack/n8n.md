@@ -367,3 +367,11 @@ que el error handler no dispare es buena señal).
 
 Implementación: `~/.claude/scripts/agentes-check.py` (cron semanal, lunes 09:00). Ver
 [[agentes-cliente-tres-capas]].
+
+## Gotchas 12-ago (Simarro, sesión de auditoría de voz+catálogo)
+
+- **HTTP Request sin `responseFormat:json` explícito** puede devolver el body como STRING dentro de `.data` en vez de parseado — ver [[n8n-http-request-sin-responseformat-json-devuelve-string-en-data]]
+- **Merge modo `combineAll` exige que TODOS los inputs conectados reciban datos** — con fan-out condicional (una rama de 1 input, otra de 9) da `[[]]` si la rama corta solo dispara 1. Usar `mode:"append"`. Ver [[n8n-merge-combineall-exige-todos-los-inputs-usar-append-en-fan-in-parcial]]
+- **Google Sheets API v4, rango A1 en llamada HTTP directa**: usa el NOMBRE real de la pestaña (`'Hoja 1'!B2:B100`), no el gid/índice numérico — el gid solo vale para `sheetId` en `deleteDimension`/`batchUpdate`, no para el path del rango.
+- **Nodo nativo Kommo (`n8n-nodes-kommo.kommo`), opción `with`**: espera un ARRAY (`["leads"]`), no un string (`"leads"`) — con string da `"options.with.join is not a function"`.
+- **n8n Code node ya no soporta `this.helpers.httpRequestWithAuthentication`** en esta versión del task runner ("is not supported in the Code Node") — migrar a HTTP Request nativo con `authentication:predefinedCredentialType`. Rompió en producción un sync que llevaba meses funcionando, sin que nadie tocara el código — fue un cambio de plataforma, no del workflow.

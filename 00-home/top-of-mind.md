@@ -13,7 +13,7 @@ tags: [home, prioridades]
 - 🔴 **Centro Elphis — el bot de WhatsApp falla 1 de cada 5 ejecuciones (3-ago; SIGUE igual el 10-ago: 73 de 379)** — `chatwoot-event`, `Persist ids conv_state`: `invalid input syntax for type bigint: "null"`. Bot vivo con pacientes reales; lo destapó el check de efecto, no el error handler (que existe y nadie mira). Sin diagnosticar. → [[clientes/centro-elphis/index|centro-elphis]] · [[ejecucion-en-verde-no-prueba-el-efecto]]
 - 🟢 **Centro Elphis — avisos internos arreglados y verificados E2E (10-ago)** — el `else` de `Decidir etapa` silenciaba 65 de 73 leads. **Tuyo**: avisar a Alba de que ahora sí le llegan (~1/día, pico de 4). → [[clientes/centro-elphis/index|centro-elphis]] · [[el-else-de-un-clasificador-que-rellena-un-llm-debe-avisar-no-callar]]
 - 🟠 **Clínica Zen — el fix del nombre inventado NO funcionó, reincidió el 2-ago (3-ago)** — con la v64 publicada el agente reservó sin preguntar el nombre y mandó `"name":"Paciente nuevo"`; la cita del 6-ago está en la agenda de la clínica con ese nombre. Va en el Code node, no en el prompt. Y sigue diciendo "Polígono Európolis", que era justo lo que pidió corregir Gonzalo. **Tuyo: OK para tocar el workflow.** → [[clinica-zen]]
-- 🟠 **Simarro — 4 workflows de cron sin ejecutarse, incl. el matching semanal (3-ago)** — confirmar antes la retención de esa instancia (en CZ estaba en 7 h creyendo que eran días). → [[simarro]]
+- 🟢 **Simarro — los 8 puntos de queja del cliente cerrados, verificado con datos reales (12-ago)** — **Tuyo**: limpiar 1 lead de test en Kommo y avisar a `rss@`/`pss@` de 2-3 emails de prueba. → [[simarro]]
 - **Check de efecto semanal EN MARCHA (3-ago)** — `~/.claude/scripts/agentes-check.py`, cron lunes 09:00, 4 clientes. **Tuyo: elegir canal de aviso** (hoy solo escribe a log; Slack `#01-incidencias` o Telegram). Faltan clientes sin credencial n8n accesible. → [[agentes-cliente-tres-capas]]
 - 🔴 **TuFacturaIA — tickets 142-145 (IET) en prod (08-ago, #1543); queda un cabo con SUS datos** — el 144 le cambiaba el precio a la partida que seleccionaras. **Tuyo**: que confirme que ha repasado los tics de esos días. → [[facturaia]] · [[columna-congelada-se-tapa-con-altura-y-con-apilado]]
 - 🟢 **TuFacturaIA — unidad de MO y coste/hora, EN PROD (07-ago)** — ningún precio movido de los 7.683. **Tuyo**: el Excel de coste por trabajador a «Tarifas propias», y **llamar a Natalia** — el §5 (suben 294) sigue sin su OK y lo confunde con la conversión ya hecha. → [[facturaia]] · [[escribir-un-campo-que-no-entra-en-ninguna-formula-dispara-igual-el-recalculo]]
@@ -50,7 +50,6 @@ tags: [home, prioridades]
 - **TuFacturaIA — pagar GitHub Advanced Security (~16 jul)** — si caduca el trial se apaga Code Quality. [[facturaia]]
 - **TuFacturaIA — Supabase subido a Pro (10-jul)** — egress tumbó prod ~1h; ya no urge, vigilar uso, NO bajar a Free. [[facturaia]]
 - **TuFacturaIA — rotar secrets tras fuga Dokploy (Capa 2)** — Capa 1 cerrada (#870); rotar Supabase→Stripe→Meta. [[facturaia]]
-- **Simarro — verificación E2E reserva tras recableo (06-25)** — 1 reserva por voz + 1 por WA → evento con calle+`location` + tarea Meeting + email. [[simarro]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
 - **Tecnocloud — PR #3 voice-webhook-tickets** — pendiente review Dani → smoke E2E con llamada real. [[tecnocloud]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
@@ -81,7 +80,7 @@ tags: [home, prioridades]
 |---|---|---|
 | TuFacturaIA | [[facturaia]] | Activo · NEXT/Smoke/LATER en el hub |
 | Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
-| Simarro | [[simarro]] | Matching + voz/WA + outbound |
+| Simarro | [[simarro]] | Auditoría de 8 puntos de queja cerrada (12-ago) · queda limpieza de test |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
 | Tecnocloud | [[tecnocloud]] | PR #3 voice-webhook + voz Laura |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
