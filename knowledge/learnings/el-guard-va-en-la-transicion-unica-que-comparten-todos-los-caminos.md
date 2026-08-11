@@ -42,3 +42,19 @@ recorra los N y exija la forma, con la excepción **declarada por escrito en el 
 el fail-open sea deliberado. Señal para elegir: si puedes enumerar las puertas desde el repo (un
 registry, un `git ls-files`, un enum), el contrato es posible y el parche es deuda. Ver
 [[un-guard-enumera-la-clase-que-la-regla-escrita-solo-documenta]].
+
+**Y el corolario que muerde: la EXCEPCIÓN legítima de un contrato deja a ese elemento con la vara más
+corta, y suele ser el que más importa** (FacturaIA 11-ago). El contrato de crons exige que cada uno
+pase por el wrapper que reporta fallos. `cron-watchdog` está exento **con razón**: el wrapper deja una
+fila con lock in-flight hasta terminar, y si el watchdog muriese a mitad su propia fila colgada
+bloquearía sus ejecuciones futuras, que es justo lo que él viene a desbloquear. Excepción correcta,
+declarada por escrito.
+
+El efecto colateral no lo era: junto con el wrapper se perdió el **aviso** que el wrapper emite. Un
+fallo aislado de cualquier otro cron pinga al instante; los del vigilante solo se veían si encadenaba
+dos seguidos. Medido: había fallado dos veces en dos semanas, las dos aisladas, las dos invisibles.
+Quien vigila a los 45 se vigilaba con el criterio más flojo de los 46.
+
+Regla: al declarar una excepción a un contrato, **enumera lo que el contrato le daba** y repón a mano
+lo que siga aplicando. Y sospecha en particular cuando el exento es el vigilante, el healthcheck o el
+que audita: la razón por la que no encaja en el molde suele ser la razón por la que nadie lo mira.

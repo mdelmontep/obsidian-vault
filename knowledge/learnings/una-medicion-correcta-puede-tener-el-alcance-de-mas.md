@@ -16,3 +16,16 @@ El error no estuvo en medir ni en el resultado: estuvo en **el alcance del enunc
 - Antes de gastar un experimento, buscar un **experimento natural**: ¿hay algo ya en producción que conteste? (Aquí no lo había, pero costó una lectura comprobarlo.)
 
 Ver [[una-afirmacion-repetida-no-es-una-verificacion]], [[resolver-el-destinatario-por-su-clave-no-por-recencia-ni-sufijo]].
+
+**Tercera vez el mismo día, y la firma es siempre igual: leer UNA función y afirmar el comportamiento de
+la CADENA** (FacturaIA 11-ago). Vi que `tieneActividad` era `aprobadas > 0 || pendientes > 0`, concluí
+que el digest enviaría el correo con `aprobadas: 0`, y publiqué que «el 100 % de los correos que envía
+hoy llevan el titular *aprobó 0 facturas*» — en un commit, en el cuerpo de un PR y en el registro de QA.
+Falso: el llamante tenía un guard más, `if (summary.aprobadas === 0 || !tieneActividad(...)) continue`,
+así que ese caso **no era alcanzable**. Lo desmontó el primer run real: `enviados: 0, sinActividad: 4`.
+
+Lo que hay que hacer y no hice: **leer la costura donde se DECIDE, no la función que calcula el dato**.
+Una función auxiliar te dice qué computa; solo el llamante te dice qué se hace con eso. Y el atajo que
+lo habría evitado costaba menos que la corrección: **ejecutarlo una vez antes de afirmar**. Las tres
+veces del día tuvieron la misma cura (ejecutar / preguntar la pregunta exacta / mirar el universo) y el
+mismo síntoma: una conclusión creíble, publicada, y con la etiqueta de «medido» encima.
