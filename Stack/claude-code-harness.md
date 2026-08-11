@@ -346,6 +346,14 @@ contexto"). Aquí quedan documentadas con su gate:
   gate falla por un motivo que no es el suyo. El loop vale donde cada iteración es pequeña y verificable
   sola (cerrar hallazgos de una lista), no para construir.
 - **Techo de tres.** Más agentes no es más trabajo hecho: es más probabilidad de que uno muera a medias.
+- **El techo se mide en PESO, no en cabezas, y un agente de migración pesa dos** (FacturaIA 11-ago).
+  Lancé cuatro a la vez —uno de ellos escribiendo SQL, que arranca su propio `supabase`/`psql` y
+  typechequea con tipos regenerados— y **murieron los cuatro** al watchdog de 600 s con **cero
+  output**: ni informe, ni fichero, ni pista de por dónde iban. Con tres (uno de ellos el de
+  migración) la misma tanda salió entera. El fallo fue mío por sobreaprovisionar, no de los agentes,
+  y el síntoma engaña: parece que el que falló es el pesado, y caen todos. Regla operativa: presupuesto
+  3 · un agente de migración/BD ocupa 2 · si el encargo arranca un build, un servidor o el CLI de
+  Supabase, cuenta doble.
 - **Un fichero, un agente.** Dos sobre el mismo `.sql` de asserts es conflicto garantizado: al segundo se
   le da un fichero aparte y lo fusiona el hilo principal.
 - **Ningún agente verifica a otro, ninguno commitea, ninguno corre el gate entero** (tarda y hay trabajo

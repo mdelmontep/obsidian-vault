@@ -38,3 +38,20 @@ Dos cosas que aprender de la reincidencia:
   de dos filas en un proyecto, y cuando alguien lo comprueba se lleva por delante la credibilidad
   del resto del informe.
 
+
+**Tercera reincidencia (11-ago) y ya hay máquina.** «195 de 593 recibidas sin proveedor, 171
+declarando IVA» → al excluir `is_test`: **13 de 168, y CERO declarando IVA**. De las 195, **179 eran
+residuo de la sandbox, buena parte sembrado por mi propia suite E2E** — que corre contra el proyecto
+Supabase de producción. O sea: medí mi propia basura y la presenté como exposición del cliente, con
+la regla escrita dos veces en esta misma nota. Conclusión: **una regla que ya has incumplido tres
+veces no se arregla escribiéndola una cuarta** → `scripts/medir-prod.sh` (FacturaIA) aborta si la
+consulta no menciona `is_test` y si no trae las columnas `que`/`universo`/`afectados`. Verificado en
+las dos direcciones: rechaza las dos formas malas y ejecuta la buena.
+
+**Y el error que ningún script puede cazar: preguntarle a la BD una pregunta PARECIDA a la tuya.** El
+mismo día conté «3 de 21 minas» con una consulta de *«factura con un movimiento cuyo importe
+difiere»* cuando lo que iba a afirmar era *«factura marcada **cobrada** cuyo importe difiere»*. El
+único caso real estaba legítimamente en `parcial`. Cifra verdadera: 0. El filtro `is_test` estaba
+puesto y la consulta corría bien: lo que no coincidía era el enunciado. Antes de citar un número,
+**leer la consulta como frase y comprobar que es la frase que vas a publicar** →
+[[una-medicion-correcta-puede-tener-el-alcance-de-mas]].

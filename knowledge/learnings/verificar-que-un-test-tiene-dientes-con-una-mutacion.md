@@ -83,3 +83,23 @@ caso a un fichero que escribes tú, tras un flag de entorno). Corolario del arn�
 de «sin resumen de tests reconocible», eso NO es un resultado — es que no pudo confirmar que los
 tests corrieran.
 
+
+**Undécimo — la mutación cayó en un COMENTARIO, y por eso ya está mecanizado.** Variante peor del
+modo «aparición equivocada del literal»: el fichero cambia, el `grep -c` baja, el resumen de tests
+corre… y el mutante es idéntico al control porque lo mutado era prosa. FacturaIA 11-ago: cambié
+`detect_lote_drift` en la línea 7 (cabecera del fichero) creyendo tocar la llamada de la 82, declaré
+«el arnés del agente tiene un hueco», dije que no mergearía su PR y lo repetí **tres veces**. Lo
+desmontó el propio agente corriendo *mi* mutación sobre el commit anterior al arreglo y sacando
+víctima; la prueba estaba en mi propia salida de `grep`. Ahora `~/.claude/bin/mutate` **aborta** si
+todas las apariciones de la aguja están en líneas de comentario (`//`, `#`, `*`, `--`, `<!--`), con
+`--permitir-comentario` para el caso legítimo. Tercer candado del arnés, y los tres nacieron de un
+falso «sin víctima» mío: árbol sucio · el comando no ejecutó tests · la aguja solo vive en comentarios.
+Regla de conducta, más importante que el candado: **un «sin víctima» es una acusación contra el
+código de otro y se verifica antes de publicarla**, no después de repetirla.
+
+**Duodécimo — el caso de control pasó SIN LLEGAR al punto de decisión.** Hermano del «universo
+vacío», pero dentro de un solo caso: el escenario «cadena sana» del worker de VeriFACTU estaba verde
+porque el fake no devolvía `lineas_factura` y el worker se desviaba por «factura huérfana» mucho
+antes de comprobar la cadena. Verde por no haber llegado. Se cierra afirmando **que el camino se
+recorrió**: `expect(enviadas).toHaveLength(1)` en el caso sano, no solo el `toHaveLength(0)` de
+avisos. Todo caso de control necesita una aserción de que ejecutó lo que dice controlar.

@@ -267,3 +267,16 @@ Reestructurado 2026-06-26 (poda: backlog por-cliente devuelto a cada hub; backup
   avisa. El `toHaveValue` intermedio que se añadió el 10-ago por la mañana para cerrar esta carrera
   **no basta**: pasa, y el dato se pierde igual. No se arregló en el momento a propósito —
   `ui/date-picker.tsx` es el componente de fecha de TODA la app— y es misma familia que qa-002/003/008.
+
+## Retirado del NOW en la poda del 11-ago-2026
+
+Entradas cerradas o resueltas que estaban pagando peaje en el dashboard de arranque. Se conservan íntegras:
+
+- ✅ **Logo oficial de tuFacturaIA en toda la app, favicon, PWA y emails, en prod (11-ago, #1608)** — sidebar/auth/onboarding/landing pública/emails con el mismo componente `<Logo>` (paths reales, `currentColor` sigue el tema solo). `/fia-cierre` cazó 2 bloqueantes reales: el logo se volvía invisible en dark mode y el PNG del footer de email sin trackear — corregidos antes de mergear. **Decidido NO llevar el azul del logo a `--brand` global** (falla contraste AA en texto blanco, verificado con artifact). Incidente aparte: 2 SVG de referencia se colaron en el PR ajeno #1600 (ya en main); limpieza en #1604. → [[git-head-compartido-entre-sesiones-paralelas-sin-worktree]]
+- ✅ **Barrido funcional: ejes transversales cerrados y su rojo real arreglado (10/11-ago, #1583→#1597)** — cross-org 29→**59** sin fugas, #1595 cerrado. Detalle → [[facturaia-historico-detallado]] · `docs/qa/funcional/INFORME.md` · [[estado-cargado-por-effect-como-precondicion-de-escritura-descarta-el-gesto]]
+- ⚪ **Copiar el catálogo de WAPI a la org real: RETIRADO (07-ago)** — contradecía tres decisiones de Natalia y el catálogo copiado valdría **4,72× lo que IET cobra**. Motivos y cifras → [[facturaia-historico-detallado]]
+- ⚪ **Sugerencias de IA del tipo de MO: NO aceptar las 1.433 en lote (07-ago)** — contra los 43 con tiempo real de WAPI: 44 % dentro del ±10 %, error medio 131 %, y la confianza autodeclarada no discrimina (0,90 con −85 %; 0,80 con +3.757 %). Solo donde no haya dato de WAPI y con revisión. Cifras → [[facturaia-historico-eventos]]
+- 🟠 **Truncado a 1.000 filas: cerrado donde importa (02-ago, #1475→#14** — tiene pendientes, ver histórico. Detalle → [[facturaia-historico-detallado]]
+- 📗 **Referencia visual + `design-starter` en `agentesia-skills`, en prod (03/04-ago, #1517)** — clon del sistema de diseño para arrancar productos nuevos de AgentesIA con el mismo look desde el primer commit. Detalle → [[facturaia-historico-snapshot-2026-08-03]]
+- 🟠 **Los avisos donde se arreglan, en prod (03-ago, #1507 + #1510)**** — tiene pendientes, ver histórico. Detalle → [[facturaia-historico-detallado]]
+- 🟠 **Los avisos por email de tickets funcionaban; el falso negativo e** — Queda. Detalle → [[facturaia-historico-detallado]]

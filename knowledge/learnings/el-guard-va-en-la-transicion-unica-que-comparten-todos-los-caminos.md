@@ -27,3 +27,18 @@ ejecutaba el lote pendiente. El issue pedía el guard «antes de consultar los s
 **una de cuatro** puertas al atajo determinista. Puesto en la costura donde se DECIDE la respuesta,
 cubre las cuatro. La pregunta útil no es «¿dónde está el bug?» sino **«¿quién más decide esto sin
 pasar por el control?»**.
+
+**Cuarto al décimo caso el mismo día, y ahí cambia la respuesta (FacturaIA 11-ago, barrido
+funcional).** La misma forma —«el control existe en una puerta y falta en las hermanas»— salió **siete
+veces** en secciones sin relación: fecha de inicio de recurrentes, series reservadas, cadena
+VeriFACTU, importe del recordatorio, `requires_recalc` del fiscal, duplicado de recibidas y
+conciliación. Y luego una versión con **doce instancias a la vez**: doce crons acumulan contador de
+errores y devuelven `ok: true` fijo, con el mecanismo de reportar fallo ya existiendo en
+`withCronTracking`.
+
+A partir de cierta cardinalidad, **parchear las N puertas es el atajo**: deja el patrón vivo y el
+elemento N+1 nace roto. Lo que cierra la clase es un **test de conformidad sobre el registro** que
+recorra los N y exija la forma, con la excepción **declarada por escrito en el propio fichero** cuando
+el fail-open sea deliberado. Señal para elegir: si puedes enumerar las puertas desde el repo (un
+registry, un `git ls-files`, un enum), el contrato es posible y el parche es deuda. Ver
+[[un-guard-enumera-la-clase-que-la-regla-escrita-solo-documenta]].
