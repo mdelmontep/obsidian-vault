@@ -439,4 +439,5 @@ tags: [home, archivo]
 - 2026-08-10 · AGH Ibérica · **#952 cerrado: el digest semanal entregó por primera vez desde que existe** (3 filas de `error` a `delivered`). Hicieron falta código + alta de la plantilla en Meta + dos envs, en ese orden. Y 17 PRs mergeadas en dos días (6 de Borja + 11 con override de founder).
 - 2026-08-10 · AGH Ibérica · **#1088 hecho**: hook global que bloquea la keyword de cierre cualificada o citada, tras 3 reincidencias con la regla escrita las tres veces.
 - 2026-08-11 · Aula · publicada en dokploymanu con Supabase autoalojado (4 contenedores), contenido mudado, nivel de las lecciones reescrito y tres gates propios (enlaces, móvil, gate). Ver [[aula]]
+- 2026-08-11 · TuFacturaIA · logo oficial de tuFacturaIA en toda la app (sidebar/auth/onboarding), favicon, iconos PWA y pie de emails transaccionales, en prod (#1608). `/fia-cierre` cazó 2 bloqueantes reales antes de mergear: el logo se volvía invisible en dark mode (fills fijos sin variante de tema) y el PNG del footer de email sin trackear. Decidido NO extender el azul del logo a `--brand` global (falla contraste AA de texto, ver artifact de la sesión). → [[facturaia]]
 
