@@ -219,6 +219,12 @@ puede correr en cada turno. Un gate **multi-agente** cuesta decenas de agentes �
 mejor atado al `git push`, que es cuando el trabajo sale de tu máquina. Enganchar el caro a un evento
 de turno es el error caro de este patrón.
 
+**Payload grande a un Workflow: por fichero, no inline en `args`** (12-ago, fia-cierre de
+contenido-01). Un diff de 72 KB pegado en los args pasa por el output del turno principal y se
+rearrastra en cache-write en cada llamada posterior — el mismo coste que el rediseño del 07-ago
+eliminó. Dejarlo en el scratchpad y ordenar «léelo ENTERO con Read como PRIMERA acción» conserva la
+economía (1 tool call por agente) sin engordar el contexto del orquestador.
+
 **Corolario para el grafo:** el graph engineering NO es la palanca de la autonomía. El grafo reparte
 trabajo; lo que te deja irte de casa es el checker determinista. Coherente con «el grafo NUNCA es el
 checker».
