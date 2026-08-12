@@ -14,6 +14,9 @@ sí lo eran (`kknqs4zua3eje5drm6u25csaxu` en FacturAIA, `ssh AGH` en AGH Iberica
 - `opsa item get <id|título> --vault <bóveda>` → obligatorio.
 - `opsa item list` y `opsa read "op://<bóveda>/<ítem>/<campo>"` → NO lo necesitan (la ruta `op://`
   ya lleva la bóveda dentro).
+- **`op://` rechaza títulos con caracteres fuera de ASCII básico** («invalid character in secret
+  reference», caso real 12-ago: `Dokploy API · tufacturaia` por el `·`) → usar el ID del ítem en la
+  referencia: `opsa read "op://FacturAIA/<item-id>/credential"`.
 
 Corolario al escribir runbooks: si un comando `op item get` no lleva `--vault`, funciona hoy con
 huella y reventará el día que se automatice. Ponerlo siempre.
