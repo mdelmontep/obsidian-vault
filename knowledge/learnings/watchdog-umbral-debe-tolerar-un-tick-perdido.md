@@ -20,3 +20,10 @@ RECURRENCIA 2026-07-04: el fix #393 no cubrió `mcp-dcr-cleanup` (quedó a 36h,
 patrón robusto es clasificar por criticidad → mantenimiento auto-sanable no
 paginua. Ver [[cron-mantenimiento-auto-sanable-no-debe-paginar-severidad-por-criticidad]].
 Ver [[dokploy-schedule-step-expression-no-catch-up-tras-caida]].
+RECURRENCIA 2026-08-12 (Simarro, 3ª vez): watchdog nuevo (con cooldown, creado
+anoche) con umbral 8h sobre un sync que solo corre 1×/día (24h) → avisaba en
+Slack cada tarde sin nada roto; el dato real (`last_seen_at`) coincidía al
+segundo con la hora del cron, el sync SÍ corría a tiempo. Aquí NO aplica 2×
+intervalo (48h deja 2 días de catálogo obsoleto sin avisar en un dato de
+cara al cliente) — el margen correcto depende de CRITICIDAD, no de un
+multiplicador fijo. Subido a 26h (cadencia+margen corto).

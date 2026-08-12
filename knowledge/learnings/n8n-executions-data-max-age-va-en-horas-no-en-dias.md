@@ -17,3 +17,9 @@ Caso real (Clínica Zen): 44 ejecuciones retenidas, todas del mismo día. El bug
 
 Síntoma que lo delata: `GET /api/v1/executions?limit=250` y todas las fechas del mismo día.
 Ver [[camino-critico-sin-smoke-se-pudre-meses]] · [[clinica-zen]]
+
+RECURRENCIA 2026-08-12 (Simarro): mismo síntoma exacto — 71 ejecuciones vía API,
+ninguna anterior a ~6,5h. Llevó a sospechar (mal) que un workflow con cron activo
+nunca había corrido; la prueba real fue el timestamp de negocio (`last_seen_at`
+en Supabase), no el log de ejecuciones. No confirmado aún por SSH si es el mismo
+`EXECUTIONS_DATA_MAX_AGE` mal puesto — pendiente revisar en el compose de Simarro.
