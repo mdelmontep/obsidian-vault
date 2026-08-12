@@ -38,3 +38,11 @@ Caso Elphis: regla dura en el prompt ("di EXACTAMENTE X y llama YA a pause_bot")
 Cuando la tool dispara un efecto externo obligatorio (email, webhook, CRM) y el fallo silencioso importa, no hay cantidad de prompt engineering que lo garantice — hace falta mover la detección a código determinista **antes** del LLM (mismo patrón que ya usa este proyecto para crisis: regex pre-check → si hay match, ni se llama al LLM, se fuerza la acción). Si la regla es solo cara al usuario sin acción externa (ej. bloquear una respuesta), el prompt-only SÍ es fiable — 4/4 en el mismo caso real, jailbreak incluido.
 
 En Retell Conversation Flow (a diferencia de n8n) no existe esa capa de código — las transiciones son siempre `type: prompt` evaluadas por el modelo. Ahí el máximo disponible es ampliar las condiciones de transición + ejemplos few-shot, sin garantía dura.
+
+## Complemento (2026-08-12) — misma reincidencia, dos sistemas distintos el mismo día
+
+Simarro, voz (Retell Conversation Flow): el nodo `n_proponer_hora` dijo "un agente te contactará" — frase reservada por regla dura del `global_prompt` a DESPUÉS de ejecutar `Reservar` — sin haberla ejecutado. Reforzada la prohibición LOCALMENTE en el nodo (no solo en el prompt global).
+
+Mismo día, Simarro WhatsApp (LangChain AI Agent, no Retell): regla explícita "ANTES de decir 'no operamos', llama `Buscar_viviendas`" — el LLM respondió la negación directamente, sin invocar la tool. Confirmado con los logs de ejecución de n8n: cero llamadas a la tool en ese turno. Reforzado con "PROHIBIDO ABSOLUTO... ni aunque estés seguro" — mismo tipo de parche que arriba, mismo tipo de garantía (ninguna dura).
+
+Confirma el patrón de la entrada de abril con dos arquitecturas de agente distintas (conversation-flow por nodos vs. LangChain AI Agent con tools) el mismo día: una regla condicional "antes de X, verifica con la tool" en prompt/systemMessage se salta más fácilmente cuantas más veces el LLM "cree" conocer la respuesta sin buscar. Reforzar el texto mitiga pero no garantiza — ver el complemento de agosto arriba sobre mover la detección a código determinista cuando el fallo importa de verdad.
