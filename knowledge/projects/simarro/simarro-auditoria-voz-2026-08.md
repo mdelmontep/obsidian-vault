@@ -8,7 +8,7 @@ Detalle técnico de la sesión que atacó los 8 puntos de queja original del cli
 
 ## Workflows n8n tocados (todos con backup pre-fix en `knowledge/projects/agentesia/n8n-backups/simarro/`)
 
-- **`Leads entrantes`** (`iMoTKZWxYLymGuHF`) — el más tocado: tarea de visita Kommo (expresión JS sin `{{ }}`, corregida en WA y Retell), `service_type`+zona guardados en cualquier llamada, 4 nodos de la rama WA sin `onError` silencioso (igualado a Retell), WA ya no se queda mudo si el slot está ocupado, teléfono de voz normalizado a +34, guardado de `calendar_id`+`event_id` al reservar (custom fields Kommo `1379550`/`1379552`, nuevos).
+- **`Leads entrantes`** (`iMoTKZWxYLymGuHF`) — el más tocado: tarea de visita Kommo (expresión JS sin `{{ }}`, corregida en WA y Retell), `service_type`+zona guardados en cualquier llamada, 4 nodos de la rama WA sin `onError` silencioso (igualado a Retell), WA ya no se queda mudo si el slot está ocupado, teléfono de voz normalizado a +34, guardado de `calendar_id`+`event_id` al reservar (custom fields Kommo `1379550`/`1379552`, nuevos). **12-ago, tras pruebas reales del cliente**: `Update contacts1` pisaba el teléfono real del contacto de WhatsApp con lo que el LLM creía extraer del texto — nuevo `Get Contacto Actual WA` + `Validar Telefono WA` leen el dato real primero, el del LLM solo rellena si no había ninguno. Ver [[no-dejar-que-el-llm-sobrescriba-un-dato-que-el-canal-de-origen-ya-conoce-con-certeza]].
 - **`Leads cambio de fecha o anulacion`** (`om8iBm8ovENIgaxv`) — cancelación ya no confirma sin verificar el borrado real; vía rápida (lee `calendar_id`/`event_id` del lead, 1 delete directo) con fallback a los 8 calendarios de agente para reservas sin ese dato. Cierra la tarea de Kommo al cancelar con éxito.
 - **`Recordatorios`** (`Oa1lSQuDgEZvZCNS`) — margen de ventana 15→20 min (reduce huecos entre escaneos de 30 min).
 - **`Derivacion Humano`** (`DFtb3qVtxWwqHHkR`) — webhook de Retell tenía una conexión duplicada que rompía el mapeo de datos; ahora avisa a Slack `#01-incidencias` con el lead y link a Kommo (antes no avisaba a nadie).
@@ -22,11 +22,13 @@ Detalle técnico de la sesión que atacó los 8 puntos de queja original del cli
 
 ## Retell (agente `agent_0df7f123e7e3c24d99c9152358`, flow `conversation_flow_19ca70e19b3f`)
 
-Versiones publicadas v12→v18 (cada cambio verificado por integridad de nodos/edges antes de publicar):
+Versiones publicadas v12→v22 (cada cambio verificado por integridad de nodos/edges antes de publicar):
 - v12: esquema de `Mirar_disponibilidad` (`_after`/`_before` → `After`/`Before`, coincidiendo con `required` y con lo que n8n lee); `idealista_id` añadido al override de cambio de fecha.
 - v14: `match_count` añadido al esquema real de `Buscar_viviendas`; confirmación breve de día+hora+nombre antes de pedir consentimiento (antes prohibido parafrasear, sin ningún control previo a ejecutar la reserva); 7 nodos de error (uno por tool) con pregunta al cliente "¿lo intento otra vez?"; `boosted_keywords` a nivel de agente con los topónimos reales de la cartera.
 - v16: corregido el texto del prompt sobre `match_count` (no tiene efecto en búsquedas sin filtro, donde el código fuerza un mínimo de 25 resultados a propósito).
 - v18: rediseño del reintento — ya no pregunta; avisa brevemente y reintenta sola una vez, si falla otra vez lo dice claro y escala. Patrón: [[retell-reintento-sin-variable-de-estado-usando-contexto-conversacional]].
+- v20: `n_brief_comprador` reforzado (nunca decir "Claro."/"Dale." sin transitar en el mismo turno; edge relajado para aceptar zona aunque la frase sea confusa) — **insuficiente**, reprodujo en llamada real el mismo bug con una transcripción muy confusa.
+- v22: tercera vía explícita para "no reconozco nada identificable" — preguntar en vez de decir la palabra suelta. Sin validar aún con llamada nueva. Patrón: [[retell-nodo-conversacional-debe-cubrir-explicito-el-caso-no-entendi]].
 
 Patrón usado para editar flows publicados: `create-agent-version` (`base_version:N`) → edita la draft → `publish-agent`. Ver [[retell-published-flow-400-crear-nuevo-y-reasignar]].
 
@@ -41,6 +43,14 @@ Patrón usado para editar flows publicados: `create-agent-version` (`base_versio
 - Derivación a humano: mensaje real llegó a Slack con el lead y link a Kommo.
 - Reconoce cliente conocido por teléfono en llamada de voz entrante (probado con contacto real de Kommo).
 
+## Investigado y descartado
+
+Error de WhatsApp "necesitas vincular un método de pago válido" (código 3107 de Meta) al enviar la
+confirmación de cita — parecía facturación, no lo era: método de pago vinculado y vigente,
+plantilla "Visita Confirmada" aprobada, número conectado con calidad alta. La causa real era el
+teléfono roto del contacto (arriba). El error genérico de Meta puede saltar por varias causas
+distintas del mensaje textual que muestra.
+
 ## Efectos secundarios de las pruebas (a resolver, ver [[simarro]] §Otros pendientes)
 
-Leads de test en Kommo (`34790206` + contacto `38931342`) y 2-3 emails reales de "visita" a `rss@`/`pss@simarroproperties.com` por las reservas de prueba usadas para medir la latencia.
+Leads de test en Kommo (`34790206` + contacto `38931342`) y 2-3 emails reales de "visita" a `rss@`/`pss@simarroproperties.com` por las reservas de prueba usadas para medir la latencia. Contacto `38942304` ("Manuel del Monte") con teléfono roto (`+34` sin dígitos) — a corregir a mano; el fix evita que vuelva a pasar pero no repara datos ya guardados mal.
