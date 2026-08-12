@@ -8,11 +8,17 @@ tags: [cliente, simarro]
 
 Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" + Kommo CRM + catálogo Idealista (Supabase) + scraping. Contacto: Ramón.
 
-> Source of truth técnico: `/Users/manueldelmonte/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
+> Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
+>
+> La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
 ## Estado (2026-08-12)
 
 **Auditoría a fondo de voz+n8n (11/12-ago), 8 puntos de queja del cliente atacados uno a uno.** Resueltos y verificados con datos/llamadas reales: catálogo Idealista (roto ~4h por cambio de plataforma, ver Incidentes), tarea de visita en Kommo (nunca se había creado, ni voz ni WA, desde siempre), reorden recheck-antes-de-confirmar en voz (bloqueante de junio, YA resuelto), disponibilidad de voz con fecha (mismatch de esquema Retell), latencia de cancelación (7,9-9s → 2s, ver Incidentes), derivación a humano sin avisar a nadie, `match_count` de búsqueda ignorado en n8n, boosted_keywords de topónimos, y reintento de las 7 tools sin preguntar al cliente. Detalle técnico completo en [[simarro-auditoria-voz-2026-08]]. Cron zombie de `Matching semanal` y `Reconcile lead_preferences` reactivado (deactivate/activate); `Matching semanal` además tenía un bug real (cortaba con error falso cuando no había coincidencias nuevas, el caso normal).
+
+**Reorganización de carpetas (12-ago)**: la carpeta de automatización (`~/simarro`, fuera del patrón `~/Projects/`) había desaparecido de disco sin dejar rastro; recreada en `~/Projects/simarro/` con `CLAUDE.md` reconstruido desde este hub + memoria de sesión superviviente. Duplicado vacío `simarro-properties-web` (repo personal `mdelmontep`) borrado localmente — **pendiente decidir si se borra también en GitHub**. Skill `n8n-surgical-edit` actualizada al nuevo nombre de carpeta. Ver [[borrar-la-carpeta-de-un-proyecto-no-borra-su-memoria-de-claude-code]].
+
+**Pendiente en agency-portal**: el tiempo trabajado en Simarro se atribuye por nombre de carpeta (`project_key`), no hay cliente vinculado todavía → vincular `simarro` y `simarro-web` al cliente "Simarro" en `/agency/time`, y decidir si se reatribuyen a mano las sesiones del 11/12-ago que cayeron en el cubo genérico. Ver [[agency-portal-agrupa-tiempo-por-nombre-de-carpeta-no-por-cliente]].
 
 **2 bugs más, encontrados en llamadas/pruebas reales del propio Manuel tras la auditoría (12-ago)**:
 - **Teléfono del contacto de WhatsApp se corrompía en cada reserva** — el flujo pisaba el teléfono real (que Kommo ya conocía por el canal) con lo que el LLM creía extraer del texto ("+34" sin dígitos, en un caso real). Parecía un error de facturación de Meta al enviar la confirmación ("phone number is malformed") pero no lo era — descartado con capturas reales: método de pago y plantilla estaban bien. Corregido para priorizar siempre el dato real del contacto. Ver Incidentes.
