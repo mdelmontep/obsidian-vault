@@ -48,3 +48,10 @@ pasan a `.githooks/pre-commit` — cuestan 0,5 s los tres, así que el "no cargu
 nunca fue el trade-off real. **Al matar un CI, migrar sus gates UNO A UNO al hook**: lo que
 quede allí es documentación, no verificación. Ver
 [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]].
+
+**La señal que hace creer que Actions ha vuelto (12-ago).** `gh api .../actions/runs`
+mostraba runs de **Dependabot en verde** del 10-ago. No significan nada: las
+actualizaciones de Dependabot corren en su propia infraestructura. Disparando
+`ci.yml` a mano (`gh workflow run ci.yml --ref main`) los dos jobs murieron en
+**2 segundos con 0 pasos**, que es la firma del impago y no un fallo de los tests.
+El único indicador que discrimina es `steps` de los jobs: si es 0, sigue bloqueado.

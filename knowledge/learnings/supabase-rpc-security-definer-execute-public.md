@@ -36,3 +36,20 @@ Y dentro de las invocables, la que discrimina riesgo de ruido es **si reciben `o
 recurso) COMO PARÁMETRO**: es la forma de los dos incidentes reales. Las que solo leen la sesión
 (`get_user_org_id`, `current_org_role`) no tienen nada que falsear y son la excepción legítima. Un
 recuento sin esa partición manda a auditar 63 funciones cuando las candidatas son 16.
+
+**Cerrada la deuda (FacturaIA mig 665, 12-ago): 23 → 8.** Para decidir función a
+función hay que cruzar TRES fuentes; cualquiera sola se equivoca:
+1. ¿La usa una política RLS? — **sin filtrar por esquema**, o te pierdes Storage
+   ([[politicas-rls-fuera-del-esquema-public-no-salen-filtrando-pg-policies]]).
+2. ¿Quién la llama desde el código y con qué cliente? `admin.rpc(...)` es
+   service_role y no necesita el grant; `supabase.rpc(...)` en un componente o
+   en el middleware sí.
+3. ¿La invoca otra función, y esa es `SECURITY DEFINER`? Entonces corre como
+   owner y tampoco lo necesita. Comprobarlo en `pg_proc.prosecdef`, no de
+   palabra: «lo llama un trigger» fue la excusa que sostuvo el agujero de la
+   mig 213 dos meses.
+
+**Revocar una función `RETURNS trigger` es inocuo y conviene hacerlo igual**:
+medido, el trigger sigue disparando porque el permiso se comprueba al CREAR el
+trigger, no al dispararlo. Y no es invocable ni por PostgREST ni por SQL
+(«trigger functions can only be called as triggers»).
