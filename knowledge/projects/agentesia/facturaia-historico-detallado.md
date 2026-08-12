@@ -317,3 +317,35 @@ PRs #1666 (+#1667 registro del gate), issue #1646, migs 670+671 aplicadas y veri
 ## Hito 12-ago-2026 (noche) — contenido-04 cerrado: aviso diario por email con deep link a la cola
 
 PR #1670 (squash `b45bfd58`), issue #1647, sin migraciones. Cron `marketing-revision-aviso` (withCronTracking + resultadoCron): agrupa las piezas en `revision` en UN email a los perfiles `is_superadmin` («N piezas esperan tu revisión», hasta 10 títulos + «y N más», botón a `/admin/marketing/contenido`). Dedupe por destinatario y día de Madrid contra `email_log` (la idempotencia de `sendEmail` solo cubre 5 min); `failed` reabre el reintento de ese buzón, `pending` cuenta, fail-closed si no se puede leer; `count: 'exact'` contra el truncado de PostgREST en el «N» del asunto. Template `marketing_revision_aviso` en el sistema central con copy editable; `TIPO_PIEZA_LABEL` unificado en el espejo de dominio y traducido en el borde (el template no importa dominio, patrón ocr_digest — lo pidió el gate de deriva del grafo). La review de dos ejes cazó ANTES del merge el dedupe global que silenciaba el reintento en fallo parcial ([[dedupe-diario-de-email-multidestinatario-casa-destinatario-no-solo-dia]]). Schedule Dokploy dado de alta y verificado por API (`0 9 * * *`, timezone `Europe/Madrid` explícita, `sign-call.sh`); primer run ejecutado por el camino real (`docker exec` del comando exacto del schedule): 200, `sin_pendientes`, con lo que `cron_nunca_ejecutado` no llegó a sonar. Queda el smoke con piezas reales (hub §Smoke).
+
+## 12-ago-2026 · copia de los PDF, watchdog, logo de emails y la partida inicial sin apunte
+
+**PR #1671 — copia de los ficheros de Storage a B2 (mig 672).** Contenedor propio con `rclone` en
+compose **aparte** del de la app (aísla las S3 keys del env que la API de Dokploy devuelve entero en
+claro), que copia `facturas` y `logos`, verifica una muestra y reporta a un endpoint interno firmado.
+Tabla `storage_backup_runs` + eventos, RLS deny-all. Tres cosas que no eran obvias: `copy` y nunca
+`sync` (las S3 keys de Supabase no tienen variante de solo lectura); Supabase da MD5/ETag y B2 SHA-1,
+así que `--checksum` cae a comparar TAMAÑOS y la muestra se verifica con `--download`; y la UI de B2
+no sabe crear una key sin `deleteFiles` — medido con `b2_authorize_account`, «Read and Write» concede
+25 capabilities, `bypassGovernance` incluida, al contrario de lo que afirma su runbook. El gate mide
+B2 y Supabase por su cuenta con suelo en cada cifra; su primera versión decía «1415 objetos
+verificados byte a byte» contra un bucket inexistente, el mismo error de `verificar-restauracion.sh`
+cometido dentro del script que venía a evitarlo. Origen medido por dos fuentes independientes con
+resultado idéntico al byte: 1.400 objetos / 524.349.117 B. Firma HMAC del contenedor comprobada
+byte a byte contra `node:crypto`. **Falta solo el bucket y la key de B2.**
+
+**PR #1672 — el watchdog y el logo de los emails.** El health-sweep mandó email ALTA el mismo día del
+merge porque `storage-backup` no tiene schedule (espera credenciales): `pendiente_de_schedule` baja a
+MEDIA sin silenciar. Y los emails de plataforma pintaban un monograma «T» porque `renderHeader` solo
+acepta el logo de la ORG y en un email de plataforma no hay org; el logo de #1608 vivía solo en el
+pie. El literal de config estaba **copiado en 7 ficheros**; ahora hay uno. El octavo
+(`cobros/send-email.ts`) NO se tocó: ese email lo recibe el cliente de la org, y ahí nuestro logo
+sería un error — queda como hallazgo de producto que ya sale con «TuFacturaIA» en cabecera.
+
+**PR #1673 — mig 674, la partida inicial nace con su apunte.** Ver
+[[backfill-guardado-por-invariante-en-vez-de-por-sintoma]] y
+[[numero-de-migracion-libre-se-mide-en-prod-no-en-el-repo]]. Aplicada y verificada por catálogo:
+partidas desalineadas 0 (eran 9), cero cambios en stock y coste.
+
+**Issues abiertos**: #1668 (WORM escrito y sin enchufar: 23 declaraciones, 0 selladas, único
+disparador un clic humano) · #1669 (staging 10 migraciones por detrás y la suite E2E midiéndose ahí).
