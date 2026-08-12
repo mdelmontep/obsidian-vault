@@ -40,6 +40,8 @@ Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
+- **El número de migración libre se mide en PRODUCCIÓN, no en el repo** — `db push` decide por versión: si el número ya está aplicado, se salta tu migración **sin error** y el push dice que todo está al día. Reincidió DOS veces la misma tarde (12-ago), las dos por ramas que aplicaron antes de mergear. Un `select version, name … order by version desc limit 4` lo caza. Ver [[numero-de-migracion-libre-se-mide-en-prod-no-en-el-repo]]
+- **Un backfill se guarda por el INVARIANTE, no por el síntoma** — «a toda fila sin X, ponle X» habría duplicado 106 de 115 partidas de stock; la condición que hace la operación neutra deja 9. Ver [[backfill-guardado-por-invariante-en-vez-de-por-sintoma]]
 - **Un gate que cruza dos listas es ciego a lo que no está en ninguna** — cruzar A contra B no ve lo que falta en las dos; hace falta una tercera fuente, normalmente el disco. Ver [[un-gate-que-cruza-dos-listas-es-ciego-a-lo-que-no-esta-en-ninguna]]
 - **Un «no se puede» heredado caduca** — pregunta POR QUÉ, no SI: el booleano envejece, el hecho no. Ver [[un-no-se-puede-heredado-caduca-como-cualquier-otra-frase]]
 - **`cmd > fichero` vacía el fichero antes de arrancar `cmd`** — un generador que falla borra su propia fuente de verdad, sin propagar el exit code. Ver [[redirigir-con-mayor-que-destruye-el-fichero-antes-de-arrancar-el-comando]]
