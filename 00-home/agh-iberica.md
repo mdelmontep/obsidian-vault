@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-10
+updated: 2026-08-12
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,21 +44,19 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-10, noche) — `main` en `5164d0c`; **#1094 y #1096 esperando a Borja**
+## Estado (2026-08-12) — `main` en `6837b16`; **solo 2 PRs abiertas, las dos de Borja**
 
-🟢 **El digest semanal ENTREGÓ por primera vez desde que existe** (#952, cerrado). Las 3 filas que llevaban en `error` desde el 2-ago están `delivered`. Hicieron falta tres cosas **en este orden**: código (el parámetro lleva solo la lista) → **dar de alta la plantilla en Meta** —nunca se había creado, así que el `132001` no era un nombre mal configurado— → las dos envs en el panel. Al revés, el primer digest habría salido **duplicado**.
+🟢 **Jornada de 13 PRs mías dentro** (tren de 7 por la mañana + 4 por la tarde + cierre). Cerrados hoy: **#1075** (la doc de alta de M365 pedía **2 scopes de 6**) · **#1019** y **#1020** (leads que no decían el filtro aplicado) · **#1093** · **#1083 + #1057** (el barrido muta por SENTENCIA) · **#1082** (dos suites del mismo worktree ya no se destruyen la base) · **#998** (el presenter deja de heredar el techo de 30 s) · **#1112** · **#1111** · **#1088** y **#1058** por triaje. Abiertas solo **#1097 → #1098** de Borja (apiladas).
 
-📋 **#1094 (#1092) — el digest pasa a ser una LISTA de verdad**, una línea por hilo. Lo abrió una pregunta de Manu: en #1090 medí que Meta rechaza `\n` en un parámetro y concluí que «el digest no puede ser una lista» — la medición era correcta, **el alcance no**: el CUERPO de la plantilla sí admite saltos → [[una-medicion-correcta-puede-tener-el-alcance-de-mas]]. Familia `hilos_semana_1..8` (sin emojis), **la de una línea se queda como fallback** → el peor caso es «se ve como antes», nunca «no se entrega». *11 mutaciones, 11 víctimas.* El barrido cazó un hueco que no vi: `module.ts` **sin un solo candado**, y es el parseo de envs, donde un fallo no lanza.
+🔑 **Lo que más vale del día: los tres arreglos nacieron de un VERDE que no probaba nada.** `toContain("Calendars.Read")` pasaba **7/7 con el scope bajado** —así divergió la doc sin señal—; la lista de huecos del barrido tenía **3 y los tres eran falsos**; y el candado de #1082 dejaba vivo el mismo defecto por otra puerta porque **un advisory lock lleva el OID de la base en su locktag**. Ver [[un-candado-derivado-no-se-defiende-de-una-mutacion-de-si-mismo]].
 
-📋 **#1096 (#1093) — la línea que se pega en CADA PR** pasa a llevar los **ficheros no ejecutados** (con marca `f`: `2974/239/5f`) en vez de los `todo`, que no informan de nada. ⚠️ **Es una decisión de Borja, no un arreglo** — cambia lo que todo el mundo pega. Lo que sí era bug: `.claude/skills/agh-pr` —la skill que abre **cada** PR— repetía tres cosas ya medidas falsas, incluida «los `.pg` se autosaltan sin DB» y mandar a medir contra `agh_dev`.
+🩺 **Y auditar lo RECIÉN mergeado destapó cuatro textos falsos, tres escritos ese mismo día.** La lección no es «revisar los textos viejos»: es que **el texto que acabas de escribir también hay que buscarlo**. El snapshot del repo mentía por un mecanismo que se repetirá — *cada edición fue cierta en su rama*, y las PRs posteriores no volvieron a tocarlo: **no hace falta que nadie se equivoque, basta un tren**.
 
-🔴 **Y un fallo mío con datos reales: tres WhatsApp con los hilos de Manu al móvil de OTRA persona** del tenant. El script de prueba elegía destinatario por recencia teniendo `identities.user_id` delante; el producto no está afectado (el barrido resuelve por `owner_user_id`). Lo peor vino después: al preguntar Manu *«¿solo a mí?»* medí **el camino del barrido**, no el de mi script → [[resolver-el-destinatario-por-su-clave-no-por-recencia-ni-sufijo]].
+✅ **Prod verificada por CONTENIDO con su negativo** (deploy posterior al último merge, logs 16.8 KB, `RestartCount=0`). Y un hueco que nadie había mirado: **el dashboard es una app Dokploy APARTE** (`app-index-open-source-bandwidth-x7afxz`), así que verificar el agente no dice nada de él. ⚠️ Su container nace **14 s** después del merge por caché de capas: **el tiempo no demuestra un deploy, lo demuestra el contenido**.
 
-✅ **#1088 hecho — hook global del `Closes` cualificado o citado** (`~/.claude/hooks/closes-keyword-guard.sh`). La trampa cobró 3 veces con la regla escrita las tres: prevención por prosa **0 de 3**. Bloquea también la keyword **citada**, que es la que nadie espera — GitHub parsea el commit en texto plano y documentar el fallo lo volvió a cometer 6 min después de repararlo. 21 casos y **probado en el camino real**, no solo en la suite.
+🧰 **Herramienta:** `~/.claude/bin/mutate` cubre los tres modos de mutación que no mide nada — exige **1 aparición exacta** (mal dirigida), **aborta si todas están en comentarios**, y **restaura desde un `mktemp`, no con `git checkout`**, así que es seguro con el árbol sucio. Vale para cualquier repo.
 
-🧰 **De la API de Meta, que no está en su doc:** una plantilla **no se edita** salvo que esté rechazada, y **borrarla retiene el nombre**; un lote de 8 se aprueba **con huecos y desordenado** → [[plantilla-de-meta-no-se-edita-y-el-delete-retiene-el-nombre]].
-
-_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final). **`opsa`, nunca `op`**; `item get` exige `--vault`. **Langfuse responde por HTTPS** — para medir trazas no hace falta SSH, pero falta el par `pk-lf`/`sk-lf` (#1009).
+_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
 ## Bloqueantes
 
