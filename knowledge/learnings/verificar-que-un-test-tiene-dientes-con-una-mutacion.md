@@ -58,7 +58,12 @@ ausencia de éxito.
 **Séptimo — universo vacío en un candado que se DERIVA del repo.** Un contrato que recorre
 `git ls-files` con 129 casos pasa entero en verde si el comando falla: cero elementos, cero
 asserciones ejecutadas, y el resumen dice «129 passed». Todo candado derivado necesita un **suelo de
-tamaño** (`expect(n).toBeGreaterThan(500)`) como primer caso.
+tamaño** (`expect(n).toBeGreaterThan(500)`) como primer caso. Aplica igual a los gates escritos en
+**shell**, y ahí no hay runner que avise: un verificador de restauraciones daba `OK` en 3 de 5
+comprobaciones contra una base INEXISTENTE («0 tablas con el recuento exacto», «0 objetos con los
+mismos permisos», y un `grep FALLO` sobre un fichero que solo contenía el error de `psql`). Esta
+nota ya lo decía y el script se escribió igual (12-ago): el suelo se pone AL ESCRIBIRLO, y correr el
+gate contra un destino muerto es el caso de control barato que lo destapa.
 
 **Noveno — el proceso bajo prueba SIRVE el código viejo.** Distinto de «la mutación no se aplicó»:
 el fichero cambia y el símbolo sí está en el camino, pero el servidor de larga vida no lo recarga.

@@ -24,4 +24,12 @@ Fix: añadir el par `ARG NOMBRE` + `ENV NOMBRE=$NOMBRE` en el Dockerfile (stage
 que ya funcionan (ahí está el ejemplo a copiar, no inventar). Caso real:
 `NEXT_PUBLIC_VAPID_PUBLIC_KEY` en TuFacturaIA, PR #949.
 
+**Misma raíz, otra puerta — en LOCAL, con dos entornos (12-ago).** El destino del cliente lo fija el
+`build`, no el arranque: `next start` con el entorno impecable sirve igual un bundle compilado contra
+otro proyecto. Un `next build` lanzado sin las vars de staging dejó el bundle apuntando a
+**producción**, y el síntoma manda a mirar donde no es: la pantalla de login contesta «Email o
+contraseña incorrectos», que es literalmente cierto (ese usuario no existe en prod). Una hora. Se
+comprueba el BUNDLE, no el entorno: `grep -rlo "<ref-de-prod>" .next/static | wc -l` tiene que dar 0.
+Puesto como guard en `scripts/dev-staging.sh`.
+
 Ver [[facturaia]].
