@@ -34,6 +34,11 @@ Fix en `~/.claude/hooks/dokploy-secret-guard.sh`: `is_placeholder()` acepta ahor
 de REFERENCIA — `process.env.` · `import.meta.env.` · `os.environ` · `Deno.env.get(` ·
 `System.getenv(` · `${VAR}`/`$VAR` · `op://` · `{{ VAR }}`.
 
+**Residuo vivo (12-ago)**: una clave de OBJETO también dispara — `secret: opts.secret` en TS
+bloquea (clave sensible + valor que no es referencia ni placeholder). Fix sin rodear el guard:
+shorthand de propiedad (`{ secret }`, sin `:`), valores cortos (<8 chars: `s`), o valores con
+marcador (`'dummy-…'`) en tests. Ojo: `'test-…'` NO es marcador reconocido.
+
 Los tests que valen son los que **deben seguir bloqueando**, y hay tres nuevos con el
 literal conviviendo con la referencia: un `sk-proj-…` real en un fichero que también usa
 `process.env` · una contraseña literal en el mismo compose que usa `${POSTGRES_PASSWORD}` ·
