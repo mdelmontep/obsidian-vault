@@ -225,6 +225,13 @@ rearrastra en cache-write en cada llamada posterior — el mismo coste que el re
 eliminó. Dejarlo en el scratchpad y ordenar «léelo ENTERO con Read como PRIMERA acción» conserva la
 economía (1 tool call por agente) sin engordar el contexto del orquestador.
 
+**Y los `args` del Workflow pueden llegar al script como STRING** (12-ago, fia-cierre de
+contenido-03): se pasaron como objeto JSON y el script recibió el JSON serializado → `args.diffPath`
+fue `undefined`, los 4 auditores recibieron «lee el fichero undefined» y 3 lo esquivaron
+reconstruyendo con git (cobertura degradada EN SILENCIO; solo 1 se declaró no-ejecutada). Blindaje en
+la primera línea del script: `const A = typeof args === 'string' ? JSON.parse(args) : args` + un
+`log()` que imprima el campo crítico — si sale `undefined`, parar antes de gastar 500K tokens.
+
 **Corolario para el grafo:** el graph engineering NO es la palanca de la autonomía. El grafo reparte
 trabajo; lo que te deja irte de casa es el checker determinista. Coherente con «el grafo NUNCA es el
 checker».
