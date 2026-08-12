@@ -24,6 +24,9 @@ lo que **únicamente** existe como advertencia.
 > pre-push, semáforo de CPU): **solo 1 estaba cubierta por un hook**. Ese es el hueco real de este
 > fichero — no su tamaño. Cada entrada que reincide y sea comprobable por un comando debería
 > convertirse en hook y salir de aquí. Ver [[claude-code-harness]].
+>
+> ⚠️ Pero un hook **envejece por partes**: 3 de 4 reglas de `git-guard` compartían un defecto que solo
+> se arregló en una, y la peor fallaba ABIERTA. Ver [[un-guard-envejece-por-partes-arregla-una-regla-y-sus-hermanas-siguen-rotas]].
 
 **Tope: 60.** Es el número real de hoy, no un deseo: antes convivían "~45" y "tope duro de 25" en esta
 misma cabecera mientras el fichero tenía 73, y un tope que se incumple 2,4x no ordena nada. La forma de
