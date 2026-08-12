@@ -12,6 +12,19 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
+## Estado (2026-08-12, tarde — voz v23)
+
+**Conversation Flow v23 publicado** tras auditar una llamada real (contacto "Manuel del Monte", `call_140936c164a6284a21def1a09ca`) y validar el fix con una segunda llamada de prueba (`call_bdf8f0951546391a72b73669f93`). 3 fixes en `conversation_flow_19ca70e19b3f`:
+- `n_proponer_hora`: prohibición local de decir "un agente te contactará"/"queda apuntada" antes de ejecutar `Reservar` — el LLM lo decía tras proponer la hora, ANTES de pedir nombre/consentimiento. Confirmado corregido en la llamada de validación.
+- `n_consentimiento`: ante audio ininteligible ya no repite la frase idéntica, dice "perdona, no te he oído bien" primero. Sin validar aún (la llamada de prueba no disparó esa rama).
+- `global_prompt`: regla anti-eco (turno de usuario = repetición literal de lo que Ana acaba de decir → no tratarlo como respuesta real, no decir "¿sigues ahí?"). El "eco" original resultó ser la propia llamada de prueba hecha en altavoz, no un defecto de la línea Netelip — ver [[probar-agente-voz-en-altavoz-genera-eco-que-parece-bug-de-flow]]. Regla se deja igual como defensa en profundidad (clientes reales también llaman en manos libres).
+
+**Teléfono confirmado ya blindado**: el `Reservar` de la llamada de validación mandó `"phone":"+34{{from_number}}"` literal (el LLM copia el placeholder si la instrucción del nodo lo menciona entre paréntesis) — pero `Edit Fields3` en `iMoTKZWxYLymGuHF` ya lo detecta y usa `call.from_number` real. Contacto nuevo (`38943714`) quedó con teléfono correcto. Ver [[retell-from_number-no-auto-sustituye-en-tool-args]].
+
+**Pendiente nuevo**: `Buscar_viviendas` (`5NRXALN9lBVE9fTs`) omite el número de portal en el campo `message` (lo que Ana lee) aunque `direccion` sí lo trae completo desde el primer resultado — inconsistencia menor, sin decisión tomada. Backup pre-fix en `knowledge/projects/agentesia/n8n-backups/simarro/retell-flow-v22-published-pre-fix-audio-eco-nombre-consentimiento-20260812.json`.
+
+**Limpieza pendiente en Kommo**: leads/contactos de la llamada de validación de hoy (`34802708` / `38943714`, "Manuel del Monte") además de los ya conocidos abajo.
+
 ## Estado (2026-08-12)
 
 **Auditoría a fondo de voz+n8n (11/12-ago), 8 puntos de queja del cliente atacados uno a uno.** Resueltos y verificados con datos/llamadas reales: catálogo Idealista (roto ~4h por cambio de plataforma, ver Incidentes), tarea de visita en Kommo (nunca se había creado, ni voz ni WA, desde siempre), reorden recheck-antes-de-confirmar en voz (bloqueante de junio, YA resuelto), disponibilidad de voz con fecha (mismatch de esquema Retell), latencia de cancelación (7,9-9s → 2s, ver Incidentes), derivación a humano sin avisar a nadie, `match_count` de búsqueda ignorado en n8n, boosted_keywords de topónimos, y reintento de las 7 tools sin preguntar al cliente. Detalle técnico completo en [[simarro-auditoria-voz-2026-08]]. Cron zombie de `Matching semanal` y `Reconcile lead_preferences` reactivado (deactivate/activate); `Matching semanal` además tenía un bug real (cortaba con error falso cuando no había coincidencias nuevas, el caso normal).

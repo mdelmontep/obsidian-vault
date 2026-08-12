@@ -22,3 +22,4 @@ const phone = isBad ? fallback : llmPhone;
 El payload de Retell siempre incluye `call.from_number` real en inbound calls.
 
 Caso real: EcoBox 2026-05-25 — `Reservar_cita` guardó "{{from_number}}" literal en GCal description hasta añadir el fallback + guard validación.
+Segundo caso real: Simarro 2026-08-12 — `Reservar` recibió `"phone":"+34{{from_number}}"` literal (el propio texto de la instrucción del nodo mencionaba `{{from_number}}` entre paréntesis, y el LLM copió el placeholder en vez de sustituirlo); n8n ya tenía el guard aplicado (`Edit Fields3`) y no llegó a romper el dato. Patrón confirmado transversal entre clientes — revisar el mismo guard en cualquier flujo de voz nuevo que reciba `phone`/`from_number` de un LLM.
