@@ -18,4 +18,10 @@ lead en el CRM). Y separar los workflows de **cron** (si no corren, están rotos
 **webhook** (si no corren, es que nadie escribió) — sin esa distinción el informe se llena de
 rojos falsos y se aprende a ignorarlo.
 
+**Reincidió el 12-ago, y un escalón más arriba:** el nodo de efecto SÍ corrió, la ejecución fue
+`success`… y el aviso no salió. El nodo estaba en `onError: continueRegularOutput` y Slack
+responde 200 aunque rechace el mensaje. O sea que ni «terminó en verde» ni «el nodo corrió»
+bastan cuando el efecto vive en un sistema ajeno: hay que mirar el destino.
+Ver [[un-canal-de-avisos-solo-se-verifica-mirando-el-canal]].
+
 Implementado en `~/.claude/scripts/agentes-check.py`. Ver [[agentes-cliente-tres-capas]].
