@@ -23,4 +23,19 @@ Si el cableado no se puede cubrir porque el `main()` no es invocable: **declara 
 mutación sobrevive**, con qué se cubre en su lugar (una corrida real **con contrafáctico**), y abre
 issue — dejarlo en la PR no lo pone en ninguna cola.
 
-Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]].
+**Desenlace (13-ago, AGH #1123): esas declaraciones se cobraron, y hacerlo invocable destapó MÁS de lo
+que decían.** Se parte `main()` en «lectura de entorno» + `barrer(deps)` con los **bordes de proceso**
+inyectados (el fs NO: raíz temporal real, y así lo que se escribe se mira en disco). La clave: **`barrer`
+DEVUELVE el código de salida en vez de llamar a `process.exit()`** — y con eso el hook de limpieza
+(`process.on("exit", …)`) **sobra**, porque existía justo para lo que un `exit()` se salta un `finally`.
+El refactor que hace testeable el cableado **quita** una pieza; no es el trade de «testeable a cambio de
+andamio». Baja también el `catch` del error propio al nivel invocable, o ese candado se queda fuera.
+
+🔑 Y lo reutilizable: de los **4 supervivientes** que aparecieron, **dos eran códigos de salida** —justo
+las líneas que el refactor acababa de poner al alcance de un test—. Un efecto de proceso en medio de la
+lógica no sólo impide testear: **oculta cuánto hay sin testear**, porque lo que se lleva no aparece en
+ninguna cuenta de cobertura. Lo que asoma al sacarlo al borde no son «unas líneas» sino decisiones
+enteras (un barrido donde ningún mutante llegó a ejecutarse y aun así se podía citar como cobertura).
+
+Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] ·
+[[una-herramienta-que-se-aplica-a-su-propio-fuente-necesita-el-rescate-fuera]].

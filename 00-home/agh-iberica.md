@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-12
+updated: 2026-08-13
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,13 +44,13 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-12, noche) — `main` en `d868647`; **solo quedan abiertas las DOS de Borja**
+## Estado (2026-08-13) — `main` en `700c31e`; **cero PRs mías abiertas**, solo las DOS de Borja
 
-🟢 **12-ago, 13 PRs mías dentro** (#1075 · #1019/#1020 · #1093 · #1083+#1057 · #1082 · #998 · #1112 · #1111, + #1088/#1058 por triaje). Los tres arreglos de la mañana nacieron de **un verde que no probaba nada**, y auditar lo recién mergeado destapó **cuatro textos falsos, tres escritos ese mismo día** — *el texto que acabas de escribir también hay que buscarlo*. Detalle en `docs/status-log/2026-08-12-*`. → [[un-candado-derivado-no-se-defiende-de-una-mutacion-de-si-mismo]]
+🟢 **Noche-2: cinco PRs dentro** (#1130/#1123 · #1134/#1048 · #1132/#1042 · #1131 · #1135/#1124; override de founder, de una en una, sin `--delete-branch`). Gate sobre `main` ya mergeado: `3119/239/5f · 1098/0/0f · base 700c31e` ✓ · prod verificada por contenido. ⚠️ **Caducan las líneas de gate de #1097/#1098.**
 
-🧵 **Familia `mutate:diff` DENTRO** (12-ago noche, override de founder): #1119/#1073 · #1127/#1072 · #1121/#1056 · #1122/#1076, + #1125 y #1128 de docs. Gate re-corrido sobre `main` ya mergeado: `3093/239/5f · 1095/0/0f · base fdf5484` ✓. 🔴 **Mergearlas destapó que `--delete-branch` CIERRA la PR apilada en vez de re-apuntarla** (#1120, irrecuperable): el procedimiento correcto está en la regla 6 de `CLAUDE.md` y **aplica a #1098 de Borja**. En cola para Borja: **#1126** (una PR apilada no genera run de Actions — filtro `pull_request.branches`) · **#1129** (el `git-guard` del repo es copia vieja: `git reset -q --hard` PASA) · **#1123** · **#1124**. → [[el-hueco-esta-en-el-cableado-no-en-la-funcion-pura]] · [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]] · [[un-guard-envejece-por-partes-arregla-una-regla-y-sus-hermanas-siguen-rotas]]
+🔑 **Lo reutilizable de la tanda: la lista de mutaciones que te DAN no es la lista objetiva.** #1123 traía dos predichas y el `git diff` destapó **cuatro más** —dos eran **códigos de salida**, justo lo que el refactor acababa de poner al alcance de un test: *un `process.exit()` en medio de la lógica oculta cuánto hay sin testear*—; #1042 proponía un arreglo que **no cumplía su propio criterio de cierre**; y el barrido no cubría `scripts/` ni `dashboard/` (lo cerró #1124, con **`npm run mutate:restore`** porque el arnés ya puede romperse a sí mismo). 💥 Dos veces prosa que prometía de más, y mía: un candado **tapado por la protección vecina** y un `previous` con el `updatedAt` de la escritura nueva —que no muerde hoy y por eso habría mentido hasta que **#500** lo mirase—. **El gate verde no es la revisión.** → [[el-hueco-esta-en-el-cableado-no-en-la-funcion-pura]] · [[select-for-update-sin-fila-no-bloquea-y-el-subquery-del-from-no-se-reevalua]] · [[una-herramienta-que-se-aplica-a-su-propio-fuente-necesita-el-rescate-fuera]]
 
-✅ **Prod verificada por CONTENIDO con su negativo** (deploy posterior al último merge, logs 16.8 KB, `RestartCount=0`). Y un hueco que nadie había mirado: **el dashboard es una app Dokploy APARTE** (`app-index-open-source-bandwidth-x7afxz`), así que verificar el agente no dice nada de él. ⚠️ Su container nace **14 s** después del merge por caché de capas: **el tiempo no demuestra un deploy, lo demuestra el contenido**.
+🧰 **En cola para Borja:** **#1126** (una PR apilada no genera run de Actions) · **#1129** (el `git-guard` del repo deja pasar `git reset -q --hard`) · **#1133** (el año de caché se adivina por el nombre; la certeza es el manifiesto de Vite). ⚠️ **#1036/#1037/#1133 caen los tres en `static.ts`: no paralelizables.** Y `--delete-branch` **CIERRA** una PR apilada en vez de re-apuntarla (#1120, irrecuperable) → **aplica a #1098**. → [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]]
 
 🧰 **Herramienta:** `~/.claude/bin/mutate` cubre los **cuatro** modos de mutación que no miden nada — exige **1 aparición exacta** (mal dirigida), **aborta si todas están en comentarios**, **restaura desde un `mktemp`, no con `git checkout`** (seguro con el árbol sucio), y desde el 12-ago **aborta si el control trajo recuento de tests y el mutante no**: eso es un mutante que ni compiló, no una víctima. Suite en `~/.claude/hooks/tests/mutate.test.sh`. Vale para cualquier repo. → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]]
 

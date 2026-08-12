@@ -78,7 +78,23 @@ resultado y el mutante es equivalente **por defensa en profundidad**, que es la 
 conviene saberla antes de que alguien «simplifique» quitando una. Dos casos el mismo día
 (FacturaIA 10-ago): el PDF de presupuesto (el handler filtra por org y el render vuelve a filtrar) y
 `/admin` (proxy `isAdminRoute` + `AdminGuardedShell` en el layout). Se confirma mutando **las dos a
-la vez**: ahí sí cae, y eso es lo que se documenta.
+la vez**: ahí sí cae, y eso es lo que se documenta. **Y la puerta vecina puede ser TEMPORAL, no otra
+capa de guardas** (AGH 13-ago, #1042): el `FOR UPDATE` de un subselect salía equivalente porque el
+`INSERT … ON CONFLICT DO NOTHING` va SIEMPRE delante y **absorbe la espera**, así que cuando arranca el
+`UPDATE` el otro ya confirmó y el snapshot es fresco. Lo grave fue lo de al lado: mi comentario ya
+**afirmaba** que ese `FOR UPDATE` era el candado que sostenía el invariante. Al declarar un equivalente,
+di también **qué es lo que sí lo sostiene** y qué cambio lo volvería imprescindible.
+
+**Decimocuarto — la lista de mutaciones que te DAN tampoco es la lista objetiva.** Un issue bien escrito
+sigue siendo una hipótesis: no deja de serlo por venir de otro ni por traer medición. AGH 13-ago, dos
+veces. #1123 traía **dos** mutaciones medidas y nombradas —las dos caían con el arreglo— y sacar del
+`git diff -U0` las líneas con conducta destapó **cuatro supervivientes más** que el issue no mencionaba.
+Y #1042 dio **0 «sin víctima» pero 6 «ARNÉS ROTO»**: en un cambio de forma **coordinado** (el productor
+devuelve otra cosa y el consumidor la consume), revertir un hunk deja el otro lado sin compilar — eso es
+*no medido*, no *vigilado*, y obliga a mutar las conductas a mano. La lista sale del diff, también
+cuando alguien ya te ha dado una. Corolario: si el arnés **no cubre la carpeta** (`scripts/`,
+`dashboard/`), la única cobertura que existe es la que alguien se acuerde de hacer — 61 mutaciones a
+mano en un día y **nueve huecos reales** salieron de ahí.
 
 **Octavo, y este no es del test ni del arnés: el INFORME miente.** El reporter JSON de Playwright
 recortó las anotaciones a los **14 primeros casos de 78** — y eran exactamente las primeras por orden
