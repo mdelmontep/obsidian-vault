@@ -353,3 +353,17 @@ disparador un clic humano) · #1669 (staging 10 migraciones por detrás y la sui
 ## Contenido-05 — cierre del 12-ago-2026 (#1648 → PR #1674, mig 673)
 
 Cola de aprobación del equipo de contenido como vista por defecto de `/admin/marketing/contenido` (ítem enfocado, contador, atajos A aprobar / C pedir cambios / S posponer — con guardas de modificadores y de modal abierto —, kanban de solo lectura, tabla original como tercera vista, acciones en barra fija en móvil). El rechazo exige comentario, versiona la MISMA pieza (historial colapsado en la card) y acumula el comentario como regla de estilo en la misma transacción del RPC (mig 673: `scheduled_for`, `marketing_style_rules` deny-all, `marketing_transicionar_pieza` redefinida con `p_scheduled_for`, DROP de la firma vieja). Reglas visibles/editables en el panel (CRUD auditado) y servidas al runner por `GET /api/internal/marketing/reglas-estilo` con whitelist `{id, texto}` (contrato §4). Al aprobar, fecha sugerida lun/mié/vie editable (`sugerirFechaPublicacion`, helper puro con tests). Manual-admin §50.4. Ejecutado con 6 subagentes Sonnet en paralelo (BD, API, UI, docs, e2e, review de 2 ejes) + síntesis crítica; el «hallazgo crítico» del review era un artefacto de base desactualizada (main avanzó 3 veces durante la sesión: #1671 ocupó el 672, #1672, #1673 ocupó el 674). Suite 11.523/0. Smoke e2e escrito (`marketing-contenido-cola.spec.ts`, solo lectura, + 5 mutadores a `BUTTON_BLOCKLIST` — «Añadir» regla era POST directo auto-habilitable por el monkey del crawler) pero sin correr: bloqueado por #1669 (staging desalineado). Ver [[boton-de-icono-nuevo-en-facturaia-button-sm-no-icon-btn]] · [[git-add-intent-to-add-rompe-stash]].
+
+## Contenido-06 cerrado de punta a punta — 13-ago-2026 (movido del hub §Smoke)
+
+Preview fiel + bucket de assets (issue #1649; PRs #1676 y #1677 de follow-ups; mig 675
+aplicada y verificada por catálogo). Smoke COMPLETO en prod con agent-browser: MP4 real
+subido desde la card y reproducido en el marco de móvil desde URL firmada de
+`marketing-assets`; 2 slides PNG al carrusel (dots, contador 1/2→2/2, snap exacto slide
+a slide); copy en vivo + guardado + vaciado persistidos en BD; borrado de los 3 assets
+con confirmación; el 403 previo al grant probó el gate de permisos. **Grant
+`marketing_write` ejecutado por Manu (12-ago)** para `m.delmonte.p@agentesia.madrid` —
+primera fila de `superadmin_permissions`, desbloquea también el smoke de mutación de
+contenido-01. Prod quedó limpio (0 assets, copy null). Gotchas de la sesión:
+[[agent-browser-fill-vacio-no-dispara-onchange-react]] ·
+[[turbopack-build-rechaza-node-modules-symlink-en-worktree]].

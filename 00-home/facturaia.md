@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-08-12
+updated: 2026-08-13
 tags: [cliente, facturaia, hub]
 ---
 
@@ -75,7 +75,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **`fix/ingesta-progress-faster-feedback` — audit discriminadores OCR staged, pendiente commit+PR** — prerequisito canary G5 (paths non-success pipeline eran silenciosos). Cambios: shapes ingesta, !res.ok webhook, float clamp progress.ts.
 - **🔴 Smoke «Convertir en recurrente» pendiente** — factura emitida real con SEPA activo → toggle topbar → cadencia/fecha/modo → confirmar entrada en `facturas_recurrentes` + redirect `/recurrentes`. (`27d0c773` en main, no verificado E2E.)
 
-- 🟢 **Equipo de contenido: 01-05 mergeados (12-ago; 05 = #1674, mig 673 — cola de aprobación)** — rechazo → versión + regla de estilo (panel + contrato §4); `scheduled_for` al aprobar. **Siguiente: contenido-06 (#1649, preview fiel + bucket de assets)**. Smoke UI en §Smoke; e2e escrito, espera a #1669. → [[facturaia-historico-detallado]] · [[boton-de-icono-nuevo-en-facturaia-button-sm-no-icon-btn]] · [[git-add-intent-to-add-rompe-stash]]
+- 🟢 **Equipo de contenido: 01-06 CERRADOS de punta a punta (13-ago; 06 = #1676+#1677, mig 675, smoke prod completo, grant `marketing_write` hecho)** — **Siguiente: contenido-07 (#1650, runner esqueleto + coordinador)**. E2e de la cola escrito, espera a #1669. Detalle del cierre → [[facturaia-historico-detallado]] · [[agent-browser-fill-vacio-no-dispara-onchange-react]] · [[turbopack-build-rechaza-node-modules-symlink-en-worktree]]
 - 🔴 **Cobro Stripe Connect: BLOQUEADO en acción tuya, no cerrado (7-jul)** — todo lo previo está preparado; falta el KYC de la plataforma en el dashboard de `acct_1Td5cc`. Detalle → [[facturaia-historico-snapshot-2026-07-29]]
 - 🔴 **Retirada de n8n (WhatsApp): 5 PRs mergeados el 10-jul, sin terminar** — faltan los smokes de prod #2/#3/#4 y la Fase 6. Detalle → [[facturaia-historico-snapshot-2026-07-29]]
 - ⏳ **Smoke post-deploy #675 (filtro cid/tamaño en ingesta de email)** — pendiente: email con imágenes embebidas no debe crear adjuntos basura. Detalle → [[facturaia-historico-snapshot-2026-07-29]]
@@ -177,7 +177,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🟡 **[12-ago] Contenido-05 (UI cola, post-deploy con agent-browser)** — `/admin/marketing/contenido`: la Cola es la vista por defecto (contador, card enfocada, atajos A/C/S), pedir cambios → v2 + regla de estilo nueva en la card, aprobar → DatePicker con sugerencia lun/mié/vie y `scheduled_for` guardada, kanban y barra fija móvil (<720px). El smoke Playwright `marketing-contenido-cola.spec.ts` quedó escrito pero SIN ejecutar: `.env.test` apunta al staging nuevo y staging va por detrás (#1669) — al alinearlo, correrlo. Mig 673 aplicada y verificada.
 - 🟡 **[12-ago] Contenido-04 (email real, cuando haya piezas en `revision`)** — comprobar que llega UN email agrupado «N piezas esperan tu revisión» con el deep link a `/admin/marketing/contenido`, y que relanzar el cron el mismo día (Run Now) devuelve `ya_avisado_hoy` sin reenviar. El camino de firma+tracking ya está probado (primer run 200, `sin_pendientes`).
 - 🟡 **[12-ago] Contenido-03 (UI, con agent-browser)** — `/admin/marketing/contenido`: tarjeta «Topes de contenido» (editar un límite y ver la traza), modal «Aprobar extensión» (cantidad + motivo → toast con el nuevo límite efectivo), botón deshabilitado en tope sin configurar, y chip del tope junto a «Bloqueada por tope». La semántica SQL ya está medida (smoke 9/9); esto es solo la superficie.
-- 🟡 **[12-ago] Contenido-01 (mutación, tras el grant `marketing_write`)** — crear → guion → revision → pedir cambios → v2 → descartar. Mig 668 aplicada y verificada por catálogo.
+- 🟡 **[12-ago] Contenido-01 (mutación) — DESBLOQUEADO: el grant `marketing_write` ya está hecho (12-ago, smoke de contenido-06)** — crear → guion → revision → pedir cambios → v2 → descartar. Mig 668 aplicada y verificada por catálogo.
 - 🟡 **[12-ago] Contenido-02 (post-deploy, con `MARKETING_SIGNING_SECRET` en Dokploy)** — curl firmado a `/api/internal/marketing/claim` (dos en paralelo sobre dos runs pendientes → ids distintos), run con `lease_seconds` bajo → `lease_expirado`, y «Generar ahora» + toggle desde el panel. Receta de firma en `marketing-runner-contract.md`. La atomicidad hoy solo está fijada por candado sobre el TEXTO del SQL, no ejecutada.
 - 🔴 **Obras-IA + WhatsApp + MCP (19-20 jul)** — smokes de Manu que solo vivían en `top-of-mind`, trasladados aquí el 08-ago: presupuesto conversacional por WhatsApp, MCP con token, pedido/salida/albarán, foto de factura sin caption → factura, y confirmar visualmente los precios recalculados tras #1100.
 - ✅ **[08-ago] Rejilla de partidas: pulido EN PROD con smoke (#1538)** — fila 50→34 px, capítulo vacío 284→44, anchos por puntero. Detalle → [[facturaia-historico-detallado]]
@@ -412,6 +412,7 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda quincenal)_
 
+- **`mig:renumerar` sin `--dry` DESPUÉS de tu propio `db push` te muda a ti mismo** (13-ago, contenido-06): vio el 675 ocupado en prod —que era de la propia rama— y lo movió a 676 con barrido de referencias incluido, sin frenar en el aviso que promete el CLAUDE.md; hubo que revertir a mano verificando por catálogo. Caso de test hecho a medida para la rama `fix/pre-push-numero-migracion-contra-prod` (worktree `~/wt-guard-mig`, sesión paralela): si esa rama muere, esto va a un issue.
 - **El OCR acepta una `fecha` de factura en el FUTURO sin avisar de nada** (destapado el 27-jul verificando el ticket del vencimiento en prod): 8 recibidas con `fecha` posterior al día en que se subió el documento, el `vto` puesto al día de subida, y 5 ya aprobadas contando en el trimestre equivocado del 303. Una factura recibida no puede estar emitida en el futuro: es un check de 1 línea en la validación del OCR (o una anomalía de `review_reasons` como las que ya existen) que evitaría el dato malo en el origen en vez de tener que borrar y resubir. Ver [[un-guard-nuevo-se-mide-contra-los-datos-que-ya-existen]]
 - ~~Calendario como agenda de trabajo~~ **HECHO 2026-07-17** — las obras afloran en `/calendario` como capa de rango. Ver §Módulo Obras.
 - **Email_log Fase A** (recomendado próxima sesión, ~30min) — tabla `email_log` con insert en `send-factura`/`send-presupuesto`/`notify-quota`. Endpoint `/api/admin/config/email` devuelve último envío + counts 24h/7d. Sin webhook Resend de bounces todavía (Fase B siguiente). Hoy panel Email muestra "No configurado" + "Sin tracking en v1" — bloquea visibilidad cuando se configure SMTP
