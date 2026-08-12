@@ -27,3 +27,13 @@ Es la cara "escritura" de [[auditar-sobre-origin-main-worktree-no-cwd-stale]]; l
 envenenamiento previo, en [[registrar-una-migracion-sin-ejecutarla-envenena-la-bd]]. Un guard
 derivado del código (`discoverMigrations()` + el CHECK que declara `schema.sql`) aborta este
 caso aunque su autor no lo imaginara — a diferencia de una lista escrita a mano.
+
+**Segunda ocurrencia, y no era una BD: era el CANDADO que estaba verificando** (AGH 12-ago, #1056).
+Monté un worktree desechable para ver el lock bloquear *en el camino real*, lancé dos barridos a la
+vez… y no bloqueó. El worktree estaba en el commit anterior y **mi cambio no estaba commiteado**:
+corría el script de antes. Peor que el caso de la BD porque **las dos lecturas fáciles eran falsas** —
+«funciona» (sus 6 tests llevaban verdes todo el rato) y «no funciona», que me habría hecho reescribir
+un candado correcto. Generalización: al verificar algo en el camino real, lo primero no es el
+resultado, es **qué versión ejecuta el proceso que mides** — `git log -1` del worktree de prueba,
+`git status` de donde editas, y un `grep -c "<símbolo nuevo>"` sobre el fichero que va a ejecutarse.
+

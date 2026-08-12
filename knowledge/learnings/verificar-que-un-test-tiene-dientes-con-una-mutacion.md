@@ -79,9 +79,21 @@ la vez**: ahí sí cae, y eso es lo que se documenta.
 recortó las anotaciones a los **14 primeros casos de 78** — y eran exactamente las primeras por orden
 alfabético, con la forma creíble que tiene un dato verdadero. Cualquier cifra de cobertura sacada de
 la salida de una herramienta ajena hay que contrastarla con un **marcador propio** (una línea por
-caso a un fichero que escribes tú, tras un flag de entorno). Corolario del arnés: si `mutate` avisa
-de «sin resumen de tests reconocible», eso NO es un resultado — es que no pudo confirmar que los
-tests corrieran.
+caso a un fichero que escribes tú, tras un flag de entorno). Corolario del arnés, y ya con MÁQUINA detrás: «sin resumen de
+tests reconocible» no es un resultado.
+
+**Decimotercero — un «✓ VÍCTIMA» FALSO, la dirección peor** (AGH 12-ago). Todo lo de arriba vigila el
+lado del «sin víctima», que te manda a investigar; un «víctima» falso **cierra el asunto** y nadie
+vuelve. Tres seguidas salieron `✓ VÍCTIMA — exit=1 (sin resumen de tests reconocible)`: partí
+`viejo|nuevo` por `|`, **un carácter que estaba dentro de los propios regex que mutaba**, el patrón se
+aplicó truncado y el fichero ni compilaba. Tres candados dados por buenos sobre un mutante que nunca
+corrió. Reglas: **un veredicto sin recuento de tests no es un veredicto, tenga la flecha que tenga**, y
+el separador de una mutación nunca puede ser un carácter que el código pueda contener. Ya es candado
+en `~/.claude/bin/mutate` (el cuarto): si el CONTROL trajo recuento y el mutante no, aborta con ARNÉS
+ROTO — se compara contra el control para no perder los runners que nunca emiten recuento (pytest, go,
+cargo), donde el exit code sigue siendo la única señal legítima. Suite en
+`~/.claude/hooks/tests/mutate.test.sh`, con contrafáctico medido: sin el candado cae ese caso y solo
+ése.
 
 
 **Undécimo — la mutación cayó en un COMENTARIO, y por eso ya está mecanizado.** Variante peor del
