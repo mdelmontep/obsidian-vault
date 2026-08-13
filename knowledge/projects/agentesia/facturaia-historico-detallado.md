@@ -376,3 +376,9 @@ contenido-01. Prod quedó limpio (0 assets, copy null). Gotchas de la sesión:
 - **Panel**: card «Runs del runner» + `GET /api/admin/marketing/contenido/runs`.
 - **Verificado en prod**: primer run guionista encolado desde el panel a las 02:03, reclamado y completado por el contenedor a las 02:07 (resultado `esqueleto: true`); el intento previo local dejó probado también el camino `/error`. Piezas de prueba descartadas.
 - Gotchas nuevos: [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]]; alta de compose por API documentada en [[docker-infra]] §alta de un servicio Compose por API.
+
+## Hito del 13-ago-2026 — contenido-10 cerrado (#1653 → PR #1728, merge `1a1976ea`)
+
+- **Ideación**: el ritmo 3/semana queda codificado como objetivo POR TIPO en el coordinador (`RITMO_SEMANAL {carrusel:2, reel:1}` × colchón 2 semanas); el déficit dispara la regla, viaja whitelisted al especialista (`GET /ideacion-contexto`, contrato §5: la app decide CUÁNTAS, el modelo CUÁLES) y recorta al aplicar, con dedupe por título normalizado contra todo lo no descartado. Pedido a cero → `{ideas: []}` sin lanzar Claude.
+- **Copy de ads**: piezas `ad` con campos RSA (titulares 3-15 ≤30 sin `!`, descripciones 2-4 ≤90, keywords, campaña como enum del plan de Google Ads), validados por la app con 422/`fallido`; encadena hasta `revision` y la cola pinta el anuncio como resultado de búsqueda + desglose con contadores. La reescritura de un `ad` rechazado vuelve por `copy_ads`.
+- `contenido-guion-aplicar.ts` → `contenido-aplicar.ts` (núcleo único guion/anuncio/ideación, incidencia con dueño por vía). `AGENTES_CON_ESPECIALISTA`: ideacion y copy_ads ON. Review de 2 ejes aplicada pre-merge (enum de campaña, límites explícitos en lecturas del backlog). Sin migración SQL; el runner se redesplegó solo con el merge.
