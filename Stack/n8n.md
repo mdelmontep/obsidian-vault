@@ -35,6 +35,8 @@ tags: [n8n, kommo, workflows, api]
 - **Claves Redis cross-workflow: normalizar el phone igual en productor y consumidor** — uno guarda `aia_ob:617314938`, otro busca `aia_ob:34617314938` → mismatch silencioso. Centralizar normalización (siempre con prefijo país)
 - **`$json.foo || null` en jsonBody manda `null` literal al destino** — si el receptor usa Zod `.optional()` plano falla con 400. Usar `nullishOptional()` en el receptor o construir el body con `if (val) obj.key = val` para omitir clave. Ver [[zod-optional-rechaza-null-en-webhooks-n8n]]
 - **TTL Redis para flags cross-workflow ≠ ventana 24h Meta** — si el lifecycle del flag depende de respuesta del cliente (p. ej. `aia_ob:{phone}` para routing de onboarding), 24h se queda corto: cliente tarda más, expira, próximos mensajes ramifican al bot normal. Subir a 30d como tirita; fix estructural = consultar BD como source of truth, Redis como caché
+- **Un nodo que reduce `$json` (Redis/Postgres GET con `propertyName`, Set) rompe en silencio TODO nodo aguas abajo** que siga leyendo el trigger original vía `$json.campo` — a cualquier distancia, y a veces sin excepción (un IF/Switch de routing simplemente evalúa mal, sin error). Ver [[n8n-json-narrowed-rompe-nodos-lejanos-sin-error]]
+- **`Execute Workflow` puede devolver el nodo terminal equivocado si el sub-workflow tiene 2+ terminales que se ejecutan en la misma corrida** (no es problema si son mutuamente excluyentes por un IF). Cualquier rama nueva debe converger en el único terminal real antes de acabar, nunca quedar suelta — y si puede no tener nada que hacer, devolver 1 item con flag, nunca `[]` (0 items corta el flujo ahí mismo). Ver [[n8n-execute-workflow-nodo-terminal-ambiguo-con-multiples-ramas]]
 
 ## Kommo
 

@@ -12,7 +12,7 @@ tags: [home, prioridades]
 
 - 🔴 **Centro Elphis — el canal de VOZ, 14 días a cero ejecuciones (12-ago)** — o no ha llamado nadie, o el webhook de Retell no llega y se pierden los leads. Se cierra con un `list-calls` por `agent_id`. Único cabo de la auditoría; el resto (bug del `bigint`, avisos a `#01-incidencias`, 4 webhooks de pruebas apagados) cerrado. **Tuyo**: decir a Alba que ya le llegan los avisos. → [[clientes/centro-elphis/index|centro-elphis]] · [[un-canal-de-avisos-solo-se-verifica-mirando-el-canal]]
 - 🟠 **Clínica Zen — el fix del nombre inventado NO funcionó, reincidió el 2-ago (3-ago)** — con la v64 publicada el agente reservó sin preguntar el nombre y mandó `"name":"Paciente nuevo"`; la cita del 6-ago está en la agenda de la clínica con ese nombre. Va en el Code node, no en el prompt. Y sigue diciendo "Polígono Európolis", que era justo lo que pidió corregir Gonzalo. **Tuyo: OK para tocar el workflow.** → [[clinica-zen]]
-- 🟠 **Simarro — voz v23 + chatbot WA con 2 fixes más (12-ago)** — **Tuyo**: teléfono roto viejo + limpiar leads de test + decidir número de portal. → [[simarro]]
+- 🔴 **Simarro — chatbot WA sin responder desde el 12-ago, corregido y confirmado hoy (13-ago)** — bug de dedup + fix de preferencias de búsqueda, detalle en el hub. **Tuyo**: re-confirmar PATCH + responder a Dani + limpieza de test. → [[simarro]]
 - **Simarro — carpeta de automatización recreada en `~/Projects/simarro/` (12-ago)**: la antigua (`~/simarro`, fuera del patrón) había desaparecido sin backup. **Tuyo, sin prisa**: vincular `simarro`/`simarro-web` al cliente "Simarro" en `/agency/time` (hoy el tiempo cae en cubo genérico), decidir si se reatribuyen a mano las sesiones del 11/12-ago y si se borra también el repo GitHub `mdelmontep/simarro-properties-web`. Cambio en `n8n-surgical-edit/SKILL.md` sin commitear. · **Nuevo (12-ago): revisar `EXECUTIONS_DATA_MAX_AGE` en n8n Simarro** (sospecha del mismo bug que Clínica Zen, detalle en el hub). → [[simarro]]
 - **Check de efecto semanal EN MARCHA (3-ago)** — `~/.claude/scripts/agentes-check.py`, cron lunes 09:00, 4 clientes. **Tuyo: elegir canal de aviso** (hoy solo escribe a log; Slack `#01-incidencias` o Telegram). Faltan clientes sin credencial n8n accesible. → [[agentes-cliente-tres-capas]]
 - 🔴 **TuFacturaIA — 15 PR del empaquetado esperando merge, y #1686 bloquea cobrar (13-ago)** — el merge lo hace la próxima sesión (`mig:renumerar` obligatorio, main se llevó el 677). **Tuyo y solo tuyo**: las comprobaciones en el panel de Stripe del #1686 — portal de cliente, datos fiscales de las facturas de suscripción, numeración y modo de cada entorno. → [[facturaia]]
@@ -82,7 +82,7 @@ tags: [home, prioridades]
 |---|---|---|
 | TuFacturaIA | [[facturaia]] | Activo · NEXT/Smoke/LATER en el hub |
 | Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
-| Simarro | [[simarro]] | Auditoría de 8 puntos de queja cerrada (12-ago) · watchdog catálogo corregido · queda limpieza de test |
+| Simarro | [[simarro]] | 🔴 Chatbot WA sin responder desde el 12-ago, corregido y confirmado hoy · fix preferencias de búsqueda · queda re-confirmar PATCH + limpieza de test |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
 | Tecnocloud | [[tecnocloud]] | PR #3 voice-webhook + voz Laura |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |

@@ -12,6 +12,22 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
+## Estado (2026-08-13)
+
+**Petición del cliente (Dani, 11-ago) — 8 puntos pendientes de verificar/responder, borrador de respuesta entregado en sesión (sin enviar todavía)**. De los que se pudieron verificar hoy con datos reales:
+- **Recordatorios 24h**: mecanismo sano (`Recordatorios`/`Oa1lSQuDgEZvZCNS`) — confirmado con la rama de 4h disparando 2 veces con envío real por WhatsApp; misma lógica/código para 24h, sin bug estructural.
+- **Llamadas outbound con vivienda actualizada/alternativa**: `Llamadas_outbound (reactivacion)` + `Retell_outbound_eventos` SÍ registran/actualizan Kommo+Supabase al llamar — pero 0 llamadas reales han salido porque ningún lead tiene el consentimiento (CF `1376604`) marcado. Sigue siendo el pendiente de siempre: Ramón tiene que marcarlo.
+
+**Gap real encontrado y corregido: WhatsApp nunca guardaba las preferencias de búsqueda (zona/precio/habitaciones) del cliente, voz solo 3 de 9 campos y con gate de status.** Detalle: [[simarro-fix-preferencias-busqueda-y-bugs-dedup-whatsapp-13-ago]]. Resumen:
+- `Reconcile lead_preferences`: pool ampliado a 4 fases (+ "Lead Caliente" `105137095`) — antes un lead nuevo detectado por voz nunca entraba en `lead_preferences` hasta que alguien lo movía a mano.
+- `Buscar_viviendas_catalogo`: nuevo tramo que persiste zona/precio/habitaciones desde cada búsqueda de WhatsApp (voz no manda `Lead_id`, no le afecta). 2 regresiones propias en el camino (ambigüedad de nodo terminal en `Execute Workflow`, luego un `return []` que cortaba el flujo) — revertidas y corregidas antes de quedar en producción; **0 impacto real** (verificado en `executions`, solo mis pruebas en la ventana rota).
+- **Bug real PRE-EXISTENTE encontrado de rebote**: el fix de deduplicado de mensajes del 12-ago (`Chatbot Simarro`) llevaba desde entonces sin poder procesar NINGÚN mensaje real — 3 nodos (`Redis - Marcar mensaje`, `Edit Fields`, `If2`) leían `$json.body[...]` cuando ya no existía tras el Redis GET de dedup. Nunca se había probado con un mensaje real hasta hoy. Corregido y confirmado end-to-end (el bot respondió correctamente a una búsqueda real). Ver [[n8n-json-narrowed-rompe-nodos-lejanos-sin-error]].
+- Slack SÍ avisó del primer fallo (excepción real) pero no del segundo (fallo silencioso, sin excepción) — no es un bug del aviso, es el límite de lo que un error-workflow puede detectar.
+
+**Pendiente**: confirmar con un mensaje real más que el PATCH de preferencias ya no falla (arreglado el formato del campo "Habitaciones", que es `select` en Kommo, no numérico — ver [[kommo]]).
+
+**Barrido cross-cliente cerrado (13-ago)**: el mismo patrón de dedup roto NO se repite en Laserys Las Rozas ni Clínica Zen (mismo nodo reductor, pero referencian bien el nodo webhook) ni en Elphis/EcoBox (arquitectura Chatwoot, sin ese tipo de nodo). AGH Ibérica no usa n8n. Era específico de Simarro. Detalle en [[simarro-fix-preferencias-busqueda-y-bugs-dedup-whatsapp-13-ago]].
+
 ## Estado (2026-08-12, tarde — voz v23)
 
 **Conversation Flow v23 publicado** tras auditar una llamada real (contacto "Manuel del Monte", `call_140936c164a6284a21def1a09ca`) y validar el fix con una segunda llamada de prueba (`call_bdf8f0951546391a72b73669f93`). 3 fixes en `conversation_flow_19ca70e19b3f`:

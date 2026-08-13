@@ -18,6 +18,7 @@ tags: [kommo, crm, whatsapp, salesbots, api]
 - Pipeline al crearse genera además un status `Incoming leads` (type=1) que normalmente no se usa en flujos n8n
 - Custom field IDs ÚNICOS por account, no por pipeline. Una vez creado, el ID sirve en cualquier pipeline
 - Custom field `select` requiere `enums: [{value: "..."}]` en POST
+- **PATCH a un custom field `select` con un valor que no sea EXACTAMENTE una de sus opciones (como string) rechaza el `custom_fields_values` ENTERO del payload** con 400 genérico — no solo ese campo. Si mandas otros campos válidos (texto/numérico) en la misma llamada, también se pierden. Confirmar tipo real con `GET /leads/custom_fields` antes de escribir, nunca asumir por el nombre. Caso real Simarro: campo "Habitaciones" es `select` (`1`,`2`,`3`,`4`,`5+`), no numérico — mandar `2` (número) tumbaba zona y precio también
 - Task types NO se crean vía API, solo UI Kommo (Settings → Tasks)
 - Users: `GET /api/v4/users` da `id, name, email`. El user "principal" del cliente es el que se usa como `responsible_user_id`
 
