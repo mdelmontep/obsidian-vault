@@ -75,6 +75,13 @@ tags: [docker, traefik, dokploy, infra]
 - En Dokploy Environment Settings, la clave debe ser exactamente `NEXT_PUBLIC_SUPABASE_URL`, no `SUPABASE_URL`.
 - Síntoma: `env | grep SUPABASE` en el contenedor muestra `NEXT_PUBLIC_SUPABASE_URL=` (vacío) aunque en Dokploy UI esté con valor → el compose referencia `${NEXT_PUBLIC_SUPABASE_URL}` pero la UI tenía `SUPABASE_URL`.
 
+## Dokploy — alta de un servicio Compose por API (sin panel)
+
+- Secuencia probada (marketing-runner, 13-ago): `compose.create` `{name, environmentId, composeType:'docker-compose'}` → `compose.update` `{composeId, sourceType:'github', owner, repository, branch, composePath, githubId, autoDeploy}`. El `environmentId` y el `githubId` se copian de un servicio hermano vía `dokploy-safe.sh /api/project.one` y `/api/compose.one`.
+- El `env` del servicio es UN campo de reemplazo completo. Escribirlo por API solo es seguro en un servicio NUEVO (no hay nada que pisar); en uno existente no se puede ni leer con seguridad (el guard anti-fuga redacta) → panel a mano.
+- Secretos al env por API sin imprimirlos: construir el JSON en un heredoc de python con los valores de `opsa read` como argv, y `curl -d @-`.
+- Deploy: `compose.deploy` `{composeId}` y sondear `composeStatus` (`idle → running → done|error`) por `compose.one` (siempre vía dokploy-safe).
+
 ## Dokploy — Compose vs UI Variables
 
 - Variables de la UI de Dokploy solo llegan al contenedor si el compose las referencia con `${VAR}`

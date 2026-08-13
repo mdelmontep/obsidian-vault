@@ -367,3 +367,12 @@ primera fila de `superadmin_permissions`, desbloquea también el smoke de mutaci
 contenido-01. Prod quedó limpio (0 assets, copy null). Gotchas de la sesión:
 [[agent-browser-fill-vacio-no-dispara-onchange-react]] ·
 [[turbopack-build-rechaza-node-modules-symlink-en-worktree]].
+
+## 2026-08-13 — contenido-07 cerrado: runner esqueleto + coordinador determinista, DESPLEGADO en prod (#1719, #1720)
+
+- **Coordinador en la APP, no en el runner** (el contrato de contenido-02 manda: «solo la app encola»): función pura `decidirRunsDeLaNoche` (`src/lib/marketing/contenido-coordinador.ts`, 13 fixtures) invocada por el cron `marketing-coordinador` (03:20 Europe/Madrid, schedule REAL en Dokploy `tYLXsRdoWtLPLJBXzdVll`). Reglas fijas: idea → guionista/copy_ads; guion de reel → productor; backlog <6 → ideación; lunes → analista. Sin LLM: sin cupo no hay empates, solo orden determinista de cola. Gate `AGENTES_CON_ESPECIALISTA` (espejo de `services/marketing-runner/agentes.mjs`): hoy todo apagado → el cron reporta `en_espera` y no inserta nada, evitando fabricar rachas de `fallido` sintéticas.
+- **Runner** `services/marketing-runner/` (ADR-012, sin credenciales de BD): imagen node:22-slim + claude CLI, loop claim firmado → agente → resultado/error, modo `--once`. Desplegado como compose `marketing-runner` en Dokploy (PR #1720; alta por API: compose.create + compose.update + env solo porque era servicio nuevo). UNA réplica (gate de topes, mig 670). Secretos en 1Password FacturAIA (ids en la memoria del agente).
+- **Salud con dueño** (`runner-salud.ts`): `runner_sin_claims` (pendiente >20 h, la resuelve el siguiente claim) y `runner_fallos_sostenidos` (3 fallidos seguidos, la resuelve un run completado); severidad alta, detección en el cron del coordinador. Guard toda-alerta-tiene-dueno verde.
+- **Panel**: card «Runs del runner» + `GET /api/admin/marketing/contenido/runs`.
+- **Verificado en prod**: primer run guionista encolado desde el panel a las 02:03, reclamado y completado por el contenedor a las 02:07 (resultado `esqueleto: true`); el intento previo local dejó probado también el camino `/error`. Piezas de prueba descartadas.
+- Gotchas nuevos: [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]]; alta de compose por API documentada en [[docker-infra]] §alta de un servicio Compose por API.
