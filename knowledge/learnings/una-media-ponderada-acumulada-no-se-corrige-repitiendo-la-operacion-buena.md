@@ -19,3 +19,11 @@ siempre («OSTRA Nº3»: 36,6250 € con 3 de 5 unidades entradas a 37 € por e
   cifra al aviso de la UI. Ver [[ADR-045-el-coste-medio-se-rehace-desde-el-ledger-al-revertir-una-compra]].
 - Si al recalcular no queda ninguna operación con la que calcularlo, **conservar el valor anterior**;
   vaciarlo rompe lo que lea después (aquí, el COGS de las ventas).
+
+**Secuela 13-ago**: `recompute_pmp` seguía sin filtrar por `lote_id`, mientras `recompute_stock`/
+`recompute_lote` (mig 312) ya excluían movimientos sin partida en productos con lotes desde meses
+antes. Dos funciones sobre el MISMO ledger con criterio distinto: la cantidad ya ignoraba una compra
+huérfana, el coste seguía viéndola. Misma «OSTRA Nº3» — el "5 duplicado" del hub resultó ser DOS
+compras huérfanas de la misma mañana, no una. Regla: cuando un ledger alimenta varios agregados
+derivados (cantidad Y coste), un cambio de criterio de filtrado (aquí, lote-aware) tiene que tocar
+TODOS los que derivan de él, no solo el que motivó el fix original.

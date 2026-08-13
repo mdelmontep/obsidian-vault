@@ -22,6 +22,14 @@ NUNCA editar `schema_migrations` sin `on conflict do nothing` — un INSERT crud
 
 **Alternativa**: tetherear móvil (datos no bloquean 5432) y reintentar `supabase db push --linked` normal.
 
+**Sin MCP configurado en la sesión, la Management API sirve igual por curl** (13-ago): el CLI de
+Supabase ya guarda su propio token OAuth en el Keychain de macOS tras `supabase login`. `security
+find-generic-password -s "Supabase CLI" -w` lo extrae sin prompt de Touch ID (ítem ya autorizado), y
+con él `curl https://api.supabase.com/v1/projects/<ref>/database/query -H "Authorization: Bearer
+$TOKEN" -d '{"query":"..."}'` ejecuta cualquier SQL (DDL incluido) por HTTPS :443 — mismo mecanismo
+que el MCP `execute_sql`, sin necesitar el MCP montado. Mismo criterio que el punto 2: el INSERT en
+`schema_migrations` va DENTRO de la misma llamada que la migración, nunca aparte.
+
 **Mismo bloqueo también rompe `gen:types --linked`** (cuelga en "Initialising login role..." sin error, sin socket abierto — verificar con `lsof -p <pid>`). Fix: `supabase gen types typescript --project-id <ref> --schema public,graphql_public` (Management API, HTTPS, no pasa por 5432/6543). Ojo: puede servir un schema con caché de minutos — antes de commitear el diff, verificar con `execute_sql` contra `information_schema.tables` que las tablas que el diff ELIMINA de verdad no existen en prod.
 
 Ver [[campo-huerfano-shape-sin-migracion-paralela]] (caso típico que pide push urgente).
