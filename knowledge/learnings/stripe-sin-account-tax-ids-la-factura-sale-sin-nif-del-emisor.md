@@ -20,9 +20,15 @@ Crear el tax ID **sí** se puede por API: `POST /v1/tax_ids` con `type=es_cif`. 
 defecto **no**: `POST /v1/accounts/<la propia>` responde «you may only use it on connected
 accounts». Ese clic es de panel, en Billing → Invoices.
 
-Comprobable en solo lectura antes de cobrar a nadie: portal de cliente
-(`/v1/billing_portal/configurations`), numeración (`customer.invoice_prefix`) y si prod va
-en live. Lo que **no** se ve por API: la dirección del emisor (`company.address` viene
-vacía aunque la cuenta esté verificada, y el domicilio es obligatorio en factura española)
-ni cómo queda el PDF. Emitir la de prueba **en modo test**: en live quema el primer número
+Comprobable en solo lectura: portal de cliente (`/v1/billing_portal/configurations`),
+numeración (`customer.invoice_prefix`) y si prod va en live.
+
+**Dónde NO sirve la API, y engaña si insistes** (aprendido a base de afirmarlo dos veces
+mal el 14-ago): `company.address` de tu propia cuenta viene **siempre vacío**, esté puesto
+o no, así que no prueba que falte el domicilio. Y `default_account_tax_ids` puede seguir
+`null` con el tax ID ya visible en *Invoice settings*: la lista y el «predeterminado» son
+cosas distintas. Con esos dos campos no se puede concluir nada sobre el PDF.
+
+Lo único que lo verifica es **mirar el PDF**: la vista previa de la plantilla de factura
+(no emite nada) o una factura de prueba **en modo test** — en live quemas el primer número
 de tu serie para luego anularlo. Ver [[stripe-aplica-reverse-charge-sin-comprobar-que-tu-estes-en-el-roi]]
