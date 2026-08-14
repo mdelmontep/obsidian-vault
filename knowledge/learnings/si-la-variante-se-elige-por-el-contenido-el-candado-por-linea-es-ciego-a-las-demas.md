@@ -20,3 +20,9 @@ igual con el dato perdido.
 
 Para partir un molde por su hueco hace falta un testigo — **nunca un NUL**: pasa lint, typecheck y
 tests, y deja el fichero invisible a `grep`. Un token visible (`__CARGA__`) hace lo mismo y se busca.
+
+**Hermano por otra puerta (14-ago): un golden es ciego también a los MIEMBROS que no enumera.** El
+mismo golden de copia retrataba 4 de los 8 métodos del contrato, así que un defecto **vivo en prod**
+en uno de los otros cuatro llevaba meses con el fichero verde — y su propia cabecera ya advertía de
+ese modo de fallo. 👉 **«0 celdas movidas» solo cubre los escenarios que la matriz tiene**: dilo al
+pegar esa evidencia en una PR, y al añadir un miembro al contrato, mételo en la matriz o nace fuera.

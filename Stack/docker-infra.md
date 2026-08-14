@@ -68,6 +68,9 @@ tags: [docker, traefik, dokploy, infra]
 - Verificar que queda **inlined** (`grep` del valor en `.next/server/app/api/health/route.js`), no recalculado al arrancar el contenedor: ahí está la diferencia entre un dato útil y uno inútil.
 - Para qué sirve: al dudar de un despliegue, contrastar `curl /api/health` contra el `finishedAt` del deployment. Sin esto (caso real 27-jul) se gastaron **tres escrituras contra la BD de prod** para averiguar si el contenedor era el nuevo. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]].
 - Metadata de deployments sin volcar secretos: `dokploy-safe.sh "/api/compose.one?composeId=<id>"` → `deployments[]` trae `description: Commit: <sha>`, `status` y `finishedAt`, y `autoDeploy`.
+- **Si no hay marca de compilación que aprovechar, sella el CONTENIDO**: `RUN` en el `Dockerfile` (después del `COPY`, antes del `CMD`) que hashea lo que acaba de entrar en la imagen, servido por un endpoint. Se compara con el digest calculado en local sobre un árbol limpio. Es la única vía que **no depende del SSH** — y el SSH se cae. Ver [[sellar-la-imagen-en-el-build-para-saber-que-corre-en-prod-sin-shell]].
+- ⚠️ **Que Dokploy no pase el commit al build no es un detalle a rodear con una env var del panel**: su env es de *runtime* y **sobrevive a la imagen**, así que una imagen vieja cantaría el SHA nuevo que alguien tecleó. Las peticiones para que lo inyecte llevan abiertas desde 2025 (Dokploy#2715, #4006).
+- La lista de **qué** sellar se **deriva del `.dockerignore`**, nunca se escribe a mano: una lista paralela nace divergida el mismo día. Y sus patrones van **anclados a la raíz** — `node_modules` no tapa `sub/node_modules`.
 
 ## `NEXT_PUBLIC_*` vars en Dokploy requieren prefijo exacto
 
@@ -123,6 +126,7 @@ networks:
 - **Auto-apagado instalado (03-ago)**: `~/.local/bin/colima-idle-stop.sh` + LaunchAgent `madrid.agentesia.colima-idle-stop` (cada 300 s) paran la VM tras ~30 min sin uso; `~/.local/bin/docker` es un wrapper que la vuelve a levantar (~1 min) y delega en `/opt/homebrew/bin/docker`. Log: `~/.colima/idle-stop.log`; depurar con `COLIMA_IDLE_DEBUG=1`. Por qué las señales son esas → [[presencia-y-cpu-no-miden-uso-el-healthcheck-falsea-la-senal]]
 - **Tras parar la VM, un contenedor con `restart=no` NO vuelve** (se pierde el de test, bien; se pierde también tu postgres de dev, mal). Los permanentes a `docker update --restart unless-stopped <c>`. Y si añades un servicio permanente nuevo, mételo en `PERSISTENT` del script o sus healthchecks contarán como uso y la VM no se apagará nunca.
 - **`docker events --until 30s` significa "hasta hace 30 s", no "durante 30 s"** → ventana invertida y 0 eventos, que se lee como "no pasa nada". Para mirar hacia atrás: `--since 6m --until 0s`. Para muestrear hacia adelante: lanzarlo en background y matarlo tras N segundos.
+- ⚠️ **`docker info` → error NO significa "daemon parado"**: con colima corriendo (`colima status` → `Running`) puede ser solo el **contexto** — `export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"` y funciona. Un agente lo leyó como límite del entorno y estuvo a punto de dejar sin construir la imagen de una PR que tocaba el arranque de prod (14-ago). Un «no se puede medir» merece un intento propio antes de aceptarse.
 
 ## Passwords y variables
 
