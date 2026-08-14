@@ -961,6 +961,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[extract-error-objeto-anidado-en-apis-modernas]] — extractError debe gestionar error como objeto anidado
 - [[gating-de-modulo-duplicado-por-pagina-centralizar-en-helper]] — el gating de visibilidad/acceso de un módulo duplicado por página deriva inconsistente —…
 - [[google-favicon-api-patron-auto-logo]] — google favicon api patron auto-logo para proveedores
+- [[graph-api-de-instagram-exige-pagina-vinculada-y-la-concesion-es-pegajosa]] — insights IG exigen página FB administrada por el usuario del token; el popup OAuth reutiliza la selección de páginas sin re-preguntar
 - [[hitl-resumen-debe-nombrar-entidad-desambiguada]] — un gate HITL solo protege si el resumen nombra la entidad que un campo desambigua
 - [[kommo-salesbot-ids-ajax-v4]] — kommo salesbot ids — endpoint real es /ajax/v4/bots/ no /api/v2/salesbot
 - [[kommo-salesbot-json-adaptation]] — kommo salesbot jsons del drive tienen datos hardcodeados de cz — adaptar antes de importar
