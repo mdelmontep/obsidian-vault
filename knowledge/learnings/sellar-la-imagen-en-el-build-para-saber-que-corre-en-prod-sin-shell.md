@@ -25,3 +25,10 @@ Dos gotchas medidos:
   `sub/node_modules`.
 
 La lista de qué sellar **no se escribe a mano**: se deriva del `.dockerignore`, o diverge el mismo día.
+
+**Usado dos veces el 14-ago, y la 2ª es mejor evidencia que la 1ª:** ahí el digest **cambió solo** (una
+PR del tren tocaba contenido sellado) *y* coincidió con el local — que se mueva **y** case vale más que
+un control artificial. Dos corolarios al leerlo: un commit **docs-only no mueve el digest**, y eso es
+correcto por diseño, no un deploy que falta; y el `builtAt` que acompaña al sello **no sirve para fechar
+deploys** — salió a ~10 s del merge las dos veces, cifra plausible solo con la capa del `npm ci`
+cacheada, que no lo está si el diff toca `package.json`.

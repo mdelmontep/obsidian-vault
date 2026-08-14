@@ -635,7 +635,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[withapiauth-solo-carga-role-con-requirerole-o-requirewrite]] — withApiAuth solo carga `role` si el endpoint declara requireRole/requireWrite
 - [[xss-en-email-html-interpolado-de-bd]] — xss en email html interpolado de bd se subestima — escape obligatorio
 
-## Git / repo / CI (53)
+## Git / repo / CI (54)
+- [[gh-issue-create-el-titulo-se-rompe-en-silencio-y-los-numeros-no-se-predicen]] — zsh ejecuta los backticks de `gh --title` y se come la palabra; y los números de issue no se predicen
 - [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]] — aceptar una sugerencia HITL debe cerrar la decisión o el gate de acierto nunca abre
 - [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]] — «Cierra #N» no cierra el issue: GitHub solo reconoce las keywords en inglés
 - [[asistente-enterprise-natural-pero-grounded-no-llm-libre]] — contestar como ChatGPT" en un asistente enterprise = natural PERO grounded, no LLM libre
@@ -797,7 +798,9 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]] — observabilidad nueva destapa bugs viejos en silencio
 - [[watchdog-umbral-debe-tolerar-un-tick-perdido]] — umbral de watchdog de cron debe tolerar ≥1 tick perdido (2× intervalo)
 
-## TypeScript / tooling / testing (25)
+## TypeScript / tooling / testing (27)
+- [[un-export-cuyo-unico-importador-es-su-test-sale-verde-en-todo]] — un export que solo importa su test está cubierto y DESCONECTADO: verde en el arnés, en tsc y en eslint
+- [[retirar-un-campo-de-una-interfaz-no-es-un-candado-los-spreads-lo-esquivan]] — el excess-property check solo mira literales: el campo vuelve por un spread con tsc en exit 0
 - [[un-guard-que-reconoce-por-nombre-envejece-con-cada-variante-nueva]] — un guard que identifica colaboradores por su NOMBRE denuncia en falso al nacer una variante, y solo lo ve la suite completa
 - [[admin-alert-collectors-dismiss-contract]] — collector de alertas admin debe emitir dismissKey de 2 partes
 - [[agent-browser-eval-contexto-persiste-const-usar-iife]] — agent-browser eval reutiliza el contexto JS — `const` redeclarado lanza "already declared
