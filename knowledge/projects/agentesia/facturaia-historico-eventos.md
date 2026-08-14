@@ -144,3 +144,38 @@ Resuelto y en `main` (`bc90dcd8`). Se documenta aparte por dos cosas, y ninguna 
 
 Crónica y diff → [[facturaia-pedido-movil-390-issue-1541]] ·
 [[dos-salidas-contradictorias-no-son-un-mecanismo-hasta-que-lo-reproduces]]
+
+---
+title-evento: empaquetado y circuito de cobro — los 15 PR mergeados y en producción
+date: 2026-08-14
+---
+
+Cierre de la tanda de las specs #1678 (integridad del cobro) y #1679 (empaquetado y modo
+prueba): **15 PR mergeados**, sus issues cerrados y las migraciones **679-687 aplicadas y
+verificadas por catálogo** en prod (columnas de descuento en `organizations` y
+`billing_accounts`, `plan_limits.cuentas_bancarias` 3/10, `plans.empresas_incluidas`=2 en
+Plus, `conciliacion` habilitada en Pro). Más **#1754** (PR #1766): el panel de admin ya
+decide con el plan efectivo en las tres lecturas que quedaban fuera de #1696, y
+`pickEffectivePlan` normaliza el embed cuando llega como array de uno.
+
+**Las tres decisiones que esperaban a Manuel, respondidas**: límite de cuentas bancarias
+3 Pro / 10 Enterprise aprobado; baseline del trinquete de `registry.ts` subido a conciencia
+(contrapartida = #1751, partir el fichero); `CONTEXT.md` §Dominio fusionado quedándose las
+dos mitades (la corta aporta anclajes de implementación, la larga el porqué), y ADR-013 gana
+la decisión que faltaba: ningún tier incluye complementos.
+
+**Lo que cazaron las auditorías antes de mergear**, ninguno detectable por el gate: un cron
+que iba a mandar email de severidad alta **en cada impago normal** (72 h de gracia con la
+suscripción en `past_due`); dos `UPDATE` sin leer su `error`, con un cupón de importe fijo
+violando el CHECK en silencio; ids en `snake_case` enseñados al cliente en el modal de bajada
+de plan; una incidencia de webhook que no la cerraba nada nunca; una card que se escondía
+entera si fallaba su GET; y un CHECK que se vendía como candado cerrando una sola dirección.
+
+**Deuda abierta con número**: #1750-#1759. **Raíces de lo que queda**: #1702 (checkout
+genérico de complementos) y #1712 (la matriz de empaquetado), las dos arquitectura.
+
+Aprendizajes: [[pre-push-que-typechequea-con-next-build-no-mira-los-tests]] ·
+[[renumerar-migraciones-reescribe-referencias-de-migraciones-ajenas]] ·
+[[stripe-sin-account-tax-ids-la-factura-sale-sin-nif-del-emisor]] ·
+[[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]] ·
+[[claude-code-agentes-worktree-failure-modes]]

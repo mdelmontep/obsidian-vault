@@ -25,3 +25,12 @@ Salida: `git merge --abort`, `fetch`, mergear el main actual y regenerar entonce
 Relacionado: si el script usa `git ls-files` para listar qué contar, un
 `.module.css` NUEVO no aparece hasta que esté en el índice — `git add -A`
 antes de correr el ratchet o el conteo sale falso (por defecto, no por bug).
+
+**Antes de resolver el conflicto, pregunta si ese derivado debe estar commiteado (14-ago)**:
+mira QUÉ valida el gate. En facturaia el `pre-push` solo compara `dependencies.json` contra
+madge; el SVG del mismo grafo lo declara regenerable a demanda. Ese SVG son 39.000 líneas
+commiteadas igual, así que **cada merge lo ponía en conflicto en todas las ramas abiertas a
+la vez** — en una tanda de 15 PRs causó más conflictos que todo el código junto, y ninguno
+tenía nada que resolver. Dejándolo como está en main (`git show origin/main:<ruta> >
+<ruta>`) desaparece la clase entera de conflicto sin perder nada. Regla: un derivado pesado
+se commitea solo si algo lo valida o alguien lo lee dentro del repo.
