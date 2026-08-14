@@ -443,3 +443,29 @@ Seis reglas, todas de haberlas incumplido primero:
   deuda con permiso.
 
 Ver [[una-suite-en-verde-no-prueba-el-camino-real]].
+
+## Un arnés de mutación caza lo que tu lista de mutaciones no (14-ago-2026, AGH)
+
+**Una tanda de mutaciones a mano hereda tu hipótesis; un barrido derivado del diff, no.** Medido dos veces el mismo día, en PRs distintas:
+
+- En una PR se escribieron **12 mutaciones a mano y todas cayeron sobre las funciones puras**, que es donde estaba la sospecha. El barrido automático encontró a la primera un `SIN VÍCTIMA` **en el cableado**: un reparto de estados escrito como `if/else` dentro del bucle del driver, cuyo predicado se podía negar sin poner en rojo ni un test.
+- La PR que amplió el propio barrido, al barrerse a sí misma, encontró que `correr: (cmd, cwd) => correr(cmd, cwd)` se podía revertir a la forma de **un solo parámetro** con la suite verde **y el typecheck limpio** — TypeScript acepta una función de aridad menor donde se espera una mayor. O sea: reintroducir el defecto que la PR arreglaba, sin que nada se quejara.
+
+**Por qué pasa:** al elegir las mutaciones a mano eliges implícitamente dónde crees que está el fallo, y el cableado es justo lo que no se te ocurre mutar porque «solo pasa argumentos». El diff sí lo incluye. En ese repo el hueco lleva **tres veces seguidas** en el cableado y no en la lógica.
+
+**Cómo se aplica:** correr el barrido **antes** de escribir mutaciones a mano, y reservar las manuales para lo que el barrido declare «sin medir» (hunks que no compilan al revertirse). Si la carpeta no está cubierta, asumir el sesgo y mutar explícitamente **el paso de argumentos**: invertir dos parámetros, pasar un valor fijo en vez del calculado, dejar caer uno.
+
+**Corolarios operativos, medidos:**
+- Un veredicto **sin recuento de tests** no es un veredicto: un mutante que ni compila sale como «víctima» falsa.
+- La forma de cerrar el hueco del cableado suele ser **por construcción** (colapsar dos parámetros desparejables en un valor que viaje junto), no otro test.
+- Un candado **no puede defenderse de una mutación de sí mismo**: si el barrido muta tests, la vara se reescribe sola. Por eso filtra por código de producción.
+
+## Un guard debe decidir por EJECUCIÓN, no por mención (14-ago-2026)
+
+Un hook `PreToolUse(Bash)` que buscaba el nombre de un script caro **en cualquier posición del comando** rechazaba un `git commit -m "…<script>…"`, que no gasta nada. Un guard que salta cuando no debe **se aprende a rodear**, y entonces no protege el día que sí ibas a gastar.
+
+Arreglo: **tokenizar el comando respetando las comillas** (`shlex`, así el cuerpo de un `-m "…"` es UN token) y contar solo lo que aparece **en posición de comando** — al principio, o tras `&&`, `||`, `;`, `|`. Límite conocido y aceptable: un separador pegado sin espacios (`a&&b`) no se parte.
+
+Y dos reglas que salieron con él:
+- **Un guard global no debe citar una cifra que vive en un repo.** Si el dato tiene fuente única en el proyecto, el hook la **lee** del repo que está guardando y, si no la encuentra, remite a ella en vez de inventarse un número — copiarla ahí es una copia más que ningún candado del repo puede vigilar.
+- **Su suite en verde no basta: probarlo en el camino real.** Los casos que valen son los que **discriminan** (mencionar no bloquea / ejecutar sí), no los que pasan trivialmente.
