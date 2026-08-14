@@ -104,6 +104,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[outbox-trigger-bd-vs-hook-js-multiples-entry-points]] — outbox para columna mutada por múltiples puntos → trigger BD, no hook JS
 - [[pending-intent-por-key-necesita-claim-atomico-no-select-luego-delete]] — tabla pending-intent con PK por key necesita claim atómico, no select+delete
 - [[persist-merge-shallow-deja-cruft-entre-contextos]] — persist merge shallow deja cruft entre contextos
+- [[pg-returns-table-no-lleva-tipos-ni-nulabilidad-y-eso-explota-al-ejecutar]] — un RETURNS TABLE no lleva tipos comprobados ni nulabilidad — citext/text revienta en la 1ª llamada, no al crear
 - [[pg-returns-table-prefijo-out-para-evitar-ambiguity]] — PG function RETURNS TABLE con SELECT INTO → prefijo out_ para evitar ambiguity
 - [[pg-trigger-depth-1-skip-rompe-loops-cascade]] — pg_trigger_depth() > 1 SKIP rompe loops cascade sin flag de sesión
 - [[pgcrypto-supabase-trigger-search-path]] — pgcrypto en supabase cloud está en schema extensions, no public
@@ -228,6 +229,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[triggers-bd-sync-son-antipatron]] — triggers bd de sincronización son antipatrón
 - [[triggers-postgres-auditoria]] — triggers postgres para auditoría automática por tabla
 - [[typescript-6-noUncheckedSideEffectImports-rompe-imports-css-sin-tipo]] — typescript 6 activa noUncheckedSideEffectImports por defecto y rompe imports css sin tipo
+- [[una-correccion-de-tipos-sobre-un-parser-que-recibe-unknown-es-inerte]] — un tipo que compila no es un tipo que protege: mútalo y comprueba que sale en rojo
+- [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]] — la 2ª vía de escritura omite el contexto de actor que la RLS exige, y sólo falla en el caso por defecto
 - [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
 - [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética
 - [[upsert-atomico-rpc-vs-check-then-act-evita-lost-update]] — UPSERT atómico con RPC vs check-then-act para counters compartidos
@@ -238,6 +241,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[verifactu-rpc-atomico-cierra-race-transacciones-rest-separadas]] — verifactu — RPC atómico cierra race transacciones REST separadas
 - [[verificacion-no-mutar-estado-prod-cuenta-real]] — scripts de verificación pueden corromper prod si .env.test apunta al proyecto real y la c…
 - [[verificar-check-constraint-sin-tocar-prod-con-count-exacto-rest]] — verificar check constraint en prod con count exacto rest (sin tocar filas)
+- [[verificar-un-filtro-traducido-es-contar-filas-no-leer-el-chip]] — traducir un enum puede descolgar el valor: se verifica contando filas, no leyendo el chip
 - [[vitest-fileparallelism-false-tests-integracion-bd-compartida]] — vitest fileparallelism:false para tests de integración que comparten una bd
 - [[vitest-mock-admin-client-cuando-test-toca-wrapper-outbox]] — Vitest — mock @/lib/admin cuando el test toca un wrapper con INSERT outbox previo
 - [[vitest-unhandledrejection-run-rojo-pese-a-0-fallos]] — vitest sale EXIT 1 por un unhandledRejection aunque 0 tests fallen (fuga de teardown pg)

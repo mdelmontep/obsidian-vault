@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-11 noche (los 124 hallazgos juzgados y 123 cerrados · la API v1 ya tiene por dónde emitir una credencial · tuyo: borrar 7 orgs de prueba de producción, el ticket de Storage y el registro de correo de Workspace)
+updated: 2026-08-14 noche (la 083 aplicada y el esquema al día · un recorrido de navegador encontró que la importación no escribe NADA · tuyo: 7 orgs de prueba en producción, ticket de Storage, Email Log Search)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,40 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (14-ago) — el arnés mide mejor, y por eso el marcador sube
+
+**Lo que hay que atacar primero: `issues/090`.** La importación de CSV **no escribe ni una ficha**
+en producción y lo anuncia en caja de éxito («0 altas»). Falla la RLS por no pasar `ownerId`, es el
+estado **por defecto** de toda organización nueva, alcanza a las tres entidades, y crear a mano sí
+funciona — por eso no se veía. Lo encontró **subir un CSV**, no una auditoría ni las 4.819 pruebas.
+Ver [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]].
+
+**La `083` está aplicada** (68 versiones, `deploy:check` verde): quien administra puede cerrar la
+sesión de un miembro, y la parte B de la 068 pasa de **cero a dieciséis aserciones** contra Postgres
+real. Su primera versión estaba rota de una forma que ningún gate estático ve —`returns table` con
+`email text` sobre una columna `citext`, que revienta en la primera llamada— y la cazó `db:replay`
+antes de tocar producción: [[pg-returns-table-no-lleva-tipos-ni-nulabilidad-y-eso-explota-al-ejecutar]].
+
+**Tres «construido y sin llamante» menos.** `mirarComoElCliente()` llevaba cuatro días probado y sin
+una sola URL que lo usara, así que `soloLectura()` no cortaba nada; ya hay pantalla y un `POST` que
+pide la denegación. Y al desmontar el andamio de la 083 apareció el mismo patrón en tipos: una
+corrección que compilaba y **no protegía nada**, cazada mutándola —
+[[una-correccion-de-tipos-sobre-un-parser-que-recibe-unknown-es-inerte]].
+
+**`meta` sube de 116 a 120 sin deuda nueva**: la señal 8 dejó de dar por frescos los recorridos por
+calendario y ahora cruza commit + territorio; 6 de 8 resultaron caducados. Un instrumento que
+empieza a medir sube el marcador, y eso es lo contrario de un problema.
+
+**Recorridos de navegador**: `089` y `080` verdes (el aviso de carga se apaga en los tres caminos
+que jsdom no distingue; ningún identificador de la BD llega a la pantalla en 21 pantallas,
+comprobado **contando filas** y no leyendo el chip —
+[[verificar-un-filtro-traducido-es-contar-filas-no-leer-el-chip]]). `079` en ROJO a propósito: lo
+cierra el `090`. Nuevos: `090`, `091` (el catálogo de enums con un segundo dueño que es el que se
+pinta).
+
+**Para arrancar otra sesión multiagente**: `docs/plan/ARRANQUE-MULTIAGENTE.md` en el repo. No copia
+cifras a propósito — las deriva de `ESTADO.md`, `npm run meta` y los `Status:`.
 
 ## Estado (11-ago) — los 124 hallazgos juzgados, y la API v1 con puerta de entrada
 

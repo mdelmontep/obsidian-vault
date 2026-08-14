@@ -27,3 +27,9 @@ otra sesión. Se detectó porque el snapshot traía "Open Next.js Dev Tools", qu
 prod no existe. Corolario: en un smoke de producción, `agent-browser eval
 "location.href"` **en cada paso que escriba algo** — un `open` que devuelve la URL
 correcta no garantiza que el siguiente comando siga en esa pestaña.
+
+**El síntoma que lo delata sin salir de una sola sesión** (14-ago): la sesión `default` arrastraba
+una pestaña vieja de otra corrida y **`snapshot` contestaba de una página distinta que `eval`/`get
+url`** — dos comandos seguidos describiendo pantallas diferentes. Si eso pasa, no es el sitio: es el
+perfil compartido. `--session <nombre>` propio y a empezar de cero.
+
