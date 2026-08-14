@@ -680,7 +680,9 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[withapiauth-solo-carga-role-con-requirerole-o-requirewrite]] — withApiAuth solo carga `role` si el endpoint declara requireRole/requireWrite
 - [[xss-en-email-html-interpolado-de-bd]] — xss en email html interpolado de bd se subestima — escape obligatorio
 
-## Git / repo / CI (54)
+## Git / repo / CI (56)
+- [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] — `--no-verify` + gate aparte NO es equivalente, y un trinquete mide el árbol entero: bloquea a todo el repo
+- [[numero-de-migracion-libre-se-mide-en-prod-no-en-el-repo]] — si el número ya está aplicado en prod, `db push` se salta tu migración sin error (bloqueado por hook desde #1768)
 - [[gh-issue-create-el-titulo-se-rompe-en-silencio-y-los-numeros-no-se-predicen]] — zsh ejecuta los backticks de `gh --title` y se come la palabra; y los números de issue no se predicen
 - [[aceptar-sugerencia-hitl-debe-cerrar-decision-o-el-gate-no-abre]] — aceptar una sugerencia HITL debe cerrar la decisión o el gate de acierto nunca abre
 - [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]] — «Cierra #N» no cierra el issue: GitHub solo reconoce las keywords en inglés
