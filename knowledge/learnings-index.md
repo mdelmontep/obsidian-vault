@@ -797,7 +797,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]] — observabilidad nueva destapa bugs viejos en silencio
 - [[watchdog-umbral-debe-tolerar-un-tick-perdido]] — umbral de watchdog de cron debe tolerar ≥1 tick perdido (2× intervalo)
 
-## TypeScript / tooling / testing (24)
+## TypeScript / tooling / testing (25)
+- [[un-guard-que-reconoce-por-nombre-envejece-con-cada-variante-nueva]] — un guard que identifica colaboradores por su NOMBRE denuncia en falso al nacer una variante, y solo lo ve la suite completa
 - [[admin-alert-collectors-dismiss-contract]] — collector de alertas admin debe emitir dismissKey de 2 partes
 - [[agent-browser-eval-contexto-persiste-const-usar-iife]] — agent-browser eval reutiliza el contexto JS — `const` redeclarado lanza "already declared
 - [[agent-browser-verificar-snapshot-no-solo-screenshot]] — agent-browser — verificar mensajes con snapshot de accesibilidad, no solo screenshot
@@ -865,7 +866,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[output-llm-validar-zod-y-auditar-parse-failures-en-bd]] — output llm validar con zod y auditar parse failures en bd
 - [[pdf-fallback-pipeline-devolver-razon-no-null]] — pipeline asset con fallback debe devolver razón del fallo no Buffer|null
 
-## Notificaciones / email / integraciones (10)
+## Notificaciones / email / integraciones (11)
+- [[cerrar-la-alerta-al-ir-bien-es-una-escritura-por-cada-render]] — el cierre automático de una alerta en un camino caliente es un RPC de escritura por visita
 - [[calendar-event-id-deterministico-sha1-phone-slot-anti-doble-booking]] — calendar event id determinista sha1 phone+slot evita doble booking
 - [[email-imagenes-base64-bloqueadas-usar-hosting]] — email imágenes base64 bloqueadas por clientes de correo
 - [[fnmt-tsa-mtls-x509-rfc3161-no-rest]] — fnmt tsa mtls x509 rfc3161 no rest
@@ -877,7 +879,9 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[types-gen-consumer-desfasado-aunque-spec-este-al-dia]] — types.gen.ts del consumer puede estar desfasado aunque la spec del backend esté al día
 - [[verificar-comportamiento-real-api-antes-de-creer-al-integrador]] — verificar comportamiento real de api antes de creer al integrador
 
-## Stripe / pagos / billing (6)
+## Stripe / pagos / billing (8)
+- [[stripe-sin-account-tax-ids-la-factura-sale-sin-nif-del-emisor]] — sin Account Tax IDs la factura sale sin tu NIF, y *Tax details* es OTRA pantalla
+- [[stripe-aplica-reverse-charge-sin-comprobar-que-tu-estes-en-el-roi]] — Stripe Tax mira el NIF del cliente, no si TÚ estás en el ROI: comprueba el tuyo en VIES
 - [[contador-de-cuota-best-effort-tras-check-es-cuota-infinita]] — un contador de cuota best-effort tras el check es cuota infinita si el increment falla
 - [[git-checkout-file-en-red-check-deja-commit-sin-fix]] — git checkout <file> en el red-check deja el commit sin el fix (y build no compila tests)
 - [[stripe-cli-cuenta-distinta-de-la-app-price-no-existe-falso-positivo]] — stripe: el CLI --live puede ir a otra cuenta que la sk_live de la app → 'No such price' e…
