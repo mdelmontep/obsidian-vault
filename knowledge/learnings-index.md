@@ -827,7 +827,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[vitest-mock-clase-esm-vi-hoisted]] — vitest mock clase es module - vi.hoisted para evitar "not a constructor
 - [[zod-vs-openapi-doc-contrato-real-de-clientes-generados]] — zod refine no llega a clientes openapi-typescript — actualizar openapi.json en mismo comm…
 
-## Next.js / App Router (19)
+## Next.js / App Router (18)
 - [[server-component-que-toca-bd-en-su-cuerpo-se-prerenderiza-y-rompe-el-build]] — Server Component que toca la BD en su cuerpo se prerenderiza y tumba el build (recolocado de `hot.md`, poda 29-jul)
 - [[turbopack-rechaza-symlink-node-modules-en-worktree]] — node_modules por symlink en un worktree pasa lint/tests y muere en `next build`
 - [[bd-fuente-verdad-via-cache-memoria-hidratar-en-lectura]] — bd como fuente de verdad vía cache en memoria: hidratar en lectura, no solo al escribir
@@ -844,7 +844,6 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[nextjs16-middleware-to-proxy]] — next.js 16 renombra middleware.ts a proxy.ts
 - [[pdf-lib-funciona-en-nextjs-turbopack-donde-pdfkit-falla]] — pdf-lib funciona en next.js turbopack donde pdfkit falla
 - [[self-fetch-entre-api-routes-falla-en-docker-prod-extraer-a-lib]] — Self-fetch entre API routes falla en Docker prod — extraer a lib
-- [[turbopack-rechaza-symlink-node-modules-en-worktree]] — turbopack rechaza node_modules symlinkeado en un worktree (tsc/vitest sí lo aceptan)
 - [[vitest-recoge-specs-e2e-duplicados-en-next-standalone]] — vitest recoge specs e2e duplicados dentro de .next/standalone tras un build
 - [[zod-strict-bloquea-campos-no-listados-silenciosamente]] — zod strict bloquea campos no listados silenciosamente
 
@@ -881,7 +880,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[types-gen-consumer-desfasado-aunque-spec-este-al-dia]] — types.gen.ts del consumer puede estar desfasado aunque la spec del backend esté al día
 - [[verificar-comportamiento-real-api-antes-de-creer-al-integrador]] — verificar comportamiento real de api antes de creer al integrador
 
-## Stripe / pagos / billing (8)
+## Stripe / pagos / billing (9)
+- [[stripe-invoice-subscription-retirado-el-id-vive-en-parent]] — `invoice.subscription` ya no existe: vive en `parent.subscription_details`, y la versión que manda es la de la CUENTA
 - [[stripe-sin-account-tax-ids-la-factura-sale-sin-nif-del-emisor]] — sin Account Tax IDs la factura sale sin tu NIF, y *Tax details* es OTRA pantalla
 - [[stripe-aplica-reverse-charge-sin-comprobar-que-tu-estes-en-el-roi]] — Stripe Tax mira el NIF del cliente, no si TÚ estás en el ROI: comprueba el tuyo en VIES
 - [[contador-de-cuota-best-effort-tras-check-es-cuota-infinita]] — un contador de cuota best-effort tras el check es cuota infinita si el increment falla

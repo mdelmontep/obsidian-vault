@@ -366,7 +366,7 @@ con confirmación; el 403 previo al grant probó el gate de permisos. **Grant
 primera fila de `superadmin_permissions`, desbloquea también el smoke de mutación de
 contenido-01. Prod quedó limpio (0 assets, copy null). Gotchas de la sesión:
 [[agent-browser-fill-vacio-no-dispara-onchange-react]] ·
-[[turbopack-build-rechaza-node-modules-symlink-en-worktree]].
+[[turbopack-rechaza-symlink-node-modules-en-worktree]].
 
 ## 2026-08-13 — contenido-07 cerrado: runner esqueleto + coordinador determinista, DESPLEGADO en prod (#1719, #1720)
 

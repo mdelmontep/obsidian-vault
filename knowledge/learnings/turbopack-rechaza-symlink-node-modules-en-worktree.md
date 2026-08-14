@@ -55,5 +55,13 @@ puesto: un `npm install` lanzado desde el worktree escribe en el `node_modules` 
 Coste real del `npm ci` en el worktree: ~2 min con caché caliente y ~1 GB. Copia también
 `.env.local`, que no se hereda y el build lo necesita.
 
+**Reincidido dos veces más (13-ago y 14-ago), y esta nota no lo evitó** porque nadie la lee al
+CREAR el worktree: se lee cuando el build ya ha fallado, media hora después. Conclusión práctica:
+en un worktree que vaya a pasar el gate, **copiar siempre** — `cp -Rl` (hardlinks, instantáneo)
+si comparte volumen, `cp -R` (~30 s en APFS) o `npm ci` (~2 min, ~1 GB) si no. El symlink solo se
+justifica en un worktree anidado dentro del repo, o en proyectos sin Turbopack. Es candidato claro
+a hook en el comando que crea worktrees, que es el único momento en que la regla se aplicaría sola.
+(Fusionado aquí el duplicado `turbopack-build-rechaza-node-modules-symlink-en-worktree`, 14-ago.)
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
 [[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].
