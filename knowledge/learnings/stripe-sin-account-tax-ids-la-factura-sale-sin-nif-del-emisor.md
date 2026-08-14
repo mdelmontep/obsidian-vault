@@ -23,12 +23,17 @@ accounts». Ese clic es de panel, en Billing → Invoices.
 Comprobable en solo lectura: portal de cliente (`/v1/billing_portal/configurations`),
 numeración (`customer.invoice_prefix`) y si prod va en live.
 
-**Dónde NO sirve la API, y engaña si insistes** (aprendido a base de afirmarlo dos veces
-mal el 14-ago): `company.address` de tu propia cuenta viene **siempre vacío**, esté puesto
-o no, así que no prueba que falte el domicilio. Y `default_account_tax_ids` puede seguir
-`null` con el tax ID ya visible en *Invoice settings*: la lista y el «predeterminado» son
-cosas distintas. Con esos dos campos no se puede concluir nada sobre el PDF.
+**Dónde NO sirve la API, y engaña si insistes** (afirmado dos veces mal el 14-ago, y luego
+desmentido por el PDF): `company.address` de tu propia cuenta viene **siempre vacío**,
+esté puesto o no — el PDF de prueba mostró el domicilio completo mientras la API lo daba
+por ausente. Con ese campo no se puede concluir nada.
 
-Lo único que lo verifica es **mirar el PDF**: la vista previa de la plantilla de factura
-(no emite nada) o una factura de prueba **en modo test** — en live quemas el primer número
-de tu serie para luego anularlo. Ver [[stripe-aplica-reverse-charge-sin-comprobar-que-tu-estes-en-el-roi]]
+**Lo que sí quedó demostrado emitiendo una factura de prueba**: con el tax ID creado pero
+sin marcar como predeterminado, la factura finalizada sale con `account_tax_ids: null` y
+**el PDF no lleva el NIF del emisor**. Crear el tax ID no basta; hay que fijarlo por
+defecto (panel) o pasarlo por código en cada factura.
+
+Corolario del mismo experimento: **la sandbox tiene su propia configuración** (sus tax IDs,
+su registro fiscal, su dirección), así que un PDF de test no prueba nada sobre el de live
+salvo que replique los ajustes. Y en live no se prueba: quemarías el primer número de tu
+serie para luego anularlo. Ver [[stripe-aplica-reverse-charge-sin-comprobar-que-tu-estes-en-el-roi]]
