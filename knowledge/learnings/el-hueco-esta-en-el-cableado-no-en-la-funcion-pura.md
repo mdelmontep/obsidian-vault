@@ -39,3 +39,18 @@ enteras (un barrido donde ningún mutante llegó a ejecutarse y aun así se pod�
 
 Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] ·
 [[una-herramienta-que-se-aplica-a-su-propio-fuente-necesita-el-rescate-fuera]].
+
+**Cuarta vez (14-ago, AGH #1158), y ahora con el porqué:** se escribieron **12 mutaciones a mano y
+todas cayeron sobre las funciones puras**. El barrido automático encontró a la primera un `SIN
+VÍCTIMA` en el cableado — un reparto de estados como `if/else` **dentro del bucle del driver**, cuyo
+predicado se podía negar sin poner en rojo ni un test (solo lo cazaba abrir un navegador). 👉 **Una
+tanda de mutaciones a mano hereda tu hipótesis; el barrido derivado del diff, no**: al elegirlas
+eliges dónde crees que está el fallo, y el cableado es justo lo que no se te ocurre mutar porque
+«solo pasa argumentos».
+
+Regla práctica: **corre el barrido ANTES de escribir mutaciones a mano** y deja las manuales para lo
+que él declare «sin medir» (hunks que no compilan al revertirse). Si la carpeta no está cubierta,
+asume el sesgo y muta explícitamente **el paso de argumentos**: invertir dos, fijar uno, dejar caer
+otro. Ese mismo día el arnés se lo hizo a sí mismo: `correr: (cmd, cwd) => correr(cmd, cwd)` se podía
+revertir a la forma de **un solo parámetro** con la suite verde **y el typecheck limpio** — TS acepta
+aridad menor donde se espera mayor.
