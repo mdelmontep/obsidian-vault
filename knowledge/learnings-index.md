@@ -9,22 +9,27 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 
 ## Supabase / Postgres / BD (237)
 - [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] — acción masiva en cliente con N round-trips en serie cuelga la UI — batch + pool + progreso
+- [[agotar-la-fuente-oficial-antes-de-aparcar-una-duda-normativa]] — la FAQ del organismo suele responder literalmente lo que se aparcó "a esperar al asesor
 - [[agregado-cacheado-sobre-ledger-recompute-trigger]] — agregado cacheado sobre tabla-ledger compartida → recompute por trigger, no a mano en el…
 - [[agrupacion-por-campo-texto-libre-exige-normalizacion-en-write-path]] — agrupación por campo de texto libre exige normalización en write path + saneo
 - [[alerta-por-conteo-de-estado-debe-acotar-a-entidades-activas]] — alerta por conteo de filas en estado no-terminal debe acotar a entidades activas
 - [[alter-type-add-value-en-migracion-supabase]] — extender un enum postgres en migración supabase con ALTER TYPE ADD VALUE
+- [[antes-de-optimizar-latencia-mide-tu-tramo-y-restalo-del-e2e]] — antes de optimizar latencia, mide tu tramo y réstalo del e2e
 - [[anthropic-valida-saldo-antes-de-schema]] — la API de Anthropic valida saldo antes que el schema — no sirve para smoke-testear tool-s…
 - [[apify-daily-scrape-supabase-upsert-sweep-removed]] — apify daily scrape -> supabase upsert + sweep removed
 - [[audit-feed-multi-source-snapshot-vs-diff-shape]] — audit feed multi-source — shape snapshot/diff o columna detalle queda vacía
 - [[audit-log-multi-escritor-procedencia-en-after-before-sin-carrera]] — audit_log multi-escritor — procedencia en el `after` jsonb, before sin carrera vía for-up…
 - [[auditar-un-lado-de-par-simetrico-revisar-el-espejo]] — auditar un lado de un par simétrico → grepear el espejo en el mismo PR
 - [[auditoria-performance-priorizar-por-tamano-real-de-tabla]] — auditoría de performance bd — priorizar por tamaño real de tabla, no por el patrón abstra…
+- [[background-bash-io-bound-se-mata-solo-reintentar]] — un background bash io-bound se mata solo sin causa visible — reintentar, no diagnosticar
+- [[bash-3-2-de-macos-no-parsea-case-dentro-de-command-substitution]] — el /bin/sh de macOS (bash 3.2) no parsea un case dentro de $(...)
 - [[busqueda-hibrida-sql-pgvector-supabase]] — busqueda hibrida sql + pgvector en supabase para catalogos
 - [[campo-huerfano-shape-sin-migracion-paralela]] — Campo huérfano — código referencia columna sin migración paralela → UI vacía silenciosa
 - [[campo-opcional-en-tipo-compartido-no-implica-seleccionado-en-todos-los-selects]] — un campo opcional ya declarado en el tipo compartido puede seguir vacío en N puntos disti…
 - [[campo-sincronizado-entre-tablas-debe-poblarse-en-todos-los-puntos-de-escritura]] — campo sincronizado entre tablas debe poblarse en todos los puntos de escritura
 - [[check-constraint-recrear-incluye-valores-existentes]] — recrear un CHECK para añadir un valor debe incluir TODOS los existentes
 - [[checkbox-overlay-migracion-especificidad-css]] — migrar input nativo a componente wrapper — superar/borrar las reglas css del nativo
+- [[claude-in-chrome-abre-su-pestana-en-otro-perfil-la-sesion-del-usuario-no-viaja]] — Claude in Chrome abre su pestaña en otro perfil — la sesión del usuario no viaja
 - [[cliente-react-bypasa-endpoint-canonico-bug-fiscal-latente]] — cliente react bypasa endpoint canónico con supabase.from() — guards = teatro
 - [[clientes-proveedores-filtrar-activos-archivado-at]] — clientes/proveedores: filtrar activos con archivado_at IS NULL, no activo=true
 - [[cloudflare-waf-bloquea-sql-patterns-en-query-params-supabase]] — cloudflare waf bloquea sql patterns en query params supabase
@@ -36,15 +41,21 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[copiloto-tool-select-campo-faltante-guard-mudo]] — tool copiloto: campo en interface pero no en select → guard mudo
 - [[coste-derivado-de-tokens-mensaje-vs-columna-tool-calls-vacia]] — Coste copiloto — derivar de tokens del mensaje, no de columna `cost_usd` de tool_calls
 - [[create-or-replace-copiar-de-version-vigente]] — create or replace de función: copiar de la versión vigente, no de la del issue
+- [[create-or-replace-revierte-el-alter-function-set-search-path]] — CREATE OR REPLACE revierte un ALTER FUNCTION ... SET search_path anterior
 - [[cron-drift-detector-debe-usar-mismo-rango-que-genero-el-snapshot]] — Cron detector de drift debe usar el MISMO rango que generó el snapshot
 - [[cron-queue-top-n-by-date-filter-js-no-procesa-antiguos]] — cron tipo queue con "top-N by date + filter JS" no procesa pendientes antiguos
 - [[date-trunc-en-where-no-sargable-aunque-haya-indice]] — date_trunc en WHERE no es sargable aunque haya índice
 - [[decomiso-bot-monolitico-bloqueado-por-nodos-compartidos]] — decomiso de bot monolítico bloqueado por nodos de creación compartidos
 - [[defense-in-depth-estado-activo-cuando-admin-client-bypasa-rls]] — Defense-in-depth — chequear estado='activo' explícito cuando admin client bypasea RLS
+- [[derivar-un-texto-de-un-flag-sin-dientes-da-un-numero-falso]] — para derivar copy de la capacidad real, usa el flag que gobierna comportamiento, no el descriptivo
 - [[descartar-soft-exclude-ocultar-de-listado-no-hard-delete]] — accion "descartar" sobre estado soft-exclude debe ocultar del listado, no hard-delete
 - [[dokploy-api-schedule-runmanually-trigger-cron-on-demand]] — Dokploy API — `schedule.runManually` para Run Now de un cron sin tocar UI
 - [[dominio-renombrado-no-es-migracion-verificar-mismo-backend]] — cambio de dominio no es migración — verificar backend antes de asumir
+- [[dos-modales-que-se-cierran-a-la-vez-dejan-el-body-sin-scroll]] — dos modales que se cierran a la vez dejan el body sin scroll para siempre
 - [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]] — gate de drift de schema postgres — gotchas de psql -c y pg_dump ≥16
+- [[el-delimitador-se-elige-contra-el-dato-real-no-a-gusto]] — el delimitador se elige contra el dato real, no a gusto tipográfico
+- [[el-magic-link-de-supabase-ignora-un-redirect-fuera-de-la-allowlist]] — el magic link de supabase ignora un redirect que no esté en su allowlist
+- [[en-next-16-el-redirect-de-un-server-component-llega-en-el-streaming]] — en next 16 el redirect de un server component llega en el streaming, no en la respuesta
 - [[encryption-key-de-credenciales-en-bd-no-es-rotable-in-place]] — encryption key de credenciales en bd no es rotable in-place
 - [[endpoint-crear-entidad-find-or-create-por-identidad-unica]] — endpoint que crea entidad con identidad única debe find-or-create, no insert ciego
 - [[endpoint-toggle-feature-debe-gatear-enable-por-plan-o-compra]] — endpoint que escribe overrides de features debe gatear "enable" por plan o compra (bypass…
@@ -52,16 +63,19 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[etag-por-path-upsert-stale-304]] — etag por path con upsert mutable devuelve 304 indefinido
 - [[exception-when-others-colapsa-check-violation-discriminable]] — EXCEPTION WHEN OTHERS colapsa check_violation discriminables → 500 opaco
 - [[extender-database-supabase-interface-never-anyclient]] — extender el tipo Database de supabase-js sin romper el cliente tipado
+- [[extraer-un-design-system-cruza-var-usadas-vs-definidas-no-a-ojo]] — al extraer un subconjunto de un design system, cruza var(--x) usadas vs definidas — no a ojo
 - [[facturas-schema-iva_pct-created_via-gotcha]] — Tabla `facturas` — gotchas schema (iva_pct, created_via NOT NULL con CHECK)
 - [[fake-vs-postgres-orden-sort-utf16-vs-collation]] — fake in-memory vs Postgres divergen en orden — .sort() UTF-16 ≠ collation
 - [[feature-flags-multi-tenant-patron-plan-defaults-org-overrides]] — feature flags multi-tenant patron plan defaults org overrides
 - [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]] — feature que siembra recursos por org → actualizar el onboarding de orgs nuevas, no solo b…
+- [[filtrar-por-call-successful-en-la-api-de-retell-devuelve-500]] — filtrar por call_successful en la api de retell devuelve 500
 - [[filtro-texto-libre-a-columna-tipada-error-tragado-parece-vacio-real]] — filtro de texto libre a columna tipada + error tragado = panel de ceros indistinguible de…
 - [[fix-validado-solo-in-memory-oculta-bug-pg-solo-prod]] — un fix validado solo con fakes in-memory puede ocultar un bug de prod solo-Postgres
 - [[fk-compuesta-tenant-id-defensa-multi-tenant-estructural]] — FK compuesta (tenant_id, id) = defensa multi-tenant estructural, no solo WHERE
 - [[form-defaults-respetar-schema-no-bang-bang-config]] — form defaults — respetar f.default, no usar !!config[key]
 - [[form-parcial-upsert-fila-completa-borra-columnas-no-enviadas]] — formulario parcial + UPSERT de fila completa borra columnas no enviadas (pérdida silencio…
 - [[frontera-de-datos-por-ausencia-de-columna-no-por-filtro]] — frontera de datos (PII/compliance) = ausencia de columna, no filtro que se pueda olvidar
+- [[gate-que-valida-por-patron-textual-rechaza-el-equivalente-mas-amplio]] — un gate que valida por patrón textual rechaza el equivalente semántico más amplio
 - [[gen-types-linked-no-db-url]] — regenerar tipos supabase con --linked, nunca augmentar el Database global a mano
 - [[grandfathering-snapshot-antes-de-reempaquetar-planes]] — grandfathering — snapshot a org_features antes de reempaquetar plan_features
 - [[guard-cross-tenant-do-update-where-tenant-id-toctou]] — guard cross-tenant en upsert — DO UPDATE ... WHERE tenant_id = EXCLUDED + rowCount
@@ -69,6 +83,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[hash-magic-link-supabase-requiere-setsession-explicito]] — hash magic link supabase requiere setsession explicito
 - [[helper-sql-orden-last-revert-at-antes-de-update-mfa]] — helper SQL con chain de triggers — setear guard ANTES del trigger source
 - [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]] — integración crítica en jsonb de tabla genérica pierde observabilidad por diseño
+- [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]] — la reparación conversacional tiene nombre canónico y los frameworks la traen de serie
+- [[leer-un-canal-con-limit-1-se-salta-mensajes]] — leer un canal con limit=1 o filtro de fecha se salta mensajes recién llegados
 - [[magic-link-un-solo-uso-lo-preconsumen-escaneres-email]] — magic link de un solo uso lo pre-consumen los escáneres de email corporativos
 - [[matriz-permisos-rol-aware-bd-mas-espejo-ts]] — matriz permisos rol aware bd mas espejo ts
 - [[memoryPostgresChat-session-key-es-telefono-no-conversation-id]] — memoryPostgresChat session key es telefono no conversation id
@@ -84,6 +100,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[migration-add-column-backfill-not-null-misma-transaccion]] — migration con NOT NULL — secuencia ADD nullable, UPDATE backfill, SET NOT NULL
 - [[migrations-por-modulo-si-commits-van-por-modulo]] — migrations por módulo si commits van por módulo
 - [[mock-supabase-fail-fast-default-en-tests-vitest]] — mock Supabase con fail-fast por defecto en tests Vitest
+- [[modal-que-reenvia-snapshot-completo-revalida-de-balde-valores-sin-tocar]] — un modal de edición que reenvía el snapshot completo revalida de balde valores sin tocar
 - [[n8n-api-embeddings-openai-conexion-tipo-ai-embedding]] — n8n api embeddings openai se conecta via ai_embedding no ai_vectorStore
 - [[n8n-chat-histories-en-postgres-local-no-supabase]] — n8n_chat_histories vive en Postgres local del n8n Dokploy, no en Supabase del proyecto
 - [[n8n-code-sandbox-no-tiene-urlsearchparams]] — n8n Code sandbox no expone URLSearchParams ni URL globalmente
@@ -93,22 +110,31 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[n8n-jsonbody-stringify-evita-control-characters]] — n8n jsonbody stringify evita control characters
 - [[n8n-postgres-webhook-lastnode-solo-devuelve-primer-row]] — n8n postgres node con webhook lastnode solo devuelve primer row
 - [[n8n-public-api-google-oauth-schema-buggy-crear-en-ui]] — n8n public api no permite crear google oauth via rest crear en ui
+- [[n8n-status-crashed-no-filtra-y-devuelve-todas-las-ejecuciones]] — n8n `?status=crashed` no filtra y devuelve todas las ejecuciones
 - [[n8n-supabase-selfhosted-default-rest-api-no-postgres]] — n8n a Supabase self-hosted Dokploy = REST API por default
 - [[next-env-development-local-precede-a-env-local]] — .env.development.local precede a .env.local en next (qa local sin tocar prod)
+- [[next-registra-handlers-exportados-por-desestructuracion]] — next registra handlers de ruta exportados por desestructuración y deriva HEAD de GET
+- [[next16-notfound-sirve-la-cascara-con-200-no-asertes-el-status]] — con renderizado parcial, notFound() sirve la cáscara con 200 — no asertes el status
 - [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]] — cookie de impersonación pegada no implica middleware caído
 - [[non-blocking-secondary-rpc-warning-flag]] — non-blocking secondary rpc → devolver warning flag en vez de silenciar o 500
+- [[now-en-postgres-es-hora-de-inicio-de-transaccion-no-orden-de-cadena]] — ordenar por created_at una cadena serializada con advisory lock puede darte el orden contrario
 - [[nulls-not-distinct-idempotencia-con-discriminador-opcional]] — extender un unique de idempotencia con columna nullable usando NULLS NOT DISTINCT
 - [[numeric-precision-drift-bruto-neto-iva]] — numeric(x,2) genera drift inevitable convirtiendo bruto↔neto con iva
 - [[outbox-event-type-fuera-del-catalogo-muere-silencioso]] — outbox — un event-type fuera del catálogo suscribible muere en silencio
 - [[outbox-idempotencia-por-hash-contenido]] — outbox idempotencia por hash de contenido, no por clave estructural
 - [[outbox-trigger-bd-vs-hook-js-multiples-entry-points]] — outbox para columna mutada por múltiples puntos → trigger BD, no hook JS
+- [[palabras-largas-en-un-rotador-de-h1-dejan-hueco-bajo-el-cursor]] — palabras largas en un rotador de h1 dejan hueco bajo el cursor
+- [[patch-de-evento-en-graph-reemplaza-attendees-y-puede-matar-el-enlace-de-teams]] — un patch parcial de evento en microsoft graph reemplaza attendees y puede matar el enlace de teams
+- [[pedir-un-valor-nuevo-en-un-enum-cerrado-suele-ser-una-dimension-nueva]] — pedir un valor nuevo en un enum cerrado suele ser una dimensión nueva disfrazada
 - [[pending-intent-por-key-necesita-claim-atomico-no-select-luego-delete]] — tabla pending-intent con PK por key necesita claim atómico, no select+delete
 - [[persist-merge-shallow-deja-cruft-entre-contextos]] — persist merge shallow deja cruft entre contextos
 - [[pg-returns-table-no-lleva-tipos-ni-nulabilidad-y-eso-explota-al-ejecutar]] — un RETURNS TABLE no lleva tipos comprobados ni nulabilidad — citext/text revienta en la 1ª llamada, no al crear
 - [[pg-returns-table-prefijo-out-para-evitar-ambiguity]] — PG function RETURNS TABLE con SELECT INTO → prefijo out_ para evitar ambiguity
 - [[pg-trigger-depth-1-skip-rompe-loops-cascade]] — pg_trigger_depth() > 1 SKIP rompe loops cascade sin flag de sesión
 - [[pgcrypto-supabase-trigger-search-path]] — pgcrypto en supabase cloud está en schema extensions, no public
+- [[plantilla-de-meta-no-se-edita-y-el-delete-retiene-el-nombre]] — una plantilla de Meta no se edita, y borrarla retiene el nombre
 - [[playwright-request-newcontext-hereda-storagestate]] — e2e — request.newContext hereda storageState; multi-org → fijar org activa en el seed
+- [[plpgsql-variable-record-tapa-el-alias-sql-del-lateral]] — una variable RECORD de plpgsql tapa el alias SQL con el mismo nombre
 - [[postgres-asumir-columna-existente-en-trigger-rewrite-verifica-information-schema]] — Reescribir trigger que asume columna existente — verifica `information_schema.columns` an…
 - [[postgres-check-constraint-not-valid-aplica-a-inserts-no-a-existing]] — Postgres CHECK NOT VALID solo ignora filas existentes — INSERTs nuevos sí lo evalúan
 - [[postgres-guard-transition-no-persiste-en-recompute-chain]] — Guard per-transición no persiste si otro trigger re-UPDATEa con OLD distinto
@@ -138,22 +164,26 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[re-autenticacion-con-password-para-acciones-sensibles-admin]] — re-autenticacion con password para acciones sensibles admin
 - [[react-pdf-font-register-usa-rutas-filesystem-no-urls]] — react-pdf font register usa rutas filesystem no urls
 - [[recall-semantico-sin-umbral-es-confidently-wrong]] — recall semántico con k=1 sin umbral de distancia es confidently-wrong por diseño
+- [[recuperar-un-fallo-del-modelo-sin-contarlo-tapa-su-causa]] — recuperar en código un fallo del modelo sin contarlo es un tapón — la señal es parte del arreglo
 - [[regresion-visual-ci-acotar-trigger-y-baselines-en-contenedor]] — regresión visual en ci — build prod (no next dev), acotar trigger, baselines en contenedor
 - [[remote-triggers-claude-probablemente-bloquean-curl-en-sandbox]] — remote triggers de claude probablemente bloquean curl en sandbox
 - [[reportes-financieros-deben-excluir-estados-no-fiscales]] — reportes financieros deben excluir estados no-fiscales
 - [[reset-multi-tenant-allowlist-ordenada-vs-catalogo-dinamico]] — reset multi-tenant — allowlist ordenada + to_regclass, no catálogo dinámico
+- [[restaurar-un-volcado-en-un-proyecto-supabase-nuevo-reabre-los-grants-revocados]] — restaurar un volcado en un proyecto supabase nuevo reabre los grants que revocaste
 - [[revocacion-jwt-stateless-tabla-dedicada-no-inferir-de-filas-de-token]] — revocar un jwt stateless antes de exp exige tabla de revocación dedicada, no inferirla de…
 - [[rls-multi-org-active-vs-membership]] — rls multi-org usar get_user_org_id() no IN (SELECT org_members)
 - [[rls-multi-tenant-limit-1-sin-order-bug-latente]] — rls multi tenant limit 1 sin order bug latente
 - [[rls-multi-tenant-supabase-con-security-definer]] — rls multi-tenant en supabase usa security definer para aislar org_id
 - [[rls-org-members-select-debe-incluir-own-memberships]] — rls org members select debe incluir own memberships
 - [[rls-policy-recursion-42P17-subquery-misma-tabla]] — rls policy que subconsulta su propia tabla → recursión 42P17
+- [[rpc-de-borrado-que-enumera-hijos-a-mano-se-rompe-con-cada-tabla-nueva]] — una rpc de borrado que enumera hijos a mano se rompe con cada tabla nueva; el arreglo es un guard estático
 - [[rpc-rls-authuid-vacio-en-service-role]] — un rpc/policy que scopea por auth.uid() devuelve vacío con service-role
 - [[scheduled-triggers-anthropic-no-acceden-repos-privados-github]] — scheduled triggers de anthropic no acceden a repos privados de github
 - [[schema-migrations-no-es-source-of-truth-si-aplicas-manual]] — schema_migrations no es source of truth si aplicas manual
 - [[select-for-update-skip-locked-via-rpc-security-definer]] — workers concurrentes en outbox → RPC SECURITY DEFINER con FOR UPDATE SKIP LOCKED
 - [[serie-contador-editable-sin-constraint-unico-genera-duplicados]] — contador editable de numeración sin constraint único genera duplicados
 - [[settings-leen-con-createclient-getorgid-se-rompen-impersonando]] — componentes de settings que leen con createClient()/getOrgId() se rompen impersonando
+- [[si-la-variante-se-elige-por-el-contenido-el-candado-por-linea-es-ciego-a-las-demas]] — si la variante se elige por el contenido, el candado por línea es ciego a las demás
 - [[signOut-solo-invalida-refresh-no-access-token]] — signOut solo invalida refresh no access token
 - [[signup-invite-token-propio-vs-magic-link-supabase]] — invitar a crear org sin saber email exige token propio, no magic link supabase
 - [[skip-validacion-solo-en-insert-no-update-evita-vector-evasion]] — skip de validación SOLO en INSERT, nunca en UPDATE — vector evasión
@@ -164,6 +194,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[smoke-visual-ssr-sesion-inyectada-playwright]] — smoke visual de página admin SSR sin password — sesión inyectada en playwright
 - [[sql-function-con-select-puro-requiere-language-sql-no-plpgsql]] — sql function con select puro requiere language sql no plpgsql
 - [[store-guard-lanza-en-lectura-tumba-reconciler]] — validar un enum lanzando en el mapper de lectura de un store tumba el barrido de arranque
+- [[subagentes-heredan-el-modelo-de-sesion-y-explore-ya-no-es-haiku]] — los subagentes heredan el modelo de la sesión y Explore ya no corre en Haiku
 - [[supabase-advisor-trigger-functions-definer-son-ruido]] — el advisor de Supabase marca trigger functions DEFINER como ejecutables por anon/authenti…
 - [[supabase-auth-getuser-valida-en-red-dedupe-pipeline]] — supabase auth.getUser() valida en red — dedupe en el pipeline, no por helper
 - [[supabase-builders-lazy-void-nunca-ejecuta]] — void sobre un builder de supabase-js = la query nunca se ejecuta
@@ -183,6 +214,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[supabase-embedded-select-no-funciona-en-views]] — embedded select de supabase-js no funciona sobre views
 - [[supabase-enable-rls-olvidado-tabla-publica]] — supabase: policies sin ENABLE ROW LEVEL SECURITY = tabla pública
 - [[supabase-errores-que-solo-afloran-contra-schema-real]] — supabase — bugs que solo afloran contra el schema/estado real (mocks y review estático no…
+- [[supabase-gen-types-declara-todo-argumento-de-rpc-como-no-nulable]] — supabase gen types declara todo argumento de rpc como no nulable; el default lo hace opcional
 - [[supabase-gen-types-numeric-override-bigint-string]] — typegen supabase modela NUMERIC como number; override de Database para bigint-as-string
 - [[supabase-hook-vitest-mock-chain-thenable]] — mock chain thenable para hooks supabase en vitest
 - [[supabase-insert-silencioso-con-ts-nocheck-oculta-columnas-inexistentes]] — supabase insert silencioso con ts-nocheck oculta columnas inexistentes
@@ -229,10 +261,20 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[triggers-bd-sync-son-antipatron]] — triggers bd de sincronización son antipatrón
 - [[triggers-postgres-auditoria]] — triggers postgres para auditoría automática por tabla
 - [[typescript-6-noUncheckedSideEffectImports-rompe-imports-css-sin-tipo]] — typescript 6 activa noUncheckedSideEffectImports por defecto y rompe imports css sin tipo
+- [[un-bootstrap-que-aplica-el-estado-final-sin-registrar-los-pasos-hace-que-el-migrador-los-repita]] — un bootstrap que aplica el esquema final sin registrar las migraciones hace que el migrador las repita
+- [[un-click-que-expira-en-e2e-suele-ser-un-control-bloqueado-no-la-app-rota]] — un click que expira en e2e suele ser un control bloqueado, no la app rota
+- [[un-eval-que-llama-al-interprete-no-ve-lo-que-arregla-la-capa-de-abajo]] — un eval que llama al intérprete no ve lo que arregla la capa de abajo — lee el instrumento antes de promete…
+- [[un-hook-que-bloquea-es-un-and-que-no-se-cumple]] — un hook que bloquea es un && que no se cumple, así que la limpieza no va encadenada
+- [[un-metodo-sin-llamantes-puede-tener-el-guard-ausente]] — un método sin llamantes puede tener el guard ausente y su comentario afirmar que está
+- [[un-trap-de-senal-no-corre-mientras-execsync-bloquea]] — un trap de SIGINT no corre mientras execSync bloquea el event loop
+- [[un-video-del-cliente-se-lee-por-frames-y-dice-mas-que-su-mensaje]] — un vídeo del cliente se lee por frames, y dice más que el mensaje que lo acompaña
+- [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]] — una auditoría que acaba pidiendo permiso para un dato debe comprobar que no lo tiene ya
+- [[una-columna-deprecada-conserva-su-unique-y-sigue-rechazando-inserts]] — una columna deprecada con un comentario conserva sus índices y sigue rechazando inserts
 - [[una-correccion-de-tipos-sobre-un-parser-que-recibe-unknown-es-inerte]] — un tipo que compila no es un tipo que protege: mútalo y comprueba que sale en rojo
 - [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]] — la 2ª vía de escritura omite el contexto de actor que la RLS exige, y sólo falla en el caso por defecto
 - [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
 - [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética
+- [[update-browserslist-db-mete-caniuse-lite-en-dependencies]] — update-browserslist-db mete caniuse-lite en dependencies
 - [[upsert-atomico-rpc-vs-check-then-act-evita-lost-update]] — UPSERT atómico con RPC vs check-then-act para counters compartidos
 - [[upsert-sombra-por-id-remoto-no-por-id-local]] — UPSERT sombra por id remoto, no por id local — múltiples paths convergen sin duplicar
 - [[validar-input-antes-de-rpc-atomico-e-insert]] — validar input puro antes de RPC atómico e INSERT

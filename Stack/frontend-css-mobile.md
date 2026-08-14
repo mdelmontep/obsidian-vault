@@ -138,3 +138,8 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
   Ver [[empate-de-especificidad-entre-globals-y-un-module-lo-decide-el-orden-de-inyeccion]] ·
   [[baseline-de-estilos-computados-por-ruta-de-dom-para-migrar-css-sin-e2e]]
 
+## Movido desde `hot.md` (poda del 14-ago)
+
+Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
+
+- **Preferencia por tenant restaurada de un `localStorage` global se filtra entre organizaciones** — el switch de empresa recarga y aplica la clave del tenant anterior. Sembrar en servidor. Encender una restauración muerta es cambio de comportamiento, no arreglo. Ver [[localstorage-global-en-app-multitenant-filtra-entre-organizaciones]]

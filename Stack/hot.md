@@ -35,7 +35,7 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (23)
+## Ha vuelto a pasar (24)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
@@ -47,7 +47,6 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **`cmd > fichero` vacía el fichero antes de arrancar `cmd`** — un generador que falla borra su propia fuente de verdad, sin propagar el exit code. Ver [[redirigir-con-mayor-que-destruye-el-fichero-antes-de-arrancar-el-comando]]
 - **El gate escrito justo tras el arreglo mide cero casos** — demuestra el rojo contra el árbol ANTERIOR. Ver [[el-gate-escrito-justo-despues-del-arreglo-mide-cero-casos]]
 - **Un gate sobre el RESULTADO no valida la transformacion** — si reescalas dos campos a la vez (uno /f, otro xf), el producto es invariante **por construccion para cualquier f**: el gate que compara el resultado antes y despues pasa en verde con f=10. Ataca el PARAMETRO, no el resultado. Test para saber si tu gate es gate: ¿con que valor fallaria? Si no encuentras ninguno, no es un gate. Ver [[un-gate-sobre-el-resultado-no-valida-la-transformacion]]
-- **El coste de un fan-out de agentes es CONTEXTO, no razonamiento** — 94 % en cache read/write, 6 % en output. La palanca no es bajar effort: es inyectarles lo que ya sabes en vez de que lo redescubran. Ver [[el-coste-de-un-fanout-de-agentes-es-contexto-no-razonamiento]]
 - **Redondea antes de decidir la frontera, no despues** — si no, salen «5 h 60 min» y «60 s». Y pruebalo con un BARRIDO: con casos elegidos (59 y 60) la banda de en medio pasa. Ver [[decidir-una-frontera-con-el-valor-crudo-produce-imposibles]]
 - **Un trigger que PISA en vez de calcular te resincroniza los datos al migrar** — `SET hijo = NEW.padre` propaga el valor del padre, no tu conversion, y de paso corrige toda desincronia previa: 188 precios movidos. Ver [[un-trigger-que-pisa-en-vez-de-calcular-resincroniza-al-migrar]]
 - **La precision de una columna la marca su valor MAXIMO, no el tipico** — `SELECT max(col)` antes de elegir la escala. Y la fila basura que documentas y decides ignorar **sigue participando en los calculos**. Ver [[una-fila-basura-amplifica-el-error-de-redondeo-de-toda-la-tabla]]
@@ -66,7 +65,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino en el que no encuentra nada y sale con 0, no es un gate: es un adorno. Fail-closed — y vale para el TEARDOWN de un smoke: si avisa por `stderr` y no por el exit code, no avisa. Ver [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[gate-con-ruta-relativa-no-corre-desde-subdirectorio-y-sale-verde]] · [[una-metrica-por-regex-sin-test-del-parser-cuenta-ruido-y-se-vuelve-ignorable]] · [[una-suite-en-verde-no-prueba-el-camino-real]] · [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
-## El resto (37)
+## El resto (33)
 
 
 - **Antes de decir «esto no se puede medir», enumera la taxonomía cerrada** — suele estar ya partido, y su comentario dice qué se decidió NO medir. Y decide señal (excepción → numerador) vs dimensión por evento (tasa → denominador). Ver [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
@@ -74,8 +73,6 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Protección construida y no enchufada: ningún test la caza** — el doble de la prueba ES el relleno. Señal: módulo con tests y cero consumidores. Ver [[una-proteccion-construida-y-no-enchufada-no-la-caza-ningun-test]]
 - **Un entorno de pruebas más limpio que producción es ciego** — y su verde se cita como prueba. Ver [[el-replay-que-arranca-mas-limpio-que-produccion-es-ciego]]
 
-- **Preferencia por tenant restaurada de un `localStorage` global se filtra entre organizaciones** — el switch de empresa recarga y aplica la clave del tenant anterior. Sembrar en servidor. Encender una restauración muerta es cambio de comportamiento, no arreglo. Ver [[localstorage-global-en-app-multitenant-filtra-entre-organizaciones]]
-- **`curl` en macOS valida una cadena TLS que GitHub y Node rechazan** — completa el intermedio por su cuenta y te engaña; cuenta posiciones con `openssl s_client`. Ver [[cadena-tls-incompleta-curl-en-macos-la-salva-y-engana]]
 - **Un fix no está verificado hasta crear una entidad NUEVA tras el deploy** — leer los datos que arregló el backfill no prueba nada del código; el compositor no es el punto de persistencia y la suite verde no cubre el camino que tocas. Ver [[cambiar-la-semantica-de-una-columna-el-compositor-no-es-el-punto-de-persistencia]]
 - **Un check de coherencia no puede afirmar un desajuste si no pudo preguntar** — 401/429 es "no verificado" (UNA alerta media), no N desajustes altos: la falsa induce a recrear datos sanos. Delator: fallan TODAS con el MISMO motivo. Ver [[fallo-de-credencial-no-es-dato-ausente-en-un-check-de-coherencia]]
 - **Una clave read-only NO se verifica escribiendo** — el `POST` de prueba que esperaba un 403 devolvió 200 y creó objetos reales en una cuenta live. Lo comprobable leyendo es la CUENTA (`GET /v1/account`), no la ausencia de permiso de escritura. Ver [[no-verificar-una-clave-read-only-escribiendo-con-ella]]
@@ -105,8 +102,4 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Antes de preguntarle un DATO al cliente, míralo en su sistema origen** — 3 veces en un día íbamos a pedir lo que ya teníamos en su backup. Las preguntas legítimas son de decisión. Ver [[antes-de-preguntar-al-cliente-mira-si-el-dato-esta-en-el-sistema-origen]]
 - **Republicar un `Artifact`: pide el listado Y haz `WebFetch` antes** — la pertenencia al listado **no es estable** (cambia entre sesiones del mismo día, en los dos sentidos), y republicar sobre una URL listada falla igual con «this session hasn't viewed the latest version». Lo que desbloquea es el `WebFetch` previo, que además es lo único que enseña si la copia publicada va por detrás del fichero local. Seis URL huérfanas hasta aprenderlo (7-ago). Ver [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]]
 - **`git add -N` rompe `git stash`** — push/pop fallan a medias; `git reset` antes, o commitea y rebasa. Ver [[git-add-intent-to-add-rompe-stash]]
-- **Si aun así pierdes trabajo, el `.jsonl` de la sesión lo guarda** — trae el resultado completo de cada subagente y se reimplementa desde ahí. (Descartarlo ya lo bloquea `git-guard`, así que eso no hace falta recordarlo.) Ver [[transcript-jsonl-sobrevive-al-worktree-borrado]]
 - **Un guard cuya aguja cubre UNA forma sintáctica se esquiva refactorizando** — sacar el objeto de `style={{…}}` a una variable lo hacía invisible sin quitarlo del DOM. Al tocar algo que un trinquete debería contar, comprueba que el número se mueve; si no se mueve, el guard es el bug. Ver [[un-guard-cuya-aguja-cubre-una-sola-forma-sintactica-se-esquiva-refactorizando]]
-- **Filtrar por línea un volcado SQL BORRA datos** — un `grep -v '^--'` sobre un `pg_dump` se come las líneas de HTML/SQL de ejemplo que van dentro de un INSERT multilínea. Aquí saltó como error de sintaxis; sobre otro texto habría entrado limpio y mutilado. Anclar el patrón y filtrar la cabecera solo hasta el primer INSERT. Ver [[filtrar-por-linea-un-volcado-con-valores-multilinea-borra-datos]]
-- **`claude -p` desde un script hereda hooks y MCP del proyecto del cwd** — en un checkout se cuelga cargando MCPs y `--max-turns 1` da `is_error`; spawn con cwd neutro (`mkdtemp`) y stdin cerrado. Ver [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]]
-- **Un agente cortado a media tarea deja trabajo que PARECE terminado y pasa el gate** — cuatro murieron a la vez por límite de sesión; uno dejó una función escrita, importada y nunca llamada (typecheck verde, comportamiento ausente) y otro un rechazo mudo sin rama `else`. Al recoger trabajo interrumpido, recorrer los criterios de aceptación uno a uno; el último mensaje del agente apunta justo a la pieza que falta. Ver [[agente-cortado-a-media-tarea-deja-trabajo-que-parece-terminado]]

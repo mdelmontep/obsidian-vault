@@ -126,3 +126,9 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
 - **`disable_signup: false` es el defecto y deja `POST /auth/v1/signup` ABIERTO** con la clave anónima.
   Discriminar sin crear usuario: mandar una contraseña de un carácter — si contesta `weak_password`, el
   registro está abierto; si contesta `signup_disabled`, cerrado.
+
+## Movido desde `hot.md` (poda del 14-ago)
+
+Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
+
+- **Filtrar por línea un volcado SQL BORRA datos** — un `grep -v '^--'` sobre un `pg_dump` se come las líneas de HTML/SQL de ejemplo que van dentro de un INSERT multilínea. Aquí saltó como error de sintaxis; sobre otro texto habría entrado limpio y mutilado. Anclar el patrón y filtrar la cabecera solo hasta el primer INSERT. Ver [[filtrar-por-linea-un-volcado-con-valores-multilinea-borra-datos]]

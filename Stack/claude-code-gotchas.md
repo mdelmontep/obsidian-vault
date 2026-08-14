@@ -178,3 +178,10 @@ Lo otro que conviene saber antes de apoyarse en esto:
   porque entra entre tool calls en vez de esperar a que alguien lea el canal.
 - **`isolatePeerMachines: true`** en `~/.claude/settings.json` exige aprobación explícita
   antes de que un mensaje salga de la máquina. Puesto el 7-ago.
+
+## Movido desde `hot.md` (poda del 14-ago)
+
+Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
+
+- **Si aun así pierdes trabajo, el `.jsonl` de la sesión lo guarda** — trae el resultado completo de cada subagente y se reimplementa desde ahí. (Descartarlo ya lo bloquea `git-guard`, así que eso no hace falta recordarlo.) Ver [[transcript-jsonl-sobrevive-al-worktree-borrado]]
+- **`claude -p` desde un script hereda hooks y MCP del proyecto del cwd** — en un checkout se cuelga cargando MCPs y `--max-turns 1` da `is_error`; spawn con cwd neutro (`mkdtemp`) y stdin cerrado. Ver [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]]

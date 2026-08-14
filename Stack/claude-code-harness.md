@@ -469,3 +469,10 @@ Arreglo: **tokenizar el comando respetando las comillas** (`shlex`, así el cuer
 Y dos reglas que salieron con él:
 - **Un guard global no debe citar una cifra que vive en un repo.** Si el dato tiene fuente única en el proyecto, el hook la **lee** del repo que está guardando y, si no la encuentra, remite a ella en vez de inventarse un número — copiarla ahí es una copia más que ningún candado del repo puede vigilar.
 - **Su suite en verde no basta: probarlo en el camino real.** Los casos que valen son los que **discriminan** (mencionar no bloquea / ejecutar sí), no los que pasan trivialmente.
+
+## Movido desde `hot.md` (poda del 14-ago)
+
+Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
+
+- **El coste de un fan-out de agentes es CONTEXTO, no razonamiento** — 94 % en cache read/write, 6 % en output. La palanca no es bajar effort: es inyectarles lo que ya sabes en vez de que lo redescubran. Ver [[el-coste-de-un-fanout-de-agentes-es-contexto-no-razonamiento]]
+- **Un agente cortado a media tarea deja trabajo que PARECE terminado y pasa el gate** — cuatro murieron a la vez por límite de sesión; uno dejó una función escrita, importada y nunca llamada (typecheck verde, comportamiento ausente) y otro un rechazo mudo sin rama `else`. Al recoger trabajo interrumpido, recorrer los criterios de aceptación uno a uno; el último mensaje del agente apunta justo a la pieza que falta. Ver [[agente-cortado-a-media-tarea-deja-trabajo-que-parece-terminado]]
