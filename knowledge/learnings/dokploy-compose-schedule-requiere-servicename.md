@@ -19,4 +19,4 @@ las 36h. Tras cualquier `schedule.update`, relanzar a mano (`runManually` o
 **Blind spot de monitorización**: un cron que NUNCA ha corrido = `desconocido` para el
 watchdog → NO alerta (solo alerta los que ya corrieron y se quedan stale). Al añadir un
 cron nuevo, verifica el PRIMER run a mano (`runManually` → `cron_runs` success), no asumas.
-Ver [[pr-apilado-squash-cierra-al-borrar-base]].
+Ver [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]].

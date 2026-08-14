@@ -14,4 +14,10 @@ Caso real (agh-iberica, 2026-07-27): PR #597 quedó «mergeada» dentro de `fix/
 - Al rescatar: **no** mergees la rama base a `main` por atajo — si nació antes de otro merge, arrastra la AUSENCIA de ese trabajo y lo revierte (aquí habría borrado el fix de #587). Cherry-pick del commit sobre `main` al día, gate, PR nueva.
 - `--delete-branch` falla si un worktree tiene la rama: es benigno (el remoto ya se borró), pero **rompe una cadena con `&&`** y el segundo merge no se ejecuta. Verificar uno a uno.
 
+⚠️ **Y la salida contraria tampoco vale**: borrar la rama del padre **CIERRA** la hija en vez de
+re-apuntarla, y re-apuntar la base con `gh pr edit` **no arregla su historia** — el procedimiento
+completo, con las dos caras del fallo, en
+[[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]], que es la nota que hay que abrir
+antes de mergear una pila.
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]]

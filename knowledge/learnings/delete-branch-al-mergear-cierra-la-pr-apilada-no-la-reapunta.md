@@ -28,8 +28,8 @@ ancestros de `main` y la hija diverge aunque el árbol coincida. Medido con un p
 salió `CONFLICTING`… y **la otra `MERGEABLE`**, porque su contenido ya coincidía y git sabía fusionarlo
 — **mergearla habría metido el diff del padre OTRA VEZ** dentro de su commit de squash. 👉 **`MERGEABLE`
 no significa «lista», significa «git sabe combinarlo»**: rebasar igual y comprobar que
-`gh pr diff <hija> --name-only` trae **solo lo suyo**. El `rebase --onto` ya estaba escrito desde el
-13-jul en [[pr-apilado-squash-cierra-al-borrar-base]]; aquí faltaba.
+`gh pr diff <hija> --name-only` trae **solo lo suyo**. El `rebase --onto` **ya estaba medido el 13-jul** y esta nota no lo
+recogía: se pagó dos veces por tenerlo en dos notas que nadie cruzaba. Consolidado aquí el 14-ago.
 
 Dos cosas más que la pila obliga a medir aparte: la **combinación de dos hermanas nunca se ha compilado**
 (gate sobre las dos juntas), y si una toca la vista mientras la otra le cambia debajo un artefacto que su
@@ -38,6 +38,16 @@ rebasar — hay que re-correrla, no re-correr el gate.
 
 Y tras cada merge, `gh issue view <N> --json state`: si reescribiste el cuerpo de la PR, la línea de
 cierre puede haberse ido con la cabecera — pasó en el mismo tramo y el issue quedó abierto.
+
+⚠️ **El fallo ESPEJO, si no borras la rama** ([[pr-encadenada-se-mergea-en-su-base-si-no-borras-la-rama]]):
+la hija se mergea **dentro de la rama del padre**, sale `MERGED` con su commit y **no está en `main`**.
+O sea que las dos salidas fáciles fallan, cada una por su lado. Por eso el paso 3 es rebasar, y por eso
+**se verifica en el DESTINO** (`git show origin/main:<fichero> | grep -c <símbolo>`), nunca en el estado
+de la PR: «MERGED» no significa «en main».
+
+📦 Y una consecuencia que se olvida: en un repo con **auto-deploy**, cada merge a `main` es un deploy.
+Una pila de N PRs son N despliegues, así que el orden no es solo corrección — es cuántas veces sale a
+producción un estado intermedio.
 
 De dónde salía la premisa falsa: de una línea que llevaba días en el snapshot del repo describiendo
 una pila que **nadie había ejercitado**. La propagué a tres sitios sin medirla **porque ya estaba

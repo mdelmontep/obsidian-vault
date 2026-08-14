@@ -497,7 +497,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[write-tool-byte-nulo-en-template-literal]] — edit no casa una línea "idéntica" → revisar bytes ocultos (byte nulo) con python repr
 - [[zod-optional-rechaza-null-en-webhooks-n8n]] — zod .optional() rechaza null en webhooks externos
 
-## n8n / workflows (78)
+## n8n / workflows (77)
 - [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]] — $fromAI en toolCode lanza no-execution-data-available en n8n 2.15.x
 - [[adr-premisa-falsa-auditar-integracion-real]] — un adr puede partir de una premisa falsa — auditar la integración real antes de implement…
 - [[boton-hitl-referenciar-estado-persistido-no-id-efimero-proveedor]] — botón HITL debe referenciar estado persistido propio, no IDs efímeros del proveedor
@@ -559,7 +559,6 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[ocr-facturas-confunde-receptor-con-emisor-sin-org-nombre]] — ocr de facturas confunde receptor con emisor sin contexto de org_nombre
 - [[onError-continueRegularOutput-devuelve-axiosError-no-statusCode]] — onError continueRegularOutput devuelve axiosError no statusCode
 - [[openai-chatcompletions-pdf-usar-image-url-no-file]] — openai chat completions pdf → image_url no type:file
-- [[pr-apilado-squash-cierra-al-borrar-base]] — PR apilado + squash-merge de su base + borrar rama → el apilado se auto-cierra y no se re…
 - [[pr-review-ya-resuelta-por-el-reviewer-mismo]] — confirmar estado real del PR antes de invertir en review
 - [[rama-error-bot-no-debe-capturar-respuestas-conversacionales]] — rama de error de un bot no debe loguear respuestas conversacionales como error
 - [[recordatorios-visita-por-task-type]] — recordatorios de visita kommo deben filtrar por task_type, no por "cualquier tarea en 24h
