@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-15 iteración 15 (E2.1 cerrada: el CRM ya tiene conversaciones · `meta` 115, cola 2 · pendiente de bucle: la auditoría de composición, 10 lentes con territorio tocado · tuyo: 12 orgs de prueba en producción, ticket de Storage, Email Log Search, secreto de Google)
+updated: 2026-08-15 iteración 16 (auditoría de composición cerrada: 97 hallazgos, 32 confirmados con destino · `meta` 111, señal de supervivientes en verde por primera vez · siguiente unidad: E2.2, sin issue escrito · tuyo: 12 orgs de prueba en producción, ticket de Storage, Email Log Search, secreto de Google)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,42 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (15-ago, iteración 16) — la auditoría, y un derrame que apagaba tres gates
+
+**Desplegado y al día en `e79646d7`.** Gate **62 pasos / 374 ficheros / 4.995 pruebas**.
+`meta` 114 → **111**, y baja *aun escribiendo ocho issues nuevos*, que suman en la cola.
+
+**La unidad fue AUDITAR, no construir** — §6.1 lo exige tras una unidad con migración, acceso y
+frontera entre módulos, que es lo que fue `049`. Diez lentes sobre 360 ficheros: **97 hallazgos,
+33 refutados con dos escépticos cada uno, 32 confirmados**. Tope de refutación subido de 22 a 33
+con su motivo: a `medium` no se pierde profundidad, se pierde cobertura.
+
+⚠️ **La corrida murió a mitad (41 de 55 agentes) y lo primero no fue arreglar: fue persistir.** Los
+97 salieron del `journal.jsonl` al repo antes de tocar una línea — sin eso habría sido el `ADR-014`
+otra vez, la misma noche en que se cerraba. → [[workflow-cortado-a-mitad-los-resultados-viven-en-journal-jsonl]]
+
+**El hallazgo que sostiene la sesión**: `{ ...deps, rateLimit: relleno }` no llegaba al umbral de
+dos claves del reconocedor de composiciones, así que **nadie miraba su hueco** — la API pública sin
+límite de tasa con G-RL-ENCHUFADO, G-S5 y G-DEPS-ENCHUFADOS los tres en verde. Es el fallo que esas
+tres cabeceras dicen haber cerrado el 6-ago, con otra sintaxis.
+→ [[un-gate-que-exige-n-claves-se-apaga-trayendo-el-resto-con-spread]]
+
+**Y uno que estaba pasando en producción**: editar el «Dominio» de una empresa borraba su NIF, país
+y dirección en cada `onBlur`. El hermano `contacts` tenía el candado desde que pagó lo mismo.
+→ [[el-hermano-tiene-el-mismo-bug-y-su-fixture-nace-nula-asi-que-nadie-lo-ve]]
+
+**Ocho arreglados** (los dos de arriba, los dos cierres de exportación sin `.select()`, dos
+silencios que corrompían `phone_e164`, el lector de `alter type` con víctima viva y el manifiesto de
+la copia a Wasabi), **24 con issue** (`094`–`101`), **1 refutado**. Los 64 restantes son media/baja,
+sin refutar y **escritos uno a uno** — que es lo que los separa de los 96 irrecuperables del 7-ago.
+
+**Los doce supervivientes viejos pasan a 0** por re-auditoría de su territorio, no por relectura:
+nunca tuvieron enunciado. Y `abiertos` se escribió **a mano** — `--registrar` no rellena ese campo.
+
+**Siguiente**: E2.2 (receptor de webhooks y worker de ingesta), **sin issue escrito**; se redacta
+partiendo del «Qué NO entra» de `049` y de `PLAN-MAESTRO.md:1576`. `persistReferral()` va DENTRO de
+la transacción de ingesta: es el único punto del sistema con pérdida irreversible.
 
 ## Estado (15-ago, iteración 15) — el CRM ya tiene conversaciones
 
