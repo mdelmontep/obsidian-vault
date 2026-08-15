@@ -1,6 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
+updated: 2026-08-15
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -9,7 +10,17 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-12
+## Estado actual · 2026-08-15
+
+- **El circuito de avisos, reparado de verdad; y debajo tres logs que no escribían nada.** El aviso diario «Nodo: sin nodo · unknown error» era un fallo del **trigger IMAP**: Webempresa corta la conexión en una **ventana fija diaria 06:02-06:08 UTC** (medida 5 días seguidos) — `forceReconnect: 60` no lo evita, se deja por inocuo.
+  - ✅ **`error-handler-global` reescrito**: lee las dos ramas del Error Trigger, tres severidades con barra de color (rojo ejecución / naranja trigger / azul flujo previsto: `cancelacion_detectada`, `campos_minimos_faltantes`), dedup por severidad y queries a prueba de comas. Gate de 115 checks (mata con 8 mutaciones) en `~/Projects/elphis/avisos-20260814/`. Ver [[el-error-trigger-entrega-dos-payloads-y-el-de-trigger-no-trae-el-nodo]] · [[el-nodo-postgres-emite-success-true-cuando-el-returning-sale-vacio]] · [[queryreplacement-trocea-por-comas-todo-valor-que-no-sea-json]].
+  - ✅ **Tres logs que no habían escrito NUNCA** (`wa-send::Log outbound`, `retell-post-call-webhook::Log call` y `::Log crisis`): credencial Postgres `R9aMmpO1jdJ8XPJP` inexistente **y** columnas que no existían, tapado por `onError: continueRegularOutput`. Se perdieron todos los mensajes salientes de WhatsApp, todas las llamadas y **todas las detecciones de crisis en voz**. `bot_outbound_log` ampliada (`phone`, `meta_message_id`, `response_status`, `payload_excerpt`); las 4 queries probadas contra la BD con valores con comas. Ver [[un-nodo-de-log-con-onerror-continue-puede-no-haber-escrito-nunca]].
+  - ✅ **`imap-watchdog`** (`qQXVufU68Tj4mBeQ`, cada hora en el :20, tz Madrid): el corte puede dejar el trigger **desregistrado con `active: true`** (n8n reintenta 5 veces y calla). Fuerza desactivar/activar y verifica con el **código HTTP del `activate`** (400 = no conecta, con la causa); silencio si todo bien, rojo si no lo consigue. Probado en los dos caminos. Cred `n8n-api-elphis` (`xfHenPvyWG56Vukb`). Ver [[un-trigger-puede-quedar-muerto-con-el-workflow-en-active-true]].
+  - ✅ El bug del `bigint` de `chatwoot-event` **confirmado cerrado** (la query desplegada ya lleva el `NULLIF`; sin errores desde el 11-ago).
+  - 🟠 **Doctoralia lleva desde el 3-ago sin mandar un solo correo** (23 procesados en 30 días, 0 en los últimos 7). No es técnico: el sync está vivo (captó un correo en 4 s) y Clientify responde 200. **Preguntar a Alba si ha habido reservas por Doctoralia desde el 3-ago**; si dice que sí, mirar config de Doctoralia o si alguien los abre en el webmail antes (el trigger solo coge los NO leídos).
+  - ⚠️ El ruido horario de `workflow_history` en el log **no** se quita con `N8N_WORKFLOW_HISTORY_PRUNE_TIME=-1` (en Community manda el límite de licencia): solo actualizando n8n.
+
+## Histórico reciente · 2026-08-12
 
 - **Auditoría completa del bot. Todo lo encontrado, cerrado salvo el canal de voz.**
   - ✅ **`chatwoot-event` ya no falla** (era el 🔴 desde el 3-ago, 55 errores en 14 días): `queryReplacement` mandaba el TEXTO `"null"` y `$3::bigint` cascaba antes del `COALESCE`. Fix `NULLIF(NULLIF($N,'null'),'')`, probado con `BEGIN/ROLLBACK` contra la BD (rojo con la vieja, verde con la nueva). **Impacto real mucho menor del que decía la ficha**: 54 de 55 respondieron al paciente y liberaron el lock — reventaba en el último nodo, solo perdía persistir ids. Limpiadas 5 filas con `'null'` literal en `conversation_state`. Ver [[una-expresion-que-evalua-a-null-viaja-como-el-texto-null]].

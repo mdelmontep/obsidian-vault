@@ -20,6 +20,7 @@ tags: [n8n, kommo, workflows, api]
 - `N8N_HOST` antes de OAuth — sin él, callback usa traefik.me
 - Compose prod: healthcheck HTTP, pruning 168h/5000, memory 2G, versión fija (no `:latest`)
 - Community nodes requieren restart contenedor Docker
+- **`N8N_WORKFLOW_HISTORY_PRUNE_TIME=-1` NO desactiva el pruning en Community**: si la licencia no es infinita, `getWorkflowHistoryPruneTime()` devuelve el límite de licencia e ignora la env (`if (configTime === -1) return licenseTime`). Si el pruning revienta cada hora (FK contra `workflow_published_version`, ruido en el log), la única salida es actualizar n8n — no gastes un redeploy en la variable
 
 ## Expresiones
 
@@ -73,6 +74,8 @@ Cuando los workflows se replican copiando blueprints, **los nodos quedan apuntan
 - 5 nodos referenciaban cred SMTP `oKRmYFhljczyvzV8` con name "SMTP account" → no existía
 - 4 nodos referenciaban cred Google Calendar `W6EuUTZnvCtqCTjX` con names "Google Calendar Simarro" / "gonzaloautomatizaciones" / "GCAL_TODO_REPLACE_WITH_KOMMO_TASKS" → no existía
 - Bug oculto durante toda la fase de configuración por confiar en el name
+
+**Caso real Elphis 2026-08-15 — no hace falta replicar para tenerlas**: 3 nodos (`wa-send::Log outbound`, `retell-post-call-webhook::Log call` y `::Log crisis`) apuntaban a la cred Postgres `R9aMmpO1jdJ8XPJP` "postgres-aux", inexistente, en un n8n montado desde cero. Con `onError: continueRegularOutput` **no habían escrito nunca una fila** y las ejecuciones salían verdes: se perdieron todos los mensajes salientes de WhatsApp, todas las llamadas de voz y **todas las detecciones de crisis**. Encima las columnas de esas queries tampoco existían en las tablas. Barrido barato para el inventario: agrupar `node.credentials.<type>.id` de todos los workflows activos y comprobar que solo aparecen ids vivos (en Elphis quedó 1 sola cred Postgres para 38 nodos). Ver [[un-nodo-de-log-con-onerror-continue-puede-no-haber-escrito-nunca]].
 
 **Cómo detectar**:
 - `"Credential with ID 'XXX' does not exist"` → fantasma total (no existe)
@@ -227,6 +230,11 @@ Los nodos Postgres/Insert que dependen de datos del call de Retell fallan en tes
 {"onError": "continueRegularOutput"}
 ```
 En producción funcionan normal (datos reales). En test el insert falla silently y el workflow termina success.
+
+⚠️ **Y en producción también falla silently.** Ese mismo `continueRegularOutput` tapó durante meses en Elphis una credencial inexistente y unas columnas que no existían: cero filas, cero avisos, todo verde. Si el nodo es de log/auditoría, verificar aparte que la tabla se llena (contar filas contra eventos esperados), porque el `success` de la ejecución no dice nada. Ver [[un-nodo-de-log-con-onerror-continue-puede-no-haber-escrito-nunca]].
+
+### Nodo Wait — `unit` por defecto en HORAS
+`{"amount": 3}` no espera 3 segundos: espera **3 horas**. Poner siempre `{"amount": 3, "unit": "seconds"}`. Pillado antes de activar un watchdog que se habría quedado colgado cada día sin que nadie lo notara.
 
 ### TZ parsing — Madrid local NUNCA reconvertir
 Si el input es `"YYYY-MM-DD HH:MM"` sin offset/Z, **ya viene en hora Madrid**. NO hacer:
