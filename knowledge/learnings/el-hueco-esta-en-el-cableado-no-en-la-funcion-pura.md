@@ -54,3 +54,15 @@ asume el sesgo y muta explícitamente **el paso de argumentos**: invertir dos, f
 otro. Ese mismo día el arnés se lo hizo a sí mismo: `correr: (cmd, cwd) => correr(cmd, cwd)` se podía
 revertir a la forma de **un solo parámetro** con la suite verde **y el typecheck limpio** — TS acepta
 aridad menor donde se espera mayor.
+
+
+**Quinta vez (15-ago noche, AGH #1055) y con un matiz nuevo: un candado ESTRUCTURAL no cubre el
+cableado.** Mutando el punto de unión (`if (false)` delante de la grabación del turno) el candado de
+esa misma familia salió **verde**: es un test que **lee el fuente y cuenta marcadores**, así que un
+`if (false)` no mueve nada — el marcador sigue ahí. La conducta la cubrían otros tests, y con ellos
+la mutación murió (`4 failed | 50 passed`).
+
+👉 Dos lecturas, las dos útiles: *(a)* un `SIN VÍCTIMA` puede ser **selección de tests demasiado
+estrecha**, no un hueco — antes de acusar, amplía a los de conducta; *(b)* un candado que asevera la
+**forma** del fuente y otro que asevera la **conducta** cubren cosas distintas, y el estructural
+**solo** dejaría el cableado sin vigilar el día que alguien borre los de conducta.
