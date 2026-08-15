@@ -83,6 +83,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[hash-magic-link-supabase-requiere-setsession-explicito]] — hash magic link supabase requiere setsession explicito
 - [[helper-sql-orden-last-revert-at-antes-de-update-mfa]] — helper SQL con chain de triggers — setear guard ANTES del trigger source
 - [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]] — integración crítica en jsonb de tabla genérica pierde observabilidad por diseño
+- [[la-metrica-de-estado-se-mide-despues-de-commitear]] — una métrica derivada del árbol se mide después de commitear, nunca antes
 - [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]] — la reparación conversacional tiene nombre canónico y los frameworks la traen de serie
 - [[leer-un-canal-con-limit-1-se-salta-mensajes]] — leer un canal con limit=1 o filtro de fecha se salta mensajes recién llegados
 - [[magic-link-un-solo-uso-lo-preconsumen-escaneres-email]] — magic link de un solo uso lo pre-consumen los escáneres de email corporativos
@@ -264,6 +265,8 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[un-bootstrap-que-aplica-el-estado-final-sin-registrar-los-pasos-hace-que-el-migrador-los-repita]] — un bootstrap que aplica el esquema final sin registrar las migraciones hace que el migrador las repita
 - [[un-click-que-expira-en-e2e-suele-ser-un-control-bloqueado-no-la-app-rota]] — un click que expira en e2e suele ser un control bloqueado, no la app rota
 - [[un-eval-que-llama-al-interprete-no-ve-lo-que-arregla-la-capa-de-abajo]] — un eval que llama al intérprete no ve lo que arregla la capa de abajo — lee el instrumento antes de promete…
+- [[un-fail-closed-cuenta-la-fuente-que-puede-fallar-no-el-agregado]] — un fail-closed cuenta la fuente que puede fallar, no el total agregado
+- [[un-guard-sobre-sql-tiene-que-conocer-el-embed-y-el-alias-de-postgrest]] — un guard sobre SQL/PostgREST tiene que conocer el embed y el alias
 - [[un-hook-que-bloquea-es-un-and-que-no-se-cumple]] — un hook que bloquea es un && que no se cumple, así que la limpieza no va encadenada
 - [[un-metodo-sin-llamantes-puede-tener-el-guard-ausente]] — un método sin llamantes puede tener el guard ausente y su comentario afirmar que está
 - [[un-trap-de-senal-no-corre-mientras-execsync-bloquea]] — un trap de SIGINT no corre mientras execSync bloquea el event loop
