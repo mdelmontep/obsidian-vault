@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-14 noche (la 083 aplicada y el esquema al día · un recorrido de navegador encontró que la importación no escribe NADA · tuyo: 7 orgs de prueba en producción, ticket de Storage, Email Log Search)
+updated: 2026-08-15 iteración 15 (E2.1 cerrada: el CRM ya tiene conversaciones · `meta` 115, cola 2 · pendiente de bucle: la auditoría de composición, 10 lentes con territorio tocado · tuyo: 12 orgs de prueba en producción, ticket de Storage, Email Log Search, secreto de Google)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -14,36 +14,87 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 
-## Estado (14-ago) — el arnés mide mejor, y por eso el marcador sube
+## Estado (15-ago, iteración 15) — el CRM ya tiene conversaciones
 
-**Lo que hay que atacar primero: `issues/090`.** La importación de CSV **no escribe ni una ficha**
-en producción y lo anuncia en caja de éxito («0 altas»). Falla la RLS por no pasar `ownerId`, es el
-estado **por defecto** de toda organización nueva, alcanza a las tres entidades, y crear a mano sí
-funciona — por eso no se veía. Lo encontró **subir un CSV**, no una auditoría ni las 4.819 pruebas.
+**Desplegado y al día en `fd3fa8ea`.** Gate **61 pasos / 372 ficheros / 4.984 pruebas**.
+`db:replay` verde sobre **76** migraciones. `meta` 114 → **115**, cola en **2**.
+
+**`049` cerrado: el núcleo de mensajería entero** — seis tablas, dos funciones `security definer`
+y el canal `sandbox` que las escribe. Eso último es la decisión, no un detalle de alcance: siete
+tablas cuyo único escritor llegara en la entrega siguiente serían la **quinta** pieza construida y
+desenchufada de este repo. Tres migraciones y no una (P13): un fichero SQL no se reparte entre
+pistas sin que dos escriban en él.
+
+**Verificado con `smoke:mensajeria`, 20/20 contra producción, y NO en navegador** — el issue no
+trae pantalla (el inbox es E2.7), así que el recorrido que exige el último criterio no tenía dónde
+ocurrir. Decirlo hecho habría sido la mentira que aquí se persigue.
+
+**Su primera corrida cazó la cuarta repetición del fallo de `093`** —faltaba `outbox_events` en el
+barrido— y es **la primera vez que esa clase salta en el acto** en vez de descubrirse días después:
+G-SMOKE-LIMPIA entró la víspera y obliga a releer la base. El gate de ayer cobró hoy.
+
+**Tres gates nuevos.** G-SANDBOX-SIN-RED (el canal que declara que no envía no alcanza la red, ni
+por alias ni transitivamente) · G-MSG-DUENO (las seis derivadas con un solo escritor, vigilado en
+TS **y** en SQL: `messages.status` es monótona y un segundo escritor la hace retroceder sin que
+nada falle) · y **G-SINTAXIS**, no planeado, tras pagar tres veces la misma clase de fallo en tres
+lenguajes: [[citar-el-delimitador-dentro-de-su-propia-region-la-cierra-ahi-mismo]].
+
+**Tres consumidores despertaron solos al aplicar**, que era media razón para hacerlo así: los doce
+enums pidieron rótulos, la métrica norte pasó de bloqueada a verificable, y el panel de salud dejó
+de esperar `inbound_events` — este último obligó a distinguir dos esperas:
+[[la-tabla-existe-y-nadie-le-escribe-no-es-lo-mismo-que-no-existe]]. Declararlos con una lista
+calculada no valía: [[un-gate-que-lee-el-fichero-como-texto-no-ve-una-clave-calculada]].
+
+**Del método, dos cosas.** Tres de los seis agentes murieron a mitad (sesión caducada / vigía con la
+máquina cargada); todos habían entregado, así que no se relanzó nada, se verificó — y una de sus
+advertencias (`cron:check` en rojo) era una foto ya caducada. Y una mutación mía dio verde sin que
+el gate tuviera la culpa: [[una-mutacion-que-produce-codigo-valido-no-demuestra-ningun-rojo]].
+
+**Lo que queda rojo**: 7 recorridos caducados (dos más, por territorio tocado), 12 supervivientes
+de auditoría sin cerrar, y **las 10 lentes con territorio tocado** — la auditoría de composición es
+lo que manda §6.1 tras una unidad con migración, y es la siguiente unidad natural.
+
+## Estado (14-ago, cierre) — F1 sin issues cogibles; la siguiente unidad es la mensajería
+
+**Desplegado y al día en `c642cfa2`.** Gate **58 pasos / 363 ficheros / 4.882 pruebas**. `meta`
+**113**, cola en **3** — y de las tres, `049` (núcleo de mensajería, E2.1) es la única que puede
+coger un agente: `015` está bloqueado por fuera y `082` es de Manuel.
+
+**`090` cerrado, y la lección no es la línea del arreglo.** La importación no escribía ni una ficha
+en producción por no pasar `ownerId` —el estado por defecto de toda organización nueva— y lo
+anunciaba en caja verde. Lo que cerró el issue fueron las **cuatro capas que lo tapaban** y una
+aserción contra Postgres real, que es el único sitio donde puede volver a romperse sin que nada
+avise: ni el gate estático lee políticas ni el doble las evalúa.
 Ver [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]].
 
-**La `083` está aplicada** (68 versiones, `deploy:check` verde): quien administra puede cerrar la
-sesión de un miembro, y la parte B de la 068 pasa de **cero a dieciséis aserciones** contra Postgres
-real. Su primera versión estaba rota de una forma que ningún gate estático ve —`returns table` con
-`email text` sobre una columna `citext`, que revienta en la primera llamada— y la cazó `db:replay`
-antes de tocar producción: [[pg-returns-table-no-lleva-tipos-ni-nulabilidad-y-eso-explota-al-ejecutar]].
+**Cuatro instrumentos daban por bueno lo que no habían mirado, y los cuatro en verde.** El catálogo
+de enums con dos dueños pintando el equivocado (`091` → `enum-huerfano:check`); un valor CSS
+inválido que el navegador tiraba entero (`092` → G-CSS-VALIDO,
+[[un-valor-css-invalido-tira-la-declaracion-entera-y-stylelint-lo-caza]]); la señal de recorridos
+contando verde lo que nunca preguntó si pasó (`ADR-013`,
+[[un-registro-de-ultima-corrida-cuenta-verde-lo-que-nunca-pregunto-si-paso]]); y un smoke que dejó
+mil leads en producción diciendo que limpió — **segunda vez del mismo fallo**, así que gate y no
+parche (`093`, [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]]).
 
-**Tres «construido y sin llamante» menos.** `mirarComoElCliente()` llevaba cuatro días probado y sin
-una sola URL que lo usara, así que `soloLectura()` no cortaba nada; ya hay pantalla y un `POST` que
-pide la denegación. Y al desmontar el andamio de la 083 apareció el mismo patrón en tipos: una
-corrección que compilaba y **no protegía nada**, cazada mutándola —
-[[una-correccion-de-tipos-sobre-un-parser-que-recibe-unknown-es-inerte]].
+**Al escribir esos gates salieron las dos trampas del árbol de sintaxis** —el falso verde de la
+clave citada en una referencia de TIPO, y el falso rojo de castigar que extraigas un ayudante—:
+[[dos-trampas-al-escribir-un-gate-por-arbol-de-sintaxis]].
 
-**`meta` sube de 116 a 120 sin deuda nueva**: la señal 8 dejó de dar por frescos los recorridos por
-calendario y ahora cruza commit + territorio; 6 de 8 resultaron caducados. Un instrumento que
-empieza a medir sube el marcador, y eso es lo contrario de un problema.
+**Recorridos**: siete corridos contra producción y verdes. Quedan **cinco caducados**, y conviene
+saber por qué antes de alarmarse: cuatro sólo porque el commit tocó una rama de traducción de
+errores que no ejercen —territorio generoso a propósito—, y el quinto,
+`ajustes-y-baja-de-organizacion`, lleva **dos corridas seguidas** sin poder ejercer su segunda
+mitad por falta de una cuenta de superadmin de plataforma: a la tercera le toca cuarentena
+declarada, no sumar uno cada noche.
 
-**Recorridos de navegador**: `089` y `080` verdes (el aviso de carga se apaga en los tres caminos
-que jsdom no distingue; ningún identificador de la BD llega a la pantalla en 21 pantallas,
-comprobado **contando filas** y no leyendo el chip —
-[[verificar-un-filtro-traducido-es-contar-filas-no-leer-el-chip]]). `079` en ROJO a propósito: lo
-cierra el `090`. Nuevos: `090`, `091` (el catálogo de enums con un segundo dueño que es el que se
-pinta).
+**Antes, ese mismo día**: la `083` aplicada (68 versiones), con la parte B de la 068 pasando de cero
+a dieciséis aserciones — su primera versión estaba rota de una forma que ningún gate estático ve
+(`returns table` con `email text` sobre `citext`) y la cazó `db:replay`:
+[[pg-returns-table-no-lleva-tipos-ni-nulabilidad-y-eso-explota-al-ejecutar]]. Más el quinto
+«construido y sin llamante» enchufado, una corrección de tipos que compilaba sin proteger nada
+([[una-correccion-de-tipos-sobre-un-parser-que-recibe-unknown-es-inerte]]), y los recorridos `089`
+y `080` verdes comprobando **contando filas** y no leyendo el chip
+([[verificar-un-filtro-traducido-es-contar-filas-no-leer-el-chip]]).
 
 **Para arrancar otra sesión multiagente**: `docs/plan/ARRANQUE-MULTIAGENTE.md` en el repo. No copia
 cifras a propósito — las deriva de `ESTADO.md`, `npm run meta` y los `Status:`.
