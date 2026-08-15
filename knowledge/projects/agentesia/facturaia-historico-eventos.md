@@ -179,3 +179,7 @@ Aprendizajes: [[pre-push-que-typechequea-con-next-build-no-mira-los-tests]] ·
 [[stripe-sin-account-tax-ids-la-factura-sale-sin-nif-del-emisor]] ·
 [[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]] ·
 [[claude-code-agentes-worktree-failure-modes]]
+
+## 2026-08-15 · Spec #1678, circuito de cobro con eventos reales de Stripe
+
+🟢 **Spec #1678 cerrado y el circuito probado con eventos REALES de Stripe (15-ago)** — CLI emparejado con `acct_1Td5cc`, modo test, misma versión de API que live (**caduca 12-nov-2026**). Probados mirando el efecto en BD: impago de complemento y recuperación, disputa, reembolso, reactivación e idempotencia. **Salieron dos fallos que la suite no veía**, ya en prod: **#1788** (pausar el cobro no suspendía; la reactivación pasa a mirar el motivo, mig 693) y **#1789**. Cerrados también #1773 y el PR 1/4 de #1702. Queda **#1686, tuyo**. [[stripe-pause-collection-no-emite-subscription-paused]] · [[ADR-052-persistir-el-motivo-de-la-suspension-de-cobro]]
