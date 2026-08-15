@@ -12,4 +12,6 @@ Fix: normaliza antes de testear —
 
 Ojo aparte (colisión comando vs dato): para comandos que compiten con texto libre dictado (fin de flujo "ya está" vs un cliente "Grupo Fin"), NO uses `contains`; exige **match exacto** del mensaje normalizado contra un set de comandos.
 
+Caso real (Centro Elphis, 2026-08-15): tercera aparición, ya en otro proyecto. `/\bya\s+ingres[eé]\b/i` no casaba "ya ingresé" — el `\b` **final**, pegado a la é. Solo se cazó porque el test incluía la variante acentuada: los casos con palabra sin acento ("ya hice") pasaban y daban falsa tranquilidad. Si no puedes normalizar (aquí el matcher vive dentro de un nodo n8n y se quería tocar poco), **quita el `\b` que toca la vocal acentuada** — y `\b?` no es la salida: es error de sintaxis ("Nothing to repeat").
+
 Caso real (#86, 2026-07-04): reapareció en el MISMO módulo — un matcher (`STOPWORD_FIRST`) seguía aplicándose al texto crudo, así que "sí, confirmo" escapaba el guard y rompía la siembra-por-voz. Lección: normaliza en TODOS los matchers con `\b`, no solo en algunos; es fácil arreglar uno y dejar otro.

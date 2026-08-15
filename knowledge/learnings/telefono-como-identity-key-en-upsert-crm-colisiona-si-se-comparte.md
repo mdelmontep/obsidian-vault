@@ -13,6 +13,8 @@ tags: [n8n, crm, clientify, upsert, elphis, anti-patron]
 
 **Fix si se retoma:** no sobreescribir nombre a ciegas en el PATCH — si el nombre entrante difiere sustancialmente del existente, crear nota/alerta en vez de pisar, o pedir confirmación humana antes de renombrar un contacto con historial (deals abiertos).
 
+**Al casar por teléfono entre dos sistemas (2026-08-15):** normaliza a dígitos y antepón el prefijo si vienen 9 (móvil español sin `+34`), pero **NO compares "los últimos 9 dígitos"** como atajo para salvar formatos distintos: casa un `+33` con un `+34` y escribe el dato de una persona en la ficha de otra. Verificado con 6 casos, cruce internacional incluido.
+
 **Aplica a**: cualquier cliente con upsert-por-teléfono en CRM (Clínica Zen, Simarro, EcoBox, Tecnocloud...) — no es específico de Elphis.
 
 Relacionado: [[idempotencia-de-entidad-no-debe-gatear-notificacion-side-effect]]
