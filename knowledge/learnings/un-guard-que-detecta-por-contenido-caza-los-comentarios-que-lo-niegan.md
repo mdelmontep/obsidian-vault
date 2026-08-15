@@ -17,4 +17,6 @@ Y la cabecera del módulo afirmaba «hoy son nueve: drafter, presenter, deictic�
 
 **Regex vs escáner:** pesar la asimetría. Si el falso negativo es mucho más caro que el falso positivo, el escáner con estados vale su coste — un `//` dentro de una cadena le come código real a un `replace`.
 
-Ver [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]
+**15-ago: el escáner con estados TAMPOCO basta, y el mismo guard lo demostró.** Conocía cadenas y plantillas, no **literales de regex**: `const R = /[/*]/;` le abre un comentario que se come el resto del fichero, y `containsPromptMarker` devuelve `false` — o sea el guard **callado**, que es el error caro que su propio docblock declaraba evitar. Solo es exacto el **parser** (AST): entre dos tokens solo hay trivia, así que ahí un `/*` no puede estar dentro de nada. Y el barrido llegó a **nueve** despojadores a mano en un repo: cablearlos no basta —volver al naive dejaba las suites en verde—, hay que cerrar la clase con un candado sobre lo versionado, y **el detector tiene que despojar comentarios antes de escanear**, porque la prosa que explica lo prohibido casa con el patrón.
+
+Ver [[recurso-de-test-con-nombre-constante-no-aisla-entre-procesos]] · [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]] · [[un-candado-que-vive-en-tsc-es-invisible-para-la-suite-y-para-la-mutacion]]
