@@ -74,3 +74,4 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - [[ADR-049-pagos-declarados-en-ledger-aparte-del-de-banco]] — los cobros sin banco detrás van a su propio ledger y recompute pasa a ser el único escritor del estado; se unifica la LECTURA (una sola función suma), no el almacenamiento.
 - [[ADR-050-el-modelo-frasea-solo-donde-el-guard-puede-rechazarlo]] — el LLM reformula solo donde un guard determinista puede rechazarlo; la lectura cuyo texto lleva un hecho no verificable se declara literal. Ni ampliar la whitelist (persigue el caso) ni apagar el fraseo (era su único trabajo).
 - [[ADR-051-el-redondeo-de-importes-sube-el-medio-centimo]] — el `x,xx5` sube (variante con `Number.EPSILON`): 55 copias del redondeo a una sola en `lib/dinero/`. `lib/fiscal` queda fuera, ya usa céntimos con `BigInt`.
+- [[ADR-052-persistir-el-motivo-de-la-suspension-de-cobro]] — el motivo de la suspensión decide quién puede reactivar (facturaia, cobro)

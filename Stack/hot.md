@@ -65,7 +65,9 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un gate solo puede fallar HACIENDO RUIDO** — si hay un camino en el que no encuentra nada y sale con 0, no es un gate: es un adorno. Fail-closed, y vale para el TEARDOWN de un smoke: avisar por `stderr` y no por el exit code no es avisar. 👉 **El gate que corres aparte NO es el del hook**: `--no-verify` se salta los trinquetes, que miden el ÁRBOL ENTERO. Ver [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] · [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[gate-con-ruta-relativa-no-corre-desde-subdirectorio-y-sale-verde]] · [[una-suite-en-verde-no-prueba-el-camino-real]] · [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
-## El resto (33)
+- **Un verde esperado «vacío» no mide nada si el estado ya era vacío** — RLS sobre tabla vacía da `[]` con y sin RLS. Ver [[verificar-rls-en-tabla-vacia-no-discrimina]]
+
+## El resto (34)
 
 
 - **Antes de decir «esto no se puede medir», enumera la taxonomía cerrada** — suele estar ya partido, y su comentario dice qué se decidió NO medir. Y decide señal (excepción → numerador) vs dimensión por evento (tasa → denominador). Ver [[una-senal-cuenta-excepciones-una-tasa-necesita-denominador]]
