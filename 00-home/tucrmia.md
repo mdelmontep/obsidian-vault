@@ -54,6 +54,13 @@ el gate tuviera la culpa: [[una-mutacion-que-produce-codigo-valido-no-demuestra-
 de auditoría sin cerrar, y **las 10 lentes con territorio tocado** — la auditoría de composición es
 lo que manda §6.1 tras una unidad con migración, y es la siguiente unidad natural.
 
+**Cómo se cierran esos doce, que no es lo que parece**: ninguno tiene enunciado escrito, así que
+no se drenan leyendo — se apagan volviendo a auditar su territorio. Y al registrar la auditoría
+nueva hay que escribir `abiertos` a mano: el comando no lo rellena y la entrada nace en `null`,
+que es el agujero que hoy tiene la del 7-ago (96 hallazgos, sólo la cifra — pide ADR, no agentes).
+Ver [[un-hallazgo-cuyo-texto-se-perdio-se-cierra-re-auditando-no-releyendo]]. El prompt de retomar,
+con todo esto dentro, está en `docs/plan/PROMPT-CONTINUACION.md`.
+
 ## Estado (14-ago, cierre) — F1 sin issues cogibles; la siguiente unidad es la mensajería
 
 **Desplegado y al día en `c642cfa2`.** Gate **58 pasos / 363 ficheros / 4.882 pruebas**. `meta`
