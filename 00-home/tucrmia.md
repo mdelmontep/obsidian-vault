@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-16 iteraciones 24-25 (los dos críticos de la auditoría cerrados: 106 la llave RLS sin valla y 107 el derrame que apagaba tres gates · `meta` 151 · siguiente: 109 o 104)
+updated: 2026-08-16 iteraciones 26-27 (109 la fuga entre organizaciones y 104 el flake, que era la suite comiéndose medio node_modules · `meta` 149 · siguiente: 118 o seguir drenando cola)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,39 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (16-ago, iteraciones 26-27) — la fuga entre organizaciones, y el flake que no era un flake
+
+**Desplegado y al día en `90a6a088`.** Gate **63 pasos / 5.105 pruebas**. `meta` 151 → **149**.
+
+**`109` — `/ajustes/accesos` enseñaba a la organización A la actividad de una ex-miembro en la B.**
+El alcance de la lectura se armaba desde `org_members` **sin `status`**, mientras el permiso, veinte
+líneas más arriba en el mismo fichero, sí lo exigía. Y no lo tapaba nada más: `auth_events` no puede
+llevar `org_id`, se lee con `service_role` y la RLS de `org_members` devuelve la organización activa
+entera → esa lista **es** el único aislamiento
+(→ [[una-membresia-dada-de-baja-sigue-siendo-una-fila-de-pertenencia]]). Sin gate, con la cuenta hecha
+antes de decidirlo: de las 15 lecturas del árbol, las que resuelven permiso ya filtran. Precio
+declarado: sin fecha de baja, el rastro de quien se fue desaparece también del periodo en que sí
+estaba.
+
+**`104` — el flake era la suite ejecutando pruebas de las dependencias.** `exclude` de vitest
+**sustituye** al de fábrica, así que sólo tapaba el `node_modules` de la raíz — y el test del 404 en
+streaming enlaza uno anidado. Con él puesto: **571 ficheros recogidos en vez de 379**, 192 ajenos. Lo
+delató `Tests 5172 passed` sobre 5.094, o sea el número **subiendo**
+(→ [[exclude-de-vitest-sustituye-al-de-fabrica-y-sin-doble-asterisco-solo-tapa-la-raiz]]). Eran
+**cuatro puertas** con el mismo patrón sin `**/`: vitest, `.gitignore` (prettier con ENOENT → gate en
+2) y dos en eslint (41 errores sobre código de Next; la cuarta la encontró el guard nuevo). Aparte, un
+desajuste real: `asyncUtilTimeout` en 1000 ms gobernando **280 esperas**, con `testTimeout` declarando
+20 s y sin tocarlas (→ [[testtimeout-no-gobierna-las-esperas-de-testing-library]]).
+
+**Las dos hipótesis del issue eran falsas y se supo midiendo**: las víctimas ya usaban `findBy*`, y
+acotar el paralelismo **empeora** — la corrida que se modera es la que cae. Criterio duro cumplido:
+gate **0 dos veces seguidas** con la máquina a `load` 34,75 y 39,14 sobre 10 CPUs.
+
+**Encontrado de paso → `issues/118`**: `loop-registro.md` se quedó en la iteración 20 y `ESTADO.md` se
+saltó la 24 y la 25, con §8 declarándolo obligatorio y nada en rojo.
+
+**Siguiente**: `118`, o seguir drenando la cola (16 issues, 29 hallazgos de auditoría abiertos).
 
 ## Estado (16-ago, iteraciones 24-25) — los dos críticos de la auditoría, fuera
 
