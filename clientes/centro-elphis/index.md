@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-15
+updated: 2026-08-16
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
