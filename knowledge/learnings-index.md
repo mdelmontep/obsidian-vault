@@ -9,6 +9,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 
 ## Supabase / Postgres / BD (237)
 - [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] — acción masiva en cliente con N round-trips en serie cuelga la UI — batch + pool + progreso
+- [[acotar-un-tipo-con-pick-destapa-las-firmas-demasiado-anchas]] — acotar un tipo con Pick destapa, por contravarianza, las firmas demasiado anchas
 - [[agotar-la-fuente-oficial-antes-de-aparcar-una-duda-normativa]] — la FAQ del organismo suele responder literalmente lo que se aparcó "a esperar al asesor
 - [[agregado-cacheado-sobre-ledger-recompute-trigger]] — agregado cacheado sobre tabla-ledger compartida → recompute por trigger, no a mano en el…
 - [[agrupacion-por-campo-texto-libre-exige-normalizacion-en-write-path]] — agrupación por campo de texto libre exige normalización en write path + saneo
@@ -38,6 +39,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[conflicto-rebase-migraciones-paralelas-mismo-table-resolver-aditivo]] — conflicto de rebase entre 2 PRs que añaden columnas distintas a la misma tabla se resuelv…
 - [[consumidor-lee-claves-que-productor-no-emite]] — consumidor que lee claves de campo que el productor no emite falla en silencio
 - [[contador-por-tab-derivado-de-datos-paginados-colapsa-a-0]] — contador por tab/segmented derivado de datos ya paginados colapsa a 0 al filtrar
+- [[convertir-una-dependencia-inyectada-en-llamada-global-rompe-el-doble]] — convertir una dependencia inyectada en llamada global rompe el doble del test
 - [[copiloto-tool-select-campo-faltante-guard-mudo]] — tool copiloto: campo en interface pero no en select → guard mudo
 - [[coste-derivado-de-tokens-mensaje-vs-columna-tool-calls-vacia]] — Coste copiloto — derivar de tokens del mensaje, no de columna `cost_usd` de tool_calls
 - [[create-or-replace-copiar-de-version-vigente]] — create or replace de función: copiar de la versión vigente, no de la del issue
@@ -266,6 +268,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[un-click-que-expira-en-e2e-suele-ser-un-control-bloqueado-no-la-app-rota]] — un click que expira en e2e suele ser un control bloqueado, no la app rota
 - [[un-eval-que-llama-al-interprete-no-ve-lo-que-arregla-la-capa-de-abajo]] — un eval que llama al intérprete no ve lo que arregla la capa de abajo — lee el instrumento antes de promete…
 - [[un-fail-closed-cuenta-la-fuente-que-puede-fallar-no-el-agregado]] — un fail-closed cuenta la fuente que puede fallar, no el total agregado
+- [[un-gate-que-resuelve-imports-solo-ve-los-estaticos]] — un gate que resuelve imports por AST sólo ve los estáticos de nivel superior
 - [[un-guard-sobre-sql-tiene-que-conocer-el-embed-y-el-alias-de-postgrest]] — un guard sobre SQL/PostgREST tiene que conocer el embed y el alias
 - [[un-hook-que-bloquea-es-un-and-que-no-se-cumple]] — un hook que bloquea es un && que no se cumple, así que la limpieza no va encadenada
 - [[un-metodo-sin-llamantes-puede-tener-el-guard-ausente]] — un método sin llamantes puede tener el guard ausente y su comentario afirmar que está
@@ -274,6 +277,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[una-auditoria-que-pide-permiso-para-un-dato-debe-comprobar-que-no-lo-tiene-ya]] — una auditoría que acaba pidiendo permiso para un dato debe comprobar que no lo tiene ya
 - [[una-columna-deprecada-conserva-su-unique-y-sigue-rechazando-inserts]] — una columna deprecada con un comentario conserva sus índices y sigue rechazando inserts
 - [[una-correccion-de-tipos-sobre-un-parser-que-recibe-unknown-es-inerte]] — un tipo que compila no es un tipo que protege: mútalo y comprueba que sale en rojo
+- [[una-desactivacion-parcial-se-lee-igual-que-no-habia-agujero]] — una desactivación parcial se lee igual que «no había agujero»
 - [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]] — la 2ª vía de escritura omite el contexto de actor que la RLS exige, y sólo falla en el caso por defecto
 - [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
 - [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética

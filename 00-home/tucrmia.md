@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-15 iteraciones 21-23 (auditoría de composición entera: 96 hallazgos, 32 en pie, drenados a issues 106-117 · `meta` 147 · 096 cerrado: la PII del outbox sobrevivía al derecho al olvido · siguiente: 106 o 104)
+updated: 2026-08-16 iteraciones 24-25 (los dos críticos de la auditoría cerrados: 106 la llave RLS sin valla y 107 el derrame que apagaba tres gates · `meta` 151 · siguiente: 109 o 104)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,38 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+
+## Estado (16-ago, iteraciones 24-25) — los dos críticos de la auditoría, fuera
+
+**Desplegado y al día en `fb50e4af`.** Gate **63 pasos / 377 ficheros / 5.092 pruebas**.
+`meta` 153 → **151** (cola 17, supervivientes 30).
+
+**`106` — la llave que salta RLS viajaba entera hasta los ~20 módulos de `core/`**, con la valla
+puesta sólo en `core/admin`, que había gastado una auditoría entera en cerrar esa misma superficie.
+Reproducido escribiendo `generateLink` en el `POST` **público** de `/f/[slug]`: compilaba y pasaba
+los cuatro gates. Ahora `Pick` + candado en ejecución (ADR-015). La lista de superficies pasa a
+`shared/db` con un dueño único — y acaba ahí, no en `core/db`, porque la regla de lint prohíbe a
+`core/admin` importar de `core/db` por ruta: mover el módulo evitó abrirle un agujero a la regla.
+Acotar el tipo destapó **17 firmas** que pedían el cliente entero sin usarlo
+(→ [[acotar-un-tipo-con-pick-destapa-las-firmas-demasiado-anchas]]), y una excepción legítima que
+**encontró el typecheck y no mi medición**. El `import()` dinámico se arregló en el ayudante
+compartido, así que **seis** gates heredaron la cobertura
+(→ [[un-gate-que-resuelve-imports-solo-ve-los-estaticos]]).
+
+**`107` — tercera vuelta del mismo agujero de composición**: sin una sola clave con nombre, los tres
+gates de la puerta v1 volvían a dar verde sobre una API sin límite de tasa. Antes 0/0/0, después
+1/1/1 sobre `v1.ts` real. El arreglo no es el ancho
+(→ [[un-gate-que-exige-n-claves-se-apaga-trayendo-el-resto-con-spread]]).
+
+**Tres cosas de método que costaron caro y ya están escritas**: una desactivación parcial al medir el
+«antes» hizo parecer que el agujero no existía
+(→ [[una-desactivacion-parcial-se-lee-igual-que-no-habia-agujero]]); mover una capacidad a su puerta y
+llamarla dentro rompió el doble del test
+(→ [[convertir-una-dependencia-inyectada-en-llamada-global-rompe-el-doble]]); y un hook que bloquea
+abortó el comando **entero**, así que el arreglo se empujó con el issue todavía abierto.
+
+**Siguiente**: `109` (fuga entre organizaciones en `/ajustes/accesos`) o `104` (test inestable que ya
+provocó un push sobre gate rojo). Quedan 30 hallazgos de auditoría abiertos, en `issues/108`–`117`.
 
 ## Estado (15-ago, iteraciones 21-23) — la auditoría que se debía, y el registro mintiendo sobre la parada
 
