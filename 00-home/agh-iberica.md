@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-16
+updated: 2026-08-17
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,20 +44,19 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-16) — `main` en `c24d5c9`; **TABLERO VACÍO**: cero PRs abiertas de nadie
+## Estado (2026-08-17) — `main` en `8863b57`; **TABLERO VACÍO**: cero PRs abiertas de nadie
 
-🟢 **Dentro el 16-ago: 5 PRs y 5 issues** (`93d7fb2` → **`c24d5c9`**) — #1250/#1227 · #1249/#1219 · #1246/**#1228 + #1074** · #1251/#1231 + cierre. Cuatro agentes en paralelo, base propia por track, **coste de evals CERO** (medido con `containsPromptMarker` real antes de coger nada). Gate sobre `main` YA mergeado `agente 3445/239/5f · dashboard 1229/0/0f · base d5b55a0` ✓. Prod por contenido `sha256:bed53055… · 302 ficheros`.
+🟢 **Dentro el 16-ago (tarde): 8 PRs y 10 issues** (`c24d5c9` → **`8863b57`**) — #1254/#966 · #1264/#999 · #1267/**#1245+#1253** · #1263/#1037 · #1266/#951 · #1255/**#1161+#1144+#1146** · #1270/#1248 · #1271 cierre. Siete agentes en paralelo, base propia por track, **coste de evals CERO** (medido con `containsPromptMarker` real antes de coger nada). Combinación compilada ANTES de mergear: 0 conflictos, `tsc`/`lint` ec=0 ×2, **11 candados transversales en 329 passed**. Gate sobre `main` mergeado **por pasos separados**: `agente 3489 passed · 0 fallidos` + `dashboard 1257 passed · exit 0`, y **los dos contadores cuadran exactos** contra lo mergeado. Prod por contenido `sha256:9db9e147… · 304 ficheros`, construida **6 s después** de la única PR que toca `src/`.
 
-🔑 **Lo reutilizable del 16-ago:**
-- **`mutate:diff` acusó en falso**: «CERO MORDIDAS» midiendo **40 de 114**; con la muestra completa **muerde 12 veces** (los 40 eran de VALOR sobre un candado LÉXICO) → **#1245**
-- **Premisa de #1228 FALSA**; la protección era **incidental** (vive de unas comillas) y el token expuesto era otro → [[una-proteccion-incidental-parece-un-hueco-ya-cerrado]] · **#1247** (`ready-for-human`)
-- **Un agente muerto dejó un motor DESACOPLADO** mutando `src/` 1 h 56 min → [[un-agente-muerto-puede-dejar-un-motor-desacoplado-vivo]] · **#1253**
-- **16 rojos con cara de acoplamiento** y era un `node_modules/node_modules` mío → [[cp-r-sobre-un-destino-que-existe-copia-dentro-de-si-mismo]]
-- **Tres clasificadores míos dieron cifras plausibles sin medir nada** → [[el-instrumento-devuelve-cero-sin-decir-que-no-ha-medido]]
-- **Premisas: 3 de 4 falsas o cortas** — #1231 contaba 1 despojador y hay **2**, y el segundo (de SQL) es el que decidía entre las dos opciones de diseño.
-- 🧹 **117 ramas locales → 4**, con **refs de archivo** en `refs/archivo/2026-08-16/` (un .txt con SHAs no es respaldo: 75 eran solo-locales).
+🔑 **Lo reutilizable del 16-ago (tarde):**
+- **Un veredicto de mutación miente en las DOS direcciones**: una que **muere** puede matarla un caso que **duplica** la regla en vez de verificarla; una que **sobrevive** puede haber dejado la cota en 0 y el guard tautológico → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] (modos 13 y 14).
+- **`MERGEABLE` no significa «el diff es el tuyo»**: la hija apilada salió `CLEAN` y proponía re-aplicar el diff del padre. El detector barato es contar `gh pr diff --name-only` contra lo que la PR declara → [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]].
+- **`git worktree add` reescribe `package-lock.json`** y el preflight de #970 da CADUCO sobre un `node_modules` clonado y al día: los locks son byte a byte idénticos, así que el arreglo es `touch -r`, no `npm ci`.
+- **Un rojo con cara de real que era SIGTERM** (`expected 143 to be +0`) con la máquina a carga 49: se clasificó con tres evidencias, y **la decisiva no depende del reloj** — ninguno de los 40 ficheros del rango tocaba ese camino.
+- **Premisas: 5 de 11 falsas, cortas o caducadas.** #1146 FALSA por la mitad (ya la cerró #1153 → el track paró **sin diff**) · #1161-b: eran **2 de 8** métodos, no 4 (un escenario no es un método) · #1245 con premisa secundaria falsa (25 `sentencia` + 15 `valor`, no «todos de VALOR» — **la cifra falsa la teníamos escrita nosotros** en el snapshot) · #999 cierta al carácter, la única.
+- **El arnés de mutación ya está versionado**: `~/.claude` → `claude-harness` (`1ab6866`), con diario y negativa a correr desacoplado (#1253).
 
-🧾 **Issues nuevos (4):** #1245 · #1247 · #1248 · #1253, todos con etiqueta. **#1188 LIBERADO** (sin assignee): su barrido se perdió con el agente muerto y no está entregado.
+🧾 **Issues nuevos (10):** #1256 (el más caro: `decline` incrusta `reminder.body`, texto **dictado**, y sale crudo por altavoz) · #1257 · #1258 · #1259 · #1260 · #1261 · #1262 · #1265 · #1268 · #1269 — todos con etiqueta.
 
 ---
 
@@ -69,15 +68,8 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 ---
 
-🟢 **Dentro la mañana del 15-ago: 11 PRs y 12 issues** (`842a72a` → `a8dc258`). Reutilizable: 6 de 7 premisas falsas y todas cortas · noveno hueco en el **cableado** (cablear el arreglo bueno **no protege**; la clase se cierra en el **instrumento**) · las convenciones se descartan **con la cifra** · [[un-candado-que-vive-en-tsc-es-invisible-para-la-suite-y-para-la-mutacion]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]].
-
-✅ **Las 4 decisiones de producto de esa mañana: TRES ya implementadas y dentro** (#1196 → #1233 · #1116 → #1235 · #1103 → #1234). Viva solo **#1092**, por su paso humano: mandar `hilos_pendientes_3` a un móvil REAL — que Meta apruebe el cuerpo **no** prueba que WhatsApp entregue. El *porqué* de cada una está en su issue.
-
-🟢 **Dentro el 14-ago: 17 issues** en dos tandas. **Del 14-ago, condensado:** 11 de 16 premisas falsas y el sesgo NO es constante — *la cifra que nadie midió está mal en la dirección que le convenga al relato*, y **la recomendación de un issue es la premisa que menos se cuestiona**. Más: [[el-hueco-esta-en-el-cableado-no-en-la-funcion-pura]] · [[mide-cuantos-pueden-fallar-antes-de-elegir-entre-n-candados-y-un-tripwire]] · [[aseverar-la-igualdad-congela-un-accidente-asevera-el-bicondicional]] · [[un-fichero-nuevo-es-un-solo-hunk-y-el-barrido-de-mutacion-no-lo-cubre]] · [[dockerignore-no-es-gitignore-y-la-basura-local-pone-el-gate-rojo]] · [[el-exit-code-que-lees-no-es-el-del-comando-que-te-importa]].
-
+🗓️ **14 y 15-ago, condensado** (detalle → [[agh-iberica-historico]]): 11 PRs y 12 issues la mañana del 15 · 17 issues el 14 en dos tandas · 11 de 16 premisas falsas en cuatro días · las 4 decisiones de producto de esa mañana, **tres implementadas** · #1097→#1098 mergeadas, que es lo que desbloqueó #1144·#1146·#1161 (ya dentro hoy).
 ✅ **Prod se verifica por CONTENIDO y sin SSH**: `curl …/version` vs `build:stamp --print` en árbol limpio → [[sellar-la-imagen-en-el-build-para-saber-que-corre-en-prod-sin-shell]]. El SSH del host **NO está caído** (`nc 5251` succeeded, medido dos veces).
-
-🧰 ~~**En cola para Borja:** #1097 → #1098~~ — **MERGEADAS la noche del 15-ago**, y con ellas **#1144 · #1146 · #1161 quedan DESBLOQUEADAS**. La trampa se confirmó en vivo: **#1097 → #1098, apiladas** — ⚠️ al mergearlas, squashear el padre deja a la hija `CONFLICTING`, **o `MERGEABLE` reaplicando el diff del padre**: `gh pr edit --base` no arregla la historia, hace falta `git rebase --onto origin/main <rama-padre>` → [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]]. Desbloquean **#1144 · #1146 · #1161** (las tres en `hitl-brain.ts`). Además **#1126** · **#1129**. ⚠️ **#1036/#1037 caen en `static.ts` con la #1140 de Dani: apilar, no paralelizar.**
 
 📋 **Cola libre**: los 8 nuevos de arriba + **#1188** (barrido de fixtures no discriminantes) del lote del 14-ago. **Decisiones mías que siguen SIN tomar:** #1167 · #1129. **#1180 ya decidida (NO entra), no re-litigar**.
 

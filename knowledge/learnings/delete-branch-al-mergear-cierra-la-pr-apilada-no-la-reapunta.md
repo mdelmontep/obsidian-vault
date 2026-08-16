@@ -53,3 +53,14 @@ De dónde salía la premisa falsa: de una línea que llevaba días en el snapsho
 una pila que **nadie había ejercitado**. La propagué a tres sitios sin medirla **porque ya estaba
 escrita**: una premisa heredada se re-mide antes de propagarla, y más si vas a montar un
 procedimiento encima.
+
+**Ampliación 16-ago — el DETECTOR barato, porque el estado de GitHub no lo da.** Tercera pila medida:
+la hija salió `OPEN · MERGEABLE · CLEAN` (ni `CONFLICTING`), o sea perfecta a ojos de GitHub… y su
+diff traía **SEIS ficheros en vez de uno**: proponía re-aplicar el trabajo del padre. Lo peligroso es
+que **no hay conflicto que te pare** — un `CLEAN` invita a mergear sin mirar. Lo delató contar los
+ficheros contra lo que la PR **declaraba**:
+
+    gh pr diff <hija> --name-only    # ¿coincide con lo que la PR dice tocar?
+
+Si sobran, rebasar igual (`git rebase --onto origin/main <rama-padre>`) y —esto también se olvida—
+**re-medir después**: el rebase cambia la base y caduca `tsc`, tests y la línea del gate previas.

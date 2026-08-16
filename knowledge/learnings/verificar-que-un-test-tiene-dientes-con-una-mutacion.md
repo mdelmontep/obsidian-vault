@@ -136,3 +136,20 @@ porque el fake no devolvía `lineas_factura` y el worker se desviaba por «factu
 antes de comprobar la cadena. Verde por no haber llegado. Se cierra afirmando **que el camino se
 recorrió**: `expect(enviadas).toHaveLength(1)` en el caso sano, no solo el `toHaveLength(0)` de
 avisos. Todo caso de control necesita una aserción de que ejecutó lo que dice controlar.
+
+**Decimotercero — la mutación MUERE y aun así no está cubierta: importa QUIÉN la mata.** No es un
+falso verde, es un falso **VÍCTIMA**. AGH 16-ago: bajar un umbral de aviso salía `✓ VÍCTIMA`… y lo
+mataba un caso que escribía la frontera **a mano** (`aviso("caso", 2500, 5000)`) en vez de derivarla
+de la política. Eso no la verificaba, la **duplicaba** — y habría dado un rojo diciendo «la frontera
+está mal» a quien solo estuviera cambiando el umbral **a propósito**. Se cierra derivando la frontera
+del propio umbral. Regla: ante un `✓ VÍCTIMA`, mira **cuál** caso se puso rojo y si asevera la
+propiedad o **repite el cálculo**.
+
+**Decimocuarto — la mutación SOBREVIVE porque ha DESACTIVADO el candado, no porque sea inocua.**
+Pariente del «universo vacío», pero sin universo vacío: aquí la comparación se vuelve **tautológica**.
+AGH 16-ago: invertir un cociente medido (`MAX/MIN` → `MIN/MAX`) dejó el factor en 0,148, la cota en
+`Math.floor(0,44) = 0` y la aserción en `20 >= 0` — verde para siempre **sin tocar ni un dato
+documentado**, los dos números seguían siendo correctos con su fuente y su fecha. Antes de declarar
+equivalente un superviviente, comprueba si **anula la comparación**. Se cierra con anti-vacío sobre el
+DATO antes de usarlo (aquí: `factor > 1`, porque un factor de contención menor que 1 diría que la
+máquina cargada va más rápida que la que está en reposo — imposibilidad física, no política laxa).
