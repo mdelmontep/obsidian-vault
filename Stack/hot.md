@@ -6,6 +6,9 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un barrido devuelve cero sin decir que no midió** — `git grep -E` sin `\s`, zsh sin word-splitting, `:t` modificador. Control en las dos direcciones. Ver [[el-instrumento-devuelve-cero-sin-decir-que-no-ha-medido]]
+- **Un agente muerto deja un motor desacoplado vivo** — sube por `ppid`; `TaskStop` no vale. Ver [[un-agente-muerto-puede-dejar-un-motor-desacoplado-vivo]]
+
 Este fichero se carga **cuando no hay disparador claro** (CLAUDE.md: "Default / dudo → `Stack/hot.md`").
 O sea: es lo que se lee al arrancar sin saber todavía qué se va a tocar. Todo lo que esté aquí se paga
 en contexto en esas sesiones, venga al caso o no.
