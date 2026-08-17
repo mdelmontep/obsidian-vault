@@ -107,6 +107,72 @@ v2 respectivamente) para excluir zonas propuestas por el agente y rechazadas por
 validar aún con una llamada real que dispare ese caso concreto — se confirma en la próxima que
 pase.
 
+# 6. Clústeres ampliados a toda la Comunidad de Madrid (mismo día, segunda vuelta)
+
+Tras validar los 2 clústeres iniciales, pregunta directa del cliente vía Manu: "¿y si dice un
+pueblo de otro lado, Alcalá de Henares, o Benidorm en Alicante?". Aclarado el alcance real
+("actualiza la lista con todo Madrid", confirmado que cubre TANTO el diccionario de reconocimiento
+ASR como los clústeres de cercanía): ampliar a la Comunidad de Madrid entera, resto de España sigue
+sin clúster (solo coincidencia exacta, sin inventar vecinos).
+
+**Fuente**: los 179 municipios oficiales / 9 comarcas de la Comunidad de Madrid (Wikipedia,
+recuento verificado 179/179 antes de tocar código). Reestructurados en **12 clústeres comerciales**
+partiendo la comarca oficial "Área Metropolitana y Corredor del Henares" en 4 subzonas
+(noroeste/henares/sur/norte metropolitano) — la comarca oficial mezclaba puntas opuestas de Madrid
+(ej. Boadilla y Alcalá de Henares) bajo una sola etiqueta, inútil para "cercanía" real de comprador.
+
+**Corrección de paso**: Villaviciosa de Odón estaba mal en el clúster "sierra" desde el diseño de
+hoy (§4) — la fuente oficial la sitúa en el área metropolitana noroeste, junto a Boadilla. Verificado
+en vivo: Boadilla + presupuesto 500-650k ahora sugiere Villaviciosa, cosa que no hacía antes.
+
+**2 nodos tocados** en `Buscar_viviendas_catalogo` (`5NRXALN9lBVE9fTs`):
+- `Router` → `fixZone()`: los ~25 patrones `ZONE_FIX` existentes (correcciones de ASR reales,
+  validadas con llamadas de clientes) se dejan intactos; se añade un fallback nuevo, un lookup
+  plano de los 179 municipios (nombre correcto, con o sin acentos → forma canónica de la BD). No
+  intenta adivinar variantes de mala transcripción para pueblos sin historial de llamadas — si
+  aparece un caso real de ASR roto en un municipio nuevo, se añade como patrón `ZONE_FIX`, igual
+  que los 25 ya existentes.
+- `Build Zones`: los 2 clústeres antiguos sustituidos por los 12 nuevos.
+
+**Mensaje "fuera de zona" (nuevo, mismo commit)**: si el pueblo pedido no aparece ni en coincidencia
+exacta ni en ningún clúster con cartera activa (ej. Alcalá de Henares, Benidorm), la respuesta ya no
+es el genérico "no tengo con esos criterios, ¿ampliamos?" (que sugiere que insistiendo puede
+aparecer algo) sino un aviso honesto de que Simarro no opera ahí. Distinción clave: "el pueblo se
+reconoce" (ahora toda Madrid) ≠ "Simarro tiene cartera ahí" (sigue siendo solo ~10 poblaciones) — la
+búsqueda nunca debe confundir ambas cosas.
+
+**Bug de rebote, 2ª vuelta**: el primer fix de `Format For Voice` (§4) condicionaba usar
+`item.message` a `zones.length > 0` — correcto para "hay vecinos con algo", pero el caso nuevo
+"fuera de zona" no tiene vecinos que listar y aun así trae un mensaje válido. Detectado probando en
+vivo Benidorm/Alcalá y viendo que seguía saliendo el genérico. Fix: confiar siempre en
+`item.message` cuando está presente, sin condicionarlo — `Build Zones` ya calcula el mensaje
+correcto en las 4 variantes (vecinos, fuera de zona, passthrough, sin criterio). Lección: un gate
+que depende de una señal correlacionada con el caso viejo se rompe en cuanto aparece un caso nuevo
+legítimo sin esa señal.
+
+Verificado con 5 casos reales adicionales contra el catálogo real: Alcorcón (reconocido, fuera de
+zona por falta de cartera), Boadilla 500-650k (ahora sugiere Villaviciosa — antes no), Majadahonda
+≤900k (regresión: sigue igual, ahora Boadilla+Villaviciosa en vez de solo un pueblo), Guadarrama
+316-400k (regresión: sin cambios, San Lorenzo + Collado Villalba), Alcalá de Henares (fuera de
+zona, mensaje nuevo).
+
+# 7. Precio antes/después visual — investigado, aplazado
+
+Petición de Dani en su lista de 8 puntos: mostrar de forma visual cuando un piso baja de precio
+(ej. 300.000€ → 290.000€). Investigado antes de prometer nada:
+- `properties_price_history` **existe** en Supabase (creada en la DDL original de `properties`,
+  workflow `Y2BqlEDl51KyqVmT`) pero `Sync_catalogo_idealista` nunca escribe en ella — 0 histórico
+  real capturado hasta hoy.
+- El badge `highlight: "rebajado"` en `simarro_web` (`PropertyCard.astro`) es **puramente
+  decorativo** — texto fijo, sin comparar precio actual contra ninguno anterior. La fuente real de
+  datos (`properties-source.ts`, feed de Idealista vía Supabase) nunca calcula ni asigna ese campo.
+- Implementarlo de verdad exige: (1) que el sync empiece a escribir en `properties_price_history`
+  cada vez que el precio cambia, (2) tocar el schema/tipo `Property` (sin campo `previousPrice` hoy),
+  (3) cambios en el repo **aparte** `simarro_web` (Astro, GitHub `AgentesIA-MAdrid/simarro_web`).
+
+Presentado el alcance real al usuario (toca BD de producción + un segundo repo) — **aplazado
+explícitamente**: "de momento lo dejamos así ahora". No construir sin que se pida de nuevo.
+
 # Pendiente
 
 - Confirmar en llamada real (no sintética) que la regla de "zona rechazada" funciona.
@@ -114,3 +180,4 @@ pase.
   (TEST E2E/E2E Outbound), sumados a la lista ya existente en el hub.
 - Corregir la afirmación desactualizada del hub ("lanzador `2LqwDgLecHwjgIQl` INACTIVO") — está
   activo, verificado hoy; el bloqueante real sigue siendo el consentimiento (0 leads marcados).
+- Precio antes/después: retomar solo si el usuario lo repide explícitamente (ver §7).
