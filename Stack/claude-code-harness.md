@@ -425,6 +425,17 @@ verde hace la meta inalcanzable por construcción**. Si el dato para contestarla
 no es «roja para siempre» sino crear el campo que la contesta y contar aparte el «no consta» — un rojo
 que alguien puede apagar mirando, frente a uno permanente que enseña a ignorar el rojo.
 
+**Y la polaridad invertida, que es la forma cara del mismo defecto (17-ago-2026).** Antes de mirar si
+el número sube por descubrir, mira **qué estados NO cuenta**. En TuCRMIA la señal de roadmap contaba
+`[ ]` y `[~]` pero **no `[!]` (bloqueado por algo externo)**, y la de cola contaba `ready-for-agent`
+pero **no `ready-for-human`**. Consecuencia medida: desbloquear una épica parada once días **subió** el
+número, y *tomar* una decisión aparcada también. O sea que la métrica **premiaba la parálisis** y
+abarataba delegar en un tercero — un contador de deuda que abarata aparcar enseña a aparcar.
+
+La regla: **todo estado que signifique «no hecho» tiene que contar**, y lo que exime es la cuarentena
+declarada (ADR + costura + disparador), no la etiqueta. Y comprueba las dos direcciones a la vez: si
+arreglas sólo la señal que molestó primero, la otra vuelve.
+
 ## Repartir N agentes sin que se pisen (10-ago-2026, 14 en una noche)
 
 Seis reglas, todas de haberlas incumplido primero:

@@ -135,6 +135,17 @@ Orden correcto: `list` (limit 50) → `WebFetch` de la elegida → `Artifact` co
 Y si la URL vigente cambia, corregir en el mismo commit el fichero que la declara: dejarla
 apuntando a la vieja es exactamente cómo se fabricaron las huérfanas.
 
+**Tercer punto, peor que los dos de arriba (17-ago-2026): una URL puede volverse
+INALCANZABLE entre dos publicaciones del mismo día.** Publiqué el tablero en `689ef079…`
+sin incidencias; una hora después la misma llamada devolvía `publish refused … artifact not
+found` —dos intentos— y la URL había desaparecido del listado. No es «esta sesión no ha
+visto la última versión»: es un 404 de lectura sobre algo que acababa de recibir contenido.
+
+Salida sin romper nada: **no crear un tercero**. Publicar en el otro de la rotación —el
+mismo documento congelado en una versión vieja— **tras comprobar con `WebFetch` en qué
+iteración está**. Sin esa comprobación, publicar «en el que salga» habría enterrado nueve
+iteraciones de golpe. Y dejar escrito en la fuente cuál es la URL viva **y por qué cambió**.
+
 ## Mensajería entre sesiones: el `[ref]` es obligatorio la primera vez (7-ago-2026)
 
 La doc de *cross-session messaging* dice que el ` [ref]` que `ListAgents` imprime tras cada

@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un guard que mide un sustituto bloquea sin que nadie pruebe el hecho** — si aborta ANTES de intentar la operación, el error nunca aparece (once días parados). Comprueba el RESULTADO al final, no el permiso al principio. Ver [[un-guard-que-mide-un-sustituto-bloquea-sin-que-nadie-pruebe-el-hecho]]
 - **Acotar una API por scopes no la acota** — rutas distintas comparten scope: allowlist de endpoints en el wrapper, así una ruta nueva nace fuera. Ver [[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]
 - **Un barrido devuelve cero sin decir que no midió** — `git grep -E` sin `\s`, zsh sin word-splitting, `:t` modificador. Control en las dos direcciones. Ver [[el-instrumento-devuelve-cero-sin-decir-que-no-ha-medido]]
 - **Un agente muerto deja un motor desacoplado vivo** — sube por `ppid`; `TaskStop` no vale. Ver [[un-agente-muerto-puede-dejar-un-motor-desacoplado-vivo]]
@@ -115,6 +116,5 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Fail-closed sobre INICIAR lo peligroso, nunca sobre SUPERVISAR lo que ya está en vuelo** — abortar el arranque mata también el plano de control y deja sin vigilancia lo que sigue abierto; la guarda va en el cuello de la acción, no en el arranque. Ver [[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]]
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
 - **Antes de preguntarle un DATO al cliente, míralo en su sistema origen** — 3 veces en un día íbamos a pedir lo que ya teníamos en su backup. Las preguntas legítimas son de decisión. Ver [[antes-de-preguntar-al-cliente-mira-si-el-dato-esta-en-el-sistema-origen]]
-- **Republicar un `Artifact`: pide el listado Y haz `WebFetch` antes** — la pertenencia al listado **no es estable** (cambia entre sesiones del mismo día, en los dos sentidos), y republicar sobre una URL listada falla igual con «this session hasn't viewed the latest version». Lo que desbloquea es el `WebFetch` previo, que además es lo único que enseña si la copia publicada va por detrás del fichero local. Seis URL huérfanas hasta aprenderlo (7-ago). Ver [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]]
 - **`git add -N` rompe `git stash`** — push/pop fallan a medias; `git reset` antes, o commitea y rebasa. Ver [[git-add-intent-to-add-rompe-stash]]
 - **Un guard cuya aguja cubre UNA forma sintáctica se esquiva refactorizando** — sacar el objeto de `style={{…}}` a una variable lo hacía invisible sin quitarlo del DOM. Al tocar algo que un trinquete debería contar, comprueba que el número se mueve; si no se mueve, el guard es el bug. Ver [[un-guard-cuya-aguja-cubre-una-sola-forma-sintactica-se-esquiva-refactorizando]]

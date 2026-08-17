@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-16 iteraciones 26-27 (109 la fuga entre organizaciones y 104 el flake, que era la suite comiéndose medio node_modules · `meta` 149 · siguiente: 118 o seguir drenando cola)
+updated: 2026-08-17 iteraciones 33-34 (Storage desbloqueado —el bloqueo era una deducción, no un permiso— y el hueco de PII que se declaraba en silencio · `meta` 192 · siguiente: la ruta de borrado de bytes en `core/files`, que desbloquea 133 y 134)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,6 +13,41 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
+- Tablero publicado: **`460ab415…`** desde el 17-ago — la URL vieja (`689ef079…`) empezó a dar
+  404 al publicar. Ver [[claude-code-gotchas]] §Republicar un Artifact.
+
+## Estado (17-ago, iteraciones 33-34) — Storage desbloqueado, y no había ningún permiso que pedir
+
+**Desplegado y al día en `4fd2e772`.** Gate **0** · 383 ficheros · **5.152** pruebas. `meta` 183 → **192**.
+
+**E1.8 llevaba once días parada por una deducción.** Se midió que `postgres` no puede
+`grant supabase_storage_admin` —cierto, `42501`— y de ahí se dedujo que tampoco puede
+`create policy` sobre `storage.objects`. **Sí puede.** No se intentó nunca porque la propia `034`
+llevaba delante un guard que preguntaba por la PERTENENCIA y abortaba antes. Aplicadas `034`, `039`,
+`051` y `079`; hay `files`, `export_jobs`, dos buckets privados y cuatro políticas
+(2 insert, 2 select, cero update/delete). Se retiró el trámite y el ticket a soporte, **sin ejecutarlos**
+(→ [[postgres-de-supabase-no-puede-el-grant-de-storage-pero-si-crear-sus-politicas]],
+[[un-guard-que-mide-un-sustituto-bloquea-sin-que-nadie-pruebe-el-hecho]], `ADR-016`).
+
+**Y el hueco de PII que se declaraba solo.** `pii:check` DEDUCÍA quién queda fuera del cruce catálogo ↔
+`rgpd_redact()`: una columna ausente de **las dos** listas era invisible. La `034` declara tres veces
+en sus comentarios que `filename` es dato personal y el gate imprimía «dicen lo mismo». Ahora se
+declara en `FUERA_DEL_CRUCE` con motivo, en los dos sentidos y fail-closed.
+
+**Lo que queda, y su disparador es observable** (hoy `files` tiene **cero filas**, por eso E1.8 está en
+`[~]` y no es deuda escondida):
+- `core/files` **no tiene ruta de borrado de bytes** — ni para RGPD ni para baja de organización. Es lo
+  que bloquea `133` (la supresión no alcanza el fichero) y lo que la papelera de la `039` necesita.
+- `134` decidida **(a)**: los objetos del bucket entran en `npm run copia` y en `copia:drill`. Hoy la
+  copia diaria no toca Storage, con Supabase en plan free (que tampoco trae copias).
+- `136`: la métrica premia la parálisis — `[!]` y `ready-for-human` no cuentan
+  (→ [[claude-code-harness]], §Métrica de un loop).
+
+**Frontera con TuFacturaIA, cerrada el mismo día por la otra sesión**: el vínculo NO va por `api_access`
+(enterprise) sino por un derecho propio, `crm_link`, con allowlist de endpoints
+(→ [[la-integracion-entre-productos-propios-no-se-cobra-como-acceso-a-api]],
+[[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]). Pendiente reflejarlo en
+`docs/plan/24-frontera-tufacturaia.md`, que aún describe pegar una api key de cliente.
 
 ## Estado (16-ago, iteraciones 26-27) — la fuga entre organizaciones, y el flake que no era un flake
 

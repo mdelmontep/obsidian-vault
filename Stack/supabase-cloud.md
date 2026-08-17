@@ -37,6 +37,14 @@ tags: [supabase, saas, facturaia]
 
 ## Storage — buckets y PDFs
 
+- **`postgres` NO puede el `grant` de `supabase_storage_admin`, pero SÍ puede crear las políticas de
+  `storage.objects` y escribir en `storage.buckets`** (medido 17-ago-2026 en `tucrmia-prod`). El
+  `grant` da `42501: role memberships are reserved` por Management API **y por el SQL Editor**, que
+  corre con el mismo rol; de ahí **no se deduce** que `create policy` falle — son sentencias con
+  requisitos distintos. Lo único del bloque que sí exige pertenencia es el `set local role <dueño>`
+  que se suele copiar delante: quítalo. Esta deducción bloqueó una épica once días y generó un ticket
+  a soporte innecesario. Sonda y detalle en
+  [[postgres-de-supabase-no-puede-el-grant-de-storage-pero-si-crear-sus-politicas]]
 - Bucket `facturas` (público, 5MB limit) en proyecto TuFacturaIA
 - API route `generate-pdfs` usa service_role key via header `x-service-key` — permite ejecutar desde curl sin sesión de usuario
 - Tabla `organizations` (inglés, no `organizaciones`) — el schema usa nombre en inglés
