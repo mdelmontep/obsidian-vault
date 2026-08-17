@@ -7,6 +7,7 @@ tags: [stack, index]
 # Hot Cache
 
 - **Al retirar una columna o su escritor, grep de quién la LEE** — el `DROP` no avisa de la función que la usa (cuerpo en cadena = sin `pg_depend`, revienta con `42703` en runtime), y un guard sobre una columna que ya nadie rellena compila y tiene tests verdes sin proteger nada. Ver [[funcion-sql-con-cuerpo-en-cadena-no-registra-dependencia-de-columna]]
+- **«¿Existe X?» se busca por la LLAMADA, no por el módulo** — la carpeta esperada contesta otra pregunta. Ver [[buscar-una-capacidad-por-su-llamada-no-por-el-modulo-donde-crees-que-vive]]
 - **Un guard que mide un sustituto bloquea sin que nadie pruebe el hecho** — si aborta ANTES de intentar la operación, el error nunca aparece (once días parados). Comprueba el RESULTADO al final, no el permiso al principio. Ver [[un-guard-que-mide-un-sustituto-bloquea-sin-que-nadie-pruebe-el-hecho]]
 - **Acotar una API por scopes no la acota** — rutas distintas comparten scope: allowlist de endpoints en el wrapper, así una ruta nueva nace fuera. Ver [[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]
 - **El sujeto de un smoke debe pasar los gates ANTERIORES** — un 402 de billing tapa el 403 que medías. Ver [[el-gate-de-billing-va-antes-que-el-de-plan-y-tapa-lo-que-querias-medir]]
@@ -119,5 +120,4 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Fail-closed sobre INICIAR lo peligroso, nunca sobre SUPERVISAR lo que ya está en vuelo** — abortar el arranque mata también el plano de control y deja sin vigilancia lo que sigue abierto; la guarda va en el cuello de la acción, no en el arranque. Ver [[una-guarda-que-mata-el-proceso-deja-huerfano-lo-que-ya-esta-en-vuelo]]
 - **Antes de mergear una validación que bloquea, cuenta en prod a quién bloquea** — y cuántos de esos YA usan el flujo. Esa segunda cifra es la que cambia la decisión. Ver [[antes-de-mergear-una-validacion-que-bloquea-cuenta-a-quien-bloquea]]
 - **Antes de preguntarle un DATO al cliente, míralo en su sistema origen** — 3 veces en un día íbamos a pedir lo que ya teníamos en su backup. Las preguntas legítimas son de decisión. Ver [[antes-de-preguntar-al-cliente-mira-si-el-dato-esta-en-el-sistema-origen]]
-- **`git add -N` rompe `git stash`** — push/pop fallan a medias; `git reset` antes, o commitea y rebasa. Ver [[git-add-intent-to-add-rompe-stash]]
 - **Un guard cuya aguja cubre UNA forma sintáctica se esquiva refactorizando** — sacar el objeto de `style={{…}}` a una variable lo hacía invisible sin quitarlo del DOM. Al tocar algo que un trinquete debería contar, comprueba que el número se mueve; si no se mueve, el guard es el bug. Ver [[un-guard-cuya-aguja-cubre-una-sola-forma-sintactica-se-esquiva-refactorizando]]

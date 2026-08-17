@@ -203,3 +203,8 @@ Estaban en el índice de arranque, que se paga en TODA sesión sin disparador cl
 - **El fallo que eso provoca**: si una sesión rellena `environment` mirando sólo su directorio de trabajo, el bloque afirma cosas falsas en cuanto trabajas en otro producto —«el repo de confianza es X», «los dominios internos son los de X»— y el clasificador decide con esa foto. Peor: una regla de `soft_deny` escrita como «nada que no sea el proyecto enlazado de X» **soft-deniega el trabajo legítimo de los demás repos**, que es un rojo sobre trabajo correcto (P5).
 - **Y no se arregla moviéndolo al repo que describe**: ahí sería inerte. Se arregla generalizándolo — «el repositorio de confianza es el del cwd», los dominios y servicios de todos los productos— porque su ámbito ES global por diseño. Y hay que incluir explícitamente `~/Projects/obsidian-vault` y `~/.claude`: se tocan desde cualquier sesión (cierre de sesión y configuración), y dejarlos fuera bloquea `/obsidian-1` entero.
 - ⚠️ **Conflicto vivo entre dos mecanismos del arnés**: el stop hook `harness-commit-guard.sh` EXIGE commitear `~/.claude`, y el clasificador DENIEGA todo `git commit`/`push` ahí —con `cd` y con `git -C`—. Ningún agente puede satisfacer al hook: hay que pedírselo a Manuel con `!`, o añadir la regla a `permissions.allow`. Un hook que pide lo que otro mecanismo prohíbe es un rojo que nadie puede apagar trabajando.
+
+## `git add -N` rompe `git stash` (movido desde hot.md, 17-ago-2026)
+
+Con un fichero en `intent-to-add`, `stash push`/`pop` fallan **a medias**. `git reset` antes, o
+commitea y rebasa. Ver [[git-add-intent-to-add-rompe-stash]].

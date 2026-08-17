@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-17 iteraciones 33-34 (Storage desbloqueado —el bloqueo era una deducción, no un permiso— y el hueco de PII que se declaraba en silencio · `meta` 192 · siguiente: la ruta de borrado de bytes en `core/files`, que desbloquea 133 y 134)
+updated: 2026-08-17 iteraciones 33-35 (Storage desbloqueado, el hueco de PII declarado, y el motivo de una divergencia que se perdía al aceptarla · `meta` 193 · siguiente: las TRES unidades de `docs/plan/PROMPT-CONTINUACION.md`, borrado de bytes ACOTADO primero)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -15,6 +15,35 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 - Tablero publicado: **`460ab415…`** desde el 17-ago — la URL vieja (`689ef079…`) empezó a dar
   404 al publicar. Ver [[claude-code-gotchas]] §Republicar un Artifact.
+
+## Estado (17-ago, iteración 35) — qué se comparte de verdad con TuFacturaIA, y dos afirmaciones mías falsas
+
+**`ba148686`.** Gate **0** · 383 ficheros · **5.157** pruebas. `meta` **193**.
+
+**La pregunta de Manuel («¿el CSS y el menú se cogen de TuFacturaIA?») contestada con datos**: de
+allí viene **UN fichero**, `src/app/tokens.css` — `src/shared/manifest.json` tiene una entrada, ya con
+**siete divergencias declaradas**. El menú, las 81 hojas y los 47 primitivos son propios. Y los chats
+de WhatsApp: motor construido (`core/messaging`, 6 módulos con tests), tablas aplicadas, **cero
+llamantes y cero pantallas** — el inbox es **E2.7**, en F2.
+
+**Corregidos dos documentos caducados**: `tokens.css` abría con «fuente única de design tokens de
+TuFacturaIA» remitiendo a un fichero inexistente aquí, y `24-frontera-tufacturaia.md` ignoraba que
+`api_access` estaba sólo en enterprise — resuelto allí con `crm_link` (#1844): cuatro planes y
+**allowlist de 15 endpoints**, así que **una ruta nueva nace FUERA**.
+
+**`issues/137`, encontrado USANDO la herramienta**: `sync:shared:accept --motivo` se llevó las seis
+divergencias vigentes. Arreglado el mismo día — ahora falla e imprime lo que se perdería
+(→ [[un-registro-de-excepciones-que-no-distingue-caducado-de-vigente-borra-los-dos]]).
+
+:warning: **Dos afirmaciones mías falsas, las dos por no releer lo medido.** (1) Dije tres veces que
+no hay ruta de borrado de bytes: **sí la hay**, `borradoDeBlobs()` en `core/lifecycle/puerto.ts:101`,
+y busqué por módulo en vez de por la llamada
+(→ [[buscar-una-capacidad-por-su-llamada-no-por-el-modulo-donde-crees-que-vive]]). (2) Dije que había
+arrancado `colima`: el log decía `already running`. Lo primero cambia el trabajo **a mejor** — hay
+patrón que copiar, no capacidad que inventar; falta lo ACOTADO, por interesado y por fila de papelera.
+
+**`issues/030` fuera de cuarentena y a `ready-for-agent`**: su encabezado seguía diciendo que lo
+desbloqueaba Manuel con un `grant`. Ya no espera a nadie.
 
 ## Estado (17-ago, iteraciones 33-34) — Storage desbloqueado, y no había ningún permiso que pedir
 
