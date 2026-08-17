@@ -63,5 +63,12 @@ justifica en un worktree anidado dentro del repo, o en proyectos sin Turbopack. 
 a hook en el comando que crea worktrees, que es el único momento en que la regla se aplicaría sola.
 (Fusionado aquí el duplicado `turbopack-build-rechaza-node-modules-symlink-en-worktree`, 14-ago.)
 
+**Tercera y cuarta reincidencia (17-ago), las dos en la MISMA sesión** y con esta nota ya escrita: dos
+worktrees enlazados con `ln -s`, lint/typecheck/vitest/suite completa en verde en ambos, y los dos
+parados por el pre-push en `build`. Confirma el diagnóstico de arriba: la nota no falla por contenido,
+falla por MOMENTO — se consulta cuando el build ya reventó, nunca al crear el worktree. Con cuatro
+reincidencias medidas, el hook al crear worktrees deja de ser «candidato claro» y pasa a ser la única
+salida: lo que se arregla leyendo, no se arregla.
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
 [[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].

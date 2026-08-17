@@ -153,3 +153,16 @@ documentado**, los dos números seguían siendo correctos con su fuente y su fec
 equivalente un superviviente, comprueba si **anula la comparación**. Se cierra con anti-vacío sobre el
 DATO antes de usarlo (aquí: `factor > 1`, porque un factor de contención menor que 1 diría que la
 máquina cargada va más rápida que la que está en reposo — imposibilidad física, no política laxa).
+
+**Decimoquinto — el arnés SE NEGÓ a mutar y tu propio filtro se comió el aviso.** No es «la mutación
+no se aplicó» por comillas: `mutate` **exige que el patrón aparezca exactamente 1 vez** y aborta con
+«el patrón aparece 2 veces (hace falta exactamente 1)» sin tocar el fichero. FacturaIA 17-ago: mutar
+`function revertCell() {` en cuatro hooks; tres tenían dos definiciones por fichero → tres abortos. Y
+como lancé el bucle con `| grep -E "control|VÍCTIMA"`, el aborto no casaba el filtro y quedaban solo
+las líneas de control: leí la **ausencia de veredicto** como «SIN VÍCTIMA» y lo publiqué. La
+conclusión de fondo era correcta por otra vía (ningún test montaba esa pantalla), pero la evidencia
+que enseñé no existía. Dos reglas: **no filtres con `grep` la salida del arnés mientras interpretas
+su veredicto** —son cuatro líneas, léelas crudas— y un patrón ambiguo se ancla con una línea única
+del cuerpo, no con la firma de la función. Familia del [[decimotercero]] al revés: allí un `✓
+VÍCTIMA` falso cerraba el asunto; aquí un «sin víctima» inventado abre una acusación que no sostiene
+ninguna medición.
