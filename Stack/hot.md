@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Todo bot de voz o chat debe identificarse como IA en la primera interacción** (art. 50 del AI Act, vigente desde el 2-ago-2026) — y el aviso va en el flujo, no en el prompt: si depende del modelo, el incumplimiento es silencioso. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - **mig:renumerar fail-open en worktrees; propiedad de un número = catálogo, no registro** — [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
 - **Al retirar una columna o su escritor, grep de quién la LEE** — el `DROP` no avisa de la función que la usa (cuerpo en cadena = sin `pg_depend`, revienta con `42703` en runtime), y un guard sobre una columna que ya nadie rellena compila y tiene tests verdes sin proteger nada. Ver [[funcion-sql-con-cuerpo-en-cadena-no-registra-dependencia-de-columna]]
 - **«¿Existe X?» se busca por la LLAMADA, no por el módulo** — la carpeta esperada contesta otra pregunta. Ver [[buscar-una-capacidad-por-su-llamada-no-por-el-modulo-donde-crees-que-vive]]

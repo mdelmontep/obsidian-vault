@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-16
+updated: 2026-08-17
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,15 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-15
+## Estado actual · 2026-08-17
+
+- ✅ **Los dos canales ya se identifican como IA, EN PROD (17-ago).** Lo pidió Alba tras una llamada de prueba del comercial de Movistar y antes de activar el desvío del fijo; entró en vigor el 2-ago el art. 50 del AI Act. Ninguno de los dos decía nada: voz abría con *"Hola, estás llamando a Centro Elphis"* y el chat solo se declaraba "agente virtual" al negarse a hablar de sustancias.
+  - **Chat**: nodo Code `Aviso IA primer contacto` en `chatwoot-event`, entre `Call router-ia` y `Post reply` — prefija *"Hola, soy Laura, la asistente virtual con IA de Centro Elphis."* y marca `ia_disclosed` en los `custom_attributes`. **Determinista a propósito**, y la marca en los attrs y no en el historial (Chatwoot solo devuelve 20 mensajes). Probado con 5 casos en local; sin drift de posiciones.
+  - **Voz**: nodo `welcome` del flow `a42bf76dcfa0` + regla de identidad en el `global_prompt`; agente **v3 publicado** (sin `publish-agent` no llega a las llamadas). Aquí va "inteligencia artificial" desarrollado, no la sigla: el TTS lee inestable las de dos letras. **Llamada de prueba verificada por Manuel.**
+  - Ambos prompts llevan además la regla de no afirmar nunca ser una persona. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]] · [[n8n-put-solo-acepta-executionorder-en-settings-y-conserva-el-resto]]
+  - ⚠️ **Falta el smoke del chat**: no entra un mensaje desde el 11-ago, así que el aviso de WhatsApp sigue sin ejercitarse en camino real. Un WhatsApp desde un número nuevo lo cierra — y de paso estrena las 15 correcciones de agosto.
+
+## Histórico reciente · 2026-08-15
 
 - **Auditoría de calidad de las conversaciones del bot (39 en Chatwoot, 28 con transcripción, 6-jul→11-ago) y 12 correcciones aplicadas.** El guion comercial funciona (8 de 28 acaban con enlace de cita, precios siempre correctos, filtra bien spam/empleo/intento de compra de droga); fallaba lo de alrededor. Aplicado en `router-ia`, `chatwoot-event`, `book-and-notify` y `doctoralia-email-sync`, con backup previo y sin drift de posiciones.
   - ✅ **El bot ya puede confirmar una cita.** Era el peor: un paciente en recaída preguntó si su cita de mañana estaba bien puesta y se llevó *"no puedo acceder a la información de las reservas"*. `doctoralia-email-sync` extraía la fecha pero solo la escribía en Clientify. Ahora la persiste en `conversation_state.paciente_data.cita` (dos nodos: uno para la cita y **otro para las cancelaciones**, que el guard mandaba a skip) y el router se la pasa al LLM ya formateada y clasificada (PENDIENTE / PASADA / CANCELADA / NINGUNA). → [[ADR-053-la-cita-de-doctoralia-vive-en-conversation-state]] · [[el-estado-derivado-tambien-hay-que-sincronizarlo-en-la-rama-que-descarta]]
