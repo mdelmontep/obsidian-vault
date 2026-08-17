@@ -29,13 +29,17 @@ TuCRMIA se integra pegando una api key de la propia org del cliente; nace `key_t
 - **Rojo medido**: barrido de mutación 3/3 con víctima (quitar el estrechamiento → 3 rojos; no comprobar el derecho → 2; desincronizar una etiqueta → 1).
 - De paso: `docs/qa/inventario/gating.md` decía «api_access → Pro+», falso desde la mig 399.
 
-## 17-ago-2026 — la v1 gana webhooks y estado de cobro (#1849 `9b7dc07c9` · #1850 `8fe6716ac`)
+## 17-ago-2026 — la v1 gana webhooks y estado de cobro (#1849 `9b7dc07c9` · #1850 `8fe6716ac` · #1851 `ce89a78d0`)
 
-Las dos piezas que le faltaban al vínculo con TuCRMIA después de `crm_link`. Queda **#1851** (evento de cobro parcial), abierto y con decisión de producto dentro.
+**El vínculo TuCRMIA↔FIA queda COMPLETO**: las cuatro piezas (#1844 `crm_link`, #1849, #1850, #1851) en prod el mismo día.
 
 - **#1849 — `GET|POST /v1/webhooks`, `PATCH|DELETE /v1/webhooks/{id}`, `POST /v1/webhooks/{id}/test`.** El scope `webhooks:manage` existía desde la **mig 025 sin un solo endpoint detrás**: activar una integración exigía que alguien de la casa entrara a Ajustes por cada cliente. → [[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]
 - **#1850 — `GET /v1/facturas/{id}` publica el estado de cobro** (cobrado y pendiente cobrable), que es de lo que depende #1851.
+- **#1851 — `factura.cobro_registrado` (mig 705)**, evento NUEVO en vez de ampliar `factura.paid`: cambiarle el disparador habría hecho que un CRM diera por cobrada una factura a medias, y en un webhook eso no da error. Emite también al ANULAR un cobro. Smoke en prod con `ROLLBACK`, 5/5: el payload salió con `estado: parcial` cuando la factura estaba en `pendiente`, que es lo que **demuestra** que las cuatro `z` del nombre del trigger lo hacen correr después del recompute.
 - **Lo que destapó el barrido de mutación**, y no la revisión: un contrato que aseveraba el `import` de `deliverOne` en vez de su llamada (6 tests verdes con la protección anti-SSRF sustituida), y cinco tests de la aritmética de `pendienteCobrable` que no cubrían el cableado del DTO (`yaCobradoEur: 0` seguía verde — el pendiente habría ignorado todo lo ya pagado). → [[aseverar-sobre-el-import-no-asevera-sobre-la-llamada]] · [[probar-la-aritmetica-no-prueba-el-cableado-que-la-invoca]]
+- **Tres marcadores que mentían, cazados entre dos sesiones paralelas**, los tres con la misma forma —la herramienta no miente, CALLA, y el silencio se lee como conformidad—: `gh pr merge --delete-branch` sale con EC=1 habiendo mergeado (3 veces, reproducible con worktrees vivos sobre `main`); `mig:renumerar` y el `pre-push` fallan abiertos dentro de un worktree; y `Cierra #N` en español no cierra el issue. → [[numero-de-migracion-libre-se-mide-en-prod-no-en-el-repo]] · [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]] · [[gh-pr-merge-delete-branch-no-borra-la-rama-si-falla-su-checkout-local]]
+- **Y un gate que muerde donde no lo esperas**: `madge` indexa `__tests__/`, así que un PR cuyo diff es «solo un test» mueve el grafo de dependencias y el `pre-push` lo para. Verificado dos veces el mismo día, en dos sesiones distintas. → [[madge-indexa-los-tests-asi-que-anadir-solo-un-test-mueve-el-grafo]]
+- **Abiertos con medición, no con sospecha**: **#1856** (el embudo de reclamación no ve el ledger de la mig 640 — 0 filas afectadas hoy) y **#1858** (nadie barre las dependencias entre features que YA existen en prod — 0 de 17 violadas). Los dos documentan riesgo latente sin vigilancia, no incendio.
 
 ## Poda del hub del 07-ago-2026 (noche) — tres entradas cerradas sin pendientes
 

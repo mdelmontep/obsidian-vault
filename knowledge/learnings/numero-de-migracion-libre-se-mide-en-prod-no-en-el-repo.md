@@ -30,4 +30,10 @@ Y sus «apariciones sin traducir» incluyen falsos positivos: el SVG del grafo d
 coordenadas que contienen el número (`673` dentro de un `<path d="…">`). Traducirlas corrompería el
 fichero. Por eso el script **lista** en vez de sustituir.
 
+**Dentro de un worktree las dos herramientas FALLAN ABIERTAS** (17-ago): `mig:renumerar` avisa «no se
+pudo leer el remoto, el número sale SOLO del repo» y el `pre-push` avisa «no se puede comprobar si ya
+está aplicado en producción» — a los dos les falta `opsa`/`psql`/`supabase/.temp/pooler-url`, que no
+se hereda del repo raíz. Avisan y siguen. Dos silencios seguidos se leen como confirmación: la única
+comprobación válida sigue siendo la consulta de arriba.
+
 Ver [[aplicar-migracion-antes-del-merge-deja-el-registro-mintiendo]].
