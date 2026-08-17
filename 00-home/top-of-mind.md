@@ -38,7 +38,7 @@ tags: [home, prioridades]
 - 🟠 **TuFacturaIA — censo de filas densas clasificado entero (PRs #1547/#1548): quedan 15 filas por arreglar (08-ago)** — no eran 8 ni 33; el grep a mano fallaba. Issues #1540 y #1541. → [[facturaia]] §NEXT
 - **Infra — reboots: 2 cabos, ambos atajados (07-ago)** — **tuyo**: `restart: unless-stopped` al compose de documenso en el panel Dokploy (el `docker update` de hoy se pierde al redesplegar) y mirar `/var/log/dokploy-restart-orphans/` tras el próximo reboot de Tecnocloud, única prueba en camino real del guardián. → [[contenedor-que-no-vuelve-tras-reboot-dos-causas-que-se-confunden]] · [[tecnocloud]] · [[simarro]]
 - **agency-portal — dar de alta DOKPLOYMANU en `/agency/infrastructure` (07-ago)** — clave ya autorizada y verificada; falta pegarla en el formulario (no hay API de alta). → [[agentesia]]
-- 🟢 **AGH Ibérica — `main` `534858c`: 6 PRs y 7 issues dentro (17-ago tarde), gate verde a la primera** · ✅ **#1284 arreglado** sin Deploy, las 1.064 trazas intactas. ⚠️ **Casi no la usan** (1.064 trazas en 5 semanas): pesarlo antes de gastar ~12 $ en el lote de evals. 🔴 **Tuyo: #1092 paso 1**. ▶️ Barato: #1305 · #1291 · #1306. → [[agh-iberica]]
+- 🟢 **AGH Ibérica — `main` `7c9bd36`: 12 PRs y 12 issues dentro (17-ago noche), gate verde y prod verificada** · ▶️ **#1322**, un defecto de PRODUCCIÓN, es lo siguiente. 🔴 **Tuyo: #1092 paso 1**. 💸 Evals (~12 $): **casi no la usan**. → [[agh-iberica]]
 - 🟢 **TuFacturaIA — auditoría del guardado silencioso en prod, quedan 3 cabos (30-jul)** — **pendientes**: enganchar los E2E a algún CI (hoy el crawler falla y nadie se entera), burndown de 67 casts ciegos y la alerta 61 de Dependabot. Prompt listo en `docs/architecture/prompt-burndown-guardado-silencioso.md`. Detalle → [[facturaia]]
 - 🟢 **TuFacturaIA — ticket #86 de Borja: solo queda contestar y pasarlo a `resuelto`** — todo lo técnico en prod (28/29-jul), ambos importes correctos. Detalle → [[facturaia]]
 - 🟠 **TuFacturaIA — arquitectura y auth (5 PRs en prod, 27/28-jul): quedan 2 acciones tuyas** — fijar `SIGNING_LEGACY_UNTIL` (sin él el HMAC v2 es cosmético; el panel avisa de cuándo se puede cerrar sin riesgo) y encender `INTERNAL_WRITE_GATE_ENFORCE` cuando haya datos. Detalle y hallazgos → [[facturaia]] §Bloqueos · [[helper-de-auth-que-asume-validacion-del-caller]]
@@ -89,7 +89,7 @@ tags: [home, prioridades]
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Chat LIVE · voz y chat ya se identifican como IA (17-ago) · 15 fixes sin estrenar · secretos sin rotar |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
-| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · `main` `534858c` · solo abierta la #1302 de Borja · 🔴 **tuyo: #1092 paso 1**, un envío real a móvil · 💸 **decidir**: el lote de evals (~12 $), sabiendo que hoy **casi no la usan** |
+| AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · `main` `7c9bd36` · solo abierta la #1302 de Borja · ▶️ **#1322** (defecto de PRODUCCIÓN) · 🔴 **tuyo: #1092 paso 1** · 💸 evals ~12 $, **casi no la usan** |
 | Aula | [[aula]] | Propio · **publicada** en dokploymanu · 10 de 29 lecciones, runner en marcha |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 

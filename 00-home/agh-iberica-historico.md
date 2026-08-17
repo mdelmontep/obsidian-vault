@@ -9,6 +9,10 @@ tags: [cliente, agh-iberica, historico]
 Estados anteriores del hub [[agh-iberica]], sacados del dashboard para que el arranque de sesión no
 los pague. El detalle día a día vive en `docs/status-log/` del repo.
 
+## 2026-08-17 (tarde)
+
+🟢 **Seis PRs dentro, siete issues cerrados** (`4a83b42`), gate verde a la primera (`3670/239/5f`), combinación de las siete medida antes de mergear con suma exacta. 🩺 El flake `57P01` cerrado como CLASE, no por fichero. 🟢 **Langfuse recuperado sin Deploy** (`docker compose up -d clickhouse`): 1.064 trazas intactas, ventana real **10 días** — el diagnóstico previo y su corrección eran los dos falsos. 🔴 Tres premisas falsas del día eran propias (dos caminos de salida de un read donde hay uno; `git ls-files` donde el barrido usa `readdirSync`; censo 8/10 siendo 7/9).
+
 ## 2026-08-15 (noche) — `main` en `10faf60`
 
 🟢 **Dentro la NOCHE del 15-ago: 13 PRs y 14 issues** (`ff1ce5d` → **`10faf60`**) — **siete mías y las CINCO de Dani y Borja**, más el arreglo del rojo y dos de cierre. Gate de las doce combinadas `agente 3429/239/5f · dashboard 1229/0/0f · base 219ee16` ✓. Prod `sha256:4ca23792… · 302 ficheros`.
