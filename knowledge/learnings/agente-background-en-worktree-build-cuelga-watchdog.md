@@ -14,3 +14,11 @@ Recuperación preferida: **`SendMessage` al `agentId` del agente caído** → re
 Prevención: en el prompt pide verificar con `lint`+`typecheck`+**unit tests** (no el build completo); deja el build pesado para ti al integrar. Casos: 3 mejoras MCP (#396/#397/#398) colgadas en build; refactor arquitectura #472/#473/#474 (2 muertos en stream, 1 truncado) recuperados con SendMessage. Ver [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] · [[claude-code-agentes-worktree-failure-modes]].
 
 **Ampliación 9-ago: esa prevención no siempre basta.** Se relanzaron tres agentes con el prompt ya limpio (prohibido `build`, suite y `git commit` sin `--no-verify`) y murieron igual a los 600 s, aún en fase de lectura. Con la máquina cargada —otra sesión de Claude Code compilando OTRO repo en paralelo— el watchdog salta antes de que el agente produzca nada. Solo sobrevivió uno, forzando `model: sonnet` y prompt más corto. Práctico: **si el entorno está cargado, no delegues, hazlo tú**; y antes de lanzar una tanda mira si hay procesos ajenos (`pgrep -fl "next|vitest|prettier"`), que además envenenan cualquier medición de tiempo (una suite tardó 49 min en vez de 45 s). Ver [[cpu-contencion-multisesion-falso-positivo-ui-atascada]].
+
+**Modo nuevo (15/17-ago): el agente se PARA SOLO a «esperar notificaciones» de sus propios
+procesos en background**, aunque su prompt prohíba explícitamente background y monitores —
+5 agentes distintos en una sesión, algunos en bucle (nudge → un paso → otra espera). El
+`SendMessage` de reanudación solo avanza un eslabón por vez. Remedio que cerró más rápido:
+pedirle el parte final (qué falló, qué dejó a medias, decisiones) y que el orquestador tome
+gates+commit+push+PR sobre su worktree. El trabajo del agente suele estar bien; lo roto es
+su bucle de cierre.

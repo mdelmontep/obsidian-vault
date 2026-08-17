@@ -43,3 +43,15 @@ revertir los dos PRs. Orden bueno: `db push` → `migration list` para confirmar
 Un `db push` que falla es razón para **parar el merge**, no un paso que se apunta para
 luego. Y ojo con el orden inverso: el número se renumera justo antes de cada merge, así
 que en una tanda de varios PRs con migración toca ir de uno en uno.
+
+**Sexta vez, a TRES sesiones (15/17-ago, migs 693-703)**: dos sesiones renumerando en
+círculo (693→696→697→698) mientras una tercera aplicaba por SQL editor con el pooler caído.
+Tres piezas nuevas: (1) `mig:renumerar` es **fail-open** — sin leer prod avisa pero propone
+número mirando solo el repo, y en un worktree NO lee prod ni con `SUPABASE_DB_PASSWORD` si
+falta `supabase/.temp/` completo (el `pooler-url` es la conexión real): así nos propuso el
+mismo número a dos sesiones. (2) La **propiedad** de una fila ya aplicada se desambigua por
+CATÁLOGO, no por el registro: ¿existen en prod los objetos de TU migración? Si no, la fila es
+de otro. (3) Lo que funcionó: el número se ocupa AL MERGEAR, coordinación explícita entre
+sesiones (SendMessage), avisar SIEMPRE antes de aplicar a prod, y verificación cruzada por
+nombre al cerrar. Prod por delante de main mientras un PR espera es ventana de colisión:
+mergear rápido la cierra.
