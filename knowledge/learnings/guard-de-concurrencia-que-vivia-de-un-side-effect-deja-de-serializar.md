@@ -23,5 +23,13 @@ un objetivo de 1.331. Reproducido en prod.
 - El test que lo fija no mira el resultado, mira que el UPDATE **cotejó** el token: el
   resultado es idéntico en el camino feliz, y por eso el bug sobrevivió a la suite.
 
+**Generaliza más allá de la concurrencia: el escritor no tiene que moverse, basta con que
+desaparezca.** Caso TuFacturaIA (#1702 PR 4, 17-ago): al borrar el endpoint del trial sin
+tarjeta, nadie volvía a escribir `org_complementos.trial_started_at`, que es lo único que
+lee el guard antifarming. Seguía compilando y con tests en verde —le pasaban las filas ya
+construidas, así que probaban la consulta pero no que alguien la escribiera— y devolvía
+`false` siempre: cancelar y recontratar daba 14 días gratis cada vez, indefinidamente. Al
+retirar un escritor, grep de **quién LEE** lo que escribía, no solo de quién lo llamaba.
+
 Pariente de [[atribucion-quien-usa-x-ahora-columna-escalar-pierde-bajo-concurrencia]] ·
 [[columna-derivada-por-recompute-solo-admite-un-escritor]]
