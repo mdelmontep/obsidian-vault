@@ -85,6 +85,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[hash-magic-link-supabase-requiere-setsession-explicito]] — hash magic link supabase requiere setsession explicito
 - [[helper-sql-orden-last-revert-at-antes-de-update-mfa]] — helper SQL con chain de triggers — setear guard ANTES del trigger source
 - [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]] — integración crítica en jsonb de tabla genérica pierde observabilidad por diseño
+- [[la-cabecera-de-error-del-runner-roba-la-primera-ocurrencia-al-parser]] — la cabecera de error de un runner roba la primera ocurrencia y el parser cuenta 0 pasados
 - [[la-metrica-de-estado-se-mide-despues-de-commitear]] — una métrica derivada del árbol se mide después de commitear, nunca antes
 - [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]] — la reparación conversacional tiene nombre canónico y los frameworks la traen de serie
 - [[leer-un-canal-con-limit-1-se-salta-mensajes]] — leer un canal con limit=1 o filtro de fecha se salta mensajes recién llegados
@@ -123,6 +124,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[now-en-postgres-es-hora-de-inicio-de-transaccion-no-orden-de-cadena]] — ordenar por created_at una cadena serializada con advisory lock puede darte el orden contrario
 - [[nulls-not-distinct-idempotencia-con-discriminador-opcional]] — extender un unique de idempotencia con columna nullable usando NULLS NOT DISTINCT
 - [[numeric-precision-drift-bruto-neto-iva]] — numeric(x,2) genera drift inevitable convirtiendo bruto↔neto con iva
+- [[order-by-created-at-empata-dentro-de-la-misma-transaccion]] — order by created_at empata dentro de la misma transacción y la aserción de orden es una lotería
 - [[outbox-event-type-fuera-del-catalogo-muere-silencioso]] — outbox — un event-type fuera del catálogo suscribible muere en silencio
 - [[outbox-idempotencia-por-hash-contenido]] — outbox idempotencia por hash de contenido, no por clave estructural
 - [[outbox-trigger-bd-vs-hook-js-multiples-entry-points]] — outbox para columna mutada por múltiples puntos → trigger BD, no hook JS

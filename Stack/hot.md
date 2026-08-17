@@ -48,11 +48,12 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (24)
+## Ha vuelto a pasar (25)
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
+- **Arreglar un flake en UN fichero garantiza que vuelva por el hermano** — 7 de 9 nacieron sin el `pool.on("error")` copiado a mano; se cierra con un punto único que DISCRIMINE y un barrido que impida el noveno. Ver [[vitest-unhandledrejection-run-rojo-pese-a-0-fallos]]
 - **Un backfill se guarda por el INVARIANTE, no por el síntoma** — «a toda fila sin X, ponle X» habría duplicado 106 de 115 filas; la condición que lo hace neutro deja 9. Ver [[backfill-guardado-por-invariante-en-vez-de-por-sintoma]]
 - **Citar el delimitador dentro de su propia región la cierra ahí mismo** — `$$` en un comentario de `do $$`, acento grave en plantilla, `*/` en JSDoc; el error sale LEJOS. Nadie lo ve porque `allowJs:false` deja los `.mjs` fuera de `tsc` y un fichero que nadie ejecuta no lo analiza nada. Ver [[citar-el-delimitador-dentro-de-su-propia-region-la-cierra-ahi-mismo]]
 - **Un gate que cruza dos listas es ciego a lo que no está en ninguna** — cruzar A contra B no ve lo que falta en las dos; hace falta una tercera fuente, normalmente el disco. Ver [[un-gate-que-cruza-dos-listas-es-ciego-a-lo-que-no-esta-en-ninguna]]
@@ -75,7 +76,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Al partir una pila en PRs, el fix va con el commit que lo causa** — si no, mergear el primero publica el fallo; con datos personales el hueco entre merges ES la exposición. Al MERGEARLA, squashear el padre deja a la hija `CONFLICTING` **o `MERGEABLE` reaplicando su diff**: `rebase --onto origin/main <padre>`. Ver [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]] · [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]]
 - **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
 - **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
-- **Un gate solo puede fallar HACIENDO RUIDO** — un camino que no encuentra nada y sale con 0 es un adorno: fail-closed, y avisar por `stderr` sin pesar en el exit code no es avisar. El gate que corres aparte NO es el del hook. Ver [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] · [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]] · [[gate-con-ruta-relativa-no-corre-desde-subdirectorio-y-sale-verde]] · [[una-suite-en-verde-no-prueba-el-camino-real]] · [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]]
+- **Un gate solo puede fallar HACIENDO RUIDO** — un camino que no encuentra nada y sale con 0 es un adorno: fail-closed, y avisar por `stderr` sin pesar en el exit code no es avisar. El gate que corres aparte NO es el del hook. Ver [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] · [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
 - **Un verde esperado «vacío» no mide nada si el estado ya era vacío** — RLS sobre tabla vacía da `[]` con y sin RLS. Ver [[verificar-rls-en-tabla-vacia-no-discrimina]]

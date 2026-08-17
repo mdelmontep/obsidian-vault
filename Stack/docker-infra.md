@@ -78,6 +78,25 @@ tags: [docker, traefik, dokploy, infra]
 - En Dokploy Environment Settings, la clave debe ser exactamente `NEXT_PUBLIC_SUPABASE_URL`, no `SUPABASE_URL`.
 - Síntoma: `env | grep SUPABASE` en el contenedor muestra `NEXT_PUBLIC_SUPABASE_URL=` (vacío) aunque en Dokploy UI esté con valor → el compose referencia `${NEXT_PUBLIC_SUPABASE_URL}` pero la UI tenía `SUPABASE_URL`.
 
+## Un servicio AUSENTE se levanta solo, sin el Deploy entero
+
+Si a un stack de Dokploy le falta **un** contenedor pero el servicio **sigue declarado** en el compose,
+no hace falta Deploy (que reinicia todos los sanos y es prod):
+
+```
+cd /etc/dokploy/compose/<stack>/code && docker compose up -d <servicio>
+```
+
+- Los demás salen listados como `Running` y **no se reinician**; verificado con `Up 6 weeks` intactos.
+- **El compose no se edita**, así que el panel NO queda desincronizado — lo que la disciplina prohíbe
+  es editar en disco (el Deploy lo regenera), no arrancar algo ya declarado.
+- Antes: comprobar que el servicio está en el compose (`grep -nE "^  [a-z-]+:"`) y que **sus volúmenes
+  existen** (`docker volume ls`) — si el volumen sobrevive, no se ha perdido nada.
+- Verificar por el **fallo exacto**, no por `/health`: `docker exec <consumidor> wget -qO- http://<servicio>:<puerto>/ping`.
+- ⚠️ No dar por hecho lo que diga tu máquina del subcomando: en el Mac con Colima `docker compose` **no
+  existe**, y en el host de AGH es v5.2.0. Caso real (17-ago): ClickHouse de Langfuse ausente 10 días,
+  reparado en 20 s por esta vía tras un día dado por bloqueado en «hay que hacer Deploy».
+
 ## Dokploy — alta de un servicio Compose por API (sin panel)
 
 - Secuencia probada (marketing-runner, 13-ago): `compose.create` `{name, environmentId, composeType:'docker-compose'}` → `compose.update` `{composeId, sourceType:'github', owner, repository, branch, composePath, githubId, autoDeploy}`. El `environmentId` y el `githubId` se copian de un servicio hermano vía `dokploy-safe.sh /api/project.one` y `/api/compose.one`.
