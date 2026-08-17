@@ -39,3 +39,11 @@ tags: [retell, voice, sdk, webhooks]
 
 - **API v3 list-calls (desde ~2026-06)** — `POST /v3/list-calls` (deprecated `/v2/`). Response: `{ items: RetellCall[], pagination_key?: string, has_more: boolean }` (antes array plano). Paginar con `has_more + pagination_key`, no `batch.length < LIMIT`.
 - **retell-sdk 5.38.0: `webhook_auth` eliminado** — `/lib/webhook_auth.js` ya no existe. Reimplementar con `crypto.createHmac('sha256', apiKey).update(rawBody).digest('hex')` + `crypto.timingSafeEqual`. Ver [[retell-webhook-firma-hmac-body-mas-timestamp]].
+
+## Versionado y publicación (agent + conversation flow)
+
+- **`GET /get-agent/{id}` SIN `?version=N` devuelve el DRAFT más reciente, no lo publicado** — puede llevar meses sin publicar (visto real: un draft de junio idéntico al publicado, nunca tocado). Para saber qué versión usan las llamadas reales: `GET /list-agents`, filtrar por `agent_id` y coger la de `is_published: true` con el `version` más alto.
+- **`PATCH /update-agent` y `PATCH /update-conversation-flow` sin `?version=N` editan el DRAFT en el sitio** (no crean uno nuevo si ya hay un draft sin publicar) — **antes de editar un draft heredado, diferéncialo contra el publicado** (`nodes` node-a-node): si es idéntico, es seguro construir encima; si no, hay trabajo ajeno sin publicar que no debe perderse a ciegas.
+- **`PATCH /update-conversation-flow/{id}?version=N` sobre una versión YA publicada da 400** `"Cannot update published conversation flow"` — solo se puede patchear el draft (omite `version` o usa el número del draft, nunca el del publicado).
+- **`POST /publish-agent/{id}` publica la versión que acabas de patchear Y abre un draft nuevo encima** — tras publicar, `list-agents` muestra dos filas `is_published: true` (la vieja publicada sigue marcada así en el histórico) — la que importa es la de mayor `version`. Verificar con `GET /get-agent/{id}?version=N` explícito, no fiarse del default.
+- **`PATCH /update-conversation-flow` en el campo `nodes`: hay que mandar el array COMPLETO**, no solo el nodo que cambia — es reemplazo, no merge. Sacar la lista de "Valid Body Fields" con la doc oficial (`global_prompt`, `nodes`, `start_node_id`, `tools`, `model_choice`... — NO `conversation_flow_id`/`version`/`is_published`, son de solo lectura) y filtrar el objeto a esos campos antes de enviarlo.

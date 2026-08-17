@@ -12,6 +12,18 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
+## Estado (2026-08-17)
+
+**Seguimiento a los fixes del 13-ago, arrancado por una llamada real del cliente con 3 quejas — las 3 confirmadas y corregidas.** Detalle técnico completo: [[simarro-voz-fixes-claro-clusters-17-ago]].
+
+- **Guard de teléfono endurecido** (`Edit Fields3`, `iMoTKZWxYLymGuHF`): el guard de mayo solo descartaba el placeholder viejo — hoy el modelo confundió teléfono con nombre y llegó basura hasta Kommo. Ahora valida que parezca un teléfono real, no solo que no sea el patrón conocido. Confirmado E2E con lead de prueba real.
+- **"Claro." + transición en el mismo turno — causa raíz oficial encontrada**: los edges de Retell solo evalúan tras un turno NUEVO del usuario, nunca justo tras la propia frase del agente (confirmado por soporte oficial de Retell, ver [[Stack/retell/conversation-flow-outbound-gotchas]]). Fix en los 2 flujos de voz (entrada v24, salida v1) — confirmado con llamada real sin ninguna pausa.
+- **Ruido de fondo**: `denoising_mode` ausente en el agente de salida (sí lo tenía el de entrada) — igualado.
+- **Clústeres de proximidad geográfica (feature nueva)**: núcleo (Majadahonda/Las Rozas/Pozuelo/Boadilla) y sierra (Collado Villalba/San Lorenzo/Guadarrama/Villaviciosa), sin mezclarse, sin Madrid capital. De rebote, encontrado y corregido un bug preexistente que descartaba SIEMPRE el mensaje con la sugerencia antes de llegar a la llamada (`Format For Voice`, ver [[Stack/n8n]]). Verificado con 4 casos reales contra el catálogo real.
+- **Zona rechazada no se guarda como interés**: efecto colateral de la función nueva — si Ana propone una zona y el cliente la rechaza, ya no se captura como si fuera lo que pide. Sin validar aún con caso real.
+
+**Pendiente**: confirmar regla de zona rechazada en llamada real. Corregido en este hub: el lanzador outbound (`2LqwDgLecHwjgIQl`) está ACTIVO (verificado hoy), no inactivo como decía la entrada de junio — el bloqueante real sigue siendo que 0 leads tienen el consentimiento marcado.
+
 ## Estado (2026-08-13)
 
 **Petición del cliente (Dani, 11-ago) — 8 puntos pendientes de verificar/responder, borrador de respuesta entregado en sesión (sin enviar todavía)**. De los que se pudieron verificar hoy con datos reales:
@@ -24,7 +36,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **Bug real PRE-EXISTENTE encontrado de rebote**: el fix de deduplicado de mensajes del 12-ago (`Chatbot Simarro`) llevaba desde entonces sin poder procesar NINGÚN mensaje real — 3 nodos (`Redis - Marcar mensaje`, `Edit Fields`, `If2`) leían `$json.body[...]` cuando ya no existía tras el Redis GET de dedup. Nunca se había probado con un mensaje real hasta hoy. Corregido y confirmado end-to-end (el bot respondió correctamente a una búsqueda real). Ver [[n8n-json-narrowed-rompe-nodos-lejanos-sin-error]].
 - Slack SÍ avisó del primer fallo (excepción real) pero no del segundo (fallo silencioso, sin excepción) — no es un bug del aviso, es el límite de lo que un error-workflow puede detectar.
 
-**Pendiente**: confirmar con un mensaje real más que el PATCH de preferencias ya no falla (arreglado el formato del campo "Habitaciones", que es `select` en Kommo, no numérico — ver [[kommo]]).
+✅ **Confirmado el mismo 13-ago**: PATCH de preferencias validado con mensaje real (Guadarrama, 320.000€, 2 habitaciones) — los 3 campos quedaron bien en Kommo tras el fix del campo "Habitaciones" (`select`, no numérico — ver [[kommo]]).
 
 **Barrido cross-cliente cerrado (13-ago)**: el mismo patrón de dedup roto NO se repite en Laserys Las Rozas ni Clínica Zen (mismo nodo reductor, pero referencian bien el nodo webhook) ni en Elphis/EcoBox (arquitectura Chatwoot, sin ese tipo de nodo). AGH Ibérica no usa n8n. Era específico de Simarro. Detalle en [[simarro-fix-preferencias-busqueda-y-bugs-dedup-whatsapp-13-ago]].
 
@@ -63,7 +75,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 
 ## Estado (2026-06-11, histórico)
 
-- **Outbound reactivación (Opción C) VALIDADO E2E 2026-06-11** — llamadas IA a leads fríos cada ≥10 días (L-V 10:30, finde → lunes), cap 3 intentos, gate = CF consentimiento `1376604` marcado a mano. Agente Retell `agent_042b9fbc990838ae4117315440` (voz `eleven_multilingual_v2` temp 1.1) + flow `conversation_flow_29839e6fd152` **v2 (17 nodos, tool Buscar_viviendas + reglas de naturalidad)**; lanzador `2LqwDgLecHwjgIQl` (INACTIVO, **integra `match_pairs`**: pivote vivienda-original→motivo→alternativa del matching) + handler `flhsvOskRZiHrcKu` (activo). `sql/017` aplicada. 4 llamadas test al móvil de Manu; la 4ª completó el camino entero: motivo descarte → alternativa → búsqueda en cartera → visita agendada con `idealista_id` correcto. **Falta**: marcar consentimientos (Ramón) + activar lanzador. Lista Robinson documentada, no se usa aún. Doc presentación: `simarro/docs/entrega-fase2-simarro.html`. Detalle: [[llamadas-outbound-reactivacion]].
+- **Outbound reactivación (Opción C) VALIDADO E2E 2026-06-11** — llamadas IA a leads fríos cada ≥10 días (L-V 10:30, finde → lunes), cap 3 intentos, gate = CF consentimiento `1376604` marcado a mano. Agente Retell `agent_042b9fbc990838ae4117315440` (voz `eleven_multilingual_v2` temp 1.1) + flow `conversation_flow_29839e6fd152` **v2 (17 nodos, tool Buscar_viviendas + reglas de naturalidad)**; lanzador `2LqwDgLecHwjgIQl` (**ACTIVO** — corregido 17-ago, esta entrada decía INACTIVO desde junio; **integra `match_pairs`**: pivote vivienda-original→motivo→alternativa del matching) + handler `flhsvOskRZiHrcKu` (activo). `sql/017` aplicada. 4 llamadas test al móvil de Manu; la 4ª completó el camino entero: motivo descarte → alternativa → búsqueda en cartera → visita agendada con `idealista_id` correcto. **Falta**: marcar consentimientos (Ramón) + activar lanzador. Lista Robinson documentada, no se usa aún. Doc presentación: `simarro/docs/entrega-fase2-simarro.html`. Detalle: [[llamadas-outbound-reactivacion]].
 - **Audit 2026-06-10**: BD sana — 12 viviendas activas (8 con `agente:`, 4 sin → fallback Ramón), tabla `agents` completa (8 agentes, emails reales), `match_pairs` verificado con los 2 leads activos (case-insensitive OK). **Fix aplicado**: la anulación de citas (`om8iBm8ovENIgaxv`) no miraba los calendarios de Elisa, Javier, Mónica ni Ramón Simarro — añadidos los 4 pares Buscar/Eliminar (backup `om8iBm8ovENIgaxv-cambio-pre-calendarios-faltantes-20260610.json`).
 - **Notificaciones P1-P5 HECHAS** (2026-06-02→09): confirmación cliente formulario, confirmación visita, aviso interno visita a Ramón+agente (emails reales en BD), seguimiento post-visita 48h (salesbot 87873 + etapa Post-visita), alertas inactividad (`Xh2miozB7LvwQKia`, diario 08:30).
 - **Recordatorios** solo reaccionan a tareas Meeting (type 2) creadas por la reserva; matching usa Follow-up (1). ~~Especialista Asignado~~ desactivado 2026-06-08 (el agente va por `agente:` de Idealista).
@@ -98,6 +110,7 @@ Ver [[simarro-auditoria-voz-2026-08]] para el detalle completo (8 agentes de aud
 
 ## Otros pendientes
 
+- **Limpieza leads de test 17-ago (Kommo UI)**: `34951382` (TEST E2E Phone Guard), `34951644`/`34951946` (TEST E2E/E2E Outbound) — usados para validar el guard de teléfono y los fixes de voz de hoy.
 - **Limpieza leads de test 12-ago (Kommo UI)**: `34790206` ("TEST BORRAR - validacion tarea") y su contacto `38931342` — usado para validar el fix de latencia de cancelación. Y avisar a `rss@`/`pss@simarroproperties.com`: recibieron 2-3 emails reales de "visita" por las pruebas de reserva de esta sesión (nombre "Test Latencia Claude").
 - **Contacto `38942304` ("Manuel del Monte") con teléfono roto (`+34` sin dígitos)** — corregirlo a mano con el número real y reenviar el mensaje de confirmación fallido de la conversación A236 para confirmar que el fix del teléfono ya lo resuelve de verdad (sin probar en real todavía).
 - **Outbound go-live** (solo queda): marcar consentimiento `1376604` en leads autorizados por Ramón → activar `2LqwDgLecHwjgIQl`.
