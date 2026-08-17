@@ -44,23 +44,20 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-17) — `main` en `8863b57`; **TABLERO VACÍO**: cero PRs abiertas de nadie
+## Estado (2026-08-17) — `main` en `5d3c473`; **TABLERO VACÍO**: cero PRs abiertas de nadie
 
-🟢 **Dentro el 16-ago (tarde): 8 PRs y 10 issues** (`c24d5c9` → **`8863b57`**) — #1254/#966 · #1264/#999 · #1267/**#1245+#1253** · #1263/#1037 · #1266/#951 · #1255/**#1161+#1144+#1146** · #1270/#1248 · #1271 cierre. Siete agentes en paralelo, base propia por track, **coste de evals CERO** (medido con `containsPromptMarker` real antes de coger nada). Combinación compilada ANTES de mergear: 0 conflictos, `tsc`/`lint` ec=0 ×2, **11 candados transversales en 329 passed**. Gate sobre `main` mergeado **por pasos separados**: `agente 3489 passed · 0 fallidos` + `dashboard 1257 passed · exit 0`, y **los dos contadores cuadran exactos** contra lo mergeado. Prod por contenido `sha256:9db9e147… · 304 ficheros`, construida **6 s después** de la única PR que toca `src/`.
+🟢 **Dentro el 17-ago (madrugada): 6 PRs y 6 issues** (`8863b57` → **`5d3c473`**) — #1274/#1272 · #1275/#1265 · #1276/#1269 · #1277/#1259 · #1278/#1258 · #1279/**#1256** (la única que toca `src/` del agente) · #1283/cierre. Seis agentes en paralelo, superficies disjuntas contadas fichero a fichero, **coste de evals CERO** (medido con `containsPromptMarker` real: `hitl-brain.ts` **no** es fuente de prompt aunque #1256 lo parezca). Prod verificada por contenido (`sha256:af532053…`, 304 ficheros, construida ~1 min después de `feece17`).
 
-🔑 **Lo reutilizable del 16-ago (tarde):**
-- **Un veredicto de mutación miente en las DOS direcciones**: una que **muere** puede matarla un caso que **duplica** la regla en vez de verificarla; una que **sobrevive** puede haber dejado la cota en 0 y el guard tautológico → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] (modos 13 y 14).
-- **`MERGEABLE` no significa «el diff es el tuyo»**: la hija apilada salió `CLEAN` y proponía re-aplicar el diff del padre. El detector barato es contar `gh pr diff --name-only` contra lo que la PR declara → [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]].
-- **`git worktree add` reescribe `package-lock.json`** y el preflight de #970 da CADUCO sobre un `node_modules` clonado y al día: los locks son byte a byte idénticos, así que el arreglo es `touch -r`, no `npm ci`.
-- **Un rojo con cara de real que era SIGTERM** (`expected 143 to be +0`) con la máquina a carga 49: se clasificó con tres evidencias, y **la decisiva no depende del reloj** — ninguno de los 40 ficheros del rango tocaba ese camino.
-- **Premisas: 5 de 11 falsas, cortas o caducadas.** #1146 FALSA por la mitad (ya la cerró #1153 → el track paró **sin diff**) · #1161-b: eran **2 de 8** métodos, no 4 (un escenario no es un método) · #1245 con premisa secundaria falsa (25 `sentencia` + 15 `valor`, no «todos de VALOR» — **la cifra falsa la teníamos escrita nosotros** en el snapshot) · #999 cierta al carácter, la única.
-- **El arnés de mutación ya está versionado**: `~/.claude` → `claude-harness` (`1ab6866`), con diario y negativa a correr desacoplado (#1253).
+🔑 **Lo reutilizable del 17-ago:**
+- **El hueco está en la PROPIEDAD que la PR declara como su aportación** — dos de dos SIN VÍCTIMA al revisar trabajo ajeno. Y **`0 SIN VÍCTIMA` del barrido no cubre nada mientras «sin medir» no sea 0**: revertir el hunk entero no compila y cae en esa categoría; borrar solo la llamada sí mide. → [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]]
+- **La combinación se compila ANTES de mergear, y los contadores tienen que CUADRAR**: `3534 = 3489+4+14+19+8` y `1271 = 1257+14` — sumar las PRs por separado da el mismo número que juntarlas, o sea que nada se pisa ni desaparece.
+- **`git cherry` no vale tras un squash de varias ramas** (dio 2, 5 y 7 «sin mergear» estando las seis dentro): decide comparar **los ficheros de cada rama** contra `main`. Y el flake `57P01` es de **CARGA, no de diff** — 4 de 6 corridas lo tuvieron a load 31-38, la combinación en calma salió limpia.
 
-🧾 **Issues nuevos (10):** #1256 (el más caro: `decline` incrusta `reminder.body`, texto **dictado**, y sale crudo por altavoz) · #1257 · #1258 · #1259 · #1260 · #1261 · #1262 · #1265 · #1268 · #1269 — todos con etiqueta.
+🧾 **Issues nuevos (4):** **#1280** (el `decline` del `execute` sigue crudo por voz: `failure.userReply` no pasa por el seam — radio = **todo** `UserFacingError`) · **#1281** `ready-for-human` (**`agh-postgres` no pertenece a ningún proyecto compose**, `Labels` = `{}`: `DRIFT_MODE=docker` es inejecutable contra el 5433 — tercera vez que ese camino cuesta tiempo) · **#1282** (el marcador del aviso de deriva es un literal: el candado ve que el emisor CAMBIE, no que aparezca uno NUEVO, **y #1268 lo estrena**) · **#1273** (botón de Entra sin gatear).
 
 ---
 
-📚 **Estados anteriores** → [[agh-iberica-historico]]. Lo del **15-ago (noche)** en una línea: 13 PRs y 14 issues (`ff1ce5d`→`10faf60`), las cinco de Dani y Borja dentro tras re-medirlas, y **5 de 6 premisas falsas con sesgo CORTO**.
+📚 **Estados anteriores** → [[agh-iberica-historico]]. **16-ago (tarde)**: 8 PRs y 10 issues (`c24d5c9`→`8863b57`) — su lección (`MERGEABLE` no es «el diff es el tuyo») **ya está en la regla 6 de `CLAUDE.md` desde #1272**. **15-ago (noche)**: 13 PRs y 14 issues.
 
 ⏸️ **Lo único vivo a propósito:** rama `manu/issue-1064-1212-1044-campo-aislado-y-huella` (#1064 + #1212 + #1044A) en `~/wt-1064`, **sin PR**. #1212 y #1044A hechos — y #1212 trae la cifra que faltaba: de los alias de FILTRO difieren **0** entre `toLowerCase` y `foldKey`, pero **de los 13 de ORDEN difieren 2**. Falta el caso-oro de #1064 y el prompt **cambió de verdad**, así que abrirla sería declarar cobertura de eval CERO sobre un cambio real de prompt (~12 $ para medir una PR sin su propia eval).
 
@@ -71,7 +68,7 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 🗓️ **14 y 15-ago, condensado** (detalle → [[agh-iberica-historico]]): 11 PRs y 12 issues la mañana del 15 · 17 issues el 14 en dos tandas · 11 de 16 premisas falsas en cuatro días · las 4 decisiones de producto de esa mañana, **tres implementadas** · #1097→#1098 mergeadas, que es lo que desbloqueó #1144·#1146·#1161 (ya dentro hoy).
 ✅ **Prod se verifica por CONTENIDO y sin SSH**: `curl …/version` vs `build:stamp --print` en árbol limpio → [[sellar-la-imagen-en-el-build-para-saber-que-corre-en-prod-sin-shell]]. El SSH del host **NO está caído** (`nc 5251` succeeded, medido dos veces).
 
-📋 **Cola libre**: los 8 nuevos de arriba + **#1188** (barrido de fixtures no discriminantes) del lote del 14-ago. **Decisiones mías que siguen SIN tomar:** #1167 · #1129. **#1180 ya decidida (NO entra), no re-litigar**.
+📋 **Cola libre**: los 4 nuevos de arriba + los del 16-ago que quedan (#1257 · #1260 · #1261 · #1262) + **#1268** (deuda de #1248, **DESBLOQUEADO**: su fichero ya está en `main`) + **#1188** (barrido de fixtures no discriminantes; esta tanda aporta **4 casos nuevos** de esa familia, ya cerrados dentro de #1269 — o sea que el patrón no era de aquel fichero). ⚠️ **#1268 y #1282 hay que ordenarlos entre sí**, no dejarlo al azar de quién coja cuál. **Decisiones mías SIN tomar:** #1167 · #1129 · **#1281** (recrear `agh-postgres` desde el compose, o declarar el modo docker como solo-CI). **#1180 ya decidida (NO entra), no re-litigar**.
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
@@ -114,4 +111,4 @@ La política de datos del cliente decide el escalón: (1) API pública + DPA + z
 
 [[agh-qa-voz-guion-llamada]] (guion de QA en llamada real) · [[agentesia]] · [[top-of-mind]]
 
-_Método de esta semana:_ [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]] · [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]] · [[campo-de-texto-libre-que-viaja-a-telemetria-es-un-canal-de-egress]] · [[regiones-distintas-en-el-mismo-fichero-de-test-no-se-afirma-sin-mirar-el-hunk]]
+_Método de esta semana:_ [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]] · [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]] · [[campo-de-texto-libre-que-viaja-a-telemetria-es-un-canal-de-egress]] · [[regiones-distintas-en-el-mismo-fichero-de-test-no-se-afirma-sin-mirar-el-hunk]]
