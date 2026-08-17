@@ -17,6 +17,18 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-29]] — dos podas del 29-jul: la de la mañana y, al cierre, 11 entradas más del NOW (área de tickets y su fuga de mensajes internos, avisos de respuesta del cliente, impersonación en listados, VeriFactu, coste LLM, prompt caching, auditoría Fable 5, cola OCR, UX de ingesta, recurrentes).
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 
+## 17-ago-2026 — `crm_link`: el vínculo TuCRMIA↔FIA deja de exigir Enterprise (#1844 / PR #1847, `551f36021`)
+
+TuCRMIA se integra pegando una api key de la propia org del cliente; nace `key_type='cliente'` (mig 685) y el gate de #1700 le exigía `api_access`, que solo tiene enterprise (mig 399:252). Por debajo, el primer `POST /v1/clientes` daba 403 y el paquete CRM+FIA no podía ser autoservicio.
+
+**Decisión (ADR-018, en el repo):** feature `crm_link` como SEGUNDA llave del mismo gate, estrecha, habilitada en los **cuatro planes** (mig 700). No abre la v1: abre 15 endpoints (clientes, presupuestos, factura en lectura, `org/perfil`). `api_access` intacta y enterprise-only.
+
+- **Por qué allowlist de endpoints y no scopes**: con `clientes:*` + `presupuestos:*` + `facturas:*` se colaban `proveedores/*`, `catalogo/*`, `fiscal/*`, `resumen`, `clientes/top`, recibidas, `anular` y `marcar-cobrada`. → [[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]
+- **Por qué en los cuatro planes**: el vínculo ya se cobra en el CRM; cobrarlo aquí sería cobrarlo dos veces. Zoho/HubSpot lo hacen así, Salesforce es el contraejemplo. → [[la-integracion-entre-productos-propios-no-se-cobra-como-acceso-a-api]]
+- **Medición de prod que lo sostuvo**: 9 orgs reales (8 enterprise, 1 starter); 14 api_keys, las 14 `interna` → el gate de #1700 no bloqueaba aún a nadie. `api_access` **no** es complemento comprable, tiene `visible=false` y no se pinta en el highlight de plan (cae fuera del `slice(0,2)` tras `fiscal` y `antifraud`). Lo que se cobraba era el delta de plan (99 vs 49).
+- **Rojo medido**: barrido de mutación 3/3 con víctima (quitar el estrechamiento → 3 rojos; no comprobar el derecho → 2; desincronizar una etiqueta → 1).
+- De paso: `docs/qa/inventario/gating.md` decía «api_access → Pro+», falso desde la mig 399.
+
 ## Poda del hub del 07-ago-2026 (noche) — tres entradas cerradas sin pendientes
 
 - 🟢 **Panel de tickets: quién cerró, cuándo y por qué vía + filtros con contador (06-ago noche, #1528 · #1529, mig 651)** — `resuelto_at`/`resuelto_por`/`resuelto_via` (`manuela` = el runner · `manual` · `sin_codigo`), backfill desde `admin_audit_log`: **62 manuela · 53 a mano · 11 sin código**, ninguno sin registrar (los 59 que el backfill dejó en NULL, clasificados leyéndolos uno a uno el 07-ago; traza en `admin_audit_log`). Pestañas con contador (Sin abrir · Sin leer · Te toca · **Sin responder** · **Listo para cerrar**), hilo del revés con el compositor arriba, ⌘+Enter y ← → entre tickets. Destapó que **7 de los 8 abiertos no tenían ni una respuesta nuestra** y no salían en ningún filtro. Verificado conduciendo el navegador. Nada pendiente. → [[un-filtro-definido-por-el-ultimo-elemento-no-ve-la-lista-vacia]] · [[el-audit-log-suele-tener-el-dato-que-le-falta-a-la-columna-nueva]] · [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
