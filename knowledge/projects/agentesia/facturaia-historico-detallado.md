@@ -29,6 +29,14 @@ TuCRMIA se integra pegando una api key de la propia org del cliente; nace `key_t
 - **Rojo medido**: barrido de mutación 3/3 con víctima (quitar el estrechamiento → 3 rojos; no comprobar el derecho → 2; desincronizar una etiqueta → 1).
 - De paso: `docs/qa/inventario/gating.md` decía «api_access → Pro+», falso desde la mig 399.
 
+## 17-ago-2026 — la v1 gana webhooks y estado de cobro (#1849 `9b7dc07c9` · #1850 `8fe6716ac`)
+
+Las dos piezas que le faltaban al vínculo con TuCRMIA después de `crm_link`. Queda **#1851** (evento de cobro parcial), abierto y con decisión de producto dentro.
+
+- **#1849 — `GET|POST /v1/webhooks`, `PATCH|DELETE /v1/webhooks/{id}`, `POST /v1/webhooks/{id}/test`.** El scope `webhooks:manage` existía desde la **mig 025 sin un solo endpoint detrás**: activar una integración exigía que alguien de la casa entrara a Ajustes por cada cliente. → [[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]
+- **#1850 — `GET /v1/facturas/{id}` publica el estado de cobro** (cobrado y pendiente cobrable), que es de lo que depende #1851.
+- **Lo que destapó el barrido de mutación**, y no la revisión: un contrato que aseveraba el `import` de `deliverOne` en vez de su llamada (6 tests verdes con la protección anti-SSRF sustituida), y cinco tests de la aritmética de `pendienteCobrable` que no cubrían el cableado del DTO (`yaCobradoEur: 0` seguía verde — el pendiente habría ignorado todo lo ya pagado). → [[aseverar-sobre-el-import-no-asevera-sobre-la-llamada]] · [[probar-la-aritmetica-no-prueba-el-cableado-que-la-invoca]]
+
 ## Poda del hub del 07-ago-2026 (noche) — tres entradas cerradas sin pendientes
 
 - 🟢 **Panel de tickets: quién cerró, cuándo y por qué vía + filtros con contador (06-ago noche, #1528 · #1529, mig 651)** — `resuelto_at`/`resuelto_por`/`resuelto_via` (`manuela` = el runner · `manual` · `sin_codigo`), backfill desde `admin_audit_log`: **62 manuela · 53 a mano · 11 sin código**, ninguno sin registrar (los 59 que el backfill dejó en NULL, clasificados leyéndolos uno a uno el 07-ago; traza en `admin_audit_log`). Pestañas con contador (Sin abrir · Sin leer · Te toca · **Sin responder** · **Listo para cerrar**), hilo del revés con el compositor arriba, ⌘+Enter y ← → entre tickets. Destapó que **7 de los 8 abiertos no tenían ni una respuesta nuestra** y no salían en ningún filtro. Verificado conduciendo el navegador. Nada pendiente. → [[un-filtro-definido-por-el-ultimo-elemento-no-ve-la-lista-vacia]] · [[el-audit-log-suele-tener-el-dato-que-le-falta-a-la-columna-nueva]] · [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
