@@ -12,3 +12,5 @@ Un parser de precios de importación que hace `replace(/\./g,'')` incondicional 
 **Cómo detectarlo en review**: buscar `replace(/\./g` o `replace('.', '')` sin condicional previo sobre si hay coma en el string. Verificar con un caso de test explícito `"9.99"` → debe dar `9.99`, no `999`.
 
 Caso real: TuFacturaIA, importador de catálogo/inventario (PR #766).
+
+El bug hermano —sustituir la coma sin quitar los puntos, que parte el importe por los millares— en [[replace-coma-punto-solo-sustituye-la-primera-y-rompe-los-millares]] (17-ago).

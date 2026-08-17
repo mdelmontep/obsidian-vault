@@ -50,6 +50,7 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
 ## Ha vuelto a pasar (25)
+- **Cierre de tanda = suite COMPLETA sobre `main`** — el gate por rama no ve los guards. Ver [[suite-filtrada-por-carpetas-del-pr-no-ve-los-guards-de-arquitectura]]
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
