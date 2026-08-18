@@ -33,5 +33,12 @@ del repo era un subconjunto de hace semanas del global —que ya corre ahí igua
 propios, y sobre todo **confianza falsa**: quien lee ese fichero cree que el repo prohíbe algo que no
 prohíbe. Un guard duplicado se sincroniza o se borra; dejarlo divergir es lo peor de las dos.
 
+**No es solo de hooks** (Elphis, 17-ago): el `invalid input syntax for type bigint: "null"` se arregló el
+12-ago con `NULLIF` en `Persist ids conv_state` y **su gemelo `Upsert conv_state` se quedó como estaba**, con
+`onError: continueRegularOutput`. Resultado: `conversation_state` llevaba **semanas sin escribir una sola fila**
+y el bot iba sin memoria, sin un solo error visible. El síntoma que lo destapó no era de base de datos («el bot
+vuelve a preguntar el motivo»), así que nadie miró ahí. Dos queries que comparten forma son hermanas aunque
+estén en workflows distintos: al arreglar una, **grep de la otra**.
+
 Hermana: [[dokploy-secret-guard-falso-positivo-variable-local-con-nombre-sensible]] — el otro modo,
 un guard que invierte su incentivo y te empuja justo a la conducta peligrosa.

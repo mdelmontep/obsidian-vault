@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-17
+updated: 2026-08-18
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,17 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-17
+## Estado actual · 2026-08-18
+
+- ✅ **Avisos de lead por canal, EN PROD (18-ago).** Dos plantillas HSM aprobadas — `elphis_lead_llamada_v2` (voz) y `elphis_lead_whatsapp` (chat) — con 7 datos: nombre, teléfono, motivo, relación, urgencia, tipo y **resumen**. Antes había una sola y decía «a través del bot de WhatsApp… revísalo en Chatwoot» viniera de donde viniera: el 17-ago mandó a Alba a buscar en Chatwoot un lead que había **llamado**. La de voz cierra en «Ficha completa en Clientify», sin mencionar el canal que no es. Verificadas con envío real al móvil de Manu. → [[plantilla-hsm-por-canal-y-lo-que-la-manda-a-revision-manual]]
+- ✅ **El bot vuelve a tener memoria.** `conversation_state` tenía **8 filas y ninguna de agosto**: `Upsert conv_state` fallaba en cada mensaje con el `bigint: "null"` que se arregló el 12-ago **solo en su nodo gemelo**, y `onError: continueRegularOutput` lo hacía mudo. Cada turno llegaba con `paciente_data: {}`. Probado contra la BD real con `BEGIN/ROLLBACK`. → [[un-guard-envejece-por-partes-arregla-una-regla-y-sus-hermanas-siguen-rotas]]
+- ✅ **La ficha de Clientify ya cuenta algo.** Contacto con nombre real —o `Lead voz <tel>` si no lo dio, sin pisar nunca un nombre que sí se sabía—, etiquetas `canal_*` y `motivo: *`, y descripción con canal, motivo, relación, urgencia, tipo, «Nombre en WhatsApp» y **resumen**. El resumen de Retell existía y se quedaba en el webhook; en chat no existía y ahora lo genera la extracción. La nota del deal salía pegada sin saltos porque `sanitize` se comía los `\n`.
+- ✅ **Voz: ASR calibrado y guion que pide el nombre antes** (agente v5). «Juego» se transcribía «jueves» y el agente contestó *«Perfecto, anotado para el jueves»* sin haber anotado nada: `stt_mode: accurate`, 38 palabras potenciadas del dominio, cancelación de ruido, y regla nueva de no dar por buena una palabra que no encaja ni decir que ha anotado algo. El nombre se pide en cuanto se conoce el motivo — el lead del 17-ago colgó tras 2 min 44 s sin darlo porque el guion lo dejaba para el final.
+- ✅ **`dry_run` vuelve a ser seguro**: estaba clavado a `false` en `retell-tool-crear-lead`, así que un smoke mío creó lead real y avisó a Alba. → [[un-flag-de-dry-run-que-el-reenviador-ignora-convierte-el-smoke-en-produccion]]
+- ⚠️ **Lo que sigue sin cubrir**: quien reserva en Doctoralia **sin haber escrito nunca por WhatsApp** no tiene fila en `conversation_state`, y el sync escribe con `UPDATE … WHERE phone`, así que su cita no se guarda en ningún sitio. Arreglarlo pide tabla de citas propia y contradice [[ADR-053-la-cita-de-doctoralia-vive-en-conversation-state]] — **decisión tuya**.
+- ⚠️ **El repreguntar el motivo YA estaba arreglado** (15-ago): medido contra la API real reproduciendo el turno, 0/5 y 0/5. Lo que se vio era una conversación del 11-ago, anterior al fix. → [[antes-de-arreglar-lo-que-viste-en-un-log-mira-contra-que-version-paso]]
+
+## Estado anterior · 2026-08-17
 
 - ✅ **Los dos canales ya se identifican como IA, EN PROD (17-ago).** Lo pidió Alba tras una llamada de prueba del comercial de Movistar y antes de activar el desvío del fijo; entró en vigor el 2-ago el art. 50 del AI Act. Ninguno de los dos decía nada: voz abría con *"Hola, estás llamando a Centro Elphis"* y el chat solo se declaraba "agente virtual" al negarse a hablar de sustancias.
   - **Chat**: nodo Code `Aviso IA primer contacto` en `chatwoot-event`, entre `Call router-ia` y `Post reply` — prefija *"Hola, soy Laura, la asistente virtual con IA de Centro Elphis."* y marca `ia_disclosed` en los `custom_attributes`. **Determinista a propósito**, y la marca en los attrs y no en el historial (Chatwoot solo devuelve 20 mensajes). Probado con 5 casos en local; sin drift de posiciones.

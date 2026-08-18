@@ -19,4 +19,10 @@ detección de crisis**.
 Al auditar un workflow no basta con que las ejecuciones estén verdes: por cada nodo con
 `continueRegularOutput`, comprobar que **la credencial resuelve** y que **la tabla y las columnas
 existen**. Y contrastar volumen: si la tabla debería tener una fila por evento, contarlas.
+**Y no siempre es un log** (Elphis, 17-ago): el mismo `continueRegularOutput` tapaba el `Upsert conv_state`
+que guarda el ESTADO del bot. `conversation_state`: **8 filas, ninguna de agosto**. El bot llegaba a cada turno
+con `paciente_data: {}` y se apañaba releyendo el historial del chat, así que el fallo se manifestó como un
+problema de conversación («vuelve a preguntar el motivo que ya le dieron»), no como un error técnico. Regla
+práctica: la tabla de estado se cuenta igual que la de logs — **si no crece, no escribe**.
+
 Ver [[ejecucion-en-verde-no-prueba-el-efecto]] · [[un-canal-de-avisos-solo-se-verifica-mirando-el-canal]] · [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]]
