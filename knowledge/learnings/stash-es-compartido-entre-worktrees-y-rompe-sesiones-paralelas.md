@@ -16,4 +16,4 @@ Caso real (agh-iberica, 2 subagentes en paralelo sobre el mismo `hitl-brain.ts`)
 - Serializar los frentes que tocan el MISMO fichero de contratos, en vez de paralelizarlos.
 - Tras cada subagente: `git show --stat HEAD` + `grep` del símbolo nuevo. Ver [[subagente-reporta-hecho-codigo-que-no-existe-o-no-compila]].
 
-Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]].
+Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[un-baseline-que-mide-el-arbol-de-trabajo-hornea-el-wip-ajeno]] (el mismo árbol compartido, pero el que se lleva el trabajo ajeno es un trinquete que mide disco en vez de HEAD).
