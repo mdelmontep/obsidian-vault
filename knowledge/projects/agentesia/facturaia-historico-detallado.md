@@ -518,3 +518,12 @@ contenido-01. Prod quedó limpio (0 assets, copy null). Gotchas de la sesión:
 - **Auditoría fiscal completa, medida**: la cadena de `requires_recalc` ya estaba cerrada donde produce un acto (`sellar`, `fiscal_marcar_presentada`, agregación del 390 en `modelo-390.ts:55`). Lo ciego era la capa de presentación. 26 declaraciones, 25 en `borrador`, 0 presentadas, 0 selladas. VeriFACTU apagado en las 9 orgs reales.
 - **Inventario**: las 6 lecturas del T1 eran 8 físicas y ninguna estaba paginada. Dos daban el dato EQUIVOCADO, no menos filas. → [[postgrest-max-rows-trunca-silencioso-in-revienta-url]]
 - **Decidido no tocar staging**: 46 migraciones por detrás y cero consumidores.
+
+## Poda del dashboard — 2026-08-19 (cierre de #1856)
+
+Retirado del dashboard del hub por el trinquete de contexto; queda aquí el detalle:
+
+- **Contenido #1791**: spec cerrada, 7/7 en prod el 17-ago. En el dashboard queda solo el pendiente de Manuel (schedule `marketing-publicar` en Dokploy + wizard del token de Google).
+- **Gate automático de promoción (12-ago)**: los jobs de Actions morían en 2 s con 0 pasos, y los verdes de Dependabot NO significan que Actions funcione. Los otros dos requisitos sí están cerrados: RLS (mig 665) y restauración ensayada (#1642).
+- **Copia de los PDF / Backblaze**: login por la pestaña *Individual Account* con `info@agentesia.madrid`, contraseña en el ítem 1Password `Backblaze` (no hay 2FA guardada; si la cuenta la tiene, es lo que falta). Mientras los campos sigan con `PEGAR_AQUI`, `npm run backups:storage:verificar` sale rojo. Salidas alternativas medidas: Wasabi (su mínimo de 1 TB ya se paga → coste marginal cero) o R2; cambiar destino son 3 variables.
+- **#1856 (cerrado, PR #1893, mig 711)**: el embudo de reclamación tenía dos mitades divergentes —la función SQL del cron y el espejo TS— y le faltaban dos de tres patas de «lo ya cobrado» (ledger `factura_pagos` y resto de conciliación). Las dos delegan ya en `factura_cobros_resumen`. Daño cero medido en las dos exposiciones. Deudas abiertas: #1897 (el selector SQL sin un solo test) y #1898 (`garantiasVivasPorFactura` sin trocear ni paginar). → [[cuenta-los-motores-que-calculan-el-mismo-numero-antes-de-arreglar-uno]]

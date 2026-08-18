@@ -48,3 +48,16 @@ regla —que exige estar en `main` de un checkout con worktrees— salía antes 
 bloquea» pasaba **sin ejercitar nada**.
 👉 Regla operativa: en toda suite de guard, el control «el peligro sigue bloqueado» va **en la misma
 tanda**, no como extra. Es lo único que distingue «mi exención funciona» de «mi arnés no mide».
+
+**Instancia 2026-08-19 (guard de una migración SQL, y el comentario afirmaba lo contrario):** el
+bloque `DO` de una migración traía 8 «vectores» que fijaban el remanente esperado de cada caso de
+negocio, y el comentario que yo mismo escribí decía «los tres últimos son los que la versión vieja NO
+pasaría». Falso: son **aritmética constante** (`v_r := round(1060 - 0 - ((0+400+0)/1), 2)`), no
+invocan la función que la migración cambia, así que la versión vieja los pasa igual. Medían el
+redondeo y el orden de operaciones, nada más.
+👉 Un guard que fija el RESULTADO esperado sin ejecutar el sujeto no es un control negativo, es una
+tabla de multiplicar. Y el proxy es peor que la ausencia porque el comentario lo vende como cobertura.
+Lo que sí discriminaba estaba al lado y era estructural (`pg_get_functiondef ... NOT LIKE
+'%fuente_unica%'`) más los tests de la conducta verificados por mutación. Regla: si el guard no puede
+invocar al sujeto (en una migración, sembrar datos no es aceptable), **escribe qué NO cubre** en vez
+de insinuar que cubre.
