@@ -42,6 +42,33 @@ Repo `~/Projects/learn-agentesia` (git local, **sin remoto: no hay copia fuera d
 - ⚪ **Sin correo**: no hay SMTP. El acceso es `npm run entrar:remoto`, enlace de un solo uso, y la
   sesión dura semanas. Conectar Resend está pendiente de decidir.
 
+## Desplegar la app (NO es `docker compose up` a secas)
+
+El stack lo gestiona **Dokploy** con el nombre de proyecto `aula-womwbl`, desde
+`/etc/dokploy/compose/aula-womwbl/code/`. El `docker-compose.yml` de `/opt/aula/` es solo el origen
+del que se **construye la imagen** (`image: aula-web`, sin `build:` en el de Dokploy).
+
+Un `docker compose up -d --build` desde `/opt/aula` **levanta un stack gemelo** —compose toma el
+nombre del proyecto del directorio— y deja dos veces las mismas rutas de Traefik. Pasó el 18-ago.
+Ver [[docker-compose-up-sin-p-levanta-un-stack-gemelo-en-vez-de-recrear]]
+
+Secuencia correcta, con vuelta atrás antes de nada:
+
+```sh
+scp <ficheros> root@185.99.186.76:/opt/aula/app/...      # puerto 5251
+docker tag <id-imagen-viva> aula-web:antes-<fecha>       # red de seguridad
+cd /opt/aula && docker compose build web                 # SOLO construye
+cd /etc/dokploy/compose/aula-womwbl/code
+docker compose -p aula-womwbl up -d --force-recreate --no-deps web
+```
+
+Y verificar el CSS servido, no que el contenedor arranque: `curl` la hoja de `/_next/static/` y
+grepear un token nuevo. Última imagen de reserva: `aula-web:antes-20260818`.
+
+**Dos bases de datos distintas**: `.env.local` apunta a la de casa; la publicada vive en el
+servidor y su clave se lee por SSH (patrón de `scripts/runner-remoto.sh`). `npm run temario` y
+`npm run seed` siembran **la de casa**. Sembrar en local y mirar la web publicada es no ver nada.
+
 ## Gates propios (los tres nacieron de un fallo real)
 
 - `npm run enlaces` — recorre el sitio con sesión y falla si algo da 404, diciendo desde qué página.
