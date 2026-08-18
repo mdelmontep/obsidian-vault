@@ -17,6 +17,12 @@ reales, una de negocio (un precio de 3.060,50 € que se guardaba como 3,06 €,
 (dos crons sin `case` en su `loadHandler`). El `pre-push` tampoco las veía: corre lint,
 typecheck y build, no la suite.
 
+**Segunda vez al día siguiente** (18-ago, misma app): otros 4 PRs verdes y la suite sobre
+`main` mergeado en rojo por un guard **estructural** — un test que escanea las migraciones
+y exige que toda FK bloqueante a `facturas` la desenganche `recibida_eliminar`. La tabla
+nueva de la mig 708 no estaba. No es una regresión de código como las del 17: es una regla
+de esquema, el tipo de cosa que NADA más comprueba. La regla paga dos veces seguidas.
+
 **Regla**: el gate de una RAMA puede filtrarse; el cierre de una TANDA no. Tras mergear,
 `lint && typecheck && build && vitest` completo sobre `main` actualizado, antes de dar la
 sesión por cerrada. Con PRs encadenados el rojo aparece en la composición, no en las

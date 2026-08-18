@@ -17,6 +17,30 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-29]] — dos podas del 29-jul: la de la mañana y, al cierre, 11 entradas más del NOW (área de tickets y su fuga de mensajes internos, avisos de respuesta del cliente, impersonación en listados, VeriFactu, coste LLM, prompt caching, auditoría Fable 5, cola OCR, UX de ingesta, recurrentes).
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 
+## 18-ago-2026 (tarde) — las tres ramas en prod, y los dos PRs que nadie había planeado
+
+Cinco PRs mergeados: **#1877** (candado de idempotencia de #1778, mig 708), **#1880** (el formato
+de serie de esa migración), **#1878** (las 8 lecturas del inventario que PostgREST cortaba a 1.000
+filas, 6 tests), **#1879** (ADR-019: el export fiscal `oficial` con gate de servidor, y el 500 del
+fichero oficial), **#1881** (la FK del candado justificada en el guard de `recibida_eliminar`).
+
+- **Prod en la 708**, verificada por catálogo: tabla con 4 índices y RLS, `stripe_suscripcion` en el
+  CHECK de `factura_pagos.origen`, serie `X`, override de cuota y `facturas.stripe_invoice_id`.
+- **El `db push` murió a mitad** con un 23514: la migración copió el formato de serie del `DEFAULT`
+  del `001_schema.sql`, que la mig 021 dejó inválido meses antes. Sin daño: `BEGIN`/`COMMIT`
+  explícitos → rollback total. Antes de reintentar se auditaron los otros cinco statements contra el
+  catálogo de prod. → [[default-del-schema-inicial-puede-estar-invalidado-por-un-check-posterior]]
+- **La suite completa sobre `main` mergeado volvió a pagar, segundo día seguido**: rojo por un guard
+  estructural (toda FK bloqueante a `facturas` la debe desenganchar `recibida_eliminar`). Justificado
+  en su ALLOWLIST con el porqué, y comprobado por mutación que el guard sigue discriminando. Cierre
+  verde: **12.881/0 en 1.244 ficheros**, lint y typecheck limpios.
+- Las dos mutaciones pendientes de la tanda anterior, con víctima: el gate de `requires_recalc` y el
+  em-dash de `STATUS_303_POSICIONAL`.
+- Limpieza: 3 worktrees y 5 ramas de la tanda retirados, más 16 ramas `worktree-agent-*` muertas
+  (ninguna con commits propios). Queda 1 worktree, el repo raíz.
+- El conflicto de las tres ramas era el mismo: el SVG del grafo de dependencias. Se resuelve
+  regenerando desde el código fusionado, no eligiendo lado.
+
 ## 18-ago-2026 — cierre de los tres pendientes: #1712 cerrado y #1778 listo para construir
 
 - **#1712 CERRADO** (PR #1875). AC5: la cabecera de la matriz de empaquetado muestra el recuento de

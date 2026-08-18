@@ -21,4 +21,6 @@ siguientes bloqueadas al rebasar encima.
 - Antes de mergear una rama sin commits nuevos: `npm run typecheck` a mano.
 - El arreglo de verdad es que el hook corra el typecheck completo, no el de `next build`.
 
-Relacionado: [[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]].
+Relacionado: [[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]] · y el agujero mayor:
+el `pre-push` no EJECUTA los tests, así que los guards estructurales solo salen en la suite
+sobre `main` mergeado → [[suite-filtrada-por-carpetas-del-pr-no-ve-los-guards-de-arquitectura]].
