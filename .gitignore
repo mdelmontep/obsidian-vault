@@ -7,3 +7,6 @@
 .vault-index.db
 .vault-index.db-wal
 .vault-index.db-shm
+
+# registro local de consultas — nunca se versiona
+.vault-queries.log

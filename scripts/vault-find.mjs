@@ -34,6 +34,11 @@ const flag = (n) => { const i = argv.indexOf(n); if (i === -1) return false; arg
 const N = Number(opt('-n', opt('--num', 10)))
 const CARPETA = opt('--carpeta', null)
 const TAG = opt('--tag', null)
+// `--excluir` deja fuera una nota concreta; `--antes-de` sólo mira las anteriores
+// a una fecha. Sin el segundo, un backtest se compara contra el futuro: la nota
+// que buscas ya está en el índice y gana siempre a cualquier vecino real.
+const EXCLUIR = opt('--excluir', null)
+const ANTES_DE = opt('--antes-de', null)
 const CAT = flag('--cat')
 const DUP = flag('--dup')
 const SOLO_PATHS = flag('--paths')
@@ -81,6 +86,8 @@ const filtros = []
 const paramsFiltro = []
 if (CARPETA) { filtros.push('n.carpeta LIKE ?'); paramsFiltro.push(`%${CARPETA}%`) }
 if (TAG) { filtros.push('n.tags LIKE ?'); paramsFiltro.push(`%${TAG}%`) }
+if (EXCLUIR) { filtros.push('n.path NOT LIKE ?'); paramsFiltro.push(`%${EXCLUIR}%`) }
+if (ANTES_DE) { filtros.push("n.fecha != '' AND n.fecha < ?"); paramsFiltro.push(ANTES_DE) }
 
 const sql = `
   SELECT n.path, n.titulo, n.tags, n.fecha, n.bytes,
@@ -141,7 +148,12 @@ if (!filas.length) { console.log(`sin resultados para: ${consulta}`); process.ex
 // El vault crece a 24 notas/día y el 53% no se relee nunca; el filo de este
 // comando es que AMPLIAR una nota existente casi siempre gana a crear la 1.606.
 if (DUP) {
-  const umbral = 0.35
+  // 0.55 y no 0.35: backtest sobre los 173 learnings de agosto, comparando cada
+  // uno contra el vault ANTERIOR a su fecha. Con 0.35 saltaba en el 14 % y la
+  // mitad eran falsos positivos ("cp -R sobre destino existente" vs "la copia
+  // durable de una fuente efímera"); con 0.55 quedan el 3 % que sí se fusionaban
+  // ("gh pr merge --delete-branch" tenía dos notas distintas del mismo gotcha).
+  const umbral = 0.55
   const fuerte = filas.filter((f) => f.final >= umbral)
   console.log(`\n¿Ya existe algo sobre "${consulta}"?\n`)
   for (const [i, f] of filas.slice(0, 8).entries()) {
@@ -167,6 +179,22 @@ if (CAT) {
   if (filas.length > 1) console.log(`\n─── otros ${filas.length - 1}: ` + filas.slice(1).map((f) => f.path.replace(/^.*\//, '')).join(' · '))
   process.exit(0)
 }
+
+// Registro local de consultas. El histórico no tiene ni una consulta de búsqueda
+// real —no había buscador, así que el vault sólo registraba escritura—, y sin
+// datos reales cualquier medida de calidad sale de consultas sintéticas, que la
+// literatura documenta como sistemáticamente optimistas. Esto acumula las de
+// verdad para poder medir de aquí a unas semanas, y delata los huecos: una
+// consulta con cero resultados es una nota que falta.
+try {
+  const { appendFileSync } = await import('node:fs')
+  appendFileSync(join(VAULT, '.vault-queries.log'), JSON.stringify({
+    t: new Date().toISOString().slice(0, 16),
+    q: consulta,
+    n: filas.length,
+    top: filas.slice(0, 3).map((f) => f.path.replace('knowledge/learnings/', '')),
+  }) + '\n')
+} catch { /* el registro nunca debe romper una búsqueda */ }
 
 for (const [i, f] of filas.entries()) {
   const cob = `${f.cobertura}/${terminos.length}`

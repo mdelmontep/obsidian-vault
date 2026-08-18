@@ -60,3 +60,22 @@ console.log(`wikilinks rotos      ${rotos.length}   (vault-doctor --rotos para v
 console.log(`sin enlaces salientes ${sinSalientes}   (${Math.round((sinSalientes / ficheros.length) * 100)}% del vault)`)
 console.log(`learnings fuera del índice temático  ${fueraMoc.length} de ${learnings.length}  (cobertura ${Math.round((1 - fueraMoc.length / learnings.length) * 100)}%)`)
 console.log(`learnings que solo enlaza el índice  ${huerfanos.length}`)
+
+// Uso real del buscador. Es lo que faltaba en el diagnóstico original: sin esto
+// no hay forma de saber si el vault ACIERTA, sólo de cuánto crece.
+try {
+  const log = readFileSync(join(VAULT, '.vault-queries.log'), 'utf8')
+    .split('\n').filter(Boolean).map((l) => JSON.parse(l))
+  const secas = log.filter((q) => q.n === 0)
+  const dias = new Set(log.map((q) => q.t.slice(0, 10))).size
+  console.log(`\nconsultas registradas   ${log.length} en ${dias} día(s)`)
+  console.log(`sin resultados          ${secas.length}   ← cada una es una nota que falta`)
+  if (secas.length) for (const q of secas.slice(-5)) console.log(`   · ${q.q}`)
+  const top = {}
+  for (const q of log) for (const t of q.top || []) top[t] = (top[t] || 0) + 1
+  const mas = Object.entries(top).sort((a, b) => b[1] - a[1]).slice(0, 3)
+  if (mas.length) {
+    console.log('notas más devueltas:')
+    for (const [t, n] of mas) console.log(`   ${String(n).padStart(3)}×  ${t.replace(/\.md$/, '')}`)
+  }
+} catch { console.log('\nconsultas registradas   0 (aún no se ha usado vault-find)') }
