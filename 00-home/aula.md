@@ -11,7 +11,7 @@ Aula personal para aprender los sistemas propios (TuFacturaIA, TuCRMIA, AGH) y l
 los rodea. **Las lecciones no existen hasta que se piden**: un runner de Claude las escribe abriendo
 los repos de verdad, y cada afirmación va con su cita `fichero:línea`.
 
-Repo `~/Projects/learn-agentesia` (git local, **sin remoto: no hay copia fuera del disco**). Next 16 + Supabase.
+Repo `~/Projects/learn-agentesia` → **`github.com/mdelmontep/learn-agentesia` (privado)**, creado el 18-ago tras 43 commits sin copia fuera del disco. Next 16 + Supabase.
 **Publicada** en `https://aula.185.99.186.76.sslip.io` · API en `aula-api.185.99.186.76.sslip.io`.
 
 ## Estado (18-ago)
