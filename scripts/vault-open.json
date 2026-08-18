@@ -1,0 +1,10 @@
+{
+  "_nota": "Nivel 1 de cada hub: qué secciones se sirven al abrirlo sin pedir nada. El resto queda en un menú con su coste en tokens. Los nombres se casan por prefijo, sin acentos ni mayúsculas.",
+  "hubs": {
+    "00-home/facturaia.md": {
+      "arranque": ["Cómo usar este hub", "Estado actual", "NOW", "Bloqueos", "Decisiones pendientes", "Índice de áreas"]
+    },
+    "00-home/top-of-mind.md": { "arranque": ["NOW"] },
+    "knowledge/learnings-index.md": { "arranque": [] }
+  }
+}

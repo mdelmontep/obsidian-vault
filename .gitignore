@@ -2,3 +2,8 @@
 .obsidian/workspace-mobile.json
 .obsidian/graph.json
 .trash/
+
+# índice FTS del vault — regenerable, nunca se versiona
+.vault-index.db
+.vault-index.db-wal
+.vault-index.db-shm

@@ -5,7 +5,24 @@ tags: [home, indice, moc]
 ---
 # Índice de learnings
 
-Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973** (última recategorización 2026-07-15, ~110 learnings nuevos desde entonces sin clasificar en las secciones de abajo — grep directo en `knowledge/learnings/` para esos). Grep aquí para descubrir qué existe antes de crear uno nuevo. Regenerable.
+> **Este índice ya NO es la vía de descubrimiento.** Lo es `vault-find`, que busca sobre
+> *todos* los learnings con ranking, no sobre los que alguien acordó listar aquí.
+>
+> ```sh
+> ~/.claude/bin/vault-find "guard que no discrimina"    # buscar
+> ~/.claude/bin/vault-dup  "titulo que voy a escribir"  # ¿ya existe? antes de crear
+> ~/.claude/bin/vault-doctor                            # cobertura REAL de este índice
+> ```
+>
+> La última recategorización a mano fue el 2026-07-15 con 973 notas; el corpus siguió
+> creciendo (~24/día) y el índice no, así que hoy cubre en torno al 59 %. **No fíes el
+> número de esta línea** — es exactamente el error que se corrige aquí: la cabecera
+> anterior declaraba «conteo real 973» cuando ya había 1.605 notas. Un índice escrito a
+> mano envejece en silencio y sigue *pareciendo* completo. Para el dato de hoy,
+> `vault-doctor`.
+
+Mapa temático parcial de `knowledge/learnings/`. Sirve para **navegar por tema** cuando ya
+sabes en qué área estás; no para comprobar si algo existe — para eso, `vault-dup`.
 
 ## Supabase / Postgres / BD (237)
 - [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] — acción masiva en cliente con N round-trips en serie cuelga la UI — batch + pool + progreso
