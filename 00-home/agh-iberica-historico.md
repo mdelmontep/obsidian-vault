@@ -76,3 +76,33 @@ los pague. El detalle día a día vive en `docs/status-log/` del repo.
 🩹 **Rojo ajeno filiado, y es una aserción verde por suerte desde #661**: `staffing.pg` asevera un ORDEN que su consulta no garantiza (los cuatro audits comparten `created_at` en la misma tx) → **#1309**, y con el gate creando su base de cero **saldrá más, no menos**. → [[order-by-created-at-empata-dentro-de-la-misma-transaccion]]
 
 ▶️ **Cola, ya desbloqueada por estos merges** (lo barato primero): **#1305** (una palabra: el subset de #247 es el CUARTO sitio que pide la costura de voz) · **#1291** · **#1306** (el backstop del borde solo vigila teléfonos; correo y fecha sin red en los dos canales — dos sesiones llegaron a él por separado) · **#1289** (`prepare` fuera de todo `try`: el embudo cubre los 6 throw sites por accidente) · **#1204** · **#1309** · **#1304**. `ready-for-human`: **#1288** (un prefijo derivado del RELOJ pasa los candados de #1260 **y** #999 a la vez) y **#1307** (la hora desnuda de la agenda).
+
+## Estado (2026-08-17, noche) — archivado el 18-ago — `main` en `7c9bd36`; abierta solo la #1302 de Borja
+
+🟢 **DOCE PRs dentro y DOCE issues cerrados** (#1309 · #1204 · #1291 · #1188 · #1308 · #1305 · #1306 · #1289 · #1262 · #1052 · #1300 · #1304; último código `94b99a3`). Gate sobre `main` **✓ verde a la primera y sin reintento** (`3748/239/5f · dashboard 1273/0/0f`), prod verificada por contenido (`sha256:d9b20f01… · 309 ficheros`), y la **combinación de las doce medida ANTES de mergear** con la suma exacta (3748).
+
+🔴 **Lo más valioso: #1291 pedía un candado que NO puede existir**, y lo demostró el gate — la invariante que el issue pedía era el **diagnóstico** de `mutate-diff.ts`. → [[un-candado-que-el-issue-pide-puede-cegar-a-otro-consumidor]]. De paso, el defecto real es peor de lo escrito: el parser mentía en las **cuatro** cifras y en **toda** corrida con fallos.
+
+🔴 **La verificación de la combinación COBRÓ** (acoplamiento del 15-ago calcado): el `lint` de las doce juntas salió rojo por una constante sin usar que **sólo existe al juntar #1315 con #1317** — ninguna PR podía verlo sola. Y la constante no sobraba: **faltaba el caso que la consumiera** (el corpus aseveraba que el embudo grita, no que rinda).
+
+🐛 **Defecto de PRODUCCIÓN vivo → #1322**: `spokenLine("b@617314938.com")` **destapa** el teléfono, porque la pasada de correo quita la `@` que lo protegía; el TTS lo dirá como cantidad (#977 otra vez). Lo probado era `spokenPhones` **a solas** — nadie había mirado la composición. Cae con él la afirmación del código de que el orden de las pasadas es una «mutación equivalente». **Es el siguiente a coger.**
+
+📡 **#1304: no había ninguna sonda que arreglar** — cero líneas del repo vigilaban Langfuse; lo que llamábamos sonda era el `curl` a `/health` de la auditoría semanal. La nueva mide el **almacén**. ⚠️ **Pero nada la ejecuta todavía**: sin disparador diario es otra señal que nadie lee. Decidir dónde vive el job.
+
+⚠️ **Tres premisas de issues resultaron falsas, dos MÍAS**: #1309 (los `created_at` **no** empatan: están separados 8-11 ms, y su arreglo propuesto tampoco valía → [[order-by-created-at-empata-dentro-de-la-misma-transaccion]], corregido) · #1305 (cinco puntos de emisión, no cuatro) · #1052 (la asimetría de tonos que daba por heredada no existe).
+
+▶️ **Cola libre, priorizada**: **#1322** (el único de producción) · **#1323** (`copyForChannel` escrita dos veces) · **#1327** · **#1326** · **#1325** · **#1095** · **#992** · **#991** · **#984**. `ready-for-human`: **#1324** · **#1288** · **#1307**.
+
+⚠️ **Aviso para la #1302 de Borja**: #1204 metió `@typescript-eslint/no-unused-vars` en la raíz y el barrido de lint ve los ficheros nuevos de los DOS paquetes — si alguno de los suyos trae un símbolo sin usar, saldrá en su corrida.
+
+⏸️ **Lo único vivo a propósito:** rama `manu/issue-1064-1212-1044-campo-aislado-y-huella` en `~/wt-1064`, **sin PR** — falta el caso-oro de #1064 y el prompt cambió, así que abrirla declararía cobertura de eval CERO sobre un cambio real (~12 $). ⚠️ **Y sigue sin saberse si Carlos usa la demo**: 1.064 trazas en cinco semanas, con días de 4 y 6 — «sin trazas» y «sin tráfico» son indistinguibles.
+
+📚 **Estados anteriores** → [[agh-iberica-historico]] (**17-ago tarde, mediodía y madrugada** condensados ahí).
+
+_Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.
+
+### Referencia sacada del dashboard el 18-ago
+
+💡 **Discriminador gratis para esa auditoría** (medido, para no repetirlo): `present()` envuelve **solo los 7 reads de LISTA** (`capabilities.ts` `:145` clients · `:175` contacts.internal · `:182` opportunities.open · `:183` consultants · `:198` tasks · `:204` reminders · `:205` threads.open). Literales, o sea **controles internos**: `client.detail`, `client.prep`, `meetings.recall`, `capabilities` y los dos de calendario. Si la degradación aparece en los siete **y no** en los cinco, el presenter es la causa; si aparece en los dos grupos, no lo es.
+
+- ✅ *Cerrados y sin cola: #952 (el digest entregó, 10-ago) · #988 (el teléfono se lee dígito a dígito) · #953 (los 3 hilos pasaron a `delivered`) · **#1094 y #1096 MERGEADAS** (el hub las listó como bloqueante de Borja hasta el 14-ago, ya siendo falso).*

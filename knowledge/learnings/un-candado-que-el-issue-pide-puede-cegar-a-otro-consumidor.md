@@ -30,3 +30,11 @@ suyo. El candado que «cerraba» el issue habría convertido dos señales distin
 - El defecto real suele seguir siendo arreglable donde estaba, y **ése sí admite candado** — pero
   comprueba que la pieza que arregla está atada: un arreglo con dos piezas redundantes deja una sin
   cubrir y nada avisa. Ver [[una-mutacion-sin-victima-puede-ser-el-arnes]].
+
+**La pregunta que discrimina (18-ago, dos issues el mismo día pidiendo el mismo candado y sólo uno
+posible): ¿el SUJETO del patrón tiene dueño único?** `mock.calls[0]!` (#1327) **sí** — `.mock` la crea
+la librería: ningún fixture puede tenerla ni ningún espía evitarla, así que prohibirla es exacto. «Toda
+lectura de `entries` pasa por el helper» (#1334) **no** — un fixture puede llamar así a su campo y un
+grabador puede no usarlo (**dos colisiones vivas** medidas antes de escribir una línea). Los dos se
+escriben igual —un grep prohibitivo— y sólo uno es invariante: cuenta consumidores **y** pregunta de
+quién es el nombre. Si no puede existir, **declararlo con la medición ES la entrega**.

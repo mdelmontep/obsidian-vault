@@ -15,3 +15,5 @@ Protocolo para trenes apilados:
 
 Caso real: tren AGH Ibérica — la #60 murió al borrarse su base y se recreó como #68 (mismo contenido).
 Relacionado con la disciplina de imanes de conflicto en repos con varias sesiones en paralelo.
+
+Variante peor, medida el 18-ago: el borrado **encadenado con `&&` al merge** corre aunque el merge se aborte, así que cierra la PR **propia** sin haber mergeado nada → [[el-borrado-de-rama-nunca-va-encadenado-al-merge]].

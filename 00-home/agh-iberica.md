@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-17
+updated: 2026-08-18
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,45 +44,52 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-17, noche) — `main` en `7c9bd36`; abierta solo la #1302 de Borja
+## Estado (2026-08-18) — abierta solo la #1302 de Borja · **tres sesiones a la vez**
 
-🟢 **DOCE PRs dentro y DOCE issues cerrados** (#1309 · #1204 · #1291 · #1188 · #1308 · #1305 · #1306 · #1289 · #1262 · #1052 · #1300 · #1304; último código `94b99a3`). Gate sobre `main` **✓ verde a la primera y sin reintento** (`3748/239/5f · dashboard 1273/0/0f`), prod verificada por contenido (`sha256:d9b20f01… · 309 ficheros`), y la **combinación de las doce medida ANTES de mergear** con la suma exacta (3748).
+> ⚠️ Este bloque **no nombra el SHA de `main` a propósito**: un snapshot que nombra su punta no puede acertar (se desfasa con su propio merge). Se consulta con `git rev-parse --short origin/main`.
 
-🔴 **Lo más valioso: #1291 pedía un candado que NO puede existir**, y lo demostró el gate — la invariante que el issue pedía era el **diagnóstico** de `mutate-diff.ts`. → [[un-candado-que-el-issue-pide-puede-cegar-a-otro-consumidor]]. De paso, el defecto real es peor de lo escrito: el parser mentía en las **cuatro** cifras y en **toda** corrida con fallos.
+🔴 **El hallazgo de la sesión, y no es código: la cadena de gobierno del dato estaba rota POR CONSTRUCCIÓN, no por la decisión de nadie.** El documento que **AGH enseña a su propio compliance** afirma «DPA + zero-retention» como control **existente** en cuatro sitios y el repo **no tiene un solo registro** de que exista (**#1349, de MANU, primero**); la precondición que lo exigía —«cláusula con Carlos, retención, accesos, **antes de onboardear comerciales**»— vivía como **casillas sin marcar dentro de #173, CERRADO**, cuyo propio texto decía «NO este issue», y la puerta se cruzó con datos reales el **11-jul** (**#1350**); y el issue bajo el que se **encendió** el flag (#996) no menciona AGH, RGPD ni #917: **la restricción nunca llegó a quien ejecutó la acción.** Fallo de sistema, no de persona. 👉 **Decisión de Manu: dejar el egress y corregir la documentación.** → [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]] · [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]]
 
-🔴 **La verificación de la combinación COBRÓ** (acoplamiento del 15-ago calcado): el `lint` de las doce juntas salió rojo por una constante sin usar que **sólo existe al juntar #1315 con #1317** — ninguna PR podía verlo sola. Y la constante no sobraba: **faltaba el caso que la consumiera** (el corpus aseveraba que el embudo grita, no que rinda).
+🟢 **Once PRs de código + once issues** en la tanda de anoche (#1322 · #1323 · #1325 · #1326 · #1327 · #1334 · #984 · #991 · #923 · #888 · #942), y **tres** hoy (#1348 la doc que dejaba de mentir, + dos de docs). Combinación de las once medida ANTES de mergear con la suma exacta, y el cierre de los once issues **verificado uno a uno** (`--state closed` ordena por CREACIÓN, así que «no aparece» ≠ «no se cerró»).
 
-🐛 **Defecto de PRODUCCIÓN vivo → #1322**: `spokenLine("b@617314938.com")` **destapa** el teléfono, porque la pasada de correo quita la `@` que lo protegía; el TTS lo dirá como cantidad (#977 otra vez). Lo probado era `spokenPhones` **a solas** — nadie había mirado la composición. Cae con él la afirmación del código de que el orden de las pasadas es una «mutación equivalente». **Es el siguiente a coger.**
+✅ **#1322 cerrado — era el único defecto de PRODUCCIÓN vivo**: el teléfono escondido en un correo se oía como cantidad porque la pasada de email quitaba la `@` que protegía al matcher. Lo probado era `spokenPhones` **a solas**: nadie había medido la composición.
 
-📡 **#1304: no había ninguna sonda que arreglar** — cero líneas del repo vigilaban Langfuse; lo que llamábamos sonda era el `curl` a `/health` de la auditoría semanal. La nueva mide el **almacén**. ⚠️ **Pero nada la ejecuta todavía**: sin disparador diario es otra señal que nadie lee. Decidir dónde vive el job.
+🔴 **La cifra que reordena la cola: de los 73 `ready-for-human` abiertos, 60 NO TIENEN DUEÑO (82 %)** — frente a 38 `ready-for-agent`. El problema no es que los humanos vayan lentos: es que **el 82 % de su cola no tiene un nombre encima**. → **#1351**.
 
-⚠️ **Tres premisas de issues resultaron falsas, dos MÍAS**: #1309 (los `created_at` **no** empatan: están separados 8-11 ms, y su arreglo propuesto tampoco valía → [[order-by-created-at-empata-dentro-de-la-misma-transaccion]], corregido) · #1305 (cinco puntos de emisión, no cuatro) · #1052 (la asimetría de tonos que daba por heredada no existe).
+🐛 **Y la otra mitad, que sale de la auditoría de Borja: cuando se usa, FALLA.** Nueve fallos de **llamadas reales** (#937 #938 #939 #648 #649 #741 #912 #535 #941): **9 de 9 abiertos**, 8 sin dueño, el más viejo **#535 del 20-jul**. Los nueve están etiquetados `ready-for-human`, así que **ninguno es cogible por un agente tal como está** — y eso explica los 13-29 días mejor que la falta de dueño. ⚠️ **Cautela al retomarlos:** siete son del 05-ago o antes y el presenter se encendió el **06-ago**, o sea que se midieron bajo **otro mecanismo de emisión** (regla #851/#733): «se reproduce hoy» y «se reproducía entonces» ya no son la misma pregunta.
 
-▶️ **Cola libre, priorizada**: **#1322** (el único de producción) · **#1323** (`copyForChannel` escrita dos veces) · **#1327** · **#1326** · **#1325** · **#1095** · **#992** · **#991** · **#984**. `ready-for-human`: **#1324** · **#1288** · **#1307**.
+⚙️ **Dos reglas que costaron sangre.** Un `push --delete` **encadenado con `&&` al merge** corrió cuando el contador de ficheros **abortó** el merge: la #1347 quedó `CLOSED` sin mergear y **sin poder reabrirse** (rehecha como #1348) → [[el-borrado-de-rama-nunca-va-encadenado-al-merge]]. Y dos issues pidieron el mismo candado el mismo día con **solo uno posible** (#1327 sí, #1334 no): declarar que no puede existir **ES** la entrega → [[un-candado-que-el-issue-pide-puede-cegar-a-otro-consumidor]].
 
-⚠️ **Aviso para la #1302 de Borja**: #1204 metió `@typescript-eslint/no-unused-vars` en la raíz y el barrido de lint ve los ficheros nuevos de los DOS paquetes — si alguno de los suyos trae un símbolo sin usar, saldrá en su corrida.
+⏸️ **Lote parado, DECIDIDO que merece la pena pero NO hoy:** `~/wt-1064` (#1064+#1212+#1044A, ~12 $ de evals). Orden al retomarlo: **rebasar → congelar el prompt y volcar las descripciones renderizadas → luego evals ×3**. Su aportación real son **13 ficheros, +570/−80** (`merge-base..HEAD`; el `origin/main..HEAD` decía 201 ficheros porque la rama va 58 commits atrás).
 
-⏸️ **Lo único vivo a propósito:** rama `manu/issue-1064-1212-1044-campo-aislado-y-huella` en `~/wt-1064`, **sin PR** — falta el caso-oro de #1064 y el prompt cambió, así que abrirla declararía cobertura de eval CERO sobre un cambio real (~12 $). ⚠️ **Y sigue sin saberse si Carlos usa la demo**: 1.064 trazas en cinco semanas, con días de 4 y 6 — «sin trazas» y «sin tráfico» son indistinguibles.
-
-📚 **Estados anteriores** → [[agh-iberica-historico]] (**17-ago tarde, mediodía y madrugada** condensados ahí).
+📚 **Estados anteriores** → [[agh-iberica-historico]] (**17-ago noche, tarde, mediodía y madrugada** condensados ahí).
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 
 ## Bloqueantes
 
+_(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una consulta, no estado.)_
+
+- 🔴🔴 **RGPD, y va PRIMERO (18-ago): #1349 es de MANU.** Verificar las **tres** por separado: ¿DPA firmado con OpenAI? · ¿zero-retention **activo en la organización** (no es el default)? · ¿la **key de prod pertenece a esa organización**? Registrar el resultado con fecha en `docs/adr/0001-stack-mvp.md`, y **si alguna es No, corregir `arquitectura-rag-enterprise.html` antes de volver a enseñarlo**. Con él van **#1350 + #917 + #958**: son **UNA reunión con Carlos, no cuatro issues** — repartirlos es lo que llevaba doce días haciendo que ninguno avance.
+- 🔴 **De Manu, 2 minutos, bloquea toda la observabilidad (#1284):** acuñar las claves de API de Langfuse desde su UI (las credenciales de acceso SÍ están en 1Password) y guardarlas en el ítem. **Ninguna sesión puede hacerlo**: guardar exige `op` con Touch ID, y un secreto no se pega en un canal.
+- 🔴 **Y el disparador diario de la sonda de #1304 sigue sin existir** — la sonda mide bien y **nadie la ejecuta**, así que seguimos sin saber si Carlos usa la demo (1.064 trazas en cinco semanas, días de 4 y 6: «sin trazas» y «sin tráfico» son indistinguibles). El `tsx` y el script **ya viajan en la imagen de prod** (`npm ci` completo + `COPY . .`), o sea que no hace falta empaquetar nada: solo decidir dónde vive el cron.
+- 🟠 **#992 espera UNA línea de Borja**: «correos pendientes» ¿es **(a) no leídos** o **(d) hilos donde el último mensaje no es mío**? La capacidad está medida y lista detrás de esa palabra.
 - 🔴 **HUMANO, en el panel de Dokploy:** activar el digest en lista con `WHATSAPP_OPEN_THREADS_LIST_PREFIX=hilos_semana` y `WHATSAPP_OPEN_THREADS_LIST_MAX=6`. ⚠️ **El tope es el tramo CONTIGUO aprobado desde 1, no cuántas plantillas hay creadas**: `hilos_semana_7` seguía en revisión y con `MAX=8` un digest de 7 hilos falla el envío entero. Sin las dos envs, #1094 no cambia nada en prod (deliberado).
 - 🔴 **DE MANU:** qué hacer con `d.martins`, que recibió tres mensajes con sus hilos. No se ha avisado a nadie.
-- ✅ *Cerrados y sin cola: #952 (el digest entregó, 10-ago) · #988 (el teléfono se lee dígito a dígito) · #953 (los 3 hilos pasaron a `delivered`) · **#1094 y #1096 MERGEADAS** (el hub las listó como bloqueante de Borja hasta el 14-ago, ya siendo falso).*
 - ✅ *RESUELTO (14-ago): prod se verifica por contenido con `curl …/version` vs `build:stamp --print` en árbol limpio. ⚠️ La app es `agente.agh.agentesialabs.com`; `agh.agentesialabs.com` es el PANEL, y su 200 no prueba nada (#780).*
+
+⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
+
+### Backlog de issues (consulta, no estado — `gh issue list --label ready-for-agent`)
+
 - **Vivas, ya sin PR asociada** (las de la tanda del 7-ago están mergeadas). De la auditoría del 7-ago: **#1031** (el patrón: dashboard client-scoped) · **#1033** (pantalla «Lo mío», espera a #1000) · **#1030** (cancelar hablando; la anáfora en #1038, falta la referencia por cuerpo — cuesta evals) · **#1032** (`addCandidate`: se escribe, nadie lo lee, no se puede quitar) · **#1026** (`llm-smoke` no corre desde que existe) · #1019 · #1020 · #1036 · #1037. **Del 10-ago:** **#1095** (responder al digest no tiene NI UNA eval, y su disparador es un prefijo de texto que nadie asevera) · ~~#1086~~ (CERRADO 14-ago: eran **40 líneas en 15 ficheros** y **tres** importes) · **#1083** (`mutate:diff` no mide lo multilínea — 3 casos en un día) · **#1044** opción A · **#1072**.
 - **Decisiones de Borja:** #738 (tolerancia del baseline — **el 22 % del banco no tiene NINGÚN suelo**) · #846 · #847 · #863 · #884 (la confirmación de borrado miente: `tasks … ON DELETE SET NULL`) · **#627** A/B (rec. **B**) · **#929** (`message.text`, toca prompt).
 - **Sin dueño y fuera de la cola de arriba:** **#741** (ASR "Grabados"/"Dragados", golden escrito) · **#898** (dos colas de turno por (tenant,usuario), cae en #454).
-- ⚠️ **`lastClientId` no caduca NUNCA** y se proyecta como entidad activa cada turno, mientras las oportunidades del mismo array sí pasan el TTL de 30 min → 2ª causa raíz del paso 5 de **#535**, que su caso-oro nº2 no cubre.
 - **Rastro de #817/#853:** **#818** (`client.prep` con el agujero que #733 cerró en `client.detail`) · **#820** · **#841** (la ventana que falta degrada en silencio estadístico).
+- ⚠️ **`lastClientId` no caduca NUNCA** y se proyecta como entidad activa cada turno, mientras las oportunidades del mismo array sí pasan el TTL de 30 min → 2ª causa raíz del paso 5 de **#535**, que su caso-oro nº2 no cubre.
 - **#870** — rojo crónico, task.create mete el contexto del mensaje en el título, 0/25 en `main`.
 - **L5/L3-A** — bloqueados por RGPD (política de datos con el cliente, decisión Borja).
 
-⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 
 🧰 **Herramientas:** `~/.claude/bin/mutate` (4 modos que no miden nada; aborta si el control trajo recuento y el mutante no) y `npm run mutate:diff` en el repo, que **desde el 14-ago cubre `dashboard/`**. → [[verificar-que-un-test-tiene-dientes-con-una-mutacion]]
 
@@ -107,4 +114,4 @@ La política de datos del cliente decide el escalón: (1) API pública + DPA + z
 
 [[agh-qa-voz-guion-llamada]] (guion de QA en llamada real) · [[agentesia]] · [[top-of-mind]]
 
-_Método de esta semana:_ [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]] · [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]] · [[campo-de-texto-libre-que-viaja-a-telemetria-es-un-canal-de-egress]] · [[regiones-distintas-en-el-mismo-fichero-de-test-no-se-afirma-sin-mirar-el-hunk]]
+_Método de esta semana:_ [[el-borrado-de-rama-nunca-va-encadenado-al-merge]] · [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]] · [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]] · [[un-candado-que-el-issue-pide-puede-cegar-a-otro-consumidor]] · [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]] · [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]] · [[campo-de-texto-libre-que-viaja-a-telemetria-es-un-canal-de-egress]] · [[regiones-distintas-en-el-mismo-fichero-de-test-no-se-afirma-sin-mirar-el-hunk]]

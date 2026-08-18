@@ -38,3 +38,4 @@ Ver [[defensa-cableada-vs-codigo-muerto]] · [[test-verde-puede-codificar-el-bug
 Prima preventiva: cuando el comentario no afirma una invariante sino una **regla para el
 que llame** («esto no se expone a X»), el fix no es un test sino un tipo →
 [[regla-en-docstring-no-impide-nada-partir-el-interface]].
+Caso hermano que **no** admite test: cuando el comentario afirma estado externo al repo (una env de prod, un panel de deploy), el remedio es fecharlo o consultarlo → [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]].
