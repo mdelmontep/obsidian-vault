@@ -1,25 +1,24 @@
 ---
-title: un dato en el bloque de contexto de un prompt LLM se lee en voz alta aunque no esté en ningún guion escrito
+title: la regla que prohíbe usar un dato va pegada al dato, no en su propia sección del prompt
 date: 2026-08-10
-source: claude-code-session
-tags: [llm, prompt-engineering, retell, voice, n8n]
+source: clinica-zen, elphis
+tags: [llm, prompt-engineering, retell, voice, chat, n8n, clinica-zen, elphis]
 ---
+Un dato "solo de referencia" en el bloque de datos del prompt NO se queda fuera de lo que el modelo dice.
+Cuando la pregunta no calza con ninguna frase guionada, el modelo improvisa leyendo el dato crudo tal cual
+—incluido lo que el autor consideró nota interna—, y la regla que lo prohíbe, si vive en otra sección, no
+se activa porque el modelo no está en ese flujo.
 
-Poner un dato "solo de referencia" (ej. `(Pol. Europolis)` junto a una dirección) en un bloque de
-contexto/datos del prompt NO lo mantiene fuera de lo que el modelo dice en voz alta. Si el paciente
-pregunta algo que no coincide con ninguna de las frases ya guionadas ("¿me repites la dirección
-completa?", "¿en qué polígono estáis?"), el modelo improvisa leyendo el dato crudo tal cual está
-escrito — incluido lo que el autor consideró "nota interna".
+**Clínica Zen (jul-ago)**: el fix cambió las 3 frases guionadas de "Polígono Européolis" a otra referencia,
+pero dejó `(Pol. Europolis)` en el dato de la dirección "por no hablado". Reincidió en llamadas reales.
 
-**Caso real**: Clínica Zen. El fix del 28-jul cambió las 3 frases guionadas de "Polígono Européolis"
-a "frente al edificio de correos de la dehesa de Navalcarbón", pero dejó `(Pol. Europolis)` en el
-dato de la dirección "por considerarlo no hablado". Reincidió en llamadas reales de agosto — el
-modelo lo leía igual cuando la pregunta no calzaba con ninguna frase ya escrita.
+**Elphis (18-ago), mismo patrón en chat**: el horario del centro estaba en la ficha de arriba y la
+prohibición ("no des horas de la primera visita, que las vea en el enlace") 157 líneas más abajo, dentro de
+«Flujo de reserva». A un "¿horario de visitas?" el modelo no estaba reservando, así que sirvió el horario
+del centro como el de la visita. Medido, 5 tiradas del turno real: **2/5 daba horas; con el aviso pegado al
+dato, 0/5** y 5/5 remite al enlace.
 
-**Fix real**: la instrucción de qué decir/no decir va EN LA MISMA LÍNEA que el dato, no en una
-frase-ejemplo aparte: `- **Dirección** (di SIEMPRE "X"; NUNCA menciones "Y"): <dato crudo>`. Separar
-la regla del dato en secciones distintas del prompt no basta — hay que anclarla al dato exacto que
-el modelo va a leer cuando improvise.
-
-Transversal a cualquier AI Agent (n8n, Retell, LangChain) con un bloque de "datos del centro/cliente"
-separado del guion conversacional.
+**Fix**: la instrucción va EN LA MISMA LÍNEA que el dato —`- **X** (di SIEMPRE "A"; NUNCA "B"): <dato>`—,
+además de en su sección. Que la regla exista no basta: tiene que estar donde el modelo mira al improvisar,
+y eso es el dato. Corolario: lo que deba salir siempre, en texto fijo, no en el prompt (medido 0/5). Ver
+[[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]].

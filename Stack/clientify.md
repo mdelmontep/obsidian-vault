@@ -11,6 +11,12 @@ CRM usado en Centro Elphis. API base: `https://api.clientify.net/v1/`. Auth: `Au
 
 ## Gotchas API
 
+### 403 `error code: 1010` desde un script = Cloudflare, no el token
+Cloudflare bloquea por firma del cliente: `urllib`/python-requests sin `User-Agent` reciben **403 con
+cuerpo `error code: 1010`** en cualquier verbo, GET incluido. Parece token caducado y no lo es. Mandar un
+`User-Agent` cualquiera (`curl/8.4.0`) lo resuelve. El token de lectura/escritura vive en
+`op://Elphis/API Clientify/credencial`.
+
 ### `GET /v1/deals/?contact=<ID>` ignora el filtro de contacto
 El parámetro `contact` se acepta sin error pero **devuelve todos los deals del pipeline**, no los del contacto. Filtrar client-side:
 ```javascript
