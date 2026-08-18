@@ -39,3 +39,12 @@ lista de «verbos de escritura». Un caso negativo con la forma fácil da la sen
 familia entera. Elige la forma que de verdad se cuela, y confírmalo mutando: la mutación «mencionar =
 escribir» tiene que ponerlo rojo. Ver
 [[hook-sobre-recurso-compartido-bloquea-a-quien-cierra-no-a-quien-ensucia]].
+
+Instancia 2026-08-18 (arnés de un hook, y el control cazó un **verde falso mío**): cuatro casos nuevos,
+el primero «esto NO debe bloquear» → verde. Pero el control «el peligro SÍ bloquea» **también** salió
+verde, y eso es imposible: si el peligro no bloquea, la regla no se está armando. Causa: el `cd` estaba
+dentro de la función y `$(funcion)` corre en un **subshell**, así que el cwd del test nunca cambiaba y la
+regla —que exige estar en `main` de un checkout con worktrees— salía antes de mirar nada. El caso «no
+bloquea» pasaba **sin ejercitar nada**.
+👉 Regla operativa: en toda suite de guard, el control «el peligro sigue bloqueado» va **en la misma
+tanda**, no como extra. Es lo único que distingue «mi exención funciona» de «mi arnés no mide».

@@ -106,3 +106,17 @@ _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SS
 💡 **Discriminador gratis para esa auditoría** (medido, para no repetirlo): `present()` envuelve **solo los 7 reads de LISTA** (`capabilities.ts` `:145` clients · `:175` contacts.internal · `:182` opportunities.open · `:183` consultants · `:198` tasks · `:204` reminders · `:205` threads.open). Literales, o sea **controles internos**: `client.detail`, `client.prep`, `meetings.recall`, `capabilities` y los dos de calendario. Si la degradación aparece en los siete **y no** en los cinco, el presenter es la causa; si aparece en los dos grupos, no lo es.
 
 - ✅ *Cerrados y sin cola: #952 (el digest entregó, 10-ago) · #988 (el teléfono se lee dígito a dígito) · #953 (los 3 hilos pasaron a `delivered`) · **#1094 y #1096 MERGEADAS** (el hub las listó como bloqueante de Borja hasta el 14-ago, ya siendo falso).*
+
+## 18-ago (condensado desde el hub el 18-ago)
+
+- **Tanda de la noche del 17 y las tres del 18 por la mañana**: once PRs de código + once issues, más
+  #1348 (la doc que dejaba de mentir sobre el presenter), #1352 y #1353. **#1322 cerrado** — era el único
+  defecto de PRODUCCIÓN vivo: el teléfono escondido en un correo se oía como cantidad porque la pasada de
+  email quitaba la `@` que protegía al matcher.
+- **Dos reglas que costaron sangre**: el `push --delete` **nunca** va encadenado al merge (corrió aunque
+  el contador de ficheros abortara el merge → la #1347 quedó `CLOSED` sin mergear y sin poder reabrirse),
+  y ningún gate por pipe.
+- **Tanda de la noche del 18: 17 merges**, `2bb07a7` → `c3514c9`. Trece tracks + el mantenimiento de la
+  baseline del `Δ` + dos cierres + el arreglo del deadlock de los hooks. Detalle en los cuatro
+  `docs/status-log/2026-08-18-manu-*` del repo.
+

@@ -36,3 +36,14 @@ moverse — no es afinar el umbral, corras ×3 o ×30 sigue siendo ciego. **Lee 
 Peor aún, el agregado puede tapar dos cambios que se cruzan: un eje marcó 81,8 % antes y después
 mientras un caso se ponía verde y otro rojo. Arreglado en ese repo imprimiendo el **diff caso a caso
 contra la corrida anterior** (coste 0 $: los datos ya estaban en el artefacto).
+
+Corolario 2026-08-18 — 🔴 **el «sin regresiones» dice NADA de un caso NUEVO**, y eso vale para cualquier
+gate que compare contra baseline. Una corrida ×3 dio `OVERALL 97.8%` + «✓ sin regresiones» **con el caso
+negativo recién añadido en 0 de 3**: un caso que acaba de nacer no puede ser regresión de nada.
+
+- Nunca leer el veredicto global: **agregar el informe por caso** y mirar explícitamente los que la PR añade.
+- Antes de pagar la corrida, comprobar que **existe al menos un caso que ejercite lo que la PR cambia**.
+  Pagar por una corrida que no toca el cambio es el desperdicio, no el ahorro.
+- Un caso nuevo en rojo **no se deja rojo permanente** (enseña a ignorar rojos) **ni se borra** (pierde el
+  hallazgo): se **re-apunta** a la propiedad que sí se cumple, y lo demás se protege con un candado
+  determinista que no dependa del modelo.
