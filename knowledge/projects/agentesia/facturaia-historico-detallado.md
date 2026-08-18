@@ -17,6 +17,30 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-29]] — dos podas del 29-jul: la de la mañana y, al cierre, 11 entradas más del NOW (área de tickets y su fuga de mensajes internos, avisos de respuesta del cliente, impersonación en listados, VeriFactu, coste LLM, prompt caching, auditoría Fable 5, cola OCR, UX de ingesta, recurrentes).
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 
+## 18-ago-2026 — cierre de los tres pendientes: #1712 cerrado y #1778 listo para construir
+
+- **#1712 CERRADO** (PR #1875). AC5: la cabecera de la matriz de empaquetado muestra el recuento de
+  organizaciones **por plan efectivo**, dato que ya viajaba en el payload (`orgCounts`) y solo se
+  veía en el modal de apagado. Cero se escribe «Sin organizaciones». `--fia-head-h` 40 → 52 px
+  porque la variable la comparten la altura del `th` y el `top` de las filas de categoría sticky.
+  Deuda anotada que sigue viva: ese recuento lee `organizations` sin paginar (PostgREST corta a
+  1.000 en silencio) y ahora se ve en pantalla.
+- **#1778: el plan ya existía** desde el 15-ago (#1828) y el prompt de arranque lo daba por
+  pendiente. Se restauró intacto y se le añadió una §11 (74 líneas, 0 borradas, PR #1876) con tres
+  decisiones —serie dedicada, la org emisora que ya existe, construir con flag— y cuatro huecos:
+  el gate de cuota (override en `org_limits`, no un `skipQuota`), la factura que nacería
+  `pendiente` y entraría en reclamación, los complementos que resuelven la empresa por su
+  suscripción y no por el customer (ADR-016 §7.4), y el punto de partida remedido.
+- **#1686 cerrado salvo el 036**: NIF `B27602085` por defecto, email de soporte y descriptor
+  `TUFACTURAIA`. El domicilio fiscal nunca estuvo vacío, contra lo que decía el issue.
+- **Empaquetado ola 4** (#1713, #1714, #1708, #1715, #1751, TOCTOU, #1837): cerrada el 17-ago,
+  migs 706/707 en prod. Siguiente ola → `docs/architecture/PROMPT-empaquetado-fase2-ola5.md`.
+- **Contenido spec #1791**: 7/7 en prod desde el 17-ago (pestañas, publicar en IG, Ads en PAUSED;
+  migs 698/703/699, ADR-014 y ADR-015).
+- Gate sobre `main` mergeado: lint · typecheck · build · Vitest **12.858/0** en 1.236 ficheros.
+- Learnings: [[la-org-emisora-de-tu-propio-saas-no-es-un-cascaron]] ·
+  [[facturar-lo-ya-cobrado-sin-registrar-el-cobro-lo-mete-en-reclamacion]].
+
 ## 17-ago-2026 — `crm_link`: el vínculo TuCRMIA↔FIA deja de exigir Enterprise (#1844 / PR #1847, `551f36021`)
 
 TuCRMIA se integra pegando una api key de la propia org del cliente; nace `key_type='cliente'` (mig 685) y el gate de #1700 le exigía `api_access`, que solo tiene enterprise (mig 399:252). Por debajo, el primer `POST /v1/clientes` daba 403 y el paquete CRM+FIA no podía ser autoservicio.

@@ -66,6 +66,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[exception-when-others-colapsa-check-violation-discriminable]] — EXCEPTION WHEN OTHERS colapsa check_violation discriminables → 500 opaco
 - [[extender-database-supabase-interface-never-anyclient]] — extender el tipo Database de supabase-js sin romper el cliente tipado
 - [[extraer-un-design-system-cruza-var-usadas-vs-definidas-no-a-ojo]] — al extraer un subconjunto de un design system, cruza var(--x) usadas vs definidas — no a ojo
+- [[facturar-lo-ya-cobrado-sin-registrar-el-cobro-lo-mete-en-reclamacion]] — emitir la factura de un cobro ya hecho sin registrar el cobro la mete en reclamación
 - [[facturas-schema-iva_pct-created_via-gotcha]] — Tabla `facturas` — gotchas schema (iva_pct, created_via NOT NULL con CHECK)
 - [[fake-vs-postgres-orden-sort-utf16-vs-collation]] — fake in-memory vs Postgres divergen en orden — .sort() UTF-16 ≠ collation
 - [[feature-flags-multi-tenant-patron-plan-defaults-org-overrides]] — feature flags multi-tenant patron plan defaults org overrides
@@ -87,6 +88,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]] — integración crítica en jsonb de tabla genérica pierde observabilidad por diseño
 - [[la-cabecera-de-error-del-runner-roba-la-primera-ocurrencia-al-parser]] — la cabecera de error de un runner roba la primera ocurrencia y el parser cuenta 0 pasados
 - [[la-metrica-de-estado-se-mide-despues-de-commitear]] — una métrica derivada del árbol se mide después de commitear, nunca antes
+- [[la-org-emisora-de-tu-propio-saas-no-es-un-cascaron]] — al facturar tu SaaS con tu propio producto, la org emisora no es un cascarón
 - [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]] — la reparación conversacional tiene nombre canónico y los frameworks la traen de serie
 - [[leer-un-canal-con-limit-1-se-salta-mensajes]] — leer un canal con limit=1 o filtro de fecha se salta mensajes recién llegados
 - [[magic-link-un-solo-uso-lo-preconsumen-escaneres-email]] — magic link de un solo uso lo pre-consumen los escáneres de email corporativos
