@@ -90,3 +90,4 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+- **Un gate que descubre lo que audita pasa en verde si su lista sale vacía** — suelo explícito (`toBeGreaterThanOrEqual`) y fallar CERRADO con lo que no sabe leer. Ver [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]]

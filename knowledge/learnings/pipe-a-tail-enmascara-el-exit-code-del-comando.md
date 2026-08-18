@@ -13,3 +13,11 @@ Patrón: capturar el código antes de mirar la salida.
 npm install > /tmp/log 2>&1; code=$?; [ $code -ne 0 ] && tail -15 /tmp/log
 ```
 O `set -o pipefail`. Aplica a cualquier comando cuyo resultado importe y se canalice para acortar.
+
+**La precaución también falla (2026-08-18, facturaia).** Dos formas medidas el mismo día:
+- `${pipestatus[1]}` es de **zsh**. En el shell donde corren las herramientas del agente (bash) esa
+  expansión sale **vacía**, así que el «exit capturado» no es 0 ni 1: es nada, y no mides. En bash es
+  `${PIPESTATUS[0]}`. Si no sabes en qué shell estás, no uses el array: `cmd > log 2>&1; ec=$?`.
+- Un **comando compuesto** devuelve el exit del ÚLTIMO, no del que importa: `git commit … ; git log`
+  reportó éxito con el commit bloqueado por el hook, y un `git push` que no movió el remoto reportó 0.
+  Para un push, la verificación no es el exit: es `git ls-remote origin <rama>` == `git rev-parse HEAD`.

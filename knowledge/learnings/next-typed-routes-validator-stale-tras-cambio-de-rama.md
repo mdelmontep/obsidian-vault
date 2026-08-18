@@ -13,3 +13,8 @@ No es un error de tu código — es caché del build anterior. Pasa fácil en wo
 **Fix**: `next build` (regenera el validator para las rutas actuales) y LUEGO `tsc`. Por eso conviene el orden `build → typecheck`, no al revés, cuando acabas de cambiar de rama.
 
 **Variante (2026-07-22):** matar `next dev` con `pkill`/`kill` mientras está regenerando ese fichero lo deja a medias (no stale, CORRUPTO): errores de sintaxis reales tipo `Declaration or statement expected` / `Unterminated string literal` en `.next/dev/types/validator.ts`. El pre-commit hook (typecheck) lo bloquea pensando que es tu código. Fix: `rm -rf .next` en ese worktree y reintentar el commit — no hace falta tocar el código.
+
+**Variante (2026-08-18, facturaia):** no hace falta cambiar de rama. **Borrar** una `route.ts` en tu
+propia rama deja el validator importando el `route.js` que ya no existe. Y ahí el orden del hook
+importa: el pre-commit corre `typecheck` **antes** de `build`, así que ve el artefacto viejo, bloquea
+el commit y el error se lee como un defecto de tu diff. `rm -rf .next` y reintentar.
