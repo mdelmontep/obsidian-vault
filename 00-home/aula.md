@@ -1,7 +1,7 @@
 ---
 title: Aula
 date: 2026-08-10
-updated: 2026-08-11
+updated: 2026-08-18
 tags: [proyecto, aprendizaje, nextjs, supabase, dokploy]
 ---
 
@@ -11,10 +11,10 @@ Aula personal para aprender los sistemas propios (TuFacturaIA, TuCRMIA, AGH) y l
 los rodea. **Las lecciones no existen hasta que se piden**: un runner de Claude las escribe abriendo
 los repos de verdad, y cada afirmación va con su cita `fichero:línea`.
 
-Repo `~/Projects/learn-agentesia` (git local, sin remoto). Next 16 + Supabase.
+Repo `~/Projects/learn-agentesia` (git local, **sin remoto: no hay copia fuera del disco**). Next 16 + Supabase.
 **Publicada** en `https://aula.185.99.186.76.sslip.io` · API en `aula-api.185.99.186.76.sslip.io`.
 
-## Estado (11-ago)
+## Estado (18-ago)
 
 - 🟢 **Publicada y funcionando** — Supabase autoalojado en `dokploymanu` (`/opt/aula/`), cuatro
   contenedores en vez de once. Contenido mudado con el dueño reescrito. HTTPS por `sslip.io`, sin
@@ -26,7 +26,18 @@ Repo `~/Projects/learn-agentesia` (git local, sin remoto). Next 16 + Supabase.
 - 🟢 **«¿Esto qué es?»** — marcar texto en una lección y preguntarlo sin salir. Los términos del
   glosario salen subrayados y responden al instante; lo demás lo mira el runner en contexto y, si es
   vocabulario, entra en el glosario y de ahí al repaso.
-- 🟠 **Contenido en curso** — 10 lecciones de 29 temas; el runner sigue encolando.
+- 🟢 **Temario ampliado a 106 temas en 9 secciones (18-ago)** — nueva sección **Memoria y
+  recuperación** (19 temas): sustrato markdown+git+grep → dónde se rompe el grep → índice invertido y
+  BM25 → FTS5 → ranking multi-señal → cómo se evalúa (MRR/Recall@k/nDCG) y por qué las consultas
+  sintéticas mienten → embeddings → híbrido (RRF vs ponderado) → RAG → el grafo de Obsidian →
+  grafos de conocimiento → GraphRAG → Graphiti → cuál elegir → coste de contexto → escribir para
+  recuperar → instrumentar. Cada tema anclado a un número medido del vault, no a una generalidad.
+  → [[ADR-054-la-busqueda-del-vault-es-lexica-fts5-no-semantica-ni-grafo]]
+- 🟢 **Lección 2 escrita a mano (`content/0002-memoria-del-vault.html`)** — cómo funciona la memoria
+  del vault, qué se descartó y por qué (Notion, BD, embeddings, RRF, GraphRAG) y cuatro variantes de
+  uso. Sus citas `fichero:línea` las vigila un gate del vault (`scripts/verificar-citas.mjs`), que
+  además sabe corregirlas. → [[una-cita-fichero-linea-caduca-en-silencio-el-gate-debe-corregirla]]
+- 🟠 **Contenido en curso** — 10 lecciones escritas de 106 temas; el runner sigue encolando.
   Arranque: `npm run runner:remoto -- --vigilar` (trae la clave por SSH, no toca el disco del Mac).
 - ⚪ **Sin correo**: no hay SMTP. El acceso es `npm run entrar:remoto`, enlace de un solo uso, y la
   sesión dura semanas. Conectar Resend está pendiente de decidir.

@@ -53,6 +53,11 @@ comodidad**. Sin ella el corpus sigue creciendo y su valor recuperable se estanc
 aparecen en ≥2 sesiones distintas; el resto solo en la que los creó). No era pereza —
 era que crear la nota 1.606 siempre salía más barato que comprobar si ya existía.
 
+Decisión completa, con las alternativas descartadas y sus cifras, en
+[[ADR-054-la-busqueda-del-vault-es-lexica-fts5-no-semantica-ni-grafo]].
+
 Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] ·
 [[el-instrumento-devuelve-cero-sin-decir-que-no-ha-medido]] ·
-[[una-suite-en-verde-no-prueba-el-camino-real]]
+[[una-suite-en-verde-no-prueba-el-camino-real]] ·
+[[el-camino-de-la-primera-vez-no-prueba-el-de-regimen]] ·
+[[un-experimento-que-mide-algo-contra-si-mismo-da-el-100-por-cien]]
