@@ -12,7 +12,6 @@
  * ficheros (30% del corpus); esto devuelve los 10 que importan, ordenados.
  */
 import { DatabaseSync } from 'node:sqlite'
-import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execFileSync } from 'node:child_process'
@@ -46,8 +45,13 @@ if (!consulta) {
 }
 
 // El índice se mantiene solo: si algo cambió en disco, reindexa antes de buscar.
-if (!existsSync(DB_PATH)) execFileSync('node', [join(VAULT, 'scripts/vault-index.mjs')], { stdio: 'inherit' })
-else execFileSync('node', [join(VAULT, 'scripts/vault-index.mjs')], { stdio: 'pipe' })
+//
+// Su salida va SIEMPRE a stderr, nunca a stdout. En una máquina nueva el índice
+// no existe y hay que construirlo, y con `stdio: 'inherit'` ese "indexadas 1805
+// notas" caía en stdout: un `vault-find --paths X | xargs cat` intentaba abrir un
+// fichero llamado "indexadas". stdout es el resultado; el progreso es stderr.
+const reindex = execFileSync('node', [join(VAULT, 'scripts/vault-index.mjs')], { encoding: 'utf8' })
+if (reindex && !reindex.startsWith('índice al día')) process.stderr.write(reindex)
 
 const db = new DatabaseSync(DB_PATH, { readOnly: true })
 

@@ -22,8 +22,8 @@ const TOLERANCIA = 3
 
 // [cita tal como aparece en la lección, ruta absoluta, fragmento esperado]
 const CITAS = [
-  ['vault-find.mjs:83', join(VAULT, 'scripts/vault-find.mjs'), 'bm25(fts, 10.0'],
-  ['scripts/vault-find.mjs:127-129', join(VAULT, 'scripts/vault-find.mjs'), 'final: (((d.suma'],
+  ['vault-find.mjs:87', join(VAULT, 'scripts/vault-find.mjs'), 'bm25(fts, 10.0'],
+  ['scripts/vault-find.mjs:131-133', join(VAULT, 'scripts/vault-find.mjs'), 'final: (((d.suma'],
   ['scripts/vault-index.mjs:121', join(VAULT, 'scripts/vault-index.mjs'), "delete-all"],
   ['scripts/vault-find.test.mjs:20-39', join(VAULT, 'scripts/vault-find.test.mjs'), 'const CASOS = ['],
   ['learning-dup-guard.sh:16', join(HOME, '.claude/hooks/learning-dup-guard.sh'), 'TTL_MIN='],

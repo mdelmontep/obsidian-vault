@@ -54,6 +54,22 @@ try {
   console.log(`FALLO reindexado incremental: ${String(e.stderr || e).split('\n').find((l) => l.includes('Error')) || e}`)
 }
 
+// stdout es el resultado, stderr es el progreso. En una máquina nueva hay que
+// construir el índice, y ese aviso caía en stdout: `--paths | xargs cat` intentaba
+// abrir un fichero llamado "indexadas". Se fuerza el arranque en frío aquí.
+try {
+  execFileSync('rm', ['-f', join(VAULT, '.vault-index.db'), join(VAULT, '.vault-index.db-wal'), join(VAULT, '.vault-index.db-shm')])
+  const salida = execFileSync('node', [join(VAULT, 'scripts/vault-find.mjs'), '-n', '3', '--paths', 'rls tabla vacia'], {
+    encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
+  })
+  const sucias = salida.trim().split('\n').filter((l) => l && !l.endsWith('.md'))
+  if (sucias.length) throw new Error(`stdout contaminado: ${JSON.stringify(sucias[0])}`)
+  console.log('ok   --paths en frío devuelve sólo rutas .md')
+} catch (e) {
+  fallos++
+  console.log(`FALLO --paths en frío: ${e.message}`)
+}
+
 for (const [consulta, esperado, maxPos, extra] of CASOS) {
   let salida = ''
   try {
@@ -73,6 +89,6 @@ for (const [consulta, esperado, maxPos, extra] of CASOS) {
   console.log(`${ok ? 'ok  ' : 'FALLO'} "${consulta}" → ${esperado} ${nota}`)
 }
 
-const total = CASOS.length + 1  // +1: la comprobación de reindexado
+const total = CASOS.length + 2  // +2: reindexado y stdout limpio en frío
 console.log(`\n${total - fallos}/${total} comprobaciones en verde`)
 process.exit(fallos ? 1 : 0)
