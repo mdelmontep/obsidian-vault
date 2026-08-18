@@ -26,13 +26,34 @@ Repo `~/Projects/learn-agentesia` → **`github.com/mdelmontep/learn-agentesia` 
 - 🟢 **«¿Esto qué es?»** — marcar texto en una lección y preguntarlo sin salir. Los términos del
   glosario salen subrayados y responden al instante; lo demás lo mira el runner en contexto y, si es
   vocabulario, entra en el glosario y de ahí al repaso.
-- 🟢 **Temario ampliado a 106 temas en 9 secciones (18-ago)** — nueva sección **Memoria y
-  recuperación** (19 temas): sustrato markdown+git+grep → dónde se rompe el grep → índice invertido y
-  BM25 → FTS5 → ranking multi-señal → cómo se evalúa (MRR/Recall@k/nDCG) y por qué las consultas
-  sintéticas mienten → embeddings → híbrido (RRF vs ponderado) → RAG → el grafo de Obsidian →
-  grafos de conocimiento → GraphRAG → Graphiti → cuál elegir → coste de contexto → escribir para
-  recuperar → instrumentar. Cada tema anclado a un número medido del vault, no a una generalidad.
+- 🟢 **Sección «Memoria y recuperación»: 28 temas, publicada y escribiéndose (18-ago)** — de
+  «guardar y encontrar son dos problemas distintos» a la memoria con hechos que caducan, más cinco
+  temas de molde `sistema` sobre **el montaje real del vault**. Reescrita dos veces el mismo día por
+  dos fallos propios que conviene no repetir:
+  **(1) jerga en los títulos** — 11 de 19 la traían y el runner los copió: se publicó «Cuándo grep
+  deja de buscar» para quien no sabe qué es grep. Ahora hay validador de entrada y de salida.
+  → [[una-regla-que-solo-vive-en-el-prompt-se-cumple-casi-siempre]]
+  **(2) temas escritos como fallo, no como concepto** — 7 de 19 contaban una avería sin haber
+  enseñado el mecanismo. Faltaban además cuatro fundamentos delante (qué es un índice, qué significa
+  relevante). El fallo ahora vive DENTRO de la lección de su mecanismo.
   → [[ADR-054-la-busqueda-del-vault-es-lexica-fts5-no-semantica-ni-grafo]]
+- 🟢 **Los cinco moldes, por fin en uso (18-ago)** — `encolar-temario.mjs` fijaba `molde: 'concepto'`
+  para todo, así que las cinco formas de enseñar eran una. Ahora el molde es propiedad del tema
+  (`015_molde_por_tema.sql`): 13 concepto · 6 sistema · 4 práctica · 3 comparativa · 2 chuleta.
+  → [[una-opcion-con-el-valor-fijo-en-quien-la-llama-no-existe-aunque-este-programada]]
+- 🟢 **UX auditada con 5 agentes y arreglada (18-ago)** — el anillo de foco daba 2,5:1 con 3:1
+  exigido y en los campos **empeoraba** al enfocar (2,02:1 contra ~19:1 en reposo); el subrayado de
+  los h2 sólo marcaba la última línea; la columna de texto dejaba 428 px muertos; no existía
+  `loading.tsx`, `error.tsx` ni `not-found.tsx`; y el buscador mandaba el curso entero al navegador
+  (671 KB proyectados → 188 KB de techo). Desplegado y verificado en producción.
+- ⚠️ **El runner es un SERVICIO, no un proceso** — LaunchAgent con `KeepAlive`. Matarlo lo reinicia;
+  lanzarlo a mano lo duplica (hubo dos, uno con 28 h y código viejo). Pararlo de verdad:
+  `launchctl unload ~/Library/LaunchAgents/es.agentesia.aula.runner-remoto.plist`. Log en
+  `~/Library/Logs/aula-runner-remoto.log`.
+  → [[matar-un-proceso-no-lo-para-si-detras-hay-un-servicio-que-lo-resucita]]
+- ⚠️ **La petición del trabajo se congela al encolar** — al reescribir los temas, 16 de 20 trabajos
+  pendientes seguían pidiendo la versión vieja. Antes de tocar el temario: retirar los desfasados y
+  reencolar. → [[un-trabajo-en-cola-que-guarda-el-texto-y-no-la-referencia-nace-caducando]]
 - 🟢 **Lección 2 escrita a mano (`content/0002-memoria-del-vault.html`)** — cómo funciona la memoria
   del vault, qué se descartó y por qué (Notion, BD, embeddings, RRF, GraphRAG) y cuatro variantes de
   uso. Sus citas `fichero:línea` las vigila un gate del vault (`scripts/verificar-citas.mjs`), que
