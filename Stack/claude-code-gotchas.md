@@ -208,3 +208,20 @@ Estaban en el índice de arranque, que se paga en TODA sesión sin disparador cl
 
 Con un fichero en `intent-to-add`, `stash push`/`pop` fallan **a medias**. `git reset` antes, o
 commitea y rebasa. Ver [[git-add-intent-to-add-rompe-stash]].
+
+## Las memorias se atan al cwd: mover un repo las deja mudas (18-ago-2026)
+
+`~/.claude/projects/<slug>/memory/` guarda las memorias por directorio de trabajo, y el slug **es el
+cwd con las `/` cambiadas por `-`**. Al migrar de Mac (`~/facturaia` → `~/Projects/facturaia`)
+quedaron **111 memorias** en slugs muertos: no las cargaba ninguna sesión y no hay error, warning ni
+señal. Se descubrió por casualidad meses después, limpiando disco.
+
+- Al **renombrar o mover un repo**, migrar también su `memory/` al slug nuevo, fusionando el
+  `MEMORY.md` a mano (un `mv *.md` pisa el índice del destino y te llevas por delante sus entradas).
+- Para saber a qué cwd pertenece un slug, **no lo deduzcas del nombre**: los guiones del propio repo
+  lo hacen ambiguo (`-Users-x-Projects-agentesia-crm` no es `.../agentesia/crm`). Léelo del campo
+  `"cwd"` de cualquier `.jsonl` del directorio.
+- Ya hay guard: `~/.claude/hooks/memory-orphan-guard.sh` bloquea el cierre de turno si aparece un
+  `memory/` con cwd muerto. Compañero: `worktree-guard.sh` para worktrees ya integrados.
+
+Ver [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]].

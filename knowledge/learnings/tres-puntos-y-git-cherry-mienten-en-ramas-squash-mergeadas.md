@@ -36,3 +36,11 @@ Complementa [[git-merge-base-is-ancestor-falso-negativo-con-squash]] (mismo
 problema con `--is-ancestor`) y [[git-diff-vs-main-drifteado-usar-merge-base]]
 (dos puntos con `main` drifteado). Los tres apuntan a la misma regla: para
 squash-merge, solo vale comparar árboles actuales, nunca commits ni ancestría.
+
+**Reincidencia 18-ago, con esta nota ya escrita.** En la limpieza del home caí tres
+veces seguidas: di `agentesia-web` por «26 commits en riesgo de perderse» cuando
+llevaban 11 días en `main` (PR #99), lo repetí con otras 31 ramas de facturaia, y
+solo lo vi al fallar un `git push` con 403. La nota no falló; falló consultarla —
+vive en el vault y no se carga sola. Antes de triar ramas o worktrees:
+`vault-find "squash cherry ramas"`. Un learning sin consultar es un learning que no
+existe.
