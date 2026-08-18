@@ -25,6 +25,7 @@ Mapa temático de los learnings en `knowledge/learnings/` — **conteo real 973*
 - [[background-bash-io-bound-se-mata-solo-reintentar]] — un background bash io-bound se mata solo sin causa visible — reintentar, no diagnosticar
 - [[bash-3-2-de-macos-no-parsea-case-dentro-de-command-substitution]] — el /bin/sh de macOS (bash 3.2) no parsea un case dentro de $(...)
 - [[busqueda-hibrida-sql-pgvector-supabase]] — busqueda hibrida sql + pgvector en supabase para catalogos
+- [[cabecera-http-con-caracter-fuera-de-latin1-tumba-la-respuesta]] — un carácter fuera de latin-1 en una cabecera HTTP tumba la respuesta entera
 - [[campo-huerfano-shape-sin-migracion-paralela]] — Campo huérfano — código referencia columna sin migración paralela → UI vacía silenciosa
 - [[campo-opcional-en-tipo-compartido-no-implica-seleccionado-en-todos-los-selects]] — un campo opcional ya declarado en el tipo compartido puede seguir vacío en N puntos disti…
 - [[campo-sincronizado-entre-tablas-debe-poblarse-en-todos-los-puntos-de-escritura]] — campo sincronizado entre tablas debe poblarse en todos los puntos de escritura

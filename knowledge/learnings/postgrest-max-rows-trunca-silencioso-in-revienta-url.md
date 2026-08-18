@@ -64,3 +64,12 @@ borrado**, porque la URL del DELETE sigue llevando mil ids. Dos límites, dos
 arreglos. Corolario para clasificar: un `.limit()` grande solo es bug si además
 AGREGA; en un listado muestra menos filas. Y si no quieres paginar, saca el aviso
 de un `count: 'exact'` (como `/cobros/aging`), nunca de comparar con el cap.
+
+**18-ago, la clase que faltaba: a veces no devuelve MENOS, devuelve MAL.** Hasta aquí el daño
+se describía como "importes de menos". Barrido de inventario en TuFacturaIA: un `MAX(created_at)`
+calculado en JS sobre las 1.000 primeras filas **en orden indefinido** daba una fecha cualquiera,
+no la última; y un contador de alarmas sobre filas truncadas salía **cero** cuando las alarmas
+caían más allá de la fila 1.000. Un importe corto se huele; una fecha plausible y un "no hay
+alarmas" no los huele nadie. Corolario para el criterio de arreglo: los agregados de dinero y los
+contadores de decisión deben **fallar cerrado** (500) si no caben en el tope, no devolver la
+cifra calculada sobre el conjunto incompleto.
