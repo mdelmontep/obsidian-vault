@@ -20,3 +20,6 @@ mv "$TMP" "$DESTINO"
 ```
 La comprobación tiene que **discriminar**: probarla en rojo (sin Docker) y ver que el fichero
 anterior NO se toca.
+
+Duplicado semántico de [[redirigir-con-mayor-que-destruye-el-fichero-antes-de-arrancar-el-comando]],
+que tiene el análisis de los tres casos y el registro de la tercera reincidencia (18-ago).

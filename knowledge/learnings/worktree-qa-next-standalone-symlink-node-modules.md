@@ -73,3 +73,8 @@ Ver [[facturaia]].
    gate, `npm ci` de verdad — el symlink solo para inspección rápida. Y al ver un rojo,
    descartarlo primero contra `main` antes de sospechar del diff.
 
+
+7. **Un worktree de SOLO DOCUMENTACIÓN también necesita `node_modules`** (18-ago-2026): el
+   `pre-push` de facturaia corre `build`, así que una rama que solo toca un `.md` aborta con
+   `sh: next: command not found`. Se lee como un problema del repo y es que el worktree está
+   vacío. Clonar con `cp -Rc` también ahí.

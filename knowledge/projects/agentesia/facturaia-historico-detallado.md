@@ -17,6 +17,30 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-29]] — dos podas del 29-jul: la de la mañana y, al cierre, 11 entradas más del NOW (área de tickets y su fuga de mensajes internos, avisos de respuesta del cliente, impersonación en listados, VeriFactu, coste LLM, prompt caching, auditoría Fable 5, cola OCR, UX de ingesta, recurrentes).
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 
+## 18-ago-2026 (noche) — once PRs en el día, y los dos incidentes los causé con herramientas del repo
+
+Segunda tanda: **#1882** (trinquete `series-formato-guard`), **#1883** (tipos al día + `gen:types`
+blindado + migs 709/710 sin consumidores), **#1884** (aviso de `requires_recalc` en hub y calendario),
+**#1885** (§13 del plan: el PR 2 bloqueado), **#1886** (PR 1b: guards de serie protegida),
+**#1887** (el aging deja de dar la baja de WhatsApp por irreversible).
+
+Cierre medido sobre `main` mergeado: 1.250 ficheros, **12.934 tests**, 0 fallos, lint y typecheck
+limpios, `gen:types:check` en 0 y prod en la **710**. 1 worktree, ramas de la tanda retiradas.
+
+- **Dos incidentes, los dos míos y los dos recuperados**: `gen:types` truncó el fichero de tipos antes
+  de fallar (401), y un `\i` de migración dentro de un `BEGIN … ROLLBACK` de prueba ejecutó su `COMMIT`
+  y dejó una función creada en prod. Detalle en `Stack/incidents.md`.
+- **La nota del `>` llevaba escrita dos veces desde el 7 y el 11 de agosto y no impidió nada**, porque
+  nadie había cambiado el script. Ahora hay script, test que prohíbe la redirección y `--check` de
+  drift. → [[redirigir-con-mayor-que-destruye-el-fichero-antes-de-arrancar-el-comando]]
+- **Decisión: el PR 2 de #1778 no se escribe** contra un fixture inventado. 0 invoices/subscriptions
+  en live, ninguna clave de sandbox, y el repo no usa el SDK de Stripe, así que nada validaría la forma
+  de un objeto del que se mapean importes fiscales. Bloqueado en la `sk_test`, y arrastra PR 3 y PR 4.
+- **Decisión: la serie protegida va en el dato**, no en `SERIES_RESERVADAS`, que se deriva de
+  `SERIE_BY_TIPO`. → [[una-lista-derivada-no-admite-excepciones-la-marca-va-en-el-dato]]
+- El arnés de mutación destapó **dos tests sin dientes** en el trinquete nuevo, y el caso del comentario
+  SQL necesitó tres intentos hasta discriminar.
+
 ## 18-ago-2026 (tarde) — las tres ramas en prod, y los dos PRs que nadie había planeado
 
 Cinco PRs mergeados: **#1877** (candado de idempotencia de #1778, mig 708), **#1880** (el formato

@@ -9,3 +9,11 @@ Verifica SIEMPRE el resultado real: `gh pr view <n> --json state -q .state` == "
 Con Actions caído + review requerido, el único merge posible es `gh pr merge <n> --admin --merge --delete-branch` (requiere admin). Antes de mergear: build agregado local verde de todo lo combinado; después: `git ls-remote origin refs/heads/main` cambió de SHA + build sobre el main real.
 
 **Corolario (17-ago) — verificar ANTES de destruir, no después.** Un **503** de la API dejó el merge sin hacer y el borrado de la rama remota, la local y el worktree ya iba encadenado detrás: se destruyó el soporte de un trabajo sin mergear. Se recuperó porque el commit seguía vivo en el repo (`git cat-file -t <sha>` → rama recreada → `gh pr reopen`), pero la secuencia correcta es `state == MERGED` **y entonces** borrar. Y confirmar que el merge trae lo que debía (`git show --stat HEAD`), no que el PR lo diga.
+
+**Segunda forma del mismo fallo (18-ago-2026): `GraphQL: Something went wrong while
+executing your query`.** No es solo el 503. `gh pr merge` salió con ec=1 y ese texto, y el
+PR seguía `OPEN` con `mergedAt=null`; al reintentar, la causa real era otra (conflicto con
+`main` por el SVG del grafo, que el primer mensaje no mencionaba). Y en otro PR el mismo
+error de GraphQL fue transitorio y el reintento mergeó sin más. O sea: el mensaje de error
+**no distingue** «no mergeable» de «GitHub falló», así que el único veredicto es
+`gh pr view N --json state,mergedAt`.

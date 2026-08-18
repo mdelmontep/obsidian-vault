@@ -166,3 +166,16 @@ su veredicto** —son cuatro líneas, léelas crudas— y un patrón ambiguo se 
 del cuerpo, no con la firma de la función. Familia del [[decimotercero]] al revés: allí un `✓
 VÍCTIMA` falso cerraba el asunto; aquí un «sin víctima» inventado abre una acusación que no sostiene
 ninguna medición.
+
+**Un «sin víctima» puede ser un test que mide, pero por otra rama** (18-ago-2026,
+`series-formato-guard` de facturaia). Cegar el corte en `WHERE` del guard salía SIN VÍCTIMA
+y el código estaba bien: al no reconocer la sentencia, el guard caía en su rama de «no
+verificable», que también devuelve exit 0. El test miraba solo el código de salida, así que
+no distinguía «está bien» de «no lo he entendido». Aserción que lo arregla: exigir además
+que NO aparezca el aviso de no-verificable. Es decir, verde **por haber medido**, no por
+haberse rendido.
+
+Y el caso del comentario SQL necesitó **tres intentos** hasta discriminar: un comentario
+antes de la sentencia no vale (el regex no llega), ni la sentencia comentada en varias
+líneas (el `--` rompe el match igual); solo la comentada en UNA línea. Los dos primeros
+habrían quedado como cobertura falsa, verdes para siempre.
