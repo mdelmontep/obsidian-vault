@@ -32,7 +32,7 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 - 🔴 **TODOS los agentes deben identificarse como IA (art. 50, vigente desde el 2-ago-2026)** — hecho solo en Elphis (17-ago, voz verificada). Faltan Clínica Zen, Simarro, Tecnocloud, EcoBox, AGH, Laserys, Danny, Gesfincas y el chatbot propio. Hasta 15 M€ o 3 %, y lo nota el cliente antes que tú. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
-- 🟢 **TuFacturaIA — contenido: spec pestañas+publicar IG+Ads 7/7 EN PROD (17-ago)** — `publicacion_ref` ya automático. **Tuyo**: alta del schedule `marketing-publicar` en Dokploy + wizard del token de Google; token Meta caduca ~10-oct. → [[facturaia]]
+- 🟢 **TuFacturaIA — contenido: spec #1908 COMPLETA en prod (19-ago)** — nueve tickets, migs 713-720. Cabos en #1959: sin subtítulos (nadie transcribe) y Revideo sin cablear. **Tuyo**: de dónde sale el `.srt`, y de la spec anterior el schedule `marketing-publicar` + wizard del token de Google (Meta caduca ~10-oct). → [[facturaia]]
 - 🟢 **TuFacturaIA — barrido: plan del 95 % escrito, staging en pie, restauración ensayada (11-ago)** — queda el gate automático (fuera de alcance: sin billing) y T1 con arranque escrito (`PROMPT-fiscal-inventario-cobros-t1.md`). **Tuyo**: bucket+key de Backblaze (copia de PDF ya aplicada, #1671). Albarán de las ostras cerrado 13/14-ago (ticket #147). → [[facturaia]]
 - 🟠 **TuFacturaIA — queda 1 cabo de la higiene del 09-ago**: enlazar las 3 subpáginas de `/admin/marketing` (decidido, aplazado). Lo demás en prod. → [[facturaia]] §NEXT
 - 🟠 **TuFacturaIA — censo de filas densas clasificado entero (PRs #1547/#1548): quedan 15 filas por arreglar (08-ago)** — no eran 8 ni 33; el grep a mano fallaba. Issues #1540 y #1541. → [[facturaia]] §NEXT

@@ -16,6 +16,7 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-28]] — poda del 28-jul: 10 entradas cerradas del NOW (IVA negativo de presupuestos, `/api/health` con versión real, ticket de vencimiento de IET, panel `/admin` sin falsas incidencias de precios + `proxy.ts`, gate del 26-jul y sus remates, lote de conciliación).
 - [[facturaia-historico-snapshot-2026-07-29]] — dos podas del 29-jul: la de la mañana y, al cierre, 11 entradas más del NOW (área de tickets y su fuga de mensajes internos, avisos de respuesta del cliente, impersonación en listados, VeriFactu, coste LLM, prompt caching, auditoría Fable 5, cola OCR, UX de ingesta, recurrentes).
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
+- [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
 ## 18-ago-2026 (noche) — once PRs en el día, y los dos incidentes los causé con herramientas del repo
 
