@@ -43,3 +43,23 @@ mete los N primitivos dentro de la fábrica del mock —mockea la HOJA—, y los
 Diagnóstico antes de tocar tests: `git stash` (¿flakea sin mis cambios?), sacar los tests nuevos
 para aislar, y `uptime`. **Un rojo que se arregla volviendo a lanzar enseña que el rojo es
 opinable**, y a partir de ahí nadie mira ninguno.
+
+## La variante `.pg`: el timeout es del HOOK, y los ficheros CAMBIAN entre intentos (19-ago, agh)
+
+Siete gates rojos seguidos y ninguno del diff: `6 → 5 → 1 → 2 → 6 → 1 → 1` fallos, **siempre en
+ficheros distintos**, todos `.pg` y todos con `Hook timed out in 10000ms` en un `beforeEach` que hace
+`TRUNCATE` — **nunca una aserción**. En una corrida los **skips subieron de 243 a 247**: había `.pg`
+que ni se ejecutaron, o sea que el rojo venía además con cobertura perdida en silencio.
+
+Tres cosas que no estaban aquí:
+- **Que los ficheros cambien ENTRE INTENTOS es la señal más fuerte** — más que «no tienen relación
+  con el diff», porque un fallo real también puede parecer no relacionado.
+- **Bajar workers no siempre es opción**: con `fileParallelism: false` los ficheros ya van en serie,
+  así que la contención es del HOST, no de la suite consigo misma.
+- **Esperar a que baje el load no funcionó** (10 min y subió de 9 a 24). Lo que funciona es
+  **reintentar en bucle** hasta que caiga una ventana tranquila.
+
+No era la base de datos: 7 conexiones de 100. `ps aux | sort -rnk3` señaló a otra sesión del mismo
+usuario (`next-server`, un `tsc`, graphviz) — **pregúntale a `ps` quién consume, no al Postgres**.
+Y al crear una base de contraste, migrarla: un guard de esquema desactualizado da rojos que se leen
+como propios.

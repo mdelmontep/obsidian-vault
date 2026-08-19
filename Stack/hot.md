@@ -88,6 +88,8 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 
 - **Un candado nuevo en `main` caza las PRs abiertas escritas ANTES que él** — solo lo ve el gate de la combinación. Ver [[un-candado-nuevo-en-main-caza-las-prs-abiertas-escritas-antes]]
 
+- **Importar un helper desde otro `.test.ts` re-ejecuta sus casos en el importador** — el delta de la rama dice +11 aportando 6, y `tsc`/`eslint`/el resumen cuadran igual. Ver [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]]
+
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:

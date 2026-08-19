@@ -123,3 +123,13 @@ _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SS
 ## 2026-08-18 (noche) — 17 merges, y el harness por fin activo
 
 Tanda de 17 merges con gate completo ✓ verde y el mismo total por tres caminos independientes; 11 issues `CLOSED`, 14 nuevas. Los tres candados de la tanda cazaron lo que ninguna PR sola veía: **«solo docs» NO exime del gate** (un candado pilló mi propia prosa en un ADR), y los evals ×3 destaparon que la cadencia de UN cliente se guardaba como la de TODOS. El **deadlock de los dos `git-guard`** quedó roto por los dos lados (#1392/#1393): el hook vive dentro del árbol que vigila, así que la activación de la corrección requería la corrección. Ver [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]].
+
+## 2026-08-19 — la continuidad (#941) y el track de fidelidad de resolución
+
+**Mañana (#941, PR #1397).** `state.pending` era un **slot, no una pila**: una intención dictada sobre un HITL vivo se respondía con el hold y **se tiraba** — su propio comentario lo declaraba («*theirs to repeat right after*»). Se retiene en `held_intent` (migración 0035 aditiva, TTL 30 min, limpiada por `resetUserData`) y **se re-propone sola** al morir el pendiente, siempre por HITL. Se guarda el **texto crudo** y no los `ProposedWrite`: al reanudar se rutea contra el estado ya resuelto. Fue el fallo que Borja nombró como el principal del agente.
+
+**Las cuatro premisas heredadas que resultaron falsas al medirlas**, y decidían alcance: *(1)* «`lastQuestion` no se proyecta al intérprete» — falso, cruza como `pendingQuestion` (`hitl-brain.ts:2018` → `llm-turn-interpreter.ts:409`); *(2)* la causa raíz de #938 era falsa **el día que se escribió** (el `case cancel` conserva `retakeable` desde seis días antes); *(3)* `mutate:diff` dio un `SIN VÍCTIMA` falso → #1396; *(4)* los worktrees de #1394 ya no existían.
+
+**Tarde: track de fidelidad de resolución** (#1363, #1358) y las cinco PRs del día mergeadas por orden de Manu. Detalle en `docs/status-log/2026-08-19-*` del repo.
+
+🧠 **No re-litigar:** se guarda el **texto crudo**, no los `ProposedWrite` (al reanudar se rutea contra el estado ya resuelto); y la reanudación vive en la **orquestación de `handle`** reusando lo de #535-G1, así que el tramo reservado de #454 **no se toca**. (decidido con #941; vive en el código desde su merge del 19-ago)

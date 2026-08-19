@@ -44,17 +44,23 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-19) — **#1397 y #1398 mías abiertas** · de Borja, #1302 y #1360
+## Estado (2026-08-19, tarde) — **las CINCO del día mergeadas** · abiertas solo #1302 y #1360, de Borja
 
 > ⚠️ Este bloque **no nombra el SHA de `main` a propósito**: un snapshot que nombra su punta no puede acertar (se desfasa con su propio merge). Se consulta con `git rev-parse --short origin/main`.
 
-🟡 **La CONTINUIDAD (#941) construida y esperando merge — PR #1397.** `state.pending` era un **slot, no una pila**: una intención dictada sobre un HITL vivo se respondía con el hold y **se tiraba** (el propio comentario lo declaraba: «*theirs to repeat right after*»). Ahora se retiene (`held_intent`, mig. 0035 aditiva) y **se re-propone sola** al morir el pendiente, siempre por HITL. Es el fallo que Borja nombró como el principal del agente. Gate completo ✓ verde a la primera, `Δ agente +17`. **Suya la disyuntiva**: reanudación automática (lo implementado) vs bajo petición.
+✅ **Las cinco PRs del 19-ago DENTRO** (`#1399 → #1400 → #1397 → #1398 → #1404`; **#941**, **#1363** y **#1358** cerrados, comprobado por `state`). Override de founder de Manu avisado en Slack antes de tocar `main`, de una en una y sin `--delete-branch`. La combinación se midió **antes** y la suma cuadró exacta sin residuo (`4340 + 17 + 12 + 6 = 4375`).
 
-🧠 **No re-litigar:** se guarda el **texto crudo**, no los `ProposedWrite` (al reanudar se rutea contra el estado ya resuelto); y la reanudación vive en la **orquestación de `handle`** reusando lo de #535-G1, así que el tramo reservado de #454 **no se toca**.
+🎯 **Cerrado el track de fidelidad de resolución** — la clase de fallo que **no falla: acierta otra pregunta**, y por eso el comercial no la detecta (#1363 escribía sobre la reunión pasada; #1358, un `WHERE` que no casa devuelve **cero**, no error). 🔒 Tres candados del repo pusieron en rojo mi propio diff y **los tres tenían razón**; cero tests ajenos tocados. Detalle → [[agh-iberica-historico]] · [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[tests-que-caen-por-contencion-de-cpu-verificalos-aislados-antes-de-diagnosticar]] · [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]].
 
-🔴 **Cuatro premisas heredadas eran FALSAS, y decidían alcance:** *(1)* «`lastQuestion` no se proyecta» — **sí**, cruza como `pendingQuestion` → **abarata #1100**; *(2)* la causa raíz de **#938** era falsa el día que se escribió (el `cancel` conserva `retakeable` desde 6 días antes; fallan **dos entradas en dos listas** de `proposal-retake.ts`); *(3)* `mutate:diff` dio un **SIN VÍCTIMA falso** → **#1396**; *(4)* los worktrees de **#1394** ya no existen (lo vivo es su preflight). Ver [[un-grep-negativo-por-el-nombre-del-origen-es-ciego-a-un-renombrado-en-la-frontera]] · [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] (modo 16).
+🟡 **Sigue siendo de Borja: la disyuntiva de #941** — reanudación **automática** (lo implementado, con motivo escrito) vs bajo petición. Es una línea y un caso.
 
-🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **8 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #648 #649 #741 #912 #535 — #941 en PR).
+🔴 **De las premisas falsas del 19-ago sigue vivo lo accionable:** **#1100 está abaratado** (`lastQuestion` SÍ cruza al intérprete, como `pendingQuestion` — no hay que construir proyección) y la causa raíz de **#938** es falsa: fallan **dos entradas en dos listas** de `proposal-retake.ts`, no el `cancel`. Detalle → [[agh-iberica-historico]].
+
+🆕 **Issues nuevas del 19-ago (las tres `ready-for-agent`):** **#1401** (un `SIN VÍCTIMA` falso con el control COHERENTE — el barrido no seleccionó ninguna suite del consumidor; #1396 no lo caza) · **#1402** (importar de un `.test.ts` re-ejecuta sus casos) · **#1403** (el mapa de #1358 solo tiene un consumidor: `tasks` y `reminders` siguen con el literal).
+
+⛔ **El instrumento de evals NO es cola de agente** (premisa caducada que se hereda): #738 y #1304 llevan `CLOSED`; lo vivo (#1026, #1361, #1009, #1002, #985) es `ready-for-human`.
+
+🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **8 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #648 #649 #741 #912 #535 — **#941 ya cerrado**).
 
 ⏸️ **Lote parado, DECIDIDO que merece la pena pero NO hoy:** `~/wt-1064` (#1064+#1212+#1044A). Al retomarlo: **rebasar → congelar el prompt y volcar las descripciones renderizadas ANTES de pagar la corrida**.
 
