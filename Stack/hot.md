@@ -93,3 +93,6 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
 - **Un gate que descubre lo que audita pasa en verde si su lista sale vacía** — suelo explícito (`toBeGreaterThanOrEqual`) y fallar CERRADO con lo que no sabe leer. Ver [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]]
+
+- **El arnés se mide a sí mismo** — un gate que construye la orden en vez de ejecutarla, un mock que declara una cadena que el código ya no usa, un check que nadie invoca, un default que nadie corrió. [[el-arnes-se-mide-a-si-mismo]]
+- **Verificar la conclusión, no la evidencia** — el estado de un secreto externo lo dice el proveedor, no un `SELECT`. [[verificar-la-conclusion-no-solo-la-evidencia]]

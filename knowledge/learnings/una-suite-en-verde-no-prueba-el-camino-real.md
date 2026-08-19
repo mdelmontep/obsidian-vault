@@ -19,3 +19,5 @@ bloquear son los que discriminan: los "no debe bloquear" pasan trivialmente cuan
 
 Corolario para gates nuevos: `pathToFileURL(process.argv[1])` **lanza** si `argv[1]` no existe (`node -e`,
 un REPL, un arnés que importe el módulo). Un guard de entrada tiene que evaluar a falso, nunca reventar.
+
+Eje hermano: [[el-arnes-se-mide-a-si-mismo]] — ese va de QUÉ se mide (un mock, un check o un default que nadie ejecuta); este, de DÓNDE se mide.
