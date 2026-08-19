@@ -18,6 +18,13 @@ El daño no es el mensaje raro: si no puedes guardar, la única salida visible e
 pulsar el botón irreversible. Es como se llegó al bucle del ticket #117 (usuario
 dándole a Emitir una y otra vez).
 
+**Variante sin par simétrico (20-ago, #1668): el guard exige algo que la interfaz no sabe hacer.**
+Se añadió al servidor «no se marca presentada sin sello eIDAS» —correcto, es la prueba que pide el
+RD 1619/2012—, pero el modal solo sellaba si el estado era `cuadrado`: una declaración en `exportado`
+con un sello inservible quedaba rechazada y **sin ningún botón para sellar**. Salida buena: no duplicar
+la condición en el cliente (así se desincronizan), sino reaccionar al veredicto del servidor —si dice
+`sin_sello_eidas`, sellar y reintentar UNA vez— y pintar su `detail`, no el código del error.
+
 Señal barata: dos ramas de la misma pantalla (crear vs editar) que corren distintos
 guards — una de las dos está mal. Fix: el criterio "¿esto emite o solo guarda?" en
 una función compartida, y los guards dentro de él. Ver
