@@ -35,6 +35,12 @@ de medición del mismo día, las dos productoras de falsos verdes:
 - Con 3 gates a la vez (setup 404 s, tests a 5 s) caen tests por contención. **Un gate cada vez**;
   antes de diagnosticar un rojo, repetirlo en solitario.
 
+**Reincidencia 19-ago**: cadena `lint; typecheck; build; vitest` con `;` → un solo presupuesto de
+900 s → `killed` a los 15m01s clavados, dos veces. Volví a achacarlo a `reap_orphans` sin abrir
+`events.jsonl` (el mismo diagnóstico falso de arriba) y monté un plan con tmux que no hacía falta.
+El fix `count_heavy` del 29-jul solo cubre cadenas con `&&`: las de `;` siguen entrando enteras.
+Regla que sí funcionó: **una etapa por llamada** (typecheck solo, luego build+vitest).
+
 **No lanzar N agentes que corran `build` cada uno**: con 2 slots se bloquean entre sí (uno estuvo
 1 h encolado, load 44 sobre 10 cores). En facturaia el `build` ya lo corre el hook `pre-push`, así
 que el push no existe sin build verde y el agente no debe repetirlo.

@@ -35,7 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
-- 🟠 **Contenido (#1791) en prod. Tuyo**: schedule `marketing-publicar` en Dokploy + wizard del token de Google.
+- 🟠 **Google Ads operativo end-to-end (19-ago)**: cuenta habilitada, Fase A en prod (#1903-#1906, ADR-015 enmendado), cron publicar verde. **Queda**: limpiar títulos IA de «Campaign #1» (pausada, 0 €), smoke IG real, y decidir la propuesta de mejoras (conversiones/negativas/SEM). Detalle → manual-admin §51 · [[google-ads-alta-cuenta-publica-campana-obligatoria]]
 - 🟠 **Equipo de contenido: el montaje automático de reels, sin decidir** — el productor entrega material (clips mudos de 5 s), no piezas montadas. Los dos carruseles del 18-ago salieron bien (7 imágenes cada uno, 1,40 €). Queda decidir el montaje (~3 €/reel, dentro del tope) → `docs/research/montaje-automatico-reels.md`
 - 🟠 **Empaquetado: olas 1-4 cerradas, la 5 SIN EMPEZAR (verificado 18-ago)** — lo urgente es que el cierre de beta (#1708) tiene tabla, endpoints, crons y correo pero **cero UI**, así que programarlo exige `curl`; encaja en la celda que #1713 dejó lista. Quedan #1717 y las 676 ramas remotas. → `PROMPT-empaquetado-fase2-ola5.md` · `PROMPT-continuacion-pendientes-19-ago.md`
 - 🟠 **#1776 no decae**: se reduce a `preferred_locales:['es']` y se cierra el día del encendido de #1778 (hay **0** customers reales, así que el PATCH a existentes desaparece).
