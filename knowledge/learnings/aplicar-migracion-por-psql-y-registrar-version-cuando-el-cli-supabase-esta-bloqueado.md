@@ -54,3 +54,11 @@ ser teórico. Cómo se detecta y cómo se sale:
 - Y captura un hash de control antes/después de lo que NO debe moverse
   (`md5(string_agg(id||':'||precio, ',' ORDER BY id))`): una suma total puede
   compensar cambios entre sí, un hash no.
+
+**Rematada (19-ago): guarda anti-carrera dentro del bloque, y verificación por PostgREST.**
+Si otra sesión puede estar mergeando, el bloque manual lleva primero
+`DO $$ IF EXISTS (select 1 from schema_migrations where version='NNN') RAISE EXCEPTION $$`
+— con carrera, aborta entero en vez de registrar mentira. Y para un DROP, la verificación
+independiente sin Postgres es PostgREST: `GET /rest/v1/<tabla>` → `PGRST205` = ya no existe.
+Los PAT `sbp_` muertos también inutilizan la Management API (401): la vía manual es la única
+cuando red+PAT fallan a la vez.

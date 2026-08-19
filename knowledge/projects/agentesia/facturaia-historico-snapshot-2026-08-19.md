@@ -94,3 +94,20 @@ y `agruparPorRacha` tienen que recibir **el mismo array**, porque la bandeja agr
 consecutivas y ahí `filtered` **sí** es el orden de pantalla. Dos gates arreglados de camino: la maqueta
 del anclaje medía **botones nativos** (una barra que no es la de la app) y `e2e:layout` no podía salir
 verde nunca porque el teardown compartido le exigía un servidor que ese proyecto no usa.
+
+## Growth Fase B — ola 1 completa en prod (19-ago noche)
+
+Cinco tickets mergeados en el día con 4 constructores Sonnet en worktrees paralelos + gate de
+composición (4 dimensiones, 0 bloqueantes) y merges serializados con suite completa tras cada uno
+(final: 13.440/0). PRs #1957 (FB-01 gclid + ConversionActions, mig 721), #1962 (FB-06 playbook SEM),
+#1963 (FB-03 límite mensual por GAQL `THIS_MONTH`), #1965 (FB-05 drill-down con serie diaria),
+#1967 (FB-04 drop `marketing_connections`, mig 723 aplicada por Manuel vía SQL Editor con guarda
+anti-carrera al estar la red bloqueada; verificada por PostgREST), y #1964 (fix anti-deriva de la
+copia embebida del plan de ads, cazado en rojo por la suite post-merge de FB-06).
+
+Lo que el gate predijo y pasó: conflicto textual FB-03×FB-05 en `reporting.ts` (dos funciones
+añadidas al final del mismo fichero), resuelto conservando ambos bloques. Lo que falló del arnés:
+el StructuredOutput de los Workflows cayó 3 de 8 veces con el mismo schema
+([[workflow-structured-output-cae-con-schemas-anidados-relanzar-como-agente-suelto]]).
+
+Continuación → `docs/architecture/PROMPT-growth-fase-b-ola2.md` (repo).

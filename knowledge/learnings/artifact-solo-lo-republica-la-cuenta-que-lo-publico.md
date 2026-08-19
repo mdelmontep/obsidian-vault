@@ -23,3 +23,8 @@ tampoco la salva.
 
 Regla operativa, **sin memoria de lo que pasó la vez anterior**: `list` → `WebFetch` de la candidata →
 publicar sobre la que conteste → mintar nueva sólo si ninguna contesta. Cada vez, entera.
+
+**Y un `/login` a media sesión rompe TODO lo publicado antes (19-ago)**: los artifacts quedan en la
+cuenta vieja (403 «not a writer» al republicar, y misma-ruta ⇒ misma URL vieja). Salida: copiar el
+HTML a OTRA ruta de fichero y publicar como artifact nuevo, y actualizar los enlaces ya pegados en
+PRs/Slack con un comentario — los viejos pueden no abrir para la cuenta nueva.

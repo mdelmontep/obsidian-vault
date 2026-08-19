@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **StructuredOutput de Workflow cae con schemas anidados: reponer la dimensión como agente suelto con JSON-por-texto** — y un status `no-ejecutada` nunca cuenta como revisado. Ver [[workflow-structured-output-cae-con-schemas-anidados-relanzar-como-agente-suelto]]
 - **Todo bot de voz o chat debe identificarse como IA en la primera interacción** (art. 50 del AI Act, vigente desde el 2-ago-2026) — y el aviso va en el flujo, no en el prompt: si depende del modelo, el incumplimiento es silencioso. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - **Un control que afirmas a un cliente necesita REGISTRO con fecha** — una afirmación de control no la caza ningún test, solo una auditoría. Ver [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]]
 - **mig:renumerar fail-open en worktrees; propiedad de un número = catálogo, no registro** — [[aplicar-migraciones-a-prod-antes-del-merge-caduca-la-reserva-de-numero]]
