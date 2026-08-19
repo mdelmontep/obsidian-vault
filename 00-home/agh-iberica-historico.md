@@ -120,3 +120,6 @@ _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SS
   baseline del `Δ` + dos cierres + el arreglo del deadlock de los hooks. Detalle en los cuatro
   `docs/status-log/2026-08-18-manu-*` del repo.
 
+## 2026-08-18 (noche) — 17 merges, y el harness por fin activo
+
+Tanda de 17 merges con gate completo ✓ verde y el mismo total por tres caminos independientes; 11 issues `CLOSED`, 14 nuevas. Los tres candados de la tanda cazaron lo que ninguna PR sola veía: **«solo docs» NO exime del gate** (un candado pilló mi propia prosa en un ADR), y los evals ×3 destaparon que la cadencia de UN cliente se guardaba como la de TODOS. El **deadlock de los dos `git-guard`** quedó roto por los dos lados (#1392/#1393): el hook vive dentro del árbol que vigila, así que la activación de la corrección requería la corrección. Ver [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]].

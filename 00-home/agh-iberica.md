@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-18
+updated: 2026-08-19
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -44,17 +44,17 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-18, noche) — **cero PRs mías abiertas** · de Borja siguen la #1302 y la #1360
+## Estado (2026-08-19) — **#1397 y #1398 mías abiertas** · de Borja, #1302 y #1360
 
 > ⚠️ Este bloque **no nombra el SHA de `main` a propósito**: un snapshot que nombra su punta no puede acertar (se desfasa con su propio merge). Se consulta con `git rev-parse --short origin/main`.
 
-🟢 **17 merges en la tanda de la noche**, gate completo con drift sobre `main` **ya mergeado** ✓ verde entero a la primera, y **el mismo total por tres caminos independientes** (la combinación de las trece ramas antes de mergear · la rama de #1376 rebasada · el gate sobre `main`). Desglose exacto sin residuo. 11 issues `CLOSED` verificados por estado, 14 nuevas.
+🟡 **La CONTINUIDAD (#941) construida y esperando merge — PR #1397.** `state.pending` era un **slot, no una pila**: una intención dictada sobre un HITL vivo se respondía con el hold y **se tiraba** (el propio comentario lo declaraba: «*theirs to repeat right after*»). Ahora se retiene (`held_intent`, mig. 0035 aditiva) y **se re-propone sola** al morir el pendiente, siempre por HITL. Es el fallo que Borja nombró como el principal del agente. Gate completo ✓ verde a la primera, `Δ agente +17`. **Suya la disyuntiva**: reanudación automática (lo implementado) vs bajo petición.
 
-🔴 **Lo que más vale de la tanda son los tres candados que cazaron lo que ninguna PR sola veía**: *(1)* el single-source del coste de evals cazó **mi propia prosa** en un ADR — y estaba en su PR desde el primer commit, invisible porque declaré «solo docs, gate no corrido»: **«solo docs» NO exime del gate**; *(2)* la corrida de evals ×3 destapó que «a **Mapfre** lo veo cada dos semanas» se guardaba como la cadencia por defecto de **TODOS** los clientes, y ni el prompt ni el guard de forma lo paran → arreglado en el HITL, que es lo que no depende del modelo (#1385 para la ambigüedad de fondo); *(3)* `verify:ui` cazó lo que **1308 tests del dashboard no ven**: todos los anchos de columna destruidos.
+🧠 **No re-litigar:** se guarda el **texto crudo**, no los `ProposedWrite` (al reanudar se rutea contra el estado ya resuelto); y la reanudación vive en la **orquestación de `handle`** reusando lo de #535-G1, así que el tramo reservado de #454 **no se toca**.
 
-⚙️ **El harness quedó arreglado y por fin ACTIVO.** Los dos `git-guard` formaban un **deadlock**: el hook vive dentro del árbol que vigila, así que un checkout atrasado corría la versión vieja —corrección **mergeada y no activa**— y el único remedio, adelantar el árbol, lo bloqueaba la propia regla. Exención del fast-forward puro en los dos hooks + aviso de copia desfasada (#1392/#1393 y `4da4f0b` en `claude-harness`). El raíz ya se adelanta solo. Ver [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]] · [[rebase-continue-estripa-las-lineas-del-mensaje-que-empiezan-por-almohadilla]].
+🔴 **Cuatro premisas heredadas eran FALSAS, y decidían alcance:** *(1)* «`lastQuestion` no se proyecta» — **sí**, cruza como `pendingQuestion` → **abarata #1100**; *(2)* la causa raíz de **#938** era falsa el día que se escribió (el `cancel` conserva `retakeable` desde 6 días antes; fallan **dos entradas en dos listas** de `proposal-retake.ts`); *(3)* `mutate:diff` dio un **SIN VÍCTIMA falso** → **#1396**; *(4)* los worktrees de **#1394** ya no existen (lo vivo es su preflight). Ver [[un-grep-negativo-por-el-nombre-del-origen-es-ciego-a-un-renombrado-en-la-frontera]] · [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] (modo 16).
 
-🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **9 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #939 #648 #649 #741 #912 #535 #941).
+🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **8 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #648 #649 #741 #912 #535 — #941 en PR).
 
 ⏸️ **Lote parado, DECIDIDO que merece la pena pero NO hoy:** `~/wt-1064` (#1064+#1212+#1044A). Al retomarlo: **rebasar → congelar el prompt y volcar las descripciones renderizadas ANTES de pagar la corrida**.
 
@@ -71,7 +71,7 @@ _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una 
 - 🔴 **HUMANO, en el panel de Dokploy:** activar el digest en lista con `WHATSAPP_OPEN_THREADS_LIST_PREFIX=hilos_semana` y `WHATSAPP_OPEN_THREADS_LIST_MAX=6`.
 - 🔴 **DE MANU:** qué hacer con `d.martins`, que recibió tres mensajes con los hilos de otra persona. No se ha avisado a nadie.
 - 🟠 **De Borja, una línea cada uno:** **#1032** (¿retirar `addCandidate` o construir su lectura? la medición respalda retirar) y **#1384** (`ready-for-human`: los **siete** comportamientos de Graph que #580 asume y **nadie ha medido** — no se midieron a propósito, un PATCH real manda correos a contactos de clientes y el camino seguro pide consentimiento OAuth en navegador).
-- 🟠 **#1394** — dos worktrees de agente abandonados del 06-ago (352 commits atrás, limpios, `git cherry` a 0) mantienen ARMADA la condición de checkout compartido. Propuesto retirarlos; **esperan OK** porque son de otra sesión.
+- 🟠 **#1394** — los dos worktrees abandonados **ya no existen** (medido 19-ago, sin saber quién los quitó). Lo vivo es su **preflight** que avisa de worktrees retirables, con el candado que discrimine el que tiene trabajo dentro.
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 

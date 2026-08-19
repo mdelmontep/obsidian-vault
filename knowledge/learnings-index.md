@@ -477,7 +477,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (91)
+## Claude Code / agentes / harness (92)
 
 - [[agent-browser-auth-login-sin-session-no-persiste-la-cookie]] — `auth login` cierra su navegador; abrir la sesión nombrada y pasar `--session` en todo
 - [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
@@ -559,6 +559,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[subagente-reusar-endpoint-compartido-rompe-consumidor]] — subagente que reusa un endpoint compartido rompe el consumidor existente
 - [[toolWorkflow-onError-stopWorkflow-mata-al-agente-silenciosamente]] — toolWorkflow onError stopWorkflow mata al agente silenciosamente
 - [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] — triaje seguro de ramas y worktrees con sesiones paralelas
+- [[un-grep-negativo-por-el-nombre-del-origen-es-ciego-a-un-renombrado-en-la-frontera]] — un grep negativo prueba que el identificador no está, no que el dato no llegue: la frontera lo renombra
 - [[useeffectevent-react19-no-se-llama-desde-settimeout]] — useEffectEvent react19 no se llama desde setTimeout
 - [[usememo-objeto-inline-en-deps-render-loop]] — objeto literal inline en deps de hook → render loop
 - [[useref-dedup-set-se-reinicia-en-remontaje]] — useRef como set de "ya notificado" se reinicia en cada remontaje del componente

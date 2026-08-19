@@ -179,3 +179,15 @@ Y el caso del comentario SQL necesitó **tres intentos** hasta discriminar: un c
 antes de la sentencia no vale (el regex no llega), ni la sentencia comentada en varias
 líneas (el `--` rompe el match igual); solo la comentada en UNA línea. Los dos primeros
 habrían quedado como cobertura falsa, verdes para siempre.
+
+**Decimosexto — el mutante corrió MENOS casos que el control, y «0 fallidos» se lee como sano.**
+AGH 19-ago (#941 → #1396): `✗ SIN VÍCTIMA … 52 pasados, 0 fallidos` contra un control de **71**. Los 19
+que faltaban eran un fichero `.pg` entero que **no se ejecutó** (base momentáneamente inalcanzable →
+`ctx.skip()` en bloque). Repetido a mano: **18 de 19 en rojo** — el guard tenía víctima. Lo peligroso es
+que aquí no chirría nada: ni un `0`, ni un crash, ni un exit raro; solo faltan casos, y el número que lo
+delata está en la línea del control, 40 más arriba. El arnés de AGH ya tenía regla para esto y compara
+contra **cero** (`0 pasados && 0 fallidos`), así que caza la corrida vacía ENTERA y es ciega a la
+**parcial**. **Regla: el veredicto se compara contra el CONTROL, y no solo por color — también por
+recuento.** Menos casos que el control ⇒ arnés roto, nunca «sin víctima». Y es sistemático, no casual:
+los `.pg` se saltan en bloque cuando la base no responde, y un barrido lanza decenas de corridas contra
+esa misma base, así que se dispara justo cuando más mutantes hay en vuelo.
