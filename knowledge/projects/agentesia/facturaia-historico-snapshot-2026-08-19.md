@@ -62,3 +62,35 @@ en el contenedor, coste marginal cero.
 El propio `pre-push` ya había concluido que «nadie revisa» ese diff y a la vez manda commitearlo →
 issue **#1954**. Y main estuvo en rojo por un mock ajeno (#1937): se avisó al dueño en vez de mergear
 encima.
+
+## #1933 — marcar presentada borraba el sello eIDAS y el puntero WORM
+
+PR **#1960** (`0638eb4ee`), migración **722** aplicada y verificada en prod. `fiscal_marcar_presentada`
+asignaba `sello_tiempo_eidas` y `fichero_aeat_path` a pelo desde sus parámetros, y el modal mandaba
+`{serial, source}` más una ruta inventada `manual-<uuid>`: se perdía el **`tsr_b64`** (el token RFC 3161,
+lo único con lo que se puede probar que ese fichero existía en esa fecha) y, desde `exportado`, también
+el puntero al objeto inmutable en Backblaze.
+
+- **Reproducido antes de arreglar**, en un Postgres 17 desechable y con el mismo caso contra los dos
+  cuerpos: con el de la mig 573, `fichero_aeat_path` vacío y `tsr_b64` NULL; con el nuevo, los dos
+  intactos y el justificante en `resultado_aeat`.
+- El `manual-<uuid>` **lo obligaba el esquema**: `fichero_path: z.string().min(1)` no admitía vacío y el
+  modal no siempre conoce la ruta. Arreglar solo el cliente habría dado un 400. Campo a opcional.
+- La 722 copia el cuerpo de la 573 y cambia solo el `UPDATE`; su bloque `DO` verifica que no se perdió
+  ningún parche anterior (guard `auth.uid()` de la 569, recheck de snapshot de la 566, `lock_timeout` de
+  la 572, ERRCODE de la 573) y **está probado en las dos direcciones**: con el cuerpo viejo aborta
+  nombrando los cuatro.
+- **Sin daño**: 26 declaraciones, 0 presentadas, 0 selladas. Con la primera presentación real no habría
+  arreglo — ese sello no se le vuelve a pedir a la FNMT con la fecha de entonces.
+- `db push` se negó (`LegacyDbPushMissingLocalError`) proponiendo `repair --status reverted 714…721`:
+  ocho migraciones de otra sesión, aplicadas y correctas. Aplicada con `psql` y registrada a mano.
+- `selloIdDe` de paso: el lector hacía `tsr_id ?? id`, dos claves que `SelloEidas` nunca tiene, así que
+  la línea «Sello eIDAS» del PDF no se imprimía ni con un sello bueno.
+
+## #1923 y sus gates (#1956, #1958)
+
+Tramo con Mayús en la bandeja, con el contrato que los tests del helper no pueden ver: `useRowSelection`
+y `agruparPorRacha` tienen que recibir **el mismo array**, porque la bandeja agrupa por rachas
+consecutivas y ahí `filtered` **sí** es el orden de pantalla. Dos gates arreglados de camino: la maqueta
+del anclaje medía **botones nativos** (una barra que no es la de la app) y `e2e:layout` no podía salir
+verde nunca porque el teardown compartido le exigía un servidor que ese proyecto no usa.

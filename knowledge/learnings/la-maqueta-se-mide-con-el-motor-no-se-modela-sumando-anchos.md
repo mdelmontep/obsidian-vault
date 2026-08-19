@@ -28,6 +28,17 @@ desbordando en el ancho de móvil más común. Si no puedes reproducir la cadena
 entera, resta un colchón medido y que el fixture peque de estrecho: optimista es
 peor que inexistente.
 
+**Y el HTML literal tiene que llevar las clases del primitivo, con su CSS
+inyectado.** Un `<button>` desnudo en el fixture se pinta con el chrome del
+navegador —fuente, padding y borde por defecto— y **la barra mide lo que miden
+sus botones**: la maqueta del anclaje en lote medía una barra que no es la de la
+app. Medido con el arnés de mutación: quitar la inyección del CSS del primitivo
+dejaba el gate en VERDE, porque `btn` salía de un comentario de `globals.css`,
+`ghost` de `.saldo-hero-btn.ghost` y `sm` de `.icon-btn.sm` — tres clases de
+otros componentes. Así que el gate deriva el vocabulario del CSS del propio
+primitivo y exige su inyección. El trinquete de deuda de diseño no lo veía: solo
+barre `src/**`.
+
 Tres cosas más que cuestan una tarde si no se saben:
 - **Sin `<meta viewport>` la emulación móvil maqueta contra 980 px** y ninguna
   media query aplica: el fixture aprueba una fila que en un móvil no cabe.
