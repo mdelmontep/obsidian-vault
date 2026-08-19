@@ -26,3 +26,15 @@ sobre un módulo de 9, borraba los 6 restantes.
 
 Trampa extra: un trigger sobre `UPDATE OF config` puede convertir el borrado en pérdida de trabajo
 del usuario (aquí borraba todas las sugerencias `pending` al "cambiar" dos claves a su default).
+
+Variante sin PATCH y con la pérdida DENTRO de una RPC (2026-08-19, TuFacturaIA, #1933): la columna la
+pisa un `UPDATE ... SET col = p_param` de una función `SECURITY DEFINER`, y el parcial lo manda la UI.
+`fiscal_marcar_presentada` reescribe `sello_tiempo_eidas` con lo que le pase el modal, y el modal manda
+`{serial, source}` (o `{}` si no selló él): se va el `tsr_b64`, el único dato con el que se puede
+verificar el sello RFC 3161 del fichero ya subido a WORM. Con `fichero_aeat_path` igual, sustituido por
+una ruta inventada `manual-<uuid>`. Tres nombres para el mismo campo en tres ficheros
+(`serial_number` quien lo produce, `serial` quien lo manda, `tsr_id ?? id` quien lo lee) y ninguno
+coincide, así que el dato no se leía nunca y nadie lo echó de menos.
+Regla: si un parámetro de RPC alimenta una columna que otro flujo ya rellenó, **`COALESCE` o merge
+condicionado** (`WHEN p ? 'clave_dura' THEN p ELSE col END`), nunca asignación directa. Y una columna
+con un shape tipado (aquí `SelloEidas`) no acepta un objeto de dos claves montado en el cliente.

@@ -50,3 +50,12 @@ sale ANTES de resolver el segmento, así que `/ajustes/api` contestaba 307 tanto
 build viejo —donde no existía— como sirviendo el nuevo. La respuesta que discrimina es la que
 se pide YA autenticado: ahí el build viejo devolvió 404. Para saber qué sirve un puerto sin
 sesión: `ps -o command -p $(lsof -ti:PORT)` → `npm run start` (build congelado) vs `next dev`.
+
+Y la variante con `next dev` + Turbopack, que es la más traicionera porque el server SÍ es el correcto
+(2026-08-19, TuFacturaIA): HMR no recogió un cambio en un fichero de 2.600 líneas y siguió sirviendo el
+bundle viejo. El arreglo pareció NO funcionar en dos rondas de medición seguidas, con una sonda en el
+navegador confirmando el comportamiento antiguo y el código nuevo en disco. Reiniciando el dev server,
+el mismo gesto funciona a la primera. Segunda vez que este trap hace dudar de código correcto.
+Regla: **cuando una medición contradice al diff, reiniciar el dev server va ANTES de tocar el código.**
+El log de arranque no sirve de prueba si se pipea (`npm run dev | tail` queda en buffer y no imprime el
+"Compiled"): redirigir a fichero.
