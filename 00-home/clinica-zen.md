@@ -12,6 +12,22 @@ Auditado end-to-end el 2026-07-28/29 vía API (n8n, Retell, Kommo, Google Calend
 
 **Estado 29-jul: nada bloqueante y nada roto conocido.** Lo corregido está verificado por partes ejecutándose (Switch, Code de ambas ramas de reserva, generador de email, deploy); lo que falta es verlo funcionar de punta a punta con un paciente real — llega solo con el uso: cuando los contadores de los bots `63810`/`63808` dejen de estar a 0 en Kommo, los recordatorios funcionan.
 
+## El número servía la v54: 3 meses de fixes que nunca llegaron (20-ago-2026)
+
+`+34919934582` estaba **fijado** a `agent_version: 54` con la v67 publicada, así que publicar no cambiaba
+nada: **28 llamadas reales** con el prompt de mayo, la última el 14-ago. Eso explica el pendiente que este
+hub arrastraba desde el 3-ago — el fix del nombre inventado y el de «Európolis» **estaban escritos en la
+v67** y verificados en el diff; no era el modelo ni el Code node, no llegaba.
+
+Arreglado: inbound y outbound a `latest_published` (diff de las 9 versiones revisado antes; nada
+peligroso). Con la v67 entran además: teléfono de clínica **629 494 209** separado del WhatsApp (919 934
+582), web `clinicazen.es`, no ofrecer «estética facial» de forma proactiva y guion de *warm transfer*.
+Backup de la v54 en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (Retell solo retiene 10
+versiones y ya se había caído de la lista).
+
+**A vigilar**: que la reserva llegue con nombre real a la agenda y que no diga «Európolis».
+Ver [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
+
 ## Estado (verificado 2026-07-28)
 
 **Infra**: servidor `185.47.13.168` · n8n `n8nclinicazen.agentesia.madrid` · Kommo `citasclinicazenes.kommo.com` (account 36308863, pipeline 13495347) · Supabase self-hosted (solo red Docker, sin dominio público).
@@ -103,12 +119,10 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 5. **Tres teléfonos distintos (LATER)** — prompt dice llamadas `629 494 209` y WhatsApp `919 934 582`; la KB dice `91 993 35 69`; las llamadas entran por `919 934 582`. Decidir cuál es cuál y unificar prompt + KB.
 6. **Nitidez de audio (LATER, si Gonzalo insiste)** — medido sobre la grabación: agente −19,8 dBFS, 0 muestras saturadas; el que se oye 5 dB más bajo es el llamante. Candidata real = `ambient_sound: call-center`, que se mezcla después de la grabación y por eso no se oye al escuchar el WAV. Latencia e2e p50 2,35 s / p90 3,35 s también pesa. Prueba: quitar el ambient y llamar. Ver [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]].
 7. **Sin repo local (LATER)** — `~/Projects/clinica-zen` está vacío. Mitigado el 28-jul: los 10 workflows activos + el backup pre-cambio están en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (trackeado por git, excluido de búsqueda vía `.ignore`). Falta decidir si CZ merece repo propio con `ops/`.
-8. ~~**n8n solo retiene las ejecuciones del día**~~ **RESUELTO 29-jul**: `EXECUTIONS_DATA_MAX_AGE=7` iba en horas, no en días. Corregido a `336` (14 días). Detalle → [[clinica-zen-historico]] · [[n8n-executions-data-max-age-va-en-horas-no-en-dias]].
-9. ~~**Bots del Digital Pipeline sin verificar en la GUI**~~ **VERIFICADO 29-jul**: los 8 bots bien montados, nada que tocar. Decisión de Manuel: no recategorizar `Confirmacion cita` a Utility. Detalle → [[clinica-zen-historico]].
 
-10. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
-11. **Verificar el fix de `bfc4dWuztZsWfb4Q` en ejecuciones reales (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Confirmar que corre sin error SQL y que no reabre conversaciones ya cerradas.
-12. **Comprobar en llamada real que ya no se menciona "Europolis" ni estética proactiva (NEXT)** — fix del 05-ago sobre el mismo patrón que ya había reincidido una vez (28-jul → 2-ago).
+8. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
+9. **Verificar el fix de `bfc4dWuztZsWfb4Q` en ejecuciones reales (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Confirmar que corre sin error SQL y que no reabre conversaciones ya cerradas.
+10. **Comprobar en llamada real que ya no se menciona "Europolis" ni estética proactiva (NEXT)** — el fix del 05-ago está en la v67 y **hasta el 20-ago no llegaba a las llamadas** (número fijado a la v54): la reincidencia que se le achacaba al modelo era eso. Ahora ya es verificable de verdad.
 
 *Descartado tras revisión de Manuel (28-jul)*: que el calendario tenga 2 eventos en 21 días es **normal** para el volumen actual, no hay riesgo de doble reserva. La credencial de Calendar "Cuenta Gonzalo" se mantiene por ahora.
 

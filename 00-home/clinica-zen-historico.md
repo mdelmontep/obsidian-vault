@@ -188,3 +188,9 @@ general. Cambiado en ambos canales:
 Ambos canales verificados sin drift de posición tras el PUT/PATCH. Voz: draft v67 (que ya llevaba
 la frase de repetición de teléfono de la ronda anterior) → publicado con estos dos fixes añadidos
 en la misma versión. Chat: aplicado directo, en vivo.
+
+## Cerrados en julio, sacados del hub el 20-ago
+
+- **n8n solo retenía las ejecuciones del día** — RESUELTO 29-jul: `EXECUTIONS_DATA_MAX_AGE` iba en horas, no en días; a `336` (14 días).
+- **Bots del Digital Pipeline sin verificar en la GUI** — VERIFICADO 29-jul: los 8 bien montados, nada que tocar.
+
