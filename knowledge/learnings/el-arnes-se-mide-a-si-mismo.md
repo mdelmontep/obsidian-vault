@@ -4,7 +4,7 @@ date: 2026-08-19
 source: facturaia
 tags: [arnes, testing, gates, mocks]
 ---
-Siete casos en dos días, en dos sesiones distintas, y son la misma familia: **lo verde no era el
+Ocho casos en dos días, en dos sesiones distintas, y son la misma familia: **lo verde no era el
 sistema, era el espejo.**
 
 - Un gate que **construye la orden** en vez de ejecutarla: comparaba cadenas de argumentos de ffmpeg,
@@ -35,6 +35,13 @@ PostgREST), no es un gate.
 `baseURL`, no que responda *tu* checkout. Con `.env.test` fijando el puerto 3002 y cinco worktrees
 vivos, toda la suite medía el código de otra rama sin que nada lo dijera, porque lo que anota el setup
 (`baseURL`, `puerto`, `pids`) no incluye de qué checkout es el servidor.
+
+**El caso más fino: un gate que mide que algo CAMBIÓ, no QUÉ cambió.** El smoke del compositor
+comparaba el brillo de la banda del subtítulo con y sin subtítulos: cambiaba, verde. El rótulo salía
+**3,3 veces más grande y en la parte de arriba** del vídeo. No lo cazó ninguna aserción: lo cazó
+extraer un fotograma y mirarlo. Fix: la aserción compara la región donde el rótulo DEBE estar contra
+una donde NO debe, y se probó por mutación. Corolario: si el gate no sabe decir *dónde*, no
+discrimina. Detalle del render en [[libass-ignora-fontfile-y-un-srt-no-lleva-geometria]].
 
 Eje distinto del de [[una-suite-en-verde-no-prueba-el-camino-real]], que va del entorno; este va de
 **qué se mide**. Y de [[verificar-la-conclusion-no-solo-la-evidencia]], que va de a quién se cree.
