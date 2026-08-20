@@ -7,6 +7,8 @@ tags: [docker, traefik, dokploy, infra]
 
 # Docker / Infraestructura
 
+- **El compose enumera variables bajo `environment:` en vez de `env_file`** → lo que no está en esa lista no llega al contenedor aunque esté guardado en el panel, y el env del panel está cifrado en reposo (no se audita por SQL). Comprobar con `docker exec <c> env | grep -c '^VAR='`. Ver [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
+
 ## El `env` está CIFRADO en la base de Dokploy — la receta de leer-fusionar-escribir no vale
 
 - `application.update` reemplaza el bloque entero, pero **no hay forma de leerlo**: la API lo devuelve en
