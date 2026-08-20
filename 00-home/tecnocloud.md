@@ -308,7 +308,9 @@ Pendiente de ellos, ya sin ambigüedad: **devolver las llamadas**, **el procedim
 reset, provisión colgada, error 74).
 
 ### Cuestionario de la base de conocimiento (para Dani/Carlos)
-https://claude.ai/code/artifact/89e01c9b-2fd1-442b-9d1c-851e0c983457
+`knowledge/projects/agentesia/tecnocloud-informes/cuestionario-faq-20260818.html`
+(HTML autocontenido: doble clic o adjuntar a un correo. Los enlaces de artifact de esta sesión murieron
+varias veces al desautenticarse, así que el fichero es la referencia buena.)
 
 Dos bloques: **8 temas sin ningún documento** (62 llamadas) y **6 que existen pero tratan de otro caso**
 (39 llamadas) — a estos les basta añadir el caso o los sinónimos, que es mucho menos trabajo. Incluye la
@@ -375,7 +377,7 @@ motivo del aviso sea concreto.
 > `knowledge/projects/agentesia/tecnocloud-informes/panel-laura-20260818.html` y
 > `cuestionario-faq-20260818.html`.
 
-Artifact privado con la auditoría completa: https://claude.ai/code/artifact/8b9d98f7-e68d-4f3d-bd8f-10a9358dc23a
+Auditoría completa: `knowledge/projects/agentesia/tecnocloud-informes/panel-laura-20260818.html`
 Contiene lo corregido, los tres asuntos que dependen de Tecnocloud (callbacks, OneLogin, infra) y el
 **cuestionario de los 6 documentos de FAQ que faltan**, con los síntomas literales de los clientes ya
 recogidos y el campo «solución» en blanco. Los documentos NO los redactamos nosotros: de las 19
