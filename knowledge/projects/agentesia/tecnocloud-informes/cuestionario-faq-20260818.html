@@ -1,0 +1,225 @@
+<title>La FAQ que le falta a Laura</title>
+<style>
+  :root {
+    --ground:#F4F6F9; --surface:#FFFFFF; --sunk:#EAEEF4;
+    --ink:#171C24; --ink-soft:#4C5665; --ink-faint:#78838F;
+    --line:#D7DEE7; --line-soft:#E7ECF2;
+    --accent:#3A5F97; --accent-soft:#E5EDF7;
+    --crit:#A5352A; --crit-soft:#F9E9E6;
+    --warn:#8F5C0D; --warn-soft:#FAF0DC;
+    --good:#276745; --good-soft:#E3F0E9;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+    --ground:#0E121A; --surface:#151B24; --sunk:#1B2330;
+    --ink:#E5EAF2; --ink-soft:#A5B0BE; --ink-faint:#7A8493;
+    --line:#29323F; --line-soft:#212936;
+    --accent:#8FB3E6; --accent-soft:#1A2434;
+    --crit:#E8877A; --crit-soft:#2B1A17;
+    --warn:#DCA95C; --warn-soft:#292116;
+    --good:#74C098; --good-soft:#14261E;}}
+  :root[data-theme="dark"]{
+    --ground:#0E121A; --surface:#151B24; --sunk:#1B2330;
+    --ink:#E5EAF2; --ink-soft:#A5B0BE; --ink-faint:#7A8493;
+    --line:#29323F; --line-soft:#212936;
+    --accent:#8FB3E6; --accent-soft:#1A2434;
+    --crit:#E8877A; --crit-soft:#2B1A17;
+    --warn:#DCA95C; --warn-soft:#292116;
+    --good:#74C098; --good-soft:#14261E;}
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:56rem;margin:0 auto;padding:clamp(1.4rem,3.5vw,3rem) clamp(1rem,3.5vw,2.5rem) 4.5rem;display:flex;flex-direction:column;gap:clamp(2rem,4vw,2.8rem)}
+  h1,h2,h3{margin:0;text-wrap:balance}
+  p{margin:0;max-width:66ch}
+  .eyebrow{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-faint)}
+  header{display:flex;flex-direction:column;gap:0.8rem}
+  h1{font-size:clamp(1.8rem,4.5vw,2.5rem);line-height:1.06;letter-spacing:-0.025em;font-weight:660}
+  .standfirst{font-size:1.08rem;color:var(--ink-soft)}
+  .meta{display:flex;flex-wrap:wrap;gap:0.3rem 1.8rem;border-top:1px solid var(--line);padding-top:0.8rem;font-family:var(--mono);font-size:0.73rem;color:var(--ink-faint)}
+  .meta b{color:var(--ink-soft);font-weight:500}
+  section{display:flex;flex-direction:column;gap:1rem}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:0.8rem;border-bottom:2px solid var(--ink);padding-bottom:0.45rem}
+  h2{font-size:clamp(1.15rem,2.3vw,1.4rem);letter-spacing:-0.015em;font-weight:640}
+  .sec-head .note{font-size:0.8rem;color:var(--ink-faint);margin-left:auto;font-family:var(--mono)}
+  .aviso{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;padding:1rem 1.15rem;display:flex;flex-direction:column;gap:0.5rem}
+  .aviso h3{font-size:0.98rem;font-weight:640}
+  .doc{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--crit);border-radius:2px;padding:1rem 1.15rem;display:flex;flex-direction:column;gap:0.65rem}
+  .doc.parcial{border-left-color:var(--warn)}
+  .doc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:0.6rem;justify-content:space-between}
+  .doc h3{font-size:1rem;font-weight:630}
+  .count{font-family:var(--mono);font-size:0.78rem;color:var(--accent);white-space:nowrap}
+  .field{display:flex;flex-direction:column;gap:0.3rem}
+  .field-label{font-family:var(--mono);font-size:0.64rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint)}
+  .said{display:flex;flex-wrap:wrap;gap:0.3rem}
+  .said span{font-size:0.85rem;background:var(--sunk);color:var(--ink-soft);padding:0.16rem 0.5rem;border-radius:2px}
+  .fill{border:1px dashed var(--line);border-radius:2px;background:var(--ground);min-height:3.4rem;padding:0.6rem 0.75rem;color:var(--ink-faint);font-size:0.86rem;font-style:italic}
+  .ejemplo{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:0.9rem 1.1rem;font-family:var(--mono);font-size:0.8rem;line-height:1.55;white-space:pre-wrap;overflow-x:auto;color:var(--ink-soft)}
+  ol{margin:0;padding-left:1.3rem;max-width:66ch}
+  li+li{margin-top:0.4rem}
+  footer{border-top:1px solid var(--line);padding-top:0.9rem;font-family:var(--mono);font-size:0.72rem;color:var(--ink-faint);display:flex;flex-direction:column;gap:0.25rem}
+  footer p{max-width:none}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Base de conocimiento del agente de voz · Tecnocloud</p>
+    <h1>La FAQ que le falta a Laura</h1>
+    <p class="standfirst">Hemos revisado 547 llamadas reales y comprobado, una por una, qué preguntas encuentran respuesta en la base de conocimiento y cuáles no. Aquí están las que no, ordenadas por cuántas llamadas explican. De cada una tenemos los síntomas tal como los dicen los clientes; lo que falta es la solución, y esa solo la tenéis vosotros.</p>
+    <div class="meta">
+      <span><b>Llamadas analizadas</b> 547</span>
+      <span><b>Periodo</b> abr – ago 2026</span>
+      <span><b>Temas sin cubrir</b> 8</span>
+      <span><b>Temas a completar</b> 6</span>
+      <span><b>Preparado por</b> AgentesIA</span>
+    </div>
+  </header>
+
+  <div class="aviso">
+    <h3>Antes de escribir: un problema por bloque</h3>
+    <p>La base de conocimiento se carga desde un documento de Google. Hoy varios bloques meten dos o tres problemas distintos juntos, y eso hace que el buscador no encuentre ninguno bien: un bloque que habla a la vez de cómo entrar, de que se cierra la sesión y de licencias no lo encuentra ninguna de las tres preguntas.</p>
+    <p>Al añadir contenido, cada problema va en su propio bloque, con este formato exacto:</p>
+    <div class="ejemplo">Problema: cómo lo dice el cliente, con todos los sinónimos que use, separados por comas
+Solución: los pasos, en frases cortas. Si hay que escalar, decirlo y a dónde.</div>
+    <p>Los sinónimos importan más de lo que parece: son lo que el buscador compara con lo que ha dicho el cliente. Cuantas más formas de decirlo, mejor. Nosotros ya los hemos recogido de las llamadas y están en cada ficha.</p>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <h2>Faltan del todo</h2>
+      <span class="note">8 temas · 62 llamadas</span>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>Comercial, precios y altas de puesto</h3><span class="count">21 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>precio de otro puesto</span><span>quiero una demo</span><span>entra alguien nuevo, necesito una licencia</span><span>una línea de correo más</span><span>migrar a nuestra propia nube</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Qué puede decir el agente por teléfono: solo «te llaman de comercial», o también precios orientativos? ¿Quién debe recibir estos avisos y en cuánto tiempo se devuelven? Una clienta pidió un tercer usuario en cinco llamadas distintas sin que se cerrara.</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>OneLogin y el doble factor</h3><span class="count">19 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>«no puede verificar mi identidad»</span><span>he cambiado de móvil</span><span>me pide un código y no me llega</span><span>no me deja validar</span><span>me sale acceso denegado</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Cuál es el procedimiento cuando alguien cambia de móvil: puede volver a enrolarse solo, o hace falta que lo desbloqueéis vosotros? ¿Se hace desde algún portal concreto? Es el motivo de queja número uno y ninguna de las 19 llamadas se resolvió por teléfono.</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>La nube se queda colgada al provisionar</h3><span class="count">6 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>«tu servicio está siendo creado, por favor espera»</span><span>se queda en el 75%</span><span>no me deja entrar en la nube</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Puede el cliente hacer algo (esperar un tiempo, cerrar y volver a entrar) o va siempre a técnico? ¿Cuánto suele tardar una provisión normal, para poder decírselo?</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>Guardar e imprimir desde la sesión publicada</h3><span class="count">4 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>«la carpeta de destino no existe»</span><span>no encuentro dónde lo he guardado</span><span>no me deja imprimir desde Word</span><span>no encuentra la ruta</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Dónde debe guardar el usuario para que el archivo le llegue a su equipo? ¿Cómo se selecciona su impresora local desde la sesión de la nube?</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>Instalar el cliente UDS</h3><span class="count">4 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>tengo que instalar el UDS</span><span>¿de dónde lo descargo?</span><span>equipo nuevo, no tengo el programa</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">Los pasos exactos y desde qué portal se descarga. Ojo: el agente llegó a decir que se bajaba de la página de login, y es cloud.tecnocloud.es. Conviene dejarlo escrito para que no se confundan los dos portales.</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>Copias de seguridad</h3><span class="count">3 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>no se hace la copia</span><span>me llega el aviso con cero elementos</span><span>lleva días sin copiar</span><span>falla en todos los puestos</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Un aviso con cero elementos copiados es normal alguna vez, o siempre hay que revisarlo? Lo preguntamos porque el agente llegó a tranquilizar a un cliente diciéndole que era normal; ya está corregido para que lo escale siempre, pero queremos escribir la respuesta correcta.</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>Usuario bloqueado por intentos fallidos</h3><span class="count">3 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>se ha bloqueado por muchos intentos</span><span>yo no he fallado tantas veces</span><span>me dice usuario bloqueado</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Se desbloquea solo pasado un tiempo o hay que hacerlo desde vuestro lado? Y si el cliente dice que él no ha fallado, ¿lo tratáis como posible intento de acceso de un tercero?</div></div>
+    </div>
+
+    <div class="doc">
+      <div class="doc-head"><h3>Certificado digital</h3><span class="count">2 llamadas</span></div>
+      <div class="field"><span class="field-label">Lo que dicen los clientes</span>
+        <div class="said"><span>no reconoce el certificado</span><span>no me deja firmar por la persona autorizada</span></div></div>
+      <div class="field"><span class="field-label">Qué necesitamos saber</span>
+        <div class="fill">¿Instaláis vosotros los certificados en la sesión de la nube o lo hace el cliente? ¿Entra en el servicio?</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Existen, pero no cubren lo que preguntan</h2>
+      <span class="note">6 temas · 39 llamadas</span>
+    </div>
+    <p>En estos hay documento, pero trata de un caso distinto al que llega por teléfono. Con añadir el caso que falta —o solo los sinónimos— se resuelven, y es mucho menos trabajo que escribir uno nuevo.</p>
+
+    <div class="doc parcial">
+      <div class="doc-head"><h3>Outlook y correo</h3><span class="count">16 llamadas</span></div>
+      <div class="field"><span class="field-label">Hay documento de</span><div class="said"><span>correos que no llegan</span><span>correos duplicados</span></div></div>
+      <div class="field"><span class="field-label">Pero preguntan por</span><div class="said"><span>no me deja enviar</span><span>me pide la contraseña todo el rato</span><span>no se abre Outlook</span></div></div>
+      <div class="field"><span class="field-label">Falta</span><div class="fill">Qué hacer cuando Outlook no envía o pide la contraseña en bucle.</div></div>
+    </div>
+
+    <div class="doc parcial">
+      <div class="doc-head"><h3>Gesfincas: facturar, remesas y recibos</h3><span class="count">7 llamadas</span></div>
+      <div class="field"><span class="field-label">Hay documento de</span><div class="said"><span>enviar correos desde Gesfincas con Gmail</span></div></div>
+      <div class="field"><span class="field-label">Pero preguntan por</span><div class="said"><span>no me deja facturar</span><span>generar los recibos</span><span>las remesas con Edge</span><span>los recibos del agua</span><span>buzones de Hacienda</span></div></div>
+      <div class="field"><span class="field-label">Falta</span><div class="fill">Decidnos primero una cosa: ¿estas dudas de manejo del programa las atendéis vosotros o se derivan al fabricante? Según la respuesta, escribimos pasos o una derivación clara.</div></div>
+    </div>
+
+    <div class="doc parcial">
+      <div class="doc-head"><h3>OneDrive</h3><span class="count">5 llamadas</span></div>
+      <div class="field"><span class="field-label">Hay documento de</span><div class="said"><span>carpetas compartidas por SharePoint que no se ven</span></div></div>
+      <div class="field"><span class="field-label">Pero preguntan por</span><div class="said"><span>no sincroniza</span><span>no vincula la cuenta</span><span>no veo los archivos en el otro equipo</span></div></div>
+      <div class="field"><span class="field-label">Falta</span><div class="fill">Pasos para cuando la sincronización se para o la cuenta no se vincula.</div></div>
+    </div>
+
+    <div class="doc parcial">
+      <div class="doc-head"><h3>El escritorio remoto se cierra</h3><span class="count">5 llamadas</span></div>
+      <div class="field"><span class="field-label">Hay documento de</span><div class="said"><span>aviso de seguridad al abrir un .rdp</span><span>otro compañero me echa de CMW</span></div></div>
+      <div class="field"><span class="field-label">Pero preguntan por</span><div class="said"><span>se cierra solo</span><span>me echa sin avisar</span><span>se queda congelado al entrar</span></div></div>
+      <div class="field"><span class="field-label">Falta</span><div class="fill">Distinguir el cierre por sesión duplicada (que sí está documentado) del cierre inesperado sin nadie más conectado.</div></div>
+    </div>
+
+    <div class="doc parcial">
+      <div class="doc-head"><h3>Error 74 en CMW</h3><span class="count">3 llamadas</span></div>
+      <div class="field"><span class="field-label">Hay documento de</span><div class="said"><span>cómo se actualiza CMW</span></div></div>
+      <div class="field"><span class="field-label">Pero preguntan por</span><div class="said"><span>error 74</span><span>«tabla no existe en File list»</span><span>nos pasa a todos desde la actualización</span></div></div>
+      <div class="field"><span class="field-label">Falta</span><div class="fill">¿Tiene arreglo en el puesto o requiere intervención en el servidor? Si es lo segundo, el agente lo escalará directo sin hacer perder tiempo al cliente. Un cliente afirmó que afectaba a todos sus usuarios.</div></div>
+    </div>
+
+    <div class="doc parcial">
+      <div class="doc-head"><h3>El correo para cambiar la contraseña no llega</h3><span class="count">3 llamadas</span></div>
+      <div class="field"><span class="field-label">Hay documento de</span><div class="said"><span>correos que no llegan de un remitente</span></div></div>
+      <div class="field"><span class="field-label">Pero preguntan por</span><div class="said"><span>pedí el cambio de contraseña y no me llega nada</span></div></div>
+      <div class="field"><span class="field-label">Falta</span><div class="fill">¿Es un problema conocido de entrega de esos correos? Mientras no se arregle, ¿qué alternativa se le ofrece al cliente para entrar?</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Cómo seguimos</h2></div>
+    <ol>
+      <li>Rellenáis la solución de cada ficha en el documento de Google, un problema por bloque y con los sinónimos que ya os damos.</li>
+      <li>Nosotros recargamos la base de conocimiento y comprobamos, con las mismas frases reales de las llamadas, que cada tema encuentra ya su respuesta.</li>
+      <li>Os pasamos el antes y el después: cuántas de esas 101 llamadas habrían podido resolverse en el primer nivel sin esperar a que alguien devolviera la llamada.</li>
+    </ol>
+    <p>Si algún tema no lo atendéis vosotros, decidlo igual: escribiremos una derivación clara en lugar de dejar que el agente improvise, que es lo que pasaba hasta ahora.</p>
+  </section>
+
+  <footer>
+    <p>Cobertura medida el 18 de agosto de 2026 sondeando la base de conocimiento en producción con las frases que usan los clientes, no con las de los documentos.</p>
+    <p>Las expresiones entre etiquetas son literales de las transcripciones. Nombres y teléfonos omitidos.</p>
+    <p>Preparado por AgentesIA para el equipo técnico de Tecnocloud.</p>
+  </footer>
+
+</div>

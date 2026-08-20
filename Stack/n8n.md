@@ -390,3 +390,70 @@ Implementación: `~/.claude/scripts/agentes-check.py` (cron semanal, lunes 09:00
 - **n8n Code node ya no soporta `this.helpers.httpRequestWithAuthentication`** en esta versión del task runner ("is not supported in the Code Node") — migrar a HTTP Request nativo con `authentication:predefinedCredentialType`. Rompió en producción un sync que llevaba meses funcionando, sin que nadie tocara el código — fue un cambio de plataforma, no del workflow.
 - **`GET /executions?workflowId=X` vacío NO prueba que un cron activo no corriera** — puede ser retención corta (`EXECUTIONS_DATA_MAX_AGE`). Verificar contra el dato de negocio real, no contra el log. Ver [[n8n-executions-data-max-age-va-en-horas-no-en-dias]]
 - **Watchdog de frescura con umbral ≤ cadencia real del job dispara SIEMPRE** — `Watchdog_catalogo_idealista` avisaba cada tarde con umbral 8h sobre un sync diario (24h) sin nada roto. Ver [[watchdog-umbral-debe-tolerar-un-tick-perdido]]
+
+## Gotchas 17-ago (Tecnocloud, robustez del backend de voz)
+
+- **Un nodo «lento» con `retryOnFail` puede ser un 429 disfrazado de red lenta.** `Generar Embedding`
+  (OpenAI `text-embedding-3-small`) marcaba 3.788 ms de mediana y el diagnóstico obvio era latencia de
+  salida del contenedor. Era la **credencial**: devolvía 429 y n8n reintentaba, pero **`executionTime`
+  suma los reintentos en un único run** (`runData[nodo]` trae UN registro, no uno por intento), así que
+  el síntoma es idéntico al de una red lenta. Al apuntar el nodo a una credencial de OpenAI verificada,
+  `buscar_FAQ` bajó de 4,99 s a 0,4-0,9 s de punta a punta. Regla: antes de culpar a la red, mirar el
+  `error` del item con `onError: continueRegularOutput` — ahí estaba el `status code 429` literal.
+- **Error Handler clonado de otro cliente = avisos con el cliente equivocado.** El de Tecnocloud tenía
+  `cliente: "Laserys Las Rozas"` fijo en el Set `Preparar contexto`, así que tres meses de alertas en
+  Slack #01-incidencias señalaban al cliente que no era. Al replicar el patrón error-handler, ese campo
+  es lo primero que hay que cambiar; no se detecta nunca porque el aviso «funciona».
+- **`$getWorkflowStaticData` no sirve como idempotencia cuando el webhook responde temprano.** Solo se
+  persiste al terminar la ejecución: con el ack en 0,17 s y el trabajo real detrás, dos peticiones del
+  mismo `call_id` separadas 166 ms entraron ambas y generaron dos avisos. Idempotencia real = reserva
+  atómica en Postgres (`INSERT ... ON CONFLICT DO NOTHING`).
+- **node-postgres no admite parámetros en sentencias múltiples** («cannot insert multiple commands into
+  a prepared statement»): con `CREATE TABLE IF NOT EXISTS` + `DELETE` + `INSERT` en la misma query hay
+  que interpolar el valor por expresión y sanearlo antes (`replace(/[^A-Za-z0-9_-]/g,'')`).
+- **La sentencia final debe devolver el veredicto explícito, para fallar del lado seguro.** En vez de
+  deducir «duplicada» de que el `RETURNING` no trajo filas (indistinguible de un error o de un item
+  vacío), cerrar con `SELECT CASE WHEN EXISTS (...) THEN 'nueva' ELSE 'duplicada' END AS estado` y
+  cortar SOLO con `'duplicada'`. Así un fallo de BD duplica un aviso en vez de perder una incidencia.
+- **Orden de la cadena = orden de criticidad.** Estaba `Sheets → Gmail → responder`: un 503 de Google
+  Sheets el 11-ago se llevó por delante el email a soporte y la respuesta al agente de voz. El log es
+  accesorio y va último; el canal que avisa a un humano va primero, con `retryOnFail` en ambos y un Code
+  final que lanza `throw` si alguno no entregó, para que el errorWorkflow lo publique en Slack.
+- **Retell: `publish-agent` sella el draft actual y abre uno nuevo.** Tras publicar, `get-agent` sin
+  `?version` devuelve el draft recién creado con `is_published:false` — parece que no se publicó nada.
+  La verdad está en la versión publicada **más alta** (`list-agents` filtrando por `agent_id`).
+- **Retell: `description` de una tool está limitada a 1024 caracteres** (400 «Tool description too
+  long»). Duele porque en este agente la `description` pesa más que el prompt para las precondiciones.
+- **Retell: cuidado con `execution_message_description` en imperativo literal.** Poner «Di exactamente:
+  X» en un campo que se le pasa al modelo como *descripción* invita a que pronuncie el prefijo; mejor
+  «Frase breve y literal para cubrir el silencio: "X". Nada más.»
+- **`connections["error"]` es formato viejo: con `onError: continueErrorOutput` el item sale por
+  `main[1]`.** Si la salida de error solo está declarada en la clave `error`, `main[1]` queda SIN
+  conectar, el item muere ahí y —en una rama de webhook— **el `respondToWebhook` nunca se ejecuta**:
+  el caller recibe `[]` con HTTP 200. Un fallo se convierte en silencio, que es el peor modo posible
+  porque no hay ejecución en rojo ni aviso del errorWorkflow. Caso Tecnocloud: el nodo de error
+  (`Responder Embedding Error`) estaba perfectamente escrito y **no se ejecutó ni una vez** en 83
+  búsquedas fallidas. Al revisar un workflow heredado, comparar `len(connections[nodo]["main"])`
+  contra el `onError` de cada nodo.
+- **RAG: el umbral duro en el SQL es el sitio equivocado para decidir, y hace invisible el contenido que
+  sí existe.** En Tecnocloud el `WHERE similarity > 0.70` de `match_documents` dejaba fuera justo la
+  franja donde vive la paráfrasis de un cliente hablando por teléfono. Medido contra el mismo corpus:
+  la frase del documento («cambio de contraseña en Gesfincas o CMW no funciona») daba **0.8222**, y la
+  del cliente («contraseña caducada, no puedo entrar») daba **0** — no 0.6, cero, porque el filtro la
+  descartaba antes de que llegara a ninguna parte. Bajado a 0.55, la cobertura pasó de **2 a 12 temas
+  de 20** sondeados y de 9 a 73 llamadas explicadas, sin añadir un solo documento nuevo. La lección:
+  **recall en el SQL, precisión en el LLM**; el `confidence` (alta/media/baja) ya viajaba al prompt y
+  el modelo puede juzgar leyendo el texto, cosa que un umbral numérico no sabe hacer. Requisito para
+  que sea seguro: instrucción explícita de descartar lo que no trate del mismo problema («un texto
+  sobre correos que no llegan no sirve para quien no puede enviarlos»); sin esa frase, bajar el umbral
+  reparte documentos equivocados — de 10 matches nuevos, 4 no eran pertinentes.
+- **RAG: varios pares problema/solución en un mismo chunk diluyen el embedding.** Un chunk que habla de
+  acceso + cierre de sesión + licencias no lo alcanza ninguna de las tres consultas por separado: la
+  frase literal de su propia segunda mitad daba 0. Un problema por documento.
+- **Un nodo que devuelve 0 filas corta la cadena y deja el `respondToWebhook` sin ejecutar** — mismo
+  síntoma, causa distinta. `SELECT` sin resultados en Postgres/PGVector emite 0 items y el Code que
+  sabía contestar «no encontrado» **es código inalcanzable**. `alwaysOutputData: true` en el nodo de
+  consulta es lo que lo hace alcanzable. Regla: en una rama que responde a un caller, **todo nodo de
+  consulta que pueda no encontrar nada necesita `alwaysOutputData`**, y el «vacío» debe viajar como
+  dato explícito, nunca como ausencia de item. Peor aún cuando el caller es un LLM de voz: no
+  distingue «no hay documento» de «no me han contestado», e improvisa delante del cliente.

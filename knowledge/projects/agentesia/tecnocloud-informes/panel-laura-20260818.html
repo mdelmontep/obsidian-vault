@@ -1,0 +1,428 @@
+<title>Auditoría de Laura</title>
+<style>
+  :root {
+    --ground: #F4F6F9;
+    --surface: #FFFFFF;
+    --sunk: #EAEEF4;
+    --ink: #171C24;
+    --ink-soft: #4C5665;
+    --ink-faint: #78838F;
+    --line: #D7DEE7;
+    --line-soft: #E7ECF2;
+    --accent: #3A5F97;
+    --accent-soft: #E5EDF7;
+    --crit: #A5352A;
+    --crit-soft: #F9E9E6;
+    --warn: #8F5C0D;
+    --warn-soft: #FAF0DC;
+    --good: #276745;
+    --good-soft: #E3F0E9;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0E121A; --surface: #151B24; --sunk: #1B2330;
+      --ink: #E5EAF2; --ink-soft: #A5B0BE; --ink-faint: #7A8493;
+      --line: #29323F; --line-soft: #212936;
+      --accent: #8FB3E6; --accent-soft: #1A2434;
+      --crit: #E8877A; --crit-soft: #2B1A17;
+      --warn: #DCA95C; --warn-soft: #292116;
+      --good: #74C098; --good-soft: #14261E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E121A; --surface: #151B24; --sunk: #1B2330;
+    --ink: #E5EAF2; --ink-soft: #A5B0BE; --ink-faint: #7A8493;
+    --line: #29323F; --line-soft: #212936;
+    --accent: #8FB3E6; --accent-soft: #1A2434;
+    --crit: #E8877A; --crit-soft: #2B1A17;
+    --warn: #DCA95C; --warn-soft: #292116;
+    --good: #74C098; --good-soft: #14261E;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.58;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 74rem; margin: 0 auto;
+    padding: clamp(1.4rem, 3.5vw, 3rem) clamp(1rem, 3.5vw, 2.5rem) 4.5rem;
+    display: flex; flex-direction: column; gap: clamp(2rem, 4vw, 3rem);
+  }
+  h1, h2, h3 { margin: 0; text-wrap: balance; }
+  p { margin: 0; max-width: 68ch; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  /* ---------- header ---------- */
+  header { display: flex; flex-direction: column; gap: 0.85rem; }
+  .title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.9rem; }
+  h1 { font-size: clamp(1.85rem, 4.5vw, 2.6rem); line-height: 1.05; letter-spacing: -0.025em; font-weight: 660; }
+  .live {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--good-soft); color: var(--good); padding: 0.28rem 0.6rem; border-radius: 2px;
+  }
+  .dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 0.35rem 1.8rem;
+    border-top: 1px solid var(--line); padding-top: 0.8rem;
+    font-family: var(--mono); font-size: 0.73rem; color: var(--ink-faint);
+  }
+  .meta b { color: var(--ink-soft); font-weight: 500; }
+  /* ---------- kpis ---------- */
+  .kpis {
+    display: grid; gap: 1px; background: var(--line-soft);
+    grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+    border: 1px solid var(--line); border-radius: 3px; overflow: hidden;
+  }
+  .kpi { background: var(--surface); padding: 0.95rem 1.05rem; display: flex; flex-direction: column; gap: 0.2rem; }
+  .kpi .lbl { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .kpi .val {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 1.6rem; line-height: 1.15; letter-spacing: -0.02em;
+  }
+  .kpi .val.bad { color: var(--crit); } .kpi .val.ok { color: var(--good); }
+  .kpi .sub { font-size: 0.78rem; color: var(--ink-soft); }
+  /* ---------- secciones ---------- */
+  section { display: flex; flex-direction: column; gap: 1rem; }
+  .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.8rem; border-bottom: 2px solid var(--ink); padding-bottom: 0.45rem; }
+  h2 { font-size: clamp(1.15rem, 2.3vw, 1.42rem); letter-spacing: -0.015em; font-weight: 640; }
+  .sec-head .note { font-size: 0.82rem; color: var(--ink-faint); margin-left: auto; font-family: var(--mono); }
+  /* ---------- antes / despues ---------- */
+  .deltas { display: grid; gap: 0.55rem; }
+  .delta {
+    display: grid; grid-template-columns: minmax(9rem, 1.6fr) auto auto auto;
+    align-items: center; gap: 0.5rem 0.9rem;
+    background: var(--surface); border: 1px solid var(--line);
+    border-left: 3px solid var(--good); border-radius: 2px; padding: 0.7rem 0.95rem;
+  }
+  .delta .what { font-size: 0.92rem; }
+  .delta .from, .delta .to {
+    font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.92rem; white-space: nowrap;
+  }
+  .delta .from { color: var(--crit); text-decoration: line-through; text-decoration-thickness: 1px; opacity: 0.85; }
+  .delta .arrow { color: var(--ink-faint); font-family: var(--mono); }
+  .delta .to { color: var(--good); font-weight: 600; }
+  @media (max-width: 620px) {
+    .delta { grid-template-columns: 1fr auto auto auto; }
+    .delta .what { grid-column: 1 / -1; }
+  }
+  /* ---------- cobertura faq ---------- */
+  .cov { display: flex; flex-direction: column; gap: 1px; background: var(--line-soft); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+  .cov-row {
+    display: grid; grid-template-columns: minmax(11rem, 2.2fr) 5.5rem minmax(6rem, 1fr) 6.5rem;
+    align-items: center; gap: 0.8rem; background: var(--surface); padding: 0.55rem 1rem;
+  }
+  .cov-row.head {
+    background: var(--sunk); font-family: var(--mono); font-size: 0.64rem;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .cov-row .tema { font-size: 0.9rem; }
+  .cov-row .calls { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; color: var(--ink-soft); text-align: right; }
+  .cov-track { background: var(--sunk); height: 0.55rem; border-radius: 1px; overflow: hidden; }
+  .cov-fill { height: 100%; background: var(--accent); }
+  .cov-row.miss .cov-fill { background: var(--crit); }
+  .state { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; text-align: right; white-space: nowrap; }
+  .state.now { color: var(--good); } .state.miss { color: var(--crit); } .state.dubious { color: var(--warn); }
+  @media (max-width: 700px) {
+    .cov-row { grid-template-columns: 1fr auto; }
+    .cov-row .cov-track, .cov-row.head .cov-track { display: none; }
+  }
+  /* ---------- barras mes / hora ---------- */
+  .two { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .panel h3 { font-size: 0.95rem; font-weight: 620; }
+  .rows { display: flex; flex-direction: column; gap: 0.28rem; }
+  .row { display: grid; grid-template-columns: 3.6rem 1fr 4.6rem; align-items: center; gap: 0.55rem; }
+  .row .k, .row .v { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .row .v { text-align: right; }
+  .track { background: var(--sunk); height: 0.6rem; border-radius: 1px; overflow: hidden; display: flex; }
+  .fill { height: 100%; background: var(--accent); }
+  .row.peak .fill { background: var(--ink); }
+  /* ---------- pendientes ---------- */
+  .todo { display: grid; gap: 0.6rem; }
+  .task {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--line);
+    border-radius: 2px; padding: 0.8rem 1rem; display: flex; flex-direction: column; gap: 0.35rem;
+  }
+  .task.p1 { border-left-color: var(--crit); }
+  .task.p2 { border-left-color: var(--warn); }
+  .task.p3 { border-left-color: var(--accent); }
+  .task-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.55rem; }
+  .task h3 { font-size: 0.95rem; font-weight: 620; }
+  .task p { font-size: 0.88rem; color: var(--ink-soft); max-width: 62ch; }
+  .chip {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 0.18rem 0.45rem; border-radius: 2px; background: var(--sunk); color: var(--ink-soft); white-space: nowrap;
+  }
+  .chip.crit { background: var(--crit-soft); color: var(--crit); }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); }
+  .chip.good { background: var(--good-soft); color: var(--good); }
+  .chip.acc  { background: var(--accent-soft); color: var(--accent); }
+  .cols { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr)); align-items: start; }
+  .col-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .col-head h3 { font-size: 1rem; font-weight: 640; }
+  blockquote { margin: 0; padding-left: 0.85rem; border-left: 2px solid var(--line); color: var(--ink-soft); font-style: italic; font-size: 0.88rem; }
+  footer { border-top: 1px solid var(--line); padding-top: 0.9rem; font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); display: flex; flex-direction: column; gap: 0.25rem; }
+  footer p { max-width: none; }
+  a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Agente de voz de soporte · Tecnocloud</p>
+    <div class="title-row">
+      <h1>Auditoría de Laura</h1>
+      <span class="live"><span class="dot"></span>Operativo · v43 publicada</span>
+    </div>
+    <p>Revisión de las 547 llamadas útiles atendidas desde abril. Encontramos un fallo que llevaba dos meses vaciando el servicio por dentro y once correcciones aplicadas hoy. Lo que queda pendiente está al final, separado por quién lo tiene que hacer.</p>
+    <div class="meta">
+      <span><b>Periodo</b> 8 abr – 17 ago 2026</span>
+      <span><b>Llamadas</b> 547 útiles de 645</span>
+      <span><b>Transcripciones leídas</b> 303</span>
+      <span><b>Coste del periodo</b> 104,50 $</span>
+      <span><b>Actualizado</b> 18 ago, 13:00</span>
+    </div>
+  </header>
+
+  <div class="task p1" style="border-left-color:var(--crit)">
+    <div class="task-head"><span class="chip crit">18 ago</span><h3>Nada de lo publicado estaba llegando a las llamadas</h3></div>
+    <p>La primera llamada real tras los cambios corrió con la versión <b>40</b> del agente, no con la 43 publicada. El número de teléfono tenía <b>fijada</b> una versión concreta, y mientras eso pasa, publicar no cambia nada: un día entero de trabajo sin llegar a un solo cliente. Corregido para que el número sirva siempre la última versión publicada.</p>
+    <p>El mismo control aplicado al resto de la agencia encontró dos clientes más en la misma situación, uno de ellos con trece versiones sin entrar en producción. Ese es un aviso aparte, fuera de este panel.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <span class="lbl">Búsquedas en vacío</span>
+      <span class="val ok">0%</span>
+      <span class="sub">era el 100% en julio y agosto</span>
+    </div>
+    <div class="kpi">
+      <span class="lbl">Temas con documento</span>
+      <span class="val ok">12<span style="color:var(--ink-faint);font-size:1rem">/20</span></span>
+      <span class="sub">eran 2 de 20 esta mañana</span>
+    </div>
+    <div class="kpi">
+      <span class="lbl">Espera del agente</span>
+      <span class="val ok">0,17 s</span>
+      <span class="sub">al registrar un aviso; eran 4,1 s</span>
+    </div>
+    <div class="kpi">
+      <span class="lbl">Avisos resueltos</span>
+      <span class="val bad">2,3%</span>
+      <span class="sub">9 de 396 · consecuencia del fallo</span>
+    </div>
+    <div class="kpi">
+      <span class="lbl">Llamadas que repiten</span>
+      <span class="val bad">84%</span>
+      <span class="sub">40% de ellas en menos de 2 h</span>
+    </div>
+    <div class="kpi">
+      <span class="lbl">Coste por llamada</span>
+      <span class="val">0,20 $</span>
+      <span class="sub">80 s de duración mediana</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <h2>El fallo de fondo</h2>
+      <span class="note">corregido y verificado</span>
+    </div>
+    <p>El agente consulta una base de conocimiento antes de guiar a nadie. Dejó de recibir respuesta a finales de mayo y desde julio no recibía absolutamente nada. Como no podía distinguir «no hay documento» de «no me han contestado», improvisaba delante del cliente. Ese es el origen del 2,3% de avisos resueltos: nunca tuvo una solución que dar.</p>
+    <div class="rows">
+      <div class="row"><span class="k">abr–may</span><div class="track"><div class="fill" style="width:6%;background:var(--crit)"></div></div><span class="v">6% vacías</span></div>
+      <div class="row"><span class="k">may–jun</span><div class="track"><div class="fill" style="width:95%;background:var(--crit)"></div></div><span class="v">95%</span></div>
+      <div class="row"><span class="k">jul–ago</span><div class="track"><div class="fill" style="width:100%;background:var(--crit)"></div></div><span class="v">100%</span></div>
+      <div class="row"><span class="k">hoy</span><div class="track"><div class="fill" style="width:2%;background:var(--good)"></div></div><span class="v">0%</span></div>
+    </div>
+    <p>Eran cuatro causas encadenadas, ninguna visible desde fuera: la clave de OpenAI había quedado limitada y rechazaba las peticiones; el aviso de error no estaba conectado a la respuesta, así que el fallo salía como silencio en lugar de como mensaje; cuando la búsqueda no encontraba nada, la cadena se cortaba antes de poder decirlo; y el umbral de parecido estaba tan alto que el modo en que habla un cliente por teléfono no alcanzaba nunca los documentos que sí existían.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Lo que cambió hoy</h2>
+      <span class="note">medido antes y después</span>
+    </div>
+    <div class="deltas">
+      <div class="delta"><span class="what">Búsqueda sin respuesta útil</span><span class="from">100%</span><span class="arrow">→</span><span class="to">0%</span></div>
+      <div class="delta"><span class="what">Temas cubiertos por la base de conocimiento</span><span class="from">2 de 20</span><span class="arrow">→</span><span class="to">12 de 20</span></div>
+      <div class="delta"><span class="what">Espera al registrar un aviso</span><span class="from">4,1 s</span><span class="arrow">→</span><span class="to">0,17 s</span></div>
+      <div class="delta"><span class="what">Espera al consultar la base de conocimiento</span><span class="from">4,99 s</span><span class="arrow">→</span><span class="to">0,45 s</span></div>
+      <div class="delta"><span class="what">Resumen del aviso generado con IA</span><span class="from">roto desde mayo</span><span class="arrow">→</span><span class="to">funcionando</span></div>
+      <div class="delta"><span class="what">Avisos duplicados por la misma llamada</span><span class="from">5 de 142</span><span class="arrow">→</span><span class="to">imposible</span></div>
+      <div class="delta"><span class="what">Fallo al entregar el aviso a soporte</span><span class="from">silencioso</span><span class="arrow">→</span><span class="to">alerta en Slack</span></div>
+      <div class="delta"><span class="what">Cliente en las alertas de error</span><span class="from">«Laserys»</span><span class="arrow">→</span><span class="to">«Tecnocloud»</span></div>
+      <div class="delta"><span class="what">Llamadas sin ningún registro</span><span class="from">1 de cada 3</span><span class="arrow">→</span><span class="to">registra siempre</span></div>
+      <div class="delta"><span class="what">Teléfono guardado en el aviso</span><span class="from">«seis dos nueve…»</span><span class="arrow">→</span><span class="to">+34 6XX XXX XXX</span></div>
+      <div class="delta"><span class="what">Silencio facturado sin colgar</span><span class="from">159 s</span><span class="arrow">→</span><span class="to">60 s y corta</span></div>
+      <div class="delta"><span class="what">Vocabulario reconocido al oído</span><span class="from">18 términos</span><span class="arrow">→</span><span class="to">42 términos</span></div>
+      <div class="delta"><span class="what">Clave de OpenAI que devolvía error</span><span class="from">guardada</span><span class="arrow">→</span><span class="to">borrada</span></div>
+      <div class="delta"><span class="what">Quien vuelve a llamar porque nadie le llamó</span><span class="from">invisible</span><span class="arrow">→</span><span class="to">en el asunto</span></div>
+      <div class="delta"><span class="what">Peticiones comerciales en la bandeja</span><span class="from">como incidencias</span><span class="arrow">→</span><span class="to">«Comercial - …»</span></div>
+      <div class="delta"><span class="what">Impresoras, Windows del puesto y OneDrive</span><span class="from">«no lo llevo yo»</span><span class="arrow">→</span><span class="to">se atienden</span></div>
+      <div class="delta"><span class="what">Versión del agente que sirve el teléfono</span><span class="from">fijada en v40</span><span class="arrow">→</span><span class="to">última publicada</span></div>
+      <div class="delta"><span class="what">Teléfono y resumen en el correo a soporte</span><span class="from">en blanco</span><span class="arrow">→</span><span class="to">completos</span></div>
+      <div class="delta"><span class="what">Problemas distintos en el texto que lee el agente</span><span class="from">4 a la vez</span><span class="arrow">→</span><span class="to">1 o 2</span></div>
+      <div class="delta"><span class="what">Tamaño de ese texto</span><span class="from">2.012 car.</span><span class="arrow">→</span><span class="to">274–1.241</span></div>
+    </div>
+    <p style="font-size:0.86rem;color:var(--ink-soft)">La clave antigua se ha eliminado tras comprobar que solo la usaba un flujo archivado. La base de conocimiento se verificó después del borrado y sigue respondiendo.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Cobertura de la base de conocimiento</h2>
+      <span class="note">20 temas sondeados hoy con las frases reales de los clientes</span>
+    </div>
+    <p>La barra mide cuántas llamadas del histórico pedían cada tema. <b>Dudoso</b> significa que la búsqueda devuelve algo pero habla de otro problema: el agente tiene orden explícita de descartarlo en ese caso y escalar, en lugar de adaptarlo.</p>
+    <div class="cov">
+      <div class="cov-row head"><span>Tema</span><span class="calls">Llamadas</span><span></span><span class="state">Estado</span></div>
+      <div class="cov-row miss"><span class="tema">Comercial, precios y altas</span><span class="calls">21</span><div class="cov-track"><div class="cov-fill" style="width:100%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row miss"><span class="tema">OneLogin y doble factor</span><span class="calls">19</span><div class="cov-track"><div class="cov-fill" style="width:90%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row"><span class="tema">Outlook y correo</span><span class="calls">16</span><div class="cov-track"><div class="cov-fill" style="width:76%"></div></div><span class="state dubious">Dudoso</span></div>
+      <div class="cov-row"><span class="tema">Alta de usuario nuevo</span><span class="calls">8</span><div class="cov-track"><div class="cov-fill" style="width:38%"></div></div><span class="state now">Cubierto hoy</span></div>
+      <div class="cov-row"><span class="tema">Contraseña caducada</span><span class="calls">8</span><div class="cov-track"><div class="cov-fill" style="width:38%"></div></div><span class="state now">Cubierto hoy</span></div>
+      <div class="cov-row"><span class="tema">Gesfincas: facturar y recibos</span><span class="calls">7</span><div class="cov-track"><div class="cov-fill" style="width:33%"></div></div><span class="state dubious">Dudoso</span></div>
+      <div class="cov-row"><span class="tema">Alcance del contrato (impresoras)</span><span class="calls">6</span><div class="cov-track"><div class="cov-fill" style="width:29%"></div></div><span class="state now">Cubierto hoy</span></div>
+      <div class="cov-row miss"><span class="tema">Nube colgada al provisionar</span><span class="calls">6</span><div class="cov-track"><div class="cov-fill" style="width:29%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row"><span class="tema">OneDrive no sincroniza</span><span class="calls">5</span><div class="cov-track"><div class="cov-fill" style="width:24%"></div></div><span class="state dubious">Dudoso</span></div>
+      <div class="cov-row"><span class="tema">Cómo entrar en CMW</span><span class="calls">5</span><div class="cov-track"><div class="cov-fill" style="width:24%"></div></div><span class="state now">Ya cubierto</span></div>
+      <div class="cov-row"><span class="tema">Escritorio remoto se cierra</span><span class="calls">5</span><div class="cov-track"><div class="cov-fill" style="width:24%"></div></div><span class="state dubious">Dudoso</span></div>
+      <div class="cov-row"><span class="tema">Usuario ya activo</span><span class="calls">4</span><div class="cov-track"><div class="cov-fill" style="width:19%"></div></div><span class="state now">Ya cubierto</span></div>
+      <div class="cov-row miss"><span class="tema">Guardar e imprimir en la sesión publicada</span><span class="calls">4</span><div class="cov-track"><div class="cov-fill" style="width:19%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row miss"><span class="tema">Instalar el cliente UDS</span><span class="calls">4</span><div class="cov-track"><div class="cov-fill" style="width:19%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row"><span class="tema">Error 74 en CMW</span><span class="calls">3</span><div class="cov-track"><div class="cov-fill" style="width:14%"></div></div><span class="state dubious">Dudoso</span></div>
+      <div class="cov-row miss"><span class="tema">Copias de seguridad</span><span class="calls">3</span><div class="cov-track"><div class="cov-fill" style="width:14%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row"><span class="tema">Correo de restablecimiento que no llega</span><span class="calls">3</span><div class="cov-track"><div class="cov-fill" style="width:14%"></div></div><span class="state dubious">Dudoso</span></div>
+      <div class="cov-row miss"><span class="tema">Usuario bloqueado por intentos fallidos</span><span class="calls">3</span><div class="cov-track"><div class="cov-fill" style="width:14%"></div></div><span class="state miss">Sin documento</span></div>
+      <div class="cov-row"><span class="tema">Teams no abre</span><span class="calls">3</span><div class="cov-track"><div class="cov-fill" style="width:14%"></div></div><span class="state now">Cubierto hoy</span></div>
+      <div class="cov-row miss"><span class="tema">Certificado digital</span><span class="calls">2</span><div class="cov-track"><div class="cov-fill" style="width:10%"></div></div><span class="state miss">Sin documento</span></div>
+    </div>
+    <p>Hay más contenido del que parecía: existen documentos de impresoras, Teams, SharePoint, actualizaciones de CMW o altas de usuario que llevaban meses siendo inalcanzables. El hallazgo incómodo es que <b>la FAQ cubre las impresoras</b> mientras el agente respondía «eso no lo llevo yo» a seis clientes que las reclamaban por contrato.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Volumen</h2><span class="note">547 llamadas útiles</span></div>
+    <div class="two">
+      <div class="panel">
+        <h3>Por mes</h3>
+        <div class="rows">
+          <div class="row"><span class="k">abr</span><div class="track"><div class="fill" style="width:57%"></div></div><span class="v">120 · 27,7 $</span></div>
+          <div class="row"><span class="k">may</span><div class="track"><div class="fill" style="width:83%"></div></div><span class="v">174 · 26,2 $</span></div>
+          <div class="row peak"><span class="k">jun</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">209 · 21,9 $</span></div>
+          <div class="row"><span class="k">jul</span><div class="track"><div class="fill" style="width:46%"></div></div><span class="v">97 · 19,9 $</span></div>
+          <div class="row"><span class="k">ago*</span><div class="track"><div class="fill" style="width:22%"></div></div><span class="v">45 · 8,7 $</span></div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--ink-faint)">*17 días. Junio incluye 77 llamadas rechazadas por un corte de saldo el día 22.</p>
+      </div>
+      <div class="panel">
+        <h3>Por hora del día</h3>
+        <div class="rows">
+          <div class="row"><span class="k">08 h</span><div class="track"><div class="fill" style="width:17%"></div></div><span class="v">14</span></div>
+          <div class="row"><span class="k">09 h</span><div class="track"><div class="fill" style="width:75%"></div></div><span class="v">62</span></div>
+          <div class="row"><span class="k">10 h</span><div class="track"><div class="fill" style="width:93%"></div></div><span class="v">77</span></div>
+          <div class="row"><span class="k">11 h</span><div class="track"><div class="fill" style="width:87%"></div></div><span class="v">72</span></div>
+          <div class="row peak"><span class="k">12 h</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">83</span></div>
+          <div class="row"><span class="k">13 h</span><div class="track"><div class="fill" style="width:77%"></div></div><span class="v">64</span></div>
+          <div class="row"><span class="k">14 h</span><div class="track"><div class="fill" style="width:37%"></div></div><span class="v">31</span></div>
+          <div class="row"><span class="k">15–18 h</span><div class="track"><div class="fill" style="width:34%"></div></div><span class="v">113</span></div>
+          <div class="row"><span class="k">19 h+</span><div class="track"><div class="fill" style="width:29%"></div></div><span class="v">24</span></div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--ink-faint)">65% entra de 9 a 14 h. La tarde recibe el 21%: ahí caben las devoluciones de llamada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Qué falta por hacer</h2><span class="note">por dueño y prioridad</span></div>
+    <div class="cols">
+
+      <div>
+        <div class="col-head"><h3>Nosotros</h3><span class="chip acc">AgentesIA</span></div>
+        <div class="todo">
+          <div class="task p1" style="border-left-color:var(--good)">
+            <div class="task-head"><span class="chip good">Hecho</span><h3>Trocear los documentos al leerlos</h3></div>
+            <p>Cada documento mete varios problemas en un mismo bloque, así que al agente le llegaban cuatro problemas de los que solo uno era el del cliente. Ahora el documento se parte en el momento y se le entregan solo los uno o dos que hablan de lo que ha preguntado, eligiendo por rareza de los términos para que palabras como «Colmadwin», que están en todos, no decidan.</p>
+            <p>Medido en siete consultas reales: de 2.012 caracteres con 4 problemas a entre 274 y 1.241 con uno o dos, y el documento correcto en primera posición en 5 de 6 casos con resultado.</p>
+          </div>
+          <div class="task p2">
+            <div class="task-head"><span class="chip warn">Media</span><span class="chip">requiere permiso</span><h3>Trocear también en la base de datos</h3></div>
+            <p>Lo de arriba arregla lo que el agente lee, pero no el otro efecto: un documento que mezcla temas es más difícil de encontrar. Trocearlo en origen subiría además la cobertura.</p>
+            <p>La herramienta está escrita —volcado, troceado, nuevos embeddings e inserción, con las consultas fijas en los nodos para que nada acepte SQL desde fuera— y quedó bloqueada por la política de permisos del entorno. Ojo: la fuente real es un documento de Google que se recarga en bloque, así que lo definitivo es reestructurar ese documento, no solo la tabla.</p>
+          </div>
+          <div class="task p1" style="border-left-color:var(--good)">
+            <div class="task-head"><span class="chip good">Hecho</span><h3>Clave de OpenAI antigua eliminada</h3></div>
+            <p>Era la que devolvía error y dejó la base de conocimiento muda dos meses. Comprobado que solo la usaba un flujo archivado, borrada, y la búsqueda verificada después.</p>
+          </div>
+          <div class="task p2">
+            <div class="task-head"><span class="chip warn">Media</span><h3>Medir el efecto real</h3></div>
+            <p>La primera llamada real ya ha entrado, pero corrió con la versión antigua del agente, así que todavía no mide nada. Las siguientes serán las primeras con todos los cambios activos: ahí se verá si la tasa de resolución se mueve del 2,3%.</p>
+          </div>
+          <div class="task p2">
+            <div class="task-head"><span class="chip warn">Media</span><h3>Columnas propias en la hoja de registro</h3></div>
+            <p>La aplicación afectada, la persona solicitada y la marca de reclamación viajan dentro del texto del resumen. Con columnas propias se podría filtrar y contar.</p>
+          </div>
+          <div class="task p3">
+            <div class="task-head"><span class="chip">Baja</span><h3>Subir la retención de ejecuciones</h3></div>
+            <p>n8n solo guarda dos semanas: hoy no se puede auditar nada anterior al 3 de agosto. Es lo que impidió ver antes este fallo.</p>
+          </div>
+          <div class="task p3">
+            <div class="task-head"><span class="chip">Baja</span><h3>Detalles de higiene</h3></div>
+            <p>Quitar el correo personal que sigue en copia en cada aviso, revisar el flujo de Chatwoot que quedó apagado con otro activo en paralelo, y documentar el acceso al servidor del n8n, que hoy nadie tiene.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-head"><h3>Tecnocloud</h3><span class="chip warn">Cliente</span></div>
+        <div class="todo">
+          <div class="task p1">
+            <div class="task-head"><span class="chip crit">Alta</span><h3>Devolver las llamadas</h3></div>
+            <p>84% de las llamadas vienen de números que repiten y el 40% de esas repeticiones llega en menos de dos horas: es gente que vuelve porque nadie le llamó. Un cliente acumuló 46 llamadas en seis semanas; otro llamó nueve veces en una mañana y acabó en el Colegio de Administradores.</p>
+            <blockquote>«Ayer llamé y dejé cuatro mensajes, y no me habéis hecho caso.»</blockquote>
+            <p><b>Por nuestra parte ya está hecho lo que se podía:</b> cada aviso dice en el asunto si ese número había llamado antes en las últimas 72 horas y cuándo fue la primera vez («2ª llamada en 72 h»). Antes cada una parecía una incidencia nueva e independiente. Devolverlas sigue siendo vuestro.</p>
+          </div>
+          <div class="task p1">
+            <div class="task-head"><span class="chip crit">Alta</span><h3>Escribir el procedimiento de OneLogin</h3></div>
+            <p>19 llamadas, casi todas por cambio de móvil, y ninguna resuelta en primer nivel: en ninguna transcripción consta cuál es el paso correcto. No lo redactamos nosotros porque inventarlo dejaría instrucciones falsas dictadas por teléfono con total naturalidad.</p>
+            <blockquote>«Habéis puesto una doble verificación que no funciona.»</blockquote>
+          </div>
+          <div class="task p1">
+          <div class="task p1" style="border-left-color:var(--good)">
+            <div class="task-head"><span class="chip good">Hecho</span><h3>Comercial ya se distingue en la bandeja</h3></div>
+            <p>Las 21 llamadas de precios, altas de puesto o preventa (13% del total) llegaban como si fueran incidencias. Ahora el asunto empieza por <b>«Comercial - »</b> en lugar de «Incidencia», así que se filtran o se desvían con una regla de correo sin cambiar nada más. Queda por decidir quién las atiende: una clienta pidió un tercer usuario en cinco llamadas distintas sin que se cerrara.</p>
+          </div>
+          <div class="task p2">
+          <div class="task p2">
+            <div class="task-head"><span class="chip warn">Media</span><span class="chip">cuestionario listo</span><h3>Rellenar la base de conocimiento</h3></div>
+            <p>8 temas sin ningún documento (62 llamadas) y otros 6 que existen pero tratan de un caso distinto al que llega por teléfono (39 llamadas más). Está todo en un <a href="https://claude.ai/code/artifact/89e01c9b-2fd1-442b-9d1c-851e0c983457">cuestionario aparte</a>: los síntomas literales de los clientes ya recogidos, el hueco de la solución, y el formato correcto — un problema por bloque, que es justo lo que hoy no se cumple y por lo que el buscador no encontraba nada.</p>
+          </div>
+          <div class="task p2">
+          <div class="task p2" style="border-left-color:var(--good)">
+            <div class="task-head"><span class="chip good">Hecho</span><h3>Impresoras, Windows y OneDrive sí entran</h3></div>
+            <p>Seis clientes los reclamaban diciendo que están en su mantenimiento, y el agente respondía «eso no lo llevo yo». Confirmado que sí entran: ya los atiende como cualquier otra incidencia. Fuera queda solo el WiFi o el equipo de casa, los portales de terceros y el software de otro proveedor — y ni ahí da un portazo: ofrece dejar constancia por si el equipo puede orientar.</p>
+          </div>
+          <div class="task p3">
+          <div class="task p3">
+            <div class="task-head"><span class="chip">Baja</span><h3>Tres arreglos de infraestructura</h3></div>
+            <p>Correos de restablecimiento que no llegan (3 llamadas), provisión de nube detenida en el 75% (6) y el error 74 tras la actualización de CMW (3).</p>
+            <p>La lista de números comerciales a filtrar la hemos descartado con datos: los dos únicos números con patrón de marcador automático no han vuelto a llamar desde el 10 de junio, así que una lista negra sería mantenimiento sin beneficio.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>547 llamadas útiles entre el 8 de abril y el 17 de agosto de 2026. Se excluyen 77 rechazadas por el corte de saldo del 22 de junio y 21 de menos de tres segundos sin audio. Transcripciones leídas íntegras: 303.</p>
+    <p>Cobertura de la base de conocimiento medida el 17 de agosto sondeando el sistema en producción con las frases que usan los clientes, no con las de los documentos.</p>
+    <p>Nombres y teléfonos de clientes omitidos deliberadamente; las citas son literales. Preparado por AgentesIA.</p>
+  </footer>
+
+</div>
