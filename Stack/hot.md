@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **«SIN VÍCTIMA» tiene tres lecturas, no dos** — hueco de test, mutante equivalente, o **guard equivocado**: preguntar qué entrada distinguiría las dos versiones antes de escribir el test que falta. Ver [[un-mutante-sin-victima-tambien-puede-ser-un-guard-equivocado]]
 - **El coste de Claude Code está en el tamaño de sesión, no en el CLAUDE.md** — 77 % es cache-read y el 91 % se gasta por encima de 200k. Y un `paths:` de rules dispara con `Read`, **no con Bash**. Ver [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
 - **StructuredOutput de Workflow cae con schemas anidados: reponer la dimensión como agente suelto con JSON-por-texto** — y un status `no-ejecutada` nunca cuenta como revisado. Ver [[workflow-structured-output-cae-con-schemas-anidados-relanzar-como-agente-suelto]]
 - **Todo bot de voz o chat debe identificarse como IA en la primera interacción** (art. 50 del AI Act, vigente desde el 2-ago-2026) — y el aviso va en el flujo, no en el prompt: si depende del modelo, el incumplimiento es silencioso. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
