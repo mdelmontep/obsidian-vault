@@ -111,3 +111,18 @@ el StructuredOutput de los Workflows cayó 3 de 8 veces con el mismo schema
 ([[workflow-structured-output-cae-con-schemas-anidados-relanzar-como-agente-suelto]]).
 
 Continuación → `docs/architecture/PROMPT-growth-fase-b-ola2.md` (repo).
+
+## Contenido — el montaje llega a publicarse (20-ago, madrugada)
+
+**#1990 (subtítulos automáticos).** No hacía falta transcribir nada: el texto ya estaba en la BD
+(`escenas[].voz` del guion) y el tiempo sale de medir cada clip con `ffprobe`. Coste cero, sin
+proveedor nuevo. Módulo puro `subtitulos.mjs` que **parte** el texto en bloques (nunca lo trunca) y
+reporta los clips que no se pueden leer a ritmo (`apretados`) en vez de arreglarlos en silencio. El
+render se rompió dos veces por cosas que ninguna suite podía ver → [[libass-ignora-fontfile-y-un-srt-no-lleva-geometria]].
+
+**#1983 (el compositor entrega).** Eran **cuatro** eslabones rotos, no tres: el cuarto —publicar el
+clip más viejo en vez del montaje— venía de antes del issue y habría hecho falsa la frase «el
+compositor entrega» justo en el último paso. Mig **727** (`kind='compuesto'` + único por versión)
+aplicada con `db query` en transacción y verificada por catálogo, porque `db push` estaba bloqueado
+por una 726 ajena sin fichero en `main`. Cinco mutaciones para probar que los candados muerden.
+
