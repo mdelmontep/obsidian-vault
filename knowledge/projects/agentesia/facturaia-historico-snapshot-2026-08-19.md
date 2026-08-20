@@ -126,3 +126,10 @@ compositor entrega» justo en el último paso. Mig **727** (`kind='compuesto'` +
 aplicada con `db query` en transacción y verificada por catálogo, porque `db push` estaba bloqueado
 por una 726 ajena sin fichero en `main`. Cinco mutaciones para probar que los candados muerden.
 
+**#1989 (el cierre cabía a medias).** `drawtext` no ajusta el texto al ancho: con el CTA por defecto
+el rótulo medía 715 px de los 540 del lienzo y, centrado, se cortaba por los dos lados — se perdía
+justo el dominio. Ahora el ancho se **mide** con un render de un fotograma y el filtro `bbox`, se
+parte en dos líneas equilibradas y solo entonces baja el cuerpo; el texto no se recorta nunca. El
+candado mira las columnas de los BORDES, no el brillo del centro, y se probó por mutación
+→ [[drawtext-no-ajusta-al-ancho-y-el-ancho-se-mide-con-bbox]]. Con esto la spec #1908 queda cerrada
+salvo #1959 (Revideo), que no bloquea nada.
