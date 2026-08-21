@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-08-21
+updated: 2026-08-22
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,11 +35,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
-- 🟢 **Cola de tickets de soporte vaciada; el ticket se cierra solo al mergear (21-ago)** — 9 PRs en prod (#2018-#2023, #2026, #2028, #2033). → [[facturaia-historico-detallado]]
-- 🟢 **Retención de IRPF: área cerrada de punta a punta (21-ago)** — pasos 1-3 del aprendizaje en prod (migs 728/731/734) y hoy tres PRs más: #2050 (la retención se VE antes de aprobar, una sola aritmética del total, `EstadoPill` deja de hablar de cobrar en Recibidas), #2058 (mig 738: se corrige también en una factura YA aprobada, por RPC transaccional con bloqueo si está en declaración presentada) y #2066 (la cuota de IVA dejaba fuera la retención + guard sobre el patrón). Smoke real: **regla del emisor en VERDE** a la tercera corrección desde la ficha. → [[una-funcion-correcta-no-impide-que-la-reescriban-a-mano]] · [[un-candado-puesto-tras-un-incidente-puede-quedar-del-reves]] · [[facturaia-historico-detallado]]
 - 🔴 **Lo que no está en `docker-compose.yml` no llega al contenedor: dos servicios caídos por eso (20-ago)** — WhatsApp llevaba **8 días** tirando mensajes al suelo y el cifrado de IBAN nunca ha estado activo (64 de 68 IBAN sin cifrar: el cutover B2 los dejaría en blanco). Los valores estaban en el panel; faltaba la línea. Arreglado (#1993). **Queda**: el trinquete `process.env` vs `environment:` (#1984, lo único que cierra la clase), un WhatsApp real con factura, una escritura que confirme el cifrado **antes** de tocar B2, y el gotcha ya está en `docs/architecture/gotchas.md` §Repo y deploy (#2005). → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
 - 🟢 **Tanda growth/contenido/cookies CERRADA: 7 PRs en prod (21-ago, suite 14.435/0)** — menú admin + campos con caja (#2048/#2067), cookies retirables en la web (#2042, ADR-023), el 401 de clips era el proxy truncando a 10 MB (#2053, #2055 abierto), contenido-16 (#2047), deadlock del planificador + «Generar ahora» honesto + edición antes de aprobar (#2054), quitar límites con auditoría (#2051). **Smokes mañana**: run 03:20 (clips + plan estrenado + ideación). **Tuyo (pre-campaña)**: abogado ADR-023 + Safari ITP; token Meta ~10-oct. Detalle → [[facturaia-historico-detallado]] · [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]] · [[gate-que-exige-el-artefacto-a-la-fase-que-lo-produce-es-deadlock]]
-- 🟢 **Google Ads — Fase B COMPLETA (21-ago)** — FB-09 en prod, llave `datamanager` girada, smoke verde. → [[facturaia-historico-detallado]]
 - 🟢 **Contenido: spec #1908 cerrada (20-ago).** Queda #1959 (Revideo), sin urgencia. → [[facturaia-historico-snapshot-2026-08-19]]
 - 🟢 **Empaquetado: ola 5 en prod (19-ago).** Queda el DROP de las dos claves del jsonb (#1813) y #1936. → `PROMPT-continuacion-20-ago.md`
 - 🟠 **#1776**: se reduce a `preferred_locales:['es']` y cierra con el encendido de #1778 (0 customers reales).
