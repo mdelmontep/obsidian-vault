@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-08-20
+updated: 2026-08-21
 tags: [cliente, facturaia, hub]
 ---
 
@@ -37,7 +37,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - 🟢 **El OCR ya aprende el DATO de cada proveedor, no solo a confiar en él (20-ago)** — mig 728 en prod y PR #2015. A la tercera corrección igual del mismo emisor (moneda, IVA, IRPF, forma de pago, categoría) el sistema lo rellena solo; si el documento la contradice **no la pisa**, avisa. Visible y borrable por el cliente en Ajustes → Módulos IA, y con reparto por estado en `/admin/ia-ops`. La ficha de una recibida sin aprobar ya dice QUÉ revisar, campo a campo, con «Corregir» al editor enfocado. **Queda**: el paso 3 (que la regla verde desbloquee `es_intracom` y `tiene_irpf`; de la moneda entró la mitad) y §4.2, el cobro conciliado al céntimo como confirmación del importe. Arranque escrito → `docs/architecture/PROMPT-aprendizaje-ocr-paso3.md`. → [[clonar-una-migracion-clona-tambien-a-quien-puede-llamarla]] · [[un-mutante-sin-victima-tambien-puede-ser-un-guard-equivocado]] · [[supabase-db-query-no-es-psql-y-solo-devuelve-el-ultimo-select]]
 - 🔴 **Lo que no está en `docker-compose.yml` no llega al contenedor: dos servicios caídos por eso (20-ago)** — WhatsApp llevaba **8 días** tirando mensajes al suelo y el cifrado de IBAN nunca ha estado activo (64 de 68 IBAN sin cifrar: el cutover B2 los dejaría en blanco). Los valores estaban en el panel; faltaba la línea. Arreglado (#1993). **Queda**: el trinquete `process.env` vs `environment:` (#1984, lo único que cierra la clase), un WhatsApp real con factura, una escritura que confirme el cifrado **antes** de tocar B2, y el gotcha ya está en `docs/architecture/gotchas.md` §Repo y deploy (#2005). → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
-- 🟢 **Google Ads — Fase B: FB-08 ENTREGADO (20-ago); queda solo FB-09 (analista semanal)** — recomendaciones y optimization score aplicables con confirmación, en prod (PR #2014). Primer apply real = smoke (§Smoke); FB-09: `PROMPT-growth-fase-b-resto.md` (actualizado). **Tuyo: 2FA del iPhone para el token datamanager** (llave de las conversiones). → [[facturaia-historico-detallado]] · [[cache-components-searchparams-solo-dentro-de-suspense]] · [[agent-browser-network-route-para-fixtures-de-qa]]
+- 🟢 **Google Ads — Fase B COMPLETA (21-ago)** — FB-09 (analista semanal) en prod y afinado tras auditoría a dos agentes (#2029/#2032/#2034); llave `datamanager` girada, smoke real verde. Queda **#2031** (card de recomendaciones de FB-08: 400 GAQL en prod). **Tuyo: nada.** Detalle → [[facturaia-historico-detallado]] · [[gaql-campos-del-discovery-doc-no-seleccionables-en-select]] · [[data-manager-ingest-exige-loginaccount-del-mcc]]
 - 🟢 **Contenido: spec #1908 cerrada (20-ago).** Queda #1959 (Revideo), sin urgencia. → [[facturaia-historico-snapshot-2026-08-19]]
 - 🟢 **Empaquetado: ola 5 en prod (19-ago).** Queda el DROP de las dos claves del jsonb (#1813) y #1936. → `PROMPT-continuacion-20-ago.md`
 - 🟠 **#1776**: se reduce a `preferred_locales:['es']` y cierra con el encendido de #1778 (0 customers reales).
@@ -184,6 +184,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Smoke tests pendientes
 - 🟡 **[20-ago] Primer apply/dismiss REAL de una recomendación de Google Ads (FB-08)** — probado solo contra fixtures (campaña pausada, sin recomendaciones vivas). Cuando Google pinte alguna: aplicar una de presupuesto desde el panel y verificar en ads.google.com que la cifra aplicada es la validada (precedente Holded: el primer write real es el que duele).
+- 🟡 **[21-ago] Primer informe del analista CON actividad (camino LLM, FB-09)** — el smoke real fue de semana sin actividad. Con campaña activa: informe del lunes con LLM, cifras es-ES y sin reenvío en retry (#2034).
 - 🟡 **[20-ago] El canario del WORM, VISTO en `/admin/alerts`** — el collector `worm-sello` entró con #1995 y nadie lo ha visto correr en prod. Nace en verde (0 declaraciones en estado terminal), así que el smoke útil es al revés: comprobar que el sweep lo ejecuta sin error, no que pinte alerta. → [[hook-que-resuelve-git-en-el-cwd-de-la-sesion-juzga-el-repo-equivocado]]
 - 🟡 **[17-ago] La consola de empaquetado, EN PANTALLA** — nadie ha visto renderizados la columna de disponibilidad (#1713), el panel de complementos (#1714) ni el semáforo por celda (#1715): están cubiertos por tests, que no es lo mismo. Mirar el ancho de la columna de disponibilidad junto a las de plan en pantalla estrecha, y el hover real de los tooltips del semáforo. Exige entrar al admin con contraseña, así que no lo hace un agente.
 - 🟡 **[17-ago] Publicación IG real supervisada** — publicar UN post real desde la pieza aprobada (agent-browser, org real, pieza de estreno) y comprobar permalink en `publicacion_ref` + estado `publicada`; después un reel (sondeo async) y una programada a 10 min vista con el cron ya dado de alta.
