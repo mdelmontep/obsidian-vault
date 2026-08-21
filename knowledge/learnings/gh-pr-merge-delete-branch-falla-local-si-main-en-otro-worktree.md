@@ -11,6 +11,12 @@ PR YA SE MERGEÓ en GitHub antes de ese paso. El comando hace el squash-merge re
 solo DESPUÉS intenta `git checkout main` local para poder borrar la rama; si `main` está
 checked out en OTRO worktree, ese segundo paso peta, pero el merge real ya es irreversible.
 
+Segundo disparador del MISMO fallo, sin worktrees (21-ago-2026, facturaia): un fichero
+**untracked** en local que main ya trae **tracked** → `error: The following untracked working
+tree files would be overwritten by checkout`. Antes de borrarlo, `diff` contra
+`git cat-file -p origin/main:<ruta>`: aquí la versión de main era la nueva (otra sesión lo
+commiteó) y la local, la vieja — al revés habría perdido trabajo.
+
 El error engañó: parecía que el merge había fallado. Verificación real:
 `gh pr view <n> --json state,mergedAt` → `state=MERGED`.
 

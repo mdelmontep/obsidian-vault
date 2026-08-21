@@ -29,3 +29,7 @@ Reglas:
 
 Aplicable también a `.single()` (que sí throw pero a veces se atrapa sin
 distinguir el caso).
+
+Corolario: pasar de `.eq()` a `.in([exacto, comodín])` convierte una query
+UNIQUE en una que puede devolver 2 — hay que añadir `.limit(1)` en el mismo
+cambio (facturaia 21-ago-2026, [[permiso-granular-sin-ui-de-concesion-se-queda-en-una-fila]]).

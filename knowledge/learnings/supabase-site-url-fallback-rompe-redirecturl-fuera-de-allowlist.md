@@ -11,4 +11,6 @@ Fix: Dashboard → Authentication → URL Configuration:
 - Site URL = dominio prod real (p.ej. `https://app.tufacturaia.com`)
 - Redirect URLs = `https://prod.com/**` + `http://localhost:3000/**` (dev)
 
+Sin dashboard (21-ago-2026, facturaia): `GET`/`PATCH https://api.supabase.com/v1/projects/<ref>/config/auth` con el token del CLI (en macOS, `security find-generic-password -s "Supabase CLI" -w`). **`uri_allow_list` es un CSV que se reemplaza entero**: leer, añadir y reenviar la lista completa, o borras las que había — mismo patrón que [[put-objeto-completo-borra-campos-no-mapeados]]. Confirmar con un GET posterior, no con el 200 del PATCH.
+
 Anti-síntoma: si redirige raro, verifica también `request.url.origin` que en contenedor Docker es `0.0.0.0:3000` interno (ver [[oauth-redirect-uri-debe-usar-request-origin-no-env-var]]).
