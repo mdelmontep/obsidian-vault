@@ -14,3 +14,5 @@ Tell real: una señal cuyo COMPORTAMIENTO cambie observable entre versión vieja
 Caso real 2026-05-26 TuFacturaIA: monitor con `POST /api/auth/email/disconnect` esperando 308 dio falso positivo al primer hit (Next middleware devuelve 307→/login en versión vieja Y nueva igual). Tuve que cambiar el monitor a `GET /api/auth/google/callback` esperando 410 (vs legacy que redirigía a `/agentes`).
 
 Regla: antes de armar el monitor, **simular mentalmente la respuesta de la versión vieja** y confirmar que difiere de la esperada de la nueva. Si coinciden → otra señal.
+
+**Y la señal buena falla si el parseo falla en silencio** (21-ago-2026, facturaia): watcher que compara `version` de `/api/health` con la de antes; durante el redeploy la respuesta no es JSON válido, `jq` devuelve cadena vacía, y `""` != versión vieja se lee como **desplegado**. Imprimió «DESPLEGADO tras 120s: » con la versión en blanco. El comparador tiene que exigir un valor **no vacío y distinto**, no solo distinto.
