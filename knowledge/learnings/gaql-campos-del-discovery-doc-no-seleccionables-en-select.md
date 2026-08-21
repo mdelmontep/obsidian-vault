@@ -1,19 +1,20 @@
 ---
-title: gaql — campos que el discovery doc lista pueden ser no seleccionables en SELECT
+title: gaql — la seleccionabilidad es por mensaje, no por hoja (y el discovery doc no la promete)
 date: 2026-08-21
 source: facturaia
 tags: [google-ads, gaql, api, gotcha]
 ---
-La forma del mensaje en el discovery doc de Google Ads NO implica seleccionabilidad GAQL:
-v25 rechaza con `400 Unrecognized fields` un SELECT de `recommendation.impact.*` y
-`recommendation.campaign_budget_recommendation.*` aunque ambos existen en el recurso
-`recommendation` (medido en vivo contra la cuenta real el 21-ago-2026). Los campos base
-(`resource_name`, `type`, `dismissed`, `campaign`) y `customer.optimization_score` sí pasan.
+En Google Ads v25 la seleccionabilidad GAQL es a nivel de MENSAJE: `SELECT
+recommendation.impact` o `recommendation.campaign_budget_recommendation` (los padres)
+→ 200 con el mensaje entero y sus subcampos; sus hojas
+(`...recommended_budget_amount_micros`, `impact.base_metrics.clicks`) NI EXISTEN como
+campos y responden `400 Unrecognized fields`, aunque el discovery doc las liste en el
+shape (shape ≠ selectability). Medido en vivo el 21-ago-2026.
 
-Fix/patrón: antes de fiarse del doc, sondear con `searchStream` variantes de la query real
-(script tipo `probe-gaql.mjs`: base / impact / budget / score por separado) y construir la
-feature sobre lo que la API acepta, no sobre lo que el doc enumera. Si solo hace falta el
-conteo, query ligera de campos base con LIMIT y `tope_alcanzado`.
+Fuente autoritativa: `GoogleAdsFieldService` (`googleAdsFields:search`, `SELECT name,
+selectable, filterable WHERE name LIKE 'recommendation%'`) — consultarla ANTES de
+construir sobre el discovery doc. Y ojo al `WHERE resource_name`: con un id malformado
+(no numérico) da 500 INTERNAL, no 400 — no confundirlo con un campo no filtrable.
 
-Caso real: la card de recomendaciones de FB-08 daba 400 en prod (issue #2031); el analista
-FB-09 lo esquivó con `conteoRecomendacionesActivas` (PRs #2032/#2034).
+Caso real: card de FB-08 en 400 desde su merge (#2031, fix #2041: seleccionar los 2
+padres; el parse ya esperaba ese shape). El analista FB-09 usa la query ligera de conteo.
