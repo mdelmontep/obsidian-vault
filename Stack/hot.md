@@ -92,13 +92,14 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 
 - **Un candado nuevo en `main` caza las PRs abiertas escritas ANTES que él** — solo lo ve el gate de la combinación. Ver [[un-candado-nuevo-en-main-caza-las-prs-abiertas-escritas-antes]]
 
-- **Importar un helper desde otro `.test.ts` re-ejecuta sus casos en el importador** — el delta de la rama dice +11 aportando 6, y `tsc`/`eslint`/el resumen cuadran igual. Ver [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]]
+- **Importar un helper desde otro `.test.ts` re-ejecuta sus casos** — el delta de la rama miente y los gates cuadran igual. [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]]
 
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
-- **Un gate que descubre lo que audita pasa en verde si su lista sale vacía** — suelo explícito (`toBeGreaterThanOrEqual`) y fallar CERRADO con lo que no sabe leer. Ver [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]]
+- **Un gate que descubre lo que audita pasa en verde si su lista sale vacía** — suelo explícito y fallar CERRADO. [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]]
 
+- **La fuente única no impide que reescriban el cálculo a mano** — el guard va sobre el PATRÓN, no sobre los sitios. [[una-funcion-correcta-no-impide-que-la-reescriban-a-mano]]
 - **El arnés se mide a sí mismo** — un gate que construye la orden en vez de ejecutarla, un mock que declara una cadena que el código ya no usa, un check que nadie invoca, un default que nadie corrió, y el más fino: uno que mide que algo cambió pero no **dónde**. [[el-arnes-se-mide-a-si-mismo]]
 - **Verificar la conclusión, no la evidencia** — el estado de un secreto externo lo dice el proveedor, no un `SELECT`. [[verificar-la-conclusion-no-solo-la-evidencia]]

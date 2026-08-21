@@ -17,3 +17,9 @@ Fix en dos capas:
 Caso real (12-ago, facturaia #1662): 2 pushes abortados por el gate del grafo de deps
 (módulo nuevo → grafo desfasado), squash con 1 de 4 commits, `perimetro.test.ts` en rojo
 en main ~20 min, recuperación en #1664.
+
+Variante sin pipe (21-ago, facturaia): el push corrió en segundo plano y el
+ENVOLTORIO reportó su propio exit 0 mientras el pre-push abortaba por el grafo de
+dependencias desfasado. Nada mentía: el envoltorio terminó bien. Lo que no subió
+fue la rama. Por eso el punto 2 no es «además», es lo único que no depende de
+quién te cuente el resultado: **compara la punta remota con la local**, siempre.
