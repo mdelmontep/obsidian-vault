@@ -21,3 +21,12 @@ Claves:
 y una rampa contra `#ffffff` cuando `--bg` es `#f8f8fa`; al pintarse, 4,35:1 y 2,93:1 — los dos
 por debajo del mínimo. Los cazó medirlo en un navegador componiendo con `canvas`, no el cálculo.
 Ver [[una-rampa-de-color-validada-contra-el-fondo-no-dice-si-los-pasos-se-distinguen]].
+
+**Y el fondo real puede tener DOS capas, no una** (22-ago): el mismo aviso translúcido se pintaba en dos
+sitios — sobre `--bg` en un formulario, y **dentro** de otra caja cuyo fondo era `color-mix(--danger 8%,
+--bg-elev)`, con `--bg-elev` también translúcido. La spec de maqueta medía solo la primera y daba verde
+para las dos. Regla: la maqueta reproduce el **anidamiento** del componente, no solo su markup, y se
+compone de atrás hacia delante (cuerpo → caja → aviso).
+Y se comprueba que el caso nuevo **discrimina por su cuenta**: mutando el fondo de la caja intermedia,
+el caso anidado tiene que morir y el plano sobrevivir. Si mueren los dos, la mutación no probó nada
+del anidamiento; si no muere ninguno, el caso nuevo no mide.
