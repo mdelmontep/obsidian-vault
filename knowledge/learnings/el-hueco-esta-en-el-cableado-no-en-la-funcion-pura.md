@@ -66,3 +66,13 @@ la mutación murió (`4 failed | 50 passed`).
 estrecha**, no un hueco — antes de acusar, amplía a los de conducta; *(b)* un candado que asevera la
 **forma** del fuente y otro que asevera la **conducta** cubren cosas distintas, y el estructural
 **solo** dejaría el cableado sin vigilar el día que alguien borre los de conducta.
+
+**Sexta vez (22-ago, FacturaIA #2115) y ya no en un arnés, sino en una feature de producto.** Un
+cuadre nuevo tenía tests con dientes para la función pura y para el loader que la alimenta. El
+cableado era **un `push` a la lista de salida**: `...(cuadre ? [cuadre] : [])`. Borrándolo se apaga
+el aviso para el usuario — la feature entera — y pasaron las **14.872** pruebas del repo. No fue una
+selección estrecha: se comprobó con la suite completa, precisamente porque filtrar por carpeta habría
+dado el mismo verde por el motivo equivocado. 👉 En una feature, el cableado no es un `main()`: es
+**el punto donde el resultado entra en la estructura que alguien lee**. Y el test que lo cubre tiene
+que mirar la **fila persistida**, no el retorno del calculador: el bug perseguido era justo que el
+valor no llegara a guardarse.

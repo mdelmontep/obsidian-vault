@@ -55,3 +55,15 @@ difiere»* cuando lo que iba a afirmar era *«factura marcada **cobrada** cuyo i
 puesto y la consulta corría bien: lo que no coincidía era el enunciado. Antes de citar un número,
 **leer la consulta como frase y comprobar que es la frase que vas a publicar** →
 [[una-medicion-correcta-puede-tener-el-alcance-de-mas]].
+
+**Cuarta reincidencia (22-ago, FacturaIA) y el script no la cazó porque la consulta no fue mía.** Un
+informe de auditoría dijo «~52 fichas en producción con el país en texto libre» y lo repetí sin
+volver a medir. Al agrupar por `is_test`: **todo estaba en orgs de prueba** (~850 fichas) salvo
+**una** real, y esa el código ya la resolvía bien. O sea, **cero víctimas**, no 52. El fallo era real
+y latente, pero se estaba priorizando como incendio.
+
+Lo nuevo respecto a las tres anteriores: `scripts/medir-prod.sh` **no protege de una cifra que llega
+en un documento**. El trinquete vigila lo que tú consultas, no lo que citas. Y la magnitud no es un
+adorno: decide el orden del día. Ese mismo día el orden real salió **invertido** — los dos hallazgos
+que sonaban graves no tenían víctimas, y el que sí las tenía apareció de rebote y no estaba en el
+plan. 👉 Antes de dejar que una cifra ordene el trabajo, **remídela tú, aunque venga escrita**.
