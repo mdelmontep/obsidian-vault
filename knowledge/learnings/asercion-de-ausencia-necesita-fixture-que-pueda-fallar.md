@@ -36,3 +36,9 @@ los ficheros sin trackear, o sea que estaba verde sobre lo único que tenía que
 Formulación corta que cubre las tres: **un guard que puede pasar sin haber examinado nada es verde
 por construcción; se prueba con el caso que DEBE bloquear, no con los que deben pasar.**
 
+Tercer caso del mismo día y el más traicionero, porque la fuente estaba envenenada: un `git status`
+de untracked devolvió 0 ficheros en un worktree que SÍ tenía trabajo dentro — el índice corrupto
+marcaba el repo entero como añadido y enmascaraba el fichero, que solo apareció al resetear el
+índice. **Un chequeo que consulta una fuente ya dañada no verifica: tranquiliza.** Antes de concluir
+«no hay nada», comprobar que el instrumento está sano.
+
