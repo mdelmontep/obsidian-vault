@@ -18,6 +18,35 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## 22-ago-2026 · el arnés, los casts y el smoke que sacó el #2100
+
+- **#2096**: ningún hook corría `vitest`. `npm run gate` (lint && typecheck && test && build) solo se
+  corría a mano, así que «hooks en verde» no incluía los tests — y por eso #2077 dejó `main` en
+  `1 failed | 14613 passed` (arreglado en #2094). La suite corre ya en `pre-push`, antes del build.
+  Probado con un test roto sembrado en un fichero EXISTENTE: uno nuevo aborta antes, en el check de
+  deriva del grafo. De paso, `if ! cmd; then rc=$?` capturaba 0 en los dos bloques.
+  → [[pre-push-que-typechequea-con-next-build-no-mira-los-tests]]
+- **#2097**: tres casts `as unknown as` con el mismo comentario falso («`billing_accounts` aún no está
+  en los tipos generados»). Uno sobraba; otro tapaba que el `select` estaba concatenado y supabase-js
+  pierde la inferencia; el tercero se queda, con su motivo real escrito.
+  → [[supabase-js-select-con-embeds-necesita-string-literal-no-concatenado]]
+- **#2098**: la gobernanza listaba como deuda prioritaria un `pre-commit` que ya corría lint+typecheck.
+- **#2099 / #1919**: `supabase start` sí aplica las 746 y siembra; muere levantando `vector` con colima
+  y al caerse tira el stack. `-x vector` → ec=0. La causa declarada en #1919 (mig 643) era falsa.
+  → [[supabase-start-colima-macos-vector-container-falla]]
+- **Smoke en prod** (navegador): #2080a, #2085a, #2085b, #2087 y #2088 verdes; #2077, #2079 y #2080b no
+  alcanzables con los datos de prod. Salió el **#2100**.
+  → [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]]
+
+## 21/22-ago-2026 · tandas cerradas retiradas del NOW
+
+- 🟢 **Cerradas: growth/contenido/cookies (7 PRs, 21-ago) · spec #1908 (queda #1959, sin urgencia) · empaquetado ola 5 (quedan #1813 y #1936)** — **Tuyo (pre-campaña)**: abogado ADR-023 + Safari ITP; token Meta ~10-oct. Detalle → [[facturaia-historico-detallado]] · [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]] · [[gate-que-exige-el-artefacto-a-la-fase-que-lo-produce-es-deadlock]]
+
+## 22-ago-2026 · multidivisa recibidas, cierre del área
+
+- Sin filas congeladas en prod, barrido diario verde a las 04:20 y el aviso de desvío >5 % en pantalla (#2089-#2092). Del S4 quedó solo la notificación en campanita. → [[facturaia-multidivisa-recibidas]] · [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
+- Conciliación: 0 discrepancias mirror↔N:N, 0 huérfanas y 0 sobre-cobros (#1932/#1979).
+
 ## 18-ago-2026 (noche) — once PRs en el día, y los dos incidentes los causé con herramientas del repo
 
 Segunda tanda: **#1882** (trinquete `series-formato-guard`), **#1883** (tipos al día + `gen:types`

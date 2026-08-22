@@ -259,6 +259,11 @@ tags: [home, archivo]
 
 - 2026-08-03 · TuFacturaIA · cerrados #1457 (fecha del OCR), #1459 (OOM del gate del runner), #132 (#1464) y #133 (#1491, en prod)
 
+## 2026-08-21/22 · TuFacturaIA
+
+- 🟢 **TuFacturaIA — tanda growth/contenido/cookies CERRADA: 7 PRs en prod (21-ago)** — menú admin + campos con caja, cookies retirables en la web, el 401 de clips (proxy truncando a 10 MB), contenido-16, deadlock del planificador + «Generar ahora» honesto + edición antes de aprobar, y quitar límites con auditoría. **Tuyo (sin prisa)**: abogado ADR-023 + Safari ITP antes de encender la campaña; mañana mirar el run de las 03:20. → [[facturaia]] · [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]]
+- 🟢 **TuFacturaIA — contenido: track de la spec #1908 CERRADO (20-ago)** — queda solo #1959 (Revideo), sin urgencia. → [[facturaia]] · [[drawtext-no-ajusta-al-ancho-y-el-ancho-se-mide-con-bbox]]
+
 ## 2026-05-21
 
 - TuFacturaIA — UX anular factura desde menú ⋯ de fila `/emitidas` (commit `270d110`, componente reutilizable `anular-confirm-modal.tsx`)

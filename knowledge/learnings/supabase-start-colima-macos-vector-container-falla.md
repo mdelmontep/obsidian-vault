@@ -16,14 +16,15 @@ Studio incluidos), aunque el replay de migraciones ya haya terminado bien. Reint
 `supabase start` o `colima restart` no lo arregla (es un límite del mount virtiofs, no algo
 transitorio).
 
-Fix: crear un `supabase/config.toml` temporal (NUNCA commitear, el repo no lo trae por
-defecto) con:
+**Fix corto (preferido, medido 22-ago): `npx supabase start -x vector`.** Un flag, nada que
+crear ni borrar. Se pierden Studio→Logs y `supabase logs`, que no hacen falta para la suite.
 
-```toml
-project_id = "facturaia"
-[analytics]
-enabled = false
-```
+**Y cuidado con el diagnóstico**: al fallar, `supabase start` hace `Stopping containers...` y tira
+el stack, así que el error se lee como «no arranca la base local» cuando las migraciones habían
+pasado ENTERAS y había llegado al `seed`. Eso mandó al issue #1919 de TuFacturaIA cuatro días con
+una causa falsa («la mig 643 aborta»). Antes de culpar a una migración, buscar el `vector` al final
+del log.
 
-Con eso `supabase start` levanta DB+API+Storage sin el contenedor `vector` y permite correr
-tests de integración reales contra Postgres local. Borrar el archivo al terminar.
+Fix alternativo (si además molesta analytics): `supabase/config.toml` con
+`[analytics] enabled = false`. En TuFacturaIA ya existe uno commiteado (`project_id = "fia-dbtest"`,
+puertos 544xx), así que el «el repo no lo trae» de la versión vieja de esta nota ya no aplica.
