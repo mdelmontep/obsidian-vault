@@ -35,6 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🔴 **Los PDF de factura no tienen copia de seguridad de ningún tipo (#1641) — falta crear el bucket** (medido 22-ago). `tufacturaia-storage-backup` **no existe**: hay que crearlo en la consola de Backblaze **sin Object Lock** y pegar bucket + Application Key en 1Password `Backblaze B2 · tufacturaia-storage-backup-writer`. Hasta entonces `npm run backups:storage:verificar` sale rojo contra el centinela `PEGAR_AQUI`. Es un bucket DISTINTO del WORM fiscal, que sí está activo. Detalle: `backup-restore-runbook.md:169`.
 - 🔴 **Lo que no está en `docker-compose.yml` no llega al contenedor (20-ago, #1993)** — WhatsApp 8 días tirando mensajes al suelo y el cifrado de IBAN nunca activo (64/68 IBAN sin cifrar: el cutover B2 los dejaría en blanco). **Queda**: el trinquete `process.env` vs `environment:` (#1984, lo único que cierra la clase), un WhatsApp real con factura y una escritura que confirme el cifrado **antes** de tocar B2. → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
 - 🟠 **#1776**: se reduce a `preferred_locales:['es']` y cierra con el encendido de #1778 (0 customers reales).
 - 🟠 **#1778: PR 1-3 EN PROD, flag `FACTURAS_SUSCRIPCION_PROPIAS` APAGADA (20-ago)** — migs 708/709 verificadas; corregido un error fiscal del PR 2 (reverse charge UE B2B se emitía como `E5` siendo **no sujeta**, N2 → #1998). **Queda**: PR 4 (encender + smoke), PR 5 (devoluciones/disputas) y modelar N2 (#1994). Sin urgencia: 1 cliente live y es ES. → [[codigo-de-exencion-no-expresa-una-operacion-no-sujeta]]
@@ -120,7 +121,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
     - ~~**Stripe price IDs** crear~~ — _verificado 2026-06-22: el add-on **Centro Fiscal IA 14,90€/mes + 154,80€/año YA existe** en Stripe LIVE_ (`prod_UcjNQFyEkZ84eM`). Planes 19/49/99 + anual también live. Cubierto.
     - **Auditoría externa pre-beta** REAF 3k + abogado IT 4k + pentest 5k = 10-15k€ total.
 <!-- Dani: DNS tufacturaia.com DNS-only resuelto 2026-05-16, SSL OK en app. y n8n. -->
-- **[ACCIÓN MANU — consola Backblaze] El bucket `tufacturaia-storage-backup` NO existe** (medido 22-ago). Documentado como pendiente en `docs/architecture/backup-restore-runbook.md:169`. Crearlo **sin Object Lock** y pegar bucket + Application Key en 1Password `Backblaze B2 · tufacturaia-storage-backup-writer`. Hasta entonces `npm run backups:storage:verificar` sale rojo contra el centinela `PEGAR_AQUI` y **#1641 (los PDF de factura sin copia de seguridad de ningún tipo) sigue bloqueado**. Ojo: es un bucket distinto del WORM fiscal, que sí existe.
 - **Dani + Gonzalo**: subir certificado P12 por org en Ajustes → VERIFACTU. Sin él no se envían facturas a AEAT y aparece error en dashboard
 <!-- Meta plantilla otp_facturaia APPROVED 2026-05-16 (language es_ES). Bloqueo cerrado. -->
 
