@@ -31,6 +31,15 @@ PostgREST), no es un gate.
   día. Fix: extraer el predicado a una función y probarlo por comportamiento; al test de fuente le
   queda medir el CABLEADO, que es lo único que sabe medir.
 
+- **Tercera vez con la misma forma, y mi arreglo fue el mismo error otra vez** (22-ago, guard
+  `gen:types:check` del `pre-push`). El test exigía tres cadenas presentes en el hook, así que pasaba
+  con `errors=1` cambiado a `errors=0`, con la condición de disparo en `if false` y con las ramas
+  INVERTIDAS (bloquear cuando no se puede comprobar, dejar pasar la deriva real). Mi primer parche
+  añadió regex sobre el texto del hook: seguía midiendo la fuente. **Lo que sí discrimina: ejecutar el
+  bloque real del hook con `bash` y un `npm` de mentira en el PATH** que emite las cadenas exactas del
+  script, y asertar el `errors` con el que sale. Un hook de shell se puede probar por comportamiento
+  sin red y sin base: solo hay que falsificar lo que invoca.
+
 **Y el arnés E2E de este repo tiene la misma forma a otra escala**: comprueba que *algo* responde en
 `baseURL`, no que responda *tu* checkout. Con `.env.test` fijando el puerto 3002 y cinco worktrees
 vivos, toda la suite medía el código de otra rama sin que nada lo dijera, porque lo que anota el setup

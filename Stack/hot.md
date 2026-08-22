@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
 - **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]
 - **Un fallo transitorio que ESCRIBES se lee luego como veredicto** — enum con el porqué + barrido que lo deshiele, y el catálogo del tercero se PREGUNTA (no se declara). Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
 - **«SIN VÍCTIMA» tiene tres lecturas, no dos** — hueco de test, mutante equivalente, o **guard equivocado**: preguntar qué entrada distinguiría las dos versiones antes de escribir el test que falta. Ver [[un-mutante-sin-victima-tambien-puede-ser-un-guard-equivocado]]

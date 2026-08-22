@@ -17,6 +17,11 @@ Leer solo el final (o un `| tail`) da por subido algo que no existe en el remoto
 - El riesgo se multiplica con hooks `pre-push` lentos (lint+typecheck+build): el push tarda minutos, se lanza en background y la salida se mira de refilón.
 - Y `git ls-remote` **también** puede fallar por red (`SSL_ERROR_SYSCALL`) devolviendo vacío: un remoto vacío puede ser «no existe» o «no pude preguntar». Reintentar antes de concluir.
 
+- Reincidencia el 22-ago con el wrapper que la propia nota predecía: `git push > log 2>&1; echo "exit=$?"`
+  lanzado en segundo plano. El aviso del arnés dijo **«completed (exit code 0)»** — ese 0 es del
+  wrapper, no del push, y el `echo` fue a un stdout que no se capturó. El remoto siguió en la punta
+  vieja. Lo cazó comparar SHAs, no leer el exit.
+
 Mismo patrón que [[push-por-pipe-oculta-el-abort-del-pre-push-y-el-merge-squashea-punta-vieja]] pero con otra causa: ahí la culpa era del pipe, aquí de una línea de éxito impresa después del fallo.
 
 Relacionado: [[facturaia]]
