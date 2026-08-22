@@ -25,3 +25,14 @@ en guards de filtrado, poblar la **matriz entera** y usar `toEqual([lo mío])`, 
 `toContain`; (3) verificar rompiendo el guard (quitar el `owner_user_id` del `WHERE`); (4)
 si un assert nuevo se pone rojo «donde no debería», sospechar del fixture antes que de ti.
 Ver [[test-verde-puede-codificar-el-bug-como-esperado]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]].
+
+**22-ago, la variante del entorno**: un trinquete que afirmaba «no queda ninguna `GIT_*` viva en
+`process.env`» pasa sobre un conjunto VACÍO en cualquier shell que no traiga ninguna — verde por no
+medir nada (en la mía solo había `GIT_EDITOR`, y de ahí salió el hallazgo). Fix: el `setup` deja
+constancia en `globalThis` de que corrió y el test exige las dos cosas. Misma familia, otro caso del
+mismo día: un guard que comparaba con `git diff --name-only` ANTES de que existiera el commit no veía
+los ficheros sin trackear, o sea que estaba verde sobre lo único que tenía que bloquear.
+
+Formulación corta que cubre las tres: **un guard que puede pasar sin haber examinado nada es verde
+por construcción; se prueba con el caso que DEBE bloquear, no con los que deben pasar.**
+

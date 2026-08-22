@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **El `pre-push` de un worktree ENLAZADO exporta `GIT_DIR`** — y con él puesto, el `cwd` de un fixture no aísla nada: la suite escribe en el repo real. Se limpia `GIT_*` en el `setup`, no llamada a llamada. Ver [[git-toma-destino-e-identidad-del-entorno-no-del-cwd]]
 - **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
 - **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]
 - **Un fallo transitorio que ESCRIBES se lee luego como veredicto** — enum con el porqué + barrido que lo deshiele, y el catálogo del tercero se PREGUNTA (no se declara). Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
