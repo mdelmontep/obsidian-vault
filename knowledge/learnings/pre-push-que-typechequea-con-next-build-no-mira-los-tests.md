@@ -21,6 +21,15 @@ siguientes bloqueadas al rebasar encima.
 - Antes de mergear una rama sin commits nuevos: `npm run typecheck` a mano.
 - El arreglo de verdad es que el hook corra el typecheck completo, no el de `next build`.
 
+**CERRADO el 22-ago (facturaia #2096): la suite ya corre en `pre-push`.** Hasta ese día los
+hooks cubrían tres de las cuatro etapas de `npm run gate` — `grep -nE "vitest|npm run test"
+.githooks/*` no devolvía NADA —, así que «push con los hooks en verde» no significaba que los
+tests pasaran, y esa frase se dijo en una tanda de merges. El coste medido: el merge de #2077
+dejó `main` con `1 failed | 14613 passed` y nadie lo vio (sin CI, y el squash no pasa por
+ningún gate). Se arregló el síntoma en #2094 y la causa en #2096. Va antes del build, que es
+más caro y falla más tarde. No sube al `pre-commit`: ya se pasa del timeout del shell de los
+agentes.
+
 Relacionado: [[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]] · y el agujero mayor:
 el `pre-push` no EJECUTA los tests, así que los guards estructurales solo salen en la suite
 sobre `main` mergeado → [[suite-filtrada-por-carpetas-del-pr-no-ve-los-guards-de-arquitectura]].
