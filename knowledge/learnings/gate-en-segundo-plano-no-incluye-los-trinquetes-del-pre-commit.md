@@ -28,3 +28,12 @@ hecho con `--no-verify`. Ruta absoluta (`$(git rev-parse --show-toplevel)`), o e
 desde cualquier cwd que no sea la raíz y el bloque degrada a no-op en silencio. Ver
 [[un-guard-envejece-por-partes-arregla-una-regla-y-sus-hermanas-siguen-rotas]] ·
 [[gate-con-ruta-relativa-no-corre-desde-subdirectorio-y-sale-verde]]
+
+**Variante peor (22-ago): el gate que corre ANTES del commit no valida lo que se publica.**
+En el runner de tickets de FacturaIA, `gate()` medía el árbol de trabajo y el commit venía
+después; entre uno y otro, `npm run deps:json` reescribía un fichero **tracked** que entraba
+en el commit sin gatear, y en la ruta de merge `mig:renumerar` mutaba, commiteaba y pusheaba
+otra vez **después** del gate. La comprobación de «punta remota == lo validado» comparaba
+contra ese HEAD posterior: no existía ningún «HEAD validado». Regla: **el gate se mide sobre
+el objeto que se publica** (commit ya hecho, `git rev-parse HEAD` guardado), no sobre el
+árbol; si algo muta después, el gate certifica algo que ya no existe.
