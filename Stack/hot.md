@@ -7,7 +7,7 @@ tags: [stack, index]
 # Hot Cache
 
 - **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]
-- **Un fallo transitorio que ESCRIBES se lee luego como veredicto** — el null de un proveedor caído queda en la fila y bloquea para siempre; reintenta en el momento de decidir, no solo mires la columna. Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
+- **Un fallo transitorio que ESCRIBES se lee luego como veredicto** — enum con el porqué + barrido que lo deshiele, y el catálogo del tercero se PREGUNTA (no se declara). Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
 - **«SIN VÍCTIMA» tiene tres lecturas, no dos** — hueco de test, mutante equivalente, o **guard equivocado**: preguntar qué entrada distinguiría las dos versiones antes de escribir el test que falta. Ver [[un-mutante-sin-victima-tambien-puede-ser-un-guard-equivocado]]
 - **El coste de Claude Code está en el tamaño de sesión, no en el CLAUDE.md** — 77 % es cache-read y el 91 % se gasta por encima de 200k. Y un `paths:` de rules dispara con `Read`, **no con Bash**. Ver [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
 - **Un hook que resuelve git en el cwd de la SESIÓN juzga otro checkout** — y renunciar (`exit 0` al ver un `cd`) lo deja decorativo justo donde importa. Ver [[hook-que-resuelve-git-en-el-cwd-de-la-sesion-juzga-el-repo-equivocado]]

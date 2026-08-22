@@ -246,3 +246,12 @@ Sprint 1 (BD+backend)  ─┬─  Sprint 2 (OCR)
 
 Sprints 1 y 2 pueden ejecutarse en paralelo (archivos disjoint).
 Sprint 3 depende de Sprint 1. Sprint 4 depende de 2 y 3.
+
+## Estado 22-ago-2026 (post-#2089/#2090/#2091)
+
+- S1-S3.5 en prod desde may-2026 (mig 187). Lo que faltaba era la **resiliencia**, no el modelo.
+- `tipo_cambio_fuente` ya no colapsa cinco fallos en uno: se distingue transitorio de permanente, y hay barrido diario (`fx-reintentar-pendientes`) + RPC `fx_aplicar_divisa_pendiente` (mig 740) + UI manual en panel de ingesta, ficha y acción masiva.
+- La cobertura de divisas del BCE se **consulta** (`GET /v1/currencies`, caché 12 h), ya no se declara a mano: la lista escrita estaba mal por dos lados (ILS/KRW sí, BGN ya no).
+- Queda del S4: aviso cuando el cambio se desvía >5 % y el cutover SSOT de WhatsApp.
+- Regla fiscal intacta: el cambio es el de la **fecha de devengo** (ADR-024), nunca el de hoy.
+- Lecciones del cierre: [[el-arreglo-masivo-borra-el-escenario-donde-probar-la-interfaz]] · [[un-color-literal-no-theme-aware-a-proposito-es-un-color-roto-en-el-otro-tema]] · [[un-catalogo-de-capacidad-de-un-tercero-escrito-a-mano-miente-en-silencio]]
