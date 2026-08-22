@@ -30,3 +30,5 @@ compone de atrás hacia delante (cuerpo → caja → aviso).
 Y se comprueba que el caso nuevo **discrimina por su cuenta**: mutando el fondo de la caja intermedia,
 el caso anidado tiene que morir y el plano sobrevivir. Si mueren los dos, la mutación no probó nada
 del anidamiento; si no muere ninguno, el caso nuevo no mide.
+
+Y cuando la maqueta no basta porque el estado que dispara la UI no existe en prod: **reescribir la RESPUESTA en el navegador, no la fila en la base** (22-ago). `agent-browser --init-script` engancha un `window.fetch` que solo toca los GET del listado; componente, CSS y llamadas de red siguen siendo los reales, la base queda intacta y el guardarraíl de escritura en prod no hace falta rodearlo. Ahí el fondo compuesto tenía 4 capas, no las 2 de la maqueta.
