@@ -657,3 +657,38 @@ Contrastada con NIST SP 800-38D/57, OWASP (Crypto/Secrets/Key/Password), RGPD ar
 - **Pendiente:** A3 E2E de sesión (cambio tel→email revoke; no automatizable, mecanismo ya verificado en BD/RPC) · Gated orden estricto: B1 backfill prod → A7 matching por bidx → B2 cutover (**+ DROP `token` fiscal**).
 - Learnings: [[cutover-token-hash-zero-downtime-expand-contract]] · [[server-component-no-puede-llamar-funcion-use-client]] · [[cifrado-columna-dual-write-degrada]] · [[blind-index-scoped-por-tenant]] · [[supabase-pooler-caido-aplicar-ddl-via-mcp]] · [[aplicar-migracion-por-psql-y-registrar-version-cuando-el-cli-supabase-esta-bloqueado]].
 
+
+## 2026-08-23 — el cuerpo de un error: cerrado el `detail` (#2131) y su hermano `message`/`error` (#2138)
+
+Dos PRs encadenados, los dos en prod: **#2140** (`5659d03bd`) y **#2146** (`600c9f6fb`).
+
+- **#2131 (`detail`)** — el `detail` que se pinta llevaba el texto de Postgres, de Stripe y el
+  `flatten()` de Zod. El arreglo salió de UN emisor (`handleApiError` → `{ error: 'Error interno',
+  detail: FRASE_ERROR_INTERNO, causa: message }`) y las 132 rutas que lo llaman heredaron la
+  decisión. Candado nuevo, `src/lib/errors/__tests__/detail-no-lleva-lo-interno.test.ts`, **por
+  ocurrencia y sin lista de excepciones**: de 239 sitios en 152 ficheros a cero. Sus cuatro
+  corolarios salieron de EJECUTAR el candado, no de leerlo: el alias de variable (21 sitios, entre
+  ellos `cron/track.ts`), `fraseDeDominio` dentro de un `instanceof Error` (el candado bendecía lo
+  que dice bloquear), nadie pinta `causa`, y **una ruta sin credencial no puede poner `causa`** —
+  conjunto derivado de `isServiceRoute` + `src/lib/api/perimetro.ts`, nunca escrito a mano.
+- **#2138 (`message` y `error`)** — el campo de al lado. Aquí **no** se mide por ocurrencia: la
+  mayoría de los `message:` son legítimos, así que la sexta aserción mide solo el subconjunto que
+  sale de una EXCEPCIÓN y solo en los cuerpos que se EMITEN (sin esa acotación daba 150 sitios, la
+  mayoría columnas de BD llamadas `error` y discriminantes internos). Cuatro escapes, los cuatro
+  derivados: narrowing de dominio (en la rama o en la expresión), humanizador, puerta de admin, y un
+  `error` crudo con un `detail` que sí trae frase — el caso del fiscal, donde `error` ES el
+  discriminante. Arreglados 16 sitios de crudo de Postgres, dos `new ApiError` de `/api/v1/*`, seis
+  rutas que mandaban la prosa inglesa de Zod al campo pintado (a `campos` con `flatten()`), y el
+  detalle del recordatorio masivo del copiloto, que volvía al LLM con el texto de Postgres dentro.
+- **El hallazgo que más valía era una frase de prosa.** El gotchas decía «Nunca solo en `message`,
+  que ningún componente lee» y era falso: 33 lecturas en 17 ficheros de pantalla, y
+  `src/components/obras/http-client.ts:52` hace `json.message || json.error` —o sea que `message`
+  **gana** a `error`— con 16 ficheros colgando. Corregida con el comando que la reproduce al lado.
+- **Dos guards que no vigilaban.** `humanizeToolError` filtraba con `^[a-zA-Z]+_failed:` y dejaba
+  pasar 3 de los 16 prefijos reales por llevar `_` en el nombre. Y el atajo de rendimiento del propio
+  candado solo miraba la forma de literal de objeto, así que un fichero cuyo único emisor era
+  posicional (`errorJson(frase, status)`) salía sin medirse: lo destapó `mutate` con **SIN VÍCTIMA**
+  estando el candado en verde. Cuatro mutaciones para probar los dientes.
+- Learnings: [[el-atajo-del-escaner-excluye-la-forma-que-nadie-penso-medir]] ·
+  [[un-patron-sobre-nombres-generados-se-enumera-no-se-imagina]] ·
+  [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
