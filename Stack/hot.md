@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **El orden del `||` decide el copy, no quién lo revisó** — `detail || error || 'frase'` tapa el texto del cliente con el error interno. Ver [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
 - **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
 - **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]
 - **Un fallo transitorio que ESCRIBES se lee luego como veredicto** — enum con el porqué + barrido que lo deshiele, y el catálogo del tercero se PREGUNTA (no se declara). Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]

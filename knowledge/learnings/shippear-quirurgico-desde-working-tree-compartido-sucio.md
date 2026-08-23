@@ -10,7 +10,14 @@ Patrón: worktree desde `origin/main` + por cada archivo modificado `git diff or
 - diff 0 → la copia del working tree es segura wholesale (base idéntica, solo tus cambios).
 - diff ≠ 0 (caso `globals.css` con glass staged) → re-aplicar solo tu hunk a mano en el worktree.
 
-Gotchas (caso real TuFacturaIA 2026-06-12, feature tickets feedback):
-- La sesión paralela puede **commitear tu trabajo uncommitted** y renumerar tu migración (`43fae46`, 252→254). Al volver, re-verificar con `git status` + `git ls-files` + `git log` antes de "limpiar duplicados" — pueden ya no existir o estar tracked.
-- Duplicados untracked idénticos a main bloquean merges futuros ("would be overwritten by merge") si nadie los commitea.
-- Re-verificar lint/typecheck/build EN el worktree (el contenido difiere del branch donde testeaste).
+Gotchas (TuFacturaIA 12-jun): la paralela puede commitear tu trabajo uncommitted
+y renumerar tu migración (`43fae46`, 252→254) — re-verificar `status`/`ls-files`/`log`
+antes de "limpiar duplicados"; y re-correr lint/typecheck/build EN el worktree.
+
+**Si son 1-2 ficheros, el worktree sobra: plumbing** (23-ago, cambio de una línea de doc).
+`git hash-object -w <f>` → índice temporal (`GIT_INDEX_FILE=… read-tree origin/main` +
+`update-index --cacheinfo`) → `write-tree` → `commit-tree -p origin/main` → `update-ref` →
+push. No toca HEAD, ni el índice real, ni el árbol del otro; el `pre-push` sí corre porque
+sale del checkout que ya tiene `node_modules` (en un worktree nuevo muere en `vitest: command
+not found`). Luego devolver el fichero con una **edición inversa**, no `git checkout --`.
+Avisar por SendMessage de qué `M` del `git status` es tuyo: la paralela commitea con `-a`.
