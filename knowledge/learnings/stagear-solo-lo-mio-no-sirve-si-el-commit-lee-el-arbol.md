@@ -27,4 +27,14 @@ compartido no ve el fichero modificado en ningún momento, así que no hay venta
 pueda leerlo a medias ni en la que un `commit` ajeno se lo lleve. Con eso el ritual del paso 6 sobra:
 no hay nada que restaurar.
 
+Y le falta la otra mitad al fallo, medida esa misma noche: el ritual **también deja el índice cargado**
+con la foto vieja, y ahí se queda, porque `vault-commit` no lo toca ni para tus propias rutas. Se
+presenta raro y por eso engaña: los ficheros salen a la vez como `D ` (el índice los da por borrados) y
+como `??` (el árbol los tiene, pero sin entrada en el índice git los lee como sin trackear). Un `git
+commit` a secas ahí no guarda nada nuevo: **retrocede**. En el caso real eran 138 líneas y tres
+learnings enteros, uno de ellos este. Se arregla con `git reset` **a secas** —nunca `--hard`, nunca
+`clean`, que con ese estado se llevan los tres sin dejar blob que rescatar— y se comprueba con
+`git status --short` vacío y `git ls-files` devolviéndolos. Cierre de sesión en un repo compartido:
+deja el índice como lo encontraste, no solo el árbol.
+
 Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]] · [[el-indice-de-git-es-compartido-entre-sesiones-como-el-arbol]]

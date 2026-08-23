@@ -14,4 +14,13 @@ Fix (antes de implementar cualquier follow-up):
 2. Lee la VERDAD de main con `git show origin/main:<path>`, no del working tree.
 3. `git merge-base --is-ancestor <commit> origin/main && echo EN-MAIN` — ¿el trabajo ya está mergeado?
 
+**Y no hace falta estar en una rama ajena: en `main` también lees viejo.** El checkout principal puede
+estar N commits por detrás y la métrica que usamos para «no me queda nada por subir»,
+`git log origin/main..HEAD` vacía, **es ciega a eso** — mide una dirección. Lo que delata el atraso es
+la contraria, `git log HEAD..origin/main`. Caso 23-ago (facturaia): el raíz estaba a 3 commits, grepeé
+`src/lib/api-error.ts` y describí una versión que ya no existía; la sesión paralela cayó en lo mismo el
+mismo minuto. Con worktrees vivos `git-guard` impide mover HEAD en el raíz, así que **la ceguera es
+permanente, no un despiste**: para AFIRMAR qué dice un fichero de main desde ahí, `git show
+origin/main:<ruta>`.
+
 Ver [[git-diff-vs-main-drifteado-usar-merge-base]] · [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[pr-review-ya-resuelta-por-el-reviewer-mismo]].
