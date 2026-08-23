@@ -37,5 +37,24 @@ Corolario 2 (2026-08-18) — **dos COTAS del mecanismo, no del patrón**, medida
    así un compuesto con algo detrás sigue bloqueándose. Más un **aviso** (no bloqueo) si la copia no es
    la de `main`: delegar en la de `main` haría imposible desarrollar el propio hook.
 
+Corolario 3 (2026-08-23) — **anclar a posición no basta si el regex del verbo es frágil**. El filtro
+`^git( -[^ ]+)* commit\b` de `mutate-guard` se saltaba con **once** formas, todas `exit 0` con
+código+test y sin víctima, y ninguna cubierta por test: `git  commit` (**dos espacios**),
+`git<TAB>commit`, `FOO=1 git commit`, `command`/`eval`/`timeout`/`\git`, `git -C . commit`,
+`git -c user.name=a commit` (opción global **con argumento separado**: rompe el `( -[^ ]+)*` porque el
+token siguiente no empieza por `-`) y `git --no-pager commit`. Un espacio de más lo apagaba. Normaliza
+(espacios y tabs colapsados, prefijos de entorno y envoltorios pelados) y compara el subcomando por
+**token exacto** — ojo, eso hace que `git commit-tree` deje de disparar, que es correcto pero es un
+cambio de comportamiento con su test.
+
+Y dos cotas del mecanismo que salieron al arreglarlo:
+- **Tokenizar cuesta, y lo paga cada llamada.** Un `sed` por segmento con `sed` partiendo por líneas dio
+  **1.299 ms** en un heredoc de 500 líneas (`cat > f <<'PY'`, el gesto de escribir un fichero) contra
+  14 ms del hook viejo. Es `PreToolUse(Bash)`: se paga en TODAS las llamadas, no en los commits. Fix:
+  pre-filtro barato antes del bucle (si el comando no contiene la cadena del verbo, salir) — quedó por
+  debajo del original, 8 vs 9 ms.
+- **Saltar el cuerpo de un heredoc no es perf, es cierre de un bypass**: un `cd` escrito DENTRO del
+  fichero que se está creando movía la medición a otro repo.
+
 Ver [[rebase-continue-estripa-las-lineas-del-mensaje-que-empiezan-por-almohadilla]] ·
 [[un-remedio-corrido-desde-un-checkout-viejo-repara-a-la-version-vieja]]
