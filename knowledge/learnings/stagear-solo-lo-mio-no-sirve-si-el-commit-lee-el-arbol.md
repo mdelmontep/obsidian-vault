@@ -20,4 +20,11 @@ Con una que hashea el árbol, el orden es: dejar la versión solo-mía EN EL ÁR
 la completa **después**. Y verificar por el `git show <sha> -- <ruta>` del commit ya hecho, no por
 `git diff --cached`, que mira un índice que la herramienta ignoró.
 
+Y hay una vuelta de tuerca mejor que invertir el orden, medida el mismo día por la otra sesión:
+**si el blob no tiene que existir en el árbol, no lo pongas en el árbol.** `git show origin/main:<ruta>`
+al scratchpad, editar allí, y hashear desde allí (`git hash-object <ruta-fuera-del-repo>`). El checkout
+compartido no ve el fichero modificado en ningún momento, así que no hay ventana en la que otra sesión
+pueda leerlo a medias ni en la que un `commit` ajeno se lo lleve. Con eso el ritual del paso 6 sobra:
+no hay nada que restaurar.
+
 Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]] · [[el-indice-de-git-es-compartido-entre-sesiones-como-el-arbol]]
