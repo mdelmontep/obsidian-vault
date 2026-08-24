@@ -34,7 +34,7 @@ tags: [home, prioridades]
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 - 🟢 **TuFacturaIA — tickets vaciados (21-ago) y multidivisa cerrada (22-ago, #2089-#2092)** — buscador con tildes, las 26 facturas en dólares del 13-ago, adjuntos PDF/XML, cierre del ticket al mergear y el aviso de desvío >5 %. **Tuyo**: ¿respondo también a #89, #129 y #134? Están arreglados y su hilo sigue vacío. → [[facturaia]] · [[cerrar-un-ticket-automaticamente-no-es-responder-a-quien-lo-abrio]]
 - 🟠 **Laserys — mismo fallo del número fijado, sin tocar** — `+34919935214` sirve la v6 con la v14 publicada. **Tuyo el OK**: es el último de la agencia así. → [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
-- 🔴 **TODOS los agentes deben identificarse como IA (art. 50, vigente desde el 2-ago-2026)** — hecho solo en Elphis (17-ago, voz verificada). Faltan Clínica Zen, Simarro, Tecnocloud, EcoBox, AGH, Laserys, Danny, Gesfincas y el chatbot propio. Hasta 15 M€ o 3 %, y lo nota el cliente antes que tú. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
+- 🔴 **TODOS los agentes deben identificarse como IA (art. 50, vigente desde el 2-ago-2026)** — hecho en Elphis (17-ago) y Tecnocloud (24-ago, v47, en el begin_message). Faltan Clínica Zen, Simarro, EcoBox, AGH, Laserys, Danny, Gesfincas y el chatbot propio. Hasta 15 M€ o 3 %, y lo nota el cliente antes que tú. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - 🟠 **TuFacturaIA — growth: antes de encender campaña, abogado ADR-023 + Safari ITP** (**tuyo**, sin prisa; los 7 PRs están en prod desde el 21-ago). → [[facturaia]]
 - 🟢 **TuFacturaIA — barrido: plan del 95 % escrito, staging en pie, restauración ensayada (11-ago)** — queda el gate automático (fuera de alcance: sin billing) y T1 con arranque escrito (`PROMPT-fiscal-inventario-cobros-t1.md`). **Tuyo**: bucket+key de Backblaze (copia de PDF ya aplicada, #1671). Albarán de las ostras cerrado 13/14-ago (ticket #147). → [[facturaia]]
 - 🟠 **TuFacturaIA — censo de filas densas clasificado entero (PRs #1547/#1548): quedan 15 filas por arreglar (08-ago)** — no eran 8 ni 33; el grep a mano fallaba. Issues #1540 y #1541. → [[facturaia]] §NEXT
@@ -56,7 +56,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — Supabase subido a Pro (10-jul)** — egress tumbó prod ~1h; ya no urge, vigilar uso, NO bajar a Free. [[facturaia]]
 - **TuFacturaIA — rotar secrets tras fuga Dokploy (Capa 2)** — Capa 1 cerrada (#870); rotar Supabase→Stripe→Meta. [[facturaia]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
-- 🟡 **Tecnocloud — cerrar el arreglo de voz (24-ago)** — **un push cierra el #26** (merge `f8f7f80` construido, gate verde), borrar los 2 tickets `PRUEBA NOMBRE`, vigilar 3-4 llamadas reales, FAQ a Dani/Carlos, y **sigue sin el aviso de IA (art. 50)**. → [[tecnocloud]]
+- 🟡 **Tecnocloud — dos cabos del 24-ago** — la cabecera del webhook a 1Password y borrar los 2 tickets `PRUEBA NOMBRE`. Luego vigilar 3-4 llamadas y el cuestionario de FAQ a Dani/Carlos. → [[tecnocloud]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - 🔴 **cryptobruj-bot — SIGUE en `live`: 76 h, no 32 (03-ago)** — opera `scalp-5m` (−0,515R, la peor) con 1 posición abierta; el resto en paper. **Tuyo y solo tuyo**: sin `ADMIN_TOKEN` (no está en 1Password) y con la contraseña del panel dando 401, nadie más puede pararlo. Orden: `POST /strategies/scalp-5m/stop` (corta entradas, sigue gestionando la salida) y SOLO con la posición cerrada, `TRADING_MODE=paper` + Deploy — al revés la deja huérfana. Pendiente también el nocional real en BingX. → [[cryptobruj]]
 
@@ -85,7 +85,7 @@ tags: [home, prioridades]
 | Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
 | Simarro | [[simarro]] | Voz: "Claro." parado + guard teléfono + clústeres de zona a toda la Comunidad de Madrid (17-ago) · queda responder a Dani + limpieza de test |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
-| Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v46) · #26 lista, falta 1 push · sin aviso de IA |
+| Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Voz+chat LIVE, identificados como IA y verificados con WhatsApp real (18-ago) · avisos por canal y ficha CRM completa · secretos sin rotar |
 | IET | [[iet]] | iet.es en producción · pendientes menores |

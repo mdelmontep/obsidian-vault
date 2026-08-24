@@ -23,6 +23,10 @@ de la rama iban firmados bien (`git -c user.name=… -c user.email=…`), pero e
   commit no vale — cambian; el árbol no.
 - **Verificar DESPUÉS del merge**, no antes: `git log origin/main -1 --format='%an <%ae>'`. Antes del
   merge todo cuadra y no dice nada.
+- Y la raíz de tener que firmar a mano cada commit: el repo **no tenía identidad local**, así que
+  caía en la global. Con eso, un `git rebase` conserva el AUTOR pero estampa la global como
+  COMMITTER. Se cura una vez con `git config --local user.name/user.email` (vale para todos sus
+  worktrees), no con `-c` en cada comando.
 
 Corolario: `gh pr merge --delete-branch` puede reportar «failed to run git» por el paso local de
 volver a la base (worktree que ya ocupa `main`) **con el merge remoto ya hecho** — comprobar

@@ -573,7 +573,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[write-tool-byte-nulo-en-template-literal]] — edit no casa una línea "idéntica" → revisar bytes ocultos (byte nulo) con python repr
 - [[zod-optional-rechaza-null-en-webhooks-n8n]] — zod .optional() rechaza null en webhooks externos
 
-## n8n / workflows (79)
+## n8n / workflows (80)
+- [[en-una-prueba-de-auth-lo-que-discrimina-es-el-403]] — en una prueba de auth lo que discrimina es el 403, no el 200
 - [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]] — n8n parte el mensaje de error en el primer ": " y el prefijo no llega a Slack
 - [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]] — replay de un id ya registrado ejercita SQL nuevo en prod sin disparar sus efectos
 - [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]] — $fromAI en toolCode lanza no-execution-data-available en n8n 2.15.x
@@ -882,7 +883,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]] — observabilidad nueva destapa bugs viejos en silencio
 - [[watchdog-umbral-debe-tolerar-un-tick-perdido]] — umbral de watchdog de cron debe tolerar ≥1 tick perdido (2× intervalo)
 
-## TypeScript / tooling / testing (27)
+## TypeScript / tooling / testing (28)
+- [[un-test-rojo-puede-estar-diciendo-que-dejo-de-medir]] — un test rojo puede estar diciendo que dejó de medir, no que el código esté mal
 - [[un-export-cuyo-unico-importador-es-su-test-sale-verde-en-todo]] — un export que solo importa su test está cubierto y DESCONECTADO: verde en el arnés, en tsc y en eslint
 - [[retirar-un-campo-de-una-interfaz-no-es-un-candado-los-spreads-lo-esquivan]] — el excess-property check solo mira literales: el campo vuelve por un spread con tsc en exit 0
 - [[un-guard-que-reconoce-por-nombre-envejece-con-cada-variante-nueva]] — un guard que identifica colaboradores por su NOMBRE denuncia en falso al nacer una variante, y solo lo ve la suite completa
