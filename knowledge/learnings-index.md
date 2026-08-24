@@ -654,7 +654,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[verificar-persistencia-tras-put-api-con-grep-marker-unico]] — verificar persistencia tras PUT a API con grep marker único
 - [[whatsapp-interactive-list-limites-y-row-id-pattern]] — WhatsApp Interactive List — límites Meta y patrón row.id "tipo:UUID
 
-## Auth / seguridad / multi-tenant (57)
+## Auth / seguridad / multi-tenant (58)
+- [[etiqueta-de-estado-interno-se-tapa-en-el-where-no-en-el-render]] — una etiqueta de estado interno se tapa en el where, no en el render
 - [[2fa-telefono-solo-para-canal-que-lo-usa-no-gate-global]] — verificación de teléfono/2FA debe alcanzar solo a quien usa el canal, no ser gate global…
 - [[acciones-irreversibles-no-tool-mcp-autonoma]] — acciones irreversibles no deben ser tool mcp autónoma
 - [[agent-browser-navegador-compartido-entre-sesiones-concurrentes]] — agent-browser sin --session comparte navegador/cookies con otras sesiones Claude Code con…
@@ -772,7 +773,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[whitelist-no-es-dry-run-añadir-flag-explicito]] — Whitelist ≠ dry-run — añadir flag explícito si quieres seguridad en smokes
 - [[worktree-monorepo-symlink-node-modules-anidado]] — worktree fresco de monorepo — el symlink de node_modules debe incluir el de cada paquete…
 
-## WhatsApp / voz / Meta / copiloto (52)
+## WhatsApp / voz / Meta / copiloto (53)
+- [[resumen-automatico-de-la-llamada-viene-en-ingles]] — el resumen automático de una llamada viene en inglés — no lo pongas en un campo que ve el cliente
 - [[marcador-de-dato-no-facilitado-acaba-como-dato-de-negocio]] — un marcador de "dato no facilitado" acaba como dato de negocio si no muere en el borde
 - [[anthropic-prompt-cache-prefijo-system-tools]] — anthropic prompt caching cachea por prefijo — cachear solo system+tools deja el historial…
 - [[auditar-sobre-origin-main-worktree-no-cwd-stale]] — auditar/arreglar en worktree desde origin/main, no sobre el cwd stale (o el hallazgo se i…

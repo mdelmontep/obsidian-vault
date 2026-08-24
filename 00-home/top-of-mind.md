@@ -56,7 +56,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — Supabase subido a Pro (10-jul)** — egress tumbó prod ~1h; ya no urge, vigilar uso, NO bajar a Free. [[facturaia]]
 - **TuFacturaIA — rotar secrets tras fuga Dokploy (Capa 2)** — Capa 1 cerrada (#870); rotar Supabase→Stripe→Meta. [[facturaia]]
 - **agency-portal — Pizarra/board PR #91** — review+merge Borja (aplica mig `board_comments`) + QA visual Manu local (`PORT=3002`). [[agentesia]]
-- 🟢 **Tecnocloud — el nombre del cliente ya se guarda (24-ago)** — `No facilitado` llegaba al CRM y al asunto (6 de 15 llamadas); cerrado en portal (#28), n8n y Retell v46, y la alerta de Slack ya distingue GRAVE de MENOR. **Tuyo**: las 3-4 próximas llamadas, cuestionario de FAQ a Dani/Carlos, rebase+review del #26, y **sigue sin el aviso de IA (art. 50)**. → [[tecnocloud]] · [[marcador-de-dato-no-facilitado-acaba-como-dato-de-negocio]]
+- 🟡 **Tecnocloud — cerrar el arreglo de voz (24-ago)** — **un push cierra el #26** (merge `f8f7f80` construido, gate verde), borrar los 2 tickets `PRUEBA NOMBRE`, vigilar 3-4 llamadas reales, FAQ a Dani/Carlos, y **sigue sin el aviso de IA (art. 50)**. → [[tecnocloud]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - 🔴 **cryptobruj-bot — SIGUE en `live`: 76 h, no 32 (03-ago)** — opera `scalp-5m` (−0,515R, la peor) con 1 posición abierta; el resto en paper. **Tuyo y solo tuyo**: sin `ADMIN_TOKEN` (no está en 1Password) y con la contraseña del panel dando 401, nadie más puede pararlo. Orden: `POST /strategies/scalp-5m/stop` (corta entradas, sigue gestionando la salida) y SOLO con la posición cerrada, `TRADING_MODE=paper` + Deploy — al revés la deja huérfana. Pendiente también el nocional real en BingX. → [[cryptobruj]]
 
@@ -85,7 +85,7 @@ tags: [home, prioridades]
 | Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
 | Simarro | [[simarro]] | Voz: "Claro." parado + guard teléfono + clústeres de zona a toda la Comunidad de Madrid (17-ago) · queda responder a Dani + limpieza de test |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
-| Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v46) · #26 draft, pide rebase · sin aviso de IA |
+| Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v46) · #26 lista, falta 1 push · sin aviso de IA |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Voz+chat LIVE, identificados como IA y verificados con WhatsApp real (18-ago) · avisos por canal y ficha CRM completa · secretos sin rotar |
 | IET | [[iet]] | iet.es en producción · pendientes menores |

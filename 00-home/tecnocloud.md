@@ -20,8 +20,12 @@ También tiene agente de voz Retell propio (Laura) para soporte técnico inbound
 ## Próximos hitos
 
 1. **WhatsApp en TuFacturaIA** (LATER) — obtener `phone_number_id` de Meta Business → guardar en `organizations.settings.whatsapp.phone_number_id` → webhook override en n8n receptor v2
-2. **PR #26 panel — tickets de llamadas sin registrar** (NEXT) — **sigue en draft** desde el 20-ago. El webhook `call_analyzed` solo creaba ticket si Laura invocaba `registrar_llamada`: 32% de las llamadas (25 de ellas conversaciones reales de ≥20 s) no dejaban rastro. Ahora las de ≥20 s con turno de usuario abren ticket con tag `sin clasificar`. Toca 3 líneas de `voice-call.service.ts` que ya movió el PR #28 → **necesita rebase trivial**.
-   · Ojo: `gh auth switch --user tecnocloudes` **no existe en este Mac** (solo `mdelmontep` en el keyring), aunque el CLAUDE.md del repo lo exige. Los commits se firman con `git -c`, pero el squash de la PR **no hereda esa firma** → [[github-pone-como-autor-del-squash-al-autor-de-la-pr]]
+2. **PR #26 panel — tickets de llamadas sin registrar** (NEXT) — rebasada, revisada y **con el merge ya construido**; falta SOLO el `git push origin HEAD:main` (worktree desasido `~/Projects/wt-merge26`, merge `f8f7f80` firmado `tecnocloudes`), que despliega a prod. Gate verde sobre la base nueva: lint/typecheck/test (1.621)/build en 0, y árbol del merge == árbol de la rama medida.
+   · Qué arregla: el webhook `call_analyzed` solo creaba ticket si Laura invocaba `registrar_llamada` → 32 % de las llamadas (25 de ellas de ≥20 s) no dejaban rastro. Ahora las de ≥20 s con turno de usuario abren ticket con etiqueta `sin clasificar`.
+   · La review encontró **dos defectos de cara al cliente**, los dos arreglados en la misma PR: el asunto llevaba el resumen de Retell **en inglés** (12 de 12 llamadas reales) → [[resumen-automatico-de-la-llamada-viene-en-ingles]]; y la etiqueta interna `sin clasificar` se **pintaba en el portal del cliente** → [[etiqueta-de-estado-interno-se-tapa-en-el-where-no-en-el-render]]
+   · Ojo: `gh auth switch --user tecnocloudes` **no existe en este Mac** (solo `mdelmontep` en el keyring), aunque el CLAUDE.md del repo lo exige. Se merguea en local con `--no-ff` para no perder la firma → [[github-pone-como-autor-del-squash-al-autor-de-la-pr]]
+   · Sin ejecutar: la suite de **integración** (pide `TEST_DATABASE_URL`; ni `.env` en el worktree ni daemon Docker en este Mac). Compila y typechequea, no la he visto pasar.
+   · Sucio en prod tras la prueba en vivo: 2 tickets `PRUEBA NOMBRE (ignorar)` del +34600000000 → se borran seleccionándolos en `/console/tickets` (`bulkDeleteTicketsAction`).
 3. **Vigilar las 3-4 próximas llamadas reales** — con la v46 publicada (24-ago) y sin tests de simulación en este LLM.
 
 ## Servidor DOKPLOYMANU — el Dokploy de Tecnocloud (07-ago-2026)

@@ -13,8 +13,14 @@ de la rama iban firmados bien (`git -c user.name=… -c user.email=…`), pero e
 - El autor del squash **no** se hereda de los commits: sale del autor de la PR.
 - Arreglarlo después es reescribir `main` + force push, con el deploy ya lanzado. No se arregla, se
   previene.
-- Prevención: abrir la PR con la cuenta que exige el repo, o mergear en local
-  (`git merge --squash` + commit con esa identidad + push).
+- Prevención: abrir la PR con la cuenta que exige el repo, o mergear en local. Mejor
+  `git merge --no-ff` que `--squash`: conserva la firma de **los commits de la rama** además de la
+  del merge, y GitHub marca la PR como mergeada sola (con squash el head no queda alcanzable y hay
+  que cerrarla a mano). El merge se hace en un worktree **desasido** en `origin/main`, que además
+  esquiva el guard de "no commitear en main con worktrees paralelos".
+- Si el merge llega tras un rebase, el gate se corrió sobre otra base: comprobar que lo medido es lo
+  que aterriza con `git rev-parse HEAD^{tree}` == `git rev-parse <rama>^{tree}`. Comparar shas de
+  commit no vale — cambian; el árbol no.
 - **Verificar DESPUÉS del merge**, no antes: `git log origin/main -1 --format='%an <%ae>'`. Antes del
   merge todo cuadra y no dice nada.
 
