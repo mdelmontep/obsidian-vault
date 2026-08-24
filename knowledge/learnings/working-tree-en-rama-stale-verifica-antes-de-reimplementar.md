@@ -21,6 +21,11 @@ la contraria, `git log HEAD..origin/main`. Caso 23-ago (facturaia): el raíz est
 `src/lib/api-error.ts` y describí una versión que ya no existía; la sesión paralela cayó en lo mismo el
 mismo minuto. Con worktrees vivos `git-guard` impide mover HEAD en el raíz, así que **la ceguera es
 permanente, no un despiste**: para AFIRMAR qué dice un fichero de main desde ahí, `git show
-origin/main:<ruta>`.
+origin/main:<ruta>`. Y la variante que cierra el círculo, medida esa misma
+noche por la sesión paralela: **estar EN main tampoco significa estar al día.** Hizo
+`git switch main`, grepeó la línea que buscaba y salió 0 — rama correcta, contenido viejo,
+porque `main` local iba un commit por detrás de `origin/main` y hacía falta un
+`merge --ff-only`. Las dos mitades juntas: la rama no dice nada del contenido, y la
+dirección que se mide tampoco.
 
 Ver [[git-diff-vs-main-drifteado-usar-merge-base]] · [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[pr-review-ya-resuelta-por-el-reviewer-mismo]].
