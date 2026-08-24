@@ -10,6 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟢 **agency-portal / Flota IA — ticket 010 en prod (24-ago)** — centro de agentes voz+chat; cimiento de datos + panel `/agency/agents` cerrados y verificados. **Tuyo**: pushear `feat/flota-ia-fleet-010` + PR a Borja. **Siguiente**: 011 adaptador Retell. → [[agentesia]] hito 10
 - 🟢 **Arnés — el contexto ya se ve y ya se corta (20-ago)** — 91 % del gasto pasa por encima de 200k y la barra medía sobre 1M (20 % en verde). Presupuesto 200k + `autoCompactWindow` 300k; los 4 `CLAUDE.md` grandes a `.claude/rules`, en `main`. **Tuyo**: ¿el aviso «`paths:` dispara con Read, no con Bash» baja a los 4 rules? → [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
 - 🟠 **Centro Elphis — en prod y verificado con WhatsApp real (18-ago)** — memoria, avisos por canal, ficha CRM y aviso de IA; la prueba real cerró dos que reportó Alba (se presentaba en cada mensaje, y daba horarios en vez de mandar al enlace). Sin tráfico de chat desde el 11-ago: es demanda, no avería. **Tuyo**: OK al guard para que los teléfonos `+3460000009X` no avisen a Alba (van 3 falsos), recrear en Meta `elphis_cita_link` (el "si no hay hueco, dínoslo" falta en voz), preguntar a Alba por publicidad y Doctoralia, que Enrique valide lo de las benzos, y **decidir** la cita de quien reserva en Doctoralia sin haber escrito nunca. → [[clientes/centro-elphis/index|centro-elphis]] · [[tres-canales-en-silencio-a-la-vez-es-demanda-no-averia]]
 - 🟢 **Clínica Zen — los fixes de 3 meses YA llegan a las llamadas (20-ago)** — su número servía la v54 con la v67 publicada: **28 llamadas** con el prompt viejo, y de ahí que el fix del nombre inventado «no funcionara». Corregido, diff revisado antes. **Tuyo**: mirar las próximas reservas (nombre real, dirección nueva). → [[clinica-zen]]
@@ -82,7 +83,7 @@ tags: [home, prioridades]
 | Cliente | Hub | Estado |
 |---|---|---|
 | TuFacturaIA | [[facturaia]] | Activo · NEXT/Smoke/LATER en el hub |
-| Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
+| Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing + **Flota IA** (010 en prod, 24-ago) |
 | Simarro | [[simarro]] | Voz: "Claro." parado + guard teléfono + clústeres de zona a toda la Comunidad de Madrid (17-ago) · queda responder a Dani + limpieza de test |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |

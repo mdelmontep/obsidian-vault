@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-08-07
+updated: 2026-08-24
 tags: [cliente, agentesia]
 ---
 
@@ -35,6 +35,8 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
    - **PR #99** (`feat/foco-desarrollo-a-medida`, DRAFT hasta que entre el #97) — los 16 commits del worktree: `/servicios/software-a-medida`, `/servicios/tufacturaia` con capturas reales de la app, hero con ilustración SVG interactiva, sección de redes, `/resultados` y `/casos-de-uso`. **Las dos regresiones anunciadas eran reales y están resueltas**: el titular volvía a teclearse dentro del `<h1>` (lo que cerró el #89) y las stats a mano resucitaban el "+35% Más conversión" que el #91 retiró por no tener respaldo. Ahora el H1 es estable ("Desarrollamos herramientas a medida"), los ejemplos rotan fuera del heading con `aria-hidden` y las tres cifras vuelven a `PROOF`. Integrado con **merge, no rebase** (16 commits y `HeroSection.tsx` reescrito 5 veces → un solo punto de resolución); backup previo en `backup/foco-a-medida-prerebase`. Gates: **vitest 76/76**, lint 0 errores, build SSG con las tres rutas prerenderizadas.
    - **Tuyo**: horquilla de precio de "A medida", créditos de Higgsfield para la foto que falta, desplegar `tufacturaia.com` (sigue en **404**) y decidir si el titular recupera el tecleo — si sí, hay que decidir antes qué pasa con `heading-text-integrity`. Las capturas (desktop fullPage + móvil de las 3 rutas) se arrastran a mano a un comentario del #99: `gh` no las sube.
    - Ver [[rama-que-reescribe-el-mismo-fichero-varias-veces-se-integra-con-merge]] · [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]] · [[los-tests-rojos-que-hereda-un-merge-se-clasifican-uno-a-uno]] · [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]] · [[los-audios-de-llamadas-reales-llevan-nombres-de-clientes]] · [[capturar-un-saas-para-la-web-publica-exige-mirar-la-organizacion-activa]]
+
+10. **agency-portal — Flota IA: centro de control de agentes voz+chat de todos los clientes (arrancado 24-ago)** — panel `/agency/agents` que unifica interacciones (Retell + Chatwoot/Kommo-n8n/API custom), señales deterministas de fallo con alerta Slack, y máquina de estados de conexión por agente. Plan en `issues/prd-flota-ia-fase-1.md` + tickets tracer-bullet `010`-`019` (commiteados). Documento maestro (visión fases 2-5: juez, findings, loop agéntico): artifact `cbac2f09`. **Hallazgo mayor**: el pipeline de ingesta Retell YA existe en prod (webhook + `sync-retell` + `retell_ingest_logs`) → se reutiliza, no se reconstruye. **`010` CERRADO (24-ago)**: 4 tablas nuevas (`agent_connections`/`agent_interactions`/`agent_transcripts` + `fleet_ingest_logs`) con RLS agency-only (`can_access_agency_client`), `ALTER voice_agents`/`client_agents` (`langfuse_project_id`,`prompt_version`), y `chatwoot`/`langfuse` en `credential_category`. Migración aplicada en prod (Supabase self-hosted) por pipe a `docker exec psql` + **verificada contra catálogo**; código en rama `feat/flota-ia-fleet-010` (2 commits, los 4 gates verdes) **sin pushear**. De paso: SSH root al host del portal (`185.47.13.166:5251`) ahora autorizado con `id_ed25519` de Manu (el `aia-sentry` alertó del cambio en `authorized_keys`, benigno). **Tuyo**: pushear rama + PR a Borja; decidir si retirar la clave SSH al cerrar la fase. **Siguiente**: `011` pipeline + adaptador Retell (regla dura: ningún adaptador se mergea sin ≥1 payload real de Retell como fixture).
 
 ## Infraestructura — el monitor del portal (`/agency/infrastructure`)
 
