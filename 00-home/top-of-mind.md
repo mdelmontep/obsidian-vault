@@ -10,6 +10,8 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟢 **Elphis Psicología — stack + agenda EN PIE (24-ago)** — 8 gates, purga real ×2, `psico-agenda-*` con idempotencia doble y E2E escrita. **Tuyo**: OAuth (redirect URI + Connect, bloquea E2E), password 1P «Elphis Psicologia», y sesiones SIEMPRE desde `~/Projects/elphis-psicologia`. → [[clientes/elphis-psicologia/index|elphis-psicologia]]
+
 - 🟢 **agency-portal / Flota IA — ticket 010 en prod (24-ago)** — centro de agentes voz+chat; cimiento de datos + panel `/agency/agents` cerrados y verificados. **Tuyo**: pushear `feat/flota-ia-fleet-010` + PR a Borja. **Siguiente**: 011 adaptador Retell. → [[agentesia]] hito 10
 - 🟢 **Arnés — el contexto ya se ve y ya se corta (20-ago)** — 91 % del gasto pasa por encima de 200k y la barra medía sobre 1M (20 % en verde). Presupuesto 200k + `autoCompactWindow` 300k; los 4 `CLAUDE.md` grandes a `.claude/rules`, en `main`. **Tuyo**: ¿el aviso «`paths:` dispara con Read, no con Bash» baja a los 4 rules? → [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
 - 🟠 **Centro Elphis — en prod y verificado con WhatsApp real (18-ago)** — memoria, avisos por canal, ficha CRM y aviso de IA; la prueba real cerró dos que reportó Alba (se presentaba en cada mensaje, y daba horarios en vez de mandar al enlace). Sin tráfico de chat desde el 11-ago: es demanda, no avería. **Tuyo**: OK al guard para que los teléfonos `+3460000009X` no avisen a Alba (van 3 falsos), recrear en Meta `elphis_cita_link` (el "si no hay hueco, dínoslo" falta en voz), preguntar a Alba por publicidad y Doctoralia, que Enrique valide lo de las benzos, y **decidir** la cita de quien reserva en Doctoralia sin haber escrito nunca. → [[clientes/centro-elphis/index|centro-elphis]] · [[tres-canales-en-silencio-a-la-vez-es-demanda-no-averia]]
@@ -89,6 +91,7 @@ tags: [home, prioridades]
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Voz+chat LIVE, identificados como IA y verificados con WhatsApp real (18-ago) · avisos por canal y ficha CRM completa · secretos sin rotar |
+| Elphis Psicología | [[clientes/elphis-psicologia/index\|elphis-psicologia]] | Bloque B: stack + agenda listos (24-ago) · OAuth pendiente · WhatsApp/voz esperan número+DPA |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · 🟢 **las 5 PRs del 19-ago dentro** (#941 + #1363 + #1358); abiertas solo #1302 y #1360, de Borja · 🔴 **#1349: DPA sin firmar y ZDR sin solicitar → dos acciones de panel TUYAS** · 🔴 tuyo 2 min: claves Langfuse (**#1009**) · #1361 el cron de la sonda sigue sin dueño · 82 % de la cola humana sin dueño (#1351) · 7 fallos de llamadas reales abiertos · 🆕 #1401/#1402/#1403 `ready-for-agent` |
 | Aula | [[aula]] | Propio · publicada · **repo en GitHub privado** · 115 temas / 7 lecciones · el runner escribe solo |
