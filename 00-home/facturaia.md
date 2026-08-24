@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-08-24
+updated: 2026-08-25
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,6 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🟢 **Arnés `eval:ocr` + JSON mode, en prod (25-ago, #2180)** — 15 fixtures ficticias, 17/17, <1 $; tocar el prompt exige correrlo. Un JSON vacío del modelo entraba como `listo`: guard `esLecturaSinDatos` tras la auto-orientación → `revisar` + `documento_sin_lectura`. **Queda**: 2 gaps medidos sin bloquear (multi-albarán, `confianza_moneda`) como diana de la vía (1) del auto-OCR; `PROMPT-ocr-eval-harness-y-json-mode.md` untracked (commit «ejecutado en #2180» o borrar). → [[json-mode-convierte-el-no-legible-en-json-vacio-y-el-guard-pasa-al-contenido]]
 - 🟢 **Holded fallaba en silencio desde el 15-jul y la pantalla decía «activa» (#2152, prod 24-ago)** — 11.072 fallos con `last_error` NULL: quien contaba no era quien escribía. Cerrado con #2154 (casar por nombre) y #2158 (anotarlo **y limpiarlo** al ir bien). **Queda #2160**: los 3 que fallan son dos productos de Holded homónimos — decide producto; una fila siempre roja avisa tan poco como una apagada.
 - 🟠 **Espejo de facturación en prod y sin verificar por otros ojos (#2119, mig 751)** — **queda** solo los cinco tracks de lectura de `PROMPT-continuacion-23-ago.md`. → [[facturaia-historico-detallado]] · [[un-trinquete-por-fichero-absuelve-al-que-ya-importa-el-helper]] · [[un-mock-que-ignora-los-filtros-hace-pasar-fixtures-sin-la-columna]]
 - 🟢 **El cuerpo de un error, cerrado (#2131 + #2138, prod)** — candado de 6 aserciones sin excepciones; **vivo**: no ve el estado de un componente de cliente. → [[el-atajo-del-escaner-excluye-la-forma-que-nadie-penso-medir]]
@@ -184,6 +185,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 
 ## Smoke tests pendientes
+- 🟡 **[25-ago] Foto que NO es factura por WhatsApp (#2180)** — mandar un DNI/tique ilegible a la org sandbox y ver la respuesta «No he podido leer los datos de esa foto…», la recibida en bandeja `revisar` con anomalía `documento_sin_lectura`, y que NO aparezca el trío `missing_*` con estado `listo`.
 - ✅ **[22-ago] El aviso de «Ejecutar ahora» de un cron, VISTO en prod (#2104)** — Manuel pulsó `system-health-sweep` en prod y confirmó: el diálogo nombra el cron, el run quedó en `cron_runs` como `success` y cero notificaciones. La verificación destapó que `triggered_by` decía `dokploy` también para los disparos manuales → corregido en #2108 (cabecera `x-cron-origen`, tres casos verificados por mutación).
 - ✅ **[22-ago] Smoke en prod de la tanda del día (navegador, no curl)** — verdes: #2080a (`aria-sort` en 4 cabeceras, «1–15 de 15», botón «Columnas»), #2085a (burbuja en y=555-611 contra fila que acaba en 445; `.adm-content` con `padding-bottom: 94px`), #2085b (las 4 cards de Producción, cero «Cargando…»), #2087 («Vinculado con T001/92182» y el chip «importe exacto») y #2088 (el PATCH sale con 3 claves, no el `settings` entero). Sacó el #2100.
 - 🟡 **[22-ago] Tres de esa tanda NO son alcanzables con los datos de prod** — #2077 (resultado AEAT) exige una declaración **presentada** y presentarla sella WORM; #2079 (Mayús en remesas) necesita ≥2 filas y hay 0 en Cobros y 1 en Pagos; #2080b (reel con controles propios) exige una pieza CON vídeo y ninguna lo tiene. Los tres se prueban cuando exista el dato, no antes.
