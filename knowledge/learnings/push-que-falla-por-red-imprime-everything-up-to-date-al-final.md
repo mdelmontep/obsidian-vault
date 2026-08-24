@@ -16,6 +16,11 @@ Leer solo el final (o un `| tail`) da por subido algo que no existe en el remoto
 - **La verificación que decide no es el exit code, es la punta**: `git ls-remote origin <rama>` == `git rev-parse HEAD`. Aplica **también cuando el push dice que fue bien**, no solo tras un pipe.
 - El riesgo se multiplica con hooks `pre-push` lentos (lint+typecheck+build): el push tarda minutos, se lanza en background y la salida se mira de refilón.
 - Y `git ls-remote` **también** puede fallar por red (`SSL_ERROR_SYSCALL`) devolviendo vacío: un remoto vacío puede ser «no existe» o «no pude preguntar». Reintentar antes de concluir.
+- **Tercer significado del vacío, encontrado el 24-ago: la rama ya BORRADA.** Tras `gh pr merge
+  --delete-branch`, un `ls-remote` de esa rama sale vacío con exit 0 — y leerlo como «nunca
+  estuvo» es tan falso como leerlo como «no existe». Las tres lecturas del vacío (ausencia,
+  error, borrado) solo se distinguen sabiendo **qué ha pasado en medio**. Ese día las dos
+  sesiones cometieron una cada una, en direcciones opuestas.
 
 - Reincidencia el 22-ago con el wrapper que la propia nota predecía: `git push > log 2>&1; echo "exit=$?"`
   lanzado en segundo plano. El aviso del arnés dijo **«completed (exit code 0)»** — ese 0 es del
