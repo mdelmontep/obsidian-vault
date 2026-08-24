@@ -457,3 +457,14 @@ Implementación: `~/.claude/scripts/agentes-check.py` (cron semanal, lunes 09:00
   consulta que pueda no encontrar nada necesita `alwaysOutputData`**, y el «vacío» debe viajar como
   dato explícito, nunca como ausencia de item. Peor aún cuando el caller es un LLM de voz: no
   distingue «no hay documento» de «no me han contestado», e improvisa delante del cliente.
+
+## Gotchas 24-ago (Tecnocloud, severidad de los avisos)
+
+- **El mensaje de un `throw` se parte en el primer `": "`**: el prefijo va a `error.description` y el
+  resto a `error.message`. El Error Handler estándar publica solo `message`, así que un
+  `throw new Error('GRAVE: …')` llega a Slack **sin el GRAVE**. Usar raya (`GRAVE — …`) y no dejar
+  ningún `": "` en la frase. Ver [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
+- **Probar SQL nuevo en un workflow con efectos**: reenviar al webhook un id ya registrado hace que la
+  rama de idempotencia corte antes del email/Sheets → el SQL corre de verdad, sin efectos hacia fuera.
+  Ver [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]]
+

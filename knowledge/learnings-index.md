@@ -573,7 +573,9 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[write-tool-byte-nulo-en-template-literal]] — edit no casa una línea "idéntica" → revisar bytes ocultos (byte nulo) con python repr
 - [[zod-optional-rechaza-null-en-webhooks-n8n]] — zod .optional() rechaza null en webhooks externos
 
-## n8n / workflows (77)
+## n8n / workflows (79)
+- [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]] — n8n parte el mensaje de error en el primer ": " y el prefijo no llega a Slack
+- [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]] — replay de un id ya registrado ejercita SQL nuevo en prod sin disparar sus efectos
 - [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]] — $fromAI en toolCode lanza no-execution-data-available en n8n 2.15.x
 - [[adr-premisa-falsa-auditar-integracion-real]] — un adr puede partir de una premisa falsa — auditar la integración real antes de implement…
 - [[boton-hitl-referenciar-estado-persistido-no-id-efimero-proveedor]] — botón HITL debe referenciar estado persistido propio, no IDs efímeros del proveedor
@@ -711,7 +713,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[withapiauth-solo-carga-role-con-requirerole-o-requirewrite]] — withApiAuth solo carga `role` si el endpoint declara requireRole/requireWrite
 - [[xss-en-email-html-interpolado-de-bd]] — xss en email html interpolado de bd se subestima — escape obligatorio
 
-## Git / repo / CI (56)
+## Git / repo / CI (57)
+- [[github-pone-como-autor-del-squash-al-autor-de-la-pr]] — github pone como autor del squash al autor de la pr, no al de los commits
 - [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] — `--no-verify` + gate aparte NO es equivalente, y un trinquete mide el árbol entero: bloquea a todo el repo
 - [[numero-de-migracion-libre-se-mide-en-prod-no-en-el-repo]] — si el número ya está aplicado en prod, `db push` se salta tu migración sin error (bloqueado por hook desde #1768)
 - [[gh-issue-create-el-titulo-se-rompe-en-silencio-y-los-numeros-no-se-predicen]] — zsh ejecuta los backticks de `gh --title` y se come la palabra; y los números de issue no se predicen
@@ -769,7 +772,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[whitelist-no-es-dry-run-añadir-flag-explicito]] — Whitelist ≠ dry-run — añadir flag explícito si quieres seguridad en smokes
 - [[worktree-monorepo-symlink-node-modules-anidado]] — worktree fresco de monorepo — el symlink de node_modules debe incluir el de cada paquete…
 
-## WhatsApp / voz / Meta / copiloto (51)
+## WhatsApp / voz / Meta / copiloto (52)
+- [[marcador-de-dato-no-facilitado-acaba-como-dato-de-negocio]] — un marcador de "dato no facilitado" acaba como dato de negocio si no muere en el borde
 - [[anthropic-prompt-cache-prefijo-system-tools]] — anthropic prompt caching cachea por prefijo — cachear solo system+tools deja el historial…
 - [[auditar-sobre-origin-main-worktree-no-cwd-stale]] — auditar/arreglar en worktree desde origin/main, no sobre el cwd stale (o el hallazgo se i…
 - [[chatwoot-agent-bot-debe-asignarse-al-inbox-correcto]] — chatwoot agent bot debe asignarse al inbox correcto

@@ -1,7 +1,7 @@
 ---
 title: tecnocloud
 date: 2026-05-07
-updated: 2026-08-20
+updated: 2026-08-24
 tags: [cliente, tecnocloud, retell, voice, dokploy]
 ---
 
@@ -20,9 +20,9 @@ También tiene agente de voz Retell propio (Laura) para soporte técnico inbound
 ## Próximos hitos
 
 1. **WhatsApp en TuFacturaIA** (LATER) — obtener `phone_number_id` de Meta Business → guardar en `organizations.settings.whatsapp.phone_number_id` → webhook override en n8n receptor v2
-2. **PR #26 panel — tickets de llamadas sin registrar** (NEXT) — draft, pendiente review. El webhook `call_analyzed` solo creaba ticket si Laura invocaba `registrar_llamada`: 32% de las llamadas (25 de ellas conversaciones reales de ≥20 s) no dejaban rastro. Ahora las de ≥20 s con turno de usuario abren ticket con tag `sin clasificar`.
-   · Ojo: `gh auth switch --user tecnocloudes` **no existe en este Mac** (solo `mdelmontep` en el keyring), aunque el CLAUDE.md del repo lo exige. El PR salió con `mdelmontep` y el commit firmado como `tecnocloudes <dansanch@tecnocloud.es>` vía `git -c`.
-3. **Vigilar las primeras llamadas con el prompt v42** — publicado el 17-ago 13:35 sin llamada real aún.
+2. **PR #26 panel — tickets de llamadas sin registrar** (NEXT) — **sigue en draft** desde el 20-ago. El webhook `call_analyzed` solo creaba ticket si Laura invocaba `registrar_llamada`: 32% de las llamadas (25 de ellas conversaciones reales de ≥20 s) no dejaban rastro. Ahora las de ≥20 s con turno de usuario abren ticket con tag `sin clasificar`. Toca 3 líneas de `voice-call.service.ts` que ya movió el PR #28 → **necesita rebase trivial**.
+   · Ojo: `gh auth switch --user tecnocloudes` **no existe en este Mac** (solo `mdelmontep` en el keyring), aunque el CLAUDE.md del repo lo exige. Los commits se firman con `git -c`, pero el squash de la PR **no hereda esa firma** → [[github-pone-como-autor-del-squash-al-autor-de-la-pr]]
+3. **Vigilar las 3-4 próximas llamadas reales** — con la v46 publicada (24-ago) y sin tests de simulación en este LLM.
 
 ## Servidor DOKPLOYMANU — el Dokploy de Tecnocloud (07-ago-2026)
 
@@ -323,6 +323,10 @@ rellenan así y recargamos, se arregla en origen y no se revierte.
 - [[una-regla-de-prioridad-maxima-sin-cuando-se-vuelve-hazlo-ya]] — «X SIEMPRE» sin cuándo = «X ya»
 - [[un-json-intermedio-correcto-no-prueba-que-el-destinatario-lo-reciba]] — verifica en el destinatario
 - [[recall-semantico-sin-umbral-es-confidently-wrong]] — ampliada con el fallo simétrico: umbral alto = mudo
+- [[marcador-de-dato-no-facilitado-acaba-como-dato-de-negocio]] — el centinela muere en el borde, no en la BD
+- [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]] — la severidad no llega a Slack
+- [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]] — probar SQL en prod sin efectos
+- [[github-pone-como-autor-del-squash-al-autor-de-la-pr]] — la firma correcta se pierde al aplastar
 
 ## REGRESIÓN GRAVE del prompt v42-v44: registraba en 20 s sin preguntar nada (20-ago)
 
@@ -383,6 +387,39 @@ Contiene lo corregido, los tres asuntos que dependen de Tecnocloud (callbacks, O
 recogidos y el campo «solución» en blanco. Los documentos NO los redactamos nosotros: de las 19
 llamadas de OneLogin ninguna se resolvió, así que no consta el procedimiento y escribirlo sería
 inventar instrucciones que Laura dictaría con total naturalidad. Lo tiene que rellenar Dani o Carlos.
+
+## El nombre del cliente se perdía en tres capas a la vez (24-ago)
+
+Síntoma de Manu: «en las llamadas sigue sin guardar el nombre». Medido sobre las 15 últimas ejecuciones
+del workflow: **6 traían `No facilitado`**. Y `+34629844804` dio su nombre el 21-ago y volvió como
+marcador el 24. No era un fallo, eran tres independientes, cada uno suficiente por sí solo.
+
+| Capa | Qué hacía | Arreglo |
+|---|---|---|
+| Portal (PR **#28**, en `main`) | el marcador se guardaba tal cual: `profileName`, `name` del `Contact` auto-creado (varios contactos distintos llamados «No facilitado») y asunto del ticket | centinela → `null` en el borde, placeholder **derivado** (`Llamada +34…`), y el nombre humano del CRM **gana** al dictado por ASR; migración de datos que limpia lo ya guardado |
+| n8n `aAfDL01MLPAOWfco` | `Preparar Registro` pasaba el marcador al INSERT y al email | filtro de marcadores + **memoria de nombre por teléfono a 30 días** (columna `nombre` + CTE `conocido` en `Reservar call_id`): si esta llamada no lo da y una anterior sí, se recupera y el aviso lo dice |
+| Retell (LLM **v46 publicada**) | «pídelo una vez» permitía registrar en el mismo turno en que el cliente pide hablar con alguien | pedir el nombre **en su propio turno**; prohibido ejecutar `registrar_llamada` sin haberlo pedido al menos una vez |
+
+Verificado con llamadas reales al webhook (`+34600000000`, ejecuciones 1254 y 1256): nombre dictado se
+guarda, y la siguiente llamada con marcador lo recupera (`nombreRecuperado: true`, asunto con el nombre).
+El SQL nuevo se validó **sin efectos** replayando un `call_id` ya registrado (exec 1253, 81 ms, ni email
+ni hoja) → [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]]
+
+### La alerta de Slack llevaba meses mandando a mirar donde no había nada
+`Comprobar Entregas` lanzaba «falló fila en el Google Sheet. **Revisar si soporte se ha quedado sin el
+aviso**» cuando el email **sí** había salido y solo había fallado la hoja (503 de Google pese a retry ×3).
+Ahora hay dos severidades: **GRAVE** solo si falla el email, **MENOR** si solo falla la hoja o el resumen
+de IA («el aviso a soporte SÍ salió por email… nadie se queda sin avisar»). Cabo que salió al medirlo: el
+prefijo se perdía porque n8n parte el mensaje en el primer `": "` →
+[[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]. Corregido a raya; **la rama GRAVE no se ha
+podido disparar en real** (no se puede forzar que falle el email a demanda).
+
+**Rastro de la prueba a limpiar**: 2 tickets/emails a soporte con `PRUEBA NOMBRE (ignorar)` del
+`+34600000000`, 1 aviso en `#01-incidencias` (exec 1254) y 2 filas en `retell_llamadas_registradas`
+(caducan solas a los 30 días).
+
+**Hallazgo sin tocar**: el webhook `retell-tecnocloud` tiene `authentication: None`. Endpoint público que
+dispara emails a soporte — cualquiera con la URL genera avisos.
 
 ## Pendiente legal: el aviso de IA (art. 50)
 
