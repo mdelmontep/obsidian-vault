@@ -10,7 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟢 **Elphis Psicología — stack + agenda EN PIE (24-ago)** — 8 gates, purga real ×2, `psico-agenda-*` con idempotencia doble y E2E escrita. **Tuyo**: OAuth (redirect URI + Connect, bloquea E2E), password 1P «Elphis Psicologia», y sesiones SIEMPRE desde `~/Projects/elphis-psicologia`. → [[clientes/elphis-psicologia/index|elphis-psicologia]]
+- 🟢 **Elphis Psicología — stack + agenda EN PIE (24-ago)** — 8 gates, purga real ×2, `psico-agenda-*` con idempotencia doble y E2E escrita. **Tuyo**: OAuth sigue sin token pese a redirect URI + Connect (e2e da 1/12, `Unable to sign without access token`), password 1P «Elphis Psicologia», y sesiones SIEMPRE desde `~/Projects/elphis-psicologia` (la carpeta suelta `~/Projects/elphis` ya mordió una vez, ver hub). → [[clientes/elphis-psicologia/index|elphis-psicologia]]
 
 - 🟢 **agency-portal / Flota IA — ticket 010 en prod (24-ago)** — centro de agentes voz+chat; cimiento de datos + panel `/agency/agents` cerrados y verificados. **Tuyo**: pushear `feat/flota-ia-fleet-010` + PR a Borja. **Siguiente**: 011 adaptador Retell. → [[agentesia]] hito 10
 - 🟢 **Arnés — el contexto ya se ve y ya se corta (20-ago)** — 91 % del gasto pasa por encima de 200k y la barra medía sobre 1M (20 % en verde). Presupuesto 200k + `autoCompactWindow` 300k; los 4 `CLAUDE.md` grandes a `.claude/rules`, en `main`. **Tuyo**: ¿el aviso «`paths:` dispara con Read, no con Bash» baja a los 4 rules? → [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]

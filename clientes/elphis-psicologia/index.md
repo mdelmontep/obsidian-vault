@@ -3,7 +3,7 @@ title: Elphis Psicología — HUB
 date: 2026-08-24
 updated: 2026-08-24
 source: elphis-psicologia
-tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd]
+tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
 
 # Elphis Psicología · HUB
@@ -35,10 +35,18 @@ Bloque A (web, marca) = Borja · **Bloque B (agentes) = Manu**. Autoridad docume
   [[parse-roto-de-una-respuesta-200-se-confunde-con-fallo-y-duplica]]
 - ✅ **Chatwoot**: cuenta «Elphis Psicología» id 4 en la instancia compartida (estanca).
   Inbox API pendiente de los puentes.
-- ⏳ **OAuth Google pendiente (bloquea la E2E de agenda)** — Manu: añadir redirect URI
-  `https://n8n-psicologia.elphis.agentesialabs.com/rest/oauth2-credential/callback` al
-  client de pruebas + «Connect my account» en la credencial; después
-  `infra/tests/agenda-e2e.sh` (12 escenarios; todo lo no-OAuth ya verificado).
+- ⏳ **OAuth Google pendiente (bloquea la E2E de agenda)** — redirect URI añadido y
+  «Connect my account» hecho el 24/08, pero **la credencial sigue sin token**:
+  `agenda-e2e.sh` da 1/12 (resto cascada del mismo fallo) con
+  `GCAL_ERROR: Unable to sign without access token` en el escenario 1. El Connect no
+  cuajó — revisar si el popup se cerró antes de completar el flujo o si el client
+  sigue en modo Testing (token a 7 días) antes de reintentar.
+- ⚠️ **`~/Projects/elphis` (carpeta suelta, sin `.git`) sigue viva y ya mordió una vez**:
+  atribuyó a `project=elphis` cuatro bloques de trabajo real de esta división (22 y
+  24/08, sesión `4cf61623-…`) en `agency-portal`. Reatribuidos a mano el 24/08
+  (`UPDATE work_sessions` vía SSH al self-hosted de agency-portal). Mientras la carpeta
+  exista, cualquier sesión arrancada ahí por costumbre repite el fallo — renombrarla o
+  borrarla lo cierra de raíz en vez de solo avisarlo en prosa.
 - 🔴 **Wasabi 403 host-wide** (escalado a Borja): los Volume Backups de TODO el host
   fallan la subida ≥11 días — afecta también a Adicciones y Chatwoot. Se arregla en
   panel → Settings → S3 Destinations.
