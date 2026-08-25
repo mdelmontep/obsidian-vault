@@ -68,6 +68,11 @@ fallo visible en pantalla: todas fallaban en silencio, en un log o en una column
   ese panel pinta tokens y coste desde que se escribió y el endpoint nunca le mandó `usage`, así
   que ese badge no se había visto nunca. La tercera, `inventario/importar/analizar`, estaba bien.
   → [[censo-de-llamadas-al-llm-por-el-helper-no-ve-al-sdk-a-pelo]]
+  Smoke en prod con el build ya desplegado, conduciendo el navegador: el playground responde y por
+  fin pinta su badge de coste (**789 in · 334 out · ~0,0023 €**, que es la prueba de que corre el
+  build nuevo: ese `<span>` no existía antes), y «Explícame esto» en un 303 2T de sandbox generó
+  texto completo y **escribió fila nueva** en `fiscal_explicaciones` (19:11:44Z, acaba en punto).
+  0 `system_alerts` nuevas.
 
 **Un hallazgo del método, no del código**: los dos arneses de evals imprimían su reporte con
 `console.info` y **vitest descarta la salida de los tests que pasan**. Tres corridas verdes sin una
