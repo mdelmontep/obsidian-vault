@@ -25,4 +25,13 @@ pusheada, ficheros con timestamp reciente), es una sesión viva — NO hagas
 `checkout`/`stash -u` a ciegas (le borras los ficheros del disco). Déjalo y usa un
 worktree propio desde `origin/main`.
 
+**Y comprobarlo «antes del commit» llega tarde** (25-ago-2026, facturaia): la otra sesión
+se llevó el checkout a `fix/tickets-soporte-25ago` mientras yo llevaba 20 minutos editando
+ficheros en `main`. Lo vi de casualidad, al leer un `git status` que había pedido para otra
+cosa. Había además un `UU .file-size-baseline.json` a medio resolver: un `npm run gate` ahí
+habría medido un árbol en conflicto ajeno y su rojo o su verde no habrían significado nada.
+Lo barato es mirar `git branch --show-current` **al empezar cada tanda de ediciones**, no solo
+al ir a commitear; y ante WIP ajeno, sacar lo tuyo (untracked se copia y se borra) y seguir en
+`git worktree add ~/wt-<tema> -b <rama> origin/main`.
+
 Relacionado: [[merge-tree-precheck-cross-pr-y-squash-branch-cleanup]].
