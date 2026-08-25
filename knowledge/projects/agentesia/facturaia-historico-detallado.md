@@ -18,7 +18,7 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
-## 25-ago-2026 · revisión de toda la IA implementada: 22 sitios, 12 hallazgos, 7 PRs, todos en prod
+## 25-ago-2026 · revisión de toda la IA implementada: 22 sitios, 12 hallazgos, 8 PRs, todos en prod
 
 Auditoría de lectura de las **22 llamadas a un LLM** del repo (copiloto, OCR, conciliación,
 VeriFACTU, Obras, marketing, Google Ads, fiscal, playground de voz, inventario). Ninguna era un
@@ -73,6 +73,15 @@ fallo visible en pantalla: todas fallaban en silencio, en un log o en una column
   build nuevo: ese `<span>` no existía antes), y «Explícame esto» en un 303 2T de sandbox generó
   texto completo y **escribió fila nueva** en `fiscal_explicaciones` (19:11:44Z, acaba en punto).
   0 `system_alerts` nuevas.
+
+- **#2192** — el candado del método: un censo por **el import del SDK**, que es lo que no se puede
+  evitar, contra cinco excepciones declaradas con su motivo (dispatcher, runner del copiloto,
+  whisper de audio, `verifactu/ai-error` con su timeout propio y el playground que espeja al
+  runner). Barre **todo el repo trackeado**, no solo `src/`, porque `services/` y `scripts/` son
+  código que corre igual (hoy 0 de 297 ficheros fuera de `src/`, mañana quién sabe); `import type`
+  no cuenta y los tests quedan fuera. Un segundo test tumba las entradas obsoletas para que la
+  lista no acabe siendo un cementerio. Cuatro dientes probados, incluido el script fuera de `src/`,
+  que es justo lo que gana el barrido ampliado.
 
 **Un hallazgo del método, no del código**: los dos arneses de evals imprimían su reporte con
 `console.info` y **vitest descarta la salida de los tests que pasan**. Tres corridas verdes sin una
