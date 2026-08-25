@@ -692,3 +692,32 @@ Dos PRs encadenados, los dos en prod: **#2140** (`5659d03bd`) y **#2146** (`600c
 - Learnings: [[el-atajo-del-escaner-excluye-la-forma-que-nadie-penso-medir]] ·
   [[un-patron-sobre-nombres-generados-se-enumera-no-se-imagina]] ·
   [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
+
+## 2026-08-25 — OCR: arnés de evals + fusión `documento_sin_lectura` + webhook sin pérdidas (#2180 → #2181 → #2183)
+
+Tres PRs en prod el mismo día, con re-smoke real al final:
+
+- **#2180** — arnés `eval:ocr` (fixtures ficticios, uno por patrón con ticket, `npm run eval:ocr:fixtures`)
+  y JSON mode con guard `esLecturaSinDatos`: un JSON vacío del modelo entraba como `listo`; ahora va a
+  bandeja `revisar` con `documento_sin_lectura`.
+- **#2181** — la fusión del trío `missing_nif_emisor/missing_nombre_emisor/missing_importe_total` bajo
+  `documento_sin_lectura` en el camino de ESCRITURA (`processOcrAudit`) + caso `moneda-extranjera-confianza`
+  del eval cerrado.
+- **#2183** — la fusión como PRESENTACIÓN: `ocr_extraction_audit.anomalies` guarda el array forense ÍNTEGRO
+  y `componerMotivosRevision` fusiona al LEER, sanando las filas históricas de 4 motivos sin migración
+  (fuente única `src/lib/ocr/sin-lectura.ts` + candado espejo `sin-lectura-espejo.test.ts`). Del gate del
+  cierre salieron además dos fixes de datos del webhook de WhatsApp: el intent pendiente (PK=teléfono) ya
+  FUSIONA items en vez de pisarlos —la 1ª foto quedaba huérfana en `_pending/`, 18 huérfanos medidos en
+  prod— y el lote siempre habla al cerrar (duplicado idempotente, fallo, corte por quota a mitad con
+  `break` etiquetado). Suite webhook 57/57, gate 15.263 tests, 8/8 mutaciones con víctima.
+
+Re-smoke prod (25-ago, tarde): intent fusionado (`items:2`), escritura fusionada (las filas nuevas traen
+`review_reasons=["documento_sin_lectura"]` a secas), reenvío idempotente sin fila nueva, y la fila
+histórica `fb095efa` de 4 motivos servida con UN motivo por el endpoint real de revisión. Sandbox limpio
+(4 recibidas borradas por API, `_pending/` a 0, org activa devuelta). Smoke del hub «foto que NO es
+factura» ejecutado y retirado. Gap conocido que se queda: `multi-albaran-multipagina` (3/6 en el día,
+`knownBaselineGap`, nombrado en el PR). Cierre `con-reservas` con 0 bloqueantes y los 6 avisos
+implementados antes del merge. Learnings: [[intent-pendiente-upsert-por-usuario-pisa-la-pregunta-y-pierde-su-trabajo]]
+· [[cookie-de-supabase-ssr-a-mano-para-smokes-sin-node]] ·
+[[hook-formatter-prefer-const-entre-dos-ediciones-rompe-el-contador]] ·
+[[json-mode-convierte-el-no-legible-en-json-vacio-y-el-guard-pasa-al-contenido]]

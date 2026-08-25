@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Sesión de app Supabase sin password ni Node** — `generate_link` → `curl -w '%{redirect_url}'` → cookie `base64-`+b64url a mano; el action_link no inicia sesión en apps code-flow. Ver [[cookie-de-supabase-ssr-a-mano-para-smokes-sin-node]]
 - **La frescura del evento solo decide revivir, nunca limpiar el error** — con crons que reprocesan timestamps fijos, condicionar la limpieza a "evento nuevo" deja el error pintado días. Ver [[la-frescura-del-evento-solo-decide-revivir-nunca-limpiar-el-error]]
 - **El orden del `||` decide el copy, no quién lo revisó** — `detail || error || 'frase'` tapa el texto del cliente con el error interno. Ver [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
 - **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
