@@ -10,9 +10,6 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟢 **Elphis Psicología — agenda alineada con la web, PR #30 vía fork, plan de agentes CERRADO (25-ago)**. **Tuyo**: OAuth sin token (e2e 1/12), las 4 confirmaciones de la WABA (número virgen · SIP · OTP · SMTP), password 1P; Borja el merge del #30. Detalle y decisiones en el hub. → [[clientes/elphis-psicologia/index|elphis-psicologia]]
-
-- 🟢 **agency-portal / Flota IA — cadena #269→#274 en review, 2 auditorías aplicadas (24-ago)** — **Tuyo**: mergear en orden y desplegar según `issues/PROMPT-CONTINUACION-020.md` (migraciones antes del código). → [[agentesia]] hito 10
 - 🟢 **Arnés — el contexto ya se ve y ya se corta (20-ago)** — 91 % del gasto pasa por encima de 200k y la barra medía sobre 1M (20 % en verde). Presupuesto 200k + `autoCompactWindow` 300k; los 4 `CLAUDE.md` grandes a `.claude/rules`, en `main`. **Tuyo**: ¿el aviso «`paths:` dispara con Read, no con Bash» baja a los 4 rules? → [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
 - 🟠 **Centro Elphis — en prod y verificado con WhatsApp real (18-ago)** — memoria, avisos por canal, ficha CRM y aviso de IA; la prueba real cerró dos que reportó Alba (se presentaba en cada mensaje, y daba horarios en vez de mandar al enlace). Sin tráfico de chat desde el 11-ago: es demanda, no avería. **Tuyo**: OK al guard para que los teléfonos `+3460000009X` no avisen a Alba (van 3 falsos), recrear en Meta `elphis_cita_link` (el "si no hay hueco, dínoslo" falta en voz), preguntar a Alba por publicidad y Doctoralia, que Enrique valide lo de las benzos, y **decidir** la cita de quien reserva en Doctoralia sin haber escrito nunca. → [[clientes/centro-elphis/index|centro-elphis]] · [[tres-canales-en-silencio-a-la-vez-es-demanda-no-averia]]
 - 🟢 **Clínica Zen — los fixes de 3 meses YA llegan a las llamadas (20-ago)** — su número servía la v54 con la v67 publicada: **28 llamadas** con el prompt viejo, y de ahí que el fix del nombre inventado «no funcionara». Corregido, diff revisado antes. **Tuyo**: mirar las próximas reservas (nombre real, dirección nueva). → [[clinica-zen]]
@@ -85,13 +82,12 @@ tags: [home, prioridades]
 | Cliente | Hub | Estado |
 |---|---|---|
 | TuFacturaIA | [[facturaia]] | Activo · NEXT/Smoke/LATER en el hub |
-| Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing + **Flota IA** (cadena #269–#274 en review, 24-ago) |
+| Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing |
 | Simarro | [[simarro]] | Voz: "Claro." parado + guard teléfono + clústeres de zona a toda la Comunidad de Madrid (17-ago) · queda responder a Dani + limpieza de test |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · los recordatorios ya pueden salir (nunca lo hicieron) · falta smoke E2E |
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Voz+chat LIVE, identificados como IA y verificados con WhatsApp real (18-ago) · avisos por canal y ficha CRM completa · secretos sin rotar |
-| Elphis Psicología | [[clientes/elphis-psicologia/index\|elphis-psicologia]] | Bloque B: agenda alineada + PR #30 esperando a Borja (25-ago) · OAuth pendiente · plan de agentes cerrado, listo para ejecutar |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | Agente "Carlos" · 🟢 **las 5 PRs del 19-ago dentro** (#941 + #1363 + #1358); abiertas solo #1302 y #1360, de Borja · 🔴 **#1349: DPA sin firmar y ZDR sin solicitar → dos acciones de panel TUYAS** · 🔴 tuyo 2 min: claves Langfuse (**#1009**) · #1361 el cron de la sonda sigue sin dueño · 82 % de la cola humana sin dueño (#1351) · 7 fallos de llamadas reales abiertos · 🆕 #1401/#1402/#1403 `ready-for-agent` |
 | Aula | [[aula]] | Propio · publicada · **repo en GitHub privado** · 115 temas / 7 lecciones · el runner escribe solo |

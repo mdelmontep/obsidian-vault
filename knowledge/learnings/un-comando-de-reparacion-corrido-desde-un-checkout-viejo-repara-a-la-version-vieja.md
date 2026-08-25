@@ -37,14 +37,3 @@ un candado correcto. Generalización: al verificar algo en el camino real, lo pr
 resultado, es **qué versión ejecuta el proceso que mides** — `git log -1` del worktree de prueba,
 `git status` de donde editas, y un `grep -c "<símbolo nuevo>"` sobre el fichero que va a ejecutarse.
 
-
-**Tercera ocurrencia, y la más silenciosa: un artefacto DERIVADO** (facturaia 24-ago). Regeneré
-`docs/architecture/graphs/dependencies.json` con `madge` desde el checkout raíz, que iba **9
-commits por detrás**. El comando salió `0` y el fichero quedó bien formado — pero le **faltaban
-las aristas de los ficheros que esos 9 commits habían añadido**, así que commitearlo habría
-borrado trabajo ajeno sin que nada se pusiera rojo. Un artefacto derivado no tiene «error»: solo
-describe el árbol que le pones delante, y describir de menos se ve igual que describir bien.
-
-Lo cazó `git diff origin/main -- <artefacto>` **antes** del commit: si un regenerado trae líneas
-`-`, no estás regenerando, estás revirtiendo. Es la comprobación barata para grafos, lockfiles,
-baselines de trinquete, snapshots y `openapi.json`.

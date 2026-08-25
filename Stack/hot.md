@@ -6,8 +6,6 @@ tags: [stack, index]
 
 # Hot Cache
 
-- **Sesión de app Supabase sin password ni Node** — `generate_link` → `curl -w '%{redirect_url}'` → cookie `base64-`+b64url a mano; el action_link no inicia sesión en apps code-flow. Ver [[cookie-de-supabase-ssr-a-mano-para-smokes-sin-node]]
-- **La frescura del evento solo decide revivir, nunca limpiar el error** — con crons que reprocesan timestamps fijos, condicionar la limpieza a "evento nuevo" deja el error pintado días. Ver [[la-frescura-del-evento-solo-decide-revivir-nunca-limpiar-el-error]]
 - **El orden del `||` decide el copy, no quién lo revisó** — `detail || error || 'frase'` tapa el texto del cliente con el error interno. Ver [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
 - **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
 - **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]
@@ -112,4 +110,3 @@ Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 - **Verificar la conclusión, no la evidencia** — el estado de un secreto externo lo dice el proveedor, no un `SELECT`. [[verificar-la-conclusion-no-solo-la-evidencia]]
 - **El proxy de Next trunca a 10 MB en silencio y rompe firmas HMAC** — 401 intermitente solo en payloads grandes; excluir la ruta del matcher (la auth es del handler) + preflight antes de gastar. Ver [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]]
 - **Un gate que exige el artefacto a la fase que lo produce es un deadlock** — y el mock del contrato en el test del productor lo esconde. Ver [[gate-que-exige-el-artefacto-a-la-fase-que-lo-produce-es-deadlock]]
-- **Reserva/dedup idempotente en n8n** — Redis INCR+TTL como lock (no hay SET NX) + bookingKey releído antes de crear. Ver [[lock-e-idempotencia-en-n8n-con-redis-incr-sin-set-nx]]

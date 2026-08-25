@@ -47,8 +47,3 @@ negativo recién añadido en 0 de 3**: un caso que acaba de nacer no puede ser r
 - Un caso nuevo en rojo **no se deja rojo permanente** (enseña a ignorar rojos) **ni se borra** (pierde el
   hallazgo): se **re-apunta** a la propiedad que sí se cumple, y lo demás se protege con un candado
   determinista que no dependa del modelo.
-
-Corolario 2026-08-25 (facturaia #2180) — **`it.fails` tampoco sirve para un gap conocido**: un caso que el
-modelo acierta 1 de 3 veces pone la suite en rojo justo el día que acierta. El gap se marca con
-`knownBaselineGap`, se ejecuta, **imprime** y no asserta: mide sin bloquear, y el día que se cierra se le
-quita la marca. Ver [[json-mode-convierte-el-no-legible-en-json-vacio-y-el-guard-pasa-al-contenido]].

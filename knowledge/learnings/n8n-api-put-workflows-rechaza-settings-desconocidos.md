@@ -33,9 +33,3 @@ El payload de PUT solo acepta: `name`, `nodes`, `connections`, `settings` (filtr
 **Strip top-level también** (read-only que el GET incluye pero PUT rechaza): `id, createdAt, updatedAt, active, tags, versionId, meta, pinData, triggerCount, shared, isArchived, homeProject, sharedWithProjects`.
 
 Tras filtrar, `active` puede quedar en false → re-activar con `POST /workflows/{id}/activate` (exige `Content-Type: application/json` con body explícito). Confirmado de nuevo en EcoBox 2026-06-01. Ver [[n8n-public-api-no-permite-update-credentials-recrear-y-repuntar]].
-
-**Update 2026-08-24 (n8n 2.36)**: `POST /workflows/{id}/activate` **rechaza activar un
-workflow cuyos Execute Workflow referencian sub-workflows no "published"** («references
-workflow X which is not published»). Orden obligatorio vía API: activar TODOS los
-sub-workflows primero, el orquestador/runner al final. Y los webhooks creados por API
-siguen necesitando el ciclo deactivate→activate para registrarse en el router.

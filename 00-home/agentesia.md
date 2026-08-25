@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-08-24
+updated: 2026-08-07
 tags: [cliente, agentesia]
 ---
 
@@ -35,8 +35,6 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
    - **PR #99** (`feat/foco-desarrollo-a-medida`, DRAFT hasta que entre el #97) — los 16 commits del worktree: `/servicios/software-a-medida`, `/servicios/tufacturaia` con capturas reales de la app, hero con ilustración SVG interactiva, sección de redes, `/resultados` y `/casos-de-uso`. **Las dos regresiones anunciadas eran reales y están resueltas**: el titular volvía a teclearse dentro del `<h1>` (lo que cerró el #89) y las stats a mano resucitaban el "+35% Más conversión" que el #91 retiró por no tener respaldo. Ahora el H1 es estable ("Desarrollamos herramientas a medida"), los ejemplos rotan fuera del heading con `aria-hidden` y las tres cifras vuelven a `PROOF`. Integrado con **merge, no rebase** (16 commits y `HeroSection.tsx` reescrito 5 veces → un solo punto de resolución); backup previo en `backup/foco-a-medida-prerebase`. Gates: **vitest 76/76**, lint 0 errores, build SSG con las tres rutas prerenderizadas.
    - **Tuyo**: horquilla de precio de "A medida", créditos de Higgsfield para la foto que falta, desplegar `tufacturaia.com` (sigue en **404**) y decidir si el titular recupera el tecleo — si sí, hay que decidir antes qué pasa con `heading-text-integrity`. Las capturas (desktop fullPage + móvil de las 3 rutas) se arrastran a mano a un comentario del #99: `gh` no las sube.
    - Ver [[rama-que-reescribe-el-mismo-fichero-varias-veces-se-integra-con-merge]] · [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]] · [[los-tests-rojos-que-hereda-un-merge-se-clasifican-uno-a-uno]] · [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]] · [[los-audios-de-llamadas-reales-llevan-nombres-de-clientes]] · [[capturar-un-saas-para-la-web-publica-exige-mirar-la-organizacion-activa]]
-
-10. **agency-portal — Flota IA: centro de control de agentes voz+chat (fase 1 en review, 24-ago)** — PRD `issues/prd-flota-ia-fase-1.md`, doc maestro artifact `cbac2f09`. Reutiliza el pipeline Retell existente (webhook + `sync-retell`). Cadena apilada #269 (010) → #270 (011) → #271 (012) → #272 (016) → #273 (017) → #274 (019), reviewer Borja; punta `feat/flota-ia-fleet-019` `221c9ba`. 010 ya aplicado en prod; **faltan 4 migraciones más** (`…5100000`, `…5110000`, `…5120000` + la de 010 si se recrea) **antes del código** (`onConflict` nuevo → 42P10 sin ellas). Dos auditorías cross-PR (9 agentes) aplicadas: aislamiento por tenant del upsert, privilegios de columna en `agent_connections`, `resolveConnectionTouch`, `unchanged` en reprocesos + purga de `fleet_ingest_logs`, fechas Europe/Madrid, healthcheck de `error`/`pending_first_event`. Learnings: [[la-frescura-del-evento-solo-decide-revivir-nunca-limpiar-el-error]], [[una-fila-de-log-por-evento-y-pasada-con-cron-de-ventana-crece-a-miles-al-dia]], [[verificar-una-migracion-por-columnas-del-constraint-y-en-transaccion]]. Deuda aplazada en `issues/020`. 013/014/015 bloqueados por fixture real; 018 tras merge. Worktrees `~/wt-fleet-01{6,7,9}` (build: copiar `node_modules`, Turbopack rechaza symlink). SSH root al host autorizado con `id_ed25519` (retirar al cerrar fase). **Tuyo**: merges + despliegue según `issues/PROMPT-CONTINUACION-020.md`.
 
 ## Infraestructura — el monitor del portal (`/agency/infrastructure`)
 

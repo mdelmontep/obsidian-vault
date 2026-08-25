@@ -18,6 +18,65 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## 25-ago-2026 · revisión de toda la IA implementada: 22 sitios, 12 hallazgos, 7 PRs, todos en prod
+
+Auditoría de lectura de las **22 llamadas a un LLM** del repo (copiloto, OCR, conciliación,
+VeriFACTU, Obras, marketing, Google Ads, fiscal, playground de voz, inventario). Ninguna era un
+fallo visible en pantalla: todas fallaban en silencio, en un log o en una columna que nadie mira.
+
+- **#2185** — la nota de voz de WhatsApp se transcribía (y se pagaba) **antes** de saber quién la
+  manda. El pre-gate se movió delante; y comprobado que no autoriza nada: el copiloto vuelve a
+  preguntar con las mismas funciones. Y ningún turno del copiloto muere ya en un log: un turno
+  cortado por el tope de tokens tiene texto que decir.
+- **#2186** — cinco llamadas sin `jsonMode` ni `temperature`, o con el texto del modelo yendo a
+  pantalla sin sanear. `sanitizeUserFacingText` sale de `runner.ts` a `@/lib/llm/texto-usuario`
+  (el problema no es del copiloto, es de cualquier respuesta que acabe leyendo una persona) y el
+  diagnóstico AEAT devuelve **502** en vez de una cadena vacía.
+- **#2187** — la extracción de facturas leía a **temperatura 1** (el valor por defecto de la API,
+  no el que nadie eligió). Va solo en su PR porque `gotchas.md` §OCR exige comparar evals de pago
+  antes y después: 18/18 en `main` limpio, 2×18/18 en la rama. Candado en un test, porque los
+  evals cuestan dinero y no corren en el gate.
+- **#2188** — `interpretAeatError` podía lanzar por tres vías y su llamador la invoca **antes** de
+  escribir la fila del rechazo: la factura se quedaba sin `verifactu_estado: rechazada`, sin la
+  prueba de lo que dijo la AEAT, y con un «429» del LLM en el campo que el usuario LEE. La función
+  se hace total. Estaba latente (0 facturas con `verifactu_error` en prod).
+  → [[un-llm-puede-adornar-un-registro-nunca-condicionar-que-se-escriba]]
+- **#2189** — arnés de evals de la pre-validación de VeriFACTU (`npm run eval:verifactu`), y lo que
+  encontró en su **primera corrida**: un NIF de emisor inventado (`XY1234`) pasaba con
+  `valid: true`, tres de tres. Se arregla donde el propio fichero ya decía que se arregla —en TS,
+  determinista— y no con más prompt. Medido antes de mergear: **0 de las 9 orgs reales** de prod
+  tienen un NIF que el validador rechace.
+  → [[lo-que-se-puede-calcular-no-se-le-pregunta-al-modelo]]
+
+- **#2190** — los tres arneses de evals que faltaban de las llamadas de texto: `eval:conciliacion`
+  (8 casos sobre el enriquecedor de movimientos), `eval:obras` (5 sobre el generador de
+  presupuestos) y los 6 de `enriquecer-materiales`. Los parámetros de cada llamada salen a
+  constantes compartidas (`ENRICH_LLM_PARAMS`, `GENERADOR_LLM_PARAMS`, …) para que el eval mida lo
+  que corre en producción y no una copia que deriva. **Dos lecciones del arnés**: un caso de eval
+  que duplica lo que ya prueba un test determinista no es cobertura extra, es coste extra con ruido
+  encima (se quitó el de `redactPII`, que el modelo absorbía); y un fallo del eval es antes una
+  aserción mía equivocada que un defecto del sistema — el de la inyección en el concepto bancario
+  lo era.
+
+- **#2191** — las tres rutas que el censo no vio, porque llaman al SDK **sin pasar por el wrapper**.
+  Dos con defecto real: el **explicador fiscal** pedía la explicación con `maxTokens: 500`, no
+  miraba `finishReason` y la cacheaba por hash en `fiscal_explicaciones` — un texto cortado a media
+  frase no se servía una vez, se servía para siempre. Latente: las 6 explicaciones de prod acaban
+  las 6 en punto y la más larga son 841 caracteres (~230 tokens de 500). Y el **playground de voz**
+  de `/admin` probaba prompts **sin `temperature`** (la API va a 1) mientras el runner que contesta
+  los WhatsApp va a 0.2: el admin afinaba contra un modelo que no es el que responde. De propina,
+  ese panel pinta tokens y coste desde que se escribió y el endpoint nunca le mandó `usage`, así
+  que ese badge no se había visto nunca. La tercera, `inventario/importar/analizar`, estaba bien.
+  → [[censo-de-llamadas-al-llm-por-el-helper-no-ve-al-sdk-a-pelo]]
+
+**Un hallazgo del método, no del código**: los dos arneses de evals imprimían su reporte con
+`console.info` y **vitest descarta la salida de los tests que pasan**. Tres corridas verdes sin una
+línea de log. → [[un-gap-que-no-se-lee-es-un-gap-que-nadie-cierra]]
+
+Verificado en prod tras el deploy: `/api/health` ok, 0 `system_alerts` nuevas en 90 min y un smoke
+real del copiloto en navegador (pregunta → tool ejecutada → 3 facturas listadas), que recorre la
+línea exacta que se tocó en `/api/copiloto/message`.
+
 ## 22-ago-2026 · el arnés, los casts y el smoke que sacó el #2100
 
 - **#2096**: ningún hook corría `vitest`. `npm run gate` (lint && typecheck && test && build) solo se

@@ -225,4 +225,3 @@ señal. Se descubrió por casualidad meses después, limpiando disco.
   `memory/` con cwd muerto. Compañero: `worktree-guard.sh` para worktrees ya integrados.
 
 Ver [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]].
-- **El proyecto de una sesión = cwd de ARRANQUE, y no cambia a mitad de vida** — atribución de horas del portal, directorio de memorias (`~/.claude/projects/<slug-del-cwd>/memory/`) y telemetría cuelgan de él. Arrancar "desde el repo viejo para tener contexto" imputa todo al proyecto viejo (caso 24-ago: el trabajo de elphis-psicologia contando como Elphis). Fix: migrar las memorias al slug del repo bueno (mv + reescribir MEMORY.md en ambos) y arrancar siempre desde el repo del cliente; lo ya imputado solo se corrige en la DB del portal.
