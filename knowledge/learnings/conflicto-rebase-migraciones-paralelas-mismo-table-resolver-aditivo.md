@@ -23,3 +23,12 @@ compila, así que **ningún test lo ve** (la suite ni carga el módulo); lo caza
 resolver cualquier conflicto en código, `npx tsc --noEmit` **antes** de `git rebase --continue`.
 Regenerar sí vale para derivados (ver [[conflicto-rebase-json-generado-regenerar-no-mergear-a-mano]]);
 la confianza que da ahí no se traslada al código.
+
+**Caso opuesto (25-ago, agency-portal): el MISMO fichero de migración en los dos lados (`add/add`).**
+En un tren de PRs apiladas, las de en medio se mergean y la de arriba queda con su propia copia
+enfrentada a la que ya entró en `main` por otra rama. Aquí «aditivo» sería lo peor: **se resuelve a
+favor de `main`**, porque una migración mergeada puede estar ya aplicada en producción y el fichero
+tiene que seguir contando lo que realmente corrió. Si la variante de tu rama aporta algo (en el caso
+real, un `NOTIFY pgrst, 'reload schema'` que encima era redundante), va en una **migración nueva**,
+jamás reescribiendo la vieja. Detectarlo antes de que lo sufra el reviewer:
+`gh pr view N --json mergeStateStatus` → `DIRTY`.
