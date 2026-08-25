@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-08-24
+updated: 2026-08-25
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -30,9 +30,18 @@ Bloque A (web, marca) = Borja · **Bloque B (agentes) = Manu**. Autoridad docume
   `motivo` libre. Idempotencia doble: Redis INCR/TTL + `bookingKey` en
   `extendedProperties.private` releído antes de crear. Si GCal no responde → error
   honesto, nunca inventa huecos. Contrato completo: `infra/README-agenda.md`.
-  → [[nodo-gcal-de-n8n-no-soporta-extendedproperties]] ·
+  **`service_slug` realineado con la web el 25/08** (`adultos|adolescentes|pareja|
+  sin-decidir` — el whitelist del nodo divergía del repo y habría rechazado toda
+  reserva real): parche en prod vía API + comentario de procedencia en el nodo +
+  `CHECK` en `crm_events` (mig `02-service-slug-check.sql`, **pendiente de aplicar
+  a mano**). → [[un-consumidor-del-shape-puede-vivir-fuera-del-repo]] ·
+  [[nodo-gcal-de-n8n-no-soporta-extendedproperties]] ·
   [[lock-e-idempotencia-en-n8n-con-redis-incr-sin-set-nx]] ·
   [[parse-roto-de-una-respuesta-200-se-confunde-con-fallo-y-duplica]]
+- ✅ **PR #30 abierto vía fork (25/08)** — `mdelmontep` sigue solo-lectura en el repo
+  (y `mdelmonteagentesia` sin acceso a la org), pero el repo permite fork: rama
+  `agenda-service-slug-fix` en `mdelmontep/elphis-psicologia` → PR contra `main` con
+  los 6 commits de infra+agenda. Entregar ya no espera al write; falta el merge de Borja.
 - ✅ **Chatwoot**: cuenta «Elphis Psicología» id 4 en la instancia compartida (estanca).
   Inbox API pendiente de los puentes.
 - ⏳ **OAuth Google pendiente (bloquea la E2E de agenda)** — redirect URI añadido y
@@ -51,16 +60,23 @@ Bloque A (web, marca) = Borja · **Bloque B (agentes) = Manu**. Autoridad docume
   fallan la subida ≥11 días — afecta también a Adicciones y Chatwoot. Se arregla en
   panel → Settings → S3 Destinations.
 
-## Próximo (orden del bloque B)
+## Próximo (plan del bloque B CERRADO el 25/08, prompt de continuación entregado)
 
-3. KB Supabase (RAG pgvector — NUNCA en el Postgres self-hosted). 4-5. WhatsApp y voz
-Retell (esperan número virgen + DPA). 6. Crisis + simulation tests (**no transfiere
-nunca**: 024/112 + correo — lo CONTRARIO de Adicciones). 7. Notificaciones.
-Plantillas Meta a aprobación el día 1 que exista la WABA.
+Orden: 0a OAuth (12/12) · 0b confirmaciones · 1 webhook del formulario (§4 bis) · 2 KB ·
+3 WABA + plantillas · 4 WhatsApp · 5 voz Retell · 6 crisis E2E real · 7 notificaciones.
+**Decisiones tomadas** (el ejecutor las registra en `docs/bloqueantes.md`): KB **inline
+desde el repo, sin pgvector** hasta que exista el blog (corpus ~15 docs, divergencia
+razonada del spec) · voz = **Retell prompt único**, no conversation flow (apéndice B.1:
+en flows la crisis solo alcanza los nodos con arista) · honeypot = campo `website` ·
+LLM = Claude API con DPA/zero-retention, sub-encargados (Anthropic, Retell) flageados a
+Borja/legal. Crisis: **no transfiere nunca**, 024/112 + correo — lo CONTRARIO de
+Adicciones. Guiones VERBATIM del protocolo v1; cambiar una palabra = v2 + re-OK de Alba.
 
 ## Bloqueos (terceros)
 
-- Borja: write al repo para `mdelmontep` (3 commits locales sin pushear) · Wasabi ·
-  decidir `.agentesia.madrid` ANTES de registrar webhooks · número + DPA · móvil real
+- Borja: **merge del PR #30** · write al repo (ya no bloquea entregar: hay fork) · Wasabi ·
+  decidir `.agentesia.madrid` ANTES de registrar webhooks · DPA · móvil real
   de avisos (el 659 877 708 NO vale: emisor de la WABA de Adicciones).
-- Manu: corregir password del ítem 1P «Elphis Psicologia» (no valida contra n8n) + OAuth.
+- Manu (bloquean la WABA y el paso 3): ① confirmar que el +34 910 059 223 está **virgen**
+  ② proveedor/SIP del número ③ quién recibe el OTP de Cloud API ④ credenciales SMTP de
+  `info@elphispsicologia.com` · password del ítem 1P «Elphis Psicologia» · Connect OAuth.
