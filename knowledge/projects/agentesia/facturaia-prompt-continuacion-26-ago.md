@@ -191,7 +191,7 @@ la 286), así que es coherente con lo que ya hay, no un invento.
 **Manda el código, y el código dice que está hecho**: `auto-approve.ts:203` y `:215` ya
 comprueban `!respaldado(...)`. Deja una sola versión. Prosa caducada dentro de un doc vigente
 es cómo una sesión rehace trabajo terminado — el mismo fallo que la cabecera de
-`PROMPT-aprendizaje-ocr-cierre.md` ya documenta («la foto estaba caducada, no el árbol»).
+`PROMPT-aprendizaje-ocr-cierre.md` ya documenta («la foto estaba caducada, no el árbol»). Método → [[un-prompt-de-continuacion-propaga-los-punteros-que-no-abriste]].
 
 ### 8.5 Orden sugerido
 

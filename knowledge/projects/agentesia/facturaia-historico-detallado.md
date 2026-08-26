@@ -30,6 +30,8 @@ Verificación: **7 mutaciones, 7 víctimas** (aflojar la línea roja en el motor
 
 Estado que deja: `AgentesiaLab SL` es la única org de producción en activo (`categorias`, gate abierto) y sus 2 reglas aprendidas están a 1 confirmación de las 3 que exige el umbral. El arreglo entró **antes** de la primera escritura silenciosa, no después.
 
+Esa misma tarde, al auditar el prompt de continuación que dejaba escrito, salieron cuatro agujeros más en el área que acababa de dar por cerrada —`DOMINIOS` a mano tres veces sin candado, `decidirMuestreo` sin un solo test, la degradación del gate que nadie lee ni avisa, y `aprendizaje-ocr.md` contradiciéndose— y un puntero mío a un prompt SUPERSEDED. Los cinco van especificados en [[facturaia-prompt-continuacion-26-ago]] §8. Método → [[un-prompt-de-continuacion-propaga-los-punteros-que-no-abriste]].
+
 ## trámites AgentesiaLab · certificado FNMT, VeriFACTU y alta en el ROI (detalle retirado del hub el 26-ago)
 
 En standby por decisión de Manu (24-ago). Texto íntegro tal como vivía en el NOW del hub:
