@@ -14,3 +14,10 @@ Se ve en el dato: `feedback_ticket_messages` con **cero** filas nuevas el día e
 - Regla: el cierre automático deja el ticket en una cola de **cerrado sin responder**, no en atendido.
 
 Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
+
+**El espejo, medido el 25-ago**: de once tickets en `en_revision`, **cinco
+llevaban semanas arreglados en `main`** y nadie los había cerrado. Arreglado y no
+cerrado se lee exactamente igual que no atendido — el cliente no mira tu
+`git log`. Cerrar es parte del arreglo, no papeleo posterior: la barrida de la
+bandeja tiene que empezar comprobando cuáles ya están hechos, antes de escribir
+una línea de código.

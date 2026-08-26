@@ -16,3 +16,13 @@ radio → es el fondo colándose por el cristal.
 Fix: el chrome sticky debe ser **opaco** (`--bg-elev` sólido) + borde de línea
 + sombra suave. Reserva el cristal translúcido para overlays sobre contenido
 estable, no para barras sticky. Caso: TuFacturaIA `.summary-strip-compact`.
+
+**Reincidencia 26-ago, y el matiz que la explica**: el fix de arriba dice «usar
+`--bg-elev` sólido», pero en el tema glass `--bg-elev` **es** el translúcido
+(`color-mix(in oklch, white 60%, transparent)`). Columna `sticky` del nombre en
+la tabla de inventario: tres celdas numéricas leyéndose a través del nombre con
+`scrollLeft=250`. Opaco de verdad = el mismo cristal sobre una base opaca:
+`linear-gradient(var(--bg-elev), var(--bg-elev)), var(--bg)` — idéntico al resto
+de la fila, pero sin dejar ver nada. Y el comentario del bloque ya decía «tiene
+que ser OPACO»: escrito en prosa, no lo verificaba nadie. El guard parte el
+`background` por comas de primer nivel y exige que la última capa sea opaca.

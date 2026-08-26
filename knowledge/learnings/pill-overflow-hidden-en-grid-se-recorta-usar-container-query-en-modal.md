@@ -28,3 +28,11 @@ Dentro de modales/drawers/sidebars: responsive = **container query**, no media
 query. El ancho relevante es el del contenedor, no el del viewport. Y una pill/
 chip con `overflow:hidden` en un grid debe ir en una columna que no se comprima
 (o el layout debe poder relajarse antes de comprimirla).
+
+## Segundo caso: el rail plegable (26-ago, #2198)
+No hace falta un modal. Un **rail lateral que se pliega** cambia el ancho del
+contenedor sin que la ventana cambie de tamaño: con 1.280 px de ventana la tabla
+mide 1.128 px con el rail abierto y 1.400 px plegado. Una `@media` pinta los dos
+escenarios igual — mide lo único que ahí no varía. Misma regla, disparador nuevo:
+si entre el viewport y el componente hay algo que se pliega, colapsa o cambia de
+ancho, la query es de contenedor.

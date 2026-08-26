@@ -18,6 +18,75 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## trámites AgentesiaLab · certificado FNMT, VeriFACTU y alta en el ROI (detalle retirado del hub el 26-ago)
+
+En standby por decisión de Manu (24-ago). Texto íntegro tal como vivía en el NOW del hub:
+
+**EN STANDBY por decisión de Manu (24-ago). Los DOS trámites que esperan el certificado FNMT de representante de AgentesiaLab** (corregido 19-ago) — el mismo certificado desbloquea las dos cosas, así que se hacen en la misma tanda:
+    1. **`.p12` para VeriFACTU** → Ajustes → VeriFactu (fichero + contraseña, rol propietario/admin) y pasar la org a `verifactu_entorno='prod'`. El gate del paso a prod ya lo pasa: su `regimen_iva` es `general`. Hoy las 9 orgs reales están en `pre` con 0 certificados. **Corrección**: esto NO bloquea la cadena de #1778 — el PR 4 del plan dice literal «NO entra: activar VeriFACTU», y AgentesiaLab lleva **160 facturas emitidas** con `verifactu_activo=false`. Bloquea el **sellado**, no la emisión.
+    2. **Modelo 036, alta en el ROI** (#1686) → Sede AEAT → Censos → modelo 036 → **modificación**, apartado «Registro de operadores intracomunitarios». Da el NIF-IVA (`ES`+B27602085) visible en VIES, y **sin él no se puede facturar sin IVA a empresas de otros países UE** (el reverse charge exige que las dos partes estén en VIES; si no, el IVA lo debes tú). Hasta 3 meses y **silencio negativo**. Comprobar al final en el validador VIES. Ojo: el número de casilla (582) sale del issue, **no verificado contra el formulario vigente** — confirmarlo en el propio 036 o con la gestoría, porque la numeración cambia entre versiones. No afecta a clientes españoles ni a particulares.
+    Queda también firmar la DR y presentar la consulta a la DGT (`docs/compliance/consulta-dgt-clave-regimen-rere.md`). → [[la-org-emisora-de-tu-propio-saas-no-es-un-cascaron]]
+    **MEDIDO el 24-ago contra el validador oficial: `ESB27602085` sale `valid: false`.** O sea que el alta en el ROI NO está hecha, y eso ordena la cadena entera: certificado → 036 → *hasta 3 meses, silencio negativo* → recién entonces se le puede dar el NIF-IVA a Anthropic, OpenAI y GoDaddy. Dárselo antes no sirve de nada: su comprobación contra VIES falla y siguen repercutiendo IVA. **El paso 0 es una pregunta, no un trámite**: el certificado es el mismo con el que AgentesiaLab presenta IVA/IS/Seguridad Social, así que si ya entráis a la sede con certificado, el paso de la FNMT sobra. Guía → `docs/compliance/centro-fiscal-pre-beta/GUIA-CERTIFICADO-Y-ENTORNO-PRE-AEAT.md` §A.
+    **No bloquea el 3T**: el motor ya declara bien la inversión del sujeto pasivo (#2122), y el IVA extranjero que te cobran de más es recuperable por rectificativa dentro de los 4 años de cada factura. Lo que se pierde mientras tanto es caja, no derecho — y el cuadre C-15 se lo dice al usuario en cada declaración.
+
+## DR de SIF · detalle retirado del hub el 26-ago
+
+**[ACCIÓN — exigible YA, NO aplazada] Declaración Responsable de fabricante de SIF (RD 1007/2023, art 13)** — _verificado en sede AEAT + Orden HAC/1177/2024 art 3, 2026-06-22_. Aplazamiento RDL 15/2025 = solo USUARIOS, NO fabricante. Autocertificación (no se presenta a AEAT): in-app visible por versión + PDF descargable. Decir "adaptado al RD 1007/2023", nunca "homologado". **Auditoría de código hecha (2 agentes)**: de los 2 "bloqueantes" detectados, (1) **registro de eventos + firma de registros NO aplican** porque somos solo-Verifactu (Orden art 3 exime arts 8/9 y 6.c/d/14); (2) **inalterabilidad (art 8.2.a) cubierta con mig `376_facturas_inalterabilidad_verifactu.sql`** (trigger BEFORE UPDATE, congela contenido fiscal en cadena + huella tras aceptación; **PR #449**, **pendiente merge + `supabase db push`**). **Antes de firmar, cerrar tareas técnicas (no bloqueantes legales):** ~~residuo 1 céntimo huella~~ → _auditado 2026-06-22: NO es bug vivo, ambas rutas (RPC atómico+091 / emit trigger 303:348) calculan con Σ; la rama NOOP es inalcanzable por el advisory lock_; quedan validación XSD oficial, smoke real contra entorno `pre` AEAT, confirmar encadenamiento por-serie vs por-obligado con asesor. Fragilidad Σ duplicado: RESUELTA — totales unificados en #869 (`lib/documents/totales.ts`) y worker/trigger VeriFactu en Fase 5 (`lib/verifactu/cuota.ts`, PR #947). Análisis referenciado: `docs/compliance/centro-fiscal-pre-beta/SIF-declaracion-responsable-analisis.md`. (P12 por org y USO de Verifactu sí diferidos a 2027.)
+
+## 25/26-ago-2026 · la bandeja de soporte a cero (PR #2194, #2198, #2208)
+
+Once tickets en `en_revision`. Tres se arreglaron con código —154 «Copiar enlace», que además resuelve el documento aunque no caiga en la página, los filtros o el orden de quien lo abre; 157 el nombre del producto en Inventario; 134 la densidad de la rejilla del presupuesto, la tercera vuelta que quedó sin reaplicar del #1536—. **Cinco llevaban semanas arreglados en `main` sin que nadie cerrara el ticket** (89, 125, 126, 128, 129): contestados uno a uno, con la divergencia dicha en voz alta (el filtro de materiales arranca en «Todos» porque «Válidos» enseña 1 de 1.296 en el catálogo real de la clienta). Los tres restantes —155/156/158— eran el mismo agujero y se fueron al #2209.
+
+El 157 volvió el mismo día porque quitar la unidad repetida daba aire sin atacar la causa: los anchos iban en porcentaje y la escasez se repartía entre las once columnas, así que el nombre pagaba el ancho de ocho columnas de dos cifras. #2198 lo arregla con anchos fijos de 86 px, `width:auto` al nombre y retirada por prioridad con `@container` —no `@media`: el rail plegable da 1.128 px abierto y 1.400 px plegado con la misma ventana de 1.280—. La pregunta «¿y si quiero ver las que se retiran?» produjo el modelo de tres estados por columna (auto/fija/oculta) con `aria-checked="mixed"`, escalones de ancho mínimo de 86 px y la columna del nombre anclada al scrollear.
+
+#2208 salió del smoke en producción, no de una revisión: con cuatro columnas fijadas y `scrollLeft=250`, tres celdas numéricas se leían a través del nombre. La columna anclada usaba `var(--bg-elev)`, que en el tema glass vale `color-mix(in oklch, white 60%, transparent)` — y el comentario de ese mismo bloque, escrito horas antes, ya decía «tiene que ser OPACO». Arreglado componiendo el cristal sobre `var(--bg)`, con guard que parte el `background` por comas de primer nivel.
+
+Cierre: 0 tickets abiertos, 144 resueltos. → [[una-columna-que-se-retira-sola-necesita-un-tercer-estado]] · [[header-sticky-glass-sangra-mesh-debe-ser-opaco]] · [[cerrar-un-ticket-automaticamente-no-es-responder-a-quien-lo-abrio]] · [[pill-overflow-hidden-en-grid-se-recorta-usar-container-query-en-modal]]
+
+**Retirado del NOW el 26-ago**: Holded cerrado del todo (#2152/#2160/#2163-65, prod 24-ago), sin cabos — el hallazgo transversal (escribir `last_error` no basta si las superficies exigen `state === 'error'`) vive en [[persistir-el-error-no-basta-si-ninguna-superficie-lo-lee]]. Y el detalle del 303 (#2121/#2122/#2161): 2.644,64 € de líneas que contradecían su cabecera, los SaaS de terceros países a las casillas 32/33, `nif_iva` vacío en 627 de 673 proveedores y la mig 752 que nunca se había aplicado.
+
+## 26-ago-2026 · el albarán deja de ser cosa de Obras (PR #2209, mig 754, ADR-029)
+
+Los tickets **155, 156 y 158 de Pescados Chivite** eran el mismo agujero visto por tres lados:
+abrir una partida de varias mercancías sin papeles, asignar los albaranes diarios a la factura
+semanal, y dejar de mezclar albaranes con facturas en la misma bandeja. Hasta ese día la app solo
+sabía de albaranes dentro de Obras (`obras_albaranes`, mig 506) y Chivite tiene `stock`, no `obras`.
+
+**Lo entregado** (81 ficheros, +8.299/−740): renombrado `obras_albaranes` → `albaranes` sin vista de
+compatibilidad (una vista con escrituras vivas por detrás es la segunda verdad con otro nombre),
+puente N:M **por línea y con cantidad** `albaran_factura_lineas`, vista derivada
+`albaranes_facturacion`, pantalla propia `/albaranes` con entrada en sidebar y menú móvil, panel de
+casación dentro del modal de la recibida, alta manual, entrada por foto (el OCR ya clasifica
+`albaran`), tool de copiloto `recepcionarAlbaran` y envoltorio `withAlbaranesAuth` (sesión + doble
+puerta `stock` o sector Obras, 404 en vez de 403).
+
+**Las decisiones (ADR-029, en el repo)**: el albarán MUEVE stock al validarse, como Odoo/Sage/Holded;
+por tanto la factura que agrupa albaranes ya asentados NO vuelve a asentar, y eso se resuelve **dentro
+de las dos funciones de Postgres que asientan compras**, no con un `if` en el endpoint —ese `if` se
+esquiva desde el copiloto, la API v1, el OCR o un cron—; el eje de facturación **no es columna, es
+vista**; y el tercer caso, los dos documentos asentados por su lado, se **rechaza** con `AL014` en vez
+de duplicar inventario en silencio. Lo fiscal: RD 1619/2012 + art. 97 y 75.Uno.1 LIVA → el albarán no
+entra en 303, 347, 349, 130, 111, 115, cuadres ni VeriFACTU, y eso lo **mide** un test que barre el
+motor fiscal en TS y las funciones `fiscal_*`/`verifactu_*` en SQL, verificado por mutación.
+
+**Verificación**: gate entero verde (15.459 tests) antes del merge y otra vez tras integrar
+`origin/main`; mutación de los dos guards del doble conteo, víctima en las dos direcciones; cinco
+escenarios en Postgres real (`754_…validate.sql`); mig 754 aplicada y comprobada **por catálogo**, no
+por el mensaje del CLI; smoke de escritura en prod con navegador contra la org sandbox (alta →
+listado con los dos ejes → validar → borrar, `movimientos_revertidos: 0` porque la línea no tenía
+producto de catálogo). **No cubierto en prod**: el camino con producto real y lotes, que está probado
+por los escenarios SQL.
+
+**Cierre con el cliente**: una respuesta pública por ticket (155, 156, 158), con su email, y los tres
+a `resuelto` / `resuelto_via: manual` — el cuerpo del PR no llevaba el trailer `Ticket-feedback:`, así
+que el webhook no cerró nada y hubo que hacerlo a mano. Informe end-to-end publicado como artifact
+«Entrega antes que factura».
+
+Aprendizajes: [[un-panel-nuevo-dentro-de-un-modal-ajeno-hereda-sus-tests]] ·
+[[reserializar-un-json-tracked-lo-reescribe-entero]] ·
+[[gate-por-git-ls-files-no-ve-un-fichero-nuevo-sin-git-add]] (siete guards de arquitectura se pusieron
+rojos de golpe al hacer `git add -A`, no antes).
+
 ## 25-ago-2026 · revisión de toda la IA implementada: 22 sitios, 12 hallazgos, 8 PRs, todos en prod
 
 Auditoría de lectura de las **22 llamadas a un LLM** del repo (copiloto, OCR, conciliación,
