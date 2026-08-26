@@ -18,6 +18,43 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## 26-ago-2026 (cierre) · el cableado del bloque, vigilado y probado en prod (PR #2232, `c50bb1180`)
+
+El #2230 dejó un agujero declarado: las tres líneas de pegamento de la ruta no estaban ejercidas en
+ningún sitio, y `aprenderCategoriaBulk` es no-throw, así que un fallo ahí devuelve 200, confirma y deja
+de aprender **en silencio**. Cerrado por los dos lados.
+
+**Candado.** `bulk-confirm/__tests__/route.aprendizaje.test.ts`: siete tests que ejecutan el handler
+real (con `withApiAuth` mockeado, patrón del repo) y afirman sobre los argumentos de la llamada al
+aprendizaje — la columna `categoria_id` en el SELECT, los pares `(movimientoId, categoriaId)`, el
+cliente admin reutilizado, la categoría nula que pasa tal cual, que con cero filas no llama a nada, que
+`confirm_all` también aprende (su rama de query es otra) y que la medición se cierra además del
+aprendizaje. Cuatro mutaciones, cuatro víctimas. Los espías van con `vi.hoisted` y **firma real**, no
+`(...args: unknown[])`: así un cambio de contrato rompe en `typecheck`, no solo en runtime.
+
+**Smoke del camino real** (org de test `Obras tufacturaia sandbox`, todo por endpoints de la app y el
+botón de la UI): el GET de categorías dispara el seed lazy (16 categorías), `/api/conciliacion/import`
+crea tres apuntes —dos `COMPRA TARJ. 5540XXXXXXXX0013 OPENAI-SAN FRANCISCO` y uno
+`PAGO RECIBO IONOS ESPANA HOSTING`—, se clasifican uno a uno (el camino que ya aprendía: openai=2,
+ionos=1, **y ahí queda verificado en prod el arreglo del extractor**: la clave es `openai`, no la
+máscara), `bulk-revert` los devuelve a `ia_sugerencia`, y «Confirmar todas» deja **openai=3, ionos=2**:
++1 por clave, no +2 en la repetida. Ese +1 maduró openai a **verde** (umbral 3), o sea que el ciclo
+entero —aprender, madurar, quedar lista para aplicarse sin LLM— está demostrado end-to-end contra el
+RPC y el trigger de verdad. Limpieza: los tres movimientos borrados por el DELETE de la app y la org
+activa devuelta; se quedan las dos reglas y las 16 categorías (datos legítimos de una org `is_test`, y
+borrarlos exigía escribir fuera del camino de la app).
+
+**Lo que salió a la luz midiendo → #2231.** `categoria_reglas_aprendidas` no tiene NINGUNA superficie
+de usuario: su único consumidor es `enrich-batch`, y `GET /api/conciliacion/reglas-aprendidas` —el que
+alimenta el enlace «Reglas aprendidas» de Conciliación— lee `conciliacion_reglas_aprendidas`, la de
+emparejamiento (mig 155). Con dos reglas de categoría vivas devolvía `{"reglas":[]}`. El dominio OCR
+tiene resuelto lo mismo (GET + DELETE + sección en Ajustes) y sirve de plantilla. Importa ahora porque
+esa memoria **ya actúa**: en verde clasifica sin LLM y escribe `categoria_source='regla'`.
+
+Sigue abierta la otra mitad de #2229 y es decisión de Manu: el gate se queda abierto con la medición
+caducada (`evaluarGate` devuelve `mantener` con `autoAccuracy === null`, `src/lib/agentic/gate.ts:60`).
+Tres opciones en el comentario del issue.
+
 ## 26-ago-2026 (noche) · el atajo en bloque aprende, y la máscara de la tarjeta deja de ser la clave (PR #2230)
 
 Cierra la primera mitad de #2229. `bulk-confirm` cerraba la medición y no
