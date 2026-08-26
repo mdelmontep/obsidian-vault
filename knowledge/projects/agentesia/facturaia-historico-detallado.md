@@ -863,3 +863,31 @@ implementados antes del merge. Learnings: [[intent-pendiente-upsert-por-usuario-
 · [[cookie-de-supabase-ssr-a-mano-para-smokes-sin-node]] ·
 [[hook-formatter-prefer-const-entre-dos-ediciones-rompe-el-contador]] ·
 [[json-mode-convierte-el-no-legible-en-json-vacio-y-el-guard-pasa-al-contenido]]
+
+### 26-ago-2026 · La maduración de proveedores, y por qué el auto-OCR está inanido por diseño
+
+**#2221 (mig 755, en prod y verificada por catálogo).** `factura_confianza_proveedor()` ponía
+`facturas_ok = 0` en los tres brazos de «esta factura dejó de estar limpia», y
+`esProveedorDeConfianza` exige `facturas_ok >= 3` **y** ninguna corrección en 30 días. Las dos
+guardas juntas hacían el estado inalcanzable: un proveedor con 12 facturas limpias volvía a cero
+*y* entraba en cuarentena. Ahora decrementa (`GREATEST(facturas_ok - 1, 0)`). `proveedor_reset_confianza`
+(cambio de NIF/IBAN) **sigue** poniendo a 0 a propósito: otra identidad fiscal es otra contraparte.
+Validador de 6 casos con dientes probados contra la función vieja — (a), (c) y (d) fallan con la 368.
+
+**El paso 2 del auto-OCR, cerrado.** De 321 decisiones no-verdes de 60 días, **289 llevan el veto
+`requiere_confirmacion_stock`**, que parecía la palanca obvia. Medido: de 106 bandejas en
+`sin_aprobar`, 89 traen líneas y **0 traen `catalogo_id`** — ese mapeo lo pone el humano en la
+bandeja, y lo pone en **51 de 52** en la única org con inventario. Sin él la mig 225 inserta texto
+libre y no proyecta stock, así que auto-aprobar no movería mal el inventario: **no lo movería**, la
+compra no entraría nunca y la factura saldría de la bandeja, matando el mapeo. El veto se queda, y
+el comentario que lo justificaba afirmaba lo contrario de lo que mide el sistema (corregido). De
+las 32 fuera del veto, 30 son documentos ilegibles y 2 casi-verdes con segundo motivo: encender
+`ocr` hoy auto-aprobaría ~0. Única palanca viva: calidad de extracción.
+
+**`categorias`**: 112 verdes / 17 ámbar / 2 rojas, gate **abierto** desde el 24-jul y modo `shadow`.
+Sin una decisión desde el 23-jul porque no entran movimientos — PSD2 diferido por coste (26-ago),
+los 138 de prod son CSV (129) y PDF (9). El paso a `activo` es opt-in del propietario por diseño
+(`gate.ts`: abrir el gate **no** cambia el modo); solo lo escribe `POST /api/agentic-automation`.
+
+De paso: `gen:types:check` abortaba el push de toda rama por un bump de PostgREST de plataforma
+(`14.5` → `14.17`), y el encabezado del cron de sync bancario decía «4h» cuando siempre fue diario.
