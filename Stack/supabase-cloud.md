@@ -141,3 +141,13 @@ _Salieron del índice caliente al reservarlo a método/riesgo transversal; el le
 Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
 
 - **Filtrar por línea un volcado SQL BORRA datos** — un `grep -v '^--'` sobre un `pg_dump` se come las líneas de HTML/SQL de ejemplo que van dentro de un INSERT multilínea. Aquí saltó como error de sintaxis; sobre otro texto habría entrado limpio y mutilado. Anclar el patrón y filtrar la cabecera solo hasta el primer INSERT. Ver [[filtrar-por-linea-un-volcado-con-valores-multilinea-borra-datos]]
+- **`psql -f fichero.sql` devuelve 0 aunque un `RAISE EXCEPTION` aborte el script entero.** Un validador
+  SQL que imprime «ERROR: el caso (a) lo dejó en 0» sale con `$?` = 0, así que un arnés que solo mira el
+  código de salida da verde sobre un fallo que está en pantalla. Se arregla con `-v ON_ERROR_STOP=1` (no
+  con `\set ON_ERROR_STOP on` dentro del fichero, que además hace fallar `supabase db query` con 42601).
+  Misma familia que el `push | tail` que devuelve el exit del pipe: el veredicto se lee de donde no está.
+- **`gen:types:check` puede abortar el push de CUALQUIER rama sin que nadie haya tocado el esquema**: el
+  fichero de tipos lleva `__InternalSupabase.PostgrestVersion`, y cuando Supabase actualiza PostgREST en el
+  proyecto (26-ago-2026: `14.5` → `14.17`) el guard salta para todo el mundo. Antes de buscar qué migración
+  lo rompió, `git diff origin/main..HEAD -- <ruta de tipos>`: si sale vacío, la deriva es de plataforma y el
+  arreglo es regenerar y commitear esa línea. No se bypasea el hook.
