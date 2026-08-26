@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **26-ago** · TuFacturaIA — el permiso agéntico ya caduca y la memoria de categorías se ve y se corrige (#2233/#2234, mig 761): «Olvidar» verificado en prod, y «Sin decidir» resultó **inalcanzable por la UI** (#2236, medido con ROLLBACK contra el RPC desplegado). → [[facturaia]]
 - **26-ago** · TuFacturaIA — bandeja de soporte a CERO (#2194/#2198/#2208): los once cerrados, cinco ya estaban arreglados sin cerrar. → [[facturaia]]
 - **26-ago** · TuFacturaIA — bandeja de soporte a cero (#2194/#2198/#2208 + #2209): once tickets cerrados, cinco de ellos arreglados desde hacía semanas sin cerrar. Ticket #86 de Borja: `resuelto` desde el 28-jul, la entrada seguía viva en top-of-mind por inercia.
 - **2026-08-19 · TuFacturaIA — cobro indebido cerrado del todo**: los tres emisores que quedaban con el importe bruto (adeudo SEPA, Payment Link de Stripe y el batch de email del copiloto) consumen ya `importe_cobrable` vía `pendienteCobrable`. Verificado por grep el 19-ago. El eje del ledger se cerró aparte en #1856 / PR #1893 (mig 711).
