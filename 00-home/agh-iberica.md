@@ -1,19 +1,21 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-19
+updated: 2026-08-26
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
-# AGH Ibérica — agente comercial "Carlos"
+# AGH Ibérica — Paquita, la agente comercial
 
 HUB del proyecto. Empresa de IT que da servicio a grandes multinacionales (Dragados, McDonald's, aseguradoras). Quieren que **AIA agentesIA sea su departamento de IA**. Modelo: AGH = prime contractor / canal comercial; **AIA = brazo de delivery**. Todo lo construido debe ser **empaquetable y reutilizable** para que AGH lo revenda.
 
 **Contacto:** Carlos (CEO de AGH Ibérica España).
 
-## Producto en curso: agente comercial "Carlos"
+## Producto en curso: **Paquita**, agente comercial
 
-Agente conversacional **interno** (secretario/CRM) para los propios comerciales de AGH. Primera versión/demo que testeará el propio Carlos. Se habla por **WhatsApp (voz in / texto out)** y **llamada de voz (Retell)**.
+> ⚠️ **El agente se llama Paquita. «Carlos» es el CEO de AGH**, la persona que nos contrató — nunca el nombre del agente. Este hub decía «agente comercial "Carlos"» y el repo también: el error salió de ahí y **contaminó a un tercero** (una sesión del portal lo escribió en un encargo). Corregido en el repo por #1422 el 26-ago, y aquí ahora.
+
+Agente conversacional **interno** (secretario/CRM) para los propios comerciales de AGH. Primera versión/demo que testeará el propio Carlos (el CEO). Se habla por **WhatsApp (voz in / texto out)** y **llamada de voz (Retell)**.
 
 Clave: **no tienen CRM → el agente ES el CRM**. Registra por voz clientes, contactos, oportunidades (embudo) y consultores; hace recall fundamentado ("¿qué me pidió Dragados?" con fecha), lee agenda M365, manda emails de recap, gestiona tareas/recordatorios. Todo write pasa por **HITL** (proponer→confirmar→ejecutar).
 
@@ -44,40 +46,40 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-19, tarde) — **las CINCO del día mergeadas** · abiertas solo #1302 y #1360, de Borja
+## Estado (2026-08-26) — **Paquita ya emite al portal de Flota IA**, pero nadie ha podido comprobar que emita
 
 > ⚠️ Este bloque **no nombra el SHA de `main` a propósito**: un snapshot que nombra su punta no puede acertar (se desfasa con su propio merge). Se consulta con `git rev-parse --short origin/main`.
 
-✅ **Las cinco PRs del 19-ago DENTRO** (`#1399 → #1400 → #1397 → #1398 → #1404`; **#941**, **#1363** y **#1358** cerrados, comprobado por `state`). Override de founder de Manu avisado en Slack antes de tocar `main`, de una en una y sin `--delete-branch`. La combinación se midió **antes** y la suma cuadró exacta sin residuo (`4340 + 17 + 12 + 6 = 4375`).
+✅ **#1418 en prod: el emisor `custom_api` hacia Flota IA** (`app.agentesialabs.com`). Cuatro PRs dentro con override de founder (#1420 → #1421 → #1423 → #1425); #1418 y #1422 cerrados comprobando `closedAt`. Una interacción = **un TURNO**, `externalInteractionId = traceId` — el agente **no tiene concepto de conversación cerrada**, así que agrupar por llamada exigiría un `setTimeout` en memoria que un redespliegue se lleva (→ #1419).
 
-🎯 **Cerrado el track de fidelidad de resolución** — la clase de fallo que **no falla: acierta otra pregunta**, y por eso el comercial no la detecta (#1363 escribía sobre la reunión pasada; #1358, un `WHERE` que no casa devuelve **cero**, no error). 🔒 Tres candados del repo pusieron en rojo mi propio diff y **los tres tenían razón**; cero tests ajenos tocados. Detalle → [[agh-iberica-historico]] · [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[tests-que-caen-por-contencion-de-cpu-verificalos-aislados-antes-de-diagnosticar]] · [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]].
+🟡 **NADIE ha probado que emita, y el cero medido NO discrimina.** El portal midió a las 20:30 (cero filas, `last_error` NULL, cero `error`) pero `docker logs` da **cero webhooks entrantes**: Paquita no ha tenido ni un turno ⇒ «no emitió» y «no hubo nada que emitir» son la misma observación. Falta **un WhatsApp real** y repetir el SELECT anclando a la hora del `POST /webhook/whatsapp`, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
 
-🟡 **Sigue siendo de Borja: la disyuntiva de #941** — reanudación **automática** (lo implementado, con motivo escrito) vs bajo petición. Es una línea y un caso.
+🔴 **#1424** — el emisor **solo escribe log cuando FALLA**, así que «apagado» y «funcionando» son el mismo silencio en nuestros logs. Es la causa raíz de que hoy hiciéramos arqueología en dos bases de datos para no concluir nada. El portal descartó el latido contra su ingesta (ensuciaría `agent_interactions`, y `is_test` no salva la tabla que luego juzga la fase 2): a cambio, dos líneas nuestras, una por proceso.
 
-🔴 **De las premisas falsas del 19-ago sigue vivo lo accionable:** **#1100 está abaratado** (`lastQuestion` SÍ cruza al intérprete, como `pendingQuestion` — no hay que construir proyección) y la causa raíz de **#938** es falsa: fallan **dos entradas en dos listas** de `proposal-retake.ts`, no el `cancel`. Detalle → [[agh-iberica-historico]].
-
-🆕 **Issues nuevas del 19-ago (las tres `ready-for-agent`):** **#1401** (un `SIN VÍCTIMA` falso con el control COHERENTE — el barrido no seleccionó ninguna suite del consumidor; #1396 no lo caza) · **#1402** (importar de un `.test.ts` re-ejecuta sus casos) · **#1403** (el mapa de #1358 solo tiene un consumidor: `tasks` y `reminders` siguen con el literal).
+📚 **Estado del 19-ago (fidelidad de resolución: #941/#1363/#1358)** → [[agh-iberica-historico]]. Vivo de ahí: la disyuntiva de #941 es de Borja (una línea) · #1100 abaratado · la causa raíz de #938 es falsa · #1401/#1402/#1403 `ready-for-agent`.
 
 ⛔ **El instrumento de evals NO es cola de agente** (premisa caducada que se hereda): #738 y #1304 llevan `CLOSED`; lo vivo (#1026, #1361, #1009, #1002, #985) es `ready-for-human`.
 
-🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **8 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #648 #649 #741 #912 #535 — **#941 ya cerrado**).
+🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **8 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #648 #649 #741 #912 #535).
 
 ⏸️ **Lote parado, DECIDIDO que merece la pena pero NO hoy:** `~/wt-1064` (#1064+#1212+#1044A). Al retomarlo: **rebasar → congelar el prompt y volcar las descripciones renderizadas ANTES de pagar la corrida**.
 
-📚 **Estados anteriores** → [[agh-iberica-historico]].
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.
 ## Bloqueantes
 
 _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una consulta, no estado.)_
 
-- 🔴🔴 **RGPD, y va PRIMERO — #1349 CONTESTADO el 18-ago y la respuesta es NO a las dos: el DPA no está firmado y el ZDR no está activo ni solicitado.** Ya no es «verificar», es **hacer**: dos acciones de panel de **MANU** en la organización `agentesia-lab` (`org-iE0lJRHrjWaSI4ugYc6P50Ze`, se declara *personal org*, pay-as-you-go). ⚠️ Son **tres cosas distintas**: «no entrenar» es el defecto y sí está; el **DPA** se firma; el **ZDR** se solicita y **se aprueba o no** (por defecto retienen ~30 días). El documento que ve el compliance de AGH ya **no las da por hechas** (#1383). Y sigue pendiente decidir si el piloto salta al escalón 2 (Azure tenant-UE), que por diseño del gateway es un flip de configuración. → [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]]
-- 🔴 **De Manu, 2 minutos: las claves de API de Langfuse a 1Password → #1009** (OPEN y sin dueño; la tabla de #1351 las colgaba de #1284, que va de otra cosa). Sin ellas nadie puede correr la sonda desde un portátil.
-- 🔴 **El disparador diario de la sonda sigue sin existir → #1361** (re-filiado: su único dueño era #1304, que está `CLOSED`, y su decisión se escribió 27 min DESPUÉS del cierre). Seguimos sin saber si Carlos usa la demo.
+- 🔴🔴 **Langfuse no guarda trazas desde el 23-ago 03:00 (#1284).** ClickHouse **no existe** en el host (`/api/public/traces` → 500 `EAI_AGAIN clickhouse`) y aun así `/api/public/health` da **200** (#1304). **Segunda vez**: cayó el 17-ago, se reparó, escribió del 19 al 23 y volvió a caer ⇒ **repara pero no cura**; causa desconocida (sin OOM, disco y RAM de sobra, nada en cron a las 03:00). ⚠️ **Nada de `docker volume prune`**: el volumen sobrevivió las dos veces (38 GB, del 5-jul, nunca recreado) y #1284 lo daba por perdido — falso. Receta: [[docker-infra]] §«Un servicio AUSENTE se levanta solo». 👉 Mientras siga así, **#1361 y #1009 miden un sitio que no guarda nada**.
+- 🔴 **El DPA con AGH NO está firmado y la FIRMA no está en ninguna cola** (#1350 OPEN, de Borja, **sin fecha objetivo ni ubicación del documento**). Se opera igualmente por **decisión de Manu del 26-ago asumiendo el riesgo**: es decisión de negocio, **no cobertura documental**. → [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]]
+- 🔴🔴 **RGPD OpenAI — #1349 contestado el 18-ago: el DPA no está firmado y el ZDR no está activo ni solicitado.** Ya no es «verificar», es **hacer**: dos acciones de panel de **MANU** en `agentesia-lab` (`org-iE0lJRHrjWaSI4ugYc6P50Ze`). ⚠️ Son **tres cosas distintas**: «no entrenar» es el defecto y sí está · el **DPA** se firma · el **ZDR** se solicita y **se aprueba o no** (por defecto retienen ~30 días). El doc que ve el compliance de AGH ya no las da por hechas (#1383). Pendiente aparte: si el piloto salta al escalón 2 (Azure tenant-UE), que es un flip de configuración.
+- 🔴 **De Manu, 2 min: claves de API de Langfuse a 1Password → #1009** (OPEN, sin dueño). Sin ellas nadie corre la sonda desde un portátil — pero ver el bloqueante de arriba: hoy no hay nada que sondear.
+- 🔴 **El disparador diario de la sonda sigue sin existir → #1361** (su único dueño era #1304, `CLOSED`). Seguimos sin saber si Carlos usa la demo.
 - 🔴 **HUMANO, en el panel de Dokploy:** activar el digest en lista con `WHATSAPP_OPEN_THREADS_LIST_PREFIX=hilos_semana` y `WHATSAPP_OPEN_THREADS_LIST_MAX=6`.
+- 🔴 **DE MANU, 10 segundos:** mandar **un WhatsApp a Paquita** — es lo único que falta para saber si el emisor de #1418 emite. Y crear el incoming webhook de `#alertas-flota` (`C0BT7SLJ4G0`) para pegarlo en `/agency/admin` → conector Slack (hoy el aviso de silencio entrega en `#02-consumo-clientes`). Ninguna sesión puede hacer ninguna de las dos.
 - 🔴 **DE MANU:** qué hacer con `d.martins`, que recibió tres mensajes con los hilos de otra persona. No se ha avisado a nadie.
-- 🟠 **De Borja, una línea cada uno:** **#1032** (¿retirar `addCandidate` o construir su lectura? la medición respalda retirar) y **#1384** (`ready-for-human`: los **siete** comportamientos de Graph que #580 asume y **nadie ha medido** — no se midieron a propósito, un PATCH real manda correos a contactos de clientes y el camino seguro pide consentimiento OAuth en navegador).
-- 🟠 **#1394** — los dos worktrees abandonados **ya no existen** (medido 19-ago, sin saber quién los quitó). Lo vivo es su **preflight** que avisa de worktrees retirables, con el candado que discrimine el que tiene trabajo dentro.
+- 🟠 **De Borja, una línea cada uno:** **#1032** (¿retirar `addCandidate` o construir su lectura? la medición respalda retirar) y **#1384** (los **siete** comportamientos de Graph que #580 asume y **nadie ha medido** — a propósito: un PATCH real manda correos a clientes).
+- 🟠 **#1394** — lo vivo es el **preflight** que avise de worktrees retirables, con un candado que discrimine el que tiene trabajo dentro (los dos abandonados ya no existen).
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 
@@ -115,4 +117,4 @@ La política de datos del cliente decide el escalón: (1) API pública + DPA + z
 
 [[agh-qa-voz-guion-llamada]] (guion de QA en llamada real) · [[agentesia]] · [[top-of-mind]]
 
-_Método de esta semana:_ [[el-borrado-de-rama-nunca-va-encadenado-al-merge]] · [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]] · [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]] · [[un-candado-que-el-issue-pide-puede-cegar-a-otro-consumidor]] · [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]] · [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]] · [[campo-de-texto-libre-que-viaja-a-telemetria-es-un-canal-de-egress]] · [[regiones-distintas-en-el-mismo-fichero-de-test-no-se-afirma-sin-mirar-el-hunk]]
+_Método de esta semana:_ [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]] · [[rebuild-no-recrea-el-contenedor-y-el-sello-de-build-es-ciego-al-reinicio]] · [[el-borrado-de-rama-nunca-va-encadenado-al-merge]] · [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]] · [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]] · [[un-candado-que-el-issue-pide-puede-cegar-a-otro-consumidor]] · [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[guard-de-clasificacion-explicita-en-vez-de-uniformidad]] · [[un-guard-de-drift-bidireccional-acopla-las-prs-de-sus-dos-lados]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]] · [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]] · [[campo-de-texto-libre-que-viaja-a-telemetria-es-un-canal-de-egress]] · [[regiones-distintas-en-el-mismo-fichero-de-test-no-se-afirma-sin-mirar-el-hunk]]

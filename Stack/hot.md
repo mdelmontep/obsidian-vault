@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un cero solo discrimina si el evento PUDO ocurrir** — y una ventana anclada al arranque caduca con cada merge (autodeploy recrea el contenedor, incluso en un merge solo-docs ajeno): ancla al EVENTO. Ver [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
 - **El orden del `||` decide el copy, no quién lo revisó** — `detail || error || 'frase'` tapa el texto del cliente con el error interno. Ver [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
 - **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
 - **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]

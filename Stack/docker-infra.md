@@ -20,17 +20,6 @@ tags: [docker, traefik, dokploy, infra]
 - El guion corre EN EL HOST y sólo imprime nombres, longitudes y huellas: ningún valor cruza a la sesión.
 - Verificar siempre en el plano de datos, no en el de control. Y el contenedor no lo toma al vuelo.
 
-## El `env` está CIFRADO en la base de Dokploy — la receta de leer-fusionar-escribir no vale
-
-- `application.update` reemplaza el bloque entero, pero **no hay forma de leerlo**: la API lo devuelve en
-  claro y el wrapper lo borra; su propia base lo guarda cifrado (460 caracteres sin un `=`).
-- Sustituto probado (7-ago): reconstruir el bloque desde la fuente local y, **antes de escribir**, comparar
-  la huella SHA-256 de cada variable ya presente en el contenedor (`docker exec … printenv`, por SSH)
-  contra la tuya. Coinciden → reconstruir no pierde nada. Ver
-  [[dokploy-guarda-el-env-cifrado-la-receta-de-leer-fusionar-escribir-no-vale]].
-- El guion corre EN EL HOST y sólo imprime nombres, longitudes y huellas: ningún valor cruza a la sesión.
-- Verificar en el plano de datos, no en el de control. Y el contenedor no lo toma al vuelo.
-
 ## API Dokploy: `compose.one` y `schedule.one` devuelven el `env` COMPLETO
 
 - Ambos endpoints incluyen el bloque `env` entero del compose (todos los secrets: DB, API keys de terceros, tokens) en la respuesta, aunque solo se pida para leer metadata (autoDeploy, appName, último deploy).
@@ -62,6 +51,24 @@ tags: [docker, traefik, dokploy, infra]
 - Si se crea con una cuenta personal sin ese rol, la org no aparece en la lista de instalación ("Install App").
 - Workaround si no tienes owner: usar Git + SSH deploy key en lugar de GitHub App (Dokploy → Git → `git@github.com:org/repo.git` → Add SSH Key → añadir public key en GitHub repo Settings → Deploy keys).
 - Caso real TuFacturaIA 2026-05-13: repo en `AgentesIA-MAdrid`, app creada con `mdelmontep` (no owner) → org no aparecía. Fix: crear app logueado como `AgentesIAMadrid` (owner de la org).
+
+## `Rebuild` NO es `Deploy` — y el sello de build es ciego a un reinicio
+
+Tras cambiar una env en el panel, **`Rebuild` no aplica nada**: construye la imagen y deja el
+contenedor vivo con el env viejo. Solo **`Deploy`** clona y recrea. **Los dos terminan en `Done` verde,
+así que el panel no discrimina** — hay que abrir el log del deployment:
+
+- `Rebuild`: duración `0s`, todos los pasos `CACHED`, **sin `git clone`**, acaba en `✅ Docker build completed.`
+- `Deploy`: trae `Receiving objects…` y el commit.
+- `Reload`: ⚠️ **NO MEDIDO** — el panel dice que reinicia sin reconstruir; no lo he ejercitado.
+
+⚠️ Y el corolario, que cuesta más caro: **un sello de build (`/version` → `builtAt`) NO ve un reinicio.**
+Lo escribe un `RUN` del Dockerfile, vive en una capa **cacheada** y por construcción no se mueve aunque
+el proceso rearranque. Responde «¿qué contenido corre?», nunca «¿rearrancó?» — son dos preguntas
+distintas y el sello solo contesta la primera (26-ago: ~15 min de polling a un valor que no podía
+cambiar). Señal buena: pestaña **Logs** (`Up N minutes` + línea de arranque) o
+`docker inspect --format '{{.State.StartedAt}}' <id>`.
+Ver [[rebuild-no-recrea-el-contenedor-y-el-sello-de-build-es-ciego-al-reinicio]].
 
 ## Identidad del build: qué commit hay sirviendo (no ponerlo a mano en el panel)
 
@@ -98,6 +105,12 @@ cd /etc/dokploy/compose/<stack>/code && docker compose up -d <servicio>
 - ⚠️ No dar por hecho lo que diga tu máquina del subcomando: en el Mac con Colima `docker compose` **no
   existe**, y en el host de AGH es v5.2.0. Caso real (17-ago): ClickHouse de Langfuse ausente 10 días,
   reparado en 20 s por esta vía tras un día dado por bloqueado en «hay que hacer Deploy».
+- 🔁 **Y VOLVIÓ A PASAR**: ese mismo ClickHouse escribió del 19 al **23-ago 03:00** y desapareció otra
+  vez (medido el 26-ago; causa desconocida, sin OOM en `dmesg`, con disco y RAM de sobra). O sea que
+  **esta receta repara pero no cura**, y el síntoma tarda días en notarse. ⚠️ Antes de tocar nada:
+  `docker volume ls` — el volumen **sobrevivió las dos veces** (38 GB, creado el 5-jul, nunca
+  recreado), así que *nada de `docker volume prune`*: un issue afirmaba que los datos estaban
+  perdidos y era falso.
 
 ## Dokploy — alta de un servicio Compose por API (sin panel)
 

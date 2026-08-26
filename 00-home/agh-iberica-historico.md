@@ -133,3 +133,16 @@ Tanda de 17 merges con gate completo ✓ verde y el mismo total por tres caminos
 **Tarde: track de fidelidad de resolución** (#1363, #1358) y las cinco PRs del día mergeadas por orden de Manu. Detalle en `docs/status-log/2026-08-19-*` del repo.
 
 🧠 **No re-litigar:** se guarda el **texto crudo**, no los `ProposedWrite` (al reanudar se rutea contra el estado ya resuelto); y la reanudación vive en la **orquestación de `handle`** reusando lo de #535-G1, así que el tramo reservado de #454 **no se toca**. (decidido con #941; vive en el código desde su merge del 19-ago)
+
+## 2026-08-19 — las cinco PRs de fidelidad de resolución
+
+`#1399 → #1400 → #1397 → #1398 → #1404`; **#941**, **#1363** y **#1358** cerrados. Override de founder avisado en Slack, de una en una y sin `--delete-branch`; la suma se midió antes y cuadró exacta (`4340 + 17 + 12 + 6 = 4375`).
+
+🎯 **La clase de fallo que no falla: acierta otra pregunta**, y por eso el comercial no la detecta — #1363 escribía sobre la reunión pasada; en #1358, un `WHERE` que no casa devuelve **cero**, no error. Tres candados del repo pusieron en rojo mi propio diff y **los tres tenían razón**; cero tests ajenos tocados.
+Learnings: [[al-revisar-muta-la-propiedad-que-la-pr-declara-como-su-aportacion]] · [[tests-que-caen-por-contencion-de-cpu-verificalos-aislados-antes-de-diagnosticar]] · [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]].
+
+Premisas del día que se cayeron al medirlas: **#1100 abaratado** (`lastQuestion` SÍ cruza al intérprete, como `pendingQuestion`) y la causa raíz de **#938** es falsa (fallan **dos entradas en dos listas** de `proposal-retake.ts`, no el `cancel`). Issues nuevas: #1401 (un `SIN VÍCTIMA` falso con el control COHERENTE) · #1402 · #1403.
+
+## 2026-08-26 — Paquita emite al portal de Flota IA (#1418)
+
+Cuatro PRs con override de founder (#1420 → #1421 → #1423 → #1425). Una interacción = **un turno**, `externalInteractionId = traceId`. Aprendido y aplicado al runbook del repo: `Rebuild` ≠ `Deploy` y `builtAt` es ciego a un reinicio → [[rebuild-no-recrea-el-contenedor-y-el-sello-de-build-es-ciego-al-reinicio]]. Nadie pudo comprobar que emita porque Paquita no tuvo ningún turno → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]. Además: el hub y el repo llamaban «Carlos» al agente (se llama **Paquita**) y el error contaminó a un tercero — corregido por #1422.
