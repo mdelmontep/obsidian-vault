@@ -18,4 +18,8 @@ falso. **Solo lo cazó el E2E de navegador** (Playwright) que pega al endpoint r
 Regla: smokea el **entry point real** (endpoint/UI), no una réplica de los INSERT.
 El smoke en transacción-rollback ([[smoke-prod-en-transaccion-rollback]]) es ideal
 para RPCs/triggers, pero si bypassa el motor que arma el payload, no ve sus bugs.
+Variante gemela y su diagnóstico de una línea: un test que **replica el predicado**
+en vez de importarlo (26-ago, auto-aprobación OCR) da verde por definición. Se ve sin
+ejecutar nada: `grep "from ['\"].*<ruta>"` en `src/`+`tests/` — si ningún test importa
+el fichero donde vive la decisión, no hay cobertura por muchos tests que haya al lado.
 Relacionado: [[enum-nuevo-en-codigo-sin-ampliar-check-bd-rompe-insert-silencioso]].
