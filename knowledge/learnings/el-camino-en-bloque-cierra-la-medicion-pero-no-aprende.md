@@ -23,5 +23,10 @@ entran los datos de verdad** antes de dar por vivo un contador que solo incremen
 el lento. Un umbral de aprendizaje colgado del camino minoritario es un umbral
 inalcanzable.
 
+Arreglado el mismo día (#2230): el camino en bloque aprende con el mismo motor,
+colapsando el lote por patrón —124 apuntes = 37 llamadas, no 124—, y ese colapso es lo que
+conserva el «aprender lento» cuando la acción humana es masiva. El coste que
+justificaba no aprender se había estimado por apunte y era por patrón.
+
 Va con [[reglas-aprendidas-de-confirmacion-manual-cierra-loop-aprendizaje]] (el
 diseño del loop) y [[un-gate-abierto-con-la-metrica-caducada-no-vuelve-a-cerrarse]].

@@ -18,6 +18,53 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## 26-ago-2026 (noche) · el atajo en bloque aprende, y la máscara de la tarjeta deja de ser la clave (PR #2230)
+
+Cierra la primera mitad de #2229. `bulk-confirm` cerraba la medición y no
+aprendía nada, y las 126 decisiones de categoría cerradas en prod habían llegado
+todas por ahí, en dos clics (2 el 1-jul, 124 el 23-jul): la memoria de reglas
+estaba vacía **por construcción**, no por falta de uso.
+
+- **`aprenderCategoriaBulk`** colapsa el lote por combinación `(clave, categoría)`
+  antes de tocar la BD, así que el coste va por patrón distinto: los 124 apuntes
+  son **37 llamadas al RPC, no 124**. Sin migración: la mig 372 ya suma +1 por
+  llamada, así que una llamada por clave *es* «+1 por clave y por lote». Y ese
+  colapso es justo lo que conserva el «aprender lento» de §0.bis-3 cuando la
+  acción humana es masiva: un clic en bloque no puede madurar una regla de golpe.
+- **El coste que justificaba no aprender estaba estimado por apunte y era por
+  patrón.** La nota de alcance del docstring («por coste, resolver clave + RPC por
+  cada uno de hasta miles de ids») era una estimación que nadie midió.
+- **El extractor descarta ahora todo token con algún dígito**, no solo los 100 %
+  numéricos: 68 de esos 124 apuntes son `COMPRA TARJ. 5540XXXXXXXX0013 <comercio>`
+  y compartían clave —el enmascarado de la tarjeta, alfanumérico, que pasaba el
+  filtro—. `tarj` y `devolucion` entran en stopwords. La regla vieja `token:tarj`
+  queda inalcanzable: fila muerta e inocua, se deja.
+- **Backfill idempotente por la misma función que el endpoint** (un SQL paralelo
+  no probaría nada del camino vivo), sellando cada decisión en
+  `valor_humano.aprendizaje_backfill` — y a propósito SIN añadir `categoria_id`,
+  porque `auto_accuracy` deriva «corregida» de la presencia de esa clave y
+  añadirla habría convertido en correcciones un montón de aceptaciones.
+- **Aplicado a prod**: 126 decisiones, 2 orgs, 126/126 claves resueltas, 37 reglas
+  con +1, 126 selladas; segunda pasada no encuentra nada. Estado medido después:
+  42 filas (27 no ambiguas, 15 ambiguas), 26 en `veces_confirmada=1`, una en 2
+  (`token:laura`), **0 reglas verdes** → cero cambio de comportamiento, que era la
+  condición.
+- **7 claves quedan ambiguas** (`openai` 30 vs 7, `costco`, `brico`, `ionos`,
+  `social` y dos contrapartes): el humano les puso dos categorías. Mismo desenlace
+  que esos clics de uno en uno, y como el RPC degrada pero no borra filas siguen
+  ambiguas mientras convivan. No se hizo excepción para el histórico —un backfill
+  con semántica propia deja de reproducir el camino vivo—; si el 30-vs-7 debiera
+  ganar por mayoría, es un cambio de §0.bis-3 y va aparte.
+- Verificación: gate completo verde (15.511 tests), 14 tests nuevos, **tres
+  mutaciones con víctima** (romper el colapso, devolver el filtro a `^[0-9]+$`,
+  anular la contraparte de una emitida) y cuatro tests que comparan los
+  **argumentos reales del RPC** entre bloque e individual — si divergen, lo que el
+  sistema aprende depende del botón que se pulse.
+
+Sigue abierta la otra mitad de #2229: `evaluarGate` devuelve `mantener` con
+`auto_accuracy = null`, así que el mismo `null` dice «no abras» y «no cierres» y
+nada va a cerrar lo que se abrió el 23-jul.
+
 ## 26-ago-2026 (tarde) · los cuatro agujeros que quedaban donde la IA decide sola (PR #2226) y lo que dijo prod
 
 Ejecución del prompt de continuación §8 + §1. Mergeado en `7c657ac6f`, 19 ficheros, +757/−69, sin migración.
