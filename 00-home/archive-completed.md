@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **26-ago** · TuFacturaIA — bandeja de soporte a CERO (#2194/#2198/#2208): los once cerrados, cinco ya estaban arreglados sin cerrar. → [[facturaia]]
 - **26-ago** · TuFacturaIA — bandeja de soporte a cero (#2194/#2198/#2208 + #2209): once tickets cerrados, cinco de ellos arreglados desde hacía semanas sin cerrar. Ticket #86 de Borja: `resuelto` desde el 28-jul, la entrada seguía viva en top-of-mind por inercia.
 - **2026-08-19 · TuFacturaIA — cobro indebido cerrado del todo**: los tres emisores que quedaban con el importe bruto (adeudo SEPA, Payment Link de Stripe y el batch de email del copiloto) consumen ya `importe_cobrable` vía `pendienteCobrable`. Verificado por grep el 19-ago. El eje del ledger se cerró aparte en #1856 / PR #1893 (mig 711).
 - 2026-08-17 · facturaia — **Vínculo TuCRMIA↔FIA COMPLETO, las cuatro piezas en prod el mismo día**: #1844 (`crm_link`, mig 700, ADR-018 — el vínculo deja de exigir Enterprise sin regalar `api_access`), #1849 (`/v1/webhooks`: el scope `webhooks:manage` llevaba desde la mig 025 sin un solo endpoint detrás), #1850 (estado de cobro en `GET /v1/facturas/{id}`, con las dos escalas fiscal y cobrable) y #1851 (`factura.cobro_registrado`, mig 705, smoke en prod con ROLLBACK 5/5). Abiertos con medición y sin daño hoy: #1856 y #1858. Ver [[facturaia-historico-detallado]] §17-ago.

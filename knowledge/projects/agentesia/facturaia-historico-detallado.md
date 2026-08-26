@@ -18,6 +18,23 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## 26-ago-2026 (tarde) · los cuatro agujeros que quedaban donde la IA decide sola (PR #2226) y lo que dijo prod
+
+Ejecución del prompt de continuación §8 + §1. Mergeado en `7c657ac6f`, 19 ficheros, +757/−69, sin migración.
+
+1. **`DOMINIOS`/`MODOS` a fuente única** (`src/lib/agentic/dominios.ts`, espejo del CHECK de la mig 367 con test de espejo). No eran las tres copias que decía el prompt: eran **seis** — la cuarta en `agentic-diagnostico.ts` y dos uniones locales en el componente de Ajustes. El candado se verificó como manda la regla: metiendo un `'facturas'` falso en la unión, `typecheck` falla en TS2345/TS2741 exactamente en los cuatro sitios que hay que actualizar.
+2. **`decidirMuestreo` con tests** (11): decide qué verdes van a confirmación humana, o sea la señal con la que se mide `auto_accuracy`. Documentado de paso el peligro del porcentaje: el camino OCR pasa `muestreo_rate` sin clamp propio, al contrario que conciliación.
+3. **La degradación del gate por fin AVISA.** `aplicarGate` escribía `degradado_at`/`degradado_motivo` y **nadie los leía**: ni notificación, ni alerta, ni texto en Ajustes — la mitad `avisa` del «degrada+avisa» del §0.bis-5 no existía. Ahora emite un kind **no silenciable** (`agentic_degradado_*`, el dominio va en el kind porque `ref_id` es UUID) que se resuelve solo al reabrir el gate, y Ajustes explica por qué está en observación. Un descenso manual no inventa explicación.
+4. **Dos docs que contradecían al código**: `agentic-ocr-conciliacion.md` §0.bis-7 (la detección de transferencias ya no depende del toggle) y `aprendizaje-ocr.md:166` (decía «pendiente» lo que `auto-approve.ts:203/:215` ya hace).
+
+Verificación: **12 mutaciones, 11 víctimas inmediatas.** La 12.ª sobrevivió y fue la útil: mi test de la UI usaba `gate_abierto: true`, así que el guard exterior tapaba la condición que decía comprobar — verde por el motivo equivocado. Se cerró con el caso que discrimina (`activo` + gate cerrado, estado que el backend no produce y solo llega por escritura directa). Gate completo `EC=0`, 15.493 tests. Otra vez el hook del grafo paró el push y otra vez se resolvió por su vía (`npm run deps:json`), no con `--no-verify`.
+
+### Lo que dijo prod (medición de solo lectura)
+
+La primera aplicación silenciosa **no ha ocurrido** —0 filas con `categoria_source='regla'` en toda la BD, 0 en `audit_log` con `actor_type='agent'`— y por esa vía **no puede llegar**: 107 de las 109 verdes de AgentesiaLab se cerraron por `bulk_confirm`, y `closeCategoriaDecisionsBulk` no llama a `aprenderCategoria` (a propósito, por coste, y lo dice su docstring). El atajo que el usuario usa de verdad alimenta el denominador del gate y no la memoria. Corolario: ninguna org tiene una verde resuelta en 30 días, así que `auto_accuracy` es `null` para todas y `evaluarGate` devuelve `mantener` cada día — AgentesiaLab sigue en `activo` por un acierto del **23-jul**. Las dos decisiones que salen de ahí → #2229. Learnings → [[el-camino-en-bloque-cierra-la-medicion-pero-no-aprende]] · [[un-gate-abierto-con-la-metrica-caducada-no-vuelve-a-cerrarse]].
+
+De paso, dos mediciones más: **#2227** (de 240 módulos que escriben sin humano, 91 sin ningún test que los alcance; mi primer script decía 12 porque casaba imports por basename en vez de resolverlos) y **#2228** (las 22 circulares de `_parts`: 21 son `import type` y una es de valor y real, `cuerpos.ts` leyendo `UUID_INEXISTENTE` del barrel en tiempo de evaluación).
+
 ## 26-ago-2026 · las tres decisiones que escriben en silencio dejan de vivir sin test (PR #2224)
 
 Auditoría de qué escribe sola la IA agéntica, el día siguiente a activar `categorias`. El agujero lo encontró un grep, no un razonamiento: **ningún** fichero de test importa `enrich-batch/_parts/enrich-batch/helpers.ts`, así que no había cobertura posible por muchos tests que hubiera al lado.
@@ -28,7 +45,7 @@ Auditoría de qué escribe sola la IA agéntica, el día siguiente a activar `ca
 
 Verificación: **7 mutaciones, 7 víctimas** (aflojar la línea roja en el motor y en el adaptador, aflojar la zona del OCR, quitar el guard de dirección, derivar la zona de `esVerdeAuto`, y las dos direcciones del plan de transferencias). Gate 1465/1465 ficheros, 15.464 tests, `EXIT=0`. La primera corrida dio 5 fallos con duraciones de 17 minutos por test: inanición de CPU (load 12,2), los 5 pasan aislados y la corrida limpia sale verde. Dos guards del pre-push pararon el push y ninguno se rodeó: subido el baseline de `file-size` (+3 en helpers, +1 en el route, que es literalmente la línea de import nueva) y regenerado el grafo de dependencias, que confirma **2 importadores** del módulo nuevo y cero fan-out. `deps:circular` sigue en 22, idénticos a un checkout limpio de `origin/main`: deuda preexistente del patrón `_parts`, ajena a este cambio.
 
-Estado que deja: `AgentesiaLab SL` es la única org de producción en activo (`categorias`, gate abierto) y sus 2 reglas aprendidas están a 1 confirmación de las 3 que exige el umbral. El arreglo entró **antes** de la primera escritura silenciosa, no después.
+Estado que deja: `AgentesiaLab SL` es la única org de producción en activo (`categorias`, gate abierto) y sus 2 reglas aprendidas están a **2** confirmaciones de las 3 que exige el umbral (`veces_confirmada = 1` cada una; el «a 1» que escribí esa mañana era mío, medido mal). El arreglo entró **antes** de la primera escritura silenciosa, no después.
 
 Esa misma tarde, al auditar el prompt de continuación que dejaba escrito, salieron cuatro agujeros más en el área que acababa de dar por cerrada —`DOMINIOS` a mano tres veces sin candado, `decidirMuestreo` sin un solo test, la degradación del gate que nadie lee ni avisa, y `aprendizaje-ocr.md` contradiciéndose— y un puntero mío a un prompt SUPERSEDED. Los cinco van especificados en [[facturaia-prompt-continuacion-26-ago]] §8. Método → [[un-prompt-de-continuacion-propaga-los-punteros-que-no-abriste]].
 

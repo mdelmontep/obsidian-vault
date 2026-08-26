@@ -31,6 +31,7 @@ tags: [stack, index]
 - **Aseverar el `import` no asevera la llamada** — `toContain("import { X")` sigue verde si otra función ocupa el sitio de `X`; asevera el USO. Ver [[aseverar-sobre-el-import-no-asevera-sobre-la-llamada]]
 - **Probar la aritmética no prueba el cableado** — 5 tests de la función pura en verde con el DTO pasándole un `0`; cubre también quién le pasa los argumentos. Ver [[probar-la-aritmetica-no-prueba-el-cableado-que-la-invoca]]
 - **Rojo de la suite + máquina saturada ≠ regresión** — 3 corridas, 3 conjuntos de rojos sin solape; pasan aislados. Mira la duración antes que el nombre (123 s vs 11.780 s). No solapes gates. Ver [[la-suite-completa-bajo-paralelismo-no-distingue-regresion-de-saturacion]]
+- **Un permiso concedido midiendo caduca con la medición** — el mismo `null` dice «no abras» y «no cierres». Ver [[un-gate-abierto-con-la-metrica-caducada-no-vuelve-a-cerrarse]]
 
 Este fichero se carga **cuando no hay disparador claro** (CLAUDE.md: "Default / dudo → `Stack/hot.md`").
 O sea: es lo que se lee al arrancar sin saber todavía qué se va a tocar. Todo lo que esté aquí se paga
