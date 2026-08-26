@@ -16,3 +16,9 @@ cron_runs, no solo exit 0); (2) en el comando del cron, considerar
 `--fail-with-body` + asertar el body esperado, o al menos `-w '%{http_code}'`;
 (3) todo endpoint sin sesión nuevo → allowlist del middleware (inviolable ya
 existente que aquí se saltó).
+Variante peor, sin `-f` siquiera (agency-portal, 26-ago): los schedules de
+Dokploy se escriben `curl -s ... >/dev/null` y el panel imprime "✅ Command
+executed successfully" mirando el exit de curl, que con `-s` a secas es 0 hasta
+con un 404 o un 401. El log verde del panel **no** es evidencia de que el cron
+corriera: la evidencia es la huella en BD (`fleet_ingest_logs`, `last_event_at`)
+o un `-w '%{http_code}'` dentro del propio comando.
