@@ -20,6 +20,14 @@ nohup npm run build > build.log 2>&1 & PID=$!
 while kill -0 $PID 2>/dev/null; do sleep 10; done
 ```
 
+Y no solo a sí mismo: casa con los shells de OTRAS sesiones que esperan a lo
+mismo (26-ago, dos direcciones el mismo día). `pgrep -q -f "npm run gate"` dio
+«sigue corriendo» durante 20 min sobre un gate terminado, porque una sesión
+paralela tenía su propio `until ! pgrep -f "npm run gate"` vivo; y un
+`pkill -f "next build"` mató el shell de vigilancia de otra sesión. Con varias
+sesiones en el mismo repo, el patrón no identifica un proceso: identifica una
+frase escrita en muchas líneas de comandos.
+
 Regla general: un `pgrep -f` sobre una cadena que tú mismo acabas de escribir en
 un comando es siempre sospechoso. Vale igual para `ps aux | grep`.
 Ver [[sondear-la-capacidad-real-no-la-presencia-del-binario]].

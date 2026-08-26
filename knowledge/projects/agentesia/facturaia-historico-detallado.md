@@ -18,6 +18,40 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 
+## 26-ago-2026 (cierre) · la auditoría de Albaranes, cerrada (PR #2235 `4ad5534e1` + #2237 `553e77845`)
+
+Las **18 propuestas** de `AUDITORIA-albaranes-2026-08-26.md` decididas una a una con su argumento en
+**ADR-030**: 12 implementadas, 4 rechazadas por escrito (entre ellas `AL014` por línea y vaciar el PMP:
+no reabrir sin datos nuevos) y 2 de campo. Migs **756-760**, ya aplicadas en prod y con `migration list
+--linked` verificado (local == remote hasta 761): los números estaban congelados, así que **no** se
+renumeró.
+
+Lo que cierra el área: entra desde la ficha del proveedor, un widget del dashboard y deep-link; el
+listado se busca por número o proveedor y se ordena; el filtro de proveedor busca en servidor; aprobar
+una factura pregunta antes por los albaranes sin cruzar y el panel los resuelve en el mismo modal; la
+procedencia (`creado_via`) se guarda y se ve; el copiloto sabe responder qué has recibido y no te han
+facturado. Y `validado_parcial` se retira (mig 760) — nadie podía escribirlo.
+
+Tres hallazgos que no venían en la auditoría:
+1. **El aviso miraba menos días que el panel que lo resuelve**, y excluía las fechas nulas. Esa
+   diferencia es la rendija del doble conteo → [[el-aviso-y-el-panel-que-lo-resuelve-tienen-que-medir-la-misma-ventana]]
+2. **`validado_parcial` seguía vivo en `openapi-spec.json`**, o sea en el contrato público, porque el
+   test de espejo ataba dos de las tres caras → [[retirar-un-valor-de-un-enum-lo-deja-vivo-en-el-contrato-publico]]
+3. **Dos defectos que solo se vieron conduciendo el navegador**: faltaban fronteras `<Suspense>` en las
+   dos páginas (con `cacheComponents`, error en consola en cada visita) y un mensaje de «ningún
+   proveedor con ese nombre» que no podía renderizarse nunca.
+
+Evidencia: gate entero verde (lint, typecheck, **15.712** tests, build), los tests de los arreglos
+**mutados** (al estrechar la ventana o quitar la rama del nulo, caen), QA en 1440 claro / 1440 oscuro /
+390 contra la org `is_test` de prod → [artifact](https://claude.ai/code/artifact/7782cdb9-d728-451f-9f65-d1103d1fbbc3),
+y el grafo regenerado y leído: cero circulares nuevas y **ningún quinto pipeline de auth** —
+`withAlbaranesAuth` envuelve `withApiAuth` y solo aporta el `moduleGate`; anotado en `dependency-map.md`.
+
+El #2237 cierra el paso externo: schedule `SckQKegrM1-4D8ZEs_Z-H` en Dokploy (`50 7 * * *`, TZ
+Europe/Madrid), `runManually` → `cron_runs` **success** con `{"orgs":1,"total":1}` leído por psql, y
+retirado `pendiente_de_schedule`. De paso corrigió una hora: el registry decía «08:50 Madrid» para
+`50 7 * * *`, que es la lectura en UTC — con `timezone` explícito dispara a las **07:50** todo el año.
+
 ## 26-ago-2026 (cierre) · el cableado del bloque, vigilado y probado en prod (PR #2232, `c50bb1180`)
 
 El #2230 dejó un agujero declarado: las tres líneas de pegamento de la ruta no estaban ejercidas en

@@ -883,7 +883,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[observabilidad-nueva-destapa-bugs-viejos-en-silencio]] — observabilidad nueva destapa bugs viejos en silencio
 - [[watchdog-umbral-debe-tolerar-un-tick-perdido]] — umbral de watchdog de cron debe tolerar ≥1 tick perdido (2× intervalo)
 
-## TypeScript / tooling / testing (28)
+## TypeScript / tooling / testing (29)
+- [[retirar-un-valor-de-un-enum-lo-deja-vivo-en-el-contrato-publico]] — un espejo con N caras y un candado que mide N−1 no protege, tranquiliza: la spec publicada es la cara que se olvida
 - [[un-test-rojo-puede-estar-diciendo-que-dejo-de-medir]] — un test rojo puede estar diciendo que dejó de medir, no que el código esté mal
 - [[un-export-cuyo-unico-importador-es-su-test-sale-verde-en-todo]] — un export que solo importa su test está cubierto y DESCONECTADO: verde en el arnés, en tsc y en eslint
 - [[retirar-un-campo-de-una-interfaz-no-es-un-candado-los-spreads-lo-esquivan]] — el excess-property check solo mira literales: el campo vuelve por un spread con tsc en exit 0
@@ -978,7 +979,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[stripe-subscription-deleted-resolver-por-sub-id-no-por-kind]] — stripe subscription.deleted handler debe resolver por sub.id no solo por metadata.kind
 - [[stripe-subscription-item-resolver-por-price-no-por-indice]] — stripe: resolver el item de una suscripción por price, nunca por índice items.data[0]
 
-## Stock / inventario (3)
+## Stock / inventario (4)
+- [[el-aviso-y-el-panel-que-lo-resuelve-tienen-que-medir-la-misma-ventana]] — quien avisa de un riesgo y quien lo remedia comparten el predicado, o el aviso es un colador
 - [[motor-con-input-requerido-debe-defaultear-no-fallar-mudo]] — motor con input requerido debe defaultear, no fallar mudo
 - [[subida-en-lote-cliente-backoff-sobre-rate-limit-servidor]] — subida en lote cliente backoff sobre rate limit servidor
 - [[unidad-compra-convertir-en-insert-no-en-motor]] — unidad de compra (cajas) — convertir en el RPC de inserción, no en el motor de stock
