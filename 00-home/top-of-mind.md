@@ -36,7 +36,7 @@ tags: [home, prioridades]
 - **Agentesia — chatbot propio (31-jul)** — `Registro Sheets` del de WhatsApp arreglado (fallaba en cada lead con la ejecución en `success`) + prompts corregidos; **sin tráfico desde el fix, sin verificar**. Pendiente: decidir el `[FIN]` muerto, el chat web sin ejecuciones desde el 19-jul y sacar el secret del `jsCode`. Hito 5 → [[agentesia]] · [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
-- 🟠 **TuFacturaIA — el gate agéntico sigue abierto por un acierto del 23-jul (26-ago, #2229)** — el atajo en bloque ya aprende y julio está backfilleado (#2230). Queda **una decisión tuya**: que la ausencia de medición no SOSTENGA el permiso. → [[facturaia]]
+- 🟢 **TuFacturaIA — el permiso agéntico ya caduca y la memoria de categorías se ve (26-ago, #2233/#2234 + mig 761)** — ambiguas en prod 15 → 0, sin cambio de comportamiento. **Tuyo**: «Olvidar» en una org activa (la sandbox da 402). → [[facturaia]]
 - 🟠 **Laserys — mismo fallo del número fijado, sin tocar** — `+34919935214` sirve la v6 con la v14 publicada. **Tuyo el OK**: es el último de la agencia así. → [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
 - 🔴 **TODOS los agentes deben identificarse como IA (art. 50, vigente desde el 2-ago-2026)** — hecho en Elphis (17-ago) y Tecnocloud (24-ago, v47, en el begin_message). Faltan Clínica Zen, Simarro, EcoBox, AGH, Laserys, Danny, Gesfincas y el chatbot propio. Hasta 15 M€ o 3 %, y lo nota el cliente antes que tú. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - 🟠 **TuFacturaIA — growth: antes de encender campaña, abogado ADR-023 + Safari ITP** (**tuyo**, sin prisa; los 7 PRs están en prod desde el 21-ago). → [[facturaia]]

@@ -55,3 +55,23 @@ de otro. (3) Lo que funcionó: el número se ocupa AL MERGEAR, coordinación exp
 sesiones (SendMessage), avisar SIEMPRE antes de aplicar a prod, y verificación cruzada por
 nombre al cerrar. Prod por delante de main mientras un PR espera es ventana de colisión:
 mergear rápido la cierra.
+
+**Séptima vez, y el CLI propone MENTIR (26-ago, mig 761)**: otra rama sin PR abierto tenía
+sus 756-760 ya aplicadas a prod. Dos bloqueos nuevos, ninguno en la lista de arriba:
+
+1. `db push --linked` no se salta nada: **aborta** con `LegacyDbPushMissingLocalError`
+   («remote migration versions not found in local migrations directory») y **sugiere
+   `migration repair --status reverted 756 757 758 759 760`**. Eso sería declarar revertido
+   lo que está aplicado: el registro pasaría a mentir y la siguiente rama las reaplicaría.
+   Lo que sí vale: **copiar los ficheros de la otra rama a `supabase/migrations/` sin
+   commitearlos**, `db push` (aplica solo el tuyo, los suyos ya constan) y borrarlos. Sin
+   `--include-all`, que sí aplicaría de todo.
+2. El `pre-push` corre `gen:types:check` contra el proyecto del checkout, así que main
+   quedaba mintiendo sobre prod por columnas AJENAS y no había push posible sin regenerar.
+   O cargas con la deriva del otro en un commit que diga de quién es, o bypasseas el hook.
+   Se carga: el commit `chore(types)` con el porqué es barato; el bypass no.
+
+Y otra vez la propiedad por catálogo antes de mover: en prod NO estaban mis objetos
+(índice, trigger con DELETE, grants revocados) y SÍ `albaranes.creado_via` de su 759.
+`mig:renumerar` se niega correctamente (issue #2095) cuando el número consta aplicado →
+renumerar A MANO, actualizando también las cadenas `mig NNN:` de dentro del fichero.
