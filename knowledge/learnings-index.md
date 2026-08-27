@@ -52,6 +52,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[cliente-react-bypasa-endpoint-canonico-bug-fiscal-latente]] — cliente react bypasa endpoint canónico con supabase.from() — guards = teatro
 - [[clientes-proveedores-filtrar-activos-archivado-at]] — clientes/proveedores: filtrar activos con archivado_at IS NULL, no activo=true
 - [[cloudflare-waf-bloquea-sql-patterns-en-query-params-supabase]] — cloudflare waf bloquea sql patterns en query params supabase
+- [[columna-de-purga-sin-cron-es-retencion-aparente]] — una columna de purga que ningún cron rellena es retención aparente
 - [[columna-generada-stored-para-equivalente-derivado]] — equivalente derivado que debe seguir sincronizado → columna GENERATED STORED, no trigger…
 - [[columnas-regulatorias-requieren-guard-rol-trigger-no-solo-rls]] — columnas regulatorias requieren guard de rol en trigger + API route, no solo RLS
 - [[conflicto-rebase-migraciones-paralelas-mismo-table-resolver-aditivo]] — conflicto de rebase entre 2 PRs que añaden columnas distintas a la misma tabla se resuelv…
@@ -75,6 +76,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]] — gate de drift de schema postgres — gotchas de psql -c y pg_dump ≥16
 - [[el-delimitador-se-elige-contra-el-dato-real-no-a-gusto]] — el delimitador se elige contra el dato real, no a gusto tipográfico
 - [[el-magic-link-de-supabase-ignora-un-redirect-fuera-de-la-allowlist]] — el magic link de supabase ignora un redirect que no esté en su allowlist
+- [[el-trabajo-no-critico-dentro-del-try-hace-que-el-emisor-reintente]] — el trabajo no crítico dentro del try del crítico hace que el emisor reintente
 - [[en-next-16-el-redirect-de-un-server-component-llega-en-el-streaming]] — en next 16 el redirect de un server component llega en el streaming, no en la respuesta
 - [[encryption-key-de-credenciales-en-bd-no-es-rotable-in-place]] — encryption key de credenciales en bd no es rotable in-place
 - [[endpoint-crear-entidad-find-or-create-por-identidad-unica]] — endpoint que crea entidad con identidad única debe find-or-create, no insert ciego
@@ -105,6 +107,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[helper-sql-orden-last-revert-at-antes-de-update-mfa]] — helper SQL con chain de triggers — setear guard ANTES del trigger source
 - [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]] — integración crítica en jsonb de tabla genérica pierde observabilidad por diseño
 - [[la-cabecera-de-error-del-runner-roba-la-primera-ocurrencia-al-parser]] — la cabecera de error de un runner roba la primera ocurrencia y el parser cuenta 0 pasados
+- [[la-doc-de-cumplimiento-cito-un-filtro-de-otro-cron]] — la doc de cumplimiento citó un filtro que vivía en otro cron
 - [[la-metrica-de-estado-se-mide-despues-de-commitear]] — una métrica derivada del árbol se mide después de commitear, nunca antes
 - [[la-org-emisora-de-tu-propio-saas-no-es-un-cascaron]] — al facturar tu SaaS con tu propio producto, la org emisora no es un cascarón
 - [[la-reparacion-conversacional-tiene-nombre-y-viene-de-serie]] — la reparación conversacional tiene nombre canónico y los frameworks la traen de serie
@@ -291,6 +294,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[un-eval-que-llama-al-interprete-no-ve-lo-que-arregla-la-capa-de-abajo]] — un eval que llama al intérprete no ve lo que arregla la capa de abajo — lee el instrumento antes de promete…
 - [[un-fail-closed-cuenta-la-fuente-que-puede-fallar-no-el-agregado]] — un fail-closed cuenta la fuente que puede fallar, no el total agregado
 - [[un-gate-que-resuelve-imports-solo-ve-los-estaticos]] — un gate que resuelve imports por AST sólo ve los estáticos de nivel superior
+- [[un-gate-que-solo-mide-lo-aplicado-puntua-al-humano]] — un gate que solo mide lo aplicado puntúa al filtro humano, no al proponente
 - [[un-guard-sobre-sql-tiene-que-conocer-el-embed-y-el-alias-de-postgrest]] — un guard sobre SQL/PostgREST tiene que conocer el embed y el alias
 - [[un-hook-que-bloquea-es-un-and-que-no-se-cumple]] — un hook que bloquea es un && que no se cumple, así que la limpieza no va encadenada
 - [[un-metodo-sin-llamantes-puede-tener-el-guard-ausente]] — un método sin llamantes puede tener el guard ausente y su comentario afirmar que está
