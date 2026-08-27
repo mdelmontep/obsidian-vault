@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-18
+updated: 2026-08-27
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,26 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-18
+## Estado actual · 2026-08-27
+
+**Auditoría y arreglo integral del agente de voz (Laura, Retell).** Lo abrió Alba: «es muy lenta, entra en bucle con el saludo, las transferidas no llegan a recepción». Agente `agent_e21120298343bc2ef8b4a535c9`, flow `a42bf76dcfa0`, **v15 publicada** y servida (el número no fija versión). Suite de simulación **9/9**.
+
+- ✅ **Latencia e2e 2.720 → 1.859 ms** (mediana de p50 sobre 40 llamadas partidas por versión); el TTS solo, 686 → 175 ms.
+- ✅ **El bucle del saludo tenía dos causas**, no una. (a) Eco: el ASR transcribía la propia voz de Laura como si fuera el usuario. (b) `welcome` era `static_text`, así que **volver a entrar en el nodo reemitía la frase** — y se volvía a entrar porque, como intuyó Alba, la gente dice "hola, ¿hay alguien?" durante la espera. El eco está mitigado, no eliminado: si vuelve a partirse en una llamada real, apunta al trunk de Netelip.
+- ✅ **Colgaba sin despedirse**: los nodos `end` de Retell no hablan. Nodo `despedida` propio. → [[retell-el-nodo-end-no-habla-la-despedida-necesita-nodo-propio]]
+- ✅ **El "bucle del nombre" que reportó Alba era una condición de arista**, no el prompt: la única salida de `intake` exigía el nombre, así que quien no lo daba veía a Laura pedirlo cuatro veces ignorando sus preguntas. → [[retell-la-condicion-del-edge-manda-sobre-el-prompt]]
+- ✅ **Opción 2 de Alba implementada**: no se transfiere a recepción, se recogen datos y se avisa al equipo. La frase *"te paso con nuestro equipo"* sobrevivía en las transiciones y ahora es prohibición dura del `global_prompt`, con la de no pedir el teléfono (ya se conoce de la llamada). `recepcion_transfer` queda huérfano a propósito, por si se reactiva. → [[prohibir-una-frase-en-un-nodo-no-cubre-lo-que-se-dice-al-transicionar]]
+- ✅ **No dejaba colgar**: ante "gracias, que tengas un buen día" respondía *"Espera un momento, antes de que cuelgues…"* y volvía a ofrecer la cita, hasta cuatro veces. No lo pedía ningún prompt. Salió leyendo transcripciones de casos que PASABAN. → [[la-transcripcion-de-un-test-que-pasa-es-donde-esta-el-defecto-que-nadie-mide]]
+- ✅ **Falso 112**: mandaba a urgencias a quien solo describía su consumo con normalidad. Nodo `estado_afectado` acotado; caso 07 de la suite lo cubre.
+- ✅ **Las reservas volvían vacías**: los `args` de la tool llegaban como `{}` o con `{{dv_x}}` literales. Propiedades con `const` en la custom function (las aplica Retell, no el LLM) + guard que descarta variables sin resolver y valores basura ("sin nombre", "ninguno") en los dos `retell-tool-*`. Verificado en la ejecución 10595: `motivo`, `relacion` resueltos, `link_enviado: true`, `wamid` real.
+- ✅ **Consentimiento RGPD en voz**: vivía dentro de un nodo `function` (mudo), así que **no se pedía nunca**. Nodo `consentimiento` propio antes de extraer datos.
+- ✅ **Dedup de deals muerto desde julio**: `ON CONFLICT DO NOTHING` no refrescaba la fila caducada, 26 claves en ese estado. → [[on-conflict-do-nothing-nunca-refresca-una-fila-caducada]]
+- ✅ **Alerta si el enlace no sale**: `reservar_visita` devolvía `ok:true` aunque el WhatsApp fallara. Ahora `ok` exige `link_enviado` y el código `enlace_no_enviado` entra en el error-handler.
+- 🧪 **Suite de 9 casos** en Retell (handoff, crisis, ingreso, reserva, saludo pisado, nombre ininteligible, falso 112, composición de sustancias, confidencialidad). Tres daban `ERROR` por el usuario simulado, no por el agente. → [[un-usuario-simulado-sin-condicion-de-salida-se-reporta-como-error-del-agente]]
+- ⚠️ **Sin ejercitar aún en llamada real**: despedida, nodo de consentimiento, tope de dos intentos con el nombre, fuera de horario, texto de `recepcion_aviso`, fallback de nombre en Clientify y la alerta `enlace_no_enviado`. La simulación los cubre; el trunk no.
+- ⚠️ **Decisión pendiente tuya**: mover precios y horarios a la knowledge base ahorraría ~180 ms, pero con `filter_score: 0.6` una consulta por debajo del umbral deja a Laura sin poder citar precios. No aplicado a propósito.
+
+## Estado previo · 2026-08-18
 
 - ✅ **Ya no se presenta en cada mensaje (18-ago tarde).** Lo reportó Alba: «se presenta 17 veces en la misma conversación». La marca `ia_disclosed` vivía en los `custom_attributes` de Chatwoot, pero el nodo que los escribía los **reconstruía**, y ese endpoint reemplaza en vez de fusionar: duraba un turno. Se llevaba por delante también `clientify_*` y `bot_paused` (una conversación pausada podía despertarse sola). Al verificarlo salió un segundo defecto —la frase literal estaba en el prompt y el modelo la copiaba: salía dos veces— y un tercero: el aviso abre con «Hola» y el modelo abría con el suyo, dos saludos pegados; ahora el nodo recorta el saludo de apertura. Probado end-to-end por el webhook real, dos turnos. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - ✅ **No se dan horarios de primera visita (18-ago tarde).** Lo pidió Alba: la disponibilidad la ve el paciente en el enlace. La regla ya existía, pero 157 líneas por debajo del horario del centro y dentro de «Flujo de reserva»; a un "horario de visitas" el modelo no estaba reservando y sirvió el horario del centro. Aviso pegado al dato: **2/5 → 0/5** medido contra la API real. Su segunda petición —«si en el enlace no encuentran hueco, que nos lo digan»— se pidió primero al prompt (0/5) y acabó en el **texto fijo** del mensaje del enlace (`book-and-notify` → `Build enlace`), donde sale siempre. Pendiente: en **voz** ese texto es la plantilla HSM `elphis_cita_link` y hay que recrearla en Meta. → [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]]
