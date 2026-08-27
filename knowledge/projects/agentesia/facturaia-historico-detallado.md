@@ -43,7 +43,8 @@ Tres hallazgos que no venían en la auditoría:
 
 Evidencia: gate entero verde (lint, typecheck, **15.712** tests, build), los tests de los arreglos
 **mutados** (al estrechar la ventana o quitar la rama del nulo, caen), QA en 1440 claro / 1440 oscuro /
-390 contra la org `is_test` de prod → [artifact](https://claude.ai/code/artifact/7782cdb9-d728-451f-9f65-d1103d1fbbc3),
+390 contra la org `is_test` de prod (el artifact con las 22 capturas lo borraron el 27-ago y la sesión
+perdió el enlace; el HTML sigue en el scratchpad → [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]]),
 y el grafo regenerado y leído: cero circulares nuevas y **ningún quinto pipeline de auth** —
 `withAlbaranesAuth` envuelve `withApiAuth` y solo aporta el `moduleGate`; anotado en `dependency-map.md`.
 
@@ -51,6 +52,12 @@ El #2237 cierra el paso externo: schedule `SckQKegrM1-4D8ZEs_Z-H` en Dokploy (`5
 Europe/Madrid), `runManually` → `cron_runs` **success** con `{"orgs":1,"total":1}` leído por psql, y
 retirado `pendiente_de_schedule`. De paso corrigió una hora: el registry decía «08:50 Madrid» para
 `50 7 * * *`, que es la lectura en UTC — con `timezone` explícito dispara a las **07:50** todo el año.
+
+**27-ago 07:50:01 Madrid: disparó solo y la hora corregida quedó probada por el propio run** — `success`
+en 208 ms, `{"orgs":1,"total":1}`, `triggered_by: dokploy`. La cadena llega al final, no al 200: la
+notificación se **reabrió** (`occurrence_count` 2, `warning`, CTA `/albaranes?estado=abierto`), que es el
+comportamiento de `notify_upsert` por el que el cron es diario y no cada N minutos. El 1 cuadra con la
+base —un único albarán `abierto`, en la org `is_test`—. Sigue sin ejercer que el CTA aterrice filtrado.
 
 ## 26-ago-2026 (cierre) · el cableado del bloque, vigilado y probado en prod (PR #2232, `c50bb1180`)
 
