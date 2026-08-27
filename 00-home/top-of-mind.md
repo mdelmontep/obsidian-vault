@@ -10,7 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟢 **Elphis Psicología — agenda alineada con la web, PR #30 vía fork, plan de agentes CERRADO (25-ago)**. **Tuyo**: OAuth sin token (e2e 1/12), las 4 confirmaciones de la WABA (número virgen · SIP · OTP · SMTP), password 1P; Borja el merge del #30. Detalle y decisiones en el hub. → [[clientes/elphis-psicologia/index|elphis-psicologia]]
+- 🟢 **Elphis Psicología — bloque B COMPLETO y vivo (27-ago), esperando la firma de Alba**. Puerta: OK por escrito a la **v2** del protocolo de crisis (mensaje listo en `docs/peticion-firma-alba.md`, lo manda Borja). **Tuyo**: rotar el token de Chatwoot (las DOS credenciales a la vez), backups fuera del host (Wasabi 403), OAuth de Google sin token (e2e 1/12), las 4 confirmaciones de la WABA. Borja: merge del #30 (sigue abierto, y local va 16 commits ATRASADO). → [[clientes/elphis-psicologia/index|elphis-psicologia]]
 
 - 🟢 **agency-portal / Flota IA — fase 2 arrancada: 030+031 en el PR #331 (27-ago)**. Cola del juez lista (506 interacciones, 0 sin transcript); migración `20260827110000` con dry-run limpio y **sin aplicar**. Prompt de continuación reescrito tras tres revisiones en paralelo: `issues/PROMPT-CONTINUACION-032-040.md`. **Tuyo**: OK a las dos migraciones, y las 3 casillas legales (5 de 7 contratos no están en el portal). Fase 1 solo deja campo (schedules, webhook post-call de Retell, tráfico de Kommo). 🔴 CI de la org roto por **facturación**, no por código. → [[agentesia]] hito 10 · [[columna-de-purga-sin-cron-es-retencion-aparente]]
 - 🟢 **Arnés — el contexto ya se ve y ya se corta (20-ago)** — 91 % del gasto pasa por encima de 200k y la barra medía sobre 1M (20 % en verde). Presupuesto 200k + `autoCompactWindow` 300k; los 4 `CLAUDE.md` grandes a `.claude/rules`, en `main`. **Tuyo**: ¿el aviso «`paths:` dispara con Read, no con Bash» baja a los 4 rules? → [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
@@ -87,7 +87,7 @@ tags: [home, prioridades]
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | Voz reconstruida y verificada en simulación 9/9 (27-ago) · chat LIVE identificado como IA · secretos sin rotar |
-| Elphis Psicología | [[clientes/elphis-psicologia/index\|elphis-psicologia]] | Bloque B: agenda alineada + PR #30 esperando a Borja (25-ago) · OAuth pendiente · plan de agentes cerrado, listo para ejecutar |
+| Elphis Psicología | [[clientes/elphis-psicologia/index\|elphis-psicologia]] | Bloque B entero vivo y con guardianes (27-ago) · **bloqueado por la firma de la v2 del protocolo** · PR #30 abierto · token de Chatwoot sin rotar · sin backups |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | **Paquita** (no «Carlos», que es el CEO) · 🟢 **#1418 en prod: emite al portal de Flota IA**, sin comprobar (falta un WhatsApp real) · 🔴 **Langfuse sin guardar trazas desde el 23-ago**, ClickHouse ausente 2.ª vez (#1284) · 🔴 **#1349 + #1350: los dos DPA sin firmar** · 🔴 tuyo 2 min: claves Langfuse (**#1009**) · #1424 el emisor solo loguea al fallar · 82 % de la cola humana sin dueño (#1351) |
 | Aula | [[aula]] | Propio · publicada · **repo en GitHub privado** · 115 temas / 7 lecciones · el runner escribe solo |
