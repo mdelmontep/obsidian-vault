@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-27
+updated: 2026-08-28
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,22 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-27
+## Estado actual · 2026-08-28
+
+**Laura deja de recitar: v29 publicada y servida.** Lo abrió Manu tras una llamada real: «dice *cannabis entonces*, me ha dicho porros… es como que no da conversación natural». No era la voz ni el modelo, era el prompt. Ciclo medir-corregir-remedir de **8 configuraciones y 231 llamadas simuladas**; el número no fija versión, así que republicar una vieja es rollback completo (`ROLLBACK.sh 21`).
+
+- ✅ **La causa dominante eran las comillas del prompt.** Turnos que reproducen una frase palabra por palabra: **32,6 % → 18,2 %**. Las frases de ejemplo se convierten en «cosas que transmitir, no un texto que recitar»; se declaran literales solo el aviso del art. 50, las frases de crisis y la fórmula de consentimiento. → [[las-frases-entrecomilladas-de-un-prompt-son-un-guion-que-el-modelo-recita]]
+- ✅ **Usa SU palabra**: si el paciente dice «porros», Laura no le contesta «cannabis». Corregirle el vocabulario le coloca en el papel de paciente antes de tiempo.
+- ✅ **Un turno para entender antes de pedir nada.** Al oír la sustancia ya no salta al siguiente campo del formulario: una pregunta abierta construida sobre lo que acaba de decir, y esa respuesta se usa después para ofrecer la primera visita conectada con lo suyo. Exploración real 3 → 4 de 21.
+- ✅ **Faltaba la salida de despedida.** El grafo era alcanzable (BFS: 0 nodos atrapados en v21 y v29) pero ninguna condición disparaba con un «gracias, ya está». Tres aristas nuevas, **añadidas al final** para no pisar la prioridad de las de crisis. Fugas de conversación **3 → 0**. → [[un-grafo-alcanzable-no-prueba-que-se-pueda-salir-la-trampa-esta-en-la-condicion]]
+- ❌ **Temperatura 0,6 descartada, medida**: rompió 2 de 21 llamadas en nodos que no se habían tocado — la temperatura evalúa también las condiciones de arista. Se queda en 0,22. → [[subir-la-temperatura-de-un-agente-de-voz-le-rompe-el-enrutado]]
+- ❌ **`claude-4.6-sonnet` descartado**: sin ganancia medible sobre haiku 4.5, y cuesta latencia y dinero.
+- ⚠️ **Pedía el consentimiento dos veces** (v27): la fórmula estaba en el `global_prompt` y en su nodo. Mismo error que la sesión anterior. Ahora vive solo en el nodo. → [[repetir-una-instruccion-en-el-prompt-global-y-en-el-nodo-la-ejecuta-dos-veces]]
+- 🧪 **Suite: ±2 casos de ruido.** v21 sin tocar dio 7/9, 9/9 y 8/9; la de crisis en v29, 11/12, 11/12 y 12/12 fallando un caso distinto cada vez. No se declara ganador por un punto. Y el juez sigue mintiendo: en el caso 06 dijo «insiste en pedir el nombre» en una transcripción donde no lo pidió ni una vez.
+- ⚠️ **El eco sigue ahí, y es infraestructura**: 4 de 4 llamadas reales, siempre durante la presentación — el ASR transcribe la voz de Laura como si fuera el paciente. Mitigado con una regla de cabecera («si oyes tu propia voz, es la línea»), pero **bloquea subir `interruption_sensitivity`**: subirla la haría interrumpirse a sí misma. **Pregunta abierta a Manu: ¿llamas con manos libres?** Si sí, es acoplamiento acústico; si no, es el trunk del `+34910054950`.
+- ⏭️ **Sin tocar a propósito**: `voice_model` (`eleven_flash_v2_5` → `eleven_multilingual_v2`) se probará solo, para poder juzgarlo de oído.
+
+## Estado previo · 2026-08-27
 
 **Auditoría y arreglo integral del agente de voz (Laura, Retell).** Lo abrió Alba: «es muy lenta, entra en bucle con el saludo, las transferidas no llegan a recepción». Agente `agent_e21120298343bc2ef8b4a535c9`, flow `a42bf76dcfa0`, **v15 publicada** y servida (el número no fija versión). Suite de simulación **9/9**.
 
@@ -29,7 +44,7 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 - ⚠️ **Sin ejercitar aún en llamada real**: despedida, nodo de consentimiento, tope de dos intentos con el nombre, fuera de horario, texto de `recepcion_aviso`, fallback de nombre en Clientify y la alerta `enlace_no_enviado`. La simulación los cubre; el trunk no.
 - ⚠️ **Decisión pendiente tuya**: mover precios y horarios a la knowledge base ahorraría ~180 ms, pero con `filter_score: 0.6` una consulta por debajo del umbral deja a Laura sin poder citar precios. No aplicado a propósito.
 
-## Estado previo · 2026-08-18
+## Estado anterior · 2026-08-18
 
 - ✅ **Ya no se presenta en cada mensaje (18-ago tarde).** Lo reportó Alba: «se presenta 17 veces en la misma conversación». La marca `ia_disclosed` vivía en los `custom_attributes` de Chatwoot, pero el nodo que los escribía los **reconstruía**, y ese endpoint reemplaza en vez de fusionar: duraba un turno. Se llevaba por delante también `clientify_*` y `bot_paused` (una conversación pausada podía despertarse sola). Al verificarlo salió un segundo defecto —la frase literal estaba en el prompt y el modelo la copiaba: salía dos veces— y un tercero: el aviso abre con «Hola» y el modelo abría con el suyo, dos saludos pegados; ahora el nodo recorta el saludo de apertura. Probado end-to-end por el webhook real, dos turnos. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - ✅ **No se dan horarios de primera visita (18-ago tarde).** Lo pidió Alba: la disponibilidad la ve el paciente en el enlace. La regla ya existía, pero 157 líneas por debajo del horario del centro y dentro de «Flujo de reserva»; a un "horario de visitas" el modelo no estaba reservando y sirvió el horario del centro. Aviso pegado al dato: **2/5 → 0/5** medido contra la API real. Su segunda petición —«si en el enlace no encuentran hueco, que nos lo digan»— se pidió primero al prompt (0/5) y acabó en el **texto fijo** del mensaje del enlace (`book-and-notify` → `Build enlace`), donde sale siempre. Pendiente: en **voz** ese texto es la plantilla HSM `elphis_cita_link` y hay que recrearla en Meta. → [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]]
@@ -42,7 +57,7 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 - ⚠️ **Lo que sigue sin cubrir**: quien reserva en Doctoralia **sin haber escrito nunca por WhatsApp** no tiene fila en `conversation_state`, y el sync escribe con `UPDATE … WHERE phone`, así que su cita no se guarda en ningún sitio. Arreglarlo pide tabla de citas propia y contradice [[ADR-053-la-cita-de-doctoralia-vive-en-conversation-state]] — **decisión tuya**.
 - ⚠️ **El repreguntar el motivo YA estaba arreglado** (15-ago): medido contra la API real reproduciendo el turno, 0/5 y 0/5. Lo que se vio era una conversación del 11-ago, anterior al fix. → [[antes-de-arreglar-lo-que-viste-en-un-log-mira-contra-que-version-paso]]
 
-## Estado anterior · 2026-08-17
+## Histórico · 2026-08-17
 
 - ✅ **Los dos canales ya se identifican como IA, EN PROD (17-ago).** Lo pidió Alba tras una llamada de prueba del comercial de Movistar y antes de activar el desvío del fijo; entró en vigor el 2-ago el art. 50 del AI Act. Ninguno de los dos decía nada: voz abría con *"Hola, estás llamando a Centro Elphis"* y el chat solo se declaraba "agente virtual" al negarse a hablar de sustancias.
   - **Chat**: nodo Code `Aviso IA primer contacto` en `chatwoot-event`, entre `Call router-ia` y `Post reply` — prefija *"Hola, soy Laura, la asistente virtual con IA de Centro Elphis."* y marca `ia_disclosed` en los `custom_attributes`. **Determinista a propósito**, y la marca en los attrs y no en el historial (Chatwoot solo devuelve 20 mensajes). Probado con 5 casos en local; sin drift de posiciones.
