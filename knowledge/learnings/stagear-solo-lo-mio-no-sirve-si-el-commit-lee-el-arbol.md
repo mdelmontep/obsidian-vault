@@ -37,4 +37,12 @@ learnings enteros, uno de ellos este. Se arregla con `git reset` **a secas** —
 `git status --short` vacío y `git ls-files` devolviéndolos. Cierre de sesión en un repo compartido:
 deja el índice como lo encontraste, no solo el árbol.
 
+Y el corolario que ahorra el ritual entero (27-ago, vault): **con esta herramienta, una `MM` en
+`git status` no prueba que haya trabajo ajeno sin commitear.** Es el mismo índice cargado de arriba,
+solo que sobreviviendo al commit de la OTRA sesión: los ficheros compartidos salían `MM` y al
+comparar con `HEAD` **coincidían byte a byte** con «HEAD + lo mío» —ella ya había commiteado con
+`vault-commit` una hora antes—. De cuatro compartidos, solo uno tenía cambios suyos de verdad. El
+`git status` de un repo así **miente hacia el lado alarmista**: la pregunta no es qué letra tiene el
+fichero, es `diff <(git show HEAD:<ruta>) <ruta>`. Conmuta solo los que salgan distintos.
+
 Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]] · [[el-indice-de-git-es-compartido-entre-sesiones-como-el-arbol]]
