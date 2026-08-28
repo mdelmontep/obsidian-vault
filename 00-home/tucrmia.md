@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-28 iteración 46 (12 agentes en paralelo; 9 integrados y verificados por mutación propia · 464 ficheros / 6.306 pruebas · cadena de gates a 78 pasos · árbol SIN commitear · siguiente: G7/G9/G10b/G6, tablero, worktrees, gate entero, commit)
+updated: 2026-08-28 iteración 50 (desplegado c0e70a16 · gate 82 pasos / 483 ficheros / 6.615 pruebas · meta 169 · el tope de gasto mató once pistas y nueve quedan sin integrar en ramas worktree-agent-*)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,37 +13,43 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
-- Tablero publicado: **`460ab415…`** desde el 17-ago — la URL vieja (`689ef079…`) empezó a dar
-  404 al publicar. Ver [[claude-code-gotchas]] §Republicar un Artifact.
+- Tablero publicado: **`3d4b9d7f…`** desde el 28-ago, y es la SÉPTIMA dirección. Ojo al diagnóstico:
+  no todas las anteriores están muertas — la quinta sigue viva, y lo que impedía republicar sobre
+  ella era que el tool **exige haber leído los 304 KB publicados** antes de pisarlos. Son dos formas
+  de fallo distintas. Ver [[claude-code-gotchas]] §Republicar un Artifact.
 
-## Estado (28-ago, iteración 46) — doce agentes en paralelo, y lo que enseña integrarlos
+## Estado (28-ago, iteraciones 47-50) — el tope de gasto paró la tanda, y a un agente lo maté yo
 
-**Sin commitear**, y verde: **464 ficheros / 6.306 pruebas**, `typecheck`/`lint`/`format`/`db:replay`
-y toda la cadena corta en 0. `gates:check` dice **78 pasos** (era 77).
+**Desplegado `c0e70a16`.** Gate `ec=0`: **82 pasos**, 483 ficheros, **6.615 pruebas**. `meta` 166 → 169.
 
-**Lo integrado, cada uno con su rojo reproducido por mí, no por su informe**: la **103** (las tres
-marcas exigen `leased_by = p_arrendatario`, así que un worker rezagado ya no cierra el evento que
-otro está escribiendo), la **104** (`ingerir_mensaje_entrante` deja de ser check-then-act bajo
-concurrencia), la **107** (el motivo de rechazo de un webhook deja de morir en `console.warn`), la
-**109** (`purge_inbound_events_raw()` ya no vacía el cuerpo de lo que la cola va a reclamar) y el
-gate nuevo `senales-configuracion:check`.
+**La iteración 50 no integró casi nada, y el porqué no es técnico**: doce pistas en paralelo, **once
+muertas a la vez** con HTTP 429 —tope de gasto mensual de la organización, se restablece a las 23:50—
+con el trabajo escrito y **sin commitear**. Rescatadas las doce en ramas `worktree-agent-*`, con el
+gate saltado a propósito y el mensaje diciendo lo que NO son. Censo en
+`docs/plan/rescate-iteracion-50.md`.
 
-**La lección de la tanda no es de código, es de coordinación**: un worktree nace del último commit,
-así que un agente no ve lo que estás integrando sin commitear y **su parche lo revierte si lo
-copias**. Se cobró dos veces —un catálogo TS sin el registro del que depende un gate, y un
-`salud.ts` sin 198 líneas— y una tercera en SQL: la 109 comentaba una firma que la 103 borra, y el
-replay entero moría. → [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
+**A la duodécima la maté yo**: 50 min de silencio y sin contestar a un mensaje se leyeron como muerte,
+y estaba dentro de una corrida completa del gate. Le retiré el worktree con `--force` sobre un
+directorio `locked` y su gate murió con `GATE_EC=7`. No se perdió nada por calendario, no por diseño.
+→ [[retirar-el-worktree-que-le-diste-a-un-gate-en-marcha-lo-deja-auditando-otro-checkout]]
 
-**Cambio propio en `tipos-check.mjs`**, con TDD y dos mutaciones con víctima: la prosa dentro de un
-`comment on … is '…'` ya no cuenta como prefiltro —es SQL ejecutable, no un comentario, y quitar los
-`--` no la toca—, y `no_declarado` mira todas las entradas de `SUBCONJUNTOS` de la misma columna,
-para que dos subconjuntos legítimos no se denuncien mutuamente.
-→ [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]]
+**Integrado**: `201` (el trinquete `G-FORMULARIO-CONSERVA` baja de 12 en 5 ficheros a **8 en 3**, con
+sus tres rojos remedidos aquí por mutación), `225` (`--brand-fg-strong` se queda en `#bcd9ff`) y `204`.
+Al remedir la 225 salió un error suyo: **ángulos de tono restados en vez de medidos por el arco corto**
+—185,3° y 259,8° donde lo cierto es 174,7° y 100,2°—, mientras sus Lc y ΔE2000 eran exactos.
+→ [[las-cifras-exactas-de-un-informe-no-avalan-las-que-no-comprobaste]]
 
-**Pendiente de integrar**: G7 (accesibilidad + gate `cristal:check`), G9, G10b (impersonación y
-cripto compartida) y G6 (cron del worker de entrantes) — este último **bloqueado**: midió que las
-migraciones **092 y 093 no están aplicadas en producción**, así que sus cinco RPC no existen.
+**Sin integrar, con trabajo real en su rama**: `224` (guard de transparencia), `183`, `196`, `111`,
+`208`, `213`, `179`, `130` y la prueba inestable de `boton-actividad`. **`213` y `208` escribieron las
+dos una migración `114`** → una se renumera antes del merge; tres tocan `tokens.css` y dos `receptor.ts`.
 
+**Iteraciones 46-49, en una línea**: doce agentes con sus rojos reproducidos a mano (migraciones 103,
+104, 107, 109), la copia de producción que no se restauraba (`is_generated` no distingue una identidad
+`generated always as identity`), y la adopción de la rampa de texto oscura de TuFacturaIA —primer valor
+copiado de ese fichero compartido en siete revisiones—. La lección de coordinación que costó tres
+incidentes: un worktree nace del último commit, así que **el parche de un agente revierte lo que
+integraste sin commitear**. → [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
+· [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]]
 ## Estado (17-ago, iteración 35) — qué se comparte de verdad con TuFacturaIA, y dos afirmaciones mías falsas
 
 **`ba148686`.** Gate **0** · 383 ficheros · **5.157** pruebas. `meta` **193**.

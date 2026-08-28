@@ -24,3 +24,13 @@ Reglas:
 
 Es la misma clase de fallo que [[una-suite-en-verde-no-prueba-el-camino-real]]: el instrumento
 contesta, pero no sobre lo que crees.
+
+**Y la otra mitad, medida el 28-ago-2026 (tucrmia): el silencio no dice si el agente está vivo.**
+Un subagente con 50 min sin escribir en su registro y sin contestar a `SendMessage` puede estar
+DENTRO de una corrida larga (`npm run gate`, ~5 min y mucho más bajo carga): no escribe nada y no
+atiende mensajes hasta su siguiente turno de herramienta. Lo di por muerto, le retiré el worktree
+con `--force` y su gate murió con `GATE_EC=7` / `getcwd: cannot access parent directories`.
+- Mirar si su **proceso** corre, no cuándo escribió por última vez.
+- **`locked` en `git worktree list` es el aviso escrito**; `--force` sobre él es saltárselo.
+- Si hay que rescatar su trabajo, **commitear en su rama es seguro y reversible**; retirar el
+  directorio no lo es. Nada se perdió sólo porque el rescate cayó después de su última escritura.
