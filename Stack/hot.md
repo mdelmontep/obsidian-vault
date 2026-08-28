@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un fix dentro de una media query, sobre un selector que ahí no existe** — compila, pasa el gate y no cambia nada: contar `querySelectorAll` A ESE ancho antes de escribirlo. Ver [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]]
+- **Una piel/tema se mide por ALCANCE, no por tokens redefinidos** — cuántas cajas pintadas cambian al encenderla (2-16 % aquí, por los valores a mano). Ver [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]]
 - **El parche de un agente en worktree revierte lo que no commiteaste** — nace del último commit: se fusiona el hunk, no se copia el fichero. Ver [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
 - **Las frases entrecomilladas de un prompt son un guion** — el modelo las recita literales (32,6 % → 18,2 % de turnos). Ver [[las-frases-entrecomilladas-de-un-prompt-son-un-guion-que-el-modelo-recita]]
 - **Lee 2-3 transcripciones de casos que PASAN** — las métricas solo cubren lo que ya sospechabas; el defecto que enfada al usuario vive en el verde. Ver [[la-transcripcion-de-un-test-que-pasa-es-donde-esta-el-defecto-que-nadie-mide]]
@@ -100,22 +102,20 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un gate solo puede fallar HACIENDO RUIDO** — salir con 0 sin encontrar nada es un adorno: fail-closed, y avisar por `stderr` sin pesar en el exit no es avisar. El gate que corres aparte NO es el del hook. Ver [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] · [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]]
 - **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
-- **Un verde esperado «vacío» no mide nada si el estado ya era vacío** — RLS sobre tabla vacía da `[]` con y sin RLS. Ver [[verificar-rls-en-tabla-vacia-no-discrimina]]
 
-- **Un candado nuevo en `main` caza las PRs abiertas escritas ANTES que él** — solo lo ve el gate de la combinación. Ver [[un-candado-nuevo-en-main-caza-las-prs-abiertas-escritas-antes]]
 
-- **Importar un helper desde otro `.test.ts` re-ejecuta sus casos** — el delta de la rama miente y los gates cuadran igual. [[importar-de-un-fichero-de-test-re-ejecuta-sus-casos]]
 
 - **Un artefacto que vive en un panel se compara carácter por carácter** — «v1 · 21 ago» → «v2 · 27 ago» no mueve el tamaño: 2 de 5 pesaban igual servidas de otra versión. Ver [[comparar-por-tamano-no-ve-un-artefacto-servido-desde-otra-version]]
 
-## Archivado
-
-Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
-[[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
 - **Un gate que descubre lo que audita pasa en verde si su lista sale vacía** — suelo explícito y fallar CERRADO. [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]]
-
 - **La fuente única no impide que reescriban el cálculo a mano** — el guard va sobre el PATRÓN, no sobre los sitios. [[una-funcion-correcta-no-impide-que-la-reescriban-a-mano]]
 - **El arnés se mide a sí mismo** — un gate que construye la orden en vez de ejecutarla, un mock que declara una cadena que el código ya no usa, un check que nadie invoca, un default que nadie corrió, y el más fino: uno que mide que algo cambió pero no **dónde**. [[el-arnes-se-mide-a-si-mismo]]
 - **Verificar la conclusión, no la evidencia** — el estado de un secreto externo lo dice el proveedor, no un `SELECT`. [[verificar-la-conclusion-no-solo-la-evidencia]]
 - **El proxy de Next trunca a 10 MB en silencio y rompe firmas HMAC** — 401 intermitente solo en payloads grandes; excluir la ruta del matcher (la auth es del handler) + preflight antes de gastar. Ver [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]]
 - **Un gate que exige el artefacto a la fase que lo produce es un deadlock** — y el mock del contrato en el test del productor lo esconde. Ver [[gate-que-exige-el-artefacto-a-la-fase-que-lo-produce-es-deadlock]]
+
+## Archivado
+
+Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
+[[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+

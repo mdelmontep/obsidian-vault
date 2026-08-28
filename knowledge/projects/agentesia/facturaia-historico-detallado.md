@@ -1051,3 +1051,26 @@ los 138 de prod son CSV (129) y PDF (9). El paso a `activo` es opt-in del propie
 
 De paso: `gen:types:check` abortaba el push de toda rama por un bump de PostgREST de plataforma
 (`14.5` → `14.17`), y el encabezado del cron de sync bancario decía «4h» cuando siempre fue diario.
+
+## 2026-08-28 — auditoría de diseño del shell y los listados (#2272, apilada sobre #2271)
+
+Encargo: lo que la métrica de contraste APCA **no** ve — jerarquía, densidad, ritmo tipográfico y de espaciado, consistencia de componentes y el alcance real de la piel `freebie` que corre en prod. Modo Operate. Todo medido con arneses de Playwright contra el servidor de staging (puerto 3002, sesión reusada desde `tests/e2e/.auth/user.json`: los logins repetidos se rate-limitan), sobre 10 combinaciones de tema × piel × viewport.
+
+**Auditoría: 13 de 20.** Reparado en el PR, con antes/después medido:
+
+- **En móvil no había NINGÚN `<h1>`.** `dashboard-shell.tsx` bifurca el chrome por dispositivo: `Topbar` en escritorio, `MobileHeader` en móvil — y `MobileHeader` pintaba el título como `<span>`. El guard `un-solo-h1` de agosto había bajado las 14 vistas a `<h2>` «porque el Topbar ya pone el h1», premisa cierta solo en escritorio. Resultado: cero encabezados de nivel 1 en el dispositivo donde más se usa el producto. Ahora 0→1 en las cinco rutas, y el guard vigila también el **suelo** (`verificarSuelo`), no solo el techo.
+- **El guard nació ciego y lo destapó `mutate`.** Con el `<h1>` sustituido por un `<span>` seguía dando OK: el comentario que hay justo encima —el que explica por qué tiene que ser un `h1`— contiene la cadena `<h1>` y el detector la contaba. Bastaba con **documentar** la regla para dejar de cumplirla. Arreglado con `cegarComentarios()`; las dos ramas fallan ya como deben.
+- **Tipografía a escala rem fija**: 7 `clamp()` fuera. Un `clamp()` en UI de producto hace que el mismo dato ocupe distinto en dos pantallas del mismo usuario; la escala fluida es de páginas de marketing.
+- **Peldaño de tinta mal elegido en 19 sitios → 0** (`-fg` donde tocaba `-fg-strong` por debajo de 18px).
+- **Jerarquía de Ajustes**: h4×14 / h3×0 → h3×14 / h4×0.
+- **Arial fuera de `/conciliacion`** (reset de fuente que faltaba).
+- **Alcance de la piel**: 16 %→40 % en el dashboard y 2 %→16 % en conciliación, dando peldaño propio a lo que se escribía a mano (`--radius-md: 8px`, `--radius-card: 12px`, más `--space-1_5/2_5/3_5`). El modal deriva ahora su marco de la placa (`calc(var(--radius-card) + 6px)`) en vez de un 18 suelto, para conservar el escalón del «doble cristal» en las dos pieles.
+- Cero desbordamiento horizontal en las 10 combinaciones.
+
+**No reparado, con motivo escrito:** el cristal en móvil (97 capas de `backdrop-filter` frente a 58 en escritorio — apagarlo cambia el aspecto de la piel de la casa, y eso se decide con los números delante, no en un PR de auditoría) y las alturas de 44px que quedan (son mínimos táctiles, no la palanca de densidad; convertirlas a `--control-h-lg` sería trazabilidad falsa).
+
+**Hallazgo aparte, sin issue:** `src/lib/ui/brand-tokens.ts` deriva la marca personalizada apuntando al **suelo** de contraste mientras los valores de fábrica van muy por encima, así que una org con marca propia recibe 10-13 Lc menos que la de casa sin que nada avise.
+
+`npm run gate` entero verde: 1.501 ficheros, 15.784 tests, 8 skipped. Dos mutaciones con víctima (el `h1` y el acento de «Módulos»). PR **no** apunta a `main` a propósito: cuelga de `fix/freebie-peldano-tintado` (#2271) para no disparar deploy sin tu palabra.
+
+→ [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]] · [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]] · [[un-guard-que-detecta-por-contenido-caza-los-comentarios-que-lo-niegan]]
