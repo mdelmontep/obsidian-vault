@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-17 iteraciones 33-35 (Storage desbloqueado, el hueco de PII declarado, y el motivo de una divergencia que se perdía al aceptarla · `meta` 193 · siguiente: las TRES unidades de `docs/plan/PROMPT-CONTINUACION.md`, borrado de bytes ACOTADO primero)
+updated: 2026-08-28 iteración 46 (12 agentes en paralelo; 9 integrados y verificados por mutación propia · 464 ficheros / 6.306 pruebas · cadena de gates a 78 pasos · árbol SIN commitear · siguiente: G7/G9/G10b/G6, tablero, worktrees, gate entero, commit)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -15,6 +15,34 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
 - Tablero publicado: **`460ab415…`** desde el 17-ago — la URL vieja (`689ef079…`) empezó a dar
   404 al publicar. Ver [[claude-code-gotchas]] §Republicar un Artifact.
+
+## Estado (28-ago, iteración 46) — doce agentes en paralelo, y lo que enseña integrarlos
+
+**Sin commitear**, y verde: **464 ficheros / 6.306 pruebas**, `typecheck`/`lint`/`format`/`db:replay`
+y toda la cadena corta en 0. `gates:check` dice **78 pasos** (era 77).
+
+**Lo integrado, cada uno con su rojo reproducido por mí, no por su informe**: la **103** (las tres
+marcas exigen `leased_by = p_arrendatario`, así que un worker rezagado ya no cierra el evento que
+otro está escribiendo), la **104** (`ingerir_mensaje_entrante` deja de ser check-then-act bajo
+concurrencia), la **107** (el motivo de rechazo de un webhook deja de morir en `console.warn`), la
+**109** (`purge_inbound_events_raw()` ya no vacía el cuerpo de lo que la cola va a reclamar) y el
+gate nuevo `senales-configuracion:check`.
+
+**La lección de la tanda no es de código, es de coordinación**: un worktree nace del último commit,
+así que un agente no ve lo que estás integrando sin commitear y **su parche lo revierte si lo
+copias**. Se cobró dos veces —un catálogo TS sin el registro del que depende un gate, y un
+`salud.ts` sin 198 líneas— y una tercera en SQL: la 109 comentaba una firma que la 103 borra, y el
+replay entero moría. → [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
+
+**Cambio propio en `tipos-check.mjs`**, con TDD y dos mutaciones con víctima: la prosa dentro de un
+`comment on … is '…'` ya no cuenta como prefiltro —es SQL ejecutable, no un comentario, y quitar los
+`--` no la toca—, y `no_declarado` mira todas las entradas de `SUBCONJUNTOS` de la misma columna,
+para que dos subconjuntos legítimos no se denuncien mutuamente.
+→ [[un-trinquete-que-cuenta-por-regex-tambien-cuenta-los-comentarios]]
+
+**Pendiente de integrar**: G7 (accesibilidad + gate `cristal:check`), G9, G10b (impersonación y
+cripto compartida) y G6 (cron del worker de entrantes) — este último **bloqueado**: midió que las
+migraciones **092 y 093 no están aplicadas en producción**, así que sus cinco RPC no existen.
 
 ## Estado (17-ago, iteración 35) — qué se comparte de verdad con TuFacturaIA, y dos afirmaciones mías falsas
 

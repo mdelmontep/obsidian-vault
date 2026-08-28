@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **El parche de un agente en worktree revierte lo que no commiteaste** — nace del último commit: se fusiona el hunk, no se copia el fichero. Ver [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
 - **Las frases entrecomilladas de un prompt son un guion** — el modelo las recita literales (32,6 % → 18,2 % de turnos). Ver [[las-frases-entrecomilladas-de-un-prompt-son-un-guion-que-el-modelo-recita]]
 - **Lee 2-3 transcripciones de casos que PASAN** — las métricas solo cubren lo que ya sospechabas; el defecto que enfada al usuario vive en el verde. Ver [[la-transcripcion-de-un-test-que-pasa-es-donde-esta-el-defecto-que-nadie-mide]]
 - **Un cero solo discrimina si el evento PUDO ocurrir** — y una ventana anclada al arranque caduca con cada merge (autodeploy recrea el contenedor, incluso en un merge solo-docs ajeno): ancla al EVENTO. Ver [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]

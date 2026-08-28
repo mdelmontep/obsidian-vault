@@ -23,6 +23,14 @@ las dos direcciones, y la segunda es la peligrosa:
   respetando cadenas: distinguir el `//` de `'https://…'` del que abre comentario no lo hace una
   regex.
 
+- **En SQL no basta con quitar los `--` (28-ago).** Un `comment on function … is '…'` es SQL
+  EJECUTABLE, no un comentario: su carga viaja entre comillas y sobrevive a cualquier
+  `sinComentariosSql()`. Ahí dentro se cita la lista en prosa —«sólo sobre `state in (done,
+  ignored, dead)`»— y el patrón casa; como los valores van sin comillas, la lista sale VACÍA y
+  el gate acusa a la migración de un prefiltro que no existe. Y no vale recortar las cadenas:
+  los prefiltros de verdad llevan sus valores ENTRE comillas y desaparecerían. Hay que
+  **contar** si la coincidencia cae dentro de una cadena, con `''` como comilla escapada.
+
 **La regla: dos pasadas.** Sin comentarios para buscar SENTENCIAS; en crudo para buscar
 MARCADORES (`rls-regime:`, `rls-helper`, `token-entrada:`, `selector-entrada:`), que viven dentro
 de un comentario a propósito. Quitarlos a secas arregla un lado y rompe el otro.

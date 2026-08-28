@@ -497,6 +497,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[brew-expone-python312-no-python3-y-el-python3-del-sistema-es-39]] — brew expone python3.12 pero no python3, y el del PATH es el 3.9 del sistema
 - [[chatwoot-webhook-message-created-no-incluye-labels]] — chatwoot webhook message_created no incluye labels
 - [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]] — chatwoot whatsapp cloud requiere redirigir webhook de meta
+- [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]] — el parche de un agente en worktree borra lo que no estaba commiteado si lo copias
 - [[cherry-pick-4-worktrees-agentes-paralelos]] — 4 agentes paralelos en worktrees aislados + cherry-pick combinado a 1 PR
 - [[claude-code-agentes-worktree-failure-modes]] — Claude Code agentes worktree — failure modes y cómo blindarlos
 - [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] — Claude Code — sesiones paralelas mismo repo causan colisiones git
