@@ -79,6 +79,16 @@ Payload que entró bien en `tufacturaia-app`:
 
 Idempotencia: no la da la API. El script debe abortar si el `name` ya está en `schedule.list` — si no, duplica el cron.
 
+## No des de alta un cron por SQL directo (2026-08-28)
+
+Con la API de lectura bloqueada por hook, la salida fácil es mirar —y escribir— la tabla
+`schedule` del Postgres de Dokploy. **Leer, sí; escribir, nunca.** Dokploy registra los
+schedules **en proceso** al arrancar y al crearlos por API: una fila insertada a mano
+aparece en el panel, con su cadencia y su check verde, y **no dispara jamás**. Es el peor
+modo de fallo posible — parece vigilancia y no lo es.
+`schedule.create` no está entre lo que bloquea el hook (`schedule.one|all|list` sí, porque
+devuelven el env de prod en claro), así que el alta se hace por API igual.
+
 ## Cross-ref
 
 - Reference `reference-dokploy-facturaia` en memory del agente — añadir esta sección al endpoint list.
