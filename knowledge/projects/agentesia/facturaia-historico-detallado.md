@@ -17,6 +17,7 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-07-29]] — dos podas del 29-jul: la de la mañana y, al cierre, 11 entradas más del NOW (área de tickets y su fuga de mensajes internos, avisos de respuesta del cliente, impersonación en listados, VeriFactu, coste LLM, prompt caching, auditoría Fable 5, cola OCR, UX de ingesta, recurrentes).
 - [[facturaia-historico-snapshot-2026-07-30]] — poda del 30-jul: los 4 smokes de prod que Manu ya verificó (runner, OCR de nº de factura y RAEE, condiciones de pago en PDF, impersonación tras `proxy.ts`).
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
+- [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
 ## 26-ago-2026 (cierre) · la auditoría de Albaranes, cerrada (PR #2235 `4ad5534e1` + #2237 `553e77845`)
 

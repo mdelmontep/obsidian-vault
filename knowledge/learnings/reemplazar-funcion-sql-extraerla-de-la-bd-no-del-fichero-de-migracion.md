@@ -23,3 +23,7 @@ de verificación para que aborte si el parche no entró. `pg_get_functiondef` no
 en `;` — hay que añadirlo. Caso real: TuFacturaIA migs 585 y 587 (`merge_cliente`,
 `merge_proveedor`, `convertir_presupuesto_a_factura`, tocadas antes por las migs
 252/320/336/576).
+
+Reincidió el 30-ago (mig 772): el `;` que falta no lo ve ninguna revisión a ojo, lo ve
+un Postgres. **Parsea la migración antes de mergear** contra el proyecto de staging,
+`BEGIN` + `\i fichero` + `ROLLBACK`, y mira el `ec`.
