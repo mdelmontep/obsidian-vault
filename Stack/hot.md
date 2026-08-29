@@ -113,6 +113,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Verificar la conclusión, no la evidencia** — el estado de un secreto externo lo dice el proveedor, no un `SELECT`. [[verificar-la-conclusion-no-solo-la-evidencia]]
 - **El proxy de Next trunca a 10 MB en silencio y rompe firmas HMAC** — 401 intermitente solo en payloads grandes; excluir la ruta del matcher (la auth es del handler) + preflight antes de gastar. Ver [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]]
 - **Un gate que exige el artefacto a la fase que lo produce es un deadlock** — y el mock del contrato en el test del productor lo esconde. Ver [[gate-que-exige-el-artefacto-a-la-fase-que-lo-produce-es-deadlock]]
+- **El control de una medida es del mismo tipo que lo medido** — borrador contra publicada dio una caída falsa en 6 variantes. [[un-borrador-y-la-version-publicada-no-son-comparables-el-control-es-otro-borrador]]
 
 ## Archivado
 

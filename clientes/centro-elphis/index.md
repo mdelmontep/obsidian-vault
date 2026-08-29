@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-28
+updated: 2026-08-29
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,30 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-28
+## Estado actual · 2026-08-29
+
+**v31 publicada y servida.** Salió de auditar las últimas llamadas reales: el nombre no llegaba al CRM
+en llamadas de familiares, Laura se despedía dos veces, insistía explorando y quedaba guion residual.
+Seis parches escritos, **dos descartados por medida propia**.
+
+- ✅ **Se va el guion «Encantada, X»**: 10/45 → **0/45**. Era la última percha entrecomillada viva.
+- ✅ **El aviso de coste deja de ir pegado al turno del nombre**: 28 % → **11 %**. Lo consigue la
+  condición de parada de la exploración, no el parche del coste (sin ella vuelve al 31 %).
+- ✅ **Crisis 12/12** frente a 10/12 de la base. Regresión igual: 41/45 en ambos.
+- ❌ **Prohibirle despedirse a un nodo, descartado**: `cierre` tiene que producir turno, así que en vez
+  de callar recitó la instrucción al paciente. → [[prohibirle-a-un-nodo-que-hable-hace-que-recite-la-instruccion-en-voz-alta]]
+- ❌ **Salida por línea ininteligible, descartada**: derivaba a devolución de llamada a gente a la que
+  sí se entendía.
+- ⚠️ **Cuatro horas de medición contaminadas** por comparar borradores contra la versión publicada; el
+  borrador no-op idéntico a v29 sacó 64 %, no 83 %. → [[un-borrador-y-la-version-publicada-no-son-comparables-el-control-es-otro-borrador]]
+- 🔜 **La doble despedida real sigue viva y es estructural**: `cierre` habla y `despedida` repite. Se
+  arregla con aristas, no con prompt, y necesita su propio lote medido.
+- 🔜 **Nombre perdido en llamadas de familiares**: la suite simulada no lo reproduce (8/9 lo capturan),
+  así que P1 quedó sin validar. Hace falta un caso de prueba que lo reproduzca antes de tocar nada más.
+- 🔜 **Para Enrique y Alba**: qué responde el centro ante situación irregular y ante barrera idiomática.
+- 🔧 Vuelta atrás en una orden: `v30/ROLLBACK.sh 29` (verifica sola qué queda sirviendo).
+
+## Estado previo · 2026-08-28
 
 **Laura deja de recitar: v29 publicada y servida.** Lo abrió Manu tras una llamada real: «dice *cannabis entonces*, me ha dicho porros… es como que no da conversación natural». No era la voz ni el modelo, era el prompt. Ciclo medir-corregir-remedir de **8 configuraciones y 231 llamadas simuladas**; el número no fija versión, así que republicar una vieja es rollback completo (`ROLLBACK.sh 21`).
 
