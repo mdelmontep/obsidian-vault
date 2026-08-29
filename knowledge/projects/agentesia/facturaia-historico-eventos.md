@@ -195,3 +195,7 @@ El `declMap` no era puntual: `hub-timeline.tsx` y `proximo-plazo-card.tsx` hací
 Contrato en `src/lib/fiscal/__tests__/contrato-lectores-requires-recalc.test.ts` con el detector en `contrato-lectores.ts` (17 tests de dientes, límites escritos en su docblock). Smoke en prod con agent-browser: **409** en «Explícame» sobre una declaración caducada con el copy visible, 200 en una sana, y en la API pública el **2T `cuadrado` con `requires_recalc:true`** — el caso peligroso, visible por fin. Ocho mutaciones, ocho víctimas. Suite sobre main mergeado 12.982/0.
 
 Queda abierto el **punto 4, la deriva de perfil**: decisión de arquitectura, no parche. → [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]] · [[next-typed-routes-validator-stale-tras-cambio-de-rama]] · [[pipe-a-tail-enmascara-el-exit-code-del-comando]]
+
+## 2026-08-28 · Ticket 159 cerrado y las dos facturas del cliente reparadas en prod (#2267)
+
+Una recibida se aprobaba con **0 líneas y sin mover stock**, y otra desaparecía de la bandeja sin llegar a factura: `aprobar_recibida_con_lineas` escribía el enlace `bandeja_ingesta.factura_id` ~900 ms DESPUÉS de crear la factura, en otra llamada, así que si esa segunda escritura no entraba la bandeja quedaba huérfana. Ahora el enlace se escribe ANTES de aprobar y si no entra, se aborta. Las dos facturas se rehicieron el mismo día desde la propia UI del cliente: 8 líneas y 8 movimientos restituidos, 7 stocks y 4 PMP cuadrados contra lo previsto. → [[impersonacion-superadmin-no-sirve-para-qa-de-ui-org-scoped]] §5
