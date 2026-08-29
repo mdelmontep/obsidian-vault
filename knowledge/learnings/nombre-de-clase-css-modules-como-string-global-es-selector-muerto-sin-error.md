@@ -15,3 +15,11 @@ sin caja porque nadie comparó visualmente contra la card real con `--brand` en 
 solo en comentarios que citan un `.module.css` → confirma que es un module, no una clase global.
 **Fix**: usar la clase global que SÍ existe (aquí `kpi`), o convertir el consumidor a leer el mismo
 `.module.css` real en vez de adivinar el nombre.
+
+**La hermana, 30-ago (agentesia-crm)**: el mismo silencio por el otro lado — `className={s.resto}`
+con `.resto` **ausente de la hoja**. El valor es `undefined`, React omite el atributo y el elemento
+sale con los estilos por defecto del navegador. No lo ve el compilador (no hay tipos de la hoja), ni
+el linter de CSS (mira lo que la hoja DECLARA), ni un gate de tokens (mira que cada `var(--x)` exista):
+ninguno cruza las dos mitades. **Detección barata**: por cada `import s from './x.module.css'`, cruzar
+los `s.loQueSea` contra los selectores `.clase` de esa hoja. En un árbol de 110 componentes tardó
+segundos y encontró el único caso, que era el que acababa de entrar.

@@ -119,4 +119,5 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
-
+- **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
+- **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]

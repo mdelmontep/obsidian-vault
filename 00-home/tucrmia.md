@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-28 iteración 50 (desplegado c0e70a16 · gate 82 pasos / 483 ficheros / 6.615 pruebas · meta 169 · el tope de gasto mató once pistas y nueve quedan sin integrar en ramas worktree-agent-*)
+updated: 2026-08-30 iteración 54 (main 14421310 · gate 87 pasos / 501 ficheros / 7.006 pruebas · las nueve pistas huérfanas INTEGRADAS a mano · bloqueo único: trámite 15)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,12 +13,36 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
-- Tablero publicado: **`3d4b9d7f…`** desde el 28-ago, y es la SÉPTIMA dirección. Ojo al diagnóstico:
-  no todas las anteriores están muertas — la quinta sigue viva, y lo que impedía republicar sobre
-  ella era que el tool **exige haber leído los 304 KB publicados** antes de pisarlos. Son dos formas
-  de fallo distintas. Ver [[claude-code-gotchas]] §Republicar un Artifact.
+- Tablero publicado: **`98d111e0…`** desde el 30-ago, y es la NOVENA. El diagnóstico correcto,
+  medido: la lectura previa que el tool exige es **por sesión**, así que ninguna dirección es estable
+  entre sesiones sin pagar ~72k tokens; y `updated` del listado es la fecha del REGISTRO, no la del
+  contenido (uno salía «actualizado hoy» con contenido de diez iteraciones antes). Antes de pagarlo,
+  medir el `diff`: un documento REGENERADO no tiene ediciones propias que fusionar.
+  Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] y [[claude-code-gotchas]].
 
-## Estado (28-ago, iteraciones 47-50) — el tope de gasto paró la tanda, y a un agente lo maté yo
+## Estado (30-ago, iteración 54) — las nueve pistas huérfanas, integradas y verificadas a mano
+
+**`main` en `14421310`.** Gate `ec=0`: **87 pasos**, 501 ficheros, **7.006 pruebas**.
+
+Las nueve pistas que el tope de gasto dejó huérfanas están **dentro**, integradas a mano en un solo
+árbol. Verificar cada diff no fue trámite: los cuatro que no se habían leído línea a línea escondían
+un fallo que ningún informe traía, y cada rojo se remidió con `mutate` **sobre el fichero real**.
+
+**Dos gates nuevos, los dos nacidos de un fallo medido**: `epica-verdad:check` (el vínculo
+épica→issue se deriva del campo `**Épica:**` de cada ficha, no de la prosa de §4) y
+`clases-css:check` / G-CLASE-FANTASMA — ver [[nombre-de-clase-css-modules-como-string-global-es-selector-muerto-sin-error]].
+
+**Auditoría de composición cerrada según §6.3**: 20 hallazgos, 13 cerrados y 7 abiertos con ficha
+(`239`–`243`) o anexo al `220`. El `#18` se había quedado sin destino y salió al cruzar los veinte
+contra lo hecho, uno a uno — no releyendo el informe.
+
+**Bloqueo único, y es tuyo**: el trámite 15 (token de la Management API, o mover la contraseña de
+`tucrmia-prod` a una bóveda que `opsa` alcance). 33 migraciones escritas sin aplicar y 5
+organizaciones de prueba en producción para enseñarlo.
+
+## Histórico
+
+### (28-ago, iteraciones 47-50) — el tope de gasto paró la tanda, y a un agente lo maté yo
 
 **Desplegado `c0e70a16`.** Gate `ec=0`: **82 pasos**, 483 ficheros, **6.615 pruebas**. `meta` 166 → 169.
 
