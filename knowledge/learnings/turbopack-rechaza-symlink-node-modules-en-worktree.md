@@ -70,5 +70,13 @@ falla por MOMENTO — se consulta cuando el build ya reventó, nunca al crear el
 reincidencias medidas, el hook al crear worktrees deja de ser «candidato claro» y pasa a ser la única
 salida: lo que se arregla leyendo, no se arregla.
 
+**Quinta reincidencia (30-ago) con firma DISTINTA: `node_modules` VACÍO, ni symlink ni copia.**
+En un worktree ANIDADO (`.claude/worktrees/<x>`), la resolución de Node sube por el árbol
+hasta el `node_modules` del repo padre, así que **lint, vitest y `tsc` pasan en verde sin
+tener nada instalado**. Solo revienta el build, y con un mensaje que no menciona worktrees
+ni symlinks: «We couldn't find the Next.js package (next/package.json)». Se lee como
+instalación corrupta del repo padre. Fix: `npm ci` en el worktree, lo primero, antes de la
+primera línea de código — mismo consejo de siempre, un síntoma nuevo por el que llegar tarde.
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
 [[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].

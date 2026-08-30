@@ -281,6 +281,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[test-db-persistente-contaminada-entre-ramas-recrear-fresca]] — bd de test persistente contaminada entre ramas → recrear fresca antes del gate
 - [[tests-integration-supabase-validar-schema-antes-de-redactar]] — tests integration supabase validar schema antes de redactar
 - [[tests-pg-self-skip-levantar-pgvector-local]] — tests de integración Postgres que se autosaltan sin DB → levantar pgvector local, no post…
+- [[tipo-de-bd-a-mano-sin-relationships-tipa-toda-fila-como-never]] — un tipo Database escrito a mano sin Relationships tipa TODA fila como never
 - [[toggle-optimista-sin-rollback-miente-al-usuario]] — toggle/switch optimista que no comprueba el error de la mutación miente al usuario
 - [[trigger-audit-solo-registra-sesion-humana]] — trigger de auditoría por auth.uid() no registra acciones service-role
 - [[trigger-before-insert-on-conflict-do-nothing-cuenta-fila-fantasma]] — trigger BEFORE INSERT cuenta fila fantasma cuando hay ON CONFLICT DO NOTHING
@@ -307,6 +308,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[una-desactivacion-parcial-se-lee-igual-que-no-habia-agujero]] — una desactivación parcial se lee igual que «no había agujero»
 - [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]] — una piel de tokens solo alcanza lo que no está escrito a mano
 - [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]] — la 2ª vía de escritura omite el contexto de actor que la RLS exige, y sólo falla en el caso por defecto
+- [[una-suscripcion-realtime-impide-revocar-el-select-de-esa-tabla]] — una suscripción realtime impide revocar el select de esa tabla a authenticated
 - [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
 - [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética
 - [[update-browserslist-db-mete-caniuse-lite-en-dependencies]] — update-browserslist-db mete caniuse-lite en dependencies
