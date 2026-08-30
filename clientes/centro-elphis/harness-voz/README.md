@@ -30,5 +30,6 @@ reconstruye el gate desde cero. El token de Retell NO está aquí — se lee de
 - **La suite tiene ±2 casos de ruido.** Ninguna decisión con una sola corrida.
 - **Un gate que solo pasa no prueba nada.** Verificado por mutación: 6 mutantes reales, 6 mordidas.
   Ojo con los equivalentes: «cambiar el precio 60» no muerde porque «60» no aparece en el prompt.
+  → [[un-mutante-que-no-muerde-puede-no-haber-mutado-nada]]
 
 Estado y decisiones del agente en [[clientes/centro-elphis/index|el hub]].

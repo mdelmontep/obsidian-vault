@@ -20,5 +20,6 @@ usado más abajo) no es un candado, y **ficheros en rojo con CERO tests en rojo*
 ejecutó una aserción. Los dos son «no medido», nunca «vigilado». Y un hueco puede ser **mutante
 equivalente**: se declara por escrito con la prueba de por qué ningún input los distingue.
 
-Relacionado: [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] ·
+Relacionado: [[un-mutante-que-no-muerde-puede-no-haber-mutado-nada]] ·
+[[verificar-que-un-test-tiene-dientes-con-una-mutacion]] ·
 [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]]
