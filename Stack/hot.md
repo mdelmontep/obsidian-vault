@@ -112,3 +112,5 @@ Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]
+- **Una respuesta que llega justo al tope no es un resultado, es el tope** — si `len(resultado) == límite`, trátalo como truncado: casi borro una rama con un PR abierto. Ver [[el-limite-silencioso-una-respuesta-que-llega-al-tope-parece-completa]]
+- **Un recuento sobre el estado final no ve la ventana de exposición** — para *nunca debe estar expuesto* la evidencia es `git log -S`, no `grep` del árbol de hoy. Ver [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]

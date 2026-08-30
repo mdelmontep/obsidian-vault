@@ -74,7 +74,7 @@ cero exportaciones nunca. El cuello de botella de AGH es codificar, no la herram
 
 **Diseño CERRADO el 30-ago; código sin arrancar.** `.TRA` de Cegid V9 mapeado campo a campo,
 catálogos del tenant en mano (235 cuentas, 40 proveedores, 4 IVAs, ejes `CANAL`/`DEPARTAMENTO`,
-3 etapas de aprobación), **15 decisiones en ADR-033**, spec **#2295** y **13 tickets #2296-#2308**
+3 etapas de aprobación), **15 decisiones en ADR-063**, spec **#2295** y **13 tickets #2296-#2308**
 con sus aristas de bloqueo. Cogibles ya: #2296 y #2297. Panel: `claude.ai/code/artifact/dbb95570`.
 El detalle de las decisiones y lo que cambiaron del plan → [[facturaia-yooz-agh-migracion]] §7.bis.
 

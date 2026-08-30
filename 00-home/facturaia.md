@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-08-30
+updated: 2026-08-31
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,9 +35,12 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
-- 🟢 **Super test V2 cerrado, 93 de 94 (30-ago, #2281→#2286)** — todo en prod. **Queda M1**, `parcial` a propósito: la ola 2 sin ejercer con navegador, con prompt en `docs/qa/PROMPT-cerrar-m1-ola2-navegador.md`. → [[facturaia-historico-snapshot-2026-08-30]] · [[el-candado-audita-la-clase-no-la-lista-que-alguien-escribio]]
-- 🟢 **La iconografía, cerrada: un registry, un trazo, una escala (30-ago, #2289 → #2290 → #2294 en prod)** — `no-restricted-imports` deja ya `lucide-react` al registry y a `ui/`. **Queda**: las 7 rutas de `/admin` sin ejercer (el usuario E2E no es superadmin) y decidir si ahí se recupera el trazo grueso —con una clase `stroke-width`, no redibujando—. → [[facturaia-historico-snapshot-2026-08-30]] · [[el-size-de-lucide-acepta-string-y-lo-reenvia-a-width]] · [[un-icono-dentro-de-un-flex-se-encoge-y-deforma-su-caja]] · [[eslint-flat-config-el-ultimo-bloque-que-casa-reemplaza-el-array-de-la-regla]]
-- 🟢 **Auditoría de diseño en prod (30-ago, #2271 + #2285)** — en móvil no había NINGÚN `<h1>`; ahora 1 en 19 de 20 rutas y la escala tipográfica es fija. **Queda**: ~50 `border-radius: 8px` a mano fuera de `ui/`. → [[facturaia-historico-snapshot-2026-08-30]] · [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]]
+- 🟢 **Numeración de ADR cerrada (31-ago, #2318 + #2319 en prod)** — el `ADR-032` duplicado se había arreglado al 034, que estaba libre aquí y ocupado en el vault. Hoy es el **062**, 86 citas reapuntadas, y un cuarto candado que sí lee el vault. **Contador único: el próximo ADR es el 063**, política en `docs/decisions/NUMERACION.md`. → [[dos-series-de-adr-con-el-mismo-prefijo-la-cita-resuelve-al-documento-equivocado]]
+- 🟠 **Auditoría del 27-ago dentro, con seis cifras reverificadas y corregidas al pie (31-ago, #2318)** — su «0 `DROP FUNCTION`+`CREATE` sin `REVOKE`» era cierto hoy y falso como historia: la mig 602 dejó `aplicar_movimientos_lotes` abierta a `anon` **152 migraciones**, hasta la 754. **Queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
+- 🟠 **El ADR de contabilidad de AGH sigue sin commitear (31-ago)** — `ADR-063-…-contabilidad-analitica-de-agh.md`, renumerado hoy del 033, con su `PLAN`, `PROMPT` y tres `to-questionnaire-*`. → [[agh-iberica]]
+- 🟢 **Super test V2 cerrado, 93 de 94 (30-ago, #2281→#2286)** — **queda M1**, `parcial` a propósito: la ola 2 sin ejercer con navegador (`docs/qa/PROMPT-cerrar-m1-ola2-navegador.md`). → [[facturaia-historico-snapshot-2026-08-30]]
+- 🟢 **Iconografía cerrada: un registry, un trazo, una escala (30-ago, #2289→#2294 en prod)** — **queda**: las 7 rutas de `/admin` sin ejercer (el usuario E2E no es superadmin) y decidir si ahí se recupera el trazo grueso, con una clase `stroke-width`. → [[facturaia-historico-snapshot-2026-08-30]]
+- 🟢 **Auditoría de diseño en prod (30-ago, #2271 + #2285)** — **queda**: ~50 `border-radius: 8px` a mano fuera de `ui/`. → [[facturaia-historico-snapshot-2026-08-30]]
 - 🔴 **`brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)** — los objetivos de contraste son mínimos y los de fábrica van muy por encima: una org con marca propia recibe 10-13 Lc MENOS sin que nada avise. Defecto preexistente; no entra en #2272.
 
 - 🟢 **Ticket 156 cerrado (29-ago, #2274→#2280, migs 764-767, ADR-032)** — queda solo la respuesta del cliente. → [[facturaia-historico-snapshot-2026-08-30]]
