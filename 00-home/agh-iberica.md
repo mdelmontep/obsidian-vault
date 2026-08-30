@@ -72,10 +72,14 @@ Independiente de Paquita y con otro interlocutor (Giuliana y Daniela llevan la c
 Carlos solo decide umbrales). Yooz es un **piloto aparcado**: 46 facturas, 39 sin codificar,
 cero exportaciones nunca. El cuello de botella de AGH es codificar, no la herramienta.
 
-**Descubrimiento cerrado, implementación sin arrancar** (decisión de Manu). Ya en mano y sin
-depender de Mazars: el `.TRA` de Cegid V9 mapeado campo a campo y los catálogos del tenant
-(235 cuentas de 11 dígitos, 40 proveedores, 4 IVAs, ejes `CANAL`/`DEPARTAMENTO`, circuito de
-3 etapas). 👉 Falta preguntar a Carlos los **umbrales de aprobación por importe**.
+**Diseño CERRADO el 30-ago; código sin arrancar.** `.TRA` de Cegid V9 mapeado campo a campo,
+catálogos del tenant en mano (235 cuentas, 40 proveedores, 4 IVAs, ejes `CANAL`/`DEPARTAMENTO`,
+3 etapas de aprobación), **15 decisiones en ADR-033**, spec **#2295** y **13 tickets #2296-#2308**
+con sus aristas de bloqueo. Cogibles ya: #2296 y #2297. Panel: `claude.ai/code/artifact/dbb95570`.
+El detalle de las decisiones y lo que cambiaron del plan → [[facturaia-yooz-agh-migracion]] §7.bis.
+
+👉 **Tuyo: mandar los tres cuestionarios** (raíz de `facturaia`): Giuliana el catálogo sucio, Carlos
+la regla de aprobación, Mazars los códigos del fichero. **Ninguno bloquea** los primeros tickets.
 
 ⛔ Tenant en **solo lectura**; **no se solicita** a Yooz la exportación de reversibilidad
 (integramos, no rescindimos). Housekeeping: borrar el export `TRA_PRUEBA`.

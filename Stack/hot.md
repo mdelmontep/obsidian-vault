@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **«✔ verificado contra el repo» encuentra la migración que CREÓ la columna, no la que la borró** — un nombre de esquema se verifica en la ÚLTIMA migración que lo toca. Ver [[verificado-contra-el-repo-no-ve-la-columna-que-un-adr-mando-borrar]]
+- **Un subagente cita el mecanismo, nunca el guard que lo cierra** — lee tú el `if` de 30 líneas antes, o diseñas contra un riesgo inexistente. Ver [[un-subagente-cita-el-mecanismo-no-el-guard-que-lo-cierra]]
 - **Un guard que discrimina por el NOMBRE de la etiqueta no vigila lo que dice** — en JSX ese nombre es una variable: hace falta un segundo guard que lo reserve. Ver [[un-guard-que-lee-el-nombre-de-la-etiqueta-miente-si-el-nombre-es-un-alias]]
 - **Cero `fetch()` no es cero uso** — mídelo en producción antes de llamar huérfano a un endpoint. Ver [[ausencia-de-consumidor-no-es-ausencia-de-funcion]]
 - **Un fix dentro de una media query, sobre un selector que ahí no existe** — compila, pasa el gate y no cambia nada: contar `querySelectorAll` A ESE ancho antes de escribirlo. Ver [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]]

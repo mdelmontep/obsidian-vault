@@ -281,14 +281,13 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 ## NEXT (próximas 2 semanas)
 
-- 🟠 **Contabilidad analítica + export Cegid `.TRA` (para AGH Ibérica, 30-ago)** — módulo nuevo
-  activado **por organización**, apagado por defecto: catálogo de cuentas propio del cliente,
-  N ejes analíticos, circuito de aprobación de 3 etapas y exportador Cegid V9 para su gestoría.
-  Plan verificado en `docs/architecture/PLAN-agh-contabilidad-cegid.md` (once tablas nuevas, cero
-  columnas en `facturas`, clon del molde de `categoria_reglas_aprendidas` sin tocar la
-  conciliación). **Sin arrancar por decisión de Manu.** Paso 0 al retomarlo: relajar los
-  `pattern` de `src/lib/modules/catalog.ts:314-321`, que rechazan cuentas de 11 dígitos →
-  [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]].
+- 🟠 **Contabilidad analítica + export Cegid `.TRA` (para AGH Ibérica, 30-ago)** — módulo por
+  organización, apagado por defecto: catálogo de cuentas del cliente, N ejes analíticos, circuito de
+  aprobación de 3 etapas y exportador Cegid V9. **Diseño cerrado, código sin arrancar**: quince
+  decisiones en `ADR-033`, glosario en `CONTEXT.md`, spec **#2295** y **13 tickets #2296-#2308**.
+  Cogibles ya: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza
+  cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]])
+  y **#2297** (fundaciones del catálogo). Panel: `claude.ai/code/artifact/dbb95570`.
   Contexto completo → [[facturaia-yooz-agh-migracion]]
 - ✅ **Multidivisa: S4 cerrado y área sin nada pendiente (22-ago, #2101)** — la campanita avisa de lo que el barrido NO puede arreglar solo (`divisas_pendientes`, agregada por org, se apaga sola). El aviso en campanita **del desvío >5 %** se retira a propósito: un desvío solo existe cuando una persona teclea un tipo pactado, ya se le dice bajo el campo en ese instante, y badgear una decisión deliberada es ruido. Si algún día se quiere supervisión, la forma es un resumen mensual, no un badge. → [[facturaia-multidivisa-recibidas]]
 

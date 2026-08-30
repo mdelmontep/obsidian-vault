@@ -244,7 +244,7 @@ La F3 y la F4 se tocan: la codificación analítica se hace en el mismo gesto qu
 - **No se solicita** la exportación contractual de reversibilidad a Yooz (decisión del 30-ago:
   estamos integrando, no rescindiendo).
 
-## 7. Plan de implementación (30-ago-2026) — escrito, sin arrancar
+## 7. Plan de implementación (30-ago-2026) — diseño CERRADO, código sin arrancar
 
 `facturaia/docs/architecture/PLAN-agh-contabilidad-cegid.md` (328 líneas) y su prompt de
 lanzamiento `PROMPT-agh-contabilidad-cegid.md`. Salió de un arquitecto Fable y está
@@ -260,9 +260,44 @@ AGH miden 5-6 (`IVA21`→`IVA`, `IVA10`→`IVA`: colisionan los tres IVAs); Lati
 el en-dash que la spec usa como booleano falso; y regenerar líneas de una recibida
 `sin_aprobar` borra su codificación por CASCADE sin aviso.
 
+### 7.bis Lo que la sesión de arquitectura cerró encima (30-ago-2026)
+
+El plan se sometió a un grilling con dos auditorías en paralelo (contra los ADRs y contra los
+invariantes del repo) y salió con **quince decisiones firmadas** en
+`facturaia/docs/decisions/ADR-033-las-quince-decisiones-de-la-contabilidad-analitica-de-agh.md`.
+Las cinco que cambian el plan:
+
+- La tabla es **`catalogo_cuentas`**, no `cuentas_contables` (choca con `proveedores.cuenta_contable`,
+  la subcuenta autoasignada de 8 dígitos, que es otra cosa) ni `plan_cuentas` (`plan_` ya significa
+  plan de suscripción aquí). El glosario de los dos conceptos vive en el `CONTEXT.md` del repo.
+- La feature se declara **sin `addon_purchasable`**: la mig 701 borró esa columna al ejecutar
+  ADR-013. Tal cual estaba, la migración del plan habría reventado.
+- La dependencia es solo `contabilidad → recibidas`. **`fiscal` NO**: su trigger solo evalúa con
+  `plan_features.enabled=true`, y `fiscal` es un complemento con `enabled=false` en los tres planes,
+  así que el candado sería decorativo y estallaría en `23514` más tarde.
+- **La exportación a Cegid BLOQUEA** si queda algo sin codificar del periodo — excepción justificada
+  a ADR-028 (el motor fiscal declara, no bloquea), con contrapartida obligatoria: la pantalla enseña
+  el recuento sin codificar ANTES del botón.
+- El **riesgo 5 del plan (regenerar líneas borra la codificación) NO existe**: un barrido no encontró
+  ninguna vía que reescriba las líneas de una recibida viva. La única que hace `DELETE FROM
+  lineas_factura` exige `tipo='emitida'` + `estado='borrador'`. La restricción de UI que el plan
+  proponía se retiró.
+
+Spec **#2295** y **trece tickets #2296-#2308** publicados en GitHub con sus aristas de bloqueo, todos
+`ready-for-agent`. Cogibles sin esperar a nadie: **#2296** (patrones PGC) y **#2297** (fundaciones del
+catálogo). Panel de progreso vivo:
+`claude.ai/code/artifact/dbb95570-48cb-4387-9db4-a250c49e9af4`.
+
+Tres cuestionarios escritos y **pendientes de mandar** (Manu): Giuliana (catálogos sucios, qué es cada
+eje, si emiten ventas), Carlos (qué factura necesita aprobación y con qué umbral), Mazars (diario,
+ejes, establecimiento, códigos de impuesto de 3 chars, y si aceptarían otro formato). **Ninguno
+bloquea el primer bloque de tickets.**
+
 Aprendizajes que salieron de esta fase:
 [[el-documento-listo-del-sistema-legado-valida-estructura-nunca-criterio]] ·
 [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]] ·
-[[dos-catalogos-exportados-del-mismo-saas-pueden-contradecirse]]
+[[dos-catalogos-exportados-del-mismo-saas-pueden-contradecirse]] ·
+[[verificado-contra-el-repo-no-ve-la-columna-que-un-adr-mando-borrar]] ·
+[[un-subagente-cita-el-mecanismo-no-el-guard-que-lo-cierra]]
 
 Relacionado: [[facturaia-integracion-api-v1-portal]] · [[agh-iberica]]
