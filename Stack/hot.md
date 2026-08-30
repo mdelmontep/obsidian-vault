@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un guard que discrimina por el NOMBRE de la etiqueta no vigila lo que dice** — en JSX ese nombre es una variable: hace falta un segundo guard que lo reserve. Ver [[un-guard-que-lee-el-nombre-de-la-etiqueta-miente-si-el-nombre-es-un-alias]]
+- **Cero `fetch()` no es cero uso** — mídelo en producción antes de llamar huérfano a un endpoint. Ver [[ausencia-de-consumidor-no-es-ausencia-de-funcion]]
 - **Un fix dentro de una media query, sobre un selector que ahí no existe** — compila, pasa el gate y no cambia nada: contar `querySelectorAll` A ESE ancho antes de escribirlo. Ver [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]]
 - **Una piel/tema se mide por ALCANCE, no por tokens redefinidos** — cuántas cajas pintadas cambian al encenderla (2-16 % aquí, por los valores a mano). Ver [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]]
 - **El parche de un agente en worktree revierte lo que no commiteaste** — nace del último commit: se fusiona el hunk, no se copia el fichero. Ver [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
@@ -26,20 +28,6 @@ tags: [stack, index]
 - **Un hook que resuelve git en el cwd de la SESIÓN juzga otro checkout** — y renunciar (`exit 0` al ver un `cd`) lo deja decorativo justo donde importa. Ver [[hook-que-resuelve-git-en-el-cwd-de-la-sesion-juzga-el-repo-equivocado]]
 - **Todo bot de voz o chat debe identificarse como IA en la primera interacción** (art. 50 del AI Act, vigente desde el 2-ago-2026) — y el aviso va en el flujo, no en el prompt: si depende del modelo, el incumplimiento es silencioso. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 - **Un control que afirmas a un cliente necesita REGISTRO con fecha** — una afirmación de control no la caza ningún test, solo una auditoría. Ver [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]]
-- **Cuenta los motores que calculan el mismo número antes de arreglar uno** — una función SQL y su espejo TS divergen en silencio; el issue nombraba 1 de 2 mitades y 1 de 3 patas. Ver [[cuenta-los-motores-que-calculan-el-mismo-numero-antes-de-arreglar-uno]]
-- **«¿Existe X?» se busca por la LLAMADA, no por el módulo** — la carpeta esperada contesta otra pregunta. Ver [[buscar-una-capacidad-por-su-llamada-no-por-el-modulo-donde-crees-que-vive]]
-- **Un guard que mide un sustituto bloquea sin que nadie pruebe el hecho** — si aborta ANTES de intentar la operación, el error nunca aparece (once días parados). Comprueba el RESULTADO al final, no el permiso al principio. Ver [[un-guard-que-mide-un-sustituto-bloquea-sin-que-nadie-pruebe-el-hecho]]
-- **Acotar una API por scopes no la acota** — rutas distintas comparten scope: allowlist de endpoints en el wrapper, así una ruta nueva nace fuera. Ver [[acotar-una-api-por-scopes-no-la-acota-usa-allowlist-de-endpoints]]
-- **Borrar una rama es un paso APARTE, al final** — encadenado con `&&` corre aunque el merge falle y **cierra la PR sin reabrirla**. Ver [[el-borrado-de-rama-nunca-va-encadenado-al-merge]] · [[gh-pr-merge-delete-branch-no-borra-la-rama-si-falla-su-checkout-local]]
-- **Un grep negativo por el nombre del origen es ciego a un renombrado en la frontera** — probaba que el identificador no está, no que el dato no llegue: cruzaba con otro nombre. Persíguelo desde el PRODUCTOR. Ver [[un-grep-negativo-por-el-nombre-del-origen-es-ciego-a-un-renombrado-en-la-frontera]]
-- **Un barrido devuelve cero sin decir que no midió** — `git grep -E` sin `\s`, zsh sin word-splitting, `:t` modificador. Control en las dos direcciones. Ver [[el-instrumento-devuelve-cero-sin-decir-que-no-ha-medido]]
-- **Un agente muerto deja un motor desacoplado vivo** — sube por `ppid`; `TaskStop` no vale. Ver [[un-agente-muerto-puede-dejar-un-motor-desacoplado-vivo]]
-- **Aseverar el `import` no asevera la llamada** — `toContain("import { X")` sigue verde si otra función ocupa el sitio de `X`; asevera el USO. Ver [[aseverar-sobre-el-import-no-asevera-sobre-la-llamada]]
-- **Probar la aritmética no prueba el cableado** — 5 tests de la función pura en verde con el DTO pasándole un `0`; cubre también quién le pasa los argumentos. Ver [[probar-la-aritmetica-no-prueba-el-cableado-que-la-invoca]]
-- **Rojo de la suite + máquina saturada ≠ regresión** — 3 corridas, 3 conjuntos de rojos sin solape; pasan aislados. Mira la duración antes que el nombre (123 s vs 11.780 s). No solapes gates. Ver [[la-suite-completa-bajo-paralelismo-no-distingue-regresion-de-saturacion]]
-- **Vitest descarta la salida de los tests que PASAN** — todo reporte de un arnés que no falla (gaps conocidos, ramas que se comparan entre corridas) se pierde: `process.stdout.write`, y compruébalo con una corrida real. Ver [[un-gap-que-no-se-lee-es-un-gap-que-nadie-cierra]]
-- **Dos capturas idénticas byte a byte no son un tema oscuro: es que el tema no cambió** — si la app lleva el tema en `dataset.theme` (no en `prefers-color-scheme`), `emulateMedia` no toca nada: siembra la precondición y **asevérala**. Ver [[dos-capturas-identicas-byte-a-byte-es-que-el-tema-no-cambio]]
-- **Un permiso concedido midiendo caduca con la medición** — el mismo `null` dice «no abras» y «no cierres». Ver [[un-gate-abierto-con-la-metrica-caducada-no-vuelve-a-cerrarse]]
 
 Este fichero se carga **cuando no hay disparador claro** (CLAUDE.md: "Default / dudo → `Stack/hot.md`").
 O sea: es lo que se lee al arrancar sin saber todavía qué se va a tocar. Todo lo que esté aquí se paga
@@ -118,6 +106,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
-[[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+[[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]
