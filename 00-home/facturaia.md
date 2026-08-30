@@ -280,6 +280,16 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toasts repetidos Bandeja IA · control de stock desde catálogo · numeración preview sin huecos · tabla facturas móvil auto-ajuste · registro branded+onboarding · auditoría APIs #518 (roles/scopes) · ingesta USD+parpadeo+stock servicios · integraciones lista glass · calendario capas · "Resolver con Claude" resumen cliente · modal ticket ancho completo · panel admin móvil · presupuestos Bearer app iOS · conciliación editar signo/importe · conciliación motor migs 265-269 · extractos PDF flujo web · Outlook/M365 · overflow móvil hardware real · consistencia glass Ajustes · recover-password 2ª mitad · 2FA E2E · multidivisa recibidas · Stripe checkout E2E real · WA multi-org crear cliente/proveedor.
 
 ## NEXT (próximas 2 semanas)
+
+- 🟠 **Contabilidad analítica + export Cegid `.TRA` (para AGH Ibérica, 30-ago)** — módulo nuevo
+  activado **por organización**, apagado por defecto: catálogo de cuentas propio del cliente,
+  N ejes analíticos, circuito de aprobación de 3 etapas y exportador Cegid V9 para su gestoría.
+  Plan verificado en `docs/architecture/PLAN-agh-contabilidad-cegid.md` (once tablas nuevas, cero
+  columnas en `facturas`, clon del molde de `categoria_reglas_aprendidas` sin tocar la
+  conciliación). **Sin arrancar por decisión de Manu.** Paso 0 al retomarlo: relajar los
+  `pattern` de `src/lib/modules/catalog.ts:314-321`, que rechazan cuentas de 11 dígitos →
+  [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]].
+  Contexto completo → [[facturaia-yooz-agh-migracion]]
 - ✅ **Multidivisa: S4 cerrado y área sin nada pendiente (22-ago, #2101)** — la campanita avisa de lo que el barrido NO puede arreglar solo (`divisas_pendientes`, agregada por org, se apaga sola). El aviso en campanita **del desvío >5 %** se retira a propósito: un desvío solo existe cuando una persona teclea un tipo pactado, ya se le dice bajo el campo en ese instante, y badgear una decisión deliberada es ruido. Si algún día se quiere supervisión, la forma es un resumen mensual, no un badge. → [[facturaia-multidivisa-recibidas]]
 
 - 🟠 **Gate de cierre: la reserva recurrente es deriva documental (señal del 20-ago)** — los últimos 8 cierres de `cierres.json` salen todos «con-reservas», y el aviso que se repite es el prompt de área afirmando pendiente lo ya entregado (reincidió en FB-08 tras corregirse en d667a3adc). Candidato a comprobación del gate: si el diff cierra un ticket listado en un `PROMPT-*.md` vigente, exigir que el diff toque ese prompt.

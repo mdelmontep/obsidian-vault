@@ -9,6 +9,13 @@ tags: [cliente, agh-iberica, historico]
 Estados anteriores del hub [[agh-iberica]], sacados del dashboard para que el arranque de sesión no
 los pague. El detalle día a día vive en `docs/status-log/` del repo.
 
+## 26-ago-2026 · #1418 — el emisor `custom_api` hacia Flota IA, en prod
+
+Cuatro PRs dentro con override de founder (#1420 → #1421 → #1423 → #1425); #1418 y #1422
+cerrados comprobando `closedAt`. Una interacción = **un TURNO**, `externalInteractionId =
+traceId` — el agente **no tiene concepto de conversación cerrada**, así que agrupar por llamada
+exigiría un `setTimeout` en memoria que un redespliegue se lleva (→ #1419, abierto).
+
 ## 2026-08-17 (tarde)
 
 🟢 **Seis PRs dentro, siete issues cerrados** (`4a83b42`), gate verde a la primera (`3670/239/5f`), combinación de las siete medida antes de mergear con suma exacta. 🩺 El flake `57P01` cerrado como CLASE, no por fichero. 🟢 **Langfuse recuperado sin Deploy** (`docker compose up -d clickhouse`): 1.064 trazas intactas, ventana real **10 días** — el diagnóstico previo y su corrección eran los dos falsos. 🔴 Tres premisas falsas del día eran propias (dos caminos de salida de un read donde hay uno; `git ls-files` donde el barrido usa `readdirSync`; censo 8/10 siendo 7/9).

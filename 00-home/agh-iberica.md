@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-26
+updated: 2026-08-30
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -13,7 +13,7 @@ HUB del proyecto. Empresa de IT que da servicio a grandes multinacionales (Draga
 
 ## Producto en curso: **Paquita**, agente comercial
 
-> ⚠️ **El agente se llama Paquita. «Carlos» es el CEO de AGH**, la persona que nos contrató — nunca el nombre del agente. Este hub decía «agente comercial "Carlos"» y el repo también: el error salió de ahí y **contaminó a un tercero** (una sesión del portal lo escribió en un encargo). Corregido en el repo por #1422 el 26-ago, y aquí ahora.
+> ⚠️ **El agente se llama Paquita. «Carlos» es el CEO de AGH**, nunca el nombre del agente. El error nació en este hub, contaminó a un tercero y se corrigió en el repo por #1422 (26-ago).
 
 Agente conversacional **interno** (secretario/CRM) para los propios comerciales de AGH. Primera versión/demo que testeará el propio Carlos (el CEO). Se habla por **WhatsApp (voz in / texto out)** y **llamada de voz (Retell)**.
 
@@ -50,7 +50,7 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 > ⚠️ Este bloque **no nombra el SHA de `main` a propósito**: un snapshot que nombra su punta no puede acertar (se desfasa con su propio merge). Se consulta con `git rev-parse --short origin/main`.
 
-✅ **#1418 en prod: el emisor `custom_api` hacia Flota IA** (`app.agentesialabs.com`). Cuatro PRs dentro con override de founder (#1420 → #1421 → #1423 → #1425); #1418 y #1422 cerrados comprobando `closedAt`. Una interacción = **un TURNO**, `externalInteractionId = traceId` — el agente **no tiene concepto de conversación cerrada**, así que agrupar por llamada exigiría un `setTimeout` en memoria que un redespliegue se lleva (→ #1419).
+✅ **#1418 en prod: el emisor `custom_api` hacia Flota IA.** Una interacción = un TURNO; agrupar por llamada sigue abierto en #1419. Detalle → [[agh-iberica-historico]].
 
 🟡 **NADIE ha probado que emita, y el cero medido NO discrimina.** El portal midió a las 20:30 (cero filas, `last_error` NULL, cero `error`) pero `docker logs` da **cero webhooks entrantes**: Paquita no ha tenido ni un turno ⇒ «no emitió» y «no hubo nada que emitir» son la misma observación. Falta **un WhatsApp real** y repetir el SELECT anclando a la hora del `POST /webhook/whatsapp`, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
 
@@ -66,6 +66,22 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.
+## Segundo frente (30-ago): la contabilidad de AGH sale de Yooz a TuFacturaIA
+
+Independiente de Paquita y con otro interlocutor (Giuliana y Daniela llevan la contabilidad;
+Carlos solo decide umbrales). Yooz es un **piloto aparcado**: 46 facturas, 39 sin codificar,
+cero exportaciones nunca. El cuello de botella de AGH es codificar, no la herramienta.
+
+**Descubrimiento cerrado, implementación sin arrancar** (decisión de Manu). Ya en mano y sin
+depender de Mazars: el `.TRA` de Cegid V9 mapeado campo a campo y los catálogos del tenant
+(235 cuentas de 11 dígitos, 40 proveedores, 4 IVAs, ejes `CANAL`/`DEPARTAMENTO`, circuito de
+3 etapas). 👉 Falta preguntar a Carlos los **umbrales de aprobación por importe**.
+
+⛔ Tenant en **solo lectura**; **no se solicita** a Yooz la exportación de reversibilidad
+(integramos, no rescindimos). Housekeeping: borrar el export `TRA_PRUEBA`.
+
+Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
+
 ## Bloqueantes
 
 _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una consulta, no estado.)_
