@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-30 iteración 54 (main 14421310 · gate 87 pasos / 501 ficheros / 7.006 pruebas · las nueve pistas huérfanas INTEGRADAS a mano · bloqueo único: trámite 15)
+updated: 2026-08-31 iteración 55 (main b14e176c · producción pasa de la 087 a la 120 · del trámite 15 solo queda mover la contraseña · las 5 orgs de prueba SE QUEDAN)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -19,6 +19,40 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   contenido (uno salía «actualizado hoy» con contenido de diez iteraciones antes). Antes de pagarlo,
   medir el `diff`: un documento REGENERADO no tiene ediciones propias que fusionar.
   Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] y [[claude-code-gotchas]].
+
+## Estado (30-ago, iteración 55) — producción pasa de la 087 a la 120, y la cifra que decía cuántas faltaban estaba mal
+
+**`main` en `b14e176c`.** Se acabó el bloqueo del trámite 15 por el lado del token: Manu regeneró el
+de la Management API y **las 29 migraciones pendientes están aplicadas**, del 088 al 120. Copia
+cifrada nueva + `copia:drill` **sobre esa misma copia** por delante, no sobre la de la mañana.
+
+**No eran 33.** Ese número era `120 − 88 + 1`, el tamaño del rango, no el recuento de ficheros: hay
+huecos (096, 106, 108, 112 y otros). Es la segunda vez que una cifra escrita a mano sobre el ÁRBOL se
+equivoca aquí —la anterior fue «veinte que eran dieciséis»— y comparten causa: `G-TABLERO` y
+`G-EPICAS` vigilan cifras sobre otros DOCUMENTOS, y esta tercera clase no la mira nadie. Ficha `244`
+(`cifras:check`, con guarda de cero y rojo medido por mutación).
+
+**Verificado contra el catálogo de la base, no contra el log de la herramienta**: 90 → 112 funciones
+en PostgREST. Tres sondas dieron ✗ y las tres eran nombres que me había inventado, no migraciones que
+faltaran → [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]].
+
+**Tres candados de caducidad se pusieron rojos a la vez** y cada uno nombró el espejo de tipos que
+tocaba borrar: el mecanismo funcionando por tercera vez →
+[[un-espejo-de-tipos-a-mano-lleva-un-test-que-caduca-cuando-el-generador-lo-trae]].
+
+**Las 5 organizaciones de prueba se quedan en producción — decisión de Manu del 31-ago.** No es un
+pendiente: `qa:limpiar` solo se corrió en seco, que no escribe. Lo que queda del trámite 15 es una
+sola cosa, y es suya: mover la contraseña de `tucrmia-prod` de `Employee` a `TUCRMIA` **desde la app
+de 1Password**, porque `op` no tiene ninguna cuenta dada de alta en esta máquina y `move` no cruza
+cuentas → [[op-item-move-destination-vault-no-vault-private-resuelve-al-vault-real]]. Con ella, el
+pooler queda al alcance de un agente y las migraciones dejan de depender de la Management API.
+
+**Dos trampas del método, las dos cobradas**: el commit salió con el mensaje de otra tarea porque el
+heredoc que debía escribirlo iba dentro de un comando bloqueado
+([[un-git-commit-f-sobre-un-fichero-de-mensaje-viejo-comete-el-mensaje-de-otra-tarea]]), y
+`sync:shared:check` pasó de verde a rojo solo, porque el `origin/main` de facturaia avanzó en medio
+([[un-gate-que-compara-contra-el-origin-main-de-otro-repo-cambia-de-veredicto-solo]]). Fichas nuevas:
+`244` y `245` (la escala tipográfica fluida hace que el suelo de APCA dependa del ancho de ventana).
 
 ## Estado (30-ago, iteración 54) — las nueve pistas huérfanas, integradas y verificadas a mano
 

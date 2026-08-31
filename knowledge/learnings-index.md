@@ -292,11 +292,14 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[typescript-6-noUncheckedSideEffectImports-rompe-imports-css-sin-tipo]] — typescript 6 activa noUncheckedSideEffectImports por defecto y rompe imports css sin tipo
 - [[un-bootstrap-que-aplica-el-estado-final-sin-registrar-los-pasos-hace-que-el-migrador-los-repita]] — un bootstrap que aplica el esquema final sin registrar las migraciones hace que el migrador las repita
 - [[un-click-que-expira-en-e2e-suele-ser-un-control-bloqueado-no-la-app-rota]] — un click que expira en e2e suele ser un control bloqueado, no la app rota
+- [[un-espejo-de-tipos-a-mano-lleva-un-test-que-caduca-cuando-el-generador-lo-trae]] — un espejo de tipos escrito a mano lleva un test que caduca cuando el generador lo trae
 - [[un-eval-que-llama-al-interprete-no-ve-lo-que-arregla-la-capa-de-abajo]] — un eval que llama al intérprete no ve lo que arregla la capa de abajo — lee el instrumento antes de promete…
 - [[un-fail-closed-cuenta-la-fuente-que-puede-fallar-no-el-agregado]] — un fail-closed cuenta la fuente que puede fallar, no el total agregado
 - [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]] — un fix en una media query sobre un selector que no existe ahí es código muerto
+- [[un-gate-que-compara-contra-el-origin-main-de-otro-repo-cambia-de-veredicto-solo]] — un gate que compara contra el `origin/main` de otro repositorio cambia de veredicto solo
 - [[un-gate-que-resuelve-imports-solo-ve-los-estaticos]] — un gate que resuelve imports por AST sólo ve los estáticos de nivel superior
 - [[un-gate-que-solo-mide-lo-aplicado-puntua-al-humano]] — un gate que solo mide lo aplicado puntúa al filtro humano, no al proponente
+- [[un-git-commit-f-sobre-un-fichero-de-mensaje-viejo-comete-el-mensaje-de-otra-tarea]] — un `git commit -F` sobre un fichero de mensaje viejo comete el mensaje de otra tarea
 - [[un-guard-sobre-sql-tiene-que-conocer-el-embed-y-el-alias-de-postgrest]] — un guard sobre SQL/PostgREST tiene que conocer el embed y el alias
 - [[un-hook-que-bloquea-es-un-and-que-no-se-cumple]] — un hook que bloquea es un && que no se cumple, así que la limpieza no va encadenada
 - [[un-metodo-sin-llamantes-puede-tener-el-guard-ausente]] — un método sin llamantes puede tener el guard ausente y su comentario afirmar que está
@@ -308,6 +311,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[una-desactivacion-parcial-se-lee-igual-que-no-habia-agujero]] — una desactivación parcial se lee igual que «no había agujero»
 - [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]] — una piel de tokens solo alcanza lo que no está escrito a mano
 - [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]] — la 2ª vía de escritura omite el contexto de actor que la RLS exige, y sólo falla en el caso por defecto
+- [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]] — una sonda cuyo nombre no salió de la fuente da un ✗ que parece un fallo del sistema
 - [[una-suscripcion-realtime-impide-revocar-el-select-de-esa-tabla]] — una suscripción realtime impide revocar el select de esa tabla a authenticated
 - [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
 - [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética

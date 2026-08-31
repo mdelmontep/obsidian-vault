@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Una sonda con el nombre inventado da un ✗ indistinguible de un fallo real** — los tres ✗ de la verificación eran los tres nombres que no salieron de leer el `create function`. Deriva la lista de la fuente. Ver [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]]
 - **El porcentaje de swap no discrimina thrashing; los `Swapouts` sí** — al 89 % con 0 swapouts/s el swap está asentado y se puede conducir un navegador. Para una ola de 3-4, el criterio del 50 % sigue mandando. Ver [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
 - **«✔ verificado contra el repo» encuentra la migración que CREÓ la columna, no la que la borró** — un nombre de esquema se verifica en la ÚLTIMA migración que lo toca. Ver [[verificado-contra-el-repo-no-ve-la-columna-que-un-adr-mando-borrar]]
 - **Un subagente cita el mecanismo, nunca el guard que lo cierra** — lee tú el `if` de 30 líneas antes, o diseñas contra un riesgo inexistente. Ver [[un-subagente-cita-el-mecanismo-no-el-guard-que-lo-cierra]]
@@ -61,7 +62,7 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (28)
+## Ha vuelto a pasar (34)
 - **Cierre de tanda = suite COMPLETA sobre `main`** — el gate por rama no ve los guards. Ver [[suite-filtrada-por-carpetas-del-pr-no-ve-los-guards-de-arquitectura]]
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de

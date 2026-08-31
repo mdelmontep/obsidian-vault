@@ -17,4 +17,11 @@ create schema if not exists supabase_migrations;
 create table if not exists supabase_migrations.schema_migrations (version text primary key, statements text[], name text);
 insert into supabase_migrations.schema_migrations (version, name) values ('001','core') on conflict do nothing;
 ```
+**Corrección del 28-ago-2026 (tucrmia): antes de dar la red por culpable, compruébalo.** Aquí esa
+conclusión se escribió sin medir y vivió veinticinco días: el pooler SÍ responde en 5432 y 6543, y
+`FATAL: password authentication failed` lo demuestra —es protocolo Postgres con el tenant resuelto—.
+Lo que faltaba era la **contraseña**, en una bóveda que el service account no alcanza. Un timeout
+prueba red; un fallo de autenticación prueba justo lo contrario. Ver
+[[credencial-de-test-guardada-puede-apuntar-a-otro-proyecto-y-a-un-usuario-sin-membresias]].
+
 Ver [[supabase-migration-numero-colision-renumerar]].
