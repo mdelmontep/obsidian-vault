@@ -19,6 +19,14 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 1-sep-2026 · el rastro de quién mira, y el DPA que faltaba (PR #2361 + #2364)
+
+- **Panel de Accesos en `/admin/ia-ops` (#2361, ADR-067)** — cada vez que alguien del equipo abre una ficha de cliente queda una fila con quién, cuándo, de qué org y si el contenido se sirvió **en claro o tapado**; si la fila no se puede escribir, el contenido no se sirve. Consultable desde el panel, así que a un cliente que pregunte «¿quién ha visto mis facturas?» se le puede responder sin entrar en la BD. Smoke en prod con las dos filas reales del día. La ruta no se audita a sí misma a propósito: auditar la lectura de la auditoría es una escalera sin peldaño final.
+- **Borrador del DPA del art. 28 (#2364)** — 620 líneas, 16 cláusulas + Anexo I (subencargados) + Anexo II (medidas), escrito desde el código y no desde una plantilla: el doble papel del §1.1, las 48 h del §10 (el cliente tiene 72), y el §16 con las siete decisiones que no puede tomar un desarrollador. El **Anexo II §10 declara las ocho cosas que hoy NO hay** (PITR apagado con RPO de 24 h, sin guardián automático de RLS, verificación de copias sin cron, sin purga automática de una org, WORM vacío, sin ISO ni SOC 2). Entra en `/admin/documents`.
+- **Un duplicado de meses en el registro de documentos** — `verifactu-auditoria-cumplimiento` estaba dos veces con el mismo `id` y distinta categoría: el listado lo pintaba dos veces y la segunda entrada era inalcanzable, porque el detalle resuelve con `find`. Ni el typecheck ni nadie lo veían. Cerrado con candado de ids únicos + `filePath` existente, probado por mutación.
+- **Superadmins de prod: 8, y 4 sobran** — inventario hecho contra la BD (`profiles.is_superadmin`, que va por `user_id`, no por `id`). Quitarlos es escritura sobre permisos de personas, así que queda del lado de Manu. En Dokploy quedan además dos líneas muertas de entorno, `SUPERADMIN_EMAILS` (retirada el 2-ago) e `IA_OPS_SHOW_TRANSCRIPTS`.
+- Aprendizaje: [[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]].
+
 ## 26-ago-2026 (cierre) · la auditoría de Albaranes, cerrada (PR #2235 `4ad5534e1` + #2237 `553e77845`)
 
 Las **18 propuestas** de `AUDITORIA-albaranes-2026-08-26.md` decididas una a una con su argumento en

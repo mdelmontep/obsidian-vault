@@ -22,6 +22,11 @@ Fix: que el exit quede **dentro del artefacto que vas a leer**, no en la salida 
 npm run gate > gate.log 2>&1; echo "EXIT_DEL_GATE=$?" >> gate.log
 ```
 
+Tercera variante (1-sep-2026): `(cmd > log 2>&1 &)` o `nohup cmd &` **dentro de una llamada en
+background**. El arnés reporta «exit code 0» a los pocos segundos y es el del shell que desasió,
+no el del comando, que sigue corriendo. El tell es el **tiempo**: un gate que canta verde en 3 s no
+ha compilado nada. Esperar por el PID (`while kill -0 $PID; do sleep 5; done`) o por el `EC=` del log.
+
 Regla: si un número decide si algo pasa o falla, **tiene que viajar con la evidencia**. Un exit code
 que vive solo en el terminal se pierde en cuanto hay un wrapper, un background o un resumen por medio.
 Ver [[un-gate-por-pipe-da-verde-con-el-push-abortado]].

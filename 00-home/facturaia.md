@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-08-31
+updated: 2026-09-01
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,6 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🟢 **Quién abre una ficha de cliente ya deja rastro, y el DPA existe (1-sep, #2361 + #2364, ADR-067)** — el panel de Accesos de `/admin/ia-ops` dice quién miró qué org y si lo vio en claro o tapado; el DPA del art. 28 entra en `/admin/documents` como borrador, con su §16 de siete decisiones y un Anexo II que declara las **8 cosas que hoy NO hay**. **Tuyo**: mandarlo al despacho, borrar `SUPERADMIN_EMAILS` e `IA_OPS_SHOW_TRANSCRIPTS` del entorno en Dokploy y quitar el superadmin a 4 de las 8 cuentas. → [[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]]
 - 🟢 **Repaso completo del área de stock, en prod (31-ago, #2335 + #2336 + #2338, mig 781)** — el borrado de una recibida cruzada devolvía albaranes a `abierto` **en silencio**: la RPC ya lo hacía, pero la clave nueva del JSON no la leía nadie hasta el aviso del usuario. Cerrado de punta a punta (RPC → parser → endpoint → toast, incluida la rama de borrado masivo parcial, que se construía su propio texto y tiraba las consecuencias). Smoke en prod verde el mismo día: el toast nombra el albarán que vuelve a `abierto` y la BD lo confirma. → [[una-clave-nueva-en-el-json-de-una-rpc-no-llega-a-nadie-sola]] · [[una-piel-y-un-tema-empatan-en-especificidad-gana-el-ultimo-escrito]] · [[un-fixture-escrito-dentro-del-arbol-que-otro-test-recorre-es-una-carrera]] · [[facturaia-modulo-stock]]
 - 🟢 **Los trece defectos del barrido funcional V2, en prod (31-ago, #2320 + #2321, migs 776-777)** — cada uno en su raíz, con candado probado por mutación. **Queda**: reverificar las 27 mediciones (olas B/C) archivadas como «bloqueadas por swap»; el motivo era un `next build` ajeno. → [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]] · [[facturaia-historico-detallado]]
 - 🟠 **Auditoría del 27-ago dentro, con seis cifras corregidas al pie (31-ago, #2318)** — su «0 `SECURITY DEFINER` sin `REVOKE`» era cierto hoy y falso como historia: la mig 602 dejó `aplicar_movimientos_lotes` abierta a `anon` durante **152 migraciones**. **Queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
@@ -43,7 +44,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🟢 **Truncado silencioso del listado y del calendario, en prod (31-ago, #2332 + #2334)** — smoke verde, 74 en pantalla contra 74 en BD. **Queda**: `ratchet:maxrows` es textual y **ciego a una consulta sin `.limit()` ninguno**, que es el caso peor. → [[una-huella-de-chunks-de-otra-ruta-no-detecta-un-deploy]]
 - 🔴 **`brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)** — los objetivos de contraste son mínimos y los de fábrica van muy por encima: una org con marca propia recibe 10-13 Lc MENOS sin que nada avise. Defecto preexistente; no entra en #2272.
 
-- 🔴 **Dos cabos del ticket 159, sin issue todavía (28-ago)** — (1) `/admin/orgs` y `/admin/orgs/<id>` se quedan en «Cargando…» con sus APIs devolviendo 200; (2) el OCR **no aprende línea→producto** (`ocr_reglas_aprendidas` no tiene esa dimensión), y ese cliente arrastra 17 recibidas sin aprobar.
+- 🔴 **Dos cabos del ticket 159, sin issue todavía (28-ago)** — (1) `/admin/orgs` y `/admin/orgs/<id>` se quedan en «Cargando…» con sus APIs devolviendo 200 — **diagnosticado el 1-sep: no es la API, es hidratación**, y despierta con el primer click real; queda decidir si eso es defecto de producto o artefacto de QA ([[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]]); (2) el OCR **no aprende línea→producto** (`ocr_reglas_aprendidas` no tiene esa dimensión), y ese cliente arrastra 17 recibidas sin aprobar.
 
 - 🟠 **IA agéntica `categorias` en prod (26-ago)** — queda cobertura de lo que escribe solo (#2227) y 22 circulares de `_parts` (#2228); OCR sigue en shadow. → [[facturaia-historico-snapshot-2026-08-30]]
 - ⏸️ **PSD2: no se integra todavía, por coste (decidido 26-ago)** — 0 consentimientos activos y 0 movimientos por sync es DECISIÓN, no avería: los movimientos entran por CSV/PDF. → [[facturaia-historico-snapshot-2026-08-30]]
@@ -52,10 +53,10 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🟠 **Eval de `doc-extract` pendiente** (pide corpus de extractos ficticios). → [[facturaia-historico-snapshot-2026-08-30]]
 - 🟠 **Gap `multi-albaran-multipagina` del arnés `eval:ocr`.** → [[facturaia-historico-snapshot-2026-08-30]]
 - 🟠 **Espejo de facturación en prod, sin verificar por otros ojos (#2119, mig 751)** — **queda** los cinco tracks de lectura de `PROMPT-continuacion-23-ago.md`. → [[un-trinquete-por-fichero-absuelve-al-que-ya-importa-el-helper]]
-- 🟠 **Siete decisiones fiscales abiertas, con encargo escrito (23-ago)** — cerrados los cuatro cabos de la tanda (#2120, #3 del arnés; las emitidas en borrador se midieron a **0 €** y no se construyó nada). Encargo para decidirlas con fuente primaria: `docs/architecture/PROMPT-decisiones-fiscales-con-norma.md` (#2135). Reparto: mías la cola fiscal + #2133; #2131 y #2136 en prod.
+- 🟠 **Siete decisiones fiscales abiertas, con encargo escrito (23-ago)** — para decidirlas con fuente primaria: `docs/architecture/PROMPT-decisiones-fiscales-con-norma.md` (#2135). Reparto: mías la cola fiscal + #2133; #2131 y #2136 en prod.
 - 📅 **303: el 3T vence el 20-oct.**
-- 🔴 **Los PDF de factura no tienen copia de seguridad de ningún tipo (#1641) — falta crear el bucket** (medido 22-ago). `tufacturaia-storage-backup` **no existe**: hay que crearlo en la consola de Backblaze **sin Object Lock** y pegar bucket + Application Key en 1Password `Backblaze B2 · tufacturaia-storage-backup-writer`. Hasta entonces `npm run backups:storage:verificar` sale rojo contra el centinela `PEGAR_AQUI`. Es un bucket DISTINTO del WORM fiscal, que sí está activo. Login, alternativas medidas (Wasabi/R2) y pasos → `backup-restore-runbook.md:169`.
-- 🔴 **Lo que no está en `docker-compose.yml` no llega al contenedor (20-ago, #1993)** — costó 8 días de WhatsApp al suelo y el cifrado de IBAN nunca activo; cerrado con `env-guard` en el pre-commit (#1984). **Queda**: un WhatsApp real con factura y una escritura que confirme el cifrado, **antes** de tocar B2. → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
+- 🔴 **Los PDF de factura siguen sin copia de seguridad (#1641, medido 22-ago)** — falta **crear el bucket** `tufacturaia-storage-backup` en Backblaze (sin Object Lock; es DISTINTO del WORM fiscal, que sí está activo) y pegar sus claves en 1Password. Hasta entonces `backups:storage:verificar` sale rojo. Pasos y alternativas → `backup-restore-runbook.md:169`.
+- 🔴 **Lo que no está en `docker-compose.yml` no llega al contenedor (20-ago, #1993)** — cerrado con `env-guard` en el pre-commit (#1984). **Queda**: un WhatsApp real con factura y una escritura que confirme el cifrado, **antes** de tocar B2. → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
 - 🟠 **#1776**: se reduce a `preferred_locales:['es']` y cierra con el encendido de #1778 (0 customers reales).
 - 🟠 **#1778: PR 1-3 en prod, flag `FACTURAS_SUSCRIPCION_PROPIAS` apagada (20-ago)** — **queda**: PR 4 (encender + smoke), PR 5 (devoluciones/disputas) y modelar N2 (#1994). Sin urgencia: 1 cliente live y es ES. → [[facturaia-historico-detallado]] · [[codigo-de-exencion-no-expresa-una-operacion-no-sujeta]]
 - ⏸️ **EN STANDBY por decisión de Manu (24-ago): los dos trámites del certificado FNMT de AgentesiaLab** — el `.p12` para VeriFACTU (bloquea el SELLADO, no la emisión) y el 036 de alta en el ROI. Ninguno lo puede hacer un agente. Detalle → [[facturaia-historico-detallado]]
