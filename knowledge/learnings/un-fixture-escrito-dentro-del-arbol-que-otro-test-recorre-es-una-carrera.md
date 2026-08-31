@@ -23,4 +23,10 @@ Corolario al buscar: no basta con arreglar el lector que mordió. El mismo
 escritor suele dejar fixtures en varios árboles (en FacturaIA, también un `.sql`
 en `supabase/migrations/`), y cada árbol tiene sus propios recorredores.
 
+**El corolario se cobró su pieza el mismo día** (el `.sql` de
+`supabase/migrations/`, que leen 52 ficheros de test) y ahí la palanca fue la
+CONTRARIA: mover al **escritor**, no excluir en 52 lectores. Elige por número —
+excluye en el lector si son pocos y el fixture debe vivir en el árbol real; mueve
+al escritor si el escáner ya acepta la ruta por parámetro. Nunca «es flaky».
+
 Relacionado: [[el-entorno-de-un-test-que-evalua-sql-emitido-no-se-escribe-a-mano]]
