@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-30
+updated: 2026-08-31
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -46,23 +46,23 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-26) — **Paquita ya emite al portal de Flota IA**, pero nadie ha podido comprobar que emita
+## Estado (2026-08-31) — Paquita probada en prod de verdad
 
-> ⚠️ Este bloque **no nombra el SHA de `main` a propósito**: un snapshot que nombra su punta no puede acertar (se desfasa con su propio merge). Se consulta con `git rev-parse --short origin/main`.
+> ⚠️ Sin SHA de `main` **a propósito**: un snapshot que nombra su punta se desfasa con su propio merge. `git rev-parse --short origin/main`.
 
-✅ **#1418 en prod: el emisor `custom_api` hacia Flota IA.** Una interacción = un TURNO; agrupar por llamada sigue abierto en #1419. Detalle → [[agh-iberica-historico]].
+🟢 **Emisor `custom_api` a Flota IA en prod (#1418)** — una interacción = un TURNO, agrupar por llamada abierto en #1419. **Y desde el 31-ago YA hay turnos reales** (barrido de Manu por WhatsApp, 19 turnos 10:21→10:28 UTC): cae la premisa que impedía medirlo, porque el cero de agosto no discriminaba. 👉 Repetir el SELECT del portal anclado a esa ventana, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
 
-🟡 **NADIE ha probado que emita, y el cero medido NO discrimina.** El portal midió a las 20:30 (cero filas, `last_error` NULL, cero `error`) pero `docker logs` da **cero webhooks entrantes**: Paquita no ha tenido ni un turno ⇒ «no emitió» y «no hubo nada que emitir» son la misma observación. Falta **un WhatsApp real** y repetir el SELECT anclando a la hora del `POST /webhook/whatsapp`, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
+🔵 **#1502 cerrado (31-ago, `9fc8aaa`)** — el backstop de #115 era **ciego al email dictado**: exigía `@` literal y el ASR escribe «arroba». Gemelo de #246. Se reclama el dominio, no la parte local (adivinar daría avisos falsos). Residuo en #1503/#1505. → [[un-detector-escrito-para-la-forma-escrita-es-ciego-a-la-dictada]] · [[un-sin-victima-del-barrido-puede-ser-una-rama-muerta]]
 
-🔴 **#1424** — el emisor **solo escribe log cuando FALLA**, así que «apagado» y «funcionando» son el mismo silencio en nuestros logs. Es la causa raíz de que hoy hiciéramos arqueología en dos bases de datos para no concluir nada. El portal descartó el latido contra su ingesta (ensuciaría `agent_interactions`, y `is_test` no salva la tabla que luego juzga la fase 2): a cambio, dos líneas nuestras, una por proceso.
+🔴 **`AGENT_TRANSCRIPT_CONTEXT` ENCENDIDO en prod** (medido en el contenedor, 31-ago). El `CLAUDE.md` decía lo contrario: **cuarto** sitio del patrón de #1331 y el peor, porque se carga en cada sesión y lo presentaba como *hecho medido que dirige el trabajo*. Corregido nombrando la sonda, no el valor. El egress lo decidió Borja en #1433 (CLOSED), documentado en #1456. → [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]]
 
-📚 **Estado del 19-ago (fidelidad de resolución: #941/#1363/#1358)** → [[agh-iberica-historico]]. Vivo de ahí: la disyuntiva de #941 es de Borja (una línea) · #1100 abaratado · la causa raíz de #938 es falsa · #1401/#1402/#1403 `ready-for-agent`.
+🔴 **#1424** — el emisor **solo loguea al FALLAR**: «apagado» y «funcionando» son el mismo silencio. El portal descartó el latido contra su ingesta (ensuciaría `agent_interactions`); a cambio, dos líneas nuestras, una por proceso.
 
-⛔ **El instrumento de evals NO es cola de agente** (premisa caducada que se hereda): #738 y #1304 llevan `CLOSED`; lo vivo (#1026, #1361, #1009, #1002, #985) es `ready-for-human`.
+📚 **19-ago (fidelidad de resolución)** → [[agh-iberica-historico]]. Vivo: la disyuntiva de #941 es de Borja · #1100 abaratado · la causa raíz de #938 es falsa · #1401/#1402/#1403 `ready-for-agent`. ⛔ El instrumento de evals **no** es cola de agente (#738/#1304 CLOSED); lo vivo (#1026 #1361 #1009 #1002 #985) es `ready-for-human`.
 
 🔴 **La cola sigue siendo el problema, no la velocidad:** 82 % de los `ready-for-human` sin dueño (#1351) y **8 fallos de llamadas reales** abiertos desde el 20-jul (#937 #938 #648 #649 #741 #912 #535).
 
-⏸️ **Lote parado, DECIDIDO que merece la pena pero NO hoy:** `~/wt-1064` (#1064+#1212+#1044A). Al retomarlo: **rebasar → congelar el prompt y volcar las descripciones renderizadas ANTES de pagar la corrida**.
+⏸️ **Lote parado** (`~/wt-1064`: #1064+#1212+#1044A). Al retomarlo: rebasar → **congelar el prompt y volcar las descripciones renderizadas ANTES de pagar la corrida**.
 
 
 _Creds:_ `AGH Iberica` → `Open AI AGH` **por ID** (⚠️ espacio final) · SSH del host en `ssh AGH` (el ítem «186» es del PANEL, no de SSH). **`opsa`, nunca `op`**; `item get` exige `--vault`.

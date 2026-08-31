@@ -13,4 +13,6 @@ Medido (AGH #1348). `gateway-llm-client.ts` decía: *«muerde SÓLO con `READ_PR
 - Un ADR **no se reescribe**: registra qué se decidió y con qué información. Se le pone la fecha y la corrección al lado.
 - Y al revés: si una decisión pendiente depende de un estado externo, **mídelo antes de re-litigarla** — puede llevar semanas resuelta de hecho.
 
+🔁 **Reincidió: 4 sitios, 2 flags (31-ago).** Corregidos los tres primeros, el cuarto seguía —y era el peor: el `CLAUDE.md`, que se carga en **cada llamada API de cada sesión**, decía «el modelo NUNCA ha visto la conversación» con `AGENT_TRANSCRIPT_CONTEXT=true` en prod. La distinción que importa: la frase que **justifica** hace que *no actúes*; la que se presenta como **premisa medida** («hechos que hay que saber ANTES de tocar el prompt») hace que **diseñes para un prod que no existe**. Y el texto viejo induce el mismo error dos veces: al verlo deduje «decisión tomada por acción» —cierto la 1.ª vez, **falso** la 2.ª (ya autorizada)—. Arreglo: **no escribir el valor, nombrar la sonda** (`docker inspect` + el issue que lo mide). Un valor en un fichero que nadie re-mide envejece solo.
+
 Ver [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]] · [[regla-en-docstring-no-impide-nada-partir-el-interface]]
