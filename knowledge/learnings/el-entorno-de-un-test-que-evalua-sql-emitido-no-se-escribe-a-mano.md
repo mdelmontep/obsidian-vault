@@ -20,3 +20,5 @@ Regla: el entorno de un test que evalúa texto generado se DERIVA de la misma de
 emisor, nunca se escribe en paralelo. Si hay que escribirlo a mano, es que falta una declaración.
 Y añadir un gate que cruce lo emitido contra el esquema real. Ver
 [[replay-de-migraciones-contra-un-postgres-desechable-en-docker]].
+Un fixture escrito así **dentro del árbol** además corre contra cualquier test
+que lo recorra: [[un-fixture-escrito-dentro-del-arbol-que-otro-test-recorre-es-una-carrera]].
