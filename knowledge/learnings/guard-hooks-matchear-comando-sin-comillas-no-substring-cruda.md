@@ -58,3 +58,12 @@ Y dos cotas del mecanismo que salieron al arreglarlo:
 
 Ver [[rebase-continue-estripa-las-lineas-del-mensaje-que-empiezan-por-almohadilla]] ·
 [[un-remedio-corrido-desde-un-checkout-viejo-repara-a-la-version-vieja]]
+
+Corolario 4 (2026-08-31) — **el guard NUEVO nace con este bug: la neutralización no se hereda.** Escribí
+un `worktree-sitio-guard` y su primer bloqueo real fue **el commit que lo introducía**, porque el mensaje
+citaba el verbo vigilado dentro de un heredoc. Es literalmente el caso de la primera línea de esta nota
+(«me bloqueó mi propio `gh pr create` describiendo el fix») repetido cuatro meses después en un hook
+distinto: la corrección vivía en `issue-dup-guard` y no viaja sola. Al escribir un guard, portar la
+neutralización del cuerpo del heredoc **el primer día**, y con su caso en la suite. Y neutralizar solo
+el CUERPO, no las comillas: una ruta destino entrecomillada tiene que seguir bloqueando, cosa que aquí
+sí se prueba.

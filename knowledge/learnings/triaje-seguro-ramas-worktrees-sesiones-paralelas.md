@@ -36,3 +36,14 @@ Regla 2 semanas: lo retomable → pointer en hub antes de borrar; lo demás se v
 **El stash es COMPARTIDO entre worktrees** (2026-07-27): el rescate descrito arriba tiene su cara B — otra sesión puede recuperar tu stash y dejarte sin fix, con su rama contaminada. Detalle y reglas en [[stash-es-compartido-entre-worktrees-y-rompe-sesiones-paralelas]].
 
 **El dashboard del semáforo de CPU delata a la paralela ANTES de que exista rama remota o PR** (2026-08-22): `git worktree list` la ve solo si el worktree está registrado en tu repo, y `gh pr list` no la ve hasta que abre PR. `node ~/.claude/gate/gate-dash` sí: pinta worktree + rama de cada gate en cola o corriendo. Así descubrí que otra sesión llevaba el mismo fix del test rojo de `main`, ya en typecheck mientras el mío esperaba lint — retiré el duplicado y su PR (#2094) cerró el rojo. Mirarlo antes de arrancar un fix de algo que se ve desde main (test roto, warning de build) es más barato que descubrirlo al abrir el PR.
+
+**Un worktree FUERA del repo es invisible para quien podría limpiarlo** (2026-08-31): `git worktree
+list` hay que correrlo DENTRO, así que un `git worktree add ~/wt-X` no lo ve nadie que no esté ya en
+ese repo, y quien abre el home ve carpetas sin dueño. Medido: 17 `wt-*` en `~` con **14 GB**, trece
+muertos hacía días; y otros 51 GB en `agency-portal/.claude/worktrees`. Sitio correcto:
+`<repo>/.claude/worktrees/` (ya en el `.gitignore` de facturaia y agentesia-crm, y es donde el harness
+pone los suyos). La regla estaba escrita y no se cumplía → hook `worktree-sitio-guard.sh`.
+Para retirar sin perder nada, [[rescatar-el-wip-de-un-worktree-sin-commitear-ni-tocar-el-stash-compartido]].
+Dos cosas que engañan al triar: una rama con migración cuyo número ya rebasó `main` **no se puede
+mergear tal cual** (`db push` decide por versión y se la salta sin error), y el `Status:` de la ficha
+en `main` distingue «cerrado» de «pendiente» mejor que cualquier diff.
