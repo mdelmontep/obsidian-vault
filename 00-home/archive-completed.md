@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-08-31 · agency-portal — el lote de 46 PRs del juez (#545-#590) mergeado y Flota IA fase 2 ENCENDIDA en prod** — 0 PRs abiertas, migraciones aplicadas y verificadas en catálogo, 3 schedules activos, proveedor OpenAI. Figuraba en Bloqueos esperando a Borja desde el 30-ago. Ese mismo día, #596 (paginación 100/500) y #597 (taxonomía de código cerrado) más la migración `20260831150000`. → [[agentesia]]
 - **26-ago** · TuFacturaIA — el permiso agéntico ya caduca y la memoria de categorías se ve y se corrige (#2233/#2234, mig 761): «Olvidar» verificado en prod, y «Sin decidir» resultó **inalcanzable por la UI** (#2236, medido con ROLLBACK contra el RPC desplegado). → [[facturaia]]
 - **26-ago** · TuFacturaIA — bandeja de soporte a CERO (#2194/#2198/#2208): los once cerrados, cinco ya estaban arreglados sin cerrar. → [[facturaia]]
 - **26-ago** · TuFacturaIA — bandeja de soporte a cero (#2194/#2198/#2208 + #2209): once tickets cerrados, cinco de ellos arreglados desde hacía semanas sin cerrar. Ticket #86 de Borja: `resuelto` desde el 28-jul, la entrada seguía viva en top-of-mind por inercia.
