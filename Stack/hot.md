@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **El porcentaje de swap no discrimina thrashing; los `Swapouts` sí** — al 89 % con 0 swapouts/s el swap está asentado y se puede conducir un navegador. Para una ola de 3-4, el criterio del 50 % sigue mandando. Ver [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
 - **«✔ verificado contra el repo» encuentra la migración que CREÓ la columna, no la que la borró** — un nombre de esquema se verifica en la ÚLTIMA migración que lo toca. Ver [[verificado-contra-el-repo-no-ve-la-columna-que-un-adr-mando-borrar]]
 - **Un subagente cita el mecanismo, nunca el guard que lo cierra** — lee tú el `if` de 30 líneas antes, o diseñas contra un riesgo inexistente. Ver [[un-subagente-cita-el-mecanismo-no-el-guard-que-lo-cierra]]
 - **Un guard que discrimina por el NOMBRE de la etiqueta no vigila lo que dice** — en JSX ese nombre es una variable: hace falta un segundo guard que lo reserve. Ver [[un-guard-que-lee-el-nombre-de-la-etiqueta-miente-si-el-nombre-es-un-alias]]
