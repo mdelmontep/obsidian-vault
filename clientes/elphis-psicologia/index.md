@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-08-27
+updated: 2026-08-31
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -16,7 +16,7 @@ workflows ni número — solo host Dokploy y dirección. Repo `AgentesIA-MAdrid/
 Bloque A (web, marca) = Borja · **Bloque B (agentes) = Manu**. Autoridad documental:
 `docs/bloqueantes.md` > `docs/protocolo-crisis.md` > `PRODUCT.md` > spec de julio.
 
-## Estado · 2026-08-27
+## Estado · 2026-08-31
 
 **El bloque B ya no tiene ninguna pieza a medias.** Todo lo que sigue está vivo en
 `n8n-psicologia.elphis.agentesialabs.com` o en Retell, y **cada pieza tiene un
@@ -44,10 +44,23 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
 - ✅ **Circuito de crisis** — `psico-crisis-{aviso,enviar,reintento}`, ejercido de
   punta a punta con correos y filas de verdad. Aviso por correo sin contenido
   clínico. Entradas: WhatsApp por el cerebro, voz por `psico-voz-crisis`.
-- ✅ **Voz (Retell)** — prompt compuesto desde la KB y el protocolo, nunca
+- ✅ **Voz (Retell)** — `retell-llm` de prompt único (NO conversation flow),
+  gpt-5.1 a 0,2, **v17 servida**. Prompt compuesto desde la KB y el protocolo, nunca
   retranscrito. Sin herramienta de transferencia: prohibirlo en el prompt con la
   herramienta puesta es una prohibición desobedecible. La **voz es dato del repo**
   (`config-voz.mjs`) porque el «suena robótico» vivía solo en el panel.
+  **28/08**: entran los hallazgos de conversación medidos en Adicciones —las frases
+  entrecomilladas no son un guion, se usa la palabra de la persona, y se acusa lo
+  dicho antes de pedir el siguiente dato *sin repreguntar*, que aquí sería recoger
+  dato del art. 9 por teléfono. Van **sin medición**: este LLM no tiene suite
+  (`list-batch-tests` = `[]`) y los porcentajes de allí no son transferibles. →
+  [[un-hallazgo-medido-en-otro-agente-viaja-el-mecanismo-nunca-el-porcentaje]]
+  De paso salió el defecto que ninguno de los dos guardianes veía: el prompt mandaba
+  colgar con `end_call` (el `type`) y la herramienta se llama `colgar` (el `name`), y
+  el test fijaba «dos herramientas» habiendo tres. Guardián nuevo en
+  `verify:voz-desplegado`, 2 mutaciones y 2 víctimas sobre el agente vivo
+  (`infra/tests/rojo-voz-herramientas.py`). →
+  [[un-repo-coherente-consigo-mismo-no-prueba-el-nombre-que-vive-fuera]]
 - ✅ **WhatsApp** — `psico-whatsapp-cerebro` vivo y con conversaciones reales
   (Chatwoot en el bucle, Basic Auth: Chatwoot **no firma** en la 4.0.3, medido).
   Prompt y las tres plantillas de Meta generados desde `site.ts`.
@@ -70,7 +83,7 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   fallo (`Unable to sign without access token`). El «Connect my account» del 24/08 no
   cuajó: revisar si el popup se cerró antes o si el client sigue en Testing.
 - ⚠️ **PR #30 sigue ABIERTO**, y el trabajo del bloque B **no está en él**: vive en
-  `main` local y en el fork. 41 commits locales sin subir a `origin/main` y **16 de
+  `main` local y en el fork. 42 commits locales sin subir a `origin/main` y **16 de
   Borja sin traer** — o sea que este repo local también está *atrasado*, no solo
   adelantado. Antes de afirmar qué dice un fichero: `git log HEAD..origin/main`.
 - ⚠️ **`~/Projects/elphis` (carpeta suelta, sin `.git`) sigue viva** y ya atribuyó

@@ -30,7 +30,7 @@ tags: [retell, voice, sdk, webhooks]
 
 - **Checklist antes de subir prompt Retell → n8n**:
   1. URLs de tools apuntan al dominio correcto (verificar DNS — EasyPanel y dominio custom pueden ser IPs distintas)
-  2. Cada tool referenciada en el prompt existe en `general_tools` (ej: `transfer_call`)
+  2. Cada tool referenciada en el prompt existe en `general_tools` **y se nombra por su `name`, no por su `type`** — el modelo solo ve el `name`. El ejemplo clásico (`transfer_call`) esconde el fallo porque ahí los dos coinciden; con una tool `{type: "end_call", name: "colgar"}`, un prompt que ordena «cuelgas con `end_call`» nombra una función que el modelo no tiene (28-ago, Elphis Psicología). Cruza la lista en los **dos** sentidos: cableada sin nombrar, y nombrada sin cablear. Ver [[un-repo-coherente-consigo-mismo-no-prueba-el-nombre-que-vive-fuera]]
   3. Nombres de parámetros coinciden con los `Edit Fields` / `Set` del workflow n8n
   4. El workflow destino está activo y no archivado
   5. `parameter_type` es `"json"` si n8n espera `body.args.X`
