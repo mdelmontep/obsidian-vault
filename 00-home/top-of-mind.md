@@ -10,6 +10,8 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟢 **TuFacturaIA — tickets IET 125-132 respondidos, 126 corregido de raíz (2-sep, #2373-#2388)** — negativas, «Buzón» y reintento escalado vivos (Guarconsa 48/48). **Tuyo**: la huérfana de `docs/plan/cierres.json` y la prueba de catálogo a 500k. → [[facturaia]] · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]
+
 - 🟢 **TuFacturaIA — quién abre una ficha de cliente ya deja rastro, y el DPA existe (1-sep, #2361 + #2364)** — **Tuyo**: mandar el borrador del DPA al despacho, borrar dos líneas muertas del entorno en Dokploy y quitar el superadmin a 4 de las 8 cuentas. → [[facturaia]]
 - 🟢 **Elphis Psicología — bloque B vivo entero, esperando la firma de Alba**. Puerta: OK por escrito a la **v2** del protocolo de crisis (`docs/peticion-firma-alba.md`, lo manda Borja). Voz v17 con los hallazgos de Adicciones, **sin suite que los mida** (28-ago). **Tuyo**: token de Chatwoot (las DOS credenciales a la vez), backups fuera del host, OAuth de Google (e2e 1/12), las 4 confirmaciones de la WABA. Borja: merge del #30. → [[clientes/elphis-psicologia/index|elphis-psicologia]]
 

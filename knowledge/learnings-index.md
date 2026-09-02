@@ -949,7 +949,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[vitest-recoge-specs-e2e-duplicados-en-next-standalone]] — vitest recoge specs e2e duplicados dentro de .next/standalone tras un build
 - [[zod-strict-bloquea-campos-no-listados-silenciosamente]] — zod strict bloquea campos no listados silenciosamente
 
-## OCR / ingesta / documentos (16)
+## OCR / ingesta / documentos (17)
+- [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]] — un catch best-effort sin señal persistente hace indistinguible el fallo del no-disparo
 
 - [[pdf-escaneado-sin-capa-de-texto-renderizar-paginas-con-pdftoppm]] — `pdftotext` a 0 líneas = escaneo; renderizar con `pdftoppm` y ojo al desfase de numeración
 - [[documento-dinero-ya-cobrado-debe-marcarse-cobrada-explicito]] — documento que representa dinero ya cobrado debe marcarse cobrada explícito
