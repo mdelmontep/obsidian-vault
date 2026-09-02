@@ -19,6 +19,26 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 2-sep-2026 · los slides del carrusel salen maquetados (PR #2379, migs 793/794/795)
+
+El bug era silencioso: el productor de imagen dejaba los slides limpios —la ilustración sin los
+titulares del guion encima— y se publicaban así, sin que nada lo dijera. Ahora el panel avisa («se
+publicarían sin los titulares del guion») y «Maquetar los slides» compone.
+
+Lo que entró: `maquetado` como `kind` de `marketing_piece_assets` con índice único parcial por slide
+(793) · `marketing_brand_assets`, la biblioteca de marca, service-role-only (794) · reglas de estilo
+tipadas con `eje`/`fuerza`/`vigente_hasta` (795).
+
+**Smoke real en prod**, pieza «Un WhatsApp basta para facturar» (`7ee13237`): 7 assets `maquetado`,
+1080×1350 (4:5), `origen=runner`. La prueba de que compone y no es un no-op: PNG→JPEG cambia el peso
+en los siete, de −23,9 % a −80,2 % (slide 0: 723.297 → 143.054 B). El panel Material pasó de 7 a 14
+archivos y el aviso desapareció.
+
+Dos gotchas del camino, ya en learnings: el barrido de renumeración con BSD `sed` **no sustituyó
+nada** y salió en verde ([[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]]), y el
+censo `tap-target-inventario` se repunta a mano porque su generador solo imprime
+([[un-censo-cuyo-generador-solo-imprime-no-se-regenera-se-repunta]]).
+
 ## 2-sep-2026 · los tres tickets de Pescados Chivite (PR #2382 · #2386 · #2387 · #2393 · #2396, mig 796)
 
 - **163/164 (#2387)** — la ficha del albarán vuelve al listado y deja cambiar un producto ya asignado mientras está `abierto`.

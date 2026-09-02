@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **BSD `sed` ignora `\b` en silencio: sustituye cero veces y sale en verde** — un barrido de 52 referencias que no tocó ninguna, con exit code 0. Toda sustitución masiva se verifica volviendo a grepear el patrón viejo, o se hace con `re.subn` de Python, que devuelve el recuento. Ver [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]]
 - **Capturas guiadas para un cliente: recuadro, velo y etiqueta se pintan con un SVG inyectado antes del `screenshot`** — sin PIL ni ImageMagick; el helper vive en `~/.claude/bin/browser-spot.js` y oculta la franja de impersonación. Ver [[capturas-guiadas-overlay-svg-en-el-navegador]]
 - **Un alcance calculado contra la rama base se vacía al mergear** — y el gate pasa a auditar lo que haya suelto en el árbol, sin avisar. Ver [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]]
 - **Una sonda con el nombre inventado da un ✗ indistinguible de un fallo real** — los tres ✗ de la verificación eran los tres nombres que no salieron de leer el `create function`. Deriva la lista de la fuente. Ver [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]]

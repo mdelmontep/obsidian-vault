@@ -31,5 +31,7 @@ grepear el diff entero. En TuFacturaIA eso ya es un comando (#1405, 31-jul):
 Mueve al primer hueco libre, traduce `NNN_slug` / `migNNNtoken` / `mig NNN`, y
 **aborta listando lo que no supo traducir** para cerrarlo a mano. Ese último
 paso es el valor: la lista de sitios hay que generarla, no recordarla. En otro
-repo sin el script, hazlo con `grep` sobre **todos los ficheros del diff**.
+repo sin el script, hazlo con `grep` sobre **todos los ficheros del diff** — y si el barrido
+lo haces con `sed`, verifica por grep que cambió algo: BSD `sed` ignora `\b` en silencio y
+sale en verde sin tocar nada ([[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]]).
 Ver [[facturaia-migracion-numero-duplicado-536-553]].

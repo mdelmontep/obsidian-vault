@@ -35,6 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🟢 **Los slides del carrusel ya salen maquetados (2-sep, #2379, migs 793/794/795)** — antes se publicaban limpios, sin los titulares del guion encima, y nada lo decía. Smoke real en prod verde. **Queda**: lo dispara un botón; el runner todavía no maqueta solo, que es el paso que lo hace automático. → [[facturaia-historico-detallado]]
 - 🟢 **Tickets 125-132 de IET respondidos, y el 126 corregido de raíz en prod (1/2-sep, #2373-#2376 · #2384/#2385/#2388, mig 792, ADR-069)** — las negativas entran y restan; «Ingesta» → **Buzón**; y con Σlíneas < base el OCR se relee solo con gpt-5.2 (nació muerto por un 400 silenciado que solo destapó el smoke real; tras el hotfix, Guarconsa 48/48 y cuadre exacto). 126 reabierto a `en_revision`. **Tuyo**: la huérfana de `docs/plan/cierres.json` y el catálogo a 500k del 125. → [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]
 
 - 🟢 **Tickets 156/163/164 de Pescados Chivite, cerrados y en prod (2-sep, #2382 · #2386 · #2387 · #2393 · #2396, mig 796)** — el duplicado 73056007 retirado con el inventario intacto (nuestro «te sumó 5» del 29-ago era falso; corregido en el hilo); 95015083 estaba en `disputada`, que el listado oculta; Wildomar en una ficha y el OCR ya no la duplica; el 409 mandaba al camino que la mig 768 cerró. **Tuyo**: decidir si `disputada` vuelve a `pendiente`. → [[un-copy-que-afirma-una-limitacion-tecnica-caduca-con-ella]] · [[capturas-guiadas-overlay-svg-en-el-navegador]]
@@ -468,6 +469,8 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 ---
 
 ## Ideas crudas / inbox
+
+- **`dependency-map.md:5` afirma «Sin dependencias circulares ✅» y hay 28** (medido 2-sep con `madge --circular`). El doc es del 27-jul y lo dice como hecho presente, con su explicación de cómo se rompió el último ciclo — así que se lee como verdad, no como foto vieja. Las 28 son el patrón `x.ts ↔ _parts/x/*.ts` que el hub ya sigue como 22 en #2228: han subido 6. Decidir: ¿issue para romperlas, o corregir la línea a «28 ciclos, todos del patrón `_parts`, tolerados» con fecha? Dejarla como está es la peor de las tres.
 
 _(volcado sin filtrar — pasan a NEXT/LATER si maduran, o se descartan en poda quincenal)_
 
