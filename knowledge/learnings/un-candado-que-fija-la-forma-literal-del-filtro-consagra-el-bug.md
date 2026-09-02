@@ -16,3 +16,7 @@ verde durante la regresión; un canario de negocio la cazó en 5 min.
 - **Match sobre fichero crudo casa con tus comentarios**: la cabecera que citaba la
   forma vieja daba el `>=1` del test. Quitar comentarios (`sinComentarios`) antes de
   contar ocurrencias, y verificar el candado por mutación (retirar la mig → rojo).
+- **Recortar `//` por «hay comilla antes» falla en cadenas supabase** (siempre llevan
+  strings): escáner por carácter contando estado de comillas; y línea-comentario → `' '`
+  si el consumidor corta en línea en blanco. Barrido 2-sep: 6 candados en 4 repos
+  (fia #2405/#2409, agh #1583/#1587, ap #602/#603, crm #2).

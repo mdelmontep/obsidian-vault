@@ -20,6 +20,17 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   medir el `diff`: un documento REGENERADO no tiene ediciones propias que fusionar.
   Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] y [[claude-code-gotchas]].
 
+## Estado (2-sep, PR #2) — el candado F12 mide sin comentarios, y la deriva compartida se resolvió adoptando un bug arreglado
+
+- **PR #2 mergeado** (`ad26859`): `etiquetas-verbos-explicitos.test.ts` deja de medir el fichero
+  crudo (un `// 'tag_id'` exoneraba un `.delete()` sin acotar) — escáner de comillas por carácter,
+  ver [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]].
+- **`sync:shared` punto (17), ADOPTADO**: `--field-glass-bg` en el bloque skin-oscuro (facturaia
+  `72d8f53c3`) — el bug se reproducía aquí (campos cristal del freebie oscuro con fondo `white 40%`
+  del claro). Y primera divergencia de `config-section.tsx`: el origen pasó a `size="sm"` con
+  lucide; el Icon de aquí es propio y numérico, se queda `size={13}`.
+- **Smoke pendiente**: skin freebie en OSCURO con un campo cristal delante, en pantalla.
+
 ## Estado (30-ago, iteración 55) — producción pasa de la 087 a la 120, y la cifra que decía cuántas faltaban estaba mal
 
 **`main` en `b14e176c`.** Se acabó el bloqueo del trámite 15 por el lado del token: Manu regeneró el
