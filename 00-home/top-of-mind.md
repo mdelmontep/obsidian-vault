@@ -10,6 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟢 **TuFacturaIA — tickets 166/167/168 en prod y su code review resuelto (2/3-sep, #2408-#2411 + #2417-#2419, mig 805)** — **Tuyo**: nada; queda #2416 (agente). → [[facturaia]] · [[un-registro-que-estampa-head-vale-solo-con-el-arbol-limpio]]
 - 🟢 **TuFacturaIA — tickets IET 125-132 respondidos, 126 corregido de raíz (2-sep, #2373-#2388)** — negativas, «Buzón» y reintento escalado vivos (Guarconsa 48/48). **Tuyo**: la huérfana de `docs/plan/cierres.json` y la prueba de catálogo a 500k. → [[facturaia]] · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]
 
 - 🟢 **TuFacturaIA — quién abre una ficha de cliente ya deja rastro, y el DPA existe (1-sep, #2361 + #2364)** — **Tuyo**: mandar el borrador del DPA al despacho, borrar dos líneas muertas del entorno en Dokploy y quitar el superadmin a 4 de las 8 cuentas. → [[facturaia]]

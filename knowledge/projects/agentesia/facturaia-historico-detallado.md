@@ -19,6 +19,15 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 3-sep-2026 · tickets 166/167/168 y su code review en tres PRs (#2408 · #2410 · #2411, mig 805 · #2417 · #2418 · #2419)
+
+- **Datos (#2417)** — `fetchLineasDeNodos`/`fetchNodosDePresupuesto` (`presupuestos-db.ts`) son la única lectura de partidas y nodos: paginada con `fetchAllPages` y por lotes de 300 ids con `fetchAllInChunks`, error si la lectura queda incompleta. Ocho lectores migrados (copiar, proforma, xlsx, pdf, copiloto ×2, materiales pendientes, proveedores resueltos); candado en `presupuesto-orden-espejo-check.test.ts` §lecturas; integración 7/7 con 1.001 líneas (el `.in()` a pelo devolvía 1.000 sin error). La selección de partidas se copia en el orden visual de la rejilla (`lineasEnOrdenVisual`), no en el de los clics.
+- **UX y contrato (#2418)** — crear un producto desde un albarán devuelve el foco a Cantidad (línea nueva) o al Select de la línea (detalle), y solo avisa «Producto creado y asignado» cuando el emparejado responde OK; `NuevoProductoModal` abre en Nombre vía `initialFocus` y desplaza el `role="alert"` a la vista; `submitLabel` opcional («Crear producto»); copy del catálogo vacío con la acción; `orden` documentado en el openapi; `inventario-vacio.test.tsx` nuevo.
+- **Proceso (#2419)** — `cierre:alcance -- --registrar` se niega con el árbol sucio (tres cierres del 2-sep apuntaban al mismo `1debb02de`, el main del momento) y acepta `--commit <sha>`; Paso 5 de `/fia-cierre`: commit → registrar → commit `chore(cierre)`. Guard probado con `mutate`.
+- **Decidido y NO hecho, con motivo** — mover `csv.ts` (no es de Obras), portal propio para el modal anidado (el bug era el foco), `orden` opcional en el tipo (la mig 805 lo garantiza), `defaultIva` opcional (el 21 es del llamador). Gemelo abierto: #2416 (`obras_unidad_obra_lineas` sin paginar al duplicar).
+- **Ticket 165 (2-sep, #2401 + #2404, mig 803)** — cuota IVA 337,22 vs 337,23: la cadena de importes calcula en decimal exacto; A2026-0081 anulada (abono B2026-0006) y sustituida por A2026-0091. De propina, la mig 792 dejaba todo abono fuera de los motores de stock (anular no reponía): canario en 5 min, un abono dañado y reparado en la propia mig 803. → [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]]
+- Aprendizaje: [[un-registro-que-estampa-head-vale-solo-con-el-arbol-limpio]].
+
 ## 2-sep-2026 · los slides del carrusel salen maquetados (PR #2379, migs 793/794/795)
 
 El bug era silencioso: el productor de imagen dejaba los slides limpios —la ilustración sin los
