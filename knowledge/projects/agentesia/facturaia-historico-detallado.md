@@ -19,6 +19,16 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 2-sep-2026 · los tres tickets de Pescados Chivite (PR #2382 · #2386 · #2387 · #2393 · #2396, mig 796)
+
+- **163/164 (#2387)** — la ficha del albarán vuelve al listado y deja cambiar un producto ya asignado mientras está `abierto`.
+- **156.2 (#2386, mig 796)** — la recibida duplicada 73056007 (`disputada`) se retira con respaldo en `facturas_reclasificadas_albaran`; los cuatro apuntes (+3, +2, −2, −3) se quedan en el ledger desenganchados y cruzados, porque borrarlos pondría en rojo `detect_lote_drift`. El cliente ya había compensado el stock el 1-ago: nuestro «te sumó 5» del 29-ago era falso y se corrigió en el hilo.
+- **156.3** — 95015083 no estaba perdida: `disputada`, que el listado oculta por defecto. No hay camino de vuelta a `pendiente`: decisión de producto pendiente.
+- **156.4 (#2382 + #2393)** — el OCR ya no crea un proveedor cuando existe uno con el mismo NIF salvo prefijo: cae a revisión con `proveedor_posible_duplicado`, dice qué ficha y no ofrece «Corregir» sobre el NIF (ADR-064 corolario 2).
+- **Guías** — capturas con recuadro y etiqueta pintadas en el propio navegador, un mensaje por paso en el hilo del ticket.
+- **Copy del 409 (#2396)** — «cruza una vez aprobada» era del 28-ago; la mig 768 lo invirtió y AL014 ya no deja corregir después. Constante compartida del título del panel + candado que lee la fuente; ADR-030 y dos hallazgos de QA enmendados. `docs/plan/cierres.json` limpio (39 registros).
+- Aprendizajes: [[un-copy-que-afirma-una-limitacion-tecnica-caduca-con-ella]] · [[capturas-guiadas-overlay-svg-en-el-navegador]].
+
 ## 1-sep-2026 · el rastro de quién mira, y el DPA que faltaba (PR #2361 + #2364)
 
 - **Panel de Accesos en `/admin/ia-ops` (#2361, ADR-067)** — cada vez que alguien del equipo abre una ficha de cliente queda una fila con quién, cuándo, de qué org y si el contenido se sirvió **en claro o tapado**; si la fila no se puede escribir, el contenido no se sirve. Consultable desde el panel, así que a un cliente que pregunte «¿quién ha visto mis facturas?» se le puede responder sin entrar en la BD. Smoke en prod con las dos filas reales del día. La ruta no se audita a sí misma a propósito: auditar la lectura de la auditoría es una escalera sin peldaño final.

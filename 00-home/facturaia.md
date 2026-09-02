@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-01
+updated: 2026-09-02
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,10 +35,10 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🟢 **Tickets 156/163/164 de Pescados Chivite, cerrados y en prod (2-sep, #2382 · #2386 · #2387 · #2393 · #2396, mig 796)** — el duplicado 73056007 retirado con el inventario intacto (nuestro «te sumó 5» del 29-ago era falso; corregido en el hilo); 95015083 estaba en `disputada`, que el listado oculta; Wildomar en una ficha y el OCR ya no la duplica; el 409 mandaba al camino que la mig 768 cerró. **Tuyo**: decidir si `disputada` vuelve a `pendiente`. → [[un-copy-que-afirma-una-limitacion-tecnica-caduca-con-ella]] · [[capturas-guiadas-overlay-svg-en-el-navegador]]
 - 🟢 **El cobro con tarjeta ya está en el catálogo (1-sep, #2369-#2372, mig 791)** — de las 7 alertas del panel quedan 2 y ninguna es código. Entra en **borrador y sin precio**: el recorrido no cobra todavía. De paso, un complemento en borrador ya no se frena solo por no tener precio puesto. **Tuyo**: Backblaze (abajo) y SOCIAL MEDIA CLOUD SOLUTIONS. → [[si-lo-unico-que-frena-algo-es-un-campo-sin-rellenar-no-hay-decision]] · [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]] · [[un-test-contra-produccion-que-pasa-rapido-y-mudo-no-toco-la-red]]
-- 🟢 **El albarán ya empareja sus líneas con un producto, y validar sin decirlo se niega (1-sep, #2365, mig 790, ADR-068 §2)** — 25 líneas en 7 albaranes de Pescados Chivite se habrían cerrado vacías (`validado` es terminal). Selector en la ficha + OB065, con puerta para portes. **Tuyo**: avisar a Chivite de esos 7. → [[el-predicado-de-un-guard-se-mide-contra-el-historico-antes-de-escribirlo]] · [[un-gate-que-enumera-desde-el-indice-de-git-no-ve-el-fichero-nuevo]]
+- 🟢 **El albarán ya empareja sus líneas con un producto, y validar sin decirlo se niega (1-sep, #2365, mig 790, ADR-068 §2)** — Chivite avisado de sus 7 albaranes en el hilo del 156 (2-sep); cambiar un producto ya asignado entró en #2387. → [[el-predicado-de-un-guard-se-mide-contra-el-historico-antes-de-escribirlo]] · [[un-gate-que-enumera-desde-el-indice-de-git-no-ve-el-fichero-nuevo]]
 - 🟢 **Quién abre una ficha de cliente ya deja rastro, y el DPA existe (1-sep, #2361 + #2364, ADR-067)** — el panel de Accesos de `/admin/ia-ops` dice quién miró qué org y si lo vio en claro o tapado; el DPA del art. 28 entra en `/admin/documents` como borrador, con su §16 de siete decisiones y un Anexo II que declara las **8 cosas que hoy NO hay**. **Tuyo**: mandarlo al despacho, borrar `SUPERADMIN_EMAILS` e `IA_OPS_SHOW_TRANSCRIPTS` del entorno en Dokploy y quitar el superadmin a 4 de las 8 cuentas. → [[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]]
-- 🟠 **Wildomar: fusión medida, sin hacer (31-ago)** — dos filas reales **las dos vivas** (`B20987657`: 29 albaranes/2 partidas; `ESB20987657`: 5/14), así que el sentido importa; el `ES` es NIF-IVA, la canónica debería ser la del 2-ago. Sin riesgo de huérfanos (mig 767 cubre las 12 tablas). **Tuyo**: superviviente. Ensayo en `is_test` antes de prod.
 - 🟠 **Reverificar 27 mediciones del barrido V2 (olas B/C)** — se archivaron como «bloqueadas por swap» y el motivo era un `next build` ajeno. El resto del barrido, en prod (#2320 + #2321, migs 776-777) → [[facturaia-historico-detallado]] · [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
 - 🟠 **Auditoría del 27-ago dentro, con seis cifras corregidas al pie (31-ago, #2318)** — su «0 `SECURITY DEFINER` sin `REVOKE`» era cierto hoy y falso como historia: la mig 602 dejó `aplicar_movimientos_lotes` abierta a `anon` durante **152 migraciones**. **Queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
 - 🟠 **El ADR de contabilidad de AGH sigue sin commitear (31-ago)** — `ADR-063-…-contabilidad-analitica-de-agh.md`, renumerado hoy del 033, con su `PLAN`, `PROMPT` y tres `to-questionnaire-*`. → [[agh-iberica]]

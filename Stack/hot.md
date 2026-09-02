@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Capturas guiadas para un cliente: recuadro, velo y etiqueta se pintan con un SVG inyectado antes del `screenshot`** — sin PIL ni ImageMagick; el helper vive en `~/.claude/bin/browser-spot.js` y oculta la franja de impersonación. Ver [[capturas-guiadas-overlay-svg-en-el-navegador]]
 - **Un alcance calculado contra la rama base se vacía al mergear** — y el gate pasa a auditar lo que haya suelto en el árbol, sin avisar. Ver [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]]
 - **Una sonda con el nombre inventado da un ✗ indistinguible de un fallo real** — los tres ✗ de la verificación eran los tres nombres que no salieron de leer el `create function`. Deriva la lista de la fuente. Ver [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]]
 - **El porcentaje de swap no discrimina thrashing; los `Swapouts` sí** — al 89 % con 0 swapouts/s el swap está asentado y se puede conducir un navegador. Para una ola de 3-4, el criterio del 50 % sigue mandando. Ver [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
