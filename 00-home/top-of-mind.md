@@ -10,7 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: confirmar los dos emails de prueba y cuándo abrir la fase. → [[facturaia]]
+- 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]
 - 🟢 **TuFacturaIA — tickets IET 125-132 respondidos, 126 corregido de raíz (2-sep, #2373-#2388)** — negativas, «Buzón» y reintento escalado vivos (Guarconsa 48/48). **Tuyo**: la huérfana de `docs/plan/cierres.json` y la prueba de catálogo a 500k. → [[facturaia]] · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]
 
 - 🟢 **TuFacturaIA — quién abre una ficha de cliente ya deja rastro, y el DPA existe (1-sep, #2361 + #2364)** — **Tuyo**: mandar el borrador del DPA al despacho, borrar dos líneas muertas del entorno en Dokploy y quitar el superadmin a 4 de las 8 cuentas. → [[facturaia]]
