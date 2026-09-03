@@ -28,3 +28,5 @@ la plantilla resuelta alrededor de él. Comprobarlo siempre con la mutación, no
 Ver [[verificar-que-un-test-tiene-dientes-con-una-mutacion]] ·
 [[mock-funcion-compartida-en-test-endpoint-falso-verde-composicion]] ·
 [[asercion-de-ausencia-necesita-fixture-que-pueda-fallar]]
+
+**Misma trampa en un candado por texto sobre SQL (3-sep-2026, mig 819):** el test buscaba el predicado de la población (`f.total > 0`) en el fichero entero, y la verificación auto-abortante repite ese predicado; el mutante en la población seguía verde por la copia. Salida: acotar cada aserción a su bloque (`slice` entre `CREATE TEMP TABLE` y su `;`, y desde `DO $verificacion$`) y exigirla en los dos. Lo cazó `mutate`, no la lectura.
