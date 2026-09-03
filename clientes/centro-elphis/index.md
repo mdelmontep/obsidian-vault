@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-08-29
+updated: 2026-09-03
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,23 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-08-29
+## Estado actual · 2026-09-03
+
+**Doctoralia ya actualiza el lead en Clientify, y recepción tiene guía.** Lo abrió Olga: imprimía los avisos de voz sin saber qué hacer con ellos ni cómo buscar «deal 32108592». Agentes por modelo (Sonnet construye, Opus verifica); pruebas solo contra nuestro correo y teléfono.
+
+- ✅ **Reserva en Doctoralia → todos los deals abiertos del lead a «1º Visita Programada»**, con nota «Cita Doctoralia: DD/MM/YYYY HH:MMh · servicio» y vencimiento = día de la cita; crea «Cita Doctoralia» solo si no había ninguno. Cancelación → «Volver a contactar» (+7 días); reprogramación actualiza la nota. → [[ADR-079-una-reserva-de-doctoralia-mueve-todos-los-deals-abiertos-del-lead]]
+- ✅ **La rama de cancelación llevaba inerte desde el 15-ago**: leía `$input` detrás de un Postgres que emite `{success:true}`. → [[el-nodo-postgres-emite-success-true-cuando-el-returning-sale-vacio]]
+- ✅ **WhatsApp: si motivo, nombre o relación llegan después de registrar, el deal se actualiza sin avisar dos veces** (`update_only` de `chatwoot-event` a `registrar-lead`, caché por `chatwoot_conv_id`). El caso «Marta» sin nombre: el bot preguntó y ella no contestó; el nombre de WhatsApp sí queda en la ficha.
+- ✅ **Guía para recepción con 7 capturas** (artifact «Guía Clientify Elphis», privado hasta compartirlo) y mensaje de respuesta entregado. Lo esencial: el aviso no significa «atendido»; buscar por teléfono o `app.clientify.com/deals/<id>/`; deal en «1º Visita Programada» con nota de Doctoralia = ya tiene cita.
+- 🔴 **Incidente propio (13:08)**: la primera prueba de `registrar-lead` mandó WhatsApp y email reales a recepción con datos ficticios — el flag no estaba en el schema del trigger. Regla en [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]].
+- 🔴 **Dos fallos reales tras desplegar, corregidos el mismo día**: PATCH 400 por pipeline (el POST lo ignora; 88 deals viejos inconsistentes, sin backfill por decisión) y bigint en leads de voz (`conv_id` `postcall-…`). El deal real 32290400 se reparó con replay del payload. → [[clientify-post-deals-ignora-pipeline-y-un-patch-parcial-reevalua-etapa-y-vencimiento]] · [[un-agente-que-reporta-fallo-por-529-puede-haber-terminado-el-trabajo]]
+- ⚠️ **Los emails «Contacto creado desde API» de Clientify se quedan** (decisión 3-sep): aviso estándar del CRM por contacto nuevo.
+- 🔜 **Tuyo, bloqueado por el clasificador de auto-mode** (escritura a deals reales): (a) aplicar la cita del 08/09 10:00 a los 3 deals de Camilo (32109777 / 32109813 / 32109765); (b) cerrar como Lost los ~10 deals de prueba del contacto 161749243. Las etiquetas de prueba solo se quitan desde la UI.
+- 🔜 **Vigilar el primer correo real de Doctoralia y el primer lead de voz** por el código nuevo (`doctoralia-email-sync` / `registrar-lead`).
+- 🔜 Sin construir, opciones abiertas: aviso diferido 30 min con «ya tiene cita / pendiente de llamar»; dejar de crear el deal «Primera visita» al mandar el enlace; dedup de contactos por email en `clientify-upsert-contact`.
+- 🔧 Backups pre-cambio de los 5 workflows en el scratchpad de la sesión (`backup-<id>-pre-*-20260903.json`); gotchas de la API en [[clientify-discovery-elphis]].
+
+## Estado previo · 2026-08-29
 
 **v31 publicada y servida.** Salió de auditar las últimas llamadas reales: el nombre no llegaba al CRM
 en llamadas de familiares, Laura se despedía dos veces, insistía explorando y quedaba guion residual.

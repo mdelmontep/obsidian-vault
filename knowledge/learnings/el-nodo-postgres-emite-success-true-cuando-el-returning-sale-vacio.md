@@ -22,3 +22,5 @@ SELECT EXISTS (SELECT 1 FROM upsert) AS avisar
 
 Vale para cualquier gate basado en "no devolvió filas": comprobarlo antes de fiarse.
 Ver [[queryreplacement-trocea-por-comas-todo-valor-que-no-sea-json]] · [[ejecucion-en-verde-no-prueba-el-efecto]]
+
+Otra cara (3-sep-2026): un Code que lee `$input` detrás de un Postgres sin `RETURNING` recibe `{success:true}` y no los datos. La rama de cancelación de `doctoralia-email-sync` llevaba así desde el 15-ago, inerte en producción y verde en la suite porque el clon la tenía desactivada. Leer el nodo origen por nombre (`$('Guard campos mínimos').first().json`).

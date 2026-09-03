@@ -5,6 +5,8 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-09-03 · Centro Elphis — Doctoralia actualiza el lead en Clientify, `update_only` en WhatsApp y guía con capturas para Olga** — 5 workflows tocados con backup, dos fallos reales corregidos el mismo día. → [[clientes/centro-elphis/index|centro-elphis]]
+- **2026-08-29 · Centro Elphis — Laura v31 servida** (guion «Encantada, X» fuera, crisis 12/12); lo que queda vive en el hub.
 - **2026-09-03 · TuCRMIA — iteración 56 integrada y desplegada** (`d8d84b10`+`41537a80`): 246/244/220/245 + fichas E1.27; y del 30-ago, producción de la 087 a la 120 con las 29 migraciones aplicadas (iter. 55).
 - **2026-09-03 · TuFacturaIA — tickets 166/167/168 en prod y su code review resuelto (#2408-#2411 + #2417-#2419, mig 805)** — nada tuyo; queda #2416 para un agente, sigue en el hub. → [[facturaia]]
 - **2026-09-02 · TuFacturaIA — tickets 156/163/164 de Pescados Chivite cerrados y en prod** — #2382 la ingesta no duplica un proveedor por el prefijo ES · #2386 mig 796 retira la recibida duplicada 73056007 con el inventario intacto (el cliente ya lo había compensado el 1-ago; nuestro «te sumó 5» del 29-ago era falso y se corrigió en el hilo) · #2387 corregir el producto de una línea ya asignada y volver al listado · #2393 el aviso dice qué ficha · #2396 el 409 vuelve a mandar a cruzar antes de aprobar. Guías con capturas en el hilo del 156. → [[facturaia]]

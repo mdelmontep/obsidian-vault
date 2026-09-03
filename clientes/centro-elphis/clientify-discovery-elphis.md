@@ -27,7 +27,7 @@ Hecho contra `https://api.clientify.net/v1/` con `Authorization: Token <key>`. C
 | 243849 | 1ª Visita Programada | Bot agendó primera visita con Enrique. |
 | 243850 | 1ª Visita Realizada | Equipo lo mueve manualmente tras la cita. |
 
-Estado del deal (`open`/`won`/`lost`) es independiente del stage. Cancelaciones → `lost` con motivo en custom field.
+Estado del deal (`status` 1 Open · 2 Expired · 3 Won · 4 Lost) es independiente del stage. Una cancelación de Doctoralia va a **260088 Volver a contactar** con vencimiento hoy+7, no a Lost ([[ADR-079-una-reserva-de-doctoralia-mueve-todos-los-deals-abiertos-del-lead]]).
 
 ## Users relevantes
 
@@ -53,6 +53,15 @@ Estado del deal (`open`/`won`/`lost`) es independiente del stage. Cancelaciones 
 - Auth: API key con header `Authorization: Token <key>`. Sin OAuth público. Rate limit no documentado, asumimos ~60 req/min con backoff exponencial.
 - Phone matching: normalizar a E.164, URL-encode el `+` (gotcha clásico).
 - Custom fields se envían por ID interno, no por nombre. Cachear `GET /custom-fields/` desde panel.
+
+## Gotchas de la API (medidos 3-sep-2026)
+
+- `POST /deals/` ignora `pipeline` (guarda 54955) y `PATCH` sin `pipeline` da 400; un PATCH con vencimiento pasado expira el deal → [[clientify-post-deals-ignora-pipeline-y-un-patch-parcial-reevalua-etapa-y-vencimiento]].
+- Deals de un contacto: solo `?contact_id=<id>&page_size=100`; `?query=` busca por nombre. El listado devuelve `remarks:""`.
+- `POST /contacts/` dedup por email (devuelve el existente); `PATCH`/`PUT` ignoran `phones` — un teléfono se quita con `DELETE /contacts/{id}/phones/{phone_id}/` (204). Las etiquetas del contacto por PATCH solo se añaden, nunca se quitan (quitar = UI); las etiquetas de deal no persisten.
+- `python urllib` recibe 403 (bloqueo por User-Agent); `curl` 200.
+- UI: `app.clientify.com/deals/<id>/` y `/contacts/<id>/`. Todos los del bot llevan `lead_bot`; canal en `canal_voz`/`canal_whatsapp`, motivo en `motivo: <x>`.
+- Cada contacto nuevo por API dispara el email «Contacto creado desde API» de Clientify a los admins; decidido dejarlo (3-sep).
 
 ## Modelo de datos
 
