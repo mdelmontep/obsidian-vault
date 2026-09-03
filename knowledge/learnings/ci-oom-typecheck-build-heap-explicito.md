@@ -32,3 +32,11 @@ Relacionado (distinto pero cercano): [[pre-commit-hook-oom-con-dev-server]].
 **Ampliación 1-ago: el coste no es el rojo, es lo que el rojo bloquea.** El runner de tickets de TuFacturaIA corre el gate y, si falla, **abre el PR en draft** con el log pegado. Un OOM de `tsc` (exit 134, `Ineffective mark-compacts near heap limit`) dejó el #1435 aparcado **dos días** con el trabajo correcto dentro: nadie distinguió «la herramienta se murió» de «el código está mal». Antes de dar por malo un PR del runner, mirar si el fallo es de tipos o de heap y volver a correr el gate en local. Y la salida de fondo es la de arriba: `NODE_OPTIONS=--max-old-space-size` en el gate del runner, no en el criterio de quien revisa.
 
 **Y el número importa (1-ago, PR #1459).** En el runner de tickets el arreglo NO es el 6144 de arriba: ese valor es para runners de GitHub Actions. El contenedor tiene `memory: 3G`, y pedir un heap MAYOR que el límite del cgroup es peor que no pedir nada — el kernel mata el proceso (exit 137, sin log útil) en vez de fallar V8 limpio. Quedó en `--max-old-space-size=2560` y **acotado a los pasos del gate**, no en el env del servicio: global se lo comería también el proceso `claude`, que tiene otro perfil de memoria.
+
+**Y el hook te miente sobre la causa (3-sep, facturaia).** El `pre-push` abortó con
+«Push bloqueado: build con errores. Corre 'npm run build' para ver el detalle» — el log
+real traía `Ineffective mark-compacts near heap limit` justo encima. El mensaje manda a
+buscar un error de tipos que no existe. Se distingue en un comando: `npm run typecheck`
+suelto da `exit 134` (Abort trap), no una lista de errores. Y el heap se le pasa al hook
+por entorno del propio push, que lo hereda: `NODE_OPTIONS=--max-old-space-size=8192 git
+push …`. Nunca `--no-verify`, que es rodear el gate por un fallo que no es del código.
