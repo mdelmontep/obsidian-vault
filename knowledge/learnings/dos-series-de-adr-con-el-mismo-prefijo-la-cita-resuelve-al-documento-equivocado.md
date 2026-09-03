@@ -1,6 +1,7 @@
 ---
 title: dos series de ADR con el mismo prefijo — la cita resuelve a un documento coherente que habla de otra cosa
 date: 2026-08-30
+updated: 2026-09-03
 source: facturaia
 tags: [adr, documentacion, facturaia, obsidian, candados]
 ---
@@ -30,6 +31,11 @@ que nadie mira.
 Regla: contador ÚNICO entre las series que comparten prefijo (el mayor de las dos
 más uno). Una serie con prefijo propio (`ADR-obras-NNN`) no entra en el contador;
 su riesgo es que se cite por elipsis.
+
+**Mordió al revés el 3-sep**: otra sesión creó `ADR-069` en el vault (Doctoralia/Elphis) el mismo
+día en que el repo ya tenía su 069, y fue el candado del repo —que lee el vault— quien paró el push
+de facturaia. Se renumeró el del vault a 079. Quien numere en el vault también mira
+`facturaia/docs/decisions/`: el contador es uno, se escriba donde se escriba.
 
 PR #2311 · [[facturaia]] · `docs/decisions/NUMERACION.md` ·
 [[el-limite-silencioso-una-respuesta-que-llega-al-tope-parece-completa]]
