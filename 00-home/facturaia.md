@@ -172,7 +172,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Cuenta Stripe — Agentesia Madrid SL vs entidad propia TuFacturaIA SL** — pendiente decisión jurídica antes de crear price IDs y abrir cobros reales. Si TuFacturaIA tiene CIF propio que firma con clientes finales, debe tener cuenta Stripe propia. Modo Test inicialmente. Bloquea P1.3 próxima sesión.
 - **Pricing definitivo de Cashflow IA v2** — copy `descripcionLarga` ya refleja v2 completa (eventos + IVA + RETA + payment-pattern + bullet IA + pill crítico) pero el `precioMensual` del catálogo no se ha tocado desde v1 (19€ Conciliación). Revisar si Cashflow IA mantiene el mismo precio o sube a 24€ vs Holded Premium 30€. Ver análisis producto en plan de sesión 2026-05-23.
 - **Modelo 130/IRPF en `incluir_fiscal` (Cashflow IA v3 opcional)** — hoy solo IVA 303. Diferido por análisis producto-GTM (la mayoría en directa simplificada tributa al final del año, no trimestre). Re-evaluar si clientes lo piden.
-- 🟢 **Auditoría de conciliación cerrada (3-sep)** — 9 PRs + 5 decisiones de panel (#2449/#2450/#2456 mig 816/#2459 mig 817). **Tuyo**: OK a los manuales de la cuenta del CSV y del toggle de ignorados; tres `cobrada` con cobro por encima del importe (107,79 € del 30-ago + 135 € de QA1). Detalle → [[facturaia-historico-detallado]].
+- 🟢 **Auditoría de conciliación cerrada (3-sep)** — 9 PRs + 5 decisiones de panel (#2449/#2450/#2456 mig 816/#2459 mig 817). manuales al día (#2463). **Tuyo**: tres `cobrada` con cobro por encima del importe (107,79 € del 30-ago + 135 € de QA1). Detalle → [[facturaia-historico-detallado]].
 
 ## Índice de áreas (abrir solo el que toca)
 
