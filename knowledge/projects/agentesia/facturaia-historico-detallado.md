@@ -36,6 +36,17 @@ tags: [cliente, facturaia, historico]
   sin avisar de que el CTA ya no cabe, y monta cierre y subtítulos en iframes distintos, así que el
   solape no se ve nunca en pantalla.
 
+### Y el cierre destapó que la propia skill de cierre estaba rota (PR #2464)
+
+- El `touch` del paso 6 de `/fia-cierre` moría con `Not a directory` en cualquier worktree: escribía
+  el marcador en `$(git rev-parse --show-toplevel)/.git/`, que en un worktree es un FICHERO. El hook
+  se había arreglado el 2-sep y la instrucción que lo alimenta se quedó atrás, así que el aviso
+  salía en cada turno de cada sesión de worktree. Ahora `--git-dir`, que además da
+  `.git/worktrees/<nombre>`: cada worktree responde por su propio cierre y nadie marca la casilla
+  por el trabajo de otro. Candado espejo skill↔hook en `scripts/__tests__/fia-cierre-reminder.test.ts`,
+  verificado revirtiendo la skill (1 de 7 en rojo). Ver
+  [[arreglar-el-hook-y-no-la-instruccion-que-lo-ejecuta-deja-el-paso-apuntando-a-la-ruta-vieja]].
+
 ## 3-sep-2026 · la auditoría de conciliación, cerrada entera (PR #2407 · #2412 · #2414 · #2420 · #2431 · #2438 · #2440 · #2442 · #2444 · #2445, migs 804-815; y las cinco decisiones de panel: #2449 · #2450 · #2456 · #2459 · #2460, migs 816/817)
 
 - Los nueve PRs planeados el 2-sep entraron entre el 2 y el 3: contadores de pestaña y eje de estado en el servidor (#2438 mig 813 `v_conciliacion_movimientos` + `conciliacion_estado_counts(p_org_id)`, #2440 mig 814 columna `estado` en la vista), que a la vez cerró la decisión «RPC dedicada vs dejarlo» de julio y desbloqueó `conciliacion` para RSC (la RPC ya recibe `p_org_id`).

@@ -14,7 +14,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 **Modelo de 2 niveles — no leer todo, leer lo que toca:**
 - **Arranque de sesión (siempre, ~12K tokens hoy, medido; objetivo 8K)**: leer solo este bloque superior — `Estado` + `NOW` + `Bloqueos` + `Decisiones pendientes` + `Índice de áreas`. Es la foto del proyecto.
 - **Durante (bajo demanda)**: abrir el subfile del área en la que trabajas (ver `Índice de áreas`) o la sección inferior concreta (NEXT / Smoke / WIP). NO leer el hub entero ni el histórico salvo que se pida.
-- **Cierre — `/fia-precommit` → `/fia-cierre` → `/obsidian-1`**: el cierre corre 4 dimensiones (`codigo`, `datos`, `plataforma`, `cabos`) con el diff INYECTADO y el alcance decidido por `npm run cierre:alcance`. Al leer su informe, comprobar **qué dimensiones corrieron de verdad**: pueden caerse o devolver relleno. Lo cerrado (✅ / ~~tachado~~) se mueve a [[facturaia-historico-detallado]]; las entradas del hub son 1-2 líneas mirando hacia delante.
+- **Cierre — `/fia-precommit` → `/fia-cierre` → `/obsidian-1`**: el cierre corre 4 dimensiones (`codigo`, `datos`, `plataforma`, `cabos`) con el diff INYECTADO y el alcance decidido por `npm run cierre:alcance`. Al leer su informe, comprobar **qué dimensiones corrieron de verdad**: pueden caerse o devolver relleno. Lo cerrado (✅ / ~~tachado~~) se mueve a [[facturaia-historico-detallado]]; las entradas del hub son 1-2 líneas mirando hacia delante. El marcador se escribe con `--git-dir`: [[arreglar-el-hook-y-no-la-instruccion-que-lo-ejecuta-deja-el-paso-apuntando-a-la-ruta-vieja]].
 
 ---
 
