@@ -1,6 +1,7 @@
 ---
 title: clinica-zen
 date: 2026-07-29
+updated: 2026-09-03
 tags: [cliente, clinica-zen]
 ---
 
@@ -8,25 +9,24 @@ tags: [cliente, clinica-zen]
 
 Clínica dental + estética facial en Las Rozas. Chatbot WhatsApp (Kommo) + agente de voz Retell + recordatorios + emails. Contactos: Gonzalo (legacy), Dani.
 
-Auditado end-to-end el 2026-07-28/29 vía API (n8n, Retell, Kommo, Google Calendar, IMAP) y GUI de Kommo. Los tres hitos que arrastraba este hub desde mayo estaban ya resueltos en producción.
+## Estado 3-sep-2026: v70 en producción, huecos y guard en código
 
-**Estado 29-jul: nada bloqueante y nada roto conocido.** Lo corregido está verificado por partes ejecutándose (Switch, Code de ambas ramas de reserva, generador de email, deploy); lo que falta es verlo funcionar de punta a punta con un paciente real — llega solo con el uso: cuando los contadores de los bots `63810`/`63808` dejen de estar a 0 en Kommo, los recordatorios funcionan.
+Tres llamadas reales de prueba destaparon que la **v67 calculaba la disponibilidad en el LLM** desde los eventos crudos del calendario (decía «miércoles completo» con la mañana libre, no dejaba elegir otra hora) y que aceptaba horas fuera de la lista (13:00 ocupada → reservada encima). Hecho en producción (LLM `llm_271c…`, **v70 publicada**, número en `latest_published`):
 
-## El número servía la v54: 3 meses de fixes que nunca llegaron (20-ago-2026)
+- `Mirar_disponibilidad` recibe `dia`/`franja`/`hora` y **n8n devuelve los huecos ya calculados** (`Code in JavaScript2` de `RN0wl8RaRmwLpnfQ`: L-V 10-14/15:30-20:30, sáb 10-14, festivos, margen 48 h, ventana 21 días, solapes; salida `opcion1/2_*`, `huecos_disponibles`, `dia_coincide`). El prompt solo elige.
+- **Guard en `Reservar_crm`** (4 nodos antes de `Get list of contacts1`): relee el calendario ±1 h y si el hueco está ocupado responde `error: hueco_ocupado` sin tocar Kommo; el prompt (§9b) vuelve a mirar disponibilidad. Probado (exec 13067). La lista cerrada protege el ofrecer; el guard, el reservar → [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]].
+- Teléfono: ofrece el número del llamante con `{{user_number}}` (**no** `{{from_number}}`, que llegaba vacía) y solo pide otro si dice que no → [[retell-from_number-no-auto-sustituye-en-tool-args]].
+- `Append row in sheet1` (log en Sheets, último nodo) con retry 3×5 s tras el 503 del 3-sep; no afecta al paciente.
+- Pruebas limpiadas: 4 leads a status 143 renombrados `[TEST agentesia 3-sep] …`, 5 eventos borrados. **Quedan los contactos `39968918` y `41819782`** (la API no borra contactos): quitar en la UI de Kommo.
+- Backups pre-cambio (LLM v67, workflow) en el scratchpad de la sesión; el de la v54 sigue en `knowledge/projects/agentesia/n8n-backups/clinica-zen/`.
 
-`+34919934582` estaba **fijado** a `agent_version: 54` con la v67 publicada, así que publicar no cambiaba
-nada: **28 llamadas reales** con el prompt de mayo, la última el 14-ago. Eso explica el pendiente que este
-hub arrastraba desde el 3-ago — el fix del nombre inventado y el de «Európolis» **estaban escritos en la
-v67** y verificados en el diff; no era el modelo ni el Code node, no llegaba.
+**Agente Flow** `agent_d3c52ef4ee0f2eeb6904212c05` («Clínica Zen (Flow)»): borrador con intake de una pregunta por turno, tono («vale/perfecto» + «¿me puedes decir tu nombre?»), audio (`interruption_sensitivity 0.5`, `denoising noise-cancellation`, `begin_message_delay 1000`) y sin «Európolis». **Sin número asignado**: 2 h corrigiéndolo mientras la llamada real entraba en el single-prompt — antes de editar, `list-phone-numbers` → `agent_id` ([[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]). Decidir si sustituye al single-prompt; si sí, portarle huecos + guard + caller-ID.
 
-Arreglado: inbound y outbound a `latest_published` (diff de las 9 versiones revisado antes; nada
-peligroso). Con la v67 entran además: teléfono de clínica **629 494 209** separado del WhatsApp (919 934
-582), web `clinicazen.es`, no ofrecer «estética facial» de forma proactiva y guion de *warm transfer*.
-Backup de la v54 en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (Retell solo retiene 10
-versiones y ya se había caído de la lista).
+**Visto y no tocado**: cada reserva crea DOS eventos (30 min «Odontología - Valoración - X» y 60 min «Valoración - General - X», probablemente `Especilista Asignado`) · las pruebas de playground fallan en `Get a call3` de `Leads entrantes` (no hay call real) y no mandan el email · `transfer_call` no funciona desde test web.
 
-**A vigilar**: que la reserva llegue con nombre real a la agenda y que no diga «Európolis».
-Ver [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
+## El número servía la v54 (20-ago) — condensado
+
+`+34919934582` fijado a `agent_version: 54` con la v67 publicada: 28 llamadas reales con el prompt de mayo, y de ahí el «fix del nombre inventado no funciona» que este hub arrastró del 3 al 20-ago. Arreglado a `latest_published` (inbound y outbound). Detalle en [[clinica-zen-historico]] · [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]].
 
 ## Estado (verificado 2026-07-28)
 
@@ -37,7 +37,7 @@ Ver [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
 | ID | Nombre | Notas |
 |---|---|---|
 | `u0AQPe9pxN79dbFa` | Chatbot clinica zen | 20 nodos salesbot, 4 amojo con token dinámico |
-| `RN0wl8RaRmwLpnfQ` | Leads entrantes | reserva chat + voz. Tocado 28-jul |
+| `RN0wl8RaRmwLpnfQ` | Leads entrantes | reserva chat + voz. Tocado 3-sep: huecos en código + guard + retry Sheets |
 | `DkueIeGFWLKh8nTj` | Leads cambio de fecha o anulacion | cancelación voz + chat |
 | `PJBMjLLE0vNJjZH8` | Recordatorios | 24h/4h, cada 30 min, desde Google Calendar. Tocado 28-jul |
 | `bfc4dWuztZsWfb4Q` | Reenganche Conversaciones Abandonadas | cron 30 min |
@@ -49,7 +49,7 @@ Ver [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
 
 Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_leads_entrantes_v2 · `sIjznBan8THkEbcx` meter info rag · `5ecU1EI4DSs0SPWT` Chabot Laserys (ajeno, borrable).
 
-**Retell** — agente `agent_350620f6b3044226efaeba9111`, LLM `llm_271c1594207dffae30974c56b5e6`, **v67 publicada** (05-ago: dirección sin "Europolis" + "en la dehesa" + no mencionar estética proactivamente + repetición de teléfono). Voz `custom_voice_c3e5212df87e5341a06ad66e66` (eleven_flash_v2_5, es-ES), `ambient_sound: call-center`, `voice_speed 1.05`, `volume 0.84`. Entra por `+34919934582`. Tools: `Mirar_disponibilidad`, `Reservar`, `Cancelar_cita`, `end_call`, `transfer_call`.
+**Retell** — agente `agent_350620f6b3044226efaeba9111`, LLM `llm_271c1594207dffae30974c56b5e6`, **v70 publicada** (3-sep: huecos calculados en n8n, guard de hueco ocupado, caller-ID; la v67 del 05-ago ya quitaba "Europolis" y la estética proactiva). Voz `custom_voice_c3e5212df87e5341a06ad66e66` (eleven_flash_v2_5, es-ES), `ambient_sound: call-center`, `voice_speed 1.05`, `volume 0.84`. Entra por `+34919934582`. Tools: `Mirar_disponibilidad` (`dia`/`franja`/`hora`), `Reservar`, `Cancelar_cita`, `end_call`, `transfer_call`.
 
 **Salud**: 1 sola ejecución con error en todo el histórico retenido — la de recordatorios de hoy (ver hitos). El resto en verde.
 
@@ -73,47 +73,10 @@ corregidos: Switch sin `options` que mandaba los de 4 h por la rama de 24 h · e
 `entity_type` como string en vez de entero — por la que **los recordatorios de WhatsApp no habían
 funcionado nunca**. Más el email interno de la reserva por voz, que no salía.
 
-## Verificación por API del 2026-08-03 (read-only, sin tocar nada)
-
-Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[agentes-cliente-tres-capas]].
-
-- **Recordatorios: el fix del `entity_type` SIGUE SIN VERIFICAR en producción.** Inspeccionadas una a
-  una las **268 ejecuciones retenidas** de `PJBMjLLE0vNJjZH8` (29-jul 02:30 → 3-ago 16:00), todas en
-  `success`: **ninguna pasó de `Filtrar y evitar duplicados`**. Ni el Switch ni los dos nodos
-  `WhatsApp Recordatorio 24h/4h` se ejecutaron una sola vez. No es un bug — es que no ha habido
-  ninguna cita cruzando la ventana: los únicos dos eventos del calendario están a más de 24 h.
-  **Las 268 ejecuciones en verde no prueban absolutamente nada**, que es justo el punto.
-  - **Primera oportunidad real de verificarlo: el 4-ago sobre las 11:30** (recordatorio de 24 h del
-    evento del 5-ago 11:30, lead 33137378). El de 4 h de esa cita caería a las 07:30 → **se suprime
-    por la ventana 08:00–21:30**, por diseño. Segunda y tercera: 5-ago ~17:30 (24 h) y 6-ago ~13:30
-    (4 h, esta sí dentro de ventana) para el evento del 6-ago 17:30.
-- 🔴 **El fix del nombre inventado NO funcionó — reincidió el 2-ago con la v64 ya publicada.** En la
-  llamada `call_f730941298c987b1fbbf9f0a913` (2-ago 12:38, desde `+34609779229`) el agente **nunca
-  preguntó el nombre** — el transcript va servicio → primera vez → día → hora → teléfono →
-  consentimiento → reservar — y llamó a `Reservar` con `"name":"Paciente nuevo"`. Antes inventaba
-  `"No proporcionado"`; ahora inventa `"Paciente nuevo"`. La cita del 6-ago 17:30 figura en la agenda
-  de la clínica como *"Odontología - Valoración - Paciente nuevo"* (lead `37513628`), con el teléfono
-  identificado en Kommo.
-  - El fallback de `Preparar Datos Voz`/`Voz2` **no puede entrar**: solo actúa si `name` viene vacío o
-    ausente, y el LLM manda siempre un string plausible.
-  - Es exactamente [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]]: un invariante de
-    dominio no se defiende con una regla del prompt. **Arreglo correcto**: validar en el Code node —
-    si `name` falta **o casa una lista de genéricos** (`No proporcionado`, `Paciente nuevo`, `Paciente`,
-    `Cliente`, `Sin nombre`…), resolver contra el contacto de Kommo por teléfono y, en último término,
-    `Paciente <9 dígitos>`. Y en general no fiarse del `name` del LLM cuando el teléfono ya identifica
-    al contacto ([[dos-campos-confundibles-pide-los-dos-y-cruzalos-en-codigo]]).
-- ~~**La dirección vieja se sigue diciendo.**~~ **RESUELTO 05-ago**: el fix del 28-jul dejó `Pol.
-  Europolis` en el bloque de datos "por considerarlo no hablado" — se hablaba igual al improvisar.
-  Ver [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]].
-- **Volumen real, para calibrar**: el agente de voz lleva **50 llamadas en total desde mayo**, y las de
-  julio/agosto son casi todas desde el móvil de Gonzalo (`+34609779229`) o el de Manu (`+34617314938`).
-  Sin tráfico de pacientes no hay forma de que un fallo aflore solo: por eso hace falta el check de
-  efecto, no esperar a que salte algo.
-
 ## Próximos hitos
 
-1. **Smoke de la reserva por voz (NEXT, bloquea el resto)** — `POST /Reservar_crm` crea contacto+lead reales en Kommo, evento en Calendar y manda correo. Requiere OK y limpieza posterior. Verifica: email interno llega a `citas@clinicazen.es`, WhatsApp del salesbot llega al paciente, cita correcta.
-2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — los 4 bugs corregidos el 28-jul, pendiente de verse en vivo.** Detalle en [[clinica-zen-historico]]. El fix de la causa raíz (`entity_type` string→entero, [[kommo-salesbot-run-entity-type-debe-ser-entero-no-string]]) **sigue sin ejecutarse ni una vez**: ver la verificación del 3-ago arriba. Learnings: [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]] · [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]] · [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]]. Backup pre-fix: `cz-recordatorios-pre-fix-20260728-1339.json`.
+1. **Doble evento por reserva (NEXT)** — cada `Reservar` deja dos eventos en el calendario (30 min y 60 min con distinto título); localizar cuál sobra (`Especilista Asignado` es el sospechoso) y que el guard y los recordatorios miren solo uno.
+2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — los 4 bugs corregidos el 28-jul, pendiente de verse en vivo.** Detalle en [[clinica-zen-historico]]. El fix de la causa raíz (`entity_type` string→entero, [[kommo-salesbot-run-entity-type-debe-ser-entero-no-string]]) **sigue sin ejecutarse ni una vez**: 268 ejecuciones en verde hasta el 3-ago sin pasar de `Filtrar y evitar duplicados` porque ninguna cita cruzó la ventana (histórico). Comprobar con las citas del 3-sep. Learnings: [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]] · [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]] · [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]]. Backup pre-fix: `cz-recordatorios-pre-fix-20260728-1339.json`.
 3. **Verificar el RAG de Supabase (NEXT)** — es el único corpus que no he podido revisar (self-hosted sin dominio público). Puede seguir teniendo "Europolis" o la dirección vieja. Se comprueba preguntando "¿dónde estáis?" al bot por WhatsApp.
 4. **`emiafd@agentesia.madrid` hardcodeado (LATER)** — en `Especilista Asignado`, `toEmail` = `{{ email }}, emiafd@agentesia.madrid`. Buzón de la agencia recibiendo datos de pacientes en producción. Quitar.
 5. **Tres teléfonos distintos (LATER)** — prompt dice llamadas `629 494 209` y WhatsApp `919 934 582`; la KB dice `91 993 35 69`; las llamadas entran por `919 934 582`. Decidir cuál es cuál y unificar prompt + KB.
@@ -122,7 +85,9 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 
 8. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
 9. **Verificar el fix de `bfc4dWuztZsWfb4Q` en ejecuciones reales (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Confirmar que corre sin error SQL y que no reabre conversaciones ya cerradas.
-10. **Comprobar en llamada real que ya no se menciona "Europolis" ni estética proactiva (NEXT)** — el fix del 05-ago está en la v67 y **hasta el 20-ago no llegaba a las llamadas** (número fijado a la v54): la reincidencia que se le achacaba al modelo era eso. Ahora ya es verificable de verdad.
+10. **Identificarse como IA (art. 50, vigente desde 2-ago) (NEXT)** — falta en Clínica Zen; va en el `begin_message` como en Tecnocloud. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]].
+11. **`Get a call3` en `Leads entrantes` (LATER)** — las pruebas de playground no tienen call real y el nodo rompe la rama del email; poner `onError: continue` o saltarlo cuando no hay `call_id`.
+12. **Nombre inventado (a vigilar)** — el 2-ago la v64 reservó como «Paciente nuevo»; desde el 20-ago llega el prompt bueno y el 3-sep las 3 reservas llevaron nombre real. Si reincide, el arreglo es el guard en `Preparar Datos Voz` contra genéricos, no el prompt.
 
 *Descartado tras revisión de Manuel (28-jul)*: que el calendario tenga 2 eventos en 21 días es **normal** para el volumen actual, no hay riesgo de doble reserva. La credencial de Calendar "Cuenta Gonzalo" se mantiene por ahora.
 
@@ -139,6 +104,8 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
 
 ## Histórico de hitos
 
+- 2026-09-03: v70 (huecos en n8n, guard hueco ocupado, caller-ID `{{user_number}}`), retry Sheets, limpieza de pruebas; Flow agent como borrador
+- 2026-08-20: número desfijado de la v54 → `latest_published`
 - 2026-08-05: dirección sin "Europolis"/"en la dehesa" + no mencionar estética proactiva (v67 Retell publicada, chat en vivo)
 - 2026-08-04: pase de tono en chat+voz (v66 Retell publicada) + fix link roto de Google Maps en 3 workflows + fix reenganche disparando sobre conversaciones ya cerradas
 - 2026-07-28: auditoría completa + fixes del feedback de Gonzalo (dirección, voice_speed, email interno de voz, WhatsApp de voz)

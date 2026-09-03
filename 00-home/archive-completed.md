@@ -481,3 +481,4 @@ tags: [home, archivo]
 - **2026-06-22 · agency-portal — Pizarra/board (PR #91) mergeado** — centro de mando de la agencia. Archivado el 27-ago al cruzar `gh pr view`: llevaba dos meses dentro y seguía listado como pendiente de merge.
 - **2026-08-05 · agency-portal — PR #209 mergeado** — badge «en uso ahora» con varios usuarios a la vez en una cuenta compartida; la base (#206) ya estaba en prod. Figuraba en Bloqueos esperando a Borja desde el 04-ago.
 - **2026-08-03 · agentesia-web — PR #94 mergeado** — H1 de la home sin «en Madrid». Figuraba en Bloqueos esperando a `notcapi`.
+- 2026-09-03 · Clínica Zen — v70 en producción: disponibilidad calculada en n8n (no en el LLM), guard de hueco ocupado en `Reservar_crm`, caller-ID con `{{user_number}}`. Cierra el «mirar las próximas reservas» del 20-ago: 3 llamadas reales el 3-sep con nombre real en la agenda; datos de prueba limpiados.

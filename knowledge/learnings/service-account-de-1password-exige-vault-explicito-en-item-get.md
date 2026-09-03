@@ -18,6 +18,8 @@ sí lo eran (`kknqs4zua3eje5drm6u25csaxu` en FacturAIA, `ssh AGH` en AGH Iberica
   reference», caso real 12-ago: `Dokploy API · tufacturaia` por el `·`) → usar el ID del ítem en la
   referencia: `opsa read "op://FacturAIA/<item-id>/credential"`.
 
+- **También los CAMPOS con tilde** («Token de larga duración», caso Kommo 3-sep-2026): `opsa read "op://…/<campo>"` falla igual → `opsa item get <id> --vault <bóveda> --format json` y sacar el campo por `label` con python, sin imprimir el valor.
+
 Corolario al escribir runbooks: si un comando `op item get` no lleva `--vault`, funciona hoy con
 huella y reventará el día que se automatice. Ponerlo siempre.
 

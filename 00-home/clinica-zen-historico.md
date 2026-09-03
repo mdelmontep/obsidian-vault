@@ -194,3 +194,57 @@ en la misma versión. Chat: aplicado directo, en vivo.
 - **n8n solo retenía las ejecuciones del día** — RESUELTO 29-jul: `EXECUTIONS_DATA_MAX_AGE` iba en horas, no en días; a `336` (14 días).
 - **Bots del Digital Pipeline sin verificar en la GUI** — VERIFICADO 29-jul: los 8 bien montados, nada que tocar.
 
+### Sacado del hub el 2026-09-03
+
+#### El número servía la v54: 3 meses de fixes que nunca llegaron (20-ago-2026)
+
+`+34919934582` estaba **fijado** a `agent_version: 54` con la v67 publicada, así que publicar no cambiaba
+nada: **28 llamadas reales** con el prompt de mayo, la última el 14-ago. Eso explica el pendiente que este
+hub arrastraba desde el 3-ago — el fix del nombre inventado y el de «Európolis» **estaban escritos en la
+v67** y verificados en el diff; no era el modelo ni el Code node, no llegaba.
+
+Arreglado: inbound y outbound a `latest_published` (diff de las 9 versiones revisado antes; nada
+peligroso). Con la v67 entran además: teléfono de clínica **629 494 209** separado del WhatsApp (919 934
+582), web `clinicazen.es`, no ofrecer «estética facial» de forma proactiva y guion de *warm transfer*.
+Backup de la v54 en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (Retell solo retiene 10
+versiones y ya se había caído de la lista).
+
+**A vigilar**: que la reserva llegue con nombre real a la agenda y que no diga «Európolis».
+Ver [[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]
+
+#### Verificación por API del 2026-08-03 (read-only, sin tocar nada)
+
+Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[agentes-cliente-tres-capas]].
+
+- **Recordatorios: el fix del `entity_type` SIGUE SIN VERIFICAR en producción.** Inspeccionadas una a
+  una las **268 ejecuciones retenidas** de `PJBMjLLE0vNJjZH8` (29-jul 02:30 → 3-ago 16:00), todas en
+  `success`: **ninguna pasó de `Filtrar y evitar duplicados`**. Ni el Switch ni los dos nodos
+  `WhatsApp Recordatorio 24h/4h` se ejecutaron una sola vez. No es un bug — es que no ha habido
+  ninguna cita cruzando la ventana: los únicos dos eventos del calendario están a más de 24 h.
+  **Las 268 ejecuciones en verde no prueban absolutamente nada**, que es justo el punto.
+  - **Primera oportunidad real de verificarlo: el 4-ago sobre las 11:30** (recordatorio de 24 h del
+    evento del 5-ago 11:30, lead 33137378). El de 4 h de esa cita caería a las 07:30 → **se suprime
+    por la ventana 08:00–21:30**, por diseño. Segunda y tercera: 5-ago ~17:30 (24 h) y 6-ago ~13:30
+    (4 h, esta sí dentro de ventana) para el evento del 6-ago 17:30.
+- 🔴 **El fix del nombre inventado NO funcionó — reincidió el 2-ago con la v64 ya publicada.** En la
+  llamada `call_f730941298c987b1fbbf9f0a913` (2-ago 12:38, desde `+34609779229`) el agente **nunca
+  preguntó el nombre** — el transcript va servicio → primera vez → día → hora → teléfono →
+  consentimiento → reservar — y llamó a `Reservar` con `"name":"Paciente nuevo"`. Antes inventaba
+  `"No proporcionado"`; ahora inventa `"Paciente nuevo"`. La cita del 6-ago 17:30 figura en la agenda
+  de la clínica como *"Odontología - Valoración - Paciente nuevo"* (lead `37513628`), con el teléfono
+  identificado en Kommo.
+  - El fallback de `Preparar Datos Voz`/`Voz2` **no puede entrar**: solo actúa si `name` viene vacío o
+    ausente, y el LLM manda siempre un string plausible.
+  - Es exactamente [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]]: un invariante de
+    dominio no se defiende con una regla del prompt. **Arreglo correcto**: validar en el Code node —
+    si `name` falta **o casa una lista de genéricos** (`No proporcionado`, `Paciente nuevo`, `Paciente`,
+    `Cliente`, `Sin nombre`…), resolver contra el contacto de Kommo por teléfono y, en último término,
+    `Paciente <9 dígitos>`. Y en general no fiarse del `name` del LLM cuando el teléfono ya identifica
+    al contacto ([[dos-campos-confundibles-pide-los-dos-y-cruzalos-en-codigo]]).
+- ~~**La dirección vieja se sigue diciendo.**~~ **RESUELTO 05-ago**: el fix del 28-jul dejó `Pol.
+  Europolis` en el bloque de datos "por considerarlo no hablado" — se hablaba igual al improvisar.
+  Ver [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]].
+- **Volumen real, para calibrar**: el agente de voz lleva **50 llamadas en total desde mayo**, y las de
+  julio/agosto son casi todas desde el móvil de Gonzalo (`+34609779229`) o el de Manu (`+34617314938`).
+  Sin tráfico de pacientes no hay forma de que un fallo aflore solo: por eso hace falta el check de
+  efecto, no esperar a que salte algo.

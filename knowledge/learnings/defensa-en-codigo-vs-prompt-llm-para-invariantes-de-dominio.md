@@ -15,4 +15,6 @@ Casos reales 2026-05-21 TuFacturaIA bot:
 
 Variante "pre-computar y ofrecer lista cerrada": si el LLM debe ELEGIR entre opciones derivables por código, no le pidas calcularlas en prosa — el backend devuelve la lista válida y el LLM solo elige. Caso Simarro 2026-05-31: `Mirar_disponibilidad` devolvía texto ("bloqueado 11:30-13:30, resto libre") y gpt-4.1-mini no descontaba la visita de 1h → ofrecía horas que invadían el margen. Fix: el webhook devuelve `slots:["10:00","13:00"]` ya filtrados; prompt = "ofrece slots[0]/slots[1], NO calcules".
 
+La lista cerrada protege el **ofrecer**, no el **reservar**: Clínica Zen 2026-09-03, con `huecos_disponibles` ya calculados en n8n y la regla «solo horas de la lista», gpt-4.1 aceptó «a la una» (13:00, ocupada, no listada) y reservó encima. Fix: guard en el webhook de `Reservar` que relee el calendario ±1 h y responde `error: hueco_ocupado` sin tocar el CRM; el prompt solo sabe qué decir si vuelve ese error. Un invariante de escritura se defiende en la escritura.
+
 Aplica también a: validación algorítmica (NIF, IBAN), business rules (estado válido), límites (cantidad>0). Ver [[n8n-set-node-output-solo-lleva-assignments-explicitos]].

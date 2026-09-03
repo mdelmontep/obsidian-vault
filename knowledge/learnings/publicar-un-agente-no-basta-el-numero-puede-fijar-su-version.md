@@ -22,3 +22,5 @@ Medido el 18-ago en 3 clientes a la vez: Tecnocloud servía v40 con v43 publicad
 sin llegar a nadie), Clínica Zen v54 con v67 — la causa real de un «fix que no funcionaba» que
 llevaba 15 días abierto — y Laserys v6 con v14. Tras publicar, `get-agent` sin `?version` devuelve el
 draft NUEVO con `is_published:false`: eso es normal, mira la versión publicada más alta.
+
+La misma comprobación responde también **qué `agent_id` sirve el número**: el 3-sep-2026 pasé 2 h corrigiendo el agente Flow de Clínica Zen (borrador, sin número) mientras la llamada real de prueba entraba en el single-prompt de siempre. Antes de tocar un prompt: `list-phone-numbers` → `agent_id` + `agent_version`, y `list-calls` de la última llamada para confirmar cuál corrió.

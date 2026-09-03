@@ -33,15 +33,15 @@ Config validada en producción para **voice agent inbound en español castellano
 
 Si replicas, probar Flash v2.5 antes que Cartesia.
 
-## Caller ID via `{{from_number}}`
+## Caller ID via `{{user_number}}`
 
-Variable estándar Retell para inbound. Disponible en system prompt directamente:
+Variable **de sistema** de Retell para inbound (`{{user_number}}` = quien llama, `{{agent_number}}` = el número del agente). Disponible en el system prompt directamente. **`{{from_number}}` NO es de sistema**: solo existe si el trunk SIP la inyecta como dynamic variable — en Clínica Zen (3-sep-2026) llegaba vacía y el agente pedía el teléfono teniéndolo. Ver [[retell-from_number-no-auto-sustituye-en-tool-args]].
 
 ```
-Tu sistema tiene el Caller ID en {{from_number}}. Léelo SIEMPRE al cliente
+Tu sistema tiene el Caller ID en {{user_number}}. Léelo SIEMPRE al cliente
 en grupos de tres en UN SOLO TURNO: "el [trío] - [trío] - [trío], ¿verdad?".
 SIN frases de relleno tipo "déjame confirmar".
-Si {{from_number}} viene vacío o el cliente dice no es correcto, pídele el
+Si {{user_number}} viene vacío o el cliente dice no es correcto, pídele el
 bueno y léelo en grupos de tres.
 ```
 
@@ -152,7 +152,9 @@ Dynamic solo si necesitas:
 | Corta al cliente cuando duda | `interruption_sensitivity` alto | Bajar a 0.4-0.5 |
 | Tartamudea palabras / artefactos | voice_speed >1.05 con voz clonada | Bajar a 1.0 |
 | "Pumping" rítmico | ambient_sound + denoising agresivo | ambient null, denoising "noise-cancellation" |
-| Bucles repetidos en confirmación de teléfono | falta `{{from_number}}` o prompt no canalizado | usar variable + UN solo turno |
+| Bucles repetidos en confirmación de teléfono | falta `{{user_number}}` o prompt no canalizado | usar variable + UN solo turno |
+| Pide el teléfono aunque lo tiene | prompt usa `{{from_number}}` (vacía sin trunk que la inyecte) | `{{user_number}}` |
+| `transfer_call` no hace nada en «run test» / playground | las llamadas web no pueden transferir | probar el transfer solo con llamada telefónica real |
 
 ## Anti-patrones detectados
 
