@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-08-31 iteración 55 (main b14e176c · producción pasa de la 087 a la 120 · del trámite 15 solo queda mover la contraseña · las 5 orgs de prueba SE QUEDAN)
+updated: 2026-09-03 iteración 56 (main 41537a80 · 33 agentes en paralelo, entra lo medido · 89 pasos de gate · 016 en rama sin verificar · el tablero se borra solo)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -13,12 +13,32 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
 - `CLAUDE.md` — reglas y contexto que no se deduce del código. Se lee primero.
 - `docs/plan/ESTADO.md` — progreso. **Fuente de verdad.**
 - `docs/plan/PROMPT-CONTINUACION.md` — cómo retomarlo en otra sesión.
-- Tablero publicado: **`98d111e0…`** desde el 30-ago, y es la NOVENA. El diagnóstico correcto,
-  medido: la lectura previa que el tool exige es **por sesión**, así que ninguna dirección es estable
-  entre sesiones sin pagar ~72k tokens; y `updated` del listado es la fecha del REGISTRO, no la del
-  contenido (uno salía «actualizado hoy» con contenido de diez iteraciones antes). Antes de pagarlo,
-  medir el `diff`: un documento REGENERADO no tiene ediciones propias que fusionar.
+- Tablero publicado: **`acb919e8…`** desde el 3-sep, y es la UNDÉCIMA. La novena y la décima
+  murieron con «artifact not found» sin que la sesión las tocara (la décima en menos de una hora),
+  así que el diagnóstico «la lectura previa es por sesión» explica el coste de republicar, **no el
+  borrado**, que sigue sin causa → [[tablero-artefacto-se-borra-solo]] (inbox).
   Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] y [[claude-code-gotchas]].
+
+## Estado (3-sep, iteración 56) — treinta y tres agentes en paralelo, y entra lo que se pudo medir
+
+**`main` en `41537a80`** (`d8d84b10` + el lock). Tanda de 33 agentes (Sonnet construye, Opus juzga,
+Fable planea, Haiku censa) con 20 concurrentes: carga 35-58, ningún `vitest`/`tsc` en background dio
+veredicto → solo se integró lo verificado por comando propio al terminar
+([[orquestar-subagentes-paralelos-burndown-grande-limites-y-checker]]).
+- **Entra**: `246` identidad de contacto en un solo resolutor (la pista traía una regresión —correo
+  en minúsculas contra columna cruda— y había perdido el `registrarDetalle`; corregido antes);
+  `244` `cifras:check` (G-CIFRA-DEL-DISCO); `220` `recorridos-rol:check` enchufado (gate 87 → 89
+  pasos); `245` escala tipográfica en rem; fichas `260-263` (plan E1.27) sin triar.
+- **No entra, y está dicho**: `016` correo transaccional en `worktree-agent-a7f38cddad3b3f3a3`
+  (`d471d05e`) SIN verificar; `243` parcial. Nueve worktrees de agentes siguen en pie (locked/sucios).
+- **Lo que costó**: `error-crudo` (líneas movidas de fichero, línea base 49 → 47); `build` rojo por
+  `node_modules` enlazado → [[turbopack-rechaza-symlink-node-modules-en-worktree]];
+  `tsc` sin memoria → [[un-generico-sobre-select-de-supabase-js-deja-a-tsc-sin-memoria]];
+  `mutate-guard` (2 h) y el `pre-commit` fuera del semáforo → [[fia-gate]]; G-AUDIT del pre-push
+  (`fast-uri`, arreglado en vez de tolerado). Cada gate esperó 40-60 min de cola.
+- **Tuyo**: (1) ¿vale el stack local para criterios «contra `tucrmia-prod`»? (183/196/201/220);
+  (2) smokes al stack local; (3) `RESEND_API_KEY` para verificar 016; (4) dueño de 009/015/027-C2/
+  035/074/068/240; (5) mover la contraseña de `tucrmia-prod` desde la app (trámite 15).
 
 ## Estado (2-sep, PR #2) — el candado F12 mide sin comentarios, y la deriva compartida se resolvió adoptando un bug arreglado
 

@@ -297,6 +297,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[un-eval-que-llama-al-interprete-no-ve-lo-que-arregla-la-capa-de-abajo]] — un eval que llama al intérprete no ve lo que arregla la capa de abajo — lee el instrumento antes de promete…
 - [[un-fail-closed-cuenta-la-fuente-que-puede-fallar-no-el-agregado]] — un fail-closed cuenta la fuente que puede fallar, no el total agregado
 - [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]] — un fix en una media query sobre un selector que no existe ahí es código muerto
+- [[un-generico-sobre-select-de-supabase-js-deja-a-tsc-sin-memoria]] — un genérico sobre el argumento de select() de supabase-js deja a tsc sin memoria
 - [[un-gate-que-compara-contra-el-origin-main-de-otro-repo-cambia-de-veredicto-solo]] — un gate que compara contra el `origin/main` de otro repositorio cambia de veredicto solo
 - [[un-gate-que-resuelve-imports-solo-ve-los-estaticos]] — un gate que resuelve imports por AST sólo ve los estáticos de nivel superior
 - [[un-gate-que-solo-mide-lo-aplicado-puntua-al-humano]] — un gate que solo mide lo aplicado puntúa al filtro humano, no al proponente

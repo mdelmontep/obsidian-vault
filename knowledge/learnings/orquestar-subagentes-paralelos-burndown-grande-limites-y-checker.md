@@ -10,3 +10,11 @@ Barrido masivo (cientos de sitios, ~170 ficheros) repartido en agentes por carpe
 - **Los agentes NO deben tocar estado COMPARTIDO**: `npm run build` (corrompe el `.next` común bajo paralelismo), `git stash`/`checkout`/`reset` (un subagente hizo `git stash` que revirtió el `eslint.config` estricto sin commitear y barrió fixes a un stash → eslint pasaba en falso), ni el propio `eslint.config`. El orquestador es dueño de config/git; los agentes solo editan SUS ficheros.
 - **El orquestador es el checker REAL, no te fíes del auto-verify del agente.** 2ª confirmación (burndown 42703, 9 agentes): el `tsc --noEmit` COMPLETO del orquestador cazó **4+ bugs reales que el `eslint`-scoped de los agentes NO ve** (`GenericStringError`/`ParserError` de embeds/selects dinámicos, implicit-any tras quitar cast sobre cliente `any`). El eslint gatea la SINTAXIS del cast; solo el tsc completo valida el TIPO resultante. Tras CADA lote: `tsc --noEmit` COMPLETO + tests + grep del diff por red flags (`as any`/`@ts-ignore`/`: any`/`as unknown as`). Da a los agentes `eslint scoped` como gate y **prohíbeles lanzar comandos en background** (dejaban `tsc`/waiters colgados que re-notificaban en bucle; matar el loop padre `until [ -s …output ]`, no solo el `sleep`).
 - **Commit por zona** (folder-scoped: amplía el scope del gate al completar cada zona) → progreso commiteable e independiente; un agente que muere no tira lo ya commiteado. Un push al final (build del hook ~7min). Ver [[refactor-ui-grande-agentes-paralelos-particionados-por-archivo]] · [[supabase-subagent-driven-development-paralelo-requiere-commits-y-archivos-exclusivos]].
+
+**3ª confirmación, 3-sep (TuCRMIA, 33 agentes, 20 concurrentes, carga 35-58 en 12 cores)**: ningún
+`vitest`/`tsc` que un agente lanzó en background dio veredicto nunca, y el `tsc` del orquestador
+murió por heap. Regla que funcionó: los agentes verifican solo con gates de `node` sueltos y `mutate`;
+typecheck, suite y `npm run gate` los corre el orquestador UNA vez, al terminar la tanda y con la
+carga por debajo de ~25 — y **solo se integra lo que se pudo medir así**; lo demás queda en su rama
+con la ficha diciéndolo. Pistas que leen ficheros largos mueren por «autocompact thrashing» aunque
+se les diga que lean por trozos: partirlas. Ver [[turbopack-rechaza-symlink-node-modules-en-worktree]].
