@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-09-03 · TuFacturaIA — tickets 166/167/168 en prod y su code review resuelto (#2408-#2411 + #2417-#2419, mig 805)** — nada tuyo; queda #2416 para un agente, sigue en el hub. → [[facturaia]]
 - **2026-09-02 · TuFacturaIA — tickets 156/163/164 de Pescados Chivite cerrados y en prod** — #2382 la ingesta no duplica un proveedor por el prefijo ES · #2386 mig 796 retira la recibida duplicada 73056007 con el inventario intacto (el cliente ya lo había compensado el 1-ago; nuestro «te sumó 5» del 29-ago era falso y se corrigió en el hilo) · #2387 corregir el producto de una línea ya asignada y volver al listado · #2393 el aviso dice qué ficha · #2396 el 409 vuelve a mandar a cruzar antes de aprobar. Guías con capturas en el hilo del 156. → [[facturaia]]
 - **2026-09-02 · TuFacturaIA — avisar a Chivite de los 7 albaranes que esperan producto (#2365)** — hecho en las guías del ticket 156.
 - **2026-09-02 · TuFacturaIA — la fusión de Wildomar, única decisión que quedaba del repaso de stock (migs 781/783)** — una ficha (`B20987657`, 40 albaranes, alias absorbidos).

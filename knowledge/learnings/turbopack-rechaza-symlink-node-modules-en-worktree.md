@@ -80,3 +80,7 @@ primera línea de código — mismo consejo de siempre, un síntoma nuevo por el
 
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
 [[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].
+
+**Sexta reincidencia (3-sep), en un worktree anidado y con la memoria del agente avisando:** `ln -s`
+al `node_modules` del padre, suite verde, y el pre-push muerto en `build` con el mismo FATAL. Fix
+`rsync -a` (copia real). La excepción del worktree anidado de julio ya no se cumple: no fiarse de ella. Y el gate de ese mismo día necesitó además [[tsc-de-un-repo-grande-desborda-el-heap-por-defecto-de-node-aunque-corra-solo]].
