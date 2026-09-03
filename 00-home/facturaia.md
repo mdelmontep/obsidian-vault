@@ -194,7 +194,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 | Multidivisa recibidas | [[facturaia-multidivisa-recibidas]] | — |
 | Drive sync | [[facturaia-drive-sync-architecture]] | — |
 | Onboarding / migración dominio | [[facturaia-migracion-tufacturaia-com]] | `docs/onboarding/PROGRESS.md` |
-| Marketing/Growth (admin interno) | — | `issues/prd-marketing-growth.md` |
+| Marketing/Growth (admin interno) | [[el-suelo-de-un-encoger-para-que-quepa-es-una-cota-de-legibilidad-no-cero]] | `issues/prd-marketing-growth.md` |
 | Arquitectura general | — | `docs/architecture/ARCHITECTURE.md` · `dependency-map.md` |
 | Changelog completo | [[facturaia-historico-detallado]] | — |
 

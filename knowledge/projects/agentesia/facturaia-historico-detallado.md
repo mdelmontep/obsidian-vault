@@ -19,6 +19,23 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 3-sep-2026 · el cierre del reel dejó de comerse el subtítulo, y de publicarse invisible (PR #2458)
+
+- El bug que se buscaba: con un CTA de 3+ líneas el bloque de cierre invadía 41px la banda donde
+  `subtitulos.mjs` quema el subtítulo. Ahora `cierrePxEfectivo` busca por bisección el mayor cuerpo
+  que cabe; con 1 y 2 líneas —el caso normal— el tamaño no cambia, con igualdad estricta en test.
+- **El bug que apareció por el camino y era peor**: la búsqueda arrancaba en `lo = 0` sin comprobar
+  ese extremo, así que con logo en esquina inferior devolvía `font-size:0vh` — reel publicado con
+  el CTA invisible, sin error. Medido: cero exacto desde `alto_rel = 0,135`, y ya ilegible (7px
+  sobre 1920) desde 0,07. Suelo nuevo = cuerpo de la firma «Hecho con IA». Ver
+  [[el-suelo-de-un-encoger-para-que-quepa-es-una-cota-de-legibilidad-no-cero]].
+- Dos pasadas de gate DoD (la 1.ª devolvió el bloqueante) + `/code-review`. El fix que propuso el
+  gate para uno de sus avisos **no cerraba el agujero que él mismo describía**:
+  [[el-fix-que-propone-una-auditoria-puede-no-cerrar-el-agujero-que-describe]].
+- Queda apuntado y NO hecho (cambio de UI, fuera de alcance): el panel deja subir el logo al 30 %
+  sin avisar de que el CTA ya no cabe, y monta cierre y subtítulos en iframes distintos, así que el
+  solape no se ve nunca en pantalla.
+
 ## 3-sep-2026 · la auditoría de conciliación, cerrada entera (PR #2407 · #2412 · #2414 · #2420 · #2431 · #2438 · #2440 · #2442 · #2444 · #2445, migs 804-815; y las cinco decisiones de panel: #2449 · #2450 · #2456 · #2459 · #2460, migs 816/817)
 
 - Los nueve PRs planeados el 2-sep entraron entre el 2 y el 3: contadores de pestaña y eje de estado en el servidor (#2438 mig 813 `v_conciliacion_movimientos` + `conciliacion_estado_counts(p_org_id)`, #2440 mig 814 columna `estado` en la vista), que a la vez cerró la decisión «RPC dedicada vs dejarlo» de julio y desbloqueó `conciliacion` para RSC (la RPC ya recibe `p_org_id`).

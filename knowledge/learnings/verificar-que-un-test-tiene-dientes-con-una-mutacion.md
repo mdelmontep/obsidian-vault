@@ -1,7 +1,7 @@
 ---
 title: un test nuevo no vale hasta que le rompes el código a propósito y falla
 date: 2026-07-28
-updated: 2026-08-10
+updated: 2026-09-03
 source: claude-code-session
 tags: [testing, qa, metodo, verificacion]
 ---
@@ -191,3 +191,15 @@ contra **cero** (`0 pasados && 0 fallidos`), así que caza la corrida vacía ENT
 recuento.** Menos casos que el control ⇒ arnés roto, nunca «sin víctima». Y es sistemático, no casual:
 los `.pg` se saltan en bloque cuando la base no responde, y un barrido lanza decenas de corridas contra
 esa misma base, así que se dispara justo cuando más mutantes hay en vuelo.
+
+**Decimoséptimo — la mutación muere, pero la matan los tests VIEJOS: no dice nada del candado
+NUEVO.** Familia del decimotercero («importa quién la mata»), aplicada al caso más común de todos:
+validar una aserción que **acabas de añadir**. FacturaIA 3-sep: tres mutaciones seguidas dieron
+`✓ VÍCTIMA — 3 de 25`, y las tres eran inútiles, porque entre las tres víctimas estaban siempre los
+dos casos que ya existían antes de mi cambio. Con esa evidencia la aserción nueva podía ser un
+`expect(true)`. La cuarta se eligió para **perdonar** lo que ya tenía cobertura (el test dedicado
+vivía en `alto_rel = 0,06`, así que la mutación disparaba desde `0,062`): cayó **1 de 25**, y era el
+caso nuevo. Regla: para verificar un candado nuevo, la mutación no se elige por ser plausible sino
+por **dejar en verde todo lo que ya estaba vigilado**; si no puedes construirla, es señal de que el
+candado nuevo no añade poder discriminante y sobra. Y el veredicto útil no es «hubo víctima», es
+**qué casos cayeron** — `mutate` da el recuento, los nombres hay que ir a buscarlos al log.
