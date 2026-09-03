@@ -20,3 +20,5 @@ y una convención mide a los que la siguen.
 
 Corolario para cualquier auditoría por superficie: buscar la **dependencia
 externa**, no el envoltorio interno. Ver [[una-suite-en-verde-no-prueba-el-camino-real]].
+
+**Caso 2 (3-sep-2026, tickets 169/170)**: ADR-064 decía «tres resolutores de proveedor». El cuarto (`aprobarItem` de `/ingesta`) hacía su propio `.select('id, nif')` + `.find()` y no salía grepeando el helper (`elegirProveedorExistente`, `resolve_proveedor`); lo sacó el gate de cierre grepeando **la tabla**: `from('proveedores')`. Misma regla: se censa por el recurso (tabla, SDK), no por el envoltorio.
