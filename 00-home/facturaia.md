@@ -290,6 +290,10 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 ## NEXT (próximas 2 semanas)
 
+- 🟡 **El panel no avisa de que el CTA del reel salió al mínimo (#2465)** — #2458 arregló la
+  aritmética; falta la visibilidad. El slider de la marca llega a `alto_rel = 0,3` y la frontera
+  medida está en **0,07**, `renderOverlayReel` no devuelve si se rindió, y el preview monta cierre
+  y subtítulo en iframes distintos, así que el solape no se ve nunca en pantalla.
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (para AGH Ibérica, 30-ago)** — módulo por
   organización, apagado por defecto: catálogo de cuentas del cliente, N ejes analíticos, circuito de
   aprobación de 3 etapas y exportador Cegid V9. **Diseño cerrado, código sin arrancar**: quince
