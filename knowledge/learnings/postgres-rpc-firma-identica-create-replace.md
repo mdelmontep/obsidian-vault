@@ -1,7 +1,7 @@
 ---
 title: al recrear rpc postgres mantener firma idéntica o queda función huérfana
 date: 2026-05-25
-updated: 2026-07-31
+updated: 2026-09-04
 source: claude-code-session
 tags: [postgres, plpgsql, supabase, rpc]
 ---
@@ -30,3 +30,11 @@ Aplica también a triggers (`OLD.X` / `NEW.X`) y a constraints CHECK.
 **Grants/ACL se preservan**: `CREATE OR REPLACE` (firma idéntica) NO toca los privilegios — un `REVOKE` de una mig previa sigue vigente; recrear NO resetea a PUBLIC. Misconcepción común en auditorías: creer que mig 216 al recrear `change_billing_status` "reconcedió" EXECUTE a anon/authenticated → falso, el REVOKE de mig 213 seguía aplicado. Para cambiar el ACL hace falta un `GRANT`/`REVOKE` explícito, no basta recrear.
 
 **Caso especial — cambiar `RETURNS TABLE`**: PostgreSQL lanza hard error `42P13` ("cannot change return type of existing function") en lugar de crear función huérfana silenciosa. `DROP FUNCTION IF EXISTS` antes del `CREATE` es obligatorio, no opcional. Caso real: mig 236 TuFacturaIA añadió `org_nombre` a `storage_usage_by_org()` → fallo en `db push` hasta añadir el DROP.
+
+**Añadir un parámetro con `DEFAULT` es el caso que más engaña**: parece compatible hacia atrás
+y no lo es. Crea sobrecarga igual, y además con **las dos** firmas terminadas en `DEFAULT` una
+llamada corta casa con ambas y Postgres la rechaza por ambigua (`42725`) — así que la vieja no
+solo sobrevive: rompe a los llamantes que no tocaste. Aplicado bien en la mig 828 de FacturaIA
+(4-sep-2026, ticket #171): `DROP FUNCTION` de la firma de 4 argumentos **dentro de la misma
+transacción** que crea la de 5, más el `DO` del paso 4 contando firmas. Verificado por catálogo
+tras el `db push`: una sola fila en `pg_proc`.
