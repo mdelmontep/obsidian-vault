@@ -10,3 +10,6 @@ Republicada como undécima (`acb919e8…`). Tres veces con la misma forma y sin 
 Pendiente: mirar en la galería de claude.ai si hay borrado automático, cuota o algo que las quite;
 hasta saberlo, `ESTADO.md` línea 15 miente cada pocas horas. Relacionado:
 [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] · [[artifact-solo-lo-republica-la-cuenta-que-lo-publico]].
+- 5-sep (MandaDM): los dos artifacts del plan (receta + tracker con `db`) desaparecieron también sin
+  tocarlos, el mismo día de publicarlos. Ya son 5 casos en 2 proyectos; el repo guarda el HTML en
+  `docs/artifacts/` y `ESTADO.md` es la fuente de verdad. → [[mandadm]]

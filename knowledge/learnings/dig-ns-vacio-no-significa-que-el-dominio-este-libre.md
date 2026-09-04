@@ -13,3 +13,5 @@ Fiable, en este orden:
   (y devuelve fechas y registrador en JSON, parseable).
 - `whois <d> | grep -ciE "^(No match|NOT FOUND)"` como respaldo; su formato varía por TLD y en `.es` no es
   interpretable con fiabilidad.
+- 5-sep: un envoltorio de `whois` dijo «LIBRE» para `holi.com`, registrado desde 1998 (RDAP lo dio
+  en un segundo). Dar un dominio por libre solo con RDAP 404, nunca con whois ni dig.

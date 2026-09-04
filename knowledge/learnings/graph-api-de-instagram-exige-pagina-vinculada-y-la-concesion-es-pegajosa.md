@@ -18,3 +18,10 @@ configuración» del propio popup (la pantalla de Integraciones empresariales no
   (config con login de Facebook, no el de Instagram, que pide rol de tester) + añadir a mano
   `pages_show_list` y `pages_read_engagement` o `/me/accounts` devuelve `[]` con todo «granted».
 - Verificación barata E2E: `/me/accounts?fields=instagram_business_account` → `/{ig-id}?fields=username`.
+
+**Actualización 5-sep (MandaDM):** la vía **Instagram Login** (`api.instagram.com`, permisos
+`instagram_business_*`) **no exige página de Facebook**; solo cuenta profesional. Lo de arriba aplica
+al flujo clásico por Facebook Login. Gotchas de la nueva vía: los webhooks solo llegan a una app
+**publicada**, así que la política de privacidad y la URL de borrado van ANTES de probar webhooks;
+con Standard Access solo llegan las cuentas con rol en la app (primer cliente = tester). Manychat no
+tiene acuerdo especial: todo lo que hace está en la API pública. Estado en [[mandadm]].

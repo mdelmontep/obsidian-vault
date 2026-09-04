@@ -6,10 +6,10 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un `/goal` activo salta la parada de OK del prompt** — o dos goals, o tribunal de 3 agentes que decide y deja ADR. Ver [[un-goal-activo-salta-la-parada-de-ok-del-usuario]]
 - **Antes de conceder una excepción a un trinquete, mira qué script mide de verdad ese patrón** — si ninguno, no hay nada que exceptuar; si otro sí, sobra. Ver [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]]
 - **Un prefijo `codigo:` en un `throw` de n8n no llega a `message`** — n8n lo mueve a `description`; quien clasifique por él cae al default sin avisar, y el gate que lo probaba mide una copia local caducada. Ver [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
 - **Un candado que fija la forma LITERAL del filtro consagra el bug** — vigilar el bucle no ve el predicado previo; contar sin comentarios y por mutación. Ver [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]]
-- **BSD `sed` ignora `\b` en silencio: sustituye cero veces y sale en verde** — un barrido de 52 referencias que no tocó ninguna, con exit code 0. Toda sustitución masiva se verifica volviendo a grepear el patrón viejo, o se hace con `re.subn` de Python, que devuelve el recuento. Ver [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]]
 - **Capturas guiadas para un cliente: recuadro, velo y etiqueta se pintan con un SVG inyectado antes del `screenshot`** — sin PIL ni ImageMagick; el helper vive en `~/.claude/bin/browser-spot.js` y oculta la franja de impersonación. Ver [[capturas-guiadas-overlay-svg-en-el-navegador]]
 - **Un alcance calculado contra la rama base se vacía al mergear** — y el gate pasa a auditar lo que haya suelto en el árbol, sin avisar. Ver [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]]
 - **Una sonda con el nombre inventado da un ✗ indistinguible de un fallo real** — los tres ✗ de la verificación eran los tres nombres que no salieron de leer el `create function`. Deriva la lista de la fuente. Ver [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]]
@@ -74,7 +74,6 @@ Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
 
-- **Arreglar un flake en UN fichero garantiza que vuelva por el hermano** — 7 de 9 nacieron sin el `pool.on("error")` copiado a mano; se cierra con un punto único que DISCRIMINE y un barrido que impida el noveno. Ver [[vitest-unhandledrejection-run-rojo-pese-a-0-fallos]]
 - **Un backfill se guarda por el INVARIANTE, no por el síntoma** — «a toda fila sin X, ponle X» habría duplicado 106 de 115 filas; la condición que lo hace neutro deja 9. Ver [[backfill-guardado-por-invariante-en-vez-de-por-sintoma]]
 - **Citar el delimitador dentro de su propia región la cierra ahí mismo** — `$$` en un comentario de `do $$`, acento grave en plantilla, `*/` en JSDoc; el error sale LEJOS. Nadie lo ve porque `allowJs:false` deja los `.mjs` fuera de `tsc` y un fichero que nadie ejecuta no lo analiza nada. Ver [[citar-el-delimitador-dentro-de-su-propia-region-la-cierra-ahi-mismo]]
 - **Un gate que cruza dos listas es ciego a lo que no está en ninguna** — cruzar A contra B no ve lo que falta en las dos; hace falta una tercera fuente, normalmente el disco. Ver [[un-gate-que-cruza-dos-listas-es-ciego-a-lo-que-no-esta-en-ninguna]]
@@ -91,14 +90,9 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **La `confianza` que declara un LLM no separa aciertos de fallos** — medido: 44 % dentro del ±10 %, con errores de −85 % y +3.757 % a confianza 0,80-0,90. Como umbral de auto-aceptación no filtra, solo lo aparenta: busca ground truth ANTES de elegir el umbral. Ver [[la-confianza-autodeclarada-de-un-llm-no-predice-su-acierto]]
 - **Verdes que no miden lo que parece** — un 0 se lee como dato y suele ser «no medido»; el verde de un doble no distingue enchufado de olvidado. Ver [[campo-numerico-opcional-omitido-suma-cero-y-parece-dato]] · [[asercion-e2e-que-mide-datos-en-vez-de-montaje-es-verde-o-rojo-por-azar]] · [[agregar-sobre-todas-las-orgs-mezcla-datos-sembrados-con-datos-de-cliente]]
 - **Tocar un prompt: la posición manda y n=10 no basta** — la regla va pegada al dato que prohíbe; comparar variantes exige n≥25 entrelazado. Ver [[un-prompt-es-una-superficie-con-localidad-no-un-documento]] · [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]] · [[una-suite-de-evals-cuesta-llamadas-por-prompt-mide-el-cache-antes-de-proponerlo]]
-- **Una ejecución en verde no prueba que el efecto ocurriera** — `success` = «no explotó»: mide que el nodo de efecto CORRIÓ (268 verdes, 0 envíos). Y el `else` de un `switch` sobre un valor de LLM tiene que AVISAR. Ver [[ejecucion-en-verde-no-prueba-el-efecto]] · [[el-else-de-un-clasificador-que-rellena-un-llm-debe-avisar-no-callar]]
 - **Un job de fondo: pasada en el BOOT, no solo `setInterval`** — con autodeploy el timer nunca cumple un ciclo (4 días sin barrer); y su `last_error` en la BD no vale si nadie lo consulta. Ver [[un-timer-mas-largo-que-la-cadencia-de-despliegue-no-corre-nunca]] · [[persistir-el-error-no-basta-si-ninguna-superficie-lo-lee]]
-- **Rama nueva desde `main` local sin fetch** — nace vieja y pisa lo mergeado: usar `origin/main`. Fichero reescrito >2 veces → merge, no rebase; sus rojos se clasifican. Ver [[rama-nueva-desde-un-main-local-sin-fetch-revierte-trabajo-ajeno]] · [[rama-que-reescribe-el-mismo-fichero-varias-veces-se-integra-con-merge]] · [[los-tests-rojos-que-hereda-un-merge-se-clasifican-uno-a-uno]]
 - **Al partir una pila en PRs, el fix va con el commit que lo causa** — mergear el primero publicaría el fallo; y squashear el padre pide `rebase --onto origin/main <padre>` en la hija. Ver [[al-partir-una-pila-en-prs-el-fix-tiene-que-viajar-con-lo-que-lo-causa]] · [[delete-branch-al-mergear-cierra-la-pr-apilada-no-la-reapunta]]
-- **`create or replace` con otra firma crea una sobrecarga y `db push` dice `Finished`** — el fix se despliega muerto. Verifica `pg_proc`: UNA fila. Ver [[postgres-rpc-firma-identica-create-replace]]
-- **Un comentario que afirma una invariante es una deuda de test** — grepea la afirmación contra el código antes de fiarte; si nadie la comprueba, no es cierta. Ver [[un-comentario-que-afirma-una-invariante-es-una-deuda-de-test]]
 - **Un gate solo puede fallar HACIENDO RUIDO** — salir con 0 sin encontrar nada es un adorno: fail-closed, y avisar por `stderr` sin pesar en el exit no es avisar. El gate que corres aparte NO es el del hook. Ver [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] · [[una-limpieza-multitabla-en-una-sola-query-es-todo-o-nada]] · [[un-script-gate-con-guard-de-entrypoint-degrada-a-no-op-silencioso]]
-- **Herramienta nueva sin barrer sus call-sites escritos NO se adopta** — el agente ejecuta lo ESCRITO (permisos, runbooks, memories), no lo del PATH. Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
 
 
 
@@ -116,7 +110,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
-[[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+[[hot-archivo-2026-09-05]] (7) · [[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
 
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]

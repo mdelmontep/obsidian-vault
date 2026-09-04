@@ -10,6 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟢 **MandaDM — repo, plan y `/horda` listos; fase A: A1/A4/A5/A8 hechas (5-sep)** — **Tuyo**: lanzar `/goal` + `/horda` en sesión nueva; A7 (privacidad) antes de la fase B; cliente tester. → [[mandadm]]
 - 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]
 - 🟠 **TuFacturaIA — auditoría de conciliación: 52/87 cerrados (3-sep, #2407-#2466, migs 804-819)** — quedan 35 con prompt listo (`PROMPT-continuacion-conciliacion-restantes.md`, #2467): lanzar en sesión nueva. → [[facturaia]]
 - 🟢 **TuFacturaIA — tickets IET 125-132 respondidos, 126 corregido de raíz (2-sep, #2373-#2388)** — negativas, «Buzón» y reintento escalado vivos (Guarconsa 48/48). **Tuyo**: la huérfana de `docs/plan/cierres.json` y la prueba de catálogo a 500k. → [[facturaia]] · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]
@@ -100,6 +101,7 @@ tags: [home, prioridades]
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | **Dos frentes**: Paquita (el agente; «Carlos» es el CEO) y **la contabilidad fuera de Yooz** (diseño cerrado, 13 tickets abiertos → [[facturaia-yooz-agh-migracion]]) · 🟢 **#1418 en prod: emite al portal de Flota IA**; hay turnos reales desde el 31-ago, falta el SELECT anclado · 🔴 **#1349 + #1350: los dos DPA sin firmar** · 🔴 tuyo 2 min: claves Langfuse (**#1009**) · #1424 el emisor solo loguea al fallar · 82 % de la cola humana sin dueño (#1351) |
 | Aula | [[aula]] | Propio · publicada · **repo en GitHub privado** · 115 temas / 7 lecciones · el runner escribe solo |
+| MandaDM | [[mandadm]] | Propio · fase A · `/horda` lista bajo `/goal` · sin cliente tester |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente

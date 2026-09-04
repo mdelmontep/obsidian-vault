@@ -491,8 +491,9 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (92)
+## Claude Code / agentes / harness (93)
 
+- [[un-goal-activo-salta-la-parada-de-ok-del-usuario]] — `/goal` empuja a seguir sin el OK: o dos goals o tribunal de 3 agentes con ADR
 - [[agent-browser-auth-login-sin-session-no-persiste-la-cookie]] — `auth login` cierra su navegador; abrir la sesión nombrada y pasar `--session` en todo
 - [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
 - [[3-agentes-paralelos-auditoria-cambios-grandes]] — 3 agentes paralelos auditando cambios grandes — security / backend / frontend
@@ -671,7 +672,10 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[verificar-persistencia-tras-put-api-con-grep-marker-unico]] — verificar persistencia tras PUT a API con grep marker único
 - [[whatsapp-interactive-list-limites-y-row-id-pattern]] — WhatsApp Interactive List — límites Meta y patrón row.id "tipo:UUID
 
-## Auth / seguridad / multi-tenant (58)
+## Auth / seguridad / multi-tenant (60)
+
+- [[cuenta-de-servicio-de-1password-no-ve-bovedas-creadas-despues]] — el alcance de bóvedas se fija al crearla; `vault user grant` da 400: recrear la cuenta
+- [[security-add-generic-password-interactivo-trunca-el-secreto-a-128]] — el prompt oculto corta el token de 1Password; pasarlo por fichero con `pbpaste`
 - [[etiqueta-de-estado-interno-se-tapa-en-el-where-no-en-el-render]] — una etiqueta de estado interno se tapa en el where, no en el render
 - [[2fa-telefono-solo-para-canal-que-lo-usa-no-gate-global]] — verificación de teléfono/2FA debe alcanzar solo a quien usa el canal, no ser gate global…
 - [[acciones-irreversibles-no-tool-mcp-autonoma]] — acciones irreversibles no deben ser tool mcp autónoma
