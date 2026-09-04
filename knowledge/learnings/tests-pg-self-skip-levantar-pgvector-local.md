@@ -43,3 +43,5 @@ cayó a media sesión** (Colima) → los skips saltaron de 217 a **436** y 47 fi
 en rojo *de colección*, no de aserción. Los dos tells: un salto brusco en la cifra de skips,
 y fallos en ficheros que el diff no toca. Antes de sospechar del cambio: `docker ps`,
 carga de la máquina, y **un solo gate por servidor**.
+
+**Tercera capa de invisibilidad: el hook SÍ llama a la suite, pero sin las credenciales** (4-sep, FacturaIA). El `pre-push` corre `npm run test:integration` **sin exportar** `SUPABASE_LOCAL_URL`/`SUPABASE_LOCAL_SERVICE_KEY`, así que 64 de 71 ficheros se autosaltan y la etapa sale verde. No es el gate excluyendo la carpeta (esa es la capa anterior): es el gate ejecutándola contra nada. Lo que lo delató fue medir en las DOS condiciones: con el entorno exportado salían 11 rojos, y sin él `ec=0` — o sea que los rojos no eran míos ni del reloj, es que el hook nunca los había mirado. Desde el #2501 lo denuncia («NO MEDIDO · sin la Supabase local, N de M casos no se han comprobado») pero **sigue sin bloquear**: un `pre-push` verde no dice nada de la suite de integración, y los casos del PR se corren a mano o no se han corrido.

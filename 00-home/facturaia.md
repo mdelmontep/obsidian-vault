@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-03
+updated: 2026-09-04
 tags: [cliente, facturaia, hub]
 ---
 
@@ -42,7 +42,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🟢 **Tickets 125-132 de IET respondidos, y el 126 corregido de raíz en prod (1/2-sep, #2373-#2376 · #2384/#2385/#2388, mig 792, ADR-069)** — 126 reabierto a `en_revision`. **Tuyo**: la huérfana de `docs/plan/cierres.json` y el catálogo a 500k del 125. → ADR-069 · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]
 
 - 🟢 **Ticket 171 de Chivite: un coste que no se parece al histórico se pregunta, no se asienta (4-sep, #2485 + #2486, mig 828, ADR-080)** — 409 + diálogo en las tres superficies, midiendo el MISMO coste que asienta el ledger (media ponderada por producto × `tipo_cambio`; el precio crudo de la línea lo cazó el `/code-review`). Retroactivo en prod: 1 de 33 facturas, la del incidente. **Queda**: `albaran_validar` asienta compra SIN guardarraíl (la otra mitad), la UI del selector y el `DROP` de `unidades_por_caja`. → [[un-guardarrail-mide-lo-que-asienta-el-consumidor-no-lo-que-trae-la-entrada]] · [[un-409-con-flag-de-confirmacion-que-nadie-manda-es-un-bloqueo-duro]]
-- 🟢 **Abono parcial: 4 de los 7 PRs en prod** (4-sep, #2489 `ba2041625`) — quedan el **3** (stock, sin spec escrita), el **5** (pantalla, cierra el ticket 170 de Chivite), el 6 y el 7, en ese orden y nunca dos a la vez → `docs/architecture/PROMPT-continuacion-abono-parcial-prs-3-5-6-7.md`. **Tuyo**: decidir si `disputada` vuelve a `pendiente`. → [[facturaia-historico-detallado]] §4-sep · [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]]
+- 🟢 **Abono parcial: 5 de los 7 PRs en prod** (4-sep, #2505/#2506, mig 836) — el **3** cerrado: la línea declara `devuelve_mercancia` y el motor solo devuelve las que lo dicen (ADR-031), con spec y 12 casos. Quedan el **5** (pantalla, cierra el ticket 170), el 6 y el 7, en ese orden y nunca dos a la vez → `PROMPT-continuacion-abono-parcial-prs-3-5-6-7.md`. **Tuyo**: decidir si `disputada` vuelve a `pendiente`. Cabo medido y NO tocado, del #171: el guard de `stock_rectificar_entrada` mide `cantidad_actual` ya repuesta por el abono, así que no salta (caso 12 del test; en `gotchas.md` §Stock por partidas). → [[facturaia-historico-detallado]] §4-sep · [[supabase-migration-numero-colision-renumerar]]
 - 🟢 **El cobro con tarjeta ya está en el catálogo (1-sep, #2369-#2372, mig 791)** — en **borrador y sin precio**: el recorrido no cobra todavía. Quedan 2 alertas del panel, ninguna de código. **Tuyo**: Backblaze (abajo) y SOCIAL MEDIA CLOUD SOLUTIONS. → [[si-lo-unico-que-frena-algo-es-un-campo-sin-rellenar-no-hay-decision]] · [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]]
 - 🟢 **El albarán ya empareja sus líneas con un producto, y validar sin decirlo se niega (1-sep, #2365, mig 790, ADR-068 §2)** — Chivite avisado de sus 7 albaranes en el hilo del 156 (2-sep); cambiar un producto ya asignado entró en #2387. → [[el-predicado-de-un-guard-se-mide-contra-el-historico-antes-de-escribirlo]] · [[un-gate-que-enumera-desde-el-indice-de-git-no-ve-el-fichero-nuevo]]
 - 🟢 **Quién abre una ficha de cliente ya deja rastro, y el DPA existe (1-sep, #2361 + #2364, ADR-067)** — **Tuyo**: mandar el DPA al despacho, borrar `SUPERADMIN_EMAILS` e `IA_OPS_SHOW_TRANSCRIPTS` del entorno en Dokploy y quitar el superadmin a 4 de las 8 cuentas. → ADR-067 §16 (siete decisiones + Anexo II) · [[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]]
