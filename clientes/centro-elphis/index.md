@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-03
+updated: 2026-09-04
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,18 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-03
+## Estado actual · 2026-09-04
+
+**El aviso rojo de las 08:32 no era una avería: era el circuito de avisos, que llevaba 8 días clasificando mal.**
+
+- ✅ **La cancelación se procesó bien** (exec 11899, Simone Fiorentini, cita del 8-sep): 3 deals a «Volver a contactar» con nota. El `throw` final de `Avisar correo descartado` es el diseño — así la cancelación llega a Slack en vez de morir en `error_log`.
+- ✅ **Arreglado el reconocimiento de los códigos de negocio en `error-handler-global`**: n8n parte `'<codigo>: <detalle>'` en `description` + `message`, y el `startsWith` sobre `message` que entró el 27-ago dejó **los 10 códigos** en rojo, sin explicación ni pie, y con clave de dedup genérica — dos pacientes con `enlace_no_enviado` en la misma hora volvían a colapsar en un aviso. Ahora se compara por igualdad contra `description` limpia y el prefijo de `message`. → [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
+- ✅ Verificado: gate **463 checks** (10 códigos × 3 formas de llegada + falso positivo SQL + clave por caso + payload real de la 11899), **9 mutaciones con víctima**, y E2E con un workflow temporal → aviso azul real en `#01-incidencias` a las 12:02. Backup `~/Projects/elphis/avisos-20260814/errh-pre-fixcodigo-20260904.json`. → [[un-gate-cuyo-fuente-es-copia-de-lo-desplegado-caduca-y-nadie-lo-corre]]
+- ✅ Actualizados el texto de `cancelacion_detectada` (decía «no se creó ni movió nada en Clientify», y desde el 3-sep sí mueve deals) y el sticky `Doc` del handler.
+- 🔴 **Hallazgo: el webhook de WhatsApp no valida la firma de Meta desde julio.** `META_APP_SECRET`, `META_APP_ID` y `META_HMAC_ENFORCE` **no existen en el contenedor** (`META_PHONE_NUMBER_ID` sí), así que `Validate HMAC Meta` devuelve `_hmac: sin_secreto` y `POST /webhook/wa-inbound` (path adivinable) acepta cualquiera. Un payload falso hace que el bot responda por WhatsApp al número que venga dentro: spam desde su WABA y contactos falsos; no hay fuga de datos. Meta sí manda `x-hub-signature-256`. **Orden**: rotar en Meta (pendiente desde el 17-jul) → env en Dokploy + redeploy → ver `_hmac: ok` → `META_HMAC_ENFORCE=true` → añadir `hmac_meta_invalido` a `CODIGOS_NEGOCIO`. Nunca encender enforce antes del paso 3.
+- 🔜 Sigue pendiente del 3-sep todo lo de abajo (decisión a/b de los deals, vigilar el primer lead de voz, voz v31).
+
+## Estado previo · 2026-09-03
 
 **Doctoralia ya actualiza el lead en Clientify, y recepción tiene guía.** Lo abrió Olga: imprimía los avisos de voz sin saber qué hacer con ellos ni cómo buscar «deal 32108592». Agentes por modelo (Sonnet construye, Opus verifica); pruebas solo contra nuestro correo y teléfono.
 

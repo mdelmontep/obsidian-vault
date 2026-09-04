@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un prefijo `codigo:` en un `throw` de n8n no llega a `message`** — n8n lo mueve a `description`; quien clasifique por él cae al default sin avisar, y el gate que lo probaba mide una copia local caducada. Ver [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
 - **Un candado que fija la forma LITERAL del filtro consagra el bug** — vigilar el bucle no ve el predicado previo; contar sin comentarios y por mutación. Ver [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]]
 - **BSD `sed` ignora `\b` en silencio: sustituye cero veces y sale en verde** — un barrido de 52 referencias que no tocó ninguna, con exit code 0. Toda sustitución masiva se verifica volviendo a grepear el patrón viejo, o se hace con `re.subn` de Python, que devuelve el recuento. Ver [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]]
 - **Capturas guiadas para un cliente: recuadro, velo y etiqueta se pintan con un SVG inyectado antes del `screenshot`** — sin PIL ni ImageMagick; el helper vive en `~/.claude/bin/browser-spot.js` y oculta la franja de impersonación. Ver [[capturas-guiadas-overlay-svg-en-el-navegador]]

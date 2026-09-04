@@ -591,6 +591,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 ## n8n / workflows (80)
 - [[en-una-prueba-de-auth-lo-que-discrimina-es-el-403]] — en una prueba de auth lo que discrimina es el 403, no el 200
 - [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]] — n8n parte el mensaje de error en el primer ": " y el prefijo no llega a Slack
+- [[un-gate-cuyo-fuente-es-copia-de-lo-desplegado-caduca-y-nadie-lo-corre]] — un gate cuyo fuente es copia de lo desplegado caduca, y nadie se entera de que está en rojo
 - [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]] — replay de un id ya registrado ejercita SQL nuevo en prod sin disparar sus efectos
 - [[$fromAI-en-toolCode-lanza-no-execution-data-available-en-n8n-2.15.x]] — $fromAI en toolCode lanza no-execution-data-available en n8n 2.15.x
 - [[adr-premisa-falsa-auditar-integracion-real]] — un adr puede partir de una premisa falsa — auditar la integración real antes de implement…
