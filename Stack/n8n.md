@@ -183,6 +183,18 @@ for w in wfs:
 - **Wrapper webhook que envuelve un sub-workflow con resultados opcionales = `alwaysOutputData: true` obligatorio en los nodos posteriores al ExecuteWorkflow** — si el sub-workflow puede devolver 0 items (ej. RPC Supabase con filtros que no matchean), el ExecuteWorkflow propaga 0 items y los siguientes nodos NO se ejecutan en absoluto, aunque tengan código `if (!found) return [{json: ...}]`. El webhook devuelve 200 con body vacío (no JSON, ni error) — fallo invisible. Fix: marcar `alwaysOutputData: true` al menos en ExecuteWorkflow + Code de formato + RespondToWebhook. Caso real Simarro 2026-05-04 wrapper `Voz_buscar_viviendas` para Retell: smoke test "0 resultados" devolvía body vacío; el agente voz se quedaba mudo
 - **Code node heredado de otra fuente = shape mismatch silencioso hasta producción** — al replicar un workflow y cambiar el nodo "fuente" (ej. Google Calendar trigger → Kommo Tasks node), el Code aguas abajo sigue iterando con el shape ANTIGUO (`evento.start.dateTime`, `summary`) y peta cuando llega data real (`_embedded.tasks[].complete_till`, `text`). El error solo aparece en la primera ejecución cron real, no durante config. Síntoma: `TypeError: Cannot read properties of undefined`. Fix: tras cambiar la fuente de un Code node, ejecutar manualmente el workflow una vez y leer la última execución antes de declarar listo. Caso real Simarro 2026-05-04: workflow Recordatorios fallando cada 30min durante días sin que nadie lo viera
 
+## Google Calendar — invitar al cliente y enlace de videollamada (4-sep-2026)
+
+Nombres exactos de `additionalFields` en la operación **create** (verificados contra
+`nodes-base/nodes/Google/Calendar/EventDescription.ts` y `GoogleCalendar.node.ts`, no de memoria):
+
+- `attendees` — **array de strings** (`multipleValues: true`). Desde un `googleCalendarTool`:
+  `={{ [$fromAI('Email_cliente', '...', 'string')].filter(e => e) }}` (array vacío si no hay email; es truthy, se manda `attendees: []` y Google lo acepta).
+- `sendUpdates: "all"` — **sin esto Google NO manda el email al invitado**. Crear el evento con `attendees` no notifica por sí solo.
+- `conferenceDataUi: { conferenceDataValues: { conferenceSolution: "hangoutsMeet" } }` — la clave es `conferenceDataUi`, no `conferenceData`. El nodo pone `conferenceDataVersion=1` y genera el `createRequest` con su `requestId` solo.
+
+**Google Calendar solo genera enlaces de Meet.** No hay forma de que cree uno de Teams: eso exige Microsoft Graph (`POST /onlineMeetings`) con licencia M365, app en Entra con `OnlineMeetings.ReadWrite.All` y una `ApplicationAccessPolicy` que **solo se concede por PowerShell de Teams**, sin API. Patrón limpio si la agenda vive en Google: crear siempre el evento en Google y pedirle a Graph únicamente el `joinWebUrl` para meterlo dentro — una sola agenda, dos tipos de enlace. Ver [[patch-de-evento-en-graph-reemplaza-attendees-y-puede-matar-el-enlace-de-teams]]
+
 ## WhatsApp Cloud API
 
 - **Ventana 24h**: si el destinatario no ha escrito a la business en últimas 24h, solo se entregan templates pre-aprobados. Un `text` libre devuelve `wamid` exitoso pero NO llega al destinatario (Meta lo descarta sin error). Producción: crear template aprobado en Meta Business Manager y enviar `type: 'template'`. Para tests: que el destinatario escriba primero al número business para abrir la ventana

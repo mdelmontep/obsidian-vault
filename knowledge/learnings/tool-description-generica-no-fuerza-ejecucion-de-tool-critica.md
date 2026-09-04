@@ -46,3 +46,16 @@ Simarro, voz (Retell Conversation Flow): el nodo `n_proponer_hora` dijo "un agen
 Mismo día, Simarro WhatsApp (LangChain AI Agent, no Retell): regla explícita "ANTES de decir 'no operamos', llama `Buscar_viviendas`" — el LLM respondió la negación directamente, sin invocar la tool. Confirmado con los logs de ejecución de n8n: cero llamadas a la tool en ese turno. Reforzado con "PROHIBIDO ABSOLUTO... ni aunque estés seguro" — mismo tipo de parche que arriba, mismo tipo de garantía (ninguna dura).
 
 Confirma el patrón de la entrada de abril con dos arquitecturas de agente distintas (conversation-flow por nodos vs. LangChain AI Agent con tools) el mismo día: una regla condicional "antes de X, verifica con la tool" en prompt/systemMessage se salta más fácilmente cuantas más veces el LLM "cree" conocer la respuesta sin buscar. Reforzar el texto mitiga pero no garantiza — ver el complemento de agosto arriba sobre mover la detección a código determinista cuando el fallo importa de verdad.
+
+## Complemento (2026-09-04) — la variante peor: el prompt nombra una tool que NO EXISTE
+
+Chatbot propio de Agentesia (`89B9QN23hOHDq6oP`, WhatsApp). El system prompt mandaba `Llama a "Agendar"`; el nodo real se llama `Reservar`. El agente cerró la demo, dijo la fecha y la hora, avisó a Slack y registró el lead — **sin crear el evento**. Ejecución en `success`.
+
+Lo contraintuitivo, y me equivoqué razonándolo al revés: **el system prompt no determina qué tools ve el LLM**. El modelo ve `name` + `toolDescription` de cada nodo. Por eso convivían, en la MISMA conversación:
+
+- `Lead caliente` y `Lead cita DEMO` → `descriptionType: manual`, descripción escrita a mano → **ejecutadas**, aunque el prompt las llamaba `Notificar Callback` y `Notificar Demo` (nombres inexistentes).
+- `Reservar`, `Mirar Dispo`, `Registro Sheets` → `descriptionType: auto` (n8n autogenera una genérica) → solo se ejecutó `Mirar Dispo`, la única que el prompt nombraba bien.
+
+Regla: al auditar un AI Agent, cruzar `[n.name for n in nodes if 'Tool' in n.type]` contra los nombres citados en el `systemMessage`. Y poner `descriptionType: manual` en **toda** tool de escritura, no solo en las que fallan.
+
+Diagnóstico que zanja la discusión, sin releer prompts: `GET /api/v1/executions/{id}?includeData=true` → `.data.resultData.runData | keys` lista las que corrieron **de verdad** en esa ejecución. Ver [[ejecucion-en-verde-no-prueba-el-efecto]] · [[error-de-tool-de-ai-agent-no-marca-la-ejecucion-como-fallida]]
