@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Antes de conceder una excepción a un trinquete, mira qué script mide de verdad ese patrón** — si ninguno, no hay nada que exceptuar; si otro sí, sobra. Ver [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]]
 - **Un prefijo `codigo:` en un `throw` de n8n no llega a `message`** — n8n lo mueve a `description`; quien clasifique por él cae al default sin avisar, y el gate que lo probaba mide una copia local caducada. Ver [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
 - **Un candado que fija la forma LITERAL del filtro consagra el bug** — vigilar el bucle no ve el predicado previo; contar sin comentarios y por mutación. Ver [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]]
 - **BSD `sed` ignora `\b` en silencio: sustituye cero veces y sale en verde** — un barrido de 52 referencias que no tocó ninguna, con exit code 0. Toda sustitución masiva se verifica volviendo a grepear el patrón viejo, o se hace con `re.subn` de Python, que devuelve el recuento. Ver [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]]
@@ -119,5 +120,3 @@ Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]
-- **Una respuesta que llega justo al tope no es un resultado, es el tope** — si `len(resultado) == límite`, trátalo como truncado: casi borro una rama con un PR abierto. Ver [[el-limite-silencioso-una-respuesta-que-llega-al-tope-parece-completa]]
-- **Un recuento sobre el estado final no ve la ventana de exposición** — para *nunca debe estar expuesto* la evidencia es `git log -S`, no `grep` del árbol de hoy. Ver [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]

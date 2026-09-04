@@ -199,3 +199,22 @@ Queda abierto el **punto 4, la deriva de perfil**: decisión de arquitectura, no
 ## 2026-08-28 · Ticket 159 cerrado y las dos facturas del cliente reparadas en prod (#2267)
 
 Una recibida se aprobaba con **0 líneas y sin mover stock**, y otra desaparecía de la bandeja sin llegar a factura: `aprobar_recibida_con_lineas` escribía el enlace `bandeja_ingesta.factura_id` ~900 ms DESPUÉS de crear la factura, en otra llamada, así que si esa segunda escritura no entraba la bandeja quedaba huérfana. Ahora el enlace se escribe ANTES de aprobar y si no entra, se aborta. Las dos facturas se rehicieron el mismo día desde la propia UI del cliente: 8 líneas y 8 movimientos restituidos, 7 stocks y 4 PMP cuadrados contra lo previsto. → [[impersonacion-superadmin-no-sirve-para-qa-de-ui-org-scoped]] §5
+
+
+## 2026-09-04 · abono parcial, PRs 2/2b/4 en prod y el frente reencuadrado
+
+Tickets 156-171 de Chivite cerrados en prod (#2382-#2437, migs 796/810/812/818, ADR-064/077). Del frente
+del abono parcial (issue #2426) quedan en prod los PRs **1** (#2454, mig 818: `factura_rectificadas`,
+`abono_alcance`, `linea_origen_id`), **2** (#2470, mig 820: ledger de cobros), **2b** (#2479, mig 826: KPIs
+e informes restan el parcial vivo) y **4** (#2489, `ba2041625`: VeriFactu, SII y PDF declaran TODAS las
+facturas que rectifica un abono). Quedan el 3, el 5, el 6 y el 7.
+
+Cabos cerrados el 4-sep: **#2471** (el export SII declaraba R1 todos los abonos) resultó arreglada por el
+PR 4 y seguía abierta; se cerró con puntero. Prompt de continuación reescrito para los PRs 3-5-6-7 (#2492),
+con puntero de supersede en el 2-7 y el routing de `CLAUDE.md` apuntando al nuevo. Ramas del frente
+borradas, local y remoto. Y se cerró la decisión de los nueve `borderLeft` de las plantillas (#2493), que
+arrastraba desde el cierre del PR 4 como «hallazgos side-tab, pendiente»: no hay excepción de dominio
+—`borderLeft` no es métrica de `design-debt-ratchet`— y ya estaban capados por `inline-style-ratchet`; de
+los nueve solo tres son deuda (la tarjeta del aviso de rectificativa copiada con `#b91c1c`) y se pagan
+dentro del PR 5, que es el único momento en que su QA de PDF es gratis. Ver
+[[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]].

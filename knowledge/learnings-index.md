@@ -731,7 +731,8 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[withapiauth-solo-carga-role-con-requirerole-o-requirewrite]] — withApiAuth solo carga `role` si el endpoint declara requireRole/requireWrite
 - [[xss-en-email-html-interpolado-de-bd]] — xss en email html interpolado de bd se subestima — escape obligatorio
 
-## Git / repo / CI (57)
+## Git / repo / CI (58)
+- [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]] — `borderLeft` no era métrica del gate de diseño y ya lo capaba el de inline-styles: si ningún script mide el patrón no hay nada que exceptuar, y ampliar una exclusión de fichero a carpeta regala lo migrable.
 - [[github-pone-como-autor-del-squash-al-autor-de-la-pr]] — github pone como autor del squash al autor de la pr, no al de los commits
 - [[gate-en-segundo-plano-no-incluye-los-trinquetes-del-pre-commit]] — `--no-verify` + gate aparte NO es equivalente, y un trinquete mide el árbol entero: bloquea a todo el repo
 - [[numero-de-migracion-libre-se-mide-en-prod-no-en-el-repo]] — si el número ya está aplicado en prod, `db push` se salta tu migración sin error (bloqueado por hook desde #1768)
