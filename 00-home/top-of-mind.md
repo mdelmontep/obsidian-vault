@@ -10,7 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟢 **TuFacturaIA — la etapa de integración ya mide; #2496 cerrado (5-sep)** — 520 casos de 521 y el push exige base. **Tuyo**: nada urgente; de los seis hallazgos solo el #2524 tiene reloj (30-oct). → [[facturaia]]
+- 🟢 **TuFacturaIA — auditoría de la etapa de integración CERRADA (6-sep)** — los seis hallazgos, en siete PRs ya en prod. **Tuyo**: nada. Queda el #2524, que es mío (reloj 30-oct). → [[facturaia]]
 - 🔴 **MandaDM — PR #1 abierta sin mergear (5-sep)** — **Tuyo**: A10, desplegar en el Dokploy del CRM (abre A7, B1 y B3); A6, cliente tester (~25 tareas); ¿cuenta de Instagram de TuFacturaIA para las pruebas? sus DMs irían a `events`. → [[mandadm]]
 - 🟢 **TuFacturaIA — FacturaDirecta ya no adelanta el cursor sobre lo que falló (5-sep, #2518)** — un gasto llevaba mes y medio sin importarse con la sync en verde. **Tuyo**: ponerle el código de impuesto a esas dos líneas en FacturaDirecta, y elegir de dónde salen los PDF (su API no sirve ninguno). → [[facturaia]] · [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]

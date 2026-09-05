@@ -51,3 +51,9 @@ Lo unico que funciona: **rutas absolutas** para todo lo que se lee como fuente d
 estas en la copia equivocada»). Y saber que la shell del agente **vuelve al cwd principal** tras
 cualquier `cd`, asi que la ruta relativa que funciono en la llamada anterior puede apuntar a otro
 fichero en la siguiente.
+
+**Quinta, en LECTURA pura** (facturaia 6-sep): `supabase migration list --linked` compara prod
+contra el `supabase/migrations/` **del cwd**. Desde el checkout principal, 58 ficheros por detrás,
+reportó 58 divergencias fantasma que parecían una propiedad de prod. Detalle y su gemelo
+registro-vs-catálogo en
+[[una-migracion-aplicada-sin-registrar-hace-mentir-a-migration-list]].
