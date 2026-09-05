@@ -44,6 +44,19 @@ tags: [cliente, facturaia, historico]
   [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]] ·
   [[un-fake-que-decide-por-includes-del-select-degrada-en-silencio]] · [[gen-types-linked-no-db-url]]
 
+### El desfase de tipos que lo ocultó: instruido, no roto (cerrado el 5-sep)
+
+- `gen:types:check` corre en el `pre-push` y **sí discrimina**: falsado retirando el bloque entero
+  de una tabla del fichero de tipos — rojo, con el tamaño de la deriva y el remedio. No hay bug.
+- Lo que falló fue el gesto humano: el bloque de tipos del #2519 era un **injerto a mano**
+  (`+66 / −0`, un único bloque tocado). Una regeneración de verdad arrastra la deriva pendiente.
+- La explicación cómoda —«la 818 aún no estaba en prod»— quedó descartada leyendo el **`ctid`** de
+  `supabase_migrations.schema_migrations`, que no tiene columna de fecha pero es append-only: la
+  818 está en la página 67 y la 841 en la 68, así que ya estaba aplicada.
+- Lo que sigue vivo, y es el **#2530**: el guard solo corre si el push lleva migraciones y solo
+  compara con lo que prod tenga en ese instante. Una deriva nacida de un `db push` hecho entre dos
+  pushes de git no la ve nadie, porque el `db push` no pasa por ningún gate ni deja rastro.
+
 ## 3-sep-2026 · el cierre del reel dejó de comerse el subtítulo, y de publicarse invisible (PR #2458)
 
 - El bug que se buscaba: con un CTA de 3+ líneas el bloque de cierre invadía 41px la banda donde

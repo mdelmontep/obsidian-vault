@@ -19,14 +19,16 @@ Al añadir una columna/tabla en un proyecto con tipos generados:
   ya consumió: se detecta porque el `grep` de la tabla nueva da 0 en un fichero que
   debería tenerla. Verificar siempre el resultado, no el "ok".
 - **CUÁNDO: después del `db push --linked`, no antes del merge.** El `--check` compara contra
-  PROD, no contra el repo, así que un PR que aplica su migración DESPUÉS de mergear deja una
-  ventana en la que `main` describe un esquema que prod ya no tiene — y el primero que empuje
-  detrás se come el `gen-types --check` en rojo por un cambio que no es suyo. Pasó el 5-sep-2026
-  con las migs 844-846. Su gate y su `pre-push` habían dado verde con toda la razón.
-- Y el hueco no es solo un push roto: mientras los tipos van por detrás, el typecheck **no ve**
-  lo que la migración rompió. Ver [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]].
+  PROD, no contra el repo: un PR que aplica su migración tras mergear deja una ventana en la que
+  `main` describe un esquema que prod no tiene, y el siguiente que empuje se come el rojo por un
+  cambio ajeno (5-sep-2026, migs 844-846). Peor que el push roto: mientras los tipos van por
+  detrás, el typecheck **no ve** lo que la migración rompió →
+  [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]].
 - NO augmentar el `Database` global para una tabla o columna nueva: cambia la
   identidad estructural y dispara errores en CASCADA en ficheros ajenos. El patrón
   es vista tipada LOCAL al módulo que la escribe, y borrarla cuando `gen:types`
   traiga la tabla. Ver
   [[supabase-gen-types-numeric-override-bigint-string]].
+- **Y el fichero puede mentir aunque el guard funcione**: un bloque pegado a mano pasa el
+  typecheck y no se parece a una regeneración. El tell está en el diff →
+  [[un-diff-de-fichero-generado-sin-danos-colaterales-no-salio-del-generador]].
