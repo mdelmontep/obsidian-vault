@@ -92,6 +92,12 @@ Del cierre del 5-sep, ya con la horda parada:
   si no miras en qué etapa se puso rojo.
 - [[una-busqueda-cortada-por-timeout-no-prueba-una-ausencia]] (6-sep) — afirmé una ausencia a otra
   sesión con un `grep` que el timeout había matado; el dato llevaba un mes en un inventario del repo.
+- [[un-commit-de-agente-con-un-hecho-falso-se-barre-entero]] (6-sep) — `af1ed10` metió CUATRO datos que
+  nadie decidió, incluido el dominio del criterio de aprobado de A10. Se barren de golpe, no uno a uno.
+- [[un-200-no-prueba-que-la-pagina-citada-exista]] — en `developers.facebook.com`, `/documentation/<basura>`
+  devuelve 200 siempre; así se colaron dos ficheros de `docs/meta/` que eran reconstrucción.
+- [[una-observacion-pierde-su-fuente-al-copiarse-a-un-documento-derivado]] — «el panel avisa de que…»
+  llegó a las copias sin el «el panel avisa», y ahí empezó a leerse como documentación.
 
 Postgres y límites:
 - [[un-revoke-sobre-un-esquema-custom-no-revoca-nada]] · [[un-tope-por-hora-y-otro-por-segundo-miden-ejes-distintos]]
