@@ -19,4 +19,12 @@ RECURSIVE` sobre `pg_proc.prosrc` desde las puertas, parando en el primer `prose
 DEFINER corta la propagación por diseño). Así un eslabón nuevo entra por existir, no por que
 alguien se acuerde de añadirlo. Mismo criterio que [[el-arnes-se-mide-a-si-mismo]].
 
+**La regla general: cero filas no es una medición, es la ausencia de una.** Aquí la causa fue la
+profundidad del plan; el mismo día, otra sesión leyó tres «cero filas» de prod como «no hay
+movimientos» cuando en realidad el UUID del predicado se lo había inventado al completar un id
+truncado por una compactación — los productos reales tenían 23 y 42 movimientos. Las dos dan
+verde sin haber comprobado nada. Antes de concluir de un cero: enseñar que el predicado
+selecciona algo real, o contrastar con una medida de otra naturaleza. Ver
+[[feedback_conteo_con_grep_falla_en_silencio]].
+
 Ver [[clonar-una-migracion-clona-tambien-a-quien-puede-llamarla]].
