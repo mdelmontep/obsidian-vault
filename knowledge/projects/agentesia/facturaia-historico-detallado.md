@@ -19,6 +19,31 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 5-sep-2026 · abono parcial, PR 5 de 7: la pantalla que emite la rectificativa por diferencias (PR #2528, migs 844-846, ticket #170)
+
+- **Qué entra**: la pantalla de abono parcial (elegir líneas o importe), `abono_parcial_preview`,
+  la clave de idempotencia de `create_factura_with_lineas` y el reparto por pesos
+  (`reparto_por_pesos`, largest remainder / Hamilton). El peso de una línea es su importe **CON
+  IVA**, escrito dos veces —mig 845 (`pesos_reparto_abono_lineas`) y mig 846
+  (`factura_rectificado_eur`)— y anclado por la autoverificación de la 846.
+- El tope en euros se comprueba **bajo el `FOR UPDATE` ya existente**, no en una segunda pasada, y
+  lo previsualizado se recomprueba al emitir: la previsualización no es un permiso.
+- Lo que destapó la revisión de código y entró en el mismo PR: `cliente_id` en el predicado de
+  candidatas; el vocabulario de 19 códigos `CODIGOS_ABONO`; los dos `RAISE` del ámbito con texto
+  idéntico (quien lee el log no sabe por qué puerta entró); el caso real del #170 como test; y el
+  colector `abonos_parciales_sin_ambito` con el tope del XSD de VeriFactu.
+- Gate completo verde (18.703 tests, 446 casos de integración), squash `138e8d830`,
+  `db push --linked` de las tres migraciones verificado por catálogo en prod, y smoke en prod
+  con sesión real: candidatas 200, preview 200, línea fuera del abono → 422
+  `abono_parcial_preview_linea_fuera_del_abono` (el guard que antes fallaba abierto).
+  Ticket #170 marcado `resuelto` tres segundos después del merge.
+- **Regresión que salió de aquí**: la FK nueva de la 845 dejó ambiguo todo embed
+  `facturas ↔ lineas_factura` en PostgREST (`300 PGRST201`) en 10 sitios. La causa de fondo es el
+  ORDEN de la receta: los tipos se regeneran **después** del `db push --linked`, no antes del
+  merge, y en esa ventana el typecheck no puede ver lo que la migración rompió. →
+  [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]] ·
+  [[un-fake-que-decide-por-includes-del-select-degrada-en-silencio]] · [[gen-types-linked-no-db-url]]
+
 ## 3-sep-2026 · el cierre del reel dejó de comerse el subtítulo, y de publicarse invisible (PR #2458)
 
 - El bug que se buscaba: con un CTA de 3+ líneas el bloque de cierre invadía 41px la banda donde

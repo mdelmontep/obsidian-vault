@@ -1,7 +1,7 @@
 ---
 title: regenerar tipos supabase con --linked, y desde la raíz enlazada — el redirect borra el fichero si falla
 date: 2026-07-03
-updated: 2026-07-31
+updated: 2026-09-05
 source: claude-code-session
 tags: [supabase, typescript, type-safety]
 ---
@@ -18,6 +18,13 @@ Al añadir una columna/tabla en un proyecto con tipos generados:
   `database.types.ts` (31-jul). No lo delata el código de salida, que el redirect
   ya consumió: se detecta porque el `grep` de la tabla nueva da 0 en un fichero que
   debería tenerla. Verificar siempre el resultado, no el "ok".
+- **CUÁNDO: después del `db push --linked`, no antes del merge.** El `--check` compara contra
+  PROD, no contra el repo, así que un PR que aplica su migración DESPUÉS de mergear deja una
+  ventana en la que `main` describe un esquema que prod ya no tiene — y el primero que empuje
+  detrás se come el `gen-types --check` en rojo por un cambio que no es suyo. Pasó el 5-sep-2026
+  con las migs 844-846. Su gate y su `pre-push` habían dado verde con toda la razón.
+- Y el hueco no es solo un push roto: mientras los tipos van por detrás, el typecheck **no ve**
+  lo que la migración rompió. Ver [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]].
 - NO augmentar el `Database` global para una tabla o columna nueva: cambia la
   identidad estructural y dispara errores en CASCADA en ficheros ajenos. El patrón
   es vista tipada LOCAL al módulo que la escribe, y borrarla cuando `gen:types`
