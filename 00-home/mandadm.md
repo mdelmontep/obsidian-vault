@@ -21,11 +21,17 @@ es la única referencia de endpoints y límites; `docs/decisions/ADR-001` fija l
 - 🟢 **Fase A · Preparar**: A1 (verificación de negocio, Cabamatica Soluciones en la cartera
   AgentesiaLab), A4 (app `mandadm` en Meta con Instagram Login), A5 (los tres permisos
   `instagram_business_*`) y A8 hechas. Credenciales en 1Password, bóveda `MandaDM`, ítem «Meta app mandadm».
-- 🟢 **Horda corrida de punta a punta**: fases B a G construidas, medidas y en verde en
-  [PR #1](https://github.com/AgentesIA-MAdrid/mandadm/pull/1) (**sin mergear**, es para leer).
-  59 ficheros de test, 618 tests, `./scripts/gate.sh` con `ec=0`. 12 decisiones de tribunal en
-  `ADR-003`, 18 páginas oficiales de Meta en `docs/meta/`, 31 fixtures. El informe de la PR trae los
-  hallazgos abiertos. Tracker: `artifact/0fabd758-758e-48d1-9426-2955e40dc709`.
+- 🟢 **Horda corrida de punta a punta, cuatro rondas**: fases B a G construidas, medidas y en verde
+  en [PR #1](https://github.com/AgentesIA-MAdrid/mandadm/pull/1) (**sin mergear**, es para leer).
+  71 ficheros de test, 711 tests, `./scripts/gate.sh` `0 0 0 0`. 14 decisiones de tribunal en
+  `ADR-003`, 18 páginas oficiales de Meta en `docs/meta/`, 31 fixtures.
+  Tracker: `artifact/0fabd758-758e-48d1-9426-2955e40dc709`.
+  - Ronda 2 (composición): la guarda de la ventana de 24 h era código muerto, el flujo comentario→DM
+    moría tras el private reply, y `account_members` permitía escalar a `owner` desde el navegador.
+  - Ronda 3: tests que **exigían** el defecto — uno se ponía rojo al terminar A7. `quick_replies`
+    fuera del panel (el worker no sabe entregarlo distinto de texto).
+  - Ronda 4: el intermitente del worker era un bug de producción, no un flake. C5 construida.
+  - Barrido de mutación **9 de 9** contra Postgres real: ninguna protección dio «sin víctima».
 - ⚪ **Casi todo queda en `doing`, no en `done`**, y es correcto: el «hecho cuando» de cada tarea de
   B a G está redactado contra Instagram real. Excepción: **B6** (cola y worker), la única de la fase B
   que no necesita Instagram.
@@ -59,9 +65,16 @@ Método y arnés (transversales, salieron de la horda):
 - [[un-build-con-directorio-de-salida-fijo-no-aguanta-agentes-en-paralelo]] · [[un-agente-que-trae-documentacion-transcribe-el-marcador-como-valor]]
 - [[una-regla-sin-fuente-cuyo-rechazo-es-irrecuperable-falla-abriendo]] — las cuatro preguntas antes
   de añadir una comprobación defensiva.
+- [[test-verde-puede-codificar-el-bug-como-esperado]] — ampliada aquí con la forma peor: el test que
+  **exige** el defecto (`expect(pendientes.length).toBeGreaterThan(0)`) y la lista de verificación
+  derivada de lo que verifica.
+- [[el-barrido-que-salta-los-tests-relevantes-dice-sin-victima]] — un «SIN VÍCTIMA» con skips no es
+  cobertura ausente, es medición ausente.
 
 Postgres y límites:
 - [[un-revoke-sobre-un-esquema-custom-no-revoca-nada]] · [[un-tope-por-hora-y-otro-por-segundo-miden-ejes-distintos]]
+- [[guarda-de-monotonia-entre-dos-relojes-distintos]] — el `$at > last_event_at` comparaba el reloj
+  de Meta con el del worker; dejaba la conversación abierta con el enlace ya enviado, para siempre.
 
 Meta:
 - [[los-fixtures-oficiales-de-meta-contradicen-la-descripcion-del-campo]] (incluye el error plano de
