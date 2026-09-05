@@ -70,6 +70,8 @@ Método y arnés (transversales, salieron de la horda):
   derivada de lo que verifica.
 - [[el-barrido-que-salta-los-tests-relevantes-dice-sin-victima]] — un «SIN VÍCTIMA» con skips no es
   cobertura ausente, es medición ausente.
+- [[el-agotamiento-de-un-pool-se-disfraza-de-lentitud-no-de-error]] — dos rojos del mismo gate con
+  conjuntos distintos son no-determinismo; `pg.Pool` encola en vez de fallar.
 
 Postgres y límites:
 - [[un-revoke-sobre-un-esquema-custom-no-revoca-nada]] · [[un-tope-por-hora-y-otro-por-segundo-miden-ejes-distintos]]
