@@ -11,6 +11,7 @@ tags: [home, prioridades]
 ## NOW (máx 5)
 
 - 🟢 **MandaDM — repo, plan y `/horda` listos; fase A: A1/A4/A5/A8 hechas (5-sep)** — **Tuyo**: lanzar `/goal` + `/horda` en sesión nueva; A7 (privacidad) antes de la fase B; cliente tester. → [[mandadm]]
+- 🟢 **TuFacturaIA — FacturaDirecta ya no adelanta el cursor sobre lo que falló (5-sep, #2518)** — un gasto llevaba mes y medio sin importarse con la sync en verde. **Tuyo**: ponerle el código de impuesto a esas dos líneas en FacturaDirecta, y elegir de dónde salen los PDF (su API no sirve ninguno). → [[facturaia]] · [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]
 - 🟠 **TuFacturaIA — auditoría de conciliación: 52/87 cerrados (3-sep, #2407-#2466, migs 804-819)** — quedan 35 con prompt listo (`PROMPT-continuacion-conciliacion-restantes.md`, #2467): lanzar en sesión nueva. → [[facturaia]]
 - 🟢 **TuFacturaIA — tickets IET 125-132 respondidos, 126 corregido de raíz (2-sep, #2373-#2388)** — negativas, «Buzón» y reintento escalado vivos (Guarconsa 48/48). **Tuyo**: la huérfana de `docs/plan/cierres.json` y la prueba de catálogo a 500k. → [[facturaia]] · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]

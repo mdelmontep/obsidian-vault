@@ -6,10 +6,12 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un cursor incremental que avanza sobre lo que falló pierde el documento para siempre** — el solape de seguridad solo cubre el filo; ancla el cursor al fallo más antiguo de la pasada. Ver [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - **Un `/goal` activo salta la parada de OK del prompt** — o dos goals, o tribunal de 3 agentes que decide y deja ADR. Ver [[un-goal-activo-salta-la-parada-de-ok-del-usuario]]
 - **Antes de conceder una excepción a un trinquete, mira qué script mide de verdad ese patrón** — si ninguno, no hay nada que exceptuar; si otro sí, sobra. Ver [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]]
 - **Un prefijo `codigo:` en un `throw` de n8n no llega a `message`** — n8n lo mueve a `description`; quien clasifique por él cae al default sin avisar, y el gate que lo probaba mide una copia local caducada. Ver [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
 - **Un candado que fija la forma LITERAL del filtro consagra el bug** — vigilar el bucle no ve el predicado previo; contar sin comentarios y por mutación. Ver [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]]
+- **La autoprueba de un guard destructivo se arma sola al mutarlo** — si su inocuidad depende de que el guard funcione, solo es segura en el caso en que no hace falta; ruta inexistente y `force: true`. Ver [[la-autoprueba-de-un-guard-destructivo-se-arma-al-mutarlo]]
 - **Capturas guiadas para un cliente: recuadro, velo y etiqueta se pintan con un SVG inyectado antes del `screenshot`** — sin PIL ni ImageMagick; el helper vive en `~/.claude/bin/browser-spot.js` y oculta la franja de impersonación. Ver [[capturas-guiadas-overlay-svg-en-el-navegador]]
 - **Un alcance calculado contra la rama base se vacía al mergear** — y el gate pasa a auditar lo que haya suelto en el árbol, sin avisar. Ver [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]]
 - **Una sonda con el nombre inventado da un ✗ indistinguible de un fallo real** — los tres ✗ de la verificación eran los tres nombres que no salieron de leer el `create function`. Deriva la lista de la fuente. Ver [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]]
