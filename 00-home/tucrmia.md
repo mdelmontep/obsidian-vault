@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-09-03 iteración 56 (main 41537a80 · 33 agentes en paralelo, entra lo medido · 89 pasos de gate · 016 en rama sin verificar · el tablero se borra solo)
+updated: 2026-09-06 · project_id local = ref de prod (pendiente) · iteración 56 (main 41537a80 · 33 agentes en paralelo, entra lo medido · 89 pasos de gate · 016 en rama sin verificar · el tablero se borra solo)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -18,6 +18,16 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   así que el diagnóstico «la lectura previa es por sesión» explica el coste de republicar, **no el
   borrado**, que sigue sin causa → [[tablero-artefacto-se-borra-solo]] (inbox).
   Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] y [[claude-code-gotchas]].
+
+## Estado (6-sep) — el `project_id` local es el ref de producción
+
+Lo encontró otra sesión bajando recursos de la VM: paró un stack de Colima llamado
+`kbrtrogwntjmbcqseqhf` sin saber de quién era. Es el ref de **`tucrmia-prod`** en Supabase cloud,
+puesto como `project_id` en `agentesia-crm/supabase/config.toml`, así que local y producción se
+llaman igual y el repo está linkeado (`supabase/.temp/`). Lo que hizo fue seguro (`supabase stop` no
+admite `--linked`), pero ahí un `db reset`/`db push` con un flag de más va a la base real.
+Pendiente: poner un nombre en `project_id` y dejar el ref en `.temp/`.
+Ver [[un-project-id-local-igual-al-ref-de-produccion-hace-indistinguibles-local-y-prod]]
 
 ## Estado (3-sep, iteración 56) — treinta y tres agentes en paralelo, y entra lo que se pudo medir
 

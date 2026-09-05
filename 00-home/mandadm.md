@@ -90,6 +90,8 @@ Del cierre del 5-sep, ya con la horda parada:
   alertas, correcto en producción, contaminando dos ficheros que corren en paralelo sobre un Postgres.
 - [[un-mutante-con-victima-puede-haber-muerto-en-otra-etapa-del-gate]] — «con víctima» tampoco basta
   si no miras en qué etapa se puso rojo.
+- [[una-busqueda-cortada-por-timeout-no-prueba-una-ausencia]] (6-sep) — afirmé una ausencia a otra
+  sesión con un `grep` que el timeout había matado; el dato llevaba un mes en un inventario del repo.
 
 Postgres y límites:
 - [[un-revoke-sobre-un-esquema-custom-no-revoca-nada]] · [[un-tope-por-hora-y-otro-por-segundo-miden-ejes-distintos]]
