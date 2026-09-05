@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Lo que escribes arreglando un hallazgo es el hallazgo siguiente** — el categórico escrito en caliente («la única», «los cuatro») suele ser falso. [[lo-que-escribes-arreglando-un-hallazgo-es-el-siguiente-hallazgo]]
 - **El saldo de una fecha se deriva hacia atrás desde el actual** — si `stock_actual − Σ(ledger)` no da 0, sumar el ledger miente. [[el-saldo-historico-se-deriva-hacia-atras-desde-el-actual]]
 - **Reescribir un paso de un runbook se lleva el aviso que protegía a OTRO paso** — grep del identificador, no de la sección. [[reescribir-una-seccion-se-lleva-el-aviso-que-la-protegia]]
 - **Un cursor incremental que avanza sobre lo que falló pierde el documento para siempre** — el solape de seguridad solo cubre el filo; ancla el cursor al fallo más antiguo de la pasada. Ver [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]

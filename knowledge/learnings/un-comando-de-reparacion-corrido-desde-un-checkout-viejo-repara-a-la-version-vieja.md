@@ -37,3 +37,17 @@ un candado correcto. Generalización: al verificar algo en el camino real, lo pr
 resultado, es **qué versión ejecuta el proceso que mides** — `git log -1` del worktree de prueba,
 `git status` de donde editas, y un `grep -c "<símbolo nuevo>"` sobre el fichero que va a ejecutarse.
 
+**Cuarta ocurrencia, y ninguna de las defensas anteriores la ve: un DOCUMENTO leido para afirmar un
+hecho** (facturaia 6-sep). Grepee `PROMPT-...-bloque-4.md` para comprobar una marca de superado y
+salio **0 ocurrencias**, con la conclusion lista: «el documento afirma que la fase se decidio y no
+lo dice». Falso. La shell habia vuelto al checkout **principal**, que tenia una copia de 39 KB de
+las 09:33 **sin trackear**, junto a la buena de 65 KB del worktree. Las tres defensas de arriba
+fallan aqui: `git status` del worktree esta limpio, `git rev-list HEAD..origin/main` mide otra cosa,
+y `git diff` no ve un fichero que en el otro checkout es `??`. Un fichero sin trackear **no tiene
+version**: git no puede decirte que es viejo.
+
+Lo unico que funciona: **rutas absolutas** para todo lo que se lee como fuente de verdad, mas un
+**testigo cuantitativo dentro del propio documento** («este fichero tiene 13 marcas; si cuentas 0,
+estas en la copia equivocada»). Y saber que la shell del agente **vuelve al cwd principal** tras
+cualquier `cd`, asi que la ruta relativa que funciono en la llamada anterior puede apuntar a otro
+fichero en la siguiente.
