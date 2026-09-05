@@ -33,3 +33,15 @@ function extractError(body: unknown, status: number): string {
 
 ## Cuándo aplicar
 Cualquier `fetch` / `openapi-fetch` / cliente HTTP propio donde el error se propaga al user final.
+
+## El inverso: un endpoint de la misma familia que devuelve el error PLANO
+
+Meta Graph API anida bajo `error` en todas partes **menos** en `refresh_access_token`, que devuelve
+`{error_type, code, error_message}` al mismo nivel (5-sep-2026, MandaDM). Un clasificador escrito
+solo para la forma anidada no reconoce nada, cae al «error desconocido» y lo trata como fallo
+pasajero: un permiso retirado se reintentaba semanalmente hasta que el token caducaba solo.
+
+Moraleja: «esta API anida sus errores» es una afirmación **por endpoint**, no por proveedor. El
+extractor debe aceptar las dos formas y, sobre todo, **el clasificador no debe tener un default
+optimista**: lo que no reconoce va a «no sé», y «no sé» no se reintenta para siempre.
+Ver [[los-fixtures-oficiales-de-meta-contradicen-la-descripcion-del-campo]]

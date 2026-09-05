@@ -27,6 +27,13 @@ background**. El arnés reporta «exit code 0» a los pocos segundos y es el del
 no el del comando, que sigue corriendo. El tell es el **tiempo**: un gate que canta verde en 3 s no
 ha compilado nada. Esperar por el PID (`while kill -0 $PID; do sleep 5; done`) o por el `EC=` del log.
 
+Cuarta variante (5-sep-2026), la que rompe el gate entero: **`set -e` + `cmd > log 2>&1; a=$?`
+nunca asigna `a`**. Con errexit, un comando simple que falla aborta el script en el acto, antes de
+llegar al `; a=$?` de su misma línea. Efecto: el paso rojo mata el gate sin llegar nunca al `echo`
+final, y quedan en pie los logs de una corrida anterior como si fueran de esta — un gate que solo
+sabe cantar verde. `cmd || a=$?` sí contiene el fallo (el último comando de la lista `||` es la
+asignación, no `cmd`), y el script siempre llega a imprimir sus cuatro exit codes.
+
 Regla: si un número decide si algo pasa o falla, **tiene que viajar con la evidencia**. Un exit code
 que vive solo en el terminal se pierde en cuanto hay un wrapper, un background o un resumen por medio.
 Ver [[un-gate-por-pipe-da-verde-con-el-push-abortado]].
