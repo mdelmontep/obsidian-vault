@@ -20,3 +20,13 @@ Regla: al clonar, el `GRANT` se **rederiva** de quién llama, nunca se copia. Y 
 es `SECURITY DEFINER` y se scopea por un argumento, `authenticated` es sospechoso por defecto.
 
 Lo cazó el hook `revoke-guard`, no una lectura del diff. Ver [[el-arnes-se-mide-a-si-mismo]].
+
+**El espejo, 5-sep-2026 (facturaia, migs 846 → 849/850).** Arrastrar el `REVOKE` cierra lo que
+otra migración abrió a propósito. La 846 reemitió `factura_rectificado_eur` copiando el par
+`REVOKE/GRANT` de la 820 y deshizo la decisión razonada de la 826 sin nombrarla; el dashboard de
+todos los clientes murió con `permission denied`. Y una `SECURITY INVOKER` ejecuta el cuerpo con
+los permisos de QUIEN LLAMA, así que el permiso hace falta sobre la cadena entera: la puerta
+figuraba abierta y aun así fallaba, porque el eslabón de nivel 2 (`reparto_por_pesos`) **nació
+revocado**. Corolario: al clonar no basta rederivar el `GRANT` de la función que tocas — hay que
+mirar a quién llama ella por dentro. Ver
+[[una-consulta-que-devuelve-cero-filas-no-recorre-la-cadena-de-permisos]].
