@@ -8,8 +8,14 @@ Con un `pre-push` que corre lint, typecheck, build y ahora la suite, un `git pus
 minutos y **el arnés lo mata a mitad**: quedó cortado dentro del build y la rama no llegó
 al remoto (el log acababa en «Creating an optimized production build»).
 
-- **Para el push, desasirlo funciona**: `nohup git push … &` sobrevive al arnés y termina.
-  Se verifica luego por SHA (`ls-remote` == `rev-parse`), nunca por exit code.
+- **Para el push, desasirlo funciona… hasta que deja de funcionar.** El 22-ago
+  `nohup git push … &` sobrevivió; el **5-sep, tres intentos seguidos murieron sin llegar
+  a arrancar** — ni proceso, ni fichero de log, ni rama en el remoto. Lo que sí funciona es
+  el `run_in_background` del propio arnés, que adopta el proceso en vez de dejarlo huérfano.
+- **La ausencia de log NO es «sigue corriendo».** Leí «aún no hay log» como progreso durante
+  varios minutos, cuando significaba «nunca arrancó». Distínguelo siempre con algo que
+  discrimine: `pgrep -f <script>` para saber si vive, y `git ls-remote` para saber si llegó.
+  Y en las dos lecturas, **el exit code no vale**: se verifica por SHA.
 - **Para `mutate`, desasirlo NO vale, y el propio arnés lo rechaza**: aborta si arranca
   huérfano (`ppid=1`), porque un arnés desacoplado sigue mutando fuentes cuando ya no hay
   quien lea el resultado — AGH #1253 barrió 1 h 56 min solo, con un fuente de producción
