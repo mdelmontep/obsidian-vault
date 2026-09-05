@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **El saldo de una fecha se deriva hacia atrás desde el actual** — si `stock_actual − Σ(ledger)` no da 0, sumar el ledger miente. [[el-saldo-historico-se-deriva-hacia-atras-desde-el-actual]]
+- **Reescribir un paso de un runbook se lleva el aviso que protegía a OTRO paso** — grep del identificador, no de la sección. [[reescribir-una-seccion-se-lleva-el-aviso-que-la-protegia]]
 - **Un cursor incremental que avanza sobre lo que falló pierde el documento para siempre** — el solape de seguridad solo cubre el filo; ancla el cursor al fallo más antiguo de la pasada. Ver [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - **Un `/goal` activo salta la parada de OK del prompt** — o dos goals, o tribunal de 3 agentes que decide y deja ADR. Ver [[un-goal-activo-salta-la-parada-de-ok-del-usuario]]
 - **Antes de conceder una excepción a un trinquete, mira qué script mide de verdad ese patrón** — si ninguno, no hay nada que exceptuar; si otro sí, sobra. Ver [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]]
