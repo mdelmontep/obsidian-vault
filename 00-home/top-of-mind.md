@@ -11,7 +11,7 @@ tags: [home, prioridades]
 ## NOW (máx 5)
 
 - 🟢 **TuFacturaIA — auditoría de la etapa de integración CERRADA (6-sep)** — los seis hallazgos, en siete PRs ya en prod. **Tuyo**: nada. Queda el #2524, que es mío (reloj 30-oct). → [[facturaia]]
-- 🔴 **MandaDM — PR #1 abierta sin mergear (5-sep)** — **Tuyo**: A10, desplegar en el Dokploy del CRM (abre A7, B1 y B3); A6, cliente tester (~25 tareas); ¿cuenta de Instagram de TuFacturaIA para las pruebas? sus DMs irían a `events`. → [[mandadm]]
+- 🔴 **MandaDM — PR #1 sin mergear, 3 decisiones tuyas paradas (6-sep)** — **Tuyo**: A10 (elegir dominio y rama; 14 variables a mano), A6 cliente tester (~25 tareas), ¿Instagram de TuFacturaIA? sus DMs irían a `events`. Detalle y lo hecho el 6-sep → [[mandadm]]
 - 🟢 **TuFacturaIA — FacturaDirecta ya no adelanta el cursor sobre lo que falló (5-sep, #2518)** — un gasto llevaba mes y medio sin importarse con la sync en verde. **Tuyo**: ponerle el código de impuesto a esas dos líneas en FacturaDirecta, y elegir de dónde salen los PDF (su API no sirve ninguno). → [[facturaia]] · [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]
 - 🟢 **TuFacturaIA — tickets IET 125-132 respondidos, 126 corregido de raíz (2-sep, #2373-#2388)** — negativas, «Buzón» y reintento escalado vivos (Guarconsa 48/48). **Tuyo**: la huérfana de `docs/plan/cierres.json` y la prueba de catálogo a 500k. → [[facturaia]] · [[catch-best-effort-sin-senal-persistente-fallo-parece-no-disparo]]

@@ -1,7 +1,7 @@
 ---
 title: MandaDM
 date: 2026-09-05
-updated: 2026-09-05
+updated: 2026-09-06
 tags: [proyecto, propio, instagram, meta, nextjs, supabase]
 ---
 
@@ -16,14 +16,14 @@ Repo `~/Projects/mandadm` → `github.com/AgentesIA-MAdrid/mandadm` (privado). *
 plan: `docs/plan/ESTADO.md`** (fases A-G, cada tarea con su «hecho cuando»). `docs/plan/API-META-VERIFICADA.md`
 es la única referencia de endpoints y límites; `docs/decisions/ADR-001` fija la vía.
 
-## Estado (5-sep)
+## Estado (6-sep)
 
 - 🟢 **Fase A · Preparar**: A1 (verificación de negocio, Cabamatica Soluciones en la cartera
   AgentesiaLab), A4 (app `mandadm` en Meta con Instagram Login), A5 (los tres permisos
   `instagram_business_*`) y A8 hechas. Credenciales en 1Password, bóveda `MandaDM`, ítem «Meta app mandadm».
 - 🟢 **Horda corrida de punta a punta, cuatro rondas**: fases B a G construidas, medidas y en verde
   en [PR #1](https://github.com/AgentesIA-MAdrid/mandadm/pull/1) (**sin mergear**, es para leer).
-  72 ficheros de test, 712 tests, `./scripts/gate.sh` `0 0 0 0`. 14 decisiones de tribunal en
+  72 ficheros de test, 713 tests, `./scripts/gate.sh` `0 0 0 0`. 14 decisiones de tribunal en
   `ADR-003`, 18 páginas oficiales de Meta en `docs/meta/`, 31 fixtures.
   Tracker: `artifact/0fabd758-758e-48d1-9426-2955e40dc709`.
   - Ronda 2 (composición): la guarda de la ventana de 24 h era código muerto, el flujo comentario→DM
@@ -35,14 +35,32 @@ es la única referencia de endpoints y límites; `docs/decisions/ADR-001` fija l
 - ⚪ **Casi todo queda en `doing`, no en `done`**, y es correcto: el «hecho cuando» de cada tarea de
   B a G está redactado contra Instagram real. Excepción: **B6** (cola y worker), la única de la fase B
   que no necesita Instagram.
+- 🟢 **Cuatro tareas salieron de `doing` (6-sep, `58d70dc`)**: C1, E2, F1 y F7 estaban terminadas y
+  medidas, escondidas tras una nota copiada («exige Instagram real») que en ese fichero casaba **nueve
+  veces**. Solo C4 tenía motivo real, y era otro. → [[una-razon-generica-repetida-en-cada-tarea-no-justifica-ninguna]]
+- 🟢 **Bug de caducidad de token arreglado** (`6dccc70`): un token ya vencido se clasificaba «por
+  caducar» y avisaba con días negativos; ahora cae en `expired` (el enum ya lo tenía) y el aviso lo
+  dice. Mutante muerto en vitest.
+- ⚠️ **Los dos commits de arriba NO están pusheados** — `origin/horda/2026-09-05` sigue en `6c5a9e4`.
+- 🟡 **`MetaGateway` sin commitear, a propósito**: implementa `fetchCommentTimestamp` con
+  `GET /{ig-comment-id}?fields=timestamp`, y ese endpoint **no está en ninguna fuente oficial** — la
+  cita que lo respaldaba (`docs/meta/comment-moderation.md:26`) es parte del ejemplo de respuesta de
+  `GET /<IG_MEDIA_ID>/comments`, que es el que sí está documentado. Decidir antes de seguir: cambiar
+  al documentado, o dejarlo y verificarlo con una llamada real cuando haya cuenta. Arreglar lo demás
+  que encontró la revisión (fail-open silencioso del plazo de 7 días, lectura antes de la guarda
+  `accountConnected`, dos tests que no muerden) antes de decidir es trabajo tirado.
 - 🔴 **A6 es el cuello de botella**: que el cliente acepte la invitación de tester desbloquea la
   comprobación de veintitantas tareas. Sin cliente elegido todavía.
 - 🟡 **A10 · desplegar es ahora el cuello de botella real** (5-sep, `ADR-004` en el repo): va al
   **Dokploy del CRM** (`dokploymanu.tecnocloud.es`, host `185.99.186.76`, credenciales en 1Password
   `TUCRMIA`), **no** al VPS de TuFacturaIA que la horda había escrito por su cuenta sin que nadie lo
-  decidiera. El DNS deja de bloquear: ese host ya sirve certificado real sobre `sslip.io`, así que
-  `mandadm.185.99.186.76.sslip.io` sirve para publicar la app. Las variables **a mano en el panel**:
-  la API de Dokploy reemplaza el bloque entero y recargar Traefik tira el CRM con él.
+  decidiera. **El dominio sigue SIN decidir** (6-sep): `mandadm.agentesia.madrid`
+  lo escribió el mismo commit del VPS descartado y hoy no resuelve (el apex apunta a `185.47.13.166`,
+  otra máquina), y `mandadm.185.99.186.76.sslip.io` está disponible ya —ese host sirve certificado
+  real de Let's Encrypt sobre `sslip.io` desde agosto—. A Meta le vale cualquier HTTPS, así que el
+  criterio de A10 se reescribió sin dominio; el runbook lo lleva como `<DOMINIO>`. Las variables
+  **a mano en el panel**, y son **catorce**: la API de Dokploy reemplaza el bloque entero (pegar
+  trece rompe el despliegue) y recargar Traefik tira el CRM con él.
 - ⚪ **A7 ya no espera textos**: `MARCADORES_PENDIENTES` está vacía —NIF, domicilio y proveedor de
   hosting (Tecnocloud, encargado del tratamiento) escritos y verificados por test—. Solo falta
   desplegar, o sea A10.
@@ -51,8 +69,10 @@ es la única referencia de endpoints y límites; `docs/decisions/ADR-001` fija l
 
 ## Tuyo
 
-- **A10 · encender el despliegue**: en el panel de Dokploy, proyecto `mandadm` y las trece variables
-  a mano. Es lo único que abre la URL pública, y con ella A7, B1 y B3.
+- **A10 · encender el despliegue**: elegir dominio (los dos candidatos, arriba), y en el panel de
+  Dokploy proyecto `mandadm` con las **catorce** variables a mano. Es lo único que abre la URL
+  pública, y con ella A7, B1 y B3. Decidir también **qué rama despliega**: `horda/2026-09-05` o `main`
+  con la PR #1 mergeada.
 - **Elegir cliente tester y que acepte la invitación (A6)** — la acción de mayor retorno con diferencia.
 - **Decidir si se conecta la cuenta de Instagram de TuFacturaIA** para las pruebas de B a G. La horda
   lo dio por hecho y no lo era; lo que hay que sopesar es que el webhook escribe en `events` **todo**
@@ -98,6 +118,8 @@ Del cierre del 5-sep, ya con la horda parada:
   devuelve 200 siempre; así se colaron dos ficheros de `docs/meta/` que eran reconstrucción.
 - [[una-observacion-pierde-su-fuente-al-copiarse-a-un-documento-derivado]] — «el panel avisa de que…»
   llegó a las copias sin el «el panel avisa», y ahí empezó a leerse como documentación.
+- [[una-razon-generica-repetida-en-cada-tarea-no-justifica-ninguna]] — la misma nota en nueve tareas no
+  justifica ninguna; escondía cuatro ya terminadas.
 
 Postgres y límites:
 - [[un-revoke-sobre-un-esquema-custom-no-revoca-nada]] · [[un-tope-por-hora-y-otro-por-segundo-miden-ejes-distintos]]
