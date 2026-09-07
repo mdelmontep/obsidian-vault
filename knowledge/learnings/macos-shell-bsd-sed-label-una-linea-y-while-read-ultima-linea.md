@@ -42,3 +42,7 @@ devuelve 590 filas. El recorte no le dio solo la fila equivocada: le **quitó la
 `git status`, que cortó justo en la frontera entre trackeados y `??`. Regla:
 **un recorte sobre una salida que no has dimensionado antes convierte un error
 visible en uno invisible.** Dimensiona primero (`| wc -l`), recorta después.
+Y para que no degenere en un `wc -l` ritual delante de todo: **solo aplica cuando
+NO sabes cuántas filas debería haber.** Si el tamaño está acotado por construcción
+—`git branch --show-current`, un `ps -o … -p <pid>` que sabes que da 2— el recorte
+es honesto sin contar nada. Los dos mordiscos fueron justo del otro caso.
