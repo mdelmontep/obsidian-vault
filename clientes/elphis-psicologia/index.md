@@ -104,7 +104,13 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   que cerrar a mano. Los 18 de Borja ya están traídos: el merge tuvo conflicto en
   `CLAUDE.md`, `bloqueantes.md` y `verify-form-path.mjs` —las dos ramas los venían
   tocando en paralelo desde `c508b79`— y se resolvió **sin descartar nada de ninguna de
-  las dos**; verde después (264 tests, build, `astro check`, `verify:form` 102/0).
+  las dos**. Borja siguió publicando esa noche (equipo + blog integrador), así que hubo
+  un **segundo merge** y con él saltó el guardián de frescura de la KB: `TEAM` dejó de estar
+  vacío y la KB, que se genera de `lib/`, decía «nunca se dice un nombre». Ahora lleva sección
+  **Quién atiende** derivada de `isAccredited`/`pendingMembers` —sin biografías— y los tres
+  guardianes pasan de «ningún número de colegiado» a **«solo los que la web publica»**; el de
+  Álvaro sigue pendiente y su ausencia es la que discrimina. 3 mutaciones, 3 víctimas. Verde
+  después: 295 tests, `verify:kb`/`voz`/`wa`, build, `astro check`, `verify:form` 102/0.
 - ⚠️ **`~/Projects/elphis` (carpeta suelta, sin `.git`) sigue viva** y ya atribuyó
   cuatro bloques de trabajo de esta división a `project=elphis` (reatribuidos a mano
   el 24/08). Renombrarla lo cierra de raíz; avisarlo en prosa no.
