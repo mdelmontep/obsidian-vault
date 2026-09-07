@@ -19,4 +19,12 @@ pendiente, la fuente es el código: aquí el doc se contradecía —«pendiente�
 línea, «hecho, mig 731» en otra— y el código daba razón a la segunda. Corolario:
 aplica al subsistema el diagnóstico que el prompt manda usar a otros; sacó cuatro
 agujeros donde acababa de dar el área por cerrada.
-Ver [[smoke-insert-directo-no-ejerce-el-motor-real]].
+
+**Segundo mecanismo, medido el 7-sep**: no hace falta un puntero malo — el prompt
+caduca por dentro. El del ticket 171 seguía listando tres bloques como pendientes
+tres días después de mergearlos y aplicarlos a prod. Arreglo: al cerrar un bloque,
+el prompt se corona con una cabecera de estado («quedan CERO tareas de código») y se
+tacha lo hecho **conservando su texto como método**, que sigue valiendo como registro
+de cómo se hizo. Un handoff se poda al cerrar, no al reabrir.
+Ver [[smoke-insert-directo-no-ejerce-el-motor-real]] ·
+[[una-verificacion-corrida-antes-del-cambio-destructivo-prueba-el-esquema-que-vas-a-borrar]].

@@ -19,6 +19,33 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-19]] — track de contenido de la spec #1908 (nueve tickets, migs 713-720, motor de edición): detalle retirado del NOW, los cuatro fallos que aparecieron al renderizar y los dos cabos de #1959.
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 
+## 7-sep-2026 · ticket de soporte 171 (Chivite): las tres condiciones de código, cerradas
+
+Retirada del escalar `catalogo_servicios.unidades_por_caja` en favor del conjunto
+`catalogo_presentaciones` (ADR-082): 31 lectores de runtime y el `DROP` de la columna, en el PR
+**#2554** con la mig **862** aplicada a prod, más **#2570** con los tipos. En prod, pedir la columna
+da ya `42703`; de los 26 ficheros que aún nombran el identificador, los 11 de runtime son la clave
+del CSV, el campo `deprecated` de la v1 y la cabecera del XLSX — ninguno lee la columna.
+
+Las **tres verificaciones de navegador se repitieron después del `DROP`**, que es lo que faltaba: las
+primeras probaban el código nuevo contra un esquema que todavía tenía la columna, así que no
+discriminaban. Con la predicción escrita antes de mirar, las tres coincidieron («6 cajas · 2 unidad»,
+«2 cajas · 5 unidad», «11 cajas · 1 unidad»). La limpieza §4.4 se reasertó contra prod: el producto
+del fixture en **stock 40 @ 2,5000** (la foto del 5-sep) y **cero presentaciones activas** en la org
+— medir stock y PMP es lo que delataría un «Aprobar igualmente» accidental. Manuales, tandas A y B,
+con la B remedida.
+
+Cierre de higiene: **17 ramas `tk171` borradas** (remoto y local), cada una verificada `MERGED` por
+PR, y la única sin PR comprobada con `git cherry -v origin/main` → contenido ya absorbido. El prompt
+de continuación se coronó con una cabecera «CERO tareas de código» (**#2575**) para que la siguiente
+sesión no rearranque el bloque 3d-2; ver
+[[un-prompt-de-continuacion-propaga-los-punteros-que-no-abriste]].
+
+Queda **solo** la cuarta condición, que no es de código: que José diga qué día hizo el recuento
+(plazo 19-sep). Sigue abierto aparte, como decisión de producto, el cabo del guardarraíl
+`cantidad_actual + delta < 0` de `stock_rectificar_entrada` (mig `825:410-417`): si debe medir el
+neto de hoy o la historia de la partida.
+
 ## 5-sep-2026 · abono parcial, PR 5 de 7: la pantalla que emite la rectificativa por diferencias (PR #2528, migs 844-846, ticket #170)
 
 - **Qué entra**: la pantalla de abono parcial (elegir líneas o importe), `abono_parcial_preview`,

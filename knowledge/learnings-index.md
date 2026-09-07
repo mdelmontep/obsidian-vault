@@ -24,7 +24,7 @@ tags: [home, indice, moc]
 Mapa temático parcial de `knowledge/learnings/`. Sirve para **navegar por tema** cuando ya
 sabes en qué área estás; no para comprobar si algo existe — para eso, `vault-dup`.
 
-## Supabase / Postgres / BD (237)
+## Supabase / Postgres / BD (238)
 - [[accion-masiva-cliente-n-round-trips-serie-cuelga-usar-batch-y-pool]] — acción masiva en cliente con N round-trips en serie cuelga la UI — batch + pool + progreso
 - [[acotar-un-tipo-con-pick-destapa-las-firmas-demasiado-anchas]] — acotar un tipo con Pick destapa, por contravarianza, las firmas demasiado anchas
 - [[agotar-la-fuente-oficial-antes-de-aparcar-una-duda-normativa]] — la FAQ del organismo suele responder literalmente lo que se aparcó "a esperar al asesor
@@ -315,6 +315,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[una-ruta-de-escritura-secundaria-falla-solo-bajo-rls-y-solo-en-el-caso-por-defecto]] — la 2ª vía de escritura omite el contexto de actor que la RLS exige, y sólo falla en el caso por defecto
 - [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]] — una sonda cuyo nombre no salió de la fuente da un ✗ que parece un fallo del sistema
 - [[una-suscripcion-realtime-impide-revocar-el-select-de-esa-tabla]] — una suscripción realtime impide revocar el select de esa tabla a authenticated
+- [[una-verificacion-corrida-antes-del-cambio-destructivo-prueba-el-esquema-que-vas-a-borrar]] — una verificación corrida antes del cambio destructivo prueba el esquema que vas a borrar; el `DROP` es el primer momento en que discrimina
 - [[unique-index-concurrently-parcial-para-idempotencia-bd]] — BD — UNIQUE INDEX CONCURRENTLY parcial para idempotencia anti-race
 - [[update-atomico-no-acopla-liberacion-critica-con-metadata-cosmetica]] — UPDATE atómico no debe acoplar liberación de recurso crítico con metadata cosmética
 - [[update-browserslist-db-mete-caniuse-lite-en-dependencies]] — update-browserslist-db mete caniuse-lite en dependencies
