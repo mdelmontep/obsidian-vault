@@ -49,3 +49,15 @@ mitad del mismo día: una sesión disparó en cuanto la anterior avisó de que s
 con `load 10,36` — porque la carga **tarda en bajar detrás de un gate que acaba**.
 «Ha soltado» y «está libre» están separados por minutos. El aviso del que sale
 sirve para saber que puedes mirar; no sustituye al `uptime`.
+
+**Y el aviso de INACTIVIDAD de una sesión mide la sesión, no su trabajo.** Peor que
+el anterior, porque parece automático y fiable. Me suscribí al «avísame cuando
+`facturaia-38` esté ocioso» para no sondear; saltó a las 15:21 y lancé. La guarda
+abortó: **3 procesos ajenos, load 13 subiendo a 15,34** — el máximo del día. La
+sesión estaba ociosa *precisamente porque* había mandado su push al fondo y se
+había quedado sin nada que hacer en primer plano. La suscripción contestaba
+«¿tiene el turno libre el agente?», y la pregunta era «¿tiene la máquina libre el
+trabajo?». Misma familia otra vez, y aquí el que se equivoca es el arnés, no una
+persona: **suscríbete para saber cuándo MIRAR, y decide con el `ps` y el
+`uptime`**. La guarda de dentro del lanzador es lo único que separó eso de una
+cuarta colisión.
