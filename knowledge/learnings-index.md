@@ -492,8 +492,10 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (93)
+## Claude Code / agentes / harness (95)
 
+- [[abrir-en-escritura-trunca-antes-de-leer-y-el-control-lo-lee-como-exito]] — abrir en escritura trunca antes de leer; el control por ausencia (`grep -c` → 0) confirma como éxito el fichero que acabas de vaciar
+- [[el-suelo-de-carga-de-una-maquina-compartida-no-lo-ponen-las-sesiones]] — antes de negociar turnos de máquina, medir el suelo con nadie corriendo; `ps` dice quién compila, no por qué va lenta
 - [[un-goal-activo-salta-la-parada-de-ok-del-usuario]] — `/goal` empuja a seguir sin el OK: o dos goals o tribunal de 3 agentes con ADR
 - [[agent-browser-auth-login-sin-session-no-persiste-la-cookie]] — `auth login` cierra su navegador; abrir la sesión nombrada y pasar `--session` en todo
 - [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
