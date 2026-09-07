@@ -30,6 +30,20 @@ Ver [[el-suelo-de-carga-de-una-maquina-compartida-no-lo-ponen-las-sesiones]].
 y comprobó que abortaba con `exit 17` nombrando los procesos que lo motivaron.
 Un guardia probado solo en verde pasa trivialmente y no discrimina nada.
 
+**Y el sujeto que mides tiene que estar vivo el trabajo ENTERO.** Con el `if` ya
+puesto y probado, la guardia siguió siendo ciega: miraba `npm run gate`,
+`vitest run` y `next build`, y las tres **parpadean** — arrancan y mueren por
+etapas, así que entre una y la siguiente hay un valle donde la máquina parece
+libre. Medí `load 5,10` y «cero gates» con otra sesión dentro (`pre-push` 58495 y
+`vitest run` 71741 vivos). Lo que no parpadea mientras dura una suite ajena es el
+PADRE: `pre-push` y su `git push`. Ése es el sujeto; las etapas, refuerzo.
+Añadir un patrón que falta cura el síntoma; elegir un sujeto que viva de
+principio a fin cura la causa. Y es peor que la lista corta: **una lista corta
+falla siempre, un sujeto parpadeante falla a veces y en verde**, la única forma de
+fallo que sobrevive a las pruebas. Regla: antes de medir «¿está ocupada?»,
+pregúntate si tu sujeto puede estar vivo todo el trabajo; si no puede, no mides
+ocupación, **muestreas**.
+
 **Y la medición tiene que ser de la MÁQUINA, no del mensaje del vecino.** La otra
 mitad del mismo día: una sesión disparó en cuanto la anterior avisó de que soltaba,
 con `load 10,36` — porque la carga **tarda en bajar detrás de un gate que acaba**.
