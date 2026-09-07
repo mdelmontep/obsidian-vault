@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-08-31
+updated: 2026-09-07
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -45,7 +45,7 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   punta a punta con correos y filas de verdad. Aviso por correo sin contenido
   clínico. Entradas: WhatsApp por el cerebro, voz por `psico-voz-crisis`.
 - ✅ **Voz (Retell)** — `retell-llm` de prompt único (NO conversation flow),
-  gpt-5.1 a 0,2, **v17 servida**. Prompt compuesto desde la KB y el protocolo, nunca
+  gpt-5.1 a 0,2, **v19 servida** (7/09). Prompt compuesto desde la KB y el protocolo, nunca
   retranscrito. Sin herramienta de transferencia: prohibirlo en el prompt con la
   herramienta puesta es una prohibición desobedecible. La **voz es dato del repo**
   (`config-voz.mjs`) porque el «suena robótico» vivía solo en el panel.
@@ -61,6 +61,18 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   `verify:voz-desplegado`, 2 mutaciones y 2 víctimas sobre el agente vivo
   (`infra/tests/rojo-voz-herramientas.py`). →
   [[un-repo-coherente-consigo-mismo-no-prueba-el-nombre-que-vive-fuera]]
+  **7/09, primera llamada telefónica REAL** (todo lo anterior eran `web_call`): sonó
+  «embotellada». Los cuatro knobs de audio que diferían de Adicciones eran de su **v5**,
+  y Adicciones los movió entre su v6 y su v8 — el repo decía «se copia de Adicciones»
+  sin la versión. Puestos los de la **v37**: `ambient_sound` fuera, `eleven_flash_v2_5`,
+  `responsiveness` 0,85, `interruption_sensitivity` 0,2 y cancelación de habla de fondo.
+  Los dos agentes son ahora idénticos en **14 de 16** campos de audio; los 2 restantes
+  no se copian a propósito (`voice_id` —Alejandra vs Cristina, es lo único que separa
+  las marcas en voz— y `boosted_keywords`). El guardián dio un falso rojo porque Retell
+  **omite los campos apagados**; se arregló normalizando, no borrando el campo. →
+  [[copiar-la-config-de-un-agente-vivo-copia-una-version-que-sigue-moviendose]] ·
+  [[retell-omite-los-campos-apagados-y-un-guardian-por-stringify-da-falso-rojo]] ·
+  [[como-suena-un-agente-de-voz-no-se-juzga-ni-en-web-ni-en-la-grabacion]]
 - ✅ **WhatsApp** — `psico-whatsapp-cerebro` vivo y con conversaciones reales
   (Chatwoot en el bucle, Basic Auth: Chatwoot **no firma** en la 4.0.3, medido).
   Prompt y las tres plantillas de Meta generados desde `site.ts`.
@@ -83,9 +95,12 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   fallo (`Unable to sign without access token`). El «Connect my account» del 24/08 no
   cuajó: revisar si el popup se cerró antes o si el client sigue en Testing.
 - ⚠️ **PR #30 sigue ABIERTO**, y el trabajo del bloque B **no está en él**: vive en
-  `main` local y en el fork. 42 commits locales sin subir a `origin/main` y **16 de
-  Borja sin traer** — o sea que este repo local también está *atrasado*, no solo
+  `main` local y en el fork. 42 commits locales sin subir a `origin/main` y **18 de
+  Borja sin traer** (7/09) — o sea que este repo local también está *atrasado*, no solo
   adelantado. Antes de afirmar qué dice un fichero: `git log HEAD..origin/main`.
+  Los 18 tocan `bloqueantes.md`, `CLAUDE.md` y `ONBOARDING.md`, que son justo los tres
+  que el bloque B escribe: **el merge tendrá conflicto en los tres**, y no por lo de
+  Manu — las dos ramas los vienen tocando en paralelo desde `c508b79`.
 - ⚠️ **`~/Projects/elphis` (carpeta suelta, sin `.git`) sigue viva** y ya atribuyó
   cuatro bloques de trabajo de esta división a `project=elphis` (reatribuidos a mano
   el 24/08). Renombrarla lo cierra de raíz; avisarlo en prosa no.
@@ -98,12 +113,26 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
 
 ## La puerta que lo cierra todo
 
-**Nada del bloque B se enciende hasta que Alba dé el OK por escrito a la v2 del
-protocolo de crisis.** Dio el OK *de palabra* a la v1 el 21/08 y nunca el escrito. El
-mensaje listo para que lo mande Borja está en `docs/peticion-firma-alba.md`, e
-incluye las otras cuatro preguntas abiertas del §7 para gastar un solo viaje.
-`verify:voz-desplegado` comprueba hoy que **ningún número apunta al agente**, y esa
-comprobación es parte de la puerta.
+La firma sigue pendiente: Alba dio el OK *de palabra* a la v1 el 21/08 y **nunca el
+escrito**. El mensaje listo para que lo mande Borja está en `docs/peticion-firma-alba.md`,
+e incluye las otras cuatro preguntas abiertas del §7 para gastar un solo viaje. El bloque
+de firma de `docs/protocolo-crisis.md` está **vacío**.
+
+> ⚠️ **La puerta se cruzó a propósito el 7/09.** El `+34 910 059 223` está importado en
+> Retell y **apuntando al agente**: la línea publicada contesta, con el protocolo sin
+> firmar. Decisión de Manu, tomada con el aviso delante. Consecuencia:
+> **`npm run verify:voz-desplegado` sale con exit 1 y eso es lo esperado** — dice que hay
+> un número apuntando sin firma. **No lo «arregles» desapuntando el número.** Se cierra
+> pegando el OK escrito de Alba en el bloque de firma y regenerando el prompt (hoy
+> `infra/voz/prompt-agente.md` declara `firma del protocolo: PENDIENTE`, y de esa línea
+> lee el guardián). Al medirlo, ojo: `npm run … | tail` devuelve el exit del pipe (0).
+
+El alta no fue «apuntar» sino **importar**: el número no existía en la cuenta de Retell
+—`list-phone-numbers` traía uno apodado «Elphis» que es el de **Adicciones**, un apodo no
+es una identidad— así que fue `import-phone-number` con el trunk de Netelip
+(`retellai.netelip.com`, TCP, `auth_username` = el propio número; contraseña en 1P
+`Dani/Borja/Manu` → «Contraseña Netelip retell») y después `update-phone-number` con
+`agent_version: "latest_published"`, nunca un entero.
 
 ## Bloqueos (terceros)
 
@@ -112,7 +141,10 @@ comprobación es parte de la puerta.
   horario de sábado · si el protocolo vale igual para Adicciones.
 - **Borja**: merge del PR #30 · `PUBLIC_FORM_ENDPOINT` · DPA · Wasabi · móvil real
   de avisos (el 659 877 708 NO vale: emisor de la WABA de Adicciones).
-- **Manu**: rotar el token de Chatwoot (las dos credenciales) · backups fuera del
-  host · las 4 confirmaciones de la WABA (número virgen · SIP · OTP · SMTP) ·
-  password del ítem 1P · el Connect de OAuth · una llamada real que mida el retardo
-  de `call_analyzed` y el experimento de `basic_attributes_only`.
+- **Manu**: **volver a llamar y juzgar la v19** (es lo único que prueba el arreglo: la
+  grabación no lleva el ambiente ni la banda estrecha) · commitear el cierre del 7/09,
+  que sigue **sin commitear** en el repo por lo del `main` divergente · rotar el token
+  de Chatwoot (las dos credenciales) · backups fuera del host · las 4 confirmaciones de
+  la WABA (número virgen · SIP · OTP · SMTP) · password del ítem 1P · el Connect de
+  OAuth · una llamada real que mida el retardo de `call_analyzed` y el experimento de
+  `basic_attributes_only`.

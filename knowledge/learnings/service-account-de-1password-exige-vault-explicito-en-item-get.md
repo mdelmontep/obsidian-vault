@@ -20,11 +20,18 @@ sí lo eran (`kknqs4zua3eje5drm6u25csaxu` en FacturAIA, `ssh AGH` en AGH Iberica
 
 - **También los CAMPOS con tilde** («Token de larga duración», caso Kommo 3-sep-2026): `opsa read "op://…/<campo>"` falla igual → `opsa item get <id> --vault <bóveda> --format json` y sacar el campo por `label` con python, sin imprimir el valor.
 
+- **Y las BÓVEDAS con `/` en el nombre** (caso `Dani/Borja/Manu`, 7-sep-2026): la barra es el
+  separador de la ruta `op://`, así que la referencia se parte y **devuelve vacío sin error** —
+  el modo de fallo peor de los tres, porque un `len($PW)` de 0 pasa por «no está» en vez de por
+  «mal escrito». Mismo fix: `opsa item get <id> --vault "Dani/Borja/Manu" --fields label=password --reveal --format json`.
+
 Corolario al escribir runbooks: si un comando `op item get` no lleva `--vault`, funciona hoy con
 huella y reventará el día que se automatice. Ponerlo siempre.
 
-Alcance del service account `claude-code-mac`: 16 bóvedas de `agentesialab.1password.eu`, SOLO
-lectura, **caduca 2026-11-01**. No ve `my.1password.com` ni los vaults built-in
-`Private`/`Employee`/`Shared`.
+Alcance del service account: desde el **5-sep-2026** es `Claude` (sustituye a `claude-code-mac`),
+**18 bóvedas** de `agentesialab.1password.eu` incluida MandaDM, y con permiso de **lectura y
+escritura** — la anterior era solo lectura. Caducidad real en `OPSA_TOKEN_EXPIRES` dentro de
+`~/.local/bin/opsa`, no de memoria. Sigue sin ver `my.1password.com` ni los vaults built-in
+`Private`/`Employee`/`Shared`, y **escribir** (`item create/edit/delete`) sigue siendo `op`.
 
 Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]
