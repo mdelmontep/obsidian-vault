@@ -264,7 +264,9 @@ el en-dash que la spec usa como booleano falso; y regenerar líneas de una recib
 
 El plan se sometió a un grilling con dos auditorías en paralelo (contra los ADRs y contra los
 invariantes del repo) y salió con **quince decisiones firmadas** en
-`facturaia/docs/decisions/ADR-033-las-quince-decisiones-de-la-contabilidad-analitica-de-agh.md`.
+`facturaia/docs/decisions/ADR-063-las-quince-decisiones-de-la-contabilidad-analitica-de-agh.md`
+(renumerado del 033 el 31-ago: el 033 ya lo ocupaba el ADR de Floating UI de la serie del
+vault, y `NUMERACION.md` fija que el número sale del mayor de las DOS series más uno).
 Las cinco que cambian el plan:
 
 - La tabla es **`catalogo_cuentas`**, no `cuentas_contables` (choca con `proveedores.cuenta_contable`,

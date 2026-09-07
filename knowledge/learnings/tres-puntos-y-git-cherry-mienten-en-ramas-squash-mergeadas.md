@@ -44,3 +44,16 @@ solo lo vi al fallar un `git push` con 403. La nota no falló; falló consultarl
 vive en el vault y no se carga sola. Antes de triar ramas o worktrees:
 `vault-find "squash cherry ramas"`. Un learning sin consultar es un learning que no
 existe.
+
+**Tercera reincidencia, 5-sep, en OTRO contexto: censar números de migración.** Para
+avisar a otra sesión de qué huecos estaban cogidos enumeré ramas con
+`git diff --name-only origin/main...<rama> -- supabase/migrations/` y le pasé cuatro
+como reservas vivas. Tres eran fantasmas: 840-842, 844-846 y 793-795 ya estaban en
+`main` con esos mismos nombres. El mismo fallo de tres puntos, pero disfrazado —
+aquí no triaba ramas, contaba números, así que la nota no me vino a la cabeza. **La
+comprobación correcta no era comparar árboles, era mirar el número en `main`
+directamente** (`git ls-tree origin/main supabase/migrations/ | grep '^NNN_'`), que
+además distingue lo único que importa: mismo número con OTRO contenido (colisión
+real) de mismo número con el mismo (ya mergeado). Regla: cuando la pregunta es «¿este
+identificador está ocupado?», se mira el identificador en el destino, nunca el diff
+de quien lo propone.
