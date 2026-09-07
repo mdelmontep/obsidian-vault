@@ -29,3 +29,9 @@ Ver [[el-suelo-de-carga-de-una-maquina-compartida-no-lo-ponen-las-sesiones]].
 `facturaia-72` el mismo día): lanzó su guardia nuevo con el gate ajeno corriendo
 y comprobó que abortaba con `exit 17` nombrando los procesos que lo motivaron.
 Un guardia probado solo en verde pasa trivialmente y no discrimina nada.
+
+**Y la medición tiene que ser de la MÁQUINA, no del mensaje del vecino.** La otra
+mitad del mismo día: una sesión disparó en cuanto la anterior avisó de que soltaba,
+con `load 10,36` — porque la carga **tarda en bajar detrás de un gate que acaba**.
+«Ha soltado» y «está libre» están separados por minutos. El aviso del que sale
+sirve para saber que puedes mirar; no sustituye al `uptime`.
