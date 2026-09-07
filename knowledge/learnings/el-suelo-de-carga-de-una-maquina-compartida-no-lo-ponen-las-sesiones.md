@@ -21,3 +21,14 @@ ventana que esperáis no existe. Y `ps` no basta: dice **quién compila**, no po
 la máquina va lenta — con el host paginando hay que mirar `sysctl vm.swapusage` y
 `vm_stat`. Dos sesiones midiéndolo por separado convencen; una parece una excusa.
 Ver [[contencion-cpu-entre-sesiones-parece-bug-ui]].
+
+**Y el suelo contaminado no solo estorba: falsea los umbrales que derives de él**
+(7-sep, tarde). Con `fseventsd` a 98-102 % de CPU y 1,73 GB durante 25 días, la
+carga en reposo era **7,43 sin un solo gate corriendo**. De una tabla medida así se
+dedujo un umbral —«verde con load 5-6»— y se propagó a tres sesiones como si fuera
+una propiedad del test. No lo es: **es dónde queda la carga cuando el demonio ya se
+ha servido.** La escala de la tabla seguía siendo buena (sus filas se separan por
+contención real); lo falso era el cero, y como el cero es el que fija el margen, el
+error se propagó justo a la conclusión que importaba: cuánto aire tiene el caso.
+Un umbral calibrado sobre un cero contaminado **no viaja**, y deja de valer sin que
+nadie se entere. Antes de derivar un número de una tabla, medir el reposo.
