@@ -1,7 +1,7 @@
 ---
-title: gotchas de shell en macOS/BSD — sed no acepta `:label;…;tlabel` en una línea; `while read` se salta la última línea sin \n final
+title: gotchas de shell en macOS/BSD — sed no acepta `:label;…;tlabel` en una línea; `while read` se salta la última línea sin \n final; `ps -eo` ignora el `-p`
 date: 2026-07-17
-updated: 2026-09-02
+updated: 2026-09-07
 source: claude-code-session
 tags: [bash, sed, macos, scripting]
 ---
@@ -22,3 +22,14 @@ Dos que costó depurar en scripts bash portables (macOS/BSD):
 sustitución masiva se verifica volviendo a grepear el patrón viejo en todo el árbol, nunca por su `$?`.
 
 Ver [[fia-gate]] · [[colision-de-numero-de-migracion-hace-que-db-push-la-salte-en-silencio]].
+
+**Tercera (7-sep-2026): `ps -eo … -p <pid>` IGNORA el `-p` y lista todos los
+procesos.** El `-e` gana y el filtro no avisa de que no se aplicó. Reproducido:
+`ps -eo pid,ppid,command -p 64820` devuelve **576 filas**; sin el `-e`, **2**. El
+daño real no es la verbosidad: quien lo remata con `| tail -1` o `| head -1` se
+lleva una fila **de otro proceso** con la forma exacta que esperaba, y la lee como
+respuesta a su pregunta. Le pasó a una sesión que así concluyó que un gate era de
+otra sesión —el ppid que leyó no existía en la respuesta a su pregunta— teniendo en
+la misma salida el `cwd` correcto, que contradecía su conclusión. Para un PID
+concreto: `ps -o pid,ppid,command -p <pid>`, sin `-e`. Y para saber desde qué
+directorio corre algo, `lsof -a -p <pid> -d cwd`, que no admite confusión.
