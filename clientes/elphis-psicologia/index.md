@@ -94,13 +94,17 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
 - ⏳ **OAuth Google sin token** — `agenda-e2e.sh` 1/12, el resto cascada del mismo
   fallo (`Unable to sign without access token`). El «Connect my account» del 24/08 no
   cuajó: revisar si el popup se cerró antes o si el client sigue en Testing.
-- ⚠️ **PR #30 sigue ABIERTO**, y el trabajo del bloque B **no está en él**: vive en
-  `main` local y en el fork. 42 commits locales sin subir a `origin/main` y **18 de
-  Borja sin traer** (7/09) — o sea que este repo local también está *atrasado*, no solo
-  adelantado. Antes de afirmar qué dice un fichero: `git log HEAD..origin/main`.
-  Los 18 tocan `bloqueantes.md`, `CLAUDE.md` y `ONBOARDING.md`, que son justo los tres
-  que el bloque B escribe: **el merge tendrá conflicto en los tres**, y no por lo de
-  Manu — las dos ramas los vienen tocando en paralelo desde `c508b79`.
+- ⚠️ **Todo el bloque B espera en el PR #42**, `MERGEABLE`/`CLEAN`, y **no se puede
+  mergear desde aquí**: `mdelmontep` es `member` de la org pero el repo le da
+  `{"push": false}`, así que `git push origin main` da 403 y GitHub **no pinta el botón
+  de merge** — solo «Close pull request». Owners que pueden darlo (`settings/access` →
+  Write): `notcapi` y `AgentesIAMadrid`. Mientras tanto el trabajo vive en `fork/main`
+  (== local, `9049ec2`) y **`origin/main` sigue en `683eed6`: Dokploy NO se ha
+  disparado**. El PR #42 contiene los 11 commits del **#30**, que queda superado y hay
+  que cerrar a mano. Los 18 de Borja ya están traídos: el merge tuvo conflicto en
+  `CLAUDE.md`, `bloqueantes.md` y `verify-form-path.mjs` —las dos ramas los venían
+  tocando en paralelo desde `c508b79`— y se resolvió **sin descartar nada de ninguna de
+  las dos**; verde después (264 tests, build, `astro check`, `verify:form` 102/0).
 - ⚠️ **`~/Projects/elphis` (carpeta suelta, sin `.git`) sigue viva** y ya atribuyó
   cuatro bloques de trabajo de esta división a `project=elphis` (reatribuidos a mano
   el 24/08). Renombrarla lo cierra de raíz; avisarlo en prosa no.
@@ -142,8 +146,9 @@ es una identidad— así que fue `import-phone-number` con el trunk de Netelip
 - **Borja**: merge del PR #30 · `PUBLIC_FORM_ENDPOINT` · DPA · Wasabi · móvil real
   de avisos (el 659 877 708 NO vale: emisor de la WABA de Adicciones).
 - **Manu**: **volver a llamar y juzgar la v19** (es lo único que prueba el arreglo: la
-  grabación no lleva el ambiente ni la banda estrecha) · commitear el cierre del 7/09,
-  que sigue **sin commitear** en el repo por lo del `main` divergente · rotar el token
+  grabación no lleva el ambiente ni la banda estrecha) · **conseguir write sobre el repo
+  y mergear el PR #42** (merge commit, no borrar la rama —es su `main` del fork— y
+  cerrar el #30) · rotar el token
   de Chatwoot (las dos credenciales) · backups fuera del host · las 4 confirmaciones de
   la WABA (número virgen · SIP · OTP · SMTP) · password del ítem 1P · el Connect de
   OAuth · una llamada real que mida el retardo de `call_analyzed` y el experimento de
