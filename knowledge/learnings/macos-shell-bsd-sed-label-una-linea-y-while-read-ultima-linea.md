@@ -33,3 +33,12 @@ otra sesión —el ppid que leyó no existía en la respuesta a su pregunta— t
 la misma salida el `cwd` correcto, que contradecía su conclusión. Para un PID
 concreto: `ps -o pid,ppid,command -p <pid>`, sin `-e`. Y para saber desde qué
 directorio corre algo, `lsof -a -p <pid> -d cwd`, que no admite confusión.
+
+**Y la mitad que generaliza, aportada por la sesión que se lo comió:** el culpable
+no fue solo el `-e`, fue **el `| tail -1`**. Sin el recorte habría visto 590 líneas
+y habría sabido al instante que algo iba mal — ninguna consulta por un PID concreto
+devuelve 590 filas. El recorte no le dio solo la fila equivocada: le **quitó la
+única señal** que delataba el fallo. Mismo mordisco que un `| head -6` sobre
+`git status`, que cortó justo en la frontera entre trackeados y `??`. Regla:
+**un recorte sobre una salida que no has dimensionado antes convierte un error
+visible en uno invisible.** Dimensiona primero (`| wc -l`), recorta después.
