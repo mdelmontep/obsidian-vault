@@ -34,3 +34,5 @@ la vez** — en una tanda de 15 PRs causó más conflictos que todo el código j
 tenía nada que resolver. Dejándolo como está en main (`git show origin/main:<ruta> >
 <ruta>`) desaparece la clase entera de conflicto sin perder nada. Regla: un derivado pesado
 se commitea solo si algo lo valida o alguien lo lee dentro del repo.
+
+**El derivado que NO da conflicto es el peligroso (7-sep)**: en dos merges de `main`, `nucleo-vs-dominio.md` chocó y `dependencies.json` auto-mergeó limpio. Git produjo ahí un grafo que ningún generador habría escrito, sin marcadores y sin avisar. Regenera SIEMPRE los dos, no solo el que se queja: el conflicto es una suerte, no la condición.

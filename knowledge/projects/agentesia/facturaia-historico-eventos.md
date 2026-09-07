@@ -218,3 +218,37 @@ arrastraba desde el cierre del PR 4 como «hallazgos side-tab, pendiente»: no h
 los nueve solo tres son deuda (la tarjeta del aviso de rectificativa copiada con `#b91c1c`) y se pagan
 dentro del PR 5, que es el único momento en que su QA de PDF es gratis. Ver
 [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]].
+
+## 2026-09-07 — la auditoría de la etapa de integración, cerrada del todo
+
+Los cinco issues que quedaban abiertos, mergeados y en prod: **#2544** (memoria de
+categorías: el deshacer en bloque en un solo viaje, **mig 871** aplicada y verificada
+tres formas distintas), **#2545** (el candado de la cadena de permisos deriva las
+puertas del código en vez de nombrar tres a mano), **#2532** (el relleno de un agente
+deja de contar como auditoría ejecutada, con umbrales calibrados contra 251 salidas
+reales), **#2573** (el candado de permisos muerde por alcance del rango
+`git diff base...HEAD`, nunca de `git status`) y **#2530** (vigía de la ventana entre
+mergear una migración y aplicarla). Los cuatro candados nuevos, **probados por mutación
+con control verde**, no solo «pasan».
+
+Tres cosas que salieron cerrando, y que no eran el trabajo:
+
+- **`Cierra #N` no cierra nada**: los cinco issues seguían `OPEN` con su PR mergeado,
+  uno desde la misma mañana. Cerrados a mano. Seis semanas después del learning que ya
+  lo decía → ver [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]].
+- **El trinquete de volumen de tipos no mide en caliente** (`types=85` contra
+  `types=1.757.322`): abierto como **#2603**. El tope sí se cruzó de verdad al componer
+  con `main`, y se bajó compactando el manifiesto generado (821 literales de objeto →
+  `readonly string[]`, −2.710 tipos), sin tocar ningún baseline →
+  [[un-trinquete-con-cache-incremental-caliente-no-mide-y-sale-verde]].
+- **El smoke de `/admin` da 18 rojos que no son de permisos**: 15 rutas pintan `h1` y el
+  spec exige `h2`. Abierto como **#2604**. Se ejerció de verdad levantando staging en
+  :3002 desde el propio worktree; el candado en sí dio 57 verdes, escrituras incluidas.
+
+El `env-guard` del pre-commit paró un commit propio por dos variables que la vigía leía y
+no estaban en `docker-compose.yml`: en prod habrían llegado como `undefined` aunque se
+guardasen en el panel de Dokploy. Y el nightly del #2573 **no se implementó**, con motivo
+medido: no tiene dónde correr (el runner E2E aborta contra prod, la imagen de prod no
+lleva Playwright, staging no tiene app desplegada).
+
+Retirado del NOW el mismo día, ya sin nada pendiente: **la FK de la 845 dejó ambiguo todo embed `facturas ↔ lineas_factura`**, arreglado el 5-sep en el #2529; el #2530 que dejaba vivo se cerró aquí. → [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]] · [[un-diff-de-fichero-generado-sin-danos-colaterales-no-salio-del-generador]]

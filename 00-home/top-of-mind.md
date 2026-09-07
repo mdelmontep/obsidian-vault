@@ -11,7 +11,7 @@ tags: [home, prioridades]
 ## NOW (máx 5)
 
 - 🟠 **AGH — su contabilidad sale de Yooz a TuFacturaIA (30-ago)**: diseño CERRADO (ADR-063, spec #2295, 13 tickets #2296-#2308; #2296 y #2297 cogibles ya). **Sin código y sin commitear** desde hace 8 días. **Tuyo**: mandar los tres cuestionarios (Giuliana, Carlos, Mazars) y decidir si arranca el primer ticket. → [[agh-iberica]] · [[facturaia-yooz-agh-migracion]]
-- 🟢 **TuFacturaIA — auditoría de la etapa de integración CERRADA (6-sep)** — los seis hallazgos, en siete PRs ya en prod. **Tuyo**: nada. Queda el #2524, que es mío (reloj 30-oct). → [[facturaia]]
+- 🟢 **TuFacturaIA — auditoría de integración CERRADA del todo (7-sep)** — los cinco que quedaban, en prod; mig 871. **Tuyo**: ¿`SUPABASE_ACCESS_TOKEN` en Dokploy? Sin él el vigía no vigila. → [[facturaia]]
 - 🔴 **MandaDM — PR #1 sin mergear, 3 decisiones tuyas paradas (6-sep)** — **Tuyo**: A10 (elegir dominio y rama; 14 variables a mano), A6 cliente tester (~25 tareas), ¿Instagram de TuFacturaIA? sus DMs irían a `events`. Detalle y lo hecho el 6-sep → [[mandadm]]
 - 🟢 **TuFacturaIA — FacturaDirecta ya no adelanta el cursor sobre lo que falló (5-sep, #2518)** — un gasto llevaba mes y medio sin importarse con la sync en verde. **Tuyo**: ponerle el código de impuesto a esas dos líneas en FacturaDirecta, y elegir de dónde salen los PDF (su API no sirve ninguno). → [[facturaia]] · [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]

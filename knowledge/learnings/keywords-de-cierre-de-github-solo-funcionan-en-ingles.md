@@ -16,4 +16,6 @@ El fallo es **sistemático, no un despiste**: en estos repos se escribe todo en 
 
 Casos reales: agh-iberica PR #633 mergeada (`66026f4`), issue #632 abierto — cerrado a mano. TuFacturaIA PR #1262 con "Cierra #1259" en el cuerpo, misma historia (27-jul).
 
+**Seis semanas después seguía pasando, y ya no es un caso: es el 100 %.** El 7-sep en TuFacturaIA los CINCO issues de una tanda (#2544, #2545, #2532, #2573, #2530) estaban `OPEN` con su PR mergeado, uno de ellos desde la misma mañana. Escribir el learning no lo arregló: la plantilla de mensajes del repo sigue diciendo `Cierra #N`. Esto ya pide **hook**, no prosa — un `pre-push` que rechace `Cierra|Resuelve|Arregla #N` en el cuerpo, o un cierre de sesión que corra `gh issue view` sobre lo que dio por resuelto.
+
 *(Fusionado el 29-jul con `cierra-en-espanol-no-cierra-la-issue-de-github`, que decía lo mismo.)*
