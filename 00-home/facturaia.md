@@ -35,7 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
-- 🟢 **Etapa de integración: medida y exigida por el push (6-sep, en prod)** — queda **#2524** (reconstruir de volumen limpio; reloj 30-oct), **#2561** flaky y **#2562** guard ciego. → [[una-migracion-aplicada-sin-registrar-hace-mentir-a-migration-list]]
+- 🟢 **Etapa de integración: medida y exigida por el push (6-sep, en prod)** — queda **#2524** (validado de volumen limpio el 6-sep; falta el PR2, revocar la tabla a `anon`; reloj 30-oct), **#2561** flaky y **#2562** guard ciego. → [[una-migracion-aplicada-sin-registrar-hace-mentir-a-migration-list]]
 - 🟢 **FacturaDirecta: el cursor deja de adelantar a lo que falló (5-sep, #2518, en prod)** — **Tuyo**: el código de impuesto de esas dos líneas, en FacturaDirecta. → [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]] · [[dedup-key-no-debe-incluir-contenido-volatil]]
 - 🟢 **Tickets 166/167/168 (2/3-sep, en prod)** — queda **#2416** (agente). → [[un-registro-que-estampa-head-vale-solo-con-el-arbol-limpio]]
 - 🟢 **El reel se previsualiza con el mismo dibujo que se quema (3-sep, #2423)** — **queda**: la costura PNG→ffmpeg sin test y el choque cierre/subtítulos sin medir. → [[iframe-sandbox-vacio-deja-el-documento-en-origen-opaco]]
@@ -149,6 +149,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Decisiones pendientes (producto)
 
+- ❓ **¿Cómo sabe una línea de recibida si su unidad es la del papel o la de stock? (6-sep, sale del ticket de soporte 171)** — remedido hoy en prod, READ ONLY: las líneas de los dos Gillardeau de Chivite dicen `unidad` en los **tres** emisores (6 lineas de un proveedor, 19 de otro, 57 sin proveedor), y no quieren decir lo mismo: LON PRE factura ostras sueltas y los otros facturan envases. Como `lineas_factura.unidad_medida` nace con `'unidad'` por defecto (mig 456), el hueco y el dato con significado comparten símbolo, así que ninguna conversión automática puede saber a cuál se enfrenta. Por eso la fase 4 salió **en contra de sembrar presentaciones** y sigue en contra: sembrarlas convertiría también las líneas del proveedor que ya venía bien (sus 4 envases a 0,167). Hoy lo tapa el guardarraíl del coste desviado (409 `coste_desviado_sin_confirmar`), que funciona y es menos bonito. Lo que hay que decidir: si «no lo sé» pasa a ser un estado distinto de `unidad`, sin lo cual ni el OCR ni la edición bastan. → issue **#2564**
 - ❓ **¿De dónde salen los PDF de lo importado de FacturaDirecta? (5-sep)** — medido: **su API no sirve ninguno** (12 URLs a 404; `Accept: application/pdf` → 406 enumerando json/texto/octet-stream/js; `attachments` vacío). En prod, 50 emitidas y 4 recibidas, cero con PDF. Salidas: (1) generarlo con nuestra plantilla —solo emitidas, y no es el documento que emitió FacturaDirecta—, (2) `attachments` genérico —cero valor hoy—, (3) que el cliente los exporte y se suban en bloque. Recomendada la 1. → [[la-cabecera-accept-dice-que-formatos-sirve-una-api-sin-adivinar-urls]]
 - **DECIDIDO (7-sep): los cuatro correos del dinero que faltan sí dejan campanita, y ninguno es no-silenciable** — `trial_ending`, `suscripcion_activada`, `suscripcion_cancelada` y `modulo_pasa_a_cobrarse` pasan a llamar a `notify()` (el quinto, `pago_fallido`, ya la tiene). Ninguno entra en `NON_SILENCEABLE_KINDS`: el criterio de la casa no es «es importante» sino **exclusividad de canal + plazo**, y aquí la campanita es la redundancia del email, no el único aviso. Queda implementarlo, con el `dedupe_key` espejo de la clave de idempotencia que ya usa cada `sendEmail`.
 - ❓ **Cookie `fia_gclid` en `/privacidad` — ANTES de encender anuncios (19-ago, gate FB-01)** — es la primera cookie no esencial del producto (atribución publicitaria, 90 días) y la política (255 líneas) no menciona cookies. Decidir: sección de cookies + ¿banner LSSI art. 22.2?, o exención por escrito. Con la campaña pausada no hay exposición. La opción de mini-UI de permisos de marketing quedó resuelta por otra vía: `marketing_write` ya está concedido a m.delmonte.p@ (verificado en `superadmin_permissions` el 19-ago).
@@ -289,6 +290,10 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 ## NEXT (próximas 2 semanas)
 
+- 🟡 **ADR-084 aceptado y sin implementar (7-sep, #2583)** — «no lo sé» en la unidad de una línea
+  es la AUSENCIA (`NULL`), no `'unidad'`. Falta retirar el `not null default 'unidad'` de
+  `lineas_factura.unidad_medida` (mig `384:26`) y el `coalesce` de siete migraciones. **Prohibido
+  cualquier backfill.** Es la mitad de esquema de la decisión #2564, que es la de producto.
 - 🟡 **El panel no avisa de que el CTA del reel salió al mínimo (#2465)** — #2458 arregló la
   aritmética; falta la visibilidad. El slider de la marca llega a `alto_rel = 0,3` y la frontera
   medida está en **0,07**, `renderOverlayReel` no devuelve si se rindió, y el preview monta cierre
