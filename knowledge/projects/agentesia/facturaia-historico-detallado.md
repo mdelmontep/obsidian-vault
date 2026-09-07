@@ -42,9 +42,12 @@ sesión no rearranque el bloque 3d-2; ver
 [[un-prompt-de-continuacion-propaga-los-punteros-que-no-abriste]].
 
 Queda **solo** la cuarta condición, que no es de código: que José diga qué día hizo el recuento
-(plazo 19-sep). Sigue abierto aparte, como decisión de producto, el cabo del guardarraíl
-`cantidad_actual + delta < 0` de `stock_rectificar_entrada` (mig `825:410-417`): si debe medir el
-neto de hoy o la historia de la partida.
+(plazo 19-sep).
+
+**Corregido el 7-sep**: aquí se escribió que el cabo del guardarraíl seguía abierto «como decisión de
+producto». Es falso, y el error fue fiarse del contexto en vez del disco. `ADR-083`, del **6-sep**, ya
+lo decidió: el guard de `stock_rectificar_entrada` mide el **mínimo histórico de la partida**, no el
+saldo de hoy, y su estado literal es «aceptada, sin implementar». Lo que queda es construirlo.
 
 ## 5-sep-2026 · abono parcial, PR 5 de 7: la pantalla que emite la rectificativa por diferencias (PR #2528, migs 844-846, ticket #170)
 
