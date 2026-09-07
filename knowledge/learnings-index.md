@@ -497,6 +497,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[abrir-en-escritura-trunca-antes-de-leer-y-el-control-lo-lee-como-exito]] — abrir en escritura trunca antes de leer; el control por ausencia (`grep -c` → 0) confirma como éxito el fichero que acabas de vaciar
 - [[el-suelo-de-carga-de-una-maquina-compartida-no-lo-ponen-las-sesiones]] — antes de negociar turnos de máquina, medir el suelo con nadie corriendo; `ps` dice quién compila, no por qué va lenta
 - [[medir-en-el-mismo-comando-que-lanza-no-es-decidir]] — medir la máquina dentro del comando que lanza no evita la colisión: el lanzamiento tiene que ir detrás de un `if`, y el `if` se prueba con el caso que debe bloquear
+- [[una-rectificacion-que-cambia-la-decision-de-otro-lleva-el-estado-dentro]] — entre sesiones que comparten máquina, el consejo correcto en mal momento provoca la colisión que quería evitar: el estado del recurso va dentro del mensaje
 - [[un-goal-activo-salta-la-parada-de-ok-del-usuario]] — `/goal` empuja a seguir sin el OK: o dos goals o tribunal de 3 agentes con ADR
 - [[agent-browser-auth-login-sin-session-no-persiste-la-cookie]] — `auth login` cierra su navegador; abrir la sesión nombrada y pasar `--session` en todo
 - [[2-agentes-humanos-paralelos-detectan-jerga-tecnica-en-copy]] — 2 agentes Plan con perfil humano detectan jerga técnica en copy mejor que 1 agente "UX wr…
