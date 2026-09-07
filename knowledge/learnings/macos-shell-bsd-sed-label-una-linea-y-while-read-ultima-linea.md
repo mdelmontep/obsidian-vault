@@ -46,3 +46,17 @@ Y para que no degenere en un `wc -l` ritual delante de todo: **solo aplica cuand
 NO sabes cuántas filas debería haber.** Si el tamaño está acotado por construcción
 —`git branch --show-current`, un `ps -o … -p <pid>` que sabes que da 2— el recorte
 es honesto sin contar nada. Los dos mordiscos fueron justo del otro caso.
+
+**Y el mismo dimensionado sirve para pillar el cero más traicionero: el de un
+instrumento apuntado a nada.** El 7-sep una sesión montó un muestreador de
+`pg_stat_activity` cada 2 s para cazar esperas de cerrojo durante una suite, y
+publicó «0 esperas, 0 sentencias de más de 3 s». El push había muerto **antes de
+la suite**, en `SSL_ERROR_SYSCALL` contra github: el muestreador pasó 90 s
+leyendo una base **en reposo**. Ese cero no era «miré y no había», era **«no
+había nada que mirar»**, y los dos se escriben igual. Lo delató el **tamaño del
+log: 451 bytes**. Una etapa de integración no cabe en 451 bytes.
+
+Regla: **antes de interpretar un cero, comprueba que el sujeto existió** — y la
+comprobación más barata suele ser dimensionar la salida del proceso que debía
+producirlo, no leerla. Vale también al revés del recorte de arriba: allí el
+tamaño delataba una salida de más, aquí una de menos.
