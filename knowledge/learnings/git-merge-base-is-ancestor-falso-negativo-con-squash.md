@@ -25,3 +25,15 @@ Limpieza segura de worktrees:
   `main` yendo por delante, no la rama guardando algo:
   `git diff origin/main <rama> -- $(git diff --name-only $(git merge-base origin/main <rama>) <rama>)`
   → `0 líneas` en las 17.
+
+**Cuarta caída, 9-sep (facturaia, cierre del ticket 169).** Al barrer 18 ramas `tk169` volví a
+lanzar `--is-ancestor`: las 18 salieron «pendientes» y estuve a un paso de reportarlas como trabajo
+sin mergear. La nota existía desde julio; no la consulté.
+
+**En un flujo GitHub squash el test barato no es comparar árboles, es preguntar por el PR:**
+```bash
+gh pr list --head "<rama>" --state all --json number,state -q '.[] | "\(.number) \(.state)"'
+```
+`MERGED` cierra la pregunta en una llamada, sin merge-base ni diffs, y de paso te da el número de PR
+para el registro. Las 18 dieron MERGED. Reserva la comparación de árboles para ramas **sin PR**.
+Antes de borrar, deja los SHA en un fichero: el borrado es recuperable si sabes a qué volver.
