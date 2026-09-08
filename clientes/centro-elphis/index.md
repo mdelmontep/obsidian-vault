@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-04
+updated: 2026-09-08
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,20 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-04
+## Estado actual · 2026-09-08
+
+**Los deals duplicados en el CRM dejan de nacer, el embudo deja de ir al revés que el código, y la voz sigue sin desplegar a propósito.**
+
+- ✅ **Paso 2.7 en prod (12:26)**: la clave `deal-open-<contact_id>` deja de ser un candado y guarda el `deal_id`, así que el bot reutiliza el deal en vez de abrir uno por mensaje. 24/24 puertas verdes sobre el workflow vivo. Antes hubo que rellenar a mano 8 claves vigentes sin `response` (la query anterior ni escribía esa columna).
+- ✅ **Fix de idempotencia (13:13)**: `NULLIF` contra `{"deal_id":null}` — el `COALESCE` no lo filtraba porque es jsonb, no NULL — y ventana de 30 días **fija por episodio**, no renovada en cada escritura. 25/25 puertas, 8 mutantes cazados. → [[on-conflict-coalesce-no-filtra-un-jsonb-null-y-el-where-veta-el-update]]
+- ✅ **Embudo 56886 reordenado**: tenía hueco en la 4 y empate en la 6, y mostraba «Enlace Doctoralia» ANTES que «Cliente a contactar Profesional», al revés que el RANK del código → los deals retrocedían de columna al subir de etapa. Ahora 0..6 alineado con el código; censo de 1.570 deals idéntico antes y después. → [[el-orden-visual-del-embudo-y-el-rango-del-codigo-son-dos-verdades]]
+- ✅ **Audio en prod desde las 01:59**: `interruption_sensitivity` 0,6, `responsiveness` 1, backchannel apagado. Pendiente medirlo con llamadas reales. Ojo: `PATCH /update-agent` sin `?version=` **muta la versión en sitio**, no crea una nueva, y `guard-retell-pin` no lo detecta.
+- 🔴 **Hallazgo sin arreglar — el bot resucita deals cerrados**: `Resolver acción` manda `status: 1` en todos los PATCH sin mirar si recepción cerró el deal, y `Check deal abierto` solo mira la caducidad de la clave, no consulta Clientify. Caso real: contacto 169639619, deal ganado y cerrado el 3-sep. Guarda de 3 líneas escrita en `work/IDEM/informe.md`; para que además abra deal nuevo hace falta invalidar la clave: paso propio.
+- 🔜 **Voz: variante B lista en el flow de PRUEBAS, sin desplegar.** Narración del razonamiento 8,0 % → 1,2 % por corrida (p=0,0062) y la frase que entrega el email sube de 44,1 % a 62,9 %. Con n=9 por brazo: el bucle de `preguntas` **no lo causa el corte** (4/9 · 4/9 · 3/9), pero ese nodo no tiene ninguna salida que pueda tomar el agente. → [[contar-turnos-en-vez-de-llamadas-infla-la-significancia]] · [[una-arista-que-exige-lo-que-nadie-hace-deja-el-nodo-inalcanzable]]
+- 🔜 **Decisión tuya**: marcar el ingreso urgente también en el WhatsApp interno (hoy solo cambia el asunto del email, y el equipo mira el WhatsApp), y si la guarda de deal cerrado va esta noche o mañana.
+- ⚠️ Sigue sin estrenarse con tráfico real: desde las 10:12 no ha entrado ningún lead. Vigilancia armada sobre `registrar-lead` y sobre las claves envenenadas.
+
+## Estado previo · 2026-09-04
 
 **El aviso rojo de las 08:32 no era una avería: era el circuito de avisos, que llevaba 8 días clasificando mal.**
 
