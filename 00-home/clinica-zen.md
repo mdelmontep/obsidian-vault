@@ -1,7 +1,7 @@
 ---
 title: clinica-zen
 date: 2026-07-29
-updated: 2026-09-08
+updated: 2026-09-09
 tags: [cliente, clinica-zen]
 ---
 
@@ -9,24 +9,44 @@ tags: [cliente, clinica-zen]
 
 Clínica dental + estética facial en Las Rozas. Chatbot WhatsApp (Kommo) + agente de voz Retell + recordatorios + emails. Contactos: Gonzalo (legacy), Dani.
 
-## Estado 8-sep-2026: la etapa del lead deja de pisarse, y el correo interno lleva resumen
+## Estado 8/9-sep-2026: la etapa del lead, con un solo escritor y sin resurrecciones
 
-**Bug**: un lead con cita cerrada volvía a *Contestados* 8 s después de llegar a *Pendiente de
-asignar*. No era la tool: los 10 nodos `salesbot*` de `u0AQPe9pxN79dbFa` mandaban el texto con
-`status_id: 104875243` **hardcodeado en el mismo PATCH** →
-[[el-nodo-que-envia-el-mensaje-no-debe-escribir-la-etapa-del-lead]]. **Fix**: fuera el `status_id`
-de los 10, y los 4 `Marcar Pendiente si Reserva*` pasan a ser el único punto que escribe etapa
-(Derivar → 104517011 · Reservar → 104115975 · sin tool → Contestados **solo si** la actual no es
-avanzada). Mismo `status_id` quitado del Reenganche (`bfc4dWuztZsWfb4Q`). Lead 38845044 devuelto a
-mano. 14 casos verdes sobre el `jsCode` desplegado, 3 mutantes muertos.
+**Primera tanda (día 8)**: los 10 nodos `salesbot*` de `u0AQPe9pxN79dbFa` mandaban el texto con
+`status_id: 104875243` hardcodeado en el mismo PATCH y borraban «Pendiente de asignar»; fuera de los
+10, y los 4 `Marcar Pendiente si Reserva*` pasan a ser el único punto que escribe etapa. Mismo
+`status_id` quitado del Reenganche. Y el correo interno de `Send Confirmation Email1` lleva ahora
+resumen IA de la conversación (una consulta cubre voz y WhatsApp) con CC a `info@zendental.es`; el
+aviso de una cita telefónica sale **al colgar**, no al reservar. Detalle → [[clinica-zen-historico]] ·
+[[el-nodo-que-envia-el-mensaje-no-debe-escribir-la-etapa-del-lead]]
 
-**Resumen en el correo interno** (`Send Confirmation Email1` de `RN0wl8RaRmwLpnfQ`): cadena nueva
-`Contexto → Cargar Conversacion (Postgres) → Formatear → Resumen IA (gpt-5.1) → Build Emails HTML`.
-Como el `call_summary` de Retell ya se inserta en la tabla `clinica_zen`, **una consulta cubre voz
-y WhatsApp**. La rama de voz cuelga ahora de `Insert rows in a table3/1` (tras `call_status =
-ended`), así que **el aviso de una cita telefónica sale al colgar, no al reservar**. Postgres y
-OpenAI con `onError: continueRegularOutput`. **CC a `info@zendental.es`** solo ahí. Probado
-end-to-end con un workflow temporal ya borrado: 23 turnos leídos, 24 casos verdes, 3 mutantes.
+**Segunda tanda (noche del 8-sep)**, todo verificado contra el `workflowData` de ejecuciones reales
+—no contra el workflow vivo, que es de hoy y el evento era de ayer; tres diagnósticos falsos salieron
+de ahí y están retractados en [[clinica-zen-historico]]:
+
+- **Reenganche (`bfc4dWuztZsWfb4Q`) vuelve a correr** — gate de ESTADO (cita en el campo `1864817`,
+  status del lead, palancas manuales) y, al tercer intento, el descarte **se persiste**
+  (`status='skipped'`, CHECK ampliado) con `ORDER BY r.created_at ASC` antes del `LIMIT 5`. Sin eso
+  el descarte recirculaba cada 30 min y cinco conversaciones cerradas habrían dejado los abandonos
+  reales sin evaluar. Execs 13806 (escribe el descarte) y 13808 (cero filas).
+  → [[un-descarte-que-no-se-persiste-recircula-y-con-limit-desplaza-a-los-reales]]
+- **Un solo escritor de verdad en la reserva** — `Update leads` de `RN0wl8RaRmwLpnfQ` seguía
+  escribiendo Contestados justo al reservar (exec 13697: crea el evento y manda la confirmación)
+  mientras el guard escribía Pendiente de asignar: salía bien por orden de llegada, no por diseño.
+  Ahora escribe `104115975`. **Regla de negocio (Manuel, 8-sep)**: llega el lead y contestamos →
+  Contestados; en cuanto hay cita → Pendiente de asignar.
+  → [[al-centralizar-quien-escribe-el-estado-quedan-dos-huecos-tipicos]]
+- **`NO_PISAR` con «Perdido»** — un paciente que CANCELA (→143) resucitaba a Contestados 37 s después
+  con el siguiente mensaje del bot (exec 13682 → 13684). Añadidos `143` y `111224991` a los 4 nodos.
+  La objeción de la sesión paralela («entierra al que anula y vuelve a pedir cita») quedó retirada:
+  `reservarCalled` retorna ANTES de mirar `NO_PISAR`, así que quien vuelve a reservar sale de Perdido.
+  **Pregunta de negocio abierta**: el que anuló y escribe *sin* reservar ya no vuelve al radar — si la
+  clínica quiere verlo, es una etapa o tarea propia, no sacar `143` de la lista.
+
+⚠️ **Ni este cambio ni la reconexión de los `WA Confirmación Cita A/B` (sesión paralela) se han
+estrenado**: 0 ejecuciones del chatbot desde el PUT de las 20:05:36Z. La primera conversación real
+prueba los dos a la vez.
+
+Kommo devuelve **400**, no 404, para un lead que ya no existe (`{"errors":{"<id>":"Lead not found"}}`).
 
 ## v70 en producción (3-sep) — condensado
 
@@ -75,41 +95,28 @@ Apagados: `wt5vmFCoSEEcYF3O` tmp_test_email_cz · `jp6lfAANQYvi2MbS` TEMP_test_l
 
 **Observabilidad**: los 9 workflows activos tienen `errorWorkflow: FMotimghgUBzEgdm`, y ese handler sí notifica (POST a `n8n-borja.tecnocloud.es/webhook/incidencia`). El hueco no es de instrumentación sino de **que nadie mira ese colector**: el fallo del 28-jul llevaba 7 h reportado cuando lo encontré a mano. Pendiente saber quién lo vigila (¿Borja? [[tecnocloud]]). Detalle → [[clinica-zen-historico]]
 
-### Trabajo cerrado (04/05-ago) — detalle en [[clinica-zen-historico]]
+### Trabajo cerrado (jul/ago) — detalle en [[clinica-zen-historico]]
 
-Pase de tono en chat+voz (saludo, nombre, cierre, teléfono) · fix link roto de Google Maps en 3
-workflows (pendiente el mismo link en un Salesbot de Kommo, fuera de n8n) · fix de
-`bfc4dWuztZsWfb4Q` (reenganche disparaba sobre conversaciones ya cerradas bien) · "Europolis"
-seguía sonando en voz porque el dato crudo del bloque de contexto se lee igual al improvisar, no
-solo lo guionado (ver [[dato-en-bloque-de-contexto-se-lee-en-voz-alta-aunque-no-este-en-el-guion]])
-· estética facial deja de ofrecerse proactivamente. Voz: v66→v67 publicada. Chat: en vivo.
-
-### Trabajo cerrado (28/29-jul) — detalle en [[clinica-zen-historico]]
-
-Auditoría end-to-end contra las APIs reales (Kommo, Retell, Calendar, IMAP), los tres hitos que el hub
-arrastraba desde mayo ya estaban resueltos en producción, y los cuatro bugs de `Recordatorios`
-corregidos: Switch sin `options` que mandaba los de 4 h por la rama de 24 h · envíos de madrugada
-(ventana 08:00–21:30) · marcado previo al envío que impedía todo reintento · y la causa raíz del 400,
-`entity_type` como string en vez de entero — por la que **los recordatorios de WhatsApp no habían
-funcionado nunca**. Más el email interno de la reserva por voz, que no salía.
+- **04/05-ago**: tono de chat y voz (v66/v67 publicadas), dirección sin «Europolis», link de Maps roto
+  en 3 workflows, primer parche del reenganche sobre conversaciones cerradas.
+- **28/29-jul**: auditoría completa de los 14 workflows y el feedback de Gonzalo (dirección,
+  `voice_speed`, email interno de voz, WhatsApp de voz); el falso diagnóstico de Paginalia, corregido.
 
 ## Próximos hitos
 
 1. **Doble evento por reserva (NEXT)** — cada `Reservar` deja dos eventos en el calendario (30 min y 60 min con distinto título); localizar cuál sobra (`Especilista Asignado` es el sospechoso) y que el guard y los recordatorios miren solo uno.
-2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — los 4 bugs corregidos el 28-jul, pendiente de verse en vivo.** Detalle en [[clinica-zen-historico]]. El fix de la causa raíz (`entity_type` string→entero, [[kommo-salesbot-run-entity-type-debe-ser-entero-no-string]]) **sigue sin ejecutarse ni una vez**: 268 ejecuciones en verde hasta el 3-ago sin pasar de `Filtrar y evitar duplicados` porque ninguna cita cruzó la ventana (histórico). Comprobar con las citas del 3-sep. Learnings: [[n8n-switch-conditions-sin-options-enruta-todo-por-la-primera-salida]] · [[recordatorio-relativo-sin-ventana-horaria-escribe-de-madrugada]] · [[marcar-enviado-antes-de-enviar-pierde-el-mensaje-sin-reintento]]. Backup pre-fix: `cz-recordatorios-pre-fix-20260728-1339.json`.
+2. **Recordatorios (`PJBMjLLE0vNJjZH8`) — 4 bugs corregidos el 28-jul, sin verse en vivo aún**: 268 ejecuciones en verde sin pasar de `Filtrar y evitar duplicados` porque ninguna cita cruzó la ventana. Comprobar con las citas del 3-sep. Detalle y los 4 learnings → [[clinica-zen-historico]] · [[kommo-salesbot-run-entity-type-debe-ser-entero-no-string]]
 3. **Verificar el RAG de Supabase (NEXT)** — es el único corpus que no he podido revisar (self-hosted sin dominio público). Puede seguir teniendo "Europolis" o la dirección vieja. Se comprueba preguntando "¿dónde estáis?" al bot por WhatsApp.
 4. **`emiafd@agentesia.madrid` hardcodeado (LATER)** — en `Especilista Asignado`, `toEmail` = `{{ email }}, emiafd@agentesia.madrid`. Buzón de la agencia recibiendo datos de pacientes en producción. Quitar.
 5. **Tres teléfonos distintos (LATER)** — prompt dice llamadas `629 494 209` y WhatsApp `919 934 582`; la KB dice `91 993 35 69`; las llamadas entran por `919 934 582`. Decidir cuál es cuál y unificar prompt + KB.
-6. **Nitidez de audio (LATER, si Gonzalo insiste)** — medido: el agente está a −19,8 dBFS sin saturar; el bajo es el llamante. Candidata real: `ambient_sound: call-center`, que se mezcla después de la grabación. Prueba: quitarlo y llamar. Detalle → [[clinica-zen-historico]] · [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]]
-7. **Sin repo local (LATER)** — `~/Projects/clinica-zen` está vacío. Mitigado el 28-jul: los 10 workflows activos + el backup pre-cambio están en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (trackeado por git, excluido de búsqueda vía `.ignore`). Falta decidir si CZ merece repo propio con `ops/`.
+6. **Nitidez de audio (LATER, si Gonzalo insiste)** — el agente no satura (−19,8 dBFS); la candidata es `ambient_sound: call-center`, que no está en la grabación. Prueba: quitarlo y llamar. Ver [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]]
+7. **Sin repo local (LATER)** — `~/Projects/clinica-zen` está vacío; los 10 workflows activos y los backups viven en `knowledge/projects/agentesia/n8n-backups/clinica-zen/` (git, fuera de búsqueda vía `.ignore`). Falta decidir si CZ merece repo propio con `ops/`.
 
 8. **Link de Maps roto en el Salesbot de Kommo (NEXT)** — arreglado en los 3 workflows n8n el 04-ago, pero el mensaje de WhatsApp que lo destapó lo manda un Salesbot/plantilla configurado directamente en la UI de Kommo. Cambiar ahí a `https://www.google.com/maps/search/?api=1&query=40.5066687,-3.8926916`.
-9. **Verificar el fix de `bfc4dWuztZsWfb4Q` en ejecuciones reales (NEXT)** — patcheado el 04-ago (query no probada contra la base, self-hosted sin dominio público). Confirmar que corre sin error SQL y que no reabre conversaciones ya cerradas.
-10. **Identificarse como IA (art. 50, vigente desde 2-ago) (NEXT)** — falta en Clínica Zen; va en el `begin_message` como en Tecnocloud. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]].
-11. **Reenganche roto desde hace días (NEXT)** — `bfc4dWuztZsWfb4Q` falla **cada 30 min**: la sesión `38835924` apunta a un lead **borrado** en Kommo (GET devuelve 204), el PATCH da 400 y sin `continue on fail` tumba la ejecución entera → **ningún reenganche sale**. Filtrar leads inexistentes o tolerar el fallo por item.
-12. **Correo solo-HTML (LATER)** — los tres `emailSend` mandan solo `html`, sin parte text/plain y con imágenes remotas de githubusercontent. Añadir la parte de texto ayuda a la clasificación; el CC externo a `info@zendental.es` es el que sufre.
-13. **`Get a call3` en `Leads entrantes` (LATER)** — las pruebas de playground no tienen call real y el nodo rompe la rama del email; poner `onError: continue` o saltarlo cuando no hay `call_id`.
-14. **Nombre inventado (a vigilar)** — el 2-ago la v64 reservó como «Paciente nuevo»; desde el 20-ago llega el prompt bueno y el 3-sep las 3 reservas llevaron nombre real. Si reincide, el arreglo es el guard en `Preparar Datos Voz` contra genéricos, no el prompt.
+9. **Identificarse como IA (art. 50, vigente desde 2-ago) (NEXT)** — falta en Clínica Zen; va en el `begin_message` como en Tecnocloud. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]].
+10. **Correo solo-HTML (LATER)** — los tres `emailSend` mandan solo `html`, sin parte text/plain y con imágenes remotas de githubusercontent. Añadir la parte de texto ayuda a la clasificación; el CC externo a `info@zendental.es` es el que sufre.
+11. **`Get a call3` en `Leads entrantes` (LATER)** — las pruebas de playground no tienen call real y el nodo rompe la rama del email; poner `onError: continue` o saltarlo cuando no hay `call_id`.
+12. **Nombre inventado (a vigilar)** — el 2-ago la v64 reservó como «Paciente nuevo»; desde el 20-ago llega el prompt bueno y el 3-sep las 3 reservas llevaron nombre real. Si reincide, el arreglo es el guard en `Preparar Datos Voz` contra genéricos, no el prompt.
 
 *Descartado tras revisión de Manuel (28-jul)*: que el calendario tenga 2 eventos en 21 días es **normal** para el volumen actual, no hay riesgo de doble reserva. La credencial de Calendar "Cuenta Gonzalo" se mantiene por ahora.
 
@@ -127,6 +134,7 @@ funcionado nunca**. Más el email interno de la reserva por voz, que no salía.
 ## Histórico de hitos
 
 - 2026-09-08: etapa del lead escrita desde un único nodo (chatbot + reenganche); resumen IA de la conversación en el correo interno + CC a info@zendental.es
+- 2026-09-08 (noche): reenganche con gate de estado + descarte persistido y `ORDER BY`; `Update leads` escribe Pendiente de asignar al reservar; `NO_PISAR` con «Perdido» (en discusión)
 - 2026-09-03: v70 (huecos en n8n, guard hueco ocupado, caller-ID `{{user_number}}`), retry Sheets, limpieza de pruebas; Flow agent como borrador
 - 2026-08-20: número desfijado de la v54 → `latest_published`
 - 2026-08-05: dirección sin "Europolis"/"en la dehesa" + no mencionar estética proactiva (v67 Retell publicada, chat en vivo)
