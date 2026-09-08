@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-07
+updated: 2026-09-09
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,19 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-09)
+
+**Importación de la cartera de Ramón a Kommo — parada a mitad, esperando su visto bueno.** Origen: `backup.xlsx`, 2.616 fichas de demanda (comprador + criterios de búsqueda) de un CRM anterior. Preparación y scripts en `~/Projects/simarro/import/` (`PLAN.md` manda).
+
+- **Hecho y verificado**: los **25 campos de contacto** creados por API (ids 1380610-1380658; `campos_kommo.json` guarda el `enum_id` de cada valor) + enum `Terreno` añadido al campo del lead `Tipos buscados` (1376076) con PATCH aditivo. **18 contactos de prueba importados y releídos campo a campo: 0 diferencias.** Con eso quedan medidos tres límites que no están en la documentación: el WKT de 1.590 caracteres entra entero en un `textarea`, una nota de 598 también, y 6 dormitorios mapea a `5+`.
+- **Pendiente**: que Ramón/Manu miren los 18 en Kommo y, con el OK, soltar los **2.595 restantes** por tandas de 50 (+ los 3 solapes por PATCH sobre el contacto existente). Reanudable: `import/mapa_ref_id.json` lleva la cuenta. → [[sin-filtro-por-campo-personalizado-la-idempotencia-va-por-request-id]]
+- **Decisiones cerradas**: solo contactos, **sin crear leads** (la conversión la hace el equipo a mano); valor fuera de rango → **campo vacío** + original a `Notas origen` + marca en `Revisar dato`, nunca corregido a ojo (16 fichas, casi todas precios que parecen estar en miles); los 3 solapes por teléfono se **enriquecen**, no se duplican. La copia contacto→lead (salesbot con 9 `set_custom_fields`) queda **aplazada** — los 9 campos ya están alineados 1:1 con los del lead, así que es trabajo de una sesión cuando se retome.
+- **Las zonas del Excel eran multipolígonos WKT**, no nombres: resueltas a municipio en local (punto-en-polígono contra los 179 municipios geocodificados una sola vez, con el polígono real de Madrid capital porque su centro cae más lejos que el de sus vecinos). 2.616/2.616. Nominatim aguanta ~1 req/s: geocodificar 1.182 centroides da 429, geocodificar 179 municipios y cruzar en local no.
+- **Los 1.850 contactos de mayo NO son cartera**: entraron 1.811 de ellos en 4 minutos el 26-05, `created_by: 0`, solo nombre y teléfono, con nombres tipo "Papa Ayuntamiento" o "Nacho Na" — es **una agenda de móvil sincronizada** al conectar WhatsApp Business, bajo la cuenta de Agentesia Lab. No es n8n (ninguno de los 41 workflows carga contactos). Solo **3 de 2.616** solapan por teléfono, así que la cartera nueva no pisa nada. Quién conectó esa integración no se puede sacar por API. → [[un-created-by-0-no-atribuye-el-control-es-crear-la-entidad-tu-mismo]]
+- **47 fichas basura** listadas con enlace en `import/limpieza_candidatos.csv` (28 de test nuestras, 16 vacías del todo, 2 sin nombre, 1 desechable mía). **Se borran a mano**: `DELETE` de contactos devuelve 405, comprobado.
+
+**Dos fallos vivos encontrados de paso, FUERA del encargo de Ramón — no tocados**: (1) **cada llamada del agente de voz deja una ficha huérfana vacía** además de la buena (5 solo el 7-sep, siempre ~1 min después del contacto real); (2) **el flujo de voz no deduplica por teléfono** — 3 fichas distintas con `+34629127816` creadas el mismo día, y en la cuenta hay 8 números repartidos en 49 fichas (uno en 15). Decidir si se atacan.
 
 ## Estado (2026-09-07)
 
