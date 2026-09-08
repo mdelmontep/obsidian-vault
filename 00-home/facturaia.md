@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-07
+updated: 2026-09-08
 tags: [cliente, facturaia, hub]
 ---
 
@@ -36,7 +36,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ## NOW (trabajo activo)
 
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** — módulo por organización, apagado por defecto: catálogo de cuentas del cliente, N ejes analíticos, aprobación de 3 etapas y exportador Cegid V9. **15 decisiones en `ADR-063`**, glosario en `CONTEXT.md`, spec **#2295**, **13 tickets #2296-#2308**. Cogibles sin esperar a nadie: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]]) y **#2297** (fundaciones del catálogo). Todo ello **sin commitear** en el checkout raíz (el ADR se renumeró del 033 el 31-ago: el 033 es el de Floating UI de la serie del vault). **Tuyo**: los tres cuestionarios y arrancar. → [[facturaia-yooz-agh-migracion]] · [[agh-iberica]]
-- 🟢 **Etapa de integración: CERRADA del todo (7-sep, en prod)** — los cinco que quedaban (#2544 + **mig 871** · #2545 · #2532 · #2573 · #2530), candados probados por mutación. **Tuyo**: ¿`SUPABASE_ACCESS_TOKEN` en Dokploy? Es un PAT de todo el proyecto y sin él el vigía **no vigila**. Del paraguas siguen ABIERTOS **#2541** (el PR #610 lleva una mig **423** que colisiona con la 423 ya aplicada en prod), **#2542**, **#2561** flaky, **#2562** guard ciego y **#2538**; más los dos de hoy, **#2603** y **#2604**. El **#2524** lo cerró otra sesión el 7-sep. Detalle → [[facturaia-historico-eventos]] · [[un-trinquete-con-cache-incremental-caliente-no-mide-y-sale-verde]]
+- 🟢 **Etapa de integración y sus doce cabos: CERRADO (8-sep, en prod)** — solo sigue abierto **#2538**, esperando a José hasta el 19-sep. **Tuyo**: ¿`SUPABASE_ACCESS_TOKEN` en Dokploy? Sin él el vigía no vigila. → [[facturaia-historico-eventos]] · [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
+- 🟠 **Horda del backlog de hallazgos: prompt escrito, sin lanzar (8-sep)** — 42 issues en 9 olas por colisión, en `docs/architecture/PROMPT-horda-backlog-abierto.md` (sin commitear). Autoría en paralelo, **gate y merge en SERIE** (8 GB de heap; dos a la vez van a swap). Lo caro: **#2601** (−9.900 € en un proveedor) y **#2577** (VeriFACTU sin perfil fiscal). **Tuyo**: orden de olas y quién aplica las migraciones de A y D.
 - 🟢 **FacturaDirecta: el cursor deja de adelantar a lo que falló (5-sep, #2518, en prod)** — **Tuyo**: el código de impuesto de esas dos líneas, en FacturaDirecta. → [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]] · [[dedup-key-no-debe-incluir-contenido-volatil]]
 - 🟢 **Tickets 166/167/168 (2/3-sep, en prod)** — queda **#2416** (agente). → [[un-registro-que-estampa-head-vale-solo-con-el-arbol-limpio]]
 - 🟢 **El reel se previsualiza con el mismo dibujo que se quema (3-sep, #2423)** — **queda**: la costura PNG→ffmpeg sin test y el choque cierre/subtítulos sin medir. → [[iframe-sandbox-vacio-deja-el-documento-en-origen-opaco]]

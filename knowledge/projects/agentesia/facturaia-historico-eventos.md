@@ -252,3 +252,14 @@ medido: no tiene dónde correr (el runner E2E aborta contra prod, la imagen de p
 lleva Playwright, staging no tiene app desplegada).
 
 Retirado del NOW el mismo día, ya sin nada pendiente: **la FK de la 845 dejó ambiguo todo embed `facturas ↔ lineas_factura`**, arreglado el 5-sep en el #2529; el #2530 que dejaba vivo se cerró aquí. → [[una-fk-nueva-hacia-una-tabla-ya-referenciada-rompe-los-embeds-de-postgrest]] · [[un-diff-de-fichero-generado-sin-danos-colaterales-no-salio-del-generador]]
+
+### 8-sep-2026 — los siete cabos que le quedaban a la auditoría de integración
+
+Cerrados **#2541**, **#2542**, **#2562**, **#2561**, **#2604**, **#2603** y **#2610**, cada uno con candado probado por mutación (PRs #2616, #2617, #2619, #2620, #2622). Con los cinco del 7-sep (#2544 + mig 871 · #2545 · #2532 · #2573 · #2530) el paraguas queda a cero salvo **#2538**, que espera a José hasta el 19-sep.
+
+Tres hallazgos de método, y los tres son la misma familia —un instrumento que no mide y da verde—:
+
+1. El trinquete de volumen de tipos medía con el caché incremental **caliente** (`types=85` contra 1.757.322 en frío, con un tope que discrimina en ~2.000), y además **no medía el mismo programa en dos clones**: `tsconfig.json` incluye `.next/types/**`, que no está en git, y valen 16.794 tipos. Se partió en dos comandos y dos tsconfig, con el de medición commiteado, y se regeneró el baseline en el mismo PR para no dejarlo flojo por la diferencia exacta. → [[un-trinquete-con-cache-incremental-caliente-no-mide-y-sale-verde]]
+2. **`core.hooksPath` estaba en ruta absoluta**, así que todo worktree corría el `pre-push` del checkout principal, 175 commits atrás: cuatro etapas ausentes y un log más corto que se lee como buenas noticias. El detector no podía ser otro hook —sería circular—, así que vive en la suite, que toda versión del hook ejecuta. → [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]] · [[el-detector-de-un-instrumento-roto-vive-en-la-capa-que-el-roto-sigue-ejecutando]]
+3. `mutate-guard` cruza el registro de mutaciones contra los ficheros **del stage de ese commit**: mutar el fichero que declara el valor, si no está en el stage, no desbloquea nada — y hace bien. → [[la-mutacion-que-desbloquea-el-guard-tiene-que-ser-sobre-un-fichero-del-stage]]
+

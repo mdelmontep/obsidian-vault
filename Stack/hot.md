@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **`core.hooksPath` absoluto: cada worktree corre el hook del PRINCIPAL** — y si va detrás, tu gate mide menos. [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
+- **El detector de un instrumento roto vive en la capa que el roto sigue ejecutando** — un hook no se detecta a sí mismo. [[el-detector-de-un-instrumento-roto-vive-en-la-capa-que-el-roto-sigue-ejecutando]]
 - **Lo que escribes arreglando un hallazgo es el hallazgo siguiente** — el categórico escrito en caliente («la única», «los cuatro») suele ser falso. [[lo-que-escribes-arreglando-un-hallazgo-es-el-siguiente-hallazgo]]
 - **El saldo de una fecha se deriva hacia atrás desde el actual** — si `stock_actual − Σ(ledger)` no da 0, sumar el ledger miente. [[el-saldo-historico-se-deriva-hacia-atras-desde-el-actual]]
 - **Reescribir un paso de un runbook se lleva el aviso que protegía a OTRO paso** — grep del identificador, no de la sección. [[reescribir-una-seccion-se-lleva-el-aviso-que-la-protegia]]

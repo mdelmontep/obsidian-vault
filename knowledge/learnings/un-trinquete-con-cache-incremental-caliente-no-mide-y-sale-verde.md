@@ -17,6 +17,17 @@ tiempo, y el log imprime `typecheck: OK (types=85)`, que parece una medida.
 Fix: borrar el `tsbuildinfo` antes de medir, y un caso que falle si el segundo
 número colapsa — sin él, un verde legítimo y uno ciego son idénticos.
 
+**El segundo defecto, y es peor:** si el `tsconfig` incluye ficheros GENERADOS y no
+trackeados (`.next/types/**`), el veredicto depende de si alguien levantó el servidor
+de desarrollo en ese clon. Medido: 16.794 tipos de diferencia, y tres worktrees del
+mismo commit imprimiendo 1.751.145 / 1.760.410 / 1.767.641. Un trinquete solo vale si
+su rojo es **accionable**, y nadie escribe los tipos de ruta generados. Separa dos
+programas: uno para *¿compila?* (con lo generado, caché a favor) y otro **commiteado**
+para *¿cuánto tipo añado?* (sin lo generado, `--incremental false`), y que el script se
+niegue a arrancar si el segundo falta en vez de caer al primero en silencio.
+Regenera el baseline en el mismo PR: si cambia el programa medido y no el tope, el
+trinquete queda flojo por la diferencia exacta.
+
 Corolario al cruzar el tope de verdad: **baja tu propio coste antes de subir un
 baseline compartido**. 821 literales de objeto contra una interfaz costaban 2.710
 tipos; el mismo fichero generado como `readonly string[]` + `.map()` cuesta plano.
