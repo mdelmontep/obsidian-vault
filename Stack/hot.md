@@ -124,3 +124,4 @@ Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
 
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]
+- **Un rojo de E2E por timeout de navegación mide el servidor de desarrollo** — árbol fijo, cambia solo dev → build. Ver [[un-e2e-rojo-por-timeout-de-navegacion-mide-el-servidor-de-desarrollo]]
