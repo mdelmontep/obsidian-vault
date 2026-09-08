@@ -42,6 +42,15 @@ de ahí y están retractados en [[clinica-zen-historico]]:
   **Pregunta de negocio abierta**: el que anuló y escribe *sin* reservar ya no vuelve al radar — si la
   clínica quiere verlo, es una etapa o tarea propia, no sacar `143` de la lista.
 
+**Tercera tanda (noche 8/9-sep, sesión paralela)** — tres fallos de cara al PACIENTE, arreglados:
+el **horario de verano** salía del número de mes en 4 nodos, así que ~34 días al año la cita se creaba
+**una hora antes** de lo dicho · el **CC a `info@zendental.es` no llegaba nunca** (`ccEmail` fuera de
+`options`) · **quien reserva por voz no recibía nada escrito** (`WA Confirmación Cita A/B` huérfanos,
+reconectados; el correo «de confirmación» va a la clínica). **Pendiente: capturar email y teléfono en
+la llamada — es del agente de Retell, no de n8n.** Detalle → [[clinica-zen-historico]] ·
+[[offset-de-zona-horaria-por-numero-de-mes-desfasa-una-hora-las-citas]] ·
+[[ccemail-en-la-raiz-del-nodo-email-se-descarta-sin-dar-error]] · [[el-webhook-que-notifica-un-cambio-no-es-quien-lo-hizo]]
+
 ⚠️ **Ni este cambio ni la reconexión de los `WA Confirmación Cita A/B` (sesión paralela) se han
 estrenado**: 0 ejecuciones del chatbot desde el PUT de las 20:05:36Z. La primera conversación real
 prueba los dos a la vez.

@@ -4,6 +4,33 @@ date: 2026-08-03
 tags: [cliente, clinica-zen, historico]
 ---
 
+## 8/9-sep-2026 (noche) — DST, CC y la confirmación al paciente de voz
+
+- **Horario de verano en 4 nodos de `RN0wl8RaRmwLpnfQ`** (`Preparar Datos`, `Preparar Datos Voz`,
+  `Preparar Datos Voz2`, `Pasamos a segundos2`): offset deducido del número de mes → del 1 al 28 de
+  marzo y del cambio al 31 de octubre la cita se creaba una hora antes. El arreglo obvio (calcular el
+  último domingo) también falla si se compara la hora local contra el instante UTC del cambio: el
+  umbral son las 02:00 locales en marzo y las 03:00 en octubre. Lo destapó una **mutación que
+  sobrevivió siendo más correcta que el original** — acusaba al oráculo, no al mutante. 20 casos y 6
+  mutantes muertos, y verificado 9/9 ejecutando el bloque **ya desplegado** en el motor de n8n
+  (contenedor en UTC con ICU completo), no en local.
+- **CC a `info@zendental.es`**: `ccEmail` en la raíz del `emailSend` 2.1 se descarta sin error. Se
+  probó contra el SMTP real comparando `accepted`: en la raíz solo el destinatario; en `options`,
+  destinatario + copia. Llevaba así desde que se puso.
+- **El paciente de voz no recibía confirmación escrita**: `Preparar Datos Voz` sale con `email=None` y
+  `telefono=None` en las 6 reservas retenidas, y `Send Confirmation Email1` va a `citas@clinicazen.es`.
+  El WhatsApp lo manda el salesbot `63814`, lanzado solo por `WA Confirmación Cita A/B`, sin padre y
+  sin sustituto en los 12 workflows. Delatados por la posición: seguían en la misma Y que su padre
+  (`[192,-1136]` → `[416,-1136]`). Reconectados en paralelo a `Create an event Voz[0]`/`Voz2[0]`:
+  2 conexiones, 0 nodos tocados, backup `backup-RN0wl8RaRmwLpnfQ-pre-wa-20260909-0037.json`.
+  Verificado tras el PUT: 72 nodos, 0 conexiones perdidas, 0 deriva, 67/67 alcanzables desde 7 triggers.
+- **Atribución de los saltos de etapa**: los webhooks de Kommo cuadran al segundo con el cambio y NO
+  son el autor; el autor escribe 0,6-0,7 s antes (`Update leads1` → Perdido; `Set Estado Lead 2` →
+  Contestados). El lead 37578516 ya no existe (`GET` 204), así que sus eventos son irrecuperables.
+- **Falsos diagnósticos propios, retractados**: se afirmó que `NO_PISAR` no llevaba `143` leyendo la
+  copia local del chatbot en vez del workflow vivo — ya estaba aplicado; y la objeción de que
+  bloquearlo enterraría al que anula y vuelve a reservar es falsa: `reservarCalled` retorna antes.
+
 # Clínica Zen — histórico
 
 Detalle de hitos ya cerrados, sacados del hub el 2026-08-03 para que el arranque de sesión no los
