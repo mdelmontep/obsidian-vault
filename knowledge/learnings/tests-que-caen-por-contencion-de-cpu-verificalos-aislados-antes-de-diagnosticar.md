@@ -63,3 +63,22 @@ No era la base de datos: 7 conexiones de 100. `ps aux | sort -rnk3` señaló a o
 usuario (`next-server`, un `tsc`, graphviz) — **pregúntale a `ps` quién consume, no al Postgres**.
 Y al crear una base de contraste, migrarla: un guard de esquema desactualizado da rojos que se leen
 como propios.
+
+## La variante de integración: el rojo NO es un timeout, es un `TypeError` (8-sep, facturaia)
+
+Las tres firmas de arriba dan por hecho que el síntoma es un reloj. Con una base
+de datos compartida entre worktrees el síntoma puede ser una **excepción de
+lógica**: dos casos de `asignar-manual.test.ts` cayeron con
+`TypeError: Cannot read properties of null (reading 'id')`. Con la máquina libre,
+mismo commit: `6 passed (6)` en 1,59 s.
+
+Por qué se disfraza: los helpers de seed hacen
+`const { data } = await admin.from(…).insert(…).single()` y luego `return data!.id`.
+El insert falla por la carga, se descarta el `error` de Postgres, el `!` afirma
+no-nulo y lo que se ve es un `TypeError` tres líneas más abajo, **lejos de la
+causa y con pinta de bug de código**. Censo en facturaia: 42 casos del patrón en
+26 ficheros, y `eslint.config.mjs` exime `**/__integration__/**` a mano.
+
+Así que la comprobación aislada no es opcional aquí, es lo único que discrimina —
+y al hacerla, verifica que los casos **se ejecutaron** y no se saltaron: un
+`describe.skipIf` sin credenciales sale verde igual.

@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Matar el envoltorio no mata el trabajo** — el `git push` sigue con su hook dentro; `pgrep` del comando real. [[matar-el-envoltorio-no-mata-el-proceso-que-hace-el-trabajo]]
 - **`core.hooksPath` absoluto: cada worktree corre el hook del PRINCIPAL** — y si va detrás, tu gate mide menos. [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
 - **El detector de un instrumento roto vive en la capa que el roto sigue ejecutando** — un hook no se detecta a sí mismo. [[el-detector-de-un-instrumento-roto-vive-en-la-capa-que-el-roto-sigue-ejecutando]]
 - **Lo que escribes arreglando un hallazgo es el hallazgo siguiente** — el categórico escrito en caliente («la única», «los cuatro») suele ser falso. [[lo-que-escribes-arreglando-un-hallazgo-es-el-siguiente-hallazgo]]

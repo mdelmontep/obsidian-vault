@@ -263,3 +263,41 @@ Tres hallazgos de método, y los tres son la misma familia —un instrumento que
 2. **`core.hooksPath` estaba en ruta absoluta**, así que todo worktree corría el `pre-push` del checkout principal, 175 commits atrás: cuatro etapas ausentes y un log más corto que se lee como buenas noticias. El detector no podía ser otro hook —sería circular—, así que vive en la suite, que toda versión del hook ejecuta. → [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]] · [[el-detector-de-un-instrumento-roto-vive-en-la-capa-que-el-roto-sigue-ejecutando]]
 3. `mutate-guard` cruza el registro de mutaciones contra los ficheros **del stage de ese commit**: mutar el fichero que declara el valor, si no está en el stage, no desbloquea nada — y hace bien. → [[la-mutacion-que-desbloquea-el-guard-tiene-que-ser-sobre-un-fichero-del-stage]]
 
+
+### 8-sep-2026 — la cabecera provisional se sella al renumerar, y un rojo que no era del código
+
+**#2602 → PR #2626, mergeado (`6ff1fad72`) y verificado leyendo el fichero desde `origin/main`.**
+Trece migraciones ya en `main` llevaban la cabecera «NÚMERO PROVISIONAL» que se escribe a
+mano al crearlas —876, 874, 867, 866, 865, 864, 863, 848, 809, 788, 787, 783 y 781— y la 876
+anunciaba además un número que ya no era el suyo, el 901. No se pueden corregir: la edición
+de una migración mergeada la aborta `migracion-colision-guard`, y hace bien, porque `db push`
+decide por VERSIÓN y no distingue un comentario de un `CREATE FUNCTION`. Ahora `mig:renumerar`
+sella la cabecera en el mismo gesto que asigna el número, por los **dos** caminos: la que se
+mueve y la que ya está en su hueco — esta última era la que se escapaba siempre, porque el
+script imprimía «ya está en su hueco» y no tocaba el fichero. Tres tests sobre un repo git
+real, verificados por mutación (`2 failed | 20 passed` al romper el sellado).
+
+Lo que **no** hace, y es deliberado: solo toca la cabecera. El cuerpo se sigue señalando sin
+sustituir, porque la forma con espacio `mig NNN` se retiró como regla en agosto tras reescribir
+a ciegas referencias ajenas en `CONTEXT.md`, dos manuales y un test. Corolario que engaña y que
+quedó escrito en el PR: **sellar la cabecera no significa que ya no quede el número viejo en el
+fichero** — en el PR #2623 de otra sesión vivía en dos `v_mig CONSTANT TEXT`, que es lo que
+acaba escrito en `audit_log`, donde no lo mira ningún test.
+→ [[senalar-no-es-arreglar-el-aviso-del-paso-previo-al-merge-se-deja-pasar]]
+
+**El rojo de integración era contención, cerrado con dos medidas.** Un push anterior falló con
+dos casos de `asignar-manual.test.ts` en `TypeError: Cannot read properties of null (reading
+'id')`. Con la máquina libre y el mismo commit: `6 passed (6)` en 1,59 s, y comprobado que se
+ejecutaban de verdad y no se saltaban. El disfraz lo ponen los helpers de seed, que descartan
+el `error` de Postgres y afirman `data!`: un fallo de infraestructura sale como excepción de
+lógica lejos de la causa. Abierto como **#2627** (por otra sesión, que llegó por otro camino);
+censo propio añadido en comentario: **42 casos del patrón estricto en 26 ficheros** sobre 243
+desestructuraciones, y `eslint.config.mjs:159` exime `**/__integration__/**` a mano, así que
+nada lo vigila. → [[tests-que-caen-por-contencion-de-cpu-verificalos-aislados-antes-de-diagnosticar]]
+
+**Coordinación de máquina, tres sesiones.** Dos pushes de 8 GB entraron a la vez en la etapa de
+integración contra la única `fia-dbtest` compartida (5 vitest, load 35,22). Se resolvió por
+asimetría medida y no por turno: una llevaba 372 s de suite en verde y la otra estaba en el
+pre-vuelo, así que la segunda se mató. Y de ahí el gotcha del día:
+[[matar-el-envoltorio-no-mata-el-proceso-que-hace-el-trabajo]] — matar el `zsh` del `nohup` deja
+vivo el `git push` con su hook dentro.
