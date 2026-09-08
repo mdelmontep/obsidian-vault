@@ -248,3 +248,26 @@ Medido el **efecto**, no el estado de las ejecuciones. Método y contexto en [[a
   julio/agosto son casi todas desde el móvil de Gonzalo (`+34609779229`) o el de Manu (`+34617314938`).
   Sin tráfico de pacientes no hay forma de que un fallo aflore solo: por eso hace falta el check de
   efecto, no esperar a que salte algo.
+
+## Estado 3-sep-2026: v70 en producción, huecos y guard en código
+
+Tres llamadas reales de prueba destaparon que la **v67 calculaba la disponibilidad en el LLM** desde los eventos crudos del calendario (decía «miércoles completo» con la mañana libre, no dejaba elegir otra hora) y que aceptaba horas fuera de la lista (13:00 ocupada → reservada encima). Hecho en producción (LLM `llm_271c…`, **v70 publicada**, número en `latest_published`):
+
+- `Mirar_disponibilidad` recibe `dia`/`franja`/`hora` y **n8n devuelve los huecos ya calculados** (`Code in JavaScript2` de `RN0wl8RaRmwLpnfQ`: L-V 10-14/15:30-20:30, sáb 10-14, festivos, margen 48 h, ventana 21 días, solapes; salida `opcion1/2_*`, `huecos_disponibles`, `dia_coincide`). El prompt solo elige.
+- **Guard en `Reservar_crm`** (4 nodos antes de `Get list of contacts1`): relee el calendario ±1 h y si el hueco está ocupado responde `error: hueco_ocupado` sin tocar Kommo; el prompt (§9b) vuelve a mirar disponibilidad. Probado (exec 13067). La lista cerrada protege el ofrecer; el guard, el reservar → [[defensa-en-codigo-vs-prompt-llm-para-invariantes-de-dominio]].
+- Teléfono: ofrece el número del llamante con `{{user_number}}` (**no** `{{from_number}}`, que llegaba vacía) y solo pide otro si dice que no → [[retell-from_number-no-auto-sustituye-en-tool-args]].
+- `Append row in sheet1` (log en Sheets, último nodo) con retry 3×5 s tras el 503 del 3-sep; no afecta al paciente.
+- Pruebas limpiadas: 4 leads a status 143 renombrados `[TEST agentesia 3-sep] …`, 5 eventos borrados. **Quedan los contactos `39968918` y `41819782`** (la API no borra contactos): quitar en la UI de Kommo.
+- Backups pre-cambio (LLM v67, workflow) en el scratchpad de la sesión; el de la v54 sigue en `knowledge/projects/agentesia/n8n-backups/clinica-zen/`.
+
+**Agente Flow** `agent_d3c52ef4ee0f2eeb6904212c05` («Clínica Zen (Flow)»): borrador con intake de una pregunta por turno, tono («vale/perfecto» + «¿me puedes decir tu nombre?»), audio (`interruption_sensitivity 0.5`, `denoising noise-cancellation`, `begin_message_delay 1000`) y sin «Európolis». **Sin número asignado**: 2 h corrigiéndolo mientras la llamada real entraba en el single-prompt — antes de editar, `list-phone-numbers` → `agent_id` ([[publicar-un-agente-no-basta-el-numero-puede-fijar-su-version]]). Decidir si sustituye al single-prompt; si sí, portarle huecos + guard + caller-ID.
+
+**Visto y no tocado**: cada reserva crea DOS eventos (30 min «Odontología - Valoración - X» y 60 min «Valoración - General - X», probablemente `Especilista Asignado`) · las pruebas de playground fallan en `Get a call3` de `Leads entrantes` (no hay call real) y no mandan el email · `transfer_call` no funciona desde test web.
+
+## Observabilidad (detalle 28-jul)
+
+**Observabilidad**: los 9 workflows activos (todos menos el propio handler) tienen `errorWorkflow: FMotimghgUBzEgdm`, y ese handler **sí notifica**: `Error Trigger` → `Preparar contexto` → POST a `https://n8n-borja.tecnocloud.es/webhook/incidencia` con cliente/workflow/nodo/error. El fallo del 28-jul a las 06:30 disparó la incidencia correctamente (ejec 9408 en success). O sea, el hueco no es de instrumentación sino de **que nadie mira ese colector** — el error llevaba 7 horas reportado cuando lo encontré a mano. Pendiente: saber quién vigila las incidencias que llegan ahí (¿Borja? [[tecnocloud]]).
+
+## Nitidez de audio (medición, LATER)
+
+6. **Nitidez de audio (LATER, si Gonzalo insiste)** — medido sobre la grabación: agente −19,8 dBFS, 0 muestras saturadas; el que se oye 5 dB más bajo es el llamante. Candidata real = `ambient_sound: call-center`, que se mezcla después de la grabación y por eso no se oye al escuchar el WAV. Latencia e2e p50 2,35 s / p90 3,35 s también pesa. Prueba: quitar el ambient y llamar. Ver [[retell-ambient-sound-no-esta-en-la-grabacion-auditar-por-config]].

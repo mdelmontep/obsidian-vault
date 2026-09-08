@@ -25,3 +25,11 @@ y cayó en la carpeta **Spam** del buzón, no en INBOX. Buscarlo a los 2 min y s
 me hizo concluir lo contrario. La sonda es válida; lo que hay que hacer bien es **esperar
 (hasta 15 min) y buscar en TODAS las carpetas**, Spam incluida. Un "no hay rebote" prematuro
 es tan engañoso como no mirar.
+
+**Ampliación (8-sep)**: el aviso interno de Clínica Zen lleva año y medio llegando, pero va de
+`citas@clinicazen.es` a `citas@clinicazen.es` — **entrega local en el mismo servidor**, que no
+prueba nada de la salida externa. Al añadir un destinatario de fuera (un CC a otro dominio) hay
+que probar esa ruta aparte: el primero que mandé a Gmail acabó en Spam. Y esta vez SPF, DKIM,
+DMARC (`dmarc=pass`, sonda propia al buzón emisor), FCrDNS y 4 RBL estaban **todos en verde**, así
+que cuando todo pasa y aun así cae en Spam, la causa que queda es reputación del dominio, no
+configuración: el diagnóstico útil es el registro de correo del destinatario, no otro `dig`.

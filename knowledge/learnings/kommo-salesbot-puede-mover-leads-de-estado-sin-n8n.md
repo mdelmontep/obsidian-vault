@@ -14,3 +14,8 @@ Síntoma: un lead cambia de status entre dos ejecuciones del chatbot, sin que ni
 Debug: si un lead cambia de estado misteriosamente, revisar la configuración del salesbot en Kommo GUI → buscar acciones "Cambiar etapa" o "Mover a pipeline".
 
 Caso real: bot_id 68822 en Clínica Zen movía leads de 104111891 a 104115975 al enviar cada mensaje.
+
+**Contraste (8-sep, Clínica Zen)**: el mismo síntoma —lead que cambia de etapa "solo"— resultó ser
+lo contrario: el `status_id` iba hardcodeado en el `jsonBody` del PATCH de los nodos `salesbot*` de
+n8n, no en la GUI de Kommo. Descarta primero lo que puedes leer (el nodo) y luego lo que no (el bot).
+Ver [[el-nodo-que-envia-el-mensaje-no-debe-escribir-la-etapa-del-lead]]
