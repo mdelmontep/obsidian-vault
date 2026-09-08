@@ -6,6 +6,8 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un `||` en un secreto lo degrada en silencio** — si la variable no existe, el literal del código ES la llave, y nada falla. [[secreto-con-fallback-literal-degrada-en-silencio-si-falta-la-variable]]
+- **Los datos reales no verifican un `||`** — solo prueban las combinaciones que la realidad produce; una puerta por brazo, comprobada por mutación. [[un-mutante-sobrevive-cuando-los-datos-reales-tapan-un-brazo-del-or]]
 - **Matar el envoltorio: dos hipótesis, no una** — a veces el `git push` sobrevive con su hook dentro, a veces el kill se lleva el grupo; veredicto por `pgrep` del comando real Y `git ls-remote`. [[matar-el-envoltorio-no-mata-el-proceso-que-hace-el-trabajo]]
 - **`core.hooksPath` absoluto: cada worktree corre el hook del PRINCIPAL** — y si va detrás, tu gate mide menos. [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
 - **El detector de un instrumento roto vive en la capa que el roto sigue ejecutando** — un hook no se detecta a sí mismo. [[el-detector-de-un-instrumento-roto-vive-en-la-capa-que-el-roto-sigue-ejecutando]]

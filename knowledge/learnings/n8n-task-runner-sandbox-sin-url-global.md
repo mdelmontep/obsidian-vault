@@ -16,3 +16,14 @@ function _pathSearch(urlStr) {
 ```
 
 Aplicable a cualquier helper que necesite firmar HMAC con `pathWithSearch`, parsear redirects, etc. Caso: helper `signedHttpRequest` migración Receptor v2.
+
+**Y sin esa variable no hay `crypto` de ninguna forma** (8-sep-2026, Centro Elphis): con
+`N8N_RUNNERS_ENABLED=true` el JS corre en un `vm.createContext` cuyos globales son solo
+`Buffer/timers/btoa/TextEncoder/FormData`. Ahí `typeof crypto === 'undefined'`, así que
+`crypto.subtle` —lo que uno escribe por inercia del navegador— revienta con
+`ReferenceError` en runtime, no al guardar. Un validador HMAC escrito así lleva dos
+semanas "puesto" sin validar nada, y el día que alguien añade el secreto para activarlo,
+el webhook empieza a devolver 500 y el canal entrante muere. Comprobación barata desde
+fuera: `docker exec <n8n> node -e "const vm=require('vm');console.log(vm.runInContext('typeof crypto', vm.createContext({Buffer})))"`.
+Regla: en un Code node, `require('crypto')` + `NODE_FUNCTION_ALLOW_BUILTIN=crypto`, nunca
+`crypto.subtle`; y el secreto y la variable se ponen **en la misma edición**.
