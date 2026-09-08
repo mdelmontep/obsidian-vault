@@ -328,3 +328,28 @@ retención de garantía**. Eso respalda de forma independiente la corrección de
 **#2589**: la garantía NO se resta, porque es un aplazamiento y no una minoración. Ancla interna
 medida en casa: el ADR-081, donde el total de FacturaDirecta llega neto de retención (1.060, no
 1.210). El **#2589 se deja abierto a propósito** — la propuesta espera decisión de negocio.
+
+**Ticket 170, verificado contra prod al cerrar el día.** `estado=resuelto` desde el 5-sep 03:30
+(`resuelto_via=manual`, `resuelto_por` NULL), pero la función no llegó a prod hasta el **7-sep** y
+al cliente no se le dijo cómo se llama hasta el **8-sep 06:29** — tres días con el ticket diciendo
+«resuelto» por delante de la realidad. Los dos correos constan `delivered` a `chivite@chivite.net`,
+y `visto_por_user` sigue en `f`. Lo que el smoke NO cubre y no lo tapa que lo use el cliente: los
+**10 abonos parciales** de la sandbox salen con `verifactu_estado = no_aplica`, así que el camino
+del PR 4 nunca se ha ejercido contra producción. → [[el-filtro-que-saca-el-ruido-saca-tambien-la-prueba-de-que-funciona]]
+
+**Smokes verdes retirados del hub (8-sep, poda).** Cinco entradas ✅ que ya no miraban hacia
+delante, condensadas aquí:
+- **26-ago, #2234 / mig 761** — el «Olvidar» de la tarjeta de categorías, VISTO en prod: pinta las
+  reglas con su pill y el umbral efectivo, y el botón hace `DELETE 200` + refetch acotado a la org.
+  La otra mitad no es ejercitable por la UI: `es_ambigua` ya no es alcanzable por ningún camino del
+  producto. → [[subir-ancestros-buscando-el-texto-de-una-fila-clica-la-de-al-lado]]
+- **22-ago, #2104** — el aviso de «Ejecutar ahora» de un cron, VISTO en prod: el run quedó
+  `success` y cero notificaciones. Destapó que `triggered_by` decía `dokploy` también para los
+  disparos manuales → corregido en #2108, tres casos verificados por mutación.
+- **22-ago** — smoke en navegador de la tanda del día: verdes #2080a, #2085a, #2085b, #2087 y
+  #2088. Sacó el #2100.
+- **14-ago, contenido-09** — primer reel real VERDE: run completado, 2,25 € clavado a la
+  estimación, pieza en `revision` con vídeo reproducible. Su análogo del primer carrusel sigue
+  pendiente y se queda en el hub.
+- **08-ago, #1538** — rejilla de partidas pulida en prod: fila 50→34 px, capítulo vacío 284→44,
+  anchos por puntero.
