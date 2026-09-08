@@ -78,3 +78,12 @@ Ver [[facturaia]].
    `pre-push` de facturaia corre `build`, así que una rama que solo toca un `.md` aborta con
    `sh: next: command not found`. Se lee como un problema del repo y es que el worktree está
    vacío. Clonar con `cp -Rc` también ahí.
+
+8. **Un `node_modules` vacío pasa DESAPERCIBIDO hasta el primer `.ts`** (8-sep-2026): el
+   `pre-commit` de facturaia se salta el typecheck si no hay TS en el stage, así que un
+   worktree sin provisionar deja pasar commits solo-docs y solo revienta al añadir un `.ts`,
+   con `Cannot find module …/typescript/bin/tsc` — que el hook reporta como **«errores de
+   TypeScript»**, y no lo son. Peor: al diagnosticarlo a mano, `npx tsc --noEmit` resuelve un
+   binario de FUERA del árbol y sale **verde con cero errores**. El punto 1 dice que `npx` coge
+   un binario ajeno y FALLA; el modo peligroso es este, cuando pasa. Verifica el árbol, no el
+   comando: `ls node_modules/.bin/tsc`.

@@ -300,4 +300,31 @@ integración contra la única `fia-dbtest` compartida (5 vitest, load 35,22). Se
 asimetría medida y no por turno: una llevaba 372 s de suite en verde y la otra estaba en el
 pre-vuelo, así que la segunda se mató. Y de ahí el gotcha del día:
 [[matar-el-envoltorio-no-mata-el-proceso-que-hace-el-trabajo]] — matar el `zsh` del `nohup` deja
-vivo el `git push` con su hook dentro.
+vivo el `git push` con su hook dentro. **Corregido esa misma tarde, y la corrección es el punto**:
+un segundo kill SÍ se llevó el push a mitad de gate. Ni «murió» ni «sigue vivo» se deducen de que
+el wrapper desaparezca: son dos hipótesis. El veredicto de aquella tarde salió de tres medidas de
+naturaleza distinta — sin proceso (`pgrep`), sin rama en el remoto (`git ls-remote`) y log congelado
+un minuto después (`stat`) — y solo entonces se relanzó, ya desacoplado con `nohup` + `disown`.
+
+## 2026-09-08 — la deuda se mide en cobrable: ADR-086 mergeado (#2632)
+
+**Qué se cerró.** El ADR-086 entra en `main` (`6965d4f97`) como **propuesta pendiente de OK de
+negocio**, no como cambio aplicado: la conciliación ya mide la deuda en cobrable
+(`factura_pendiente_conciliable`, mig 820, y el automarcado en la 838), pero los widgets y los
+informes siguen sumando el bruto fiscal, así que el mismo cliente ve dos cifras distintas de lo
+mismo. `factura_cobros_resumen.target_eur` se queda en escala fiscal a propósito: es contrato
+publicado de la API v1 y responde a otra pregunta.
+
+**Lo que el ADR declaraba sin medir, ya está medido en prod** (§3, lectura `BEGIN READ ONLY`): el
+agregado baja un **3,78 %**, y esa media engaña — solo **dos de las cinco orgs reales** cambian y
+una de ellas baja un **11 %**. La causa es **una sola y está descompuesta**: IRPF, **6.451,05 €**;
+abonos parciales, cobros y garantía viva aportan **cero**. Lo que sigue sin medir es el coste de
+EJECUCIÓN (§6), que es otra pregunta.
+
+**El contraste externo** (§3.d) se resolvió contra la OpenAPI oficial de Holded, no contra nuestro
+pull —que es pull-only, mete las compras como recibidas y descarta el IRPF—: Holded resta la
+retención del total y su `payments_pending` es lo que queda por cobrar, y **no tiene el concepto de
+retención de garantía**. Eso respalda de forma independiente la corrección del ADR al issue
+**#2589**: la garantía NO se resta, porque es un aplazamiento y no una minoración. Ancla interna
+medida en casa: el ADR-081, donde el total de FacturaDirecta llega neto de retención (1.060, no
+1.210). El **#2589 se deja abierto a propósito** — la propuesta espera decisión de negocio.
