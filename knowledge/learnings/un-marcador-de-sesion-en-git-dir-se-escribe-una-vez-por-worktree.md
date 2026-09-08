@@ -27,3 +27,14 @@ haga `test -d "$root/.git"` o escriba dentro lo falla en silencio.
 Medido al revés, que es como se prueba un guard: mismo hook, misma sesión, segundo worktree →
 `avisa=1` con el código viejo, `avisa=0` con el nuevo. Ver
 [[una-suite-en-verde-no-prueba-el-camino-real]].
+
+**La otra mitad, y por qué no vale una sola ruta** (9-sep-2026): el mismo hook tenía DOS
+marcadores con semánticas opuestas. «Esta sesión ya avisó» es único por repo → `--git-common-dir`.
+«Este árbol ya corrió su gate» es de ese árbol → `--git-dir`. Meterlos los dos en el común
+silencia a las demás ramas; meterlos los dos en el privado es el bug de arriba. La pregunta no es
+cuál de los dos usar, es de quién es el hecho que estás anotando.
+
+Y el caso que lo mide **no es el silencio**: con el gate en verde la salida es idéntica con
+marcador y sin él, así que el test pasaba trivialmente. Lo que cuesta el bug es volver a correr
+el gate, así que hay que **contarlo** — gate que suma una línea por ejecución, 1 con el arreglo y
+2 con el bug. Ver [[una-suite-en-verde-no-prueba-el-camino-real]].
