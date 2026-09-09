@@ -26,6 +26,15 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 
 **Dos fallos vivos encontrados de paso, FUERA del encargo de Ramón — no tocados**: (1) **cada llamada del agente de voz deja una ficha huérfana vacía** además de la buena (5 solo el 7-sep, siempre ~1 min después del contacto real); (2) **el flujo de voz no deduplica por teléfono** — 3 fichas distintas con `+34629127816` creadas el mismo día, y en la cuenta hay 8 números repartidos en 49 fichas (uno en 15). Decidir si se atacan.
 
+**Voz — cuatro correcciones más, desplegadas y verificadas la misma tarde** (independientes de la importación):
+
+- **"Monte Alegre" se ofrecía como "Monte Escorial", y como coincidencia *exacta*.** El guard fuzzy del nodo `Plan` existía desde el 8-sep pero solo cubría la query libre; la voz manda el sitio en `address_contains`/`municipality`. Mismo predicado en las **tres** entradas. 19 fixtures reales (PROD 16/19 → 19/19) y 5 de 7 mutantes muertos: los 2 vivos son constantes preexistentes que ningún término del catálogo discrimina, y se reportan como tales, no se tapan con casos inventados.
+- **Con 3 o más resultados Ana ya no recita dos: pregunta.** Decía "Tengo dos" con 12 en cartera (literal fijo en `Format For Voice`, aunque el payload traía el total). Ahora el conteo sale del payload en cardinales hablados y la pregunta se calcula del propio resultado — zona → tipo → presupuesto, y el eje que el cliente ya fijó colapsa solo. "Tengo doce, repartidas por Villaviciosa, Madrid y Las Rozas… ¿por qué zona te interesa?". → [[con-varios-resultados-la-pregunta-que-filtra-se-calcula-del-resultado]] · [[el-numero-que-dice-el-agente-sale-del-payload-no-del-tope-de-presentacion]]
+- **Ana v32 — corrección de zona.** En llamadas reales invertía la corrección del cliente ("en Chamberí no, en Boadilla" → buscaba Chamberí). Regla en el `global_prompt`: la zona buena es siempre la que **afirma**.
+- **Ana v33 — la respuesta dicha dos veces.** "¿Podría ver los dos?" disparaba el edge de "más opciones" hacia `n_buscar`; el modelo soltaba la respuesta entera mientras corría la función y el nodo destino se la hacía repetir 13 s después. Regla global de frases de espera, caso "las dos/ambas" resuelto sin transitar, edge acotado. De paso: el "máximo 2 viviendas" del prompt se aplicaba también al conteo. → [[un-edge-abierto-manda-a-buscar-lo-que-ya-estaba-en-pantalla]] · [[retell-execution-message-description-no-comprometer-accion]]
+- **Sin validar en real**: que el modelo obedezca v33. Hace falta una llamada pidiendo ver las dos de Villaviciosa. Si vuelve a duplicar, el siguiente paso ya no es prompt: apagar el `speak_during_execution` de `n_buscar` y aceptar ~1,5 s de silencio.
+- El número `+34910054675` **no está pineado** a ninguna versión (`inbound_agents` sin `agent_version`), así que lo publicado entra en la llamada siguiente.
+
 ## Estado (2026-09-07)
 
 **Siete fallos que llegaban al cliente, cerrados y desplegados hoy.** Cuatro nacen de la misma sesión del buscador (5-sep) y tres salieron de auditar en paralelo lo que ya funcionaba. Artifact para el cliente: `correcciones-simarro.html` (publicado).
