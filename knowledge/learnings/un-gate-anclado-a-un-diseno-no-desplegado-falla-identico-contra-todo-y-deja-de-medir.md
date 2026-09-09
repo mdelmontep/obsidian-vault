@@ -15,7 +15,9 @@ ignora, y a partir de ahí el gate no protege de nada: el mismo fallo que motiv�
 Resnapshotear a producción sin más habría borrado un requisito de negocio pendiente. La salida
 es **dos categorías con dos salidas**: `check()` mide contra producción y bloquea; `deuda()`
 lista las propiedades del diseño futuro que producción no cumple y no bloquea. El día que se
-despliegue, cada `deuda()` pasa a `check()`.
+despliegue, cada `deuda()` pasa a `check()`. Y la verificación de que sirve es la misma prueba de
+antes, ahora en verde: v45 → 0 fallos / 24 deudas · v31 y v29 → 2 fallos · P6 → 14 fallos / 0 deudas.
+**Los dos ejes se mueven en sentidos contrarios**; si ambos dieran lo mismo contra todo, seguiría sin medir.
 
 Corolario: al reanclar la base, verifica **qué requisito estabas codificando en la base vieja**.
 Aquí la cabecera afirmaba un requisito del cliente («cero transferencias») que no aparece en
