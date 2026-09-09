@@ -14,10 +14,19 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 
 **La voz va por la v45 y quien llama ya no acaba con la ficha de otro. Lo que queda abierto: `gate.py` sigue sin medir nada, y hay una contradicción sobre las transferencias en crisis que solo puede cerrar la clienta.**
 
-- ✅ **Voz v45 en producción, desplegada en el orden bueno** (pin en Postgres primero, Retell después). Dos corridas de 13 casos contra v44 y v45.
+- ✅ **Voz v46 en producción, desplegada en el orden bueno** (pin en Postgres primero, Retell después). Dos corridas de 13 casos contra v44 y v45.
   - **`dv_nombre` es ahora QUIEN LLAMA**, no el paciente. La descripción apuntaba a «la persona que va a ser atendida» y el consumidor la escribe como nombre del contacto de Clientify, que se identifica por el teléfono del llamante: la ficha de Ana se rellenaba con el nombre de Carlos. 3/3 aciertos en las dos corridas; antes 0-1/3. → [[una-extraccion-inestable-entre-corridas-es-una-instruccion-ambigua-no-ruido-del-modelo]]
   - **Quien no es un lead no entra al embudo** (v44, del 9-sep por la tarde): `no_paciente` ni deal ni aviso, `paciente_actual` avisa sin deal.
-  - ⚠️ **Regresión leve sin cerrar**: el caso 06 falla en las dos corridas de v45 (insiste en pedir el nombre en vez de responder a lo que le preguntan). v44 lo pasaba. Afinar.
+  - ✅ **Caso 06 cerrado en la v46** (misma tarde). No era el nombre: el veredicto del juez lo atribuía a eso y el
+    transcript decía otra cosa. Laura ignoraba una pregunta directa para seguir su guion — «¿Qué tipo de tratamientos
+    ofrecen?» → «¿Qué te ha hecho llamar hoy?», idéntico en las dos corridas. Causa: el punto 3 de `intake` ordena
+    dedicar un turno a entender «antes de pedirle nada» y sugiere literalmente esa frase. La regla que lo arreglaba
+    **ya existía**, pero al final del punto 4 y anclada al nombre («nunca ignores lo que te pregunta para insistir con
+    el nombre»): no gobernaba el paso donde se decide. El parche mete la excepción DENTRO del punto 3 (si hay pregunta
+    contestable, respóndela primero; responder ya es dedicarle el turno) y desancla la regla final del nombre.
+    `clientes/centro-elphis/harness-voz/patch_caso06.py`. Medido: **13/13 en dos corridas** y gate 30/0 contra
+    `snapshots/flow-CAND-v46.json`. Desplegado en el orden bueno (pin 46 → DDI 46).
+    → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]]
 - ✅ **`registrar-lead`: tres parches en un PUT**, 42 comprobaciones unitarias sobre el `jsCode` real del servidor y 3 mutantes con víctima.
   - La **etiqueta del aviso** sale del `tipo_consulta` y no del `destino`: un handoff urgente le llegaba a recepción como «Solicitud de ingreso residencial — URGENTE» porque `urgencia alta` arrastra a `destino='ingreso'`.
   - El **dedup pasa a alcance llamada** (`call_id`): quien cuelga y vuelve a llamar en la misma hora vuelve a avisar. El chat no cambia.
