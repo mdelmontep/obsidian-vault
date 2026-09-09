@@ -26,7 +26,7 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
     contestable, respóndela primero; responder ya es dedicarle el turno) y desancla la regla final del nombre.
     `clientes/centro-elphis/harness-voz/patch_caso06.py`. Medido: **13/13 en dos corridas** y gate 30/0 contra
     `snapshots/flow-CAND-v46.json`. Desplegado en el orden bueno (pin 46 → DDI 46).
-    → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]]
+    → [[un-prompt-es-una-superficie-con-localidad-no-un-documento]] · [[un-juez-llm-acierta-en-que-caso-falla-y-se-equivoca-en-por-que]]
 - ✅ **`registrar-lead`: tres parches en un PUT**, 42 comprobaciones unitarias sobre el `jsCode` real del servidor y 3 mutantes con víctima.
   - La **etiqueta del aviso** sale del `tipo_consulta` y no del `destino`: un handoff urgente le llegaba a recepción como «Solicitud de ingreso residencial — URGENTE» porque `urgencia alta` arrastra a `destino='ingreso'`.
   - El **dedup pasa a alcance llamada** (`call_id`): quien cuelga y vuelve a llamar en la misma hora vuelve a avisar. El chat no cambia.

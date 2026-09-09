@@ -29,3 +29,11 @@ era el modo `strict`** —contrafáctico: 1/25 vs 4/25, indistinguible—: era l
 venía después. Al mover o quitar un bloque, presupuesta el contraste de las reglas LEJANAS, que son
 las que se rompen. Y cuando la regla degradada sea decidible, arréglala en código:
 [[una-regla-de-prompt-que-el-modelo-cumple-a-medias-suele-ser-decidible-en-codigo]].
+
+**5 · No es solo DÓNDE está la regla: es A QUÉ la atas** (9-sep, Centro Elphis, caso 06). La regla
+correcta ya estaba escrita —«si te hace una pregunta, RESPÓNDELA»— pero al final del paso 4 y atada
+a un objeto: «nunca ignores lo que te pregunta *para insistir con el nombre*». El fallo ocurría en el
+paso 3, cuyo texto ordena lo contrario («dedícale un turno a entenderlo **antes de pedirle nada**») y
+**sugiere de ejemplo la frase exacta** que salía en el transcript. La regla se cumplía: el agente no
+ignoraba preguntas por el nombre. Ignoraba preguntas por otra cosa. Al auditar un prompt no basta con
+buscar si la regla existe: mira a qué objeto está anclada y si ese es el que la incumple.
