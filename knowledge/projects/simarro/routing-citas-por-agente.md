@@ -38,10 +38,17 @@ tags: [simarro, n8n, retell, supabase, calendar, routing, citas]
 
 ## Pendiente go-live
 
-### Bloqueante — depende de Ramón
-1. Ramón añade `agente:` a las descripciones de Idealista (actualmente `properties.agent = NULL` en todas → fallback siempre al calendario general).
-2. Correr el sync (`Lanzar scrape Simarro (manual)`, workflow `3zBDpPwBYLZgMink`) para poblar `properties.agent`.
-3. Test E2E real: llamada voz → vivienda con agente → `Mirar_disponibilidad` devuelve `source=agent` en n8n log → cita en calendario del agente.
+### ✅ Cerrado el 2026-09-09 — el bloqueante NO era de Ramón, era el regex
+`parseAgent` exigía los dos puntos pegados: casaba `Agente: X` pero **no** `Agente Inmobiliario: X`,
+que es como Ramón escribe la mayoría. 8 de 13 activas guardaban `agent = null` y su reserva caía al
+calendario general sin que nada diera error. Fix: `/agent(?:e)?(?:\s+inmobiliari[oa])?\s*:\s*([^\n\r.;,]+)/gi`
+(backup `nzxtGnblEFwwkofO-sync-pre-fix-parseagent-20260909.json`). Medido E2E tras correr el sync a
+mano: `agent` poblado en 13/14 y **13/14 llamadas a `mirar_disponibilidad` devuelven `source: agent`**
+— el único fallback, `111607600`, no menciona agente en la descripción. `agents` resuelve ainhoa y
+elisa, y `carlos gonzalez llanos rey` (con Z) cae en el mismo calendario que la variante con S.
+Las visitas creadas antes del fix siguen en el calendario general. Ver
+[[un-fallback-legitimo-hace-mudo-un-parser-incompleto]] ·
+[[agrupar-ejecuciones-n8n-por-clave-quedate-con-el-id-mas-alto]]
 
 ### Técnico pendiente
 4. Revertir vivienda de test: `UPDATE properties SET agent=NULL WHERE idealista_id='110751938';`
