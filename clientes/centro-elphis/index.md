@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-08
+updated: 2026-09-09
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,25 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-08 (noche)
+## Estado actual · 2026-09-09
+
+**La voz va por la v45 y quien llama ya no acaba con la ficha de otro. Lo que queda abierto: `gate.py` sigue sin medir nada, y hay una contradicción sobre las transferencias en crisis que solo puede cerrar la clienta.**
+
+- ✅ **Voz v45 en producción, desplegada en el orden bueno** (pin en Postgres primero, Retell después). Dos corridas de 13 casos contra v44 y v45.
+  - **`dv_nombre` es ahora QUIEN LLAMA**, no el paciente. La descripción apuntaba a «la persona que va a ser atendida» y el consumidor la escribe como nombre del contacto de Clientify, que se identifica por el teléfono del llamante: la ficha de Ana se rellenaba con el nombre de Carlos. 3/3 aciertos en las dos corridas; antes 0-1/3. → [[una-extraccion-inestable-entre-corridas-es-una-instruccion-ambigua-no-ruido-del-modelo]]
+  - **Quien no es un lead no entra al embudo** (v44, del 9-sep por la tarde): `no_paciente` ni deal ni aviso, `paciente_actual` avisa sin deal.
+  - ⚠️ **Regresión leve sin cerrar**: el caso 06 falla en las dos corridas de v45 (insiste en pedir el nombre en vez de responder a lo que le preguntan). v44 lo pasaba. Afinar.
+- ✅ **`registrar-lead`: tres parches en un PUT**, 42 comprobaciones unitarias sobre el `jsCode` real del servidor y 3 mutantes con víctima.
+  - La **etiqueta del aviso** sale del `tipo_consulta` y no del `destino`: un handoff urgente le llegaba a recepción como «Solicitud de ingreso residencial — URGENTE» porque `urgencia alta` arrastra a `destino='ingreso'`.
+  - El **dedup pasa a alcance llamada** (`call_id`): quien cuelga y vuelve a llamar en la misma hora vuelve a avisar. El chat no cambia.
+  - El **sentinel `Sin nombre`** se normaliza a vacío en el origen; habría creado un contacto llamado *Sin nombre* en Clientify (0 hoy, verificado por API). → [[un-sentinel-de-ausencia-es-una-cadena-no-vacia-normalizalo-en-el-origen]]
+- ✅ **El handoff ya era lo que Manu quería**: se avisa y se despide, no se transfiere (`recepcion_transfer` está huérfano); WhatsApp `elphis_lead_llamada_v2` + email salen los dos; y no hay pausa persistente que quitar — la voz no tiene estado entre llamadas.
+- ⚠️ **`gate.py` lleva desde el 7-sep en rojo permanente**: su línea base es `flow-P6.json`, un diseño que nunca se publicó, y da **los mismos 33 fallos contra v37, v44 y v45**. El parche está escrito en `clientes/centro-elphis/harness-voz/arreglar_gate.py` (dos categorías: `check()` mide contra `snapshots/flow-PROD-v45.json` y bloquea; `deuda()` lista lo de F4 y no bloquea) y **sin aplicar** — el clasificador bloqueó la edición; hay que ejecutarlo a mano. → [[un-gate-anclado-a-un-diseno-no-desplegado-falla-identico-contra-todo-y-deja-de-medir]]
+- 🔜 **Decisión de la clienta**: la cabecera del gate dice que Alba pidió **cero transferencias en crisis**. No aparece en ningún otro sitio del vault y contradice el transfer al 717 003 717 que confirmó Manu el 19-may y que está en la propuesta firmada. Producción hoy transfiere.
+- 🔜 **¿De quién es el `+34687448210`?** Es el número que recibe todos los avisos internos y consta como «el de Alba» desde el 10-ago. Si quien llama de vuelta es Olga, el WhatsApp le está llegando a la persona equivocada (el email va al buzón genérico `info@centroelphis.com`).
+- ✅ **La suite ya mide el falso positivo del filtro comercial** (caso 13): medía que un comercial no entra, no que un familiar raro no se cae. → [[un-filtro-que-descarta-trafico-necesita-el-caso-adverso-su-falso-positivo-es-mudo]]
+
+## 2026-09-08 (noche)
 
 **Siete arreglos en producción en un día. Lo que queda abierto de verdad es la firma del webhook de Meta, que depende de una clave que solo está en el panel de Facebook.**
 
@@ -25,7 +43,7 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 - 🔴 **Firma de Meta — a medio camino, y con trampa.** Validación desplegada en **modo observación** (no bloquea). La trampa: el nodo que existía desde el 27-ago usa `crypto.subtle`, y en el sandbox del Code node `crypto` **no existe**; poner solo el secreto habría matado el WhatsApp entrante con un `ReferenceError`. Hay que poner `META_APP_SECRET` **y** `NODE_FUNCTION_ALLOW_BUILTIN=crypto` en la misma edición de Dokploy, verificar 100 % `hmac=ok`, y solo entonces `META_HMAC_ENFORCE=true`. El App Secret **no está en 1Password**: app «Centro Elphis» `1332761645647854`. → [[n8n-task-runner-sandbox-sin-url-global]]
 - 🔴 **Los secretos de Retell y Chatwoot son literales en el código**: sus variables no existen en el contenedor, así que el `|| 'literal'` es el valor efectivo. → [[secreto-con-fallback-literal-degrada-en-silencio-si-falta-la-variable]]
 - 🔜 **Decisiones de Manuel/Alba**: avisar a Alba de que la adopción **cambia de columna** una ficha creada por Olga; borrar los 23 contactos de prueba (irreversible); la cita de Camilo del 3-sep; encender o no el reconciler.
-- 🔜 **Sin empezar**: cola de avisos (2.8, el más delicado — hoy un aviso que falla se pierde en silencio), constancia de crisis (F3.4), desplegar la voz (variante B lista, necesita martes/miércoles 07:15-08:30 escuchando), fase 7 de Dokploy, y los backups (psicología sin ninguno, `N8N_ENCRYPTION_KEY` fuera de 1Password).
+- 🔜 **Sin empezar**: cola de avisos (2.8, el más delicado — hoy un aviso que falla se pierde en silencio), constancia de crisis (F3.4), fase 7 de Dokploy, y los backups (psicología sin ninguno, `N8N_ENCRYPTION_KEY` fuera de 1Password).
 - ⚠️ Ojo al medir en este servidor: conviven los stacks de adicciones y psicología. → [[varios-stacks-en-un-host-docker-exec-mide-el-contenedor-equivocado]]
 
 ## Estado previo · 2026-09-04
