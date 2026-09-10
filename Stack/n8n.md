@@ -480,3 +480,39 @@ Implementación: `~/.claude/scripts/agentes-check.py` (cron semanal, lunes 09:00
   rama de idempotencia corte antes del email/Sheets → el SQL corre de verdad, sin efectos hacia fuera.
   Ver [[replay-de-un-id-ya-registrado-ejercita-sql-nuevo-sin-efectos]]
 
+
+## Gotchas 8-sep (Clínica Zen, avisos mudos y falsos positivos)
+
+- **La expresión se cierra en el primer `}}`**: un `jsonBody` `={{ JSON.stringify({...}) }}` con dos
+  llaves de cierre pegadas dentro (`$now.toISO()}}) }}`) sale truncado; basta separarlas
+  (`$now.toISO() } }) }}`). El receptor devuelve `{"error":"invalid syntax"}` **con HTTP 200**, el nodo
+  no marca error y el aviso queda **mudo**. NO es universal: solo afecta al patrón `JSON.stringify`
+  que envuelve el campo entero — decenas de nodos con `}}` interno funcionan bien, no barrer en masa.
+  Ver [[n8n-cierra-la-expresion-en-el-primer-doble-llave-y-trunca-el-jsonbody]]
+- **`alwaysOutputData: true` en un IF = falsos positivos**: si una salida se queda sin items, n8n mete
+  un `{}` por la **salida 0** y la alerta que cuelgue de ahí se dispara siempre con todo a `undefined`.
+  Correcto en un Code o en un getAll de Calendar; nunca en un IF. Y resolver el booleano en la
+  expresión (`={{ $json.alerta === true }}`), para que un valor ausente caiga en la rama falsa en vez
+  de dar error de tipo que con `onError: continueRegularOutput` sale por la salida 0.
+  Ver [[n8n-alwaysoutputdata-en-un-if-inyecta-item-vacio-y-dispara-alertas-falsas]]
+
+
+## Gotchas 9-sep (Simarro, sync de agentes desde Google Calendar)
+
+- **Un httpRequest corre una vez por item de entrada.** Colgar el nodo del catálogo detrás del de
+  agentes contó cada vivienda 8 veces (96 en vez de 12). Fix: `executeOnce: true` en el nodo que solo
+  debe disparar una llamada.
+- **PostgREST llega como un item de n8n por fila**: `$('Nodo').first().json` es la PRIMERA fila, no la
+  tabla — una tabla llena parece vacía. Leer con `$('Nodo').all().map(i => i.json)`.
+- **Set node con `type: boolean` y valor por expresión no evalúa**: se queda en `false`. Un
+  interruptor (dry-run, enforce) va como valor literal o como dos caminos de entrada distintos.
+  Ver [[el-modo-simulacion-tiene-que-ser-un-valor-fijo-no-una-expresion]]
+- **Cero items corta la cadena**: un nodo sin items de entrada no se ejecuta, y arrastra al nodo de
+  aviso que cuelga detrás. El primer nodo de la rama del aviso emite siempre un item inocuo, y el
+  nodo que avisa **no** lleva `onError: continueRegularOutput` (con esa bandera la ejecución sale en
+  verde y el `errorWorkflow` no dispara). Ver [[n8n-un-nodo-sin-items-de-entrada-no-corre-y-corta-la-cadena-hasta-el-aviso]]
+- **Antes de montar un workflow de alertas, buscar si ya hay un Error Handler**: en Simarro existía
+  `Error Handler - Simarro Properties` (`j3Rtnj0fBskd5meD`), activo, al mismo canal de Slack y ya
+  asignado a los workflows clave. Se apunta con `settings.errorWorkflow`, no se duplica.
+- Un Code node **no puede llevar credenciales**, así que `httpRequestWithAuthentication` es
+  inutilizable ahí: la llamada autenticada va en su propio nodo httpRequest.

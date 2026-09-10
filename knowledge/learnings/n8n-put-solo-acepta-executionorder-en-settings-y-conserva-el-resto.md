@@ -16,3 +16,9 @@ reemplazar. Sin eso, la tentación es no editar el workflow por API por miedo a 
 
 Patrón para el payload: `{name, nodes, connections, settings: {executionOrder}}`. Y verifica el
 `settings` en el GET posterior, no lo asumas.
+
+**Contramedida medida en Simarro (9-sep): la fusión NO es universal.** Filtrar `settings` por
+allowlist para esquivar un 400 le borró a `Buscar_viviendas_catalogo` su `availableInMCP` — el
+workflow dejó de estar expuesto como herramienta MCP, en silencio. Recuperado del backup. Regla
+segura para cualquier instancia: **mandar `settings` verbatim tal cual vino del GET** y, si sale
+400, quitar **solo la clave que nombra el error**, una a una. Nunca filtrar por lista blanca.

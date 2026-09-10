@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-09
+updated: 2026-09-10
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,24 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-09 · agentes, calendarios y avisos)
+
+**El alta y la baja de agentes ya no las hace nadie a mano.** Cron `Sync_agentes_calendar` (`SrCfPm1g7tXZ2T0r`, **activo**, 07:15 `Europe/Madrid`, `errorWorkflow` = el Error Handler que ya existía): lee `calendarList.list` de Google, compara con la tabla `agents` de Supabase y da de alta lo nuevo / de baja lo que desapareció. Backup en `n8n-backups/simarro/`.
+
+- **Verificado E2E, no supuesto**: creé un calendario real "Prueba Agentesia", el cron lo registró, una vivienda asignada a ese nombre resolvió a su `calendar_id` con `source: agent`, los 5 nodos de Google Calendar de `iMoTKZWxYLymGuHF` reservaron ahí, y al borrar el calendario la fila se desactivó sola. Todo el material de prueba, eliminado.
+- **La clave es el NOMBRE DE PILA**, porque así matchea `resolve_property_calendar`: casa cuando **todas las palabras de `agent_key` aparecen** en la descripción de Idealista — sin acentos, sin orden, sin exigir subcadena (`ramon sanchez simarro` → `ramon simarro`); apellido suelto o nombre ambiguo caen al calendario general. Medido con 9 variantes. Si un nombre de pila ya está cogido, el sync **reporta la colisión, no inventa un alias**. → [[una-tabla-que-alimenta-un-matcher-debe-generarse-con-la-normalizacion-del-matcher]]
+- **Fail-closed con umbrales**: se bloquea y avisa si Google devuelve <3 agendas, si la tabla llega vacía, si se irían >2 de baja o entrarían >3 de alta a la vez. Tres entradas: cron (real), webhook de simulación y webhook de aplicar a mano.
+- **Los avisos van a Slack `#01-incidencias`** (credencial `RROc8UOc22sKEMNp`), y el nodo que avisa falla ruidosamente a propósito: un aviso mudo se convierte así en ejecución en rojo que recoge el Error Handler. → [[n8n-un-nodo-sin-items-de-entrada-no-corre-y-corta-la-cadena-hasta-el-aviso]]
+- **Fallo vivo corregido de paso**: Javier Villalba y Mónica de Lope estaban `active=true` apuntando a calendarios **borrados en Google** — sus visitas se agendaban contra un `calendar_id` muerto. A inactivo; la RPC ya devuelve `fallback` para sus viviendas.
+- **Susto del estreno**: el sync escribió en modo real creyéndose en simulación (Set booleano por expresión que no evalúa + `.first()` sobre PostgREST). No escribió nada porque la constraint `unique` tumbó el INSERT — el código no protegía. → [[el-modo-simulacion-tiene-que-ser-un-valor-fijo-no-una-expresion]]
+- **Catálogo real hoy**: 12 viviendas activas con agente, 5 personas, cero huérfanos y cero colisiones.
+
+**🔴 SMTP caído y BLOQUEADO por Ramón/Manu**: `my0IFrzKpGNhCs8c` da `535-5.7.8 BadCredentials` y la contraseña de aplicación de 1Password está revocada también (comprobado con una credencial limpia). Hace falta **generar una app password nueva desde la cuenta de Google** (2FA, no hay API); `xtt0y0L6tTFOq9pd` ya está creada en n8n esperando el valor, y el ítem de 1Password hay que actualizarlo. Contradice la línea de junio que daba el SMTP por resuelto.
+
+**Pendientes que deja esta tanda**: (1) **simplificar `om8iBm8ovENIgaxv`** — los 8 pares Buscar/Eliminar hardcodeados sobran ahora que la RPC resuelve el calendario (el nodo `Resolve cal (cambio)` ya está en el workflow); (2) **auditar los nodos con `onError: continue` en producción**, empezando por los de correo de `Leads entrantes`: esconden el fallo al Error Handler; (3) opcional, pasar el cron de diario a horario de oficina.
+
+**Artifact del cliente actualizado** (`simarro-calendario-kommo.html`): nueva sección "Dónde cae cada cosa en Kommo" (visita → Ventas / *En seguimiento — VISITA*; nombre+teléfono → Lead Caliente; valoración → embudo Valoraciones) y el ejemplo corregido — Kommo solo tiene **2 usuarios**, así que el agente no es el responsable sino el campo select `1373105` (`Agente asignado`).
 
 ## Estado (2026-09-09)
 
@@ -67,7 +85,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **Notificaciones P1-P5 HECHAS** (2026-06-02→09): confirmación cliente formulario, confirmación visita, aviso interno visita a Ramón+agente (emails reales en BD), seguimiento post-visita 48h (salesbot 87873 + etapa Post-visita), alertas inactividad (`Xh2miozB7LvwQKia`, diario 08:30).
 - **Recordatorios** solo reaccionan a tareas Meeting (type 2) creadas por la reserva; matching usa Follow-up (1). ~~Especialista Asignado~~ desactivado 2026-06-08 (el agente va por `agente:` de Idealista).
 - **Subsistema contratos Docuseal** activo: 4 workflows `contratos-*` (generar borrador, enviar firma, firmado, spawn). OJO: `contratos-enviar-firma` lleva un `TODO producción: cambiar a la cuenta real` en Build Recipients.
-- **SMTP RESUELTO** (2026-06-02): `SMTP LEADS Simarro` (leads/visitas) + `SMTP Simarro` (contratos), ambas funcionales. Emails HTML rediseñados Gmail-safe.
+- ~~**SMTP RESUELTO** (2026-06-02)~~ — **ya no**: `SMTP Simarro` (contratos) devuelve `535 BadCredentials` desde antes del 9-sep, ver el estado del 9-sep. `SMTP LEADS Simarro` (leads/visitas) sí sigue en pie. Emails HTML rediseñados Gmail-safe.
 
 - **Voz Ana — el agente PRODUCTIVO es el Conversation Flow** `agent_0df7f123e7e3c24d99c9152358` (`conversation_flow_19ca70e19b3f`, gpt-4.1 cascading). ⚠️ El `agent_7b02aa...` (retell-llm) está **EN DESUSO**. Llama a `+34 910 05 46 75` (verificado en Retell 12-ago, nickname "Simarro Netelip" — el hub tenía `919 93 28 52` desactualizado). Busca, mira disponibilidad, reserva (pide nombre + consentimiento), cancela/cambia, deriva.
 - **Visitas de 30 min** (solicitud Simarro 2026-06-01; antes 1h). Buffer mismo agente: **0 min misma vivienda, 60 min (1h margen) distinta**. Slots :00 y :30 → **10:00–13:30 y 17:00–19:30**. SSOT: `Calc_Disponibilidad` (`kSgDVB8miWnvQFOJ`), compartida voz+WhatsApp.
