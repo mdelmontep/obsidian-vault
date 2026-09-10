@@ -1,6 +1,7 @@
 ---
 title: EcoBox HUB
 date: 2026-05-26
+updated: 2026-09-10
 tags: [cliente, ecobox, hub]
 ---
 
@@ -9,6 +10,48 @@ tags: [cliente, ecobox, hub]
 Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas (Madrid). Onboarding 2026-05-20, despliegue 21-22, voz E2E funcional 2026-05-25, **chat WhatsApp E2E real funcional 2026-06-01**.
 
 **Estimación de horas** (2026-08-04, retroactiva, sin time-tracking — método en [[estimar-horas-retroactivas-sin-time-tracking-cruzar-git-y-hub-cliente]]): web ~5-6h (autor `notcapi`, vía git log del repo `ecobox`) · automatización n8n/Retell/WhatsApp/Chatwoot/GCal ~24-32h (Manuel, estimado por densidad del hub + 3 ADRs del 22-may). Total proyecto ~29-38h, 20-may a 2-jun.
+
+## Sesión 2026-09-10 — la WEB: reforma completa + segunda sede (commit `acc8a9c`, en `main`)
+
+Primera vez que se toca la web desde el alta. Auditoría contra las webs maduras del
+estudio (22 hallazgos, veredicto del cliente uno a uno) **más el alta del segundo
+taller**. Todo en `main` de `AgentesIA-MAdrid/ecobox`, 62 ficheros, +6.103/−887.
+
+**El negocio tiene DOS talleres**, confirmado hoy: C/ Rotterdam 3 (Las Rozas, domicilio
+social) y **C/ Monjitas 13, 28220 Majadahonda**. Mismo teléfono, mismo horario, mismos
+seis servicios, mismo domicilio fiscal. **Ninguna de las dos tiene ficha de Google
+Business Profile** — es la tarea de mayor impacto pendiente y no es de código.
+
+- **`src/lib/` es la única fuente de verdad** (once módulos). Ningún componente escribe
+  ya un teléfono ni una dirección. Las sedes viven en una lista `LOCATIONS`, no en dos
+  campos: quien pinta direcciones las recorre.
+- **El JSON-LD se genera**, ya no se escribe a mano. `@graph` con la sociedad (CIF) y una
+  ficha `AutoBodyShop` por taller unidas con `branchOf`; Majadahonda **sin `geo`** a
+  propósito. Ver [[dos-locales-del-mismo-negocio-van-en-un-graph-con-branchof]].
+- **Teléfono: +34 910 054 813** para voz y WhatsApp, en las dos sedes. El `+34636521315`
+  del onboarding está **obsoleto** y así consta con fecha en `phones.ts`.
+- **0 KB de JS de cliente**: fuera la isla React y framer-motion; FAQ con `<details>` y nav
+  móvil con CSS puro. Hero de 862 KB → 79 KB con AVIF/WebP.
+- **Contraste**: el texto sobre el verde de WhatsApp iba a 2,47:1 (falla AA), ahora 7,84:1.
+  Ver [[tailwind-v4-emite-oklch-y-el-hex-de-la-tabla-v3-mide-otro-color]].
+- **Legales nuevos** (`/aviso-legal`, `/privacidad`, `/cookies`) generados desde `legal.ts`,
+  con `LEGAL_REVIEW.reviewed = false`: **no los ha visto un abogado**, y el DPA sigue sin firmar.
+- **19 pruebas** con los dientes medidos por mutación, no supuestas. Una de ellas
+  (`frescura.test.mjs`) existe porque las demás leen `dist/` y una build vieja daba verde.
+  Ver [[mutate-guard-cruza-rutas-del-stage-mutar-desde-el-subproyecto-no-desbloquea]] y
+  [[los-scripts-mjs-no-los-typechequea-astro-check-y-un-cambio-de-shape-los-rompe-mudo]].
+
+**Bloqueante de despliegue**: `www.ecobox360.es` contesta un Traefik con certificado por
+defecto y 404 en http y https — **la app no está enrutada**. Nada de lo anterior se ve en
+producción hasta que el dominio apunte a `ecobox-web-exjura` (host 185.99.186.132).
+
+**Decisiones que quedan del cliente**: el mapa de contacto (sin iframe / con banner de
+cookies / carga al pulsar), la barra de CTA en móvil, y las coordenadas exactas de cada
+taller. **Recomendación explícita: NO hacer página por sede todavía** — con los mismos
+servicios, teléfono y horario saldrían casi idénticas y competirían entre ellas; merecen
+la pena cuando cada taller tenga fotos y contenido propio.
+
+Informe con el antes y el después: https://claude.ai/code/artifact/7739ff8d-01b8-4cc7-9047-38d7d0609b21
 
 ## Sesión 2026-06-02 — 2ª ronda test E2E (voz): transfer, doble-booking, fecha, sustitución
 
