@@ -179,8 +179,22 @@ Para referencia (no reusar en cliente nuevo, mapear los suyos):
 - 87871 — Recordatorio 24h
 - 87861 — Recordatorio 4h
 - 88183 — Chatbot Simarro WhatsApp (chat asíncrono)
+- 87873 — Seguimiento post-visita +48h (además mueve el lead a Post-visita `107269815`)
 
 Cada uno puede tener múltiples pasos; auditar por UI antes de cualquier debug.
+
+**Qué etapa habla y cuál no** (medido 10-sep-2026 creando leads reales y mirando `/api/v4/events`):
+
+| Etapa | ¿Bot al crear el lead ahí? |
+|---|---|
+| `105137095` Lead Caliente | **SÍ** — `outgoing_chat_message` 1 s después de `lead_added` |
+| `107269819` En seguimiento / VISITA | no |
+| `104515787` Pendiente de Asignar | no |
+| `105358027` Visita valoración programada (embudo Valoraciones) | no |
+
+Una integración que crea leads elige su etapa de destino **también por esto**, no solo por semántica.
+Si hace falta una etapa garantizada muda, crear una nueva: nada puede estar atado a una etapa que no
+existía. Ver [[el-inventario-de-automatismos-no-esta-solo-en-el-orquestador]].
 
 ## API REST v4 — quirks de escritura (jun 2026)
 - **Vaciar un CF**: `values: null`, NO `values: []` (Kommo rechaza con `TooFew: should contain exactly 1 element` y tumba TODO el PATCH).

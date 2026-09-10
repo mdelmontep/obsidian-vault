@@ -18,4 +18,10 @@ Dos reglas al montar un aviso al final de una cadena n8n:
    nadie se entera de nada. El nodo de aviso debe fallar ruidosamente y dejar que lo cace el Error
    Handler.
 
+**Y al revés (10-sep):** ese mismo comportamiento es la forma limpia de **callar** un aviso sin meter
+un IF. Con el cron cada 5 min, avisar de "sin novedades" son 288 mensajes/día que entierran las
+incidencias reales. El nodo de aviso hace `if (todo_ok) return [];` y el de Slack no llega a
+ejecutarse. La regla 1 sigue en pie: se calla cuando NO hay nada que contar, nunca cuando la cadena
+podría estar rota — habla siempre si el fail-closed bloqueó o si se planificaron N y salieron menos.
+
 Ver [[un-nodo-de-log-con-onerror-continue-puede-no-haber-escrito-nunca]] · [[n8n-error-handler-global-via-errorworkflow]] · [[un-canal-de-avisos-solo-se-verifica-mirando-el-canal]]

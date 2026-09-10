@@ -13,6 +13,19 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
+## Estado (2026-09-10 · el calendario alimenta el CRM solo)
+
+**`Calendario_a_Kommo` (`zNbZTPbf6zhIIk2U`, activo, cron `*/5 * * * *`) convierte en leads las citas que los agentes escriben a mano en sus 7 agendas de Google.** Crea lead + contacto + tarea, sella el evento con `extendedProperties.private.simarro_lead` (memoria de idempotencia que viaja con el evento) y el cliente recibe su recordatorio de 24h. Backup en `n8n-backups/simarro/`.
+
+- **Regla de negocio (Ramón, 10-sep): solo entra lo que empieza por `VISITA` o `VALORACION`**, admitiendo un calificador delante (`2a visita`, `POSIBLE VALORACION`). Todo lo demás de las agendas —llamadas, recordatorios, reuniones internas— se descarta. Formato que se les ha pedido: `VISITA - Nombre - Teléfono - Dirección`; el nombre **justo detrás** de la palabra, porque el parser lee de ahí (con el formato viejo `visita mestanza veronica` el contacto salía llamándose como la calle). Con separadores lee el campo 2 entero; sin ellos, heurística de 1-2 palabras.
+- **La premisa del diseño original era falsa**: 0 de 74 eventos reales llevan `idealista_id`. La llave real es el **teléfono** (dedup entre agendas) y el agente sale de **en qué agenda vive el evento**, no de la descripción de Idealista.
+- **Dos sustos el día del estreno, los dos cerrados**: (1) una clienta recibió un WhatsApp por una cita ya pasada — la ventana leía `ahora-24h` y un **salesbot de Kommo**, invisible auditando n8n, escribió al crear el lead en `Lead Caliente`; (2) el aviso iba a postear "sin novedades" cada 5 min en `#01-incidencias`. → [[el-inventario-de-automatismos-no-esta-solo-en-el-orquestador]] · [[dar-de-alta-con-fecha-pasada-despierta-los-automatismos-de-esa-fecha]]
+- **Nada de lo que crea habla con el cliente por sí solo**: sin categoría `CONTACTO`, ningún lead nace ya en `Lead Caliente`, la única etapa con bot. Los destinos vivos (`107269819`, `104515787`, `105358027`) están medidos y mudos. → [[kommo]]
+- **Verificado E2E en producción**: Elisa apuntó "Visita Blanca" en su agenda, el lead entró solo y a las 14:00 salió el recordatorio de 24h al cliente sin que nadie tocara Kommo. 8 leads creados, 0 mensajes automáticos indebidos, detector de gemelos estrenado (misma cita en dos agendas → un lead).
+- **Fail-closed**: bloquea si no hay agendas, si devuelven 0 eventos o si saldrían >25 leads de golpe. Slack **solo habla cuando algo falla** (bloqueo, o planificó N y salieron menos); la simulación manual habla siempre.
+
+**Pendiente de esta tanda**: (1) **reprogramar una cita en Google no mueve la tarea de Kommo** — el recordatorio saldría con la hora vieja; `simarro_start` ya está en el sello, es media hora; (2) saber **qué bot** cuelga de `Lead Caliente` y qué dice — la API da 403, se saca desde el navegador con sesión (snippet en [[kommo]]); (3) la conversación abierta de la clienta a la que escribió el bot.
+
 ## Estado (2026-09-09 · agentes, calendarios y avisos)
 
 **El alta y la baja de agentes ya no las hace nadie a mano.** Cron `Sync_agentes_calendar` (`SrCfPm1g7tXZ2T0r`, **activo**, 07:15 `Europe/Madrid`, `errorWorkflow` = el Error Handler que ya existía): lee `calendarList.list` de Google, compara con la tabla `agents` de Supabase y da de alta lo nuevo / de baja lo que desapareció. Backup en `n8n-backups/simarro/`.
