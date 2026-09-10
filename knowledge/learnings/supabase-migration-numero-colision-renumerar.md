@@ -35,3 +35,10 @@ done | grep -oE '^supabase/migrations/[0-9]{3}' | sort -u | tail -5
 ```
 
 **Y un número que otra sesión te anuncia no es una medición.** Ese mismo día una sesión paralela avisó de que tomaba el 835 y el 836 cuando el 836 ya estaba aplicado a prod y mergeado. Se paró con tres medidas, no con el aviso: `max(version)` de prod, el fichero en `origin/main`, y el barrido de arriba. Al renumerar a mano, quitar el número de los IDENTIFICADORES de dentro (bloques `$dollar$`, códigos de prueba, nombres de scratch) y dejarlo solo en las CITAS — si no, el fichero renumerado sigue diciendo el número viejo por dentro.
+
+**Si ya renumeraste tú a mano, no vuelvas a correr el script** (10-sep, facturaia, 999 →
+884): la segunda pasada cuenta el 884 ya renombrado como ocupado, propone 885 y hace
+`git mv` sobre el `999_` que ya no existe → `fatal: bad source`. Falla limpio y no toca
+nada, pero desmiente el «es idempotente»: lo es respecto de sí mismo, no respecto de un
+renombrado manual. Y la fila vieja puede quedarse huérfana en el `schema_migrations`
+**local** — se corrige con un `UPDATE ... SET version` ahí, nunca en prod.

@@ -27,3 +27,9 @@ en `;` — hay que añadirlo. Caso real: TuFacturaIA migs 585 y 587 (`merge_clie
 Reincidió el 30-ago (mig 772): el `;` que falta no lo ve ninguna revisión a ojo, lo ve
 un Postgres. **Parsea la migración antes de mergear** contra el proyecto de staging,
 `BEGIN` + `\i fichero` + `ROLLBACK`, y mira el `ec`.
+
+Y ojo al usar `pg_get_functiondef` para verificar la AUSENCIA de algo (10-sep, mig 884):
+devuelve también los **comentarios** del cuerpo, así que un `NOT LIKE '%<marca>%'` da falso
+positivo por una línea `-- ... <marca> ...` que no ejecuta nada. La autoverificación tiene
+que filtrar los comentarios antes de buscar; si no, o aborta una migración correcta, o te
+hace investigar un fallo que no existe. Ya había mordido en las migs 744 y 827.
