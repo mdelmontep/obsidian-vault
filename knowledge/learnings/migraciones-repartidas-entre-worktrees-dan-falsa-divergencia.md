@@ -14,7 +14,14 @@ Dos cosas que ahorran la pelea:
 
 - El link del proyecto vive en `supabase/.temp/` y está gitignored, así que un worktree
   nuevo NO está linkeado (`Cannot find project ref`). `cp -r` esa carpeta del checkout
-  principal, o exporta los comandos desde él.
+  principal, o exporta los comandos desde él. Copiarla **no basta**: la credencial del
+  login role no vive ahí, así que `mig:renumerar` y `db push` piden además
+  `SUPABASE_DB_PASSWORD=...` en la misma línea o fallan con `password authentication
+  failed for user "cli_login_postgres"`.
+- **Y hay que borrarla al terminar** (10-sep-2026): mientras esos ficheros están, el
+  `gen:types:check` del `pre-push` deja de comparar contra el fichero del repo y compara
+  contra PROD, así que un worktree que solo quería empujar código empieza a rebotar por una
+  deriva de tipos que no es suya.
 - Para empujar, copia temporalmente al mismo worktree las migraciones ya aplicadas que
   le falten, haz el `db push`, y bórralas. Vuelven solas con el merge/rebase.
 

@@ -198,6 +198,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[remote-triggers-claude-probablemente-bloquean-curl-en-sandbox]] — remote triggers de claude probablemente bloquean curl en sandbox
 - [[reportes-financieros-deben-excluir-estados-no-fiscales]] — reportes financieros deben excluir estados no-fiscales
 - [[responder-un-ticket-por-sql-entrega-la-fila-y-nada-mas]] — responder un ticket escribiendo la fila entrega el texto y nada más
+- [[un-espejo-entre-dos-funciones-sql-se-ancla-leyendo-el-prosrc-de-la-otra]] — un espejo entre dos funciones sql se ancla leyendo el prosrc de la otra
 - [[reset-multi-tenant-allowlist-ordenada-vs-catalogo-dinamico]] — reset multi-tenant — allowlist ordenada + to_regclass, no catálogo dinámico
 - [[restaurar-un-volcado-en-un-proyecto-supabase-nuevo-reabre-los-grants-revocados]] — restaurar un volcado en un proyecto supabase nuevo reabre los grants que revocaste
 - [[revocacion-jwt-stateless-tabla-dedicada-no-inferir-de-filas-de-token]] — revocar un jwt stateless antes de exp exige tabla de revocación dedicada, no inferirla de…
