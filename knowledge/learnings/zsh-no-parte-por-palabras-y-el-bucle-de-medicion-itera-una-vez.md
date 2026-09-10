@@ -21,3 +21,9 @@ salieron 10 de 12 con contenido pendiente — la conclusión contraria.
 - Corolario del método: en una medición ad-hoc, imprimir SIEMPRE el denominador (`n de N`) y
   sospechar del N constante. Es la versión de andar por casa de
   [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]].
+
+**Y no se queda en la medición: sale a producción** (10-sep, EcoBox). El mismo fallo con `set -- $W`
+dentro de un `for` metió la cadena entera («id nombre») en `$1`, así que el `curl` salió con una URL
+malformada contra 8 webhooks de n8n. Resultado: **8 alertas de error en Slack** que el cliente vio, y
+una hora diagnosticando un fallo de producción que no existía. `set -- $var` es la misma trampa que
+`for x in $var`: si el valor lleva espacios, en zsh no se parte.

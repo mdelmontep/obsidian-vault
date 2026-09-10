@@ -26,3 +26,9 @@ problema de conversación («vuelve a preguntar el motivo que ya le dieron»), n
 práctica: la tabla de estado se cuenta igual que la de logs — **si no crece, no escribe**.
 
 Ver [[ejecucion-en-verde-no-prueba-el-efecto]] · [[un-canal-de-avisos-solo-se-verifica-mirando-el-canal]] · [[integracion-en-jsonb-tabla-generica-pierde-observabilidad]]
+
+**Y además desarma el `errorWorkflow`** (10-sep, EcoBox): `continueRegularOutput` no solo evita el
+rojo, impide que el nodo dispare el handler global de avisos. Un `Send HSM` de recordatorios lo
+llevaba puesto — la apariencia de una red de seguridad **en lugar** de una. Si un nodo importa lo
+bastante como para tener handler, no puede llevar `continueRegularOutput`: se gatea con un IF sobre
+el error, no tragándoselo. Ver [[n8n-error-handler-global-via-errorworkflow]] · [[n8n-webhook-tool-respond-no-hardcodear-exito-gatear-en-error-nodo]]

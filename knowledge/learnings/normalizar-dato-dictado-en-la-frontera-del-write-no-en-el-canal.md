@@ -19,3 +19,6 @@ Reglas que funcionaron (AGH #199):
   sobre texto libre; ante cualquier token no esperado, devuelve verbatim.
 - Parser de números ES: combina palabras solo mientras la magnitud decrece (centenas→decenas→
   unidades) → cubre dígito-a-dígito y agrupado con la misma lógica. Acentos: [[regex-word-boundary-no-casa-acentos-js-normalizar-nfd]].
+
+El mismo principio en n8n, donde el peligro extra es que cualquier nodo puede releer el de entrada
+y saltarse el chokepoint: [[normalizar-en-un-nodo-intermedio-no-protege-a-quien-relee-el-de-entrada]].

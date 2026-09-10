@@ -11,6 +11,53 @@ Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas 
 
 **Estimación de horas** (2026-08-04, retroactiva, sin time-tracking — método en [[estimar-horas-retroactivas-sin-time-tracking-cruzar-git-y-hub-cliente]]): web ~5-6h (autor `notcapi`, vía git log del repo `ecobox`) · automatización n8n/Retell/WhatsApp/Chatwoot/GCal ~24-32h (Manuel, estimado por densidad del hub + 3 ADRs del 22-may). Total proyecto ~29-38h, 20-may a 2-jun.
 
+## ▶︎ EMPEZAR AQUÍ (10-sep-2026, noche)
+
+Al retomar EcoBox, las dos cosas abiertas son:
+
+1. **Atacar el Redis** — idempotencia y el TOCTOU de `Reservar_cita`. Diseño listo (`incr` para
+   `idem:` + lock separado `slot:`, `IF primera vez`, `IF gano el hueco`, `Redis liberar slot`, dos
+   Respond nuevos). Hoy el `SET` es **decorativo: nadie lee su resultado**, y hay una ventana real de
+   1-3 s para que dos clientes cojan el mismo hueco. **Probarlo exige crear citas REALES en el
+   calendario** (`ZZZ0000` cortocircuita antes de `Build idem key`) → hace falta tu permiso y limpieza
+   después. Ver [[lock-e-idempotencia-en-n8n-con-redis-incr-sin-set-nx]].
+2. **Que Cristian cierre lo suyo** — sin sus respuestas no avanzan tres frentes:
+   - **Antelación mínima para cancelar** (propuesta: 24 h, blanda y escalada). El guard está escrito
+     entero (176 líneas, 13 casos) y sin aplicar, esperando solo ese número.
+   - **4 plantillas de Meta** para recordatorios (`recordatorio_{48h,24h}_{rozas,majadahonda}`,
+     UTILITY, `es`, 2 parámetros) — trámite externo de hasta 24 h. **Y hay que decirle que los
+     recordatorios NUNCA han enviado nada todavía.**
+   - Bloque 0: desvío de llamadas/operadora, número único, destino real de la transferencia, y si
+     Alex cierra solo valoraciones.
+
+Además, sin bloqueante: **PASO 2 de la auth de webhooks**. Los 8 emisores ya mandan `X-Ecobox-Token`
+y nada se ha caído; falta activar `headerAuth` en los 4 webhooks, y para eso hace falta **una llamada
+real y un WhatsApp real** que demuestren que la cabecera llega por los dos caminos
+(`31-auth-emisores.py --comprobar`). Ver [[cerrar-un-webhook-exige-censar-todos-sus-emisores-no-solo-el-obvio]].
+
+## Sesión 2026-09-10 (noche) — motor de citas: segunda pasada, teléfono obsoleto y auth a medias
+
+Scripts en `…/scratchpad/entrega/` (20-31), todos idempotentes; el detalle en `30-LEEME-horario.md`.
+
+- **8 alertas en el Slack del cliente y NO era producción**: un bucle mío con `set -- $W` en zsh
+  mandó una URL malformada a 8 webhooks. Pero destapó un defecto real — la validación colgaba
+  **detrás** de dos llamadas a Google → puerta `Validar consulta` delante, y las fechas imposibles
+  (`2026-04-31`, `10:60`, `2026-13-05`, ventana invertida) devuelven 200 con motivo en vez de 500.
+- **Dos críticos MÍOS que encontró la contraauditoría** (y verifiqué): la fecha normalizada nunca
+  llegaba a Google —siete nodos releían `Edit Fields`— así que el bug del `+02:00` seguía vivo
+  entero; y `sede='Majadahonda'` con mayúscula hacía que la puerta mirase los festivos de un taller
+  y Google escribiese en el calendario del otro. Arreglados en el **punto de entrada único**.
+  Ver [[normalizar-en-un-nodo-intermedio-no-protege-a-quien-relee-el-de-entrada]].
+- **El teléfono obsoleto `+34 636 521 315` estaba vivo de cara al cliente**: KB de voz, prompt del
+  bot y botón de WhatsApp del **correo de confirmación**. Contrastado contra Meta
+  (`display_phone_number` = `+34 910 05 48 13`), no de memoria. Y **Majadahonda no existía en la KB**.
+  Corregido y publicado (voz **v16**).
+- Las **8:00 y las 15:00 eran inconsultables por teléfono** (a una consulta se le aplicaba la regla
+  de una reserva) y los seis textos de rechazo eran **código muerto**: ni voz ni chat leían `message`.
+- Verificación: 66 casos verdes, 8 mutantes con víctima, ejecución 5356 como prueba en vivo.
+- **Sin hacer todavía**: una reserva REAL de punta a punta. `15-limpiar-pruebas.sql` sigue sin correr.
+  `GCal create.description` escribe un `\n` literal.
+
 ## Sesión 2026-09-10 — la WEB: reforma completa + segunda sede (commit `acc8a9c`, en `main`)
 
 Primera vez que se toca la web desde el alta. Auditoría contra las webs maduras del

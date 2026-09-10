@@ -10,6 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟢 **EcoBox — al retomar, EMPIEZA POR AQUÍ (10-sep)**: (1) **el Redis** (idempotencia decorativa + TOCTOU de 1-3 s) **exige citas REALES y tu permiso**; (2) **Cristian**: antelación mínima para cancelar, las 4 plantillas de Meta (24 h de trámite) y el Bloque 0. Motor de citas rehecho y en vivo (v16). → [[clientes/ecobox/index|ecobox]] §EMPEZAR AQUÍ
 - 🟠 **AGH — su contabilidad sale de Yooz a TuFacturaIA (30-ago)**: diseño CERRADO (ADR-063, spec #2295, 13 tickets #2296-#2308; #2296 y #2297 cogibles ya). **Sin código y sin commitear** desde hace 8 días. **Tuyo**: mandar los tres cuestionarios (Giuliana, Carlos, Mazars) y decidir si arranca el primer ticket. → [[agh-iberica]] · [[facturaia-yooz-agh-migracion]]
 - 🟢 **TuFacturaIA — ticket 169 cerrado entero: diferencia en prod e inventario ajustado (10-sep, mig 884)** — **Tuyo**: que José conteste **qué día contó** (**#2538**, 19-sep) y `SUPABASE_ACCESS_TOKEN` en Dokploy. → [[facturaia]] · [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]
 - 🟠 **TuFacturaIA — ticket 175 (Chivite): anular un abono emitido por error, construido y SIN MERGEAR (10-sep)** — mig 885 en la rama `feat/el-abono-emitido-por-error-se-anula`; el gate cae por memoria, no por tipos. **Tuyo**: dar el OK al merge y al `db push`; luego hay que avisar a José en el hilo. → [[facturaia]]
@@ -68,7 +69,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — Supabase subido a Pro (10-jul)** — egress tumbó prod ~1h; ya no urge, vigilar uso, NO bajar a Free. [[facturaia]]
 - **TuFacturaIA — rotar secrets tras fuga Dokploy (Capa 2)** — Capa 1 cerrada (#870); rotar Supabase→Stripe→Meta. [[facturaia]]
 - 🟡 **Tecnocloud — dos cabos del 24-ago** — la cabecera del webhook a 1Password y borrar los 2 tickets `PRUEBA NOMBRE`. Luego vigilar 3-4 llamadas y el cuestionario de FAQ a Dani/Carlos. → [[tecnocloud]]
-- **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; reserva E2E que dispare `Build Emails`; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
+- **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; **reserva E2E real, que sigue sin correrse**; chat hueco nuevo no-doble-booking. [[clientes/ecobox/index|ecobox]]
 - 🔴 **cryptobruj-bot — SIGUE en `live`: 76 h, no 32 (03-ago)** — opera `scalp-5m` (−0,515R, la peor) con 1 posición abierta; el resto en paper. **Tuyo y solo tuyo**: sin `ADMIN_TOKEN` (no está en 1Password) y con la contraseña del panel dando 401, nadie más puede pararlo. Orden: `POST /strategies/scalp-5m/stop` (corta entradas, sigue gestionando la salida) y SOLO con la posición cerrada, `TRADING_MODE=paper` + Deploy — al revés la deja huérfana. Pendiente también el nocional real en BingX. → [[cryptobruj]]
 
 - **cryptobruj-bot — guardar `ADMIN_TOKEN` en 1Password y arreglar la contraseña del panel (03-ago)** — hoy el bot no se puede parar sin ti; el webhook de deploy sí resuelve (vault `Agentesia`) pero redesplegar no cambia el modo. **Guardarlo en `Agentesia`, NO en `Trading`**: `opsa` no ve `Trading`, así que ahí seguiría necesitando tu huella y el bot seguiría siendo solo-tuyo. → [[cryptobruj]] · [[service-account-de-1password-exige-vault-explicito-en-item-get]]
@@ -95,7 +96,7 @@ tags: [home, prioridades]
 | Simarro | [[simarro]] | 🔴 **SMTP de contratos caído** (app password nueva de Google) · **calendario → Kommo en producción**, cron 5 min · cartera de Ramón: 2.595 por soltar, 47 fichas a borrar · alta/baja de agentes automática desde Calendar · voz al día (Ana v33) |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · etapa del lead con un solo escritor + reenganche arreglado (8-sep, sin estrenar) · DST y CC arreglados · confirmación al paciente de voz reconectada, sin estrenar · recordatorios aún sin verse en vivo |
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
-| EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · smokes pendientes |
+| EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz+chat LIVE · motor de citas rehecho 10-sep (v16) · **siguiente: Redis con citas reales + lo de Cristian** · auth a medias · reserva E2E pendiente |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | **voz v45 en prod (9-sep)**: no-leads fuera del embudo, `dv_nombre` = quien llama, etiqueta del aviso por tipo, dedup por `call_id` · **`gate.py` en rojo permanente, parche sin aplicar** · ¿el número de avisos es de Alba o de Olga? · firma de Meta en observación: falta el App Secret + `NODE_FUNCTION_ALLOW_BUILTIN=crypto` · secretos sin rotar |
 | Elphis Psicología | [[clientes/elphis-psicologia/index\|elphis-psicologia]] | **Línea viva y contestando (7-sep) con la firma pendiente → guardián en rojo a propósito** · voz v19, los knobs eran de Adicciones v5 · cierre del 7-sep sin commitear, main divergente 42/18 · PR #30 abierto · token de Chatwoot sin rotar · sin backups |
 | IET | [[iet]] | iet.es en producción · pendientes menores |
