@@ -19,3 +19,7 @@ Dos reglas que salen de ahí:
 
 El fichero local es el sitio: `.claude/settings.local.json` está gitignorado, así que no
 cambia la política del repo ni la de nadie más.
+
+Y antes de dar por hueco de allowlist una denegación, mira si el comando era **compuesto**: al
+denegarse se pierde también lo que preparabas en la misma llamada →
+[[un-comando-compuesto-denegado-no-escribe-ni-su-parte-inocua]].

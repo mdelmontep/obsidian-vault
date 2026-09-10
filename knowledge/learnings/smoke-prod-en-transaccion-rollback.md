@@ -24,3 +24,11 @@ ROLLBACK;
 - `psql "$SUPABASE_DB_URL"` (de .env.local) o pooler; el `p_user_id` solo necesita existir en auth.users.
 
 - **Variante para validar una migración ENTERA antes de aplicarla**: `sed 's/^COMMIT;/ROLLBACK;/' 5NN_x.sql > /tmp/dry.sql` y ejecutarla contra prod. El DDL de Postgres es transaccional, así que el `CREATE`/`ALTER` y su guard corren de verdad contra el schema real y se revierten. Cazó un guard que se validaba a sí mismo y un grant indebido (2026-07-25, migs 563-565). Ver [[guard-de-migracion-que-recalcula-la-formula-no-verifica-nada]].
+
+- **Variante para ESCRIBIR de verdad** (arreglo manual de un dato de cliente, no smoke): mismo
+  `DO $$`, pero con `COMMIT` y con las cifras que mediste **como precondiciones** —
+  `IF v_stock IS DISTINCT FROM 66 THEN RAISE EXCEPTION …`. Entre medir y escribir pasan minutos y
+  el dato de prod se mueve solo (10-sep: entró un albarán de 20 cajas mientras redactaba el
+  mensaje al cliente). Sin guardas, el ajuste se aplica sobre un estado que ya no es el que
+  justificaba el ajuste; con ellas, aborta y no escribe nada. Verifica siempre desde una
+  **conexión nueva**: el `SELECT` de dentro de la transacción no prueba que el `COMMIT` persistiera.

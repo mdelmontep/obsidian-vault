@@ -35,8 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
-- 🟢 **Ticket 169 CERRADO (10-sep, #2693, mig 884 en prod)** — **AL016**: lo cerrado como «no llegó» deja de ser facturable, con el candado en el trigger y la resta en el `least` de la aprobación → [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]. Albarán 73059127 en 26/25/1, José avisado y **#2538** comentado. **Esperando a José**: de qué partida sale la caja que sobra (66, deberían ser 65).
-  Por qué no se ajusta desde aquí: la partida de ese albarán está a **0 de 26**, el −1 saldría de una viva y falsearía su coste, y `ajustar_stock_manual` se niega en productos con partidas (mig 594).
+- 🟢 **Ticket 169 CERRADO ENTERO, papel e inventario (10-sep, #2693, mig 884 en prod)** — **AL016**: lo cerrado como «no llegó» deja de ser facturable → [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]. Albarán 73059127 en 26/25/1; lo indecidible desde aquí no era **si** sobraba una caja sino **de qué partida** (la suya, a 0 de 26; `ajustar_stock_manual` se niega con partidas, mig 594). José eligió la de junio: 66→65 con `ajustar_lote_manual`, firmado por Borja → [[smoke-prod-en-transaccion-rollback]].
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** — módulo por org, apagado por defecto: catálogo de cuentas, N ejes analíticos, aprobación de 3 etapas, exportador Cegid V9. **15 decisiones en `ADR-063`** (renumerado del 033), glosario en `CONTEXT.md`, spec **#2295**, tickets **#2296-#2308**, **sin commitear** en el checkout raíz. Cogibles ya: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]]) y **#2297**. **Tuyo**: los tres cuestionarios y arrancar. → [[facturaia-yooz-agh-migracion]] · [[agh-iberica]]
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
   - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila.
@@ -579,6 +578,7 @@ Ver `facturaia/CLAUDE.md` (en repo) para versión completa.
 - Cambios Zod API público = `openapi.json` en mismo commit (clientes openapi-typescript no leen `refine`)
 - UI con badge "implementado" = grep que el backend lee el valor (anti regresión silenciosa)
 - Una verificación dentro de una migración que tenga que nombrar el patrón que el `pre-push` prohíbe, escríbela **en positivo**: el hook grepea el texto del fichero y aborta el push que trae la comprobación. Ver [[un-guard-que-grepea-el-texto-del-fichero-no-distingue-uso-de-asercion]]
+- **Comando denegado por el clasificador**: mira primero si solo es un hueco de la allowlist ([[un-comando-denegado-suele-ser-un-hueco-en-la-allowlist]]), y nunca metas la preparación del fichero en la misma llamada que la acción vigilada — al denegarse se pierde también lo inocuo ([[un-comando-compuesto-denegado-no-escribe-ni-su-parte-inocua]]). Las escrituras en prod fuera de sandbox se ejecutan pasándole el comando a Manuel con `!`.
 - **Merge a main exige 1 aprobación (ruleset del repo) y auto-merge está desactivado** — `gh pr merge --merge` falla con "base branch policy prohibits the merge"; `--auto` falla con "Auto merge is not allowed". Sin aprobación solo queda esperar review o `--admin` (bypass, pedir OK explícito antes de usarlo).
 
 ---
