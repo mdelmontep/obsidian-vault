@@ -195,6 +195,15 @@ Nombres exactos de `additionalFields` en la operación **create** (verificados c
 
 **Google Calendar solo genera enlaces de Meet.** No hay forma de que cree uno de Teams: eso exige Microsoft Graph (`POST /onlineMeetings`) con licencia M365, app en Entra con `OnlineMeetings.ReadWrite.All` y una `ApplicationAccessPolicy` que **solo se concede por PowerShell de Teams**, sin API. Patrón limpio si la agenda vive en Google: crear siempre el evento en Google y pedirle a Graph únicamente el `joinWebUrl` para meterlo dentro — una sola agenda, dos tipos de enlace. Ver [[patch-de-evento-en-graph-reemplaza-attendees-y-puede-matar-el-enlace-de-teams]]
 
+**`getAll` sin `singleEvents: true` NO expande los eventos recurrentes** (10-sep-2026, Laserys):
+devuelve el evento maestro con su primera fecha, así que un bloqueo semanal solo tapa esa semana y
+el bot ofrece huecos realmente ocupados. Va en `options`. Comprobado con un recurrente real
+(`RRULE` de 4 semanas): sin el flag la 3ª ocurrencia no aparece; con él, sí.
+
+**Crear un recurrente desde el nodo**: el campo es `additionalFields.rrule` y va **sin el prefijo
+`RRULE:`** — `FREQ=WEEKLY;COUNT=4`. Con el prefijo, Google responde `Bad request - please check your
+parameters`.
+
 ## WhatsApp Cloud API
 
 - **Ventana 24h**: si el destinatario no ha escrito a la business en últimas 24h, solo se entregan templates pre-aprobados. Un `text` libre devuelve `wamid` exitoso pero NO llega al destinatario (Meta lo descarta sin error). Producción: crear template aprobado en Meta Business Manager y enviar `type: 'template'`. Para tests: que el destinatario escriba primero al número business para abrir la ventana
@@ -275,6 +284,12 @@ Para latencia baja con escritura externa (Kommo, Calendar, WA), patrón:
 - `responseMode: responseNode` responde con el PRIMER respond alcanzado → FAST gana siempre.
 - Resto se ejecuta en background.
 - Ahorro: 800-1500ms perceptibles vs esperar a creación.
+
+### Code node — luxon no se puede `require`
+`const { DateTime } = require('luxon')` falla con **`Module 'luxon' is disallowed`** en el task
+runner. `DateTime` (y `$now`, `$today`) ya están **inyectados como globales**: usarlos directamente.
+Copiar un snippet de fuera con el `require` dentro es la forma habitual de romper un nodo que
+funcionaba (10-sep-2026).
 
 ### Code node modo
 - `runOnceForAllItems`: permite `$input.first()`, `$input.all()`, `$('NodeName').item.json`. Default y más versátil.

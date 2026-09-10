@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un agente de voz tiene DOS bases de conocimiento** — la del proveedor y tu RAG: corregir una no arregla la otra, y editar un chunk sin reembeber no cambia lo recuperado. [[la-kb-del-proveedor-y-tu-rag-son-dos-fuentes-y-hay-que-corregir-las-dos]]
 - **Cerrar un webhook exige censar TODOS sus emisores** — casi siempre hay dos; n8n ignora la cabecera que no espera, así que se parchean emisores primero y se activa la auth al final, con tráfico real de por medio. Ver [[cerrar-un-webhook-exige-censar-todos-sus-emisores-no-solo-el-obvio]]
 - **Un gate que da el MISMO resultado contra dos versiones distintas no mide** — más barato que mutar, y el rojo fijo se acaba ignorando. [[un-gate-anclado-a-un-diseno-no-desplegado-falla-identico-contra-todo-y-deja-de-medir]]
 - **Un `||` en un secreto lo degrada en silencio** — si la variable no existe, el literal del código ES la llave, y nada falla. [[secreto-con-fallback-literal-degrada-en-silencio-si-falta-la-variable]]
@@ -35,21 +36,7 @@ tags: [stack, index]
 - **El parche de un agente en worktree revierte lo que no commiteaste** — nace del último commit: se fusiona el hunk, no se copia el fichero. Ver [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
 - **Las frases entrecomilladas de un prompt son un guion** — el modelo las recita literales (32,6 % → 18,2 % de turnos). Ver [[las-frases-entrecomilladas-de-un-prompt-son-un-guion-que-el-modelo-recita]]
 - **Lee 2-3 transcripciones de casos que PASAN** — las métricas solo cubren lo que ya sospechabas; el defecto que enfada al usuario vive en el verde. Ver [[la-transcripcion-de-un-test-que-pasa-es-donde-esta-el-defecto-que-nadie-mide]]
-- **Un cero solo discrimina si el evento PUDO ocurrir** — y una ventana anclada al arranque caduca con cada merge (autodeploy recrea el contenedor, incluso en un merge solo-docs ajeno): ancla al EVENTO. Ver [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
-- **Un check rojo que muere en 3 s sin pasos es la plataforma** — mira si `main` también falla antes de depurar la rama. Ver [[un-check-que-muere-en-segundos-sin-ejecutar-pasos-es-la-plataforma]]
-- **La vía que nadie recorre se pudre sin ruido** — webhook a cero tapado por el cron: la proporción entre las dos fuentes es señal de salud. Ver [[una-verificacion-que-nadie-ejerce-puede-llevar-meses-rota]]
-- **Sesión de app Supabase sin password ni Node** — `generate_link` → `curl -w '%{redirect_url}'` → cookie `base64-`+b64url a mano; el action_link no inicia sesión en apps code-flow. Ver [[cookie-de-supabase-ssr-a-mano-para-smokes-sin-node]]
-- **La frescura del evento solo decide revivir, nunca limpiar el error** — con crons que reprocesan timestamps fijos, condicionar la limpieza a "evento nuevo" deja el error pintado días. Ver [[la-frescura-del-evento-solo-decide-revivir-nunca-limpiar-el-error]]
-- **El orden del `||` decide el copy, no quién lo revisó** — `detail || error || 'frase'` tapa el texto del cliente con el error interno. Ver [[el-detail-tecnico-se-pinta-antes-que-la-frase-humana-y-la-tapa]]
-- **Un push que falla pasa por éxito** — se verifica por SHA (`ls-remote` == `rev-parse`), nunca por exit code. Van dos veces. Ver [[push-que-falla-por-red-imprime-everything-up-to-date-al-final]]
-- **Una pestaña instrumentada da por inerte una app sana** — antes de declarar caída, reprodúcelo en un navegador limpio. Ver [[pestana-instrumentada-da-inerte-lo-que-esta-sano]]
-- **Un fallo transitorio que ESCRIBES se lee luego como veredicto** — enum con el porqué + barrido que lo deshiele, y el catálogo del tercero se PREGUNTA (no se declara). Ver [[un-fallo-transitorio-guardado-en-una-columna-se-lee-como-veredicto]]
-- **«SIN VÍCTIMA» tiene CUATRO lecturas** — hueco de test, mutante equivalente, **guard equivocado**, o el barrido saltó los tests relevantes (mira el conteo de skips del control ANTES de creerlo). Ver [[un-mutante-sin-victima-tambien-puede-ser-un-guard-equivocado]] · [[el-barrido-que-salta-los-tests-relevantes-dice-sin-victima]]
-- **Un trinquete que mide por FICHERO absuelve al que ya importa el helper** — anclar en la OCURRENCIA, no en el import. Ver [[un-trinquete-por-fichero-absuelve-al-que-ya-importa-el-helper]]
-- **El coste de Claude Code está en el tamaño de sesión, no en el CLAUDE.md** — 77 % es cache-read y el 91 % se gasta por encima de 200k. Y un `paths:` de rules dispara con `Read`, **no con Bash**. Ver [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
-- **Un hook que resuelve git en el cwd de la SESIÓN juzga otro checkout** — y renunciar (`exit 0` al ver un `cd`) lo deja decorativo justo donde importa. Ver [[hook-que-resuelve-git-en-el-cwd-de-la-sesion-juzga-el-repo-equivocado]]
 - **Todo bot de voz o chat debe identificarse como IA en la primera interacción** (art. 50 del AI Act, vigente desde el 2-ago-2026) — y el aviso va en el flujo, no en el prompt: si depende del modelo, el incumplimiento es silencioso. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
-- **Un control que afirmas a un cliente necesita REGISTRO con fecha** — una afirmación de control no la caza ningún test, solo una auditoría. Ver [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]]
 
 Este fichero se carga **cuando no hay disparador claro** (CLAUDE.md: "Default / dudo → `Stack/hot.md`").
 O sea: es lo que se lee al arrancar sin saber todavía qué se va a tocar. Todo lo que esté aquí se paga
@@ -124,7 +111,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
-[[hot-archivo-2026-09-05]] (7) · [[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+[[hot-archivo-2026-09-10]] (14) · [[hot-archivo-2026-09-05]] (7) · [[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
 
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]

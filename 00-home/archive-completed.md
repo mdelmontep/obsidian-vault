@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-09-10 · Laserys Las Rozas — fallos silenciosos de la vía de voz cerrados y verificados en producción** — `Reservar` ya no devuelve 200 vacío, no cita a 15 meses y distingue "Calendar caído" de "agenda vacía"; recordatorios que no salen ya no quedan por enviados; KB de Retell y RAG de Supabase corregidos los dos; los dos caminos que nunca se habían ejecutado (`Especilista asignado v3` y la fila de Sheets de paciente recurrente) probados en clones de producción. **El número ya sirve `latest_published`** (v26), así que el pendiente del agente fijado a la v6 queda cerrado. Backlog vivo en `PENDIENTES.md` del repo. → [[ventana-de-dedupe-mas-corta-que-dos-pasadas-del-cron-hace-el-reintento-una-loteria]] · [[la-kb-del-proveedor-y-tu-rag-son-dos-fuentes-y-hay-que-corregir-las-dos]] · [[el-historico-de-llamadas-dice-que-reglas-del-prompt-no-se-han-ejercitado-nunca]]
 - **2026-09-03 · Centro Elphis — Doctoralia actualiza el lead en Clientify, `update_only` en WhatsApp y guía con capturas para Olga** — 5 workflows tocados con backup, dos fallos reales corregidos el mismo día. → [[clientes/centro-elphis/index|centro-elphis]]
 - **2026-08-29 · Centro Elphis — Laura v31 servida** (guion «Encantada, X» fuera, crisis 12/12); lo que queda vive en el hub.
 - **2026-09-03 · TuCRMIA — iteración 56 integrada y desplegada** (`d8d84b10`+`41537a80`): 246/244/220/245 + fichas E1.27; y del 30-ago, producción de la 087 a la 120 con las 29 migraciones aplicadas (iter. 55).

@@ -29,3 +29,11 @@ cliente («contraseña caducada») **0** — no 0.6, cero, porque el filtro la d
 precisión en el LLM** — el umbral duro no sabe leer, el modelo sí, así que dale candidatos con su
 nivel de confianza y una instrucción explícita de descartar lo que no trate del mismo problema (sin
 esa frase, 4 de 10 recuperados eran impertinentes).
+
+**Y hay corpus donde NINGÚN umbral separa, porque el orden se invierte** (Laserys, 10-sep, ada-002,
+consultas cortas en español): "financiacion" —dato que SÍ está en la base— puntúa **0,7883** y la
+pregunta absurda "que tiempo hace en Madrid" **0,8114**. Un corte por score habría rechazado la
+consulta legítima y aceptado la absurda. Antes de poner un umbral, **mide las dos colas en tu
+corpus**; si se solapan, el filtro es imposible y la decisión sube al prompt: dile al modelo que
+compruebe que el texto recuperado menciona lo que le han preguntado y que, si no, no lo lea en voz
+alta. Ver [[el-historico-de-llamadas-dice-que-reglas-del-prompt-no-se-han-ejercitado-nunca]].
