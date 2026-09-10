@@ -45,4 +45,14 @@ comparar con `HEAD` **coincidían byte a byte** con «HEAD + lo mío» —ella y
 `git status` de un repo así **miente hacia el lado alarmista**: la pregunta no es qué letra tiene el
 fichero, es `diff <(git show HEAD:<ruta>) <ruta>`. Conmuta solo los que salgan distintos.
 
+Y la causa es peor que el ritual (10-sep, vault): el residuo `D `+`??` **no lo produce la coreografía
+del índice, lo produce `vault-commit` a secas**. Cada fichero que commitea *como nuevo* queda en HEAD
+sin entrada en el índice, así que **se acumula y se regenera en cada cierre**: 93 ficheros el 10-sep, y
+4 más treinta segundos después, de otra sesión cerrando en paralelo. En este repo `git commit` a secas
+no es «arriesgado», es **destructivo por defecto**, y el riesgo crece solo. Limpieza segura —solo si
+todos coinciden con HEAD, comprobado uno a uno—:
+`git diff --cached --name-only -z --diff-filter=D | xargs -0 git restore --staged --`. El `-z`/`-0` no
+es adorno: el vault tiene rutas con espacios (backups de n8n con el nombre del workflow) y un
+`| tr '\n' ' '` las parte en trozos y falla con «pathspec did not match».
+
 Ver [[shippear-quirurgico-desde-working-tree-compartido-sucio]] · [[el-indice-de-git-es-compartido-entre-sesiones-como-el-arbol]]
