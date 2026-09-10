@@ -35,12 +35,12 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
-- 🟢 **Ticket 169 — lo cerrado deja de ser facturable (10-sep, #2693, mig 884 EN PROD)** — con 26 recibidas, 25 facturadas y 1 cerrada como «no llegó», una factura tardía por esa unidad dejaba facturado+cerrado = 27 sobre una entrega de 26. Candado **AL016** en el trigger, no en el endpoint (al puente llegan copiloto, API v1 y OCR), 422 `sobre_lo_cerrado`, y la RPC de aprobación resta lo cerrado en su `least` para no tumbarse entera → [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]. Diferencia del albarán 73059127 cerrada y verificada en prod (26/25/1). **Tuyo**: el mensaje a José, y publicar `scratchpad/comentario-2538.md` en el **#2538** (el clasificador me deniega `gh issue comment`).
-- 🔵 **Inventario de Chivite: la caja de más NO se ajusta desde aquí (10-sep)** — la partida de ese albarán está a **0 de 26**, así que el −1 saldría de una partida viva y falsearía su coste y su caducidad. El producto marca **66 y deberían ser 65**; lo decide el cliente y se ata al recuento del **#2538**.
+- 🟢 **Ticket 169 CERRADO (10-sep, #2693, mig 884 en prod)** — **AL016**: lo cerrado como «no llegó» deja de ser facturable, con el candado en el trigger y la resta en el `least` de la aprobación → [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]. Albarán 73059127 en 26/25/1, José avisado y **#2538** comentado. **Esperando a José**: de qué partida sale la caja que sobra (66, deberían ser 65).
+  Por qué no se ajusta desde aquí: la partida de ese albarán está a **0 de 26**, el −1 saldría de una viva y falsearía su coste, y `ajustar_stock_manual` se niega en productos con partidas (mig 594).
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** — módulo por org, apagado por defecto: catálogo de cuentas, N ejes analíticos, aprobación de 3 etapas, exportador Cegid V9. **15 decisiones en `ADR-063`** (renumerado del 033), glosario en `CONTEXT.md`, spec **#2295**, tickets **#2296-#2308**, **sin commitear** en el checkout raíz. Cogibles ya: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]]) y **#2297**. **Tuyo**: los tres cuestionarios y arrancar. → [[facturaia-yooz-agh-migracion]] · [[agh-iberica]]
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
   - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila.
-  - **José (Chivite)**: sale el mensaje del ticket 169 (redactado, pendiente de tu OK) y queda que diga **qué día contó** (plazo 19-sep, **#2538**); si calla, se anota y **no se ajusta nada**.
+  - **José (Chivite)**: que diga **qué día contó** (19-sep, **#2538**); si calla, se anota y **no se ajusta nada**.
   - **Decidir**: la escala de la deuda del ADR-086 y si `disputada` vuelve a `pendiente`.
   - **IET**: la huérfana de `docs/plan/cierres.json`, el catálogo a 500k (ADR-069) y el código de impuesto de las dos líneas de FacturaDirecta.
   - **Dokploy/cuentas**: borrar `SUPERADMIN_EMAILS` e `IA_OPS_SHOW_TRANSCRIPTS`, superadmin fuera en 4 de las 8 cuentas, DPA al despacho (ADR-067 §16).
@@ -50,11 +50,13 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - 🟠 **Reverificar 27 mediciones del barrido V2 (olas B/C)** — se archivaron como «bloqueadas por swap» y el motivo era un `next build` ajeno; el resto, en prod (migs 776-777). → [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
 - 🟠 **Auditoría del 27-ago dentro (31-ago, #2318)** — **queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
 - 🟠 **Prompt de continuación del 31-ago** (supersede al del 23) — **tres huecos**: `PLAN.md` 23 secciones vs `estado.json` 25; `qa/supertest-v2` ya no está en el remoto; `permisos-escritura-service-role` fuera de la cola. → [[antes-de-inventar-un-protocolo-mirar-si-el-esquema-ya-lo-codifica]]
-- 🟠 **`ratchet:maxrows` es textual y ciego a la consulta SIN `.limit()`, el caso peor** (cabo del #2332+#2334, ya en prod y con smoke verde). → [[una-huella-de-chunks-de-otra-ruta-no-detecta-un-deploy]]
+- 🟠 **`ratchet:maxrows` es textual y ciego a la consulta SIN `.limit()`** (cabo del #2332+#2334, en prod con smoke verde). → [[una-huella-de-chunks-de-otra-ruta-no-detecta-un-deploy]]
 - 🟠 **Cabos del 26-ago, todo lo demás en prod** — agéntica `categorias`: cobertura de lo que escribe solo (**#2227**) y 22 circulares de `_parts` (**#2228**), OCR en shadow · albaranes: falta el smoke que ejerza el guard del doble conteo · PSD2 sigue sin integrar por coste, y es decisión, no avería. → [[facturaia-historico-snapshot-2026-08-30]]
 
 - 🔴 **`brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)** — una org con marca propia recibe 10-13 Lc MENOS que la de fábrica, sin aviso. Preexistente; no entra en #2272.
 
+- 🟠 **Las filas de `/admin/feedback` no se pueden abrir con teclado ni por rol, sin issue (10-sep)** — `<tr>` con `onClick` sin `role`/`tabIndex`: fuera del árbol de accesibilidad, sin cobertura E2E, y responder hubo que hacerlo por el `fetch` del propio panel. → [[una-fila-clicable-sin-rol-no-la-abre-ni-un-lector-ni-un-agente]]
+  Y el mismo ticket sigue en `resuelto` (`manual`, 8-sep) con el hilo vivo el 9 y el 10 y una petición recién salida: el estado y la conversación van por libre.
 - 🔴 **Dos cabos del ticket 159, sin issue (28-ago)** — (1) `/admin/orgs` en «Cargando…» es **hidratación, no la API**: decidir si es defecto o artefacto de QA → [[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]]; (2) el OCR **no aprende línea→producto** y ese cliente arrastra 17 recibidas sin aprobar.
 
 
