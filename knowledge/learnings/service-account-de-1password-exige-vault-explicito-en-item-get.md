@@ -32,6 +32,10 @@ Alcance del service account: desde el **5-sep-2026** es `Claude` (sustituye a `c
 **18 bóvedas** de `agentesialab.1password.eu` incluida MandaDM, y con permiso de **lectura y
 escritura** — la anterior era solo lectura. Caducidad real en `OPSA_TOKEN_EXPIRES` dentro de
 `~/.local/bin/opsa`, no de memoria. Sigue sin ver `my.1password.com` ni los vaults built-in
-`Private`/`Employee`/`Shared`, y **escribir** (`item create/edit/delete`) sigue siendo `op`.
+`Private`/`Employee`/`Shared`. **Y SÍ escribe: `opsa item create --vault <b> --template <fichero.json>`
+funciona** (comprobado el 10-9-2026 creando el ítem del stack de mandadm en la bóveda MandaDM).
+Esta línea decía «escribir sigue siendo `op`» y era un resto de la cuenta anterior, que era solo
+lectura. Con `--template` los secretos van en un fichero, no en `argv`, que es lo que hay que
+querer: borrar el fichero después.
 
 Ver [[un-wrapper-nuevo-no-se-adopta-si-no-barres-los-call-sites-escritos]]

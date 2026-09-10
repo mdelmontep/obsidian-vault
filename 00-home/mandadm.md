@@ -1,7 +1,7 @@
 ---
 title: MandaDM
 date: 2026-09-05
-updated: 2026-09-06
+updated: 2026-09-10
 tags: [proyecto, propio, instagram, meta, nextjs, supabase]
 ---
 
@@ -16,8 +16,24 @@ Repo `~/Projects/mandadm` → `github.com/AgentesIA-MAdrid/mandadm` (privado). *
 plan: `docs/plan/ESTADO.md`** (fases A-G, cada tarea con su «hecho cuando»). `docs/plan/API-META-VERIFICADA.md`
 es la única referencia de endpoints y límites; `docs/decisions/ADR-001` fija la vía.
 
-## Estado (6-sep)
+## Estado (10-sep)
 
+- 🟢 **DESPLEGADO (10-sep, `d4788ce`)** en `https://mandadm.185.99.186.76.sslip.io` con certificado
+  real de Let's Encrypt. Seis contenedores sanos en `/opt/mandadm` del host `185.99.186.76`
+  (`db` · `auth` · `rest` · `kong` · `web` · `worker`), **compose a pelo por SSH, NO en el panel de
+  Dokploy** — no hay API key en ninguna bóveda que `opsa` alcance. Supabase autoalojado y recortado
+  (postgres + gotrue + postgrest + kong; sin realtime/storage/studio/analytics), `ADR-005` en el repo.
+  TuCRMIA comprobado intacto; Traefik descubre las etiquetas solo, nunca hizo falta recargarlo.
+  **A10 hecha**, con los tres «hecho cuando» medidos. B1 (webhook) verificado contra el despliegue:
+  token correcto → 200 con el challenge exacto, token falso → 403, HMAC válido → 200, firma falsa → 403.
+- 🔴 **La migración revocaba permisos que en producción no existían.** Supabase concede `arwdDxt` a
+  `anon`, `authenticated` y `service_role` en toda tabla nueva de `public` vía `alter default
+  privileges`; medido antes del arreglo: `authenticated` podía UPDATE de `ig_user_id`, y una tabla
+  como `_migrations` nacía con `anon=arwdDxt` **y sin RLS** — la anon key pública podía leer y borrar
+  el libro de migraciones. Arreglado con `deploy/autohospedado/init/zz-mandadm.sh` (corre el último
+  por orden alfabético, como `supabase_admin`). Después: 0 grants de `anon` en `public` y
+  `GET /rest/v1/accounts` con la anon key → **401 `42501`**. El gate del repo no puede cazarlo nunca.
+  → [[un-postgres-desechable-no-mide-lo-que-concede-la-plataforma]]
 - 🟢 **Fase A · Preparar**: A1 (verificación de negocio, Cabamatica Soluciones en la cartera
   AgentesiaLab), A4 (app `mandadm` en Meta con Instagram Login), A5 (los tres permisos
   `instagram_business_*`) y A8 hechas. Credenciales en 1Password, bóveda `MandaDM`, ítem «Meta app mandadm».
@@ -51,28 +67,27 @@ es la única referencia de endpoints y límites; `docs/decisions/ADR-001` fija l
   `accountConnected`, dos tests que no muerden) antes de decidir es trabajo tirado.
 - 🔴 **A6 es el cuello de botella**: que el cliente acepte la invitación de tester desbloquea la
   comprobación de veintitantas tareas. Sin cliente elegido todavía.
-- 🟡 **A10 · desplegar es ahora el cuello de botella real** (5-sep, `ADR-004` en el repo): va al
-  **Dokploy del CRM** (`dokploymanu.tecnocloud.es`, host `185.99.186.76`, credenciales en 1Password
-  `TUCRMIA`), **no** al VPS de TuFacturaIA que la horda había escrito por su cuenta sin que nadie lo
-  decidiera. **El dominio sigue SIN decidir** (6-sep): `mandadm.agentesia.madrid`
-  lo escribió el mismo commit del VPS descartado y hoy no resuelve (el apex apunta a `185.47.13.166`,
-  otra máquina), y `mandadm.185.99.186.76.sslip.io` está disponible ya —ese host sirve certificado
-  real de Let's Encrypt sobre `sslip.io` desde agosto—. A Meta le vale cualquier HTTPS, así que el
-  criterio de A10 se reescribió sin dominio; el runbook lo lleva como `<DOMINIO>`. Las variables
-  **a mano en el panel**, y son **catorce**: la API de Dokploy reemplaza el bloque entero (pegar
-  trece rompe el despliegue) y recargar Traefik tira el CRM con él.
+- ⚪ **A10 · cerrada** (`ADR-004` eligió el Dokploy del CRM, `ADR-005` el Supabase autoalojado). El
+  dominio quedó en `mandadm.185.99.186.76.sslip.io`; a Meta le vale cualquier HTTPS. Las catorce
+  variables no pasaron por el panel: viven en `/opt/mandadm/.env` (600, root), leídas de 1Password.
 - ⚪ **A7 ya no espera textos**: `MARCADORES_PENDIENTES` está vacía —NIF, domicilio y proveedor de
-  hosting (Tecnocloud, encargado del tratamiento) escritos y verificados por test—. Solo falta
-  desplegar, o sea A10.
+  hosting (Tecnocloud, encargado del tratamiento) escritos y verificados por test—. Ya responden 200 en el dominio de arriba; sigue en `doing`
+  solo porque falta registrarlas en el panel de la app de Meta.
 - ⚠️ **B1 y B3 no se cierran solo con A6**: B1 necesita capturar un POST real (ninguna página dice con
   qué secreto firma Meta `X-Hub-Signature-256`); B3 pide un GET de `subscribed_apps` que Meta no documenta.
 
 ## Tuyo
 
-- **A10 · encender el despliegue**: elegir dominio (los dos candidatos, arriba), y en el panel de
-  Dokploy proyecto `mandadm` con las **catorce** variables a mano. Es lo único que abre la URL
-  pública, y con ella A7, B1 y B3. Decidir también **qué rama despliega**: `horda/2026-09-05` o `main`
-  con la PR #1 mergeada.
+- **Decidir la ruta raíz `/`**: hoy da 404 (no existe `app/page.tsx`, solo `/app` y `/entrar`).
+  Tres opciones: 1) redirigir a `/app` (mi recomendación), 2) redirigir a `/entrar`, 3) landing de
+  producto. Con la elección lo dejo hecho y desplegado.
+- **`ALERTS_EMAIL_FROM/TO/API_KEY` están VACÍAS**: ningún aviso del worker llega a un humano —ni token
+  caducado, ni envíos fallando, ni worker parado—. Verificar `agentesia.madrid` en Resend, o reutilizar
+  una de las dos keys de FacturAIA.
+- **El volumen `mandadm-db` no está en ningún backup.**
+- **Adoptar el stack en el panel de Dokploy** (hoy es compose a pelo en `/opt/mandadm`): hace falta una
+  API key de Dokploy, que no existe en ninguna bóveda que `opsa` alcance.
+- Decidir **qué rama es la buena**: `horda/2026-09-05` (lo desplegado) o `main` con la PR #1 mergeada.
 - **Elegir cliente tester y que acepte la invitación (A6)** — la acción de mayor retorno con diferencia.
 - **Decidir si se conecta la cuenta de Instagram de TuFacturaIA** para las pruebas de B a G. La horda
   lo dio por hecho y no lo era; lo que hay que sopesar es que el webhook escribe en `events` **todo**
@@ -130,6 +145,16 @@ Meta:
 - [[los-fixtures-oficiales-de-meta-contradicen-la-descripcion-del-campo]] (incluye el error plano de
   `refresh_access_token` y el secreto sin documentar de `X-Hub-Signature-256`)
 - [[graph-api-de-instagram-exige-pagina-vinculada-y-la-concesion-es-pegajosa]] (actualizada: Instagram Login no exige página)
+
+Del despliegue (10-sep):
+- [[un-postgres-desechable-no-mide-lo-que-concede-la-plataforma]] — la grande: el gate no puede medir
+  lo que concede la plataforma, solo lo que concede la migración.
+- [[montar-la-carpeta-de-init-tapa-el-bootstrap-de-la-imagen]] — montar el directorio entero de
+  `/docker-entrypoint-initdb.d` deja la imagen sin arrancar; se monta el fichero suelto.
+- [[auth-uid-autohospedado-solo-lee-el-guc-legacy]] — con `PGRST_DB_USE_LEGACY_GUCS: "false"`,
+  `auth.uid()` devuelve null y la RLS no filtra a nadie.
+- [[un-runbook-nunca-ejecutado-da-por-rota-una-instalacion-correcta]] — tres afirmaciones falsas en
+  `docs/deploy/supabase.md`, corregidas midiendo contra el despliegue real.
 
 De la sesión anterior:
 - [[cuenta-de-servicio-de-1password-no-ve-bovedas-creadas-despues]] · [[security-add-generic-password-interactivo-trunca-el-secreto-a-128]]

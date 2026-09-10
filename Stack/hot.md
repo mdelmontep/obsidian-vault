@@ -120,6 +120,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 - **Un gate que exige el artefacto a la fase que lo produce es un deadlock** — y el mock del contrato en el test del productor lo esconde. Ver [[gate-que-exige-el-artefacto-a-la-fase-que-lo-produce-es-deadlock]]
 - **El control de una medida es del mismo tipo que lo medido** — borrador contra publicada dio una caída falsa en 6 variantes. [[un-borrador-y-la-version-publicada-no-son-comparables-el-control-es-otro-borrador]]
 
+- **Un Postgres desechable no mide lo que concede la PLATAFORMA** — la migración revocaba, pero Supabase real regala `arwdDxt` a `anon` en cada tabla nueva vía `alter default privileges`; el gate en verde y la anon key leyendo todo. [[un-postgres-desechable-no-mide-lo-que-concede-la-plataforma]]
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:

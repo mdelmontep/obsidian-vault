@@ -15,7 +15,7 @@ tags: [home, prioridades]
 - 🟢 **TuFacturaIA — ticket 169 cerrado entero: diferencia en prod e inventario ajustado (10-sep, mig 884)** — **Tuyo**: que José conteste **qué día contó** (**#2538**, 19-sep) y `SUPABASE_ACCESS_TOKEN` en Dokploy. → [[facturaia]] · [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]
 - 🟠 **TuFacturaIA — ticket 175 (Chivite): anular un abono emitido por error, construido y SIN MERGEAR (10-sep)** — mig 885 en la rama `feat/el-abono-emitido-por-error-se-anula`; el gate cae por memoria, no por tipos. **Tuyo**: dar el OK al merge y al `db push`; luego hay que avisar a José en el hilo. → [[facturaia]]
 - 🟠 **`~/.claude/hooks/` — arneses tuyos por revisar (9-sep)** — `stop-gate.sh` arreglado (`977b932`, 36/36); queda barrer el resto por `$root/.git`, que en un worktree es un fichero. El checkout principal de facturaia va **211 commits por detrás**. → [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
-- 🔴 **MandaDM — PR #1 sin mergear, 3 decisiones tuyas paradas (6-sep)** — **Tuyo**: A10 (elegir dominio y rama; 14 variables a mano), A6 cliente tester (~25 tareas), ¿Instagram de TuFacturaIA? sus DMs irían a `events`. Detalle y lo hecho el 6-sep → [[mandadm]]
+- 🔴 **MandaDM — DESPLEGADO (10-sep), decisiones tuyas paradas** — vivo en `mandadm.185.99.186.76.sslip.io`; A10 cerrada. **Tuyo**: A6 cliente tester (~25 tareas), ruta `/` da 404 (elegir destino), alertas por correo vacías (nadie se entera si el worker cae), sin backup del volumen de BD, PR #1 sin mergear. Detalle → [[mandadm]]
 - 🟢 **TuFacturaIA — FacturaDirecta ya no adelanta el cursor sobre lo que falló (5-sep, #2518)** — un gasto llevaba mes y medio sin importarse con la sync en verde. **Tuyo**: ponerle el código de impuesto a esas dos líneas en FacturaDirecta, y elegir de dónde salen los PDF (su API no sirve ninguno). → [[facturaia]] · [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - 🟢 **TuFacturaIA — beta gratuita en prod: `/beta`, lista de espera y alta del probador (3-sep, #2406/#2421/#2425, migs 807/808)** — **Tuyo**: decidir cuándo abrir la fase. → [[facturaia]]
 
@@ -102,7 +102,7 @@ tags: [home, prioridades]
 | IET | [[iet]] | iet.es en producción · pendientes menores |
 | AGH Ibérica | [[agh-iberica]] | **Dos frentes**: Paquita (el agente; «Carlos» es el CEO) y **la contabilidad fuera de Yooz** (diseño cerrado, 13 tickets abiertos → [[facturaia-yooz-agh-migracion]]) · 🟢 **#1418 en prod: emite al portal de Flota IA**; hay turnos reales desde el 31-ago, falta el SELECT anclado · 🔴 **#1349 + #1350: los dos DPA sin firmar** · 🔴 tuyo 2 min: claves Langfuse (**#1009**) · #1424 el emisor solo loguea al fallar · 82 % de la cola humana sin dueño (#1351) |
 | Aula | [[aula]] | Propio · publicada · **repo en GitHub privado** · 115 temas / 7 lecciones · el runner escribe solo |
-| MandaDM | [[mandadm]] | Propio · B-G en verde en PR #1 sin mergear · bloqueado por A10 (desplegar) y A6 (cliente tester) |
+| MandaDM | [[mandadm]] | Propio · desplegado y en verde · bloqueado solo por A6 (cliente tester de Instagram) |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente
