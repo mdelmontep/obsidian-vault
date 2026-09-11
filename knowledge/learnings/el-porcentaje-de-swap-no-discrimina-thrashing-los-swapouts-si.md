@@ -24,3 +24,12 @@ mandando porque el pico llega después de medir. Vale para decidir si abres **un
 
 Corolario: antes de culpar a la máquina, `ps -Ao rss,pid,comm | sort -rn | head` — y si el que
 come es el gate de otra sesión, se espera, no se mata.
+
+**11-sep-2026, confirmado con otra métrica y a punto de costar un rediseño.** Se iba a meter
+un guard de admisión en `fia-gate` que leyera `kern.memorystatus_level` (mpl). Medido: una
+suite que terminó VERDE vivió en mpl 41-47, y el sistema mataba procesos (jetsam) a mpl 31-34
+— pero mpl marcaba **45 con el swap al 87 %**. Mismo error que arriba con otro número: mpl es
+estado, no actividad, e ignora el swap. Además la palanca no llegaba: con el semáforo VACÍO la
+máquina estaba en `vpl=2`, porque quien comía era Chrome (2,9 GB) y las propias sesiones. Un
+guard ahí sólo frena al que ya obedece. Esta nota ya lo decía el 31-ago y no la consulté antes
+de diseñar: `vault-find` ANTES de diseñar, no después.
