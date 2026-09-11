@@ -200,6 +200,11 @@ devuelve el evento maestro con su primera fecha, así que un bloqueo semanal sol
 el bot ofrece huecos realmente ocupados. Va en `options`. Comprobado con un recurrente real
 (`RRULE` de 4 semanas): sin el flag la 3ª ocurrencia no aparece; con él, sí.
 
+**`alwaysOutputData` en un `getAll` obliga a filtrar aguas abajo**: con 0 eventos el nodo emite
+un item `{}` en vez de nada, y cualquier `evento.start.dateTime` de un Code node revienta en cada
+pasada. O se enciende el flag **y** se filtra (`$input.all().filter(i => i.json && i.json.start)`),
+o no se enciende. Ver [[n8n-gcal-getall-empty-no-propaga-downstream]].
+
 **Crear un recurrente desde el nodo**: el campo es `additionalFields.rrule` y va **sin el prefijo
 `RRULE:`** — `FREQ=WEEKLY;COUNT=4`. Con el prefijo, Google responde `Bad request - please check your
 parameters`.

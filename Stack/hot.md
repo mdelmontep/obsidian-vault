@@ -67,11 +67,12 @@ bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
-## Ha vuelto a pasar (34)
+## Ha vuelto a pasar (35)
 - **Cierre de tanda = suite COMPLETA sobre `main`** — el gate por rama no ve los guards. Ver [[suite-filtrada-por-carpetas-del-pr-no-ve-los-guards-de-arquitectura]]
 
 Estas no son advertencias teóricas: su learning documenta que el fallo **reincidió** después de
 estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un hook, no esta lista.
+- **`alwaysOutputData` en un getAll y el Code de abajo sin filtro = crash en cada pasada** — escrito en mayo, repetido en septiembre: el flag y el filtro del item vacío son un cambio en dos sitios. [[n8n-gcal-getall-empty-no-propaga-downstream]]
 
 - **Un backfill se guarda por el INVARIANTE, no por el síntoma** — «a toda fila sin X, ponle X» habría duplicado 106 de 115 filas; la condición que lo hace neutro deja 9. Ver [[backfill-guardado-por-invariante-en-vez-de-por-sintoma]]
 - **Citar el delimitador dentro de su propia región la cierra ahí mismo** — `$$` en un comentario de `do $$`, acento grave en plantilla, `*/` en JSDoc; el error sale LEJOS. Nadie lo ve porque `allowJs:false` deja los `.mjs` fuera de `tsc` y un fichero que nadie ejecuta no lo analiza nada. Ver [[citar-el-delimitador-dentro-de-su-propia-region-la-cierra-ahi-mismo]]
