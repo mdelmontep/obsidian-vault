@@ -4,22 +4,23 @@ date: 2026-09-11
 source: facturaia
 tags: [rendimiento, gates, medicion, atribucion]
 ---
-Un pre-push de 70 min con la máquina a load 17. Cuatro explicaciones, tres caídas:
-contención de CPU, el suelo `running < MIN` de `fia-gate` (la línea 260 admite sin mirar
-`vm.loadavg`), y «no hay cola, la espera máxima fue 1 s».
+Un pre-push de 70 min con la máquina a load 17. Cuatro explicaciones intentadas en una
+tarde entre dos sesiones, **las cuatro caídas**: contención de CPU (load real, pero no
+causa), el suelo `running < MIN` de `fia-gate` (la línea 260 admite sin mirar
+`vm.loadavg` — cierto, y explica quién ENTRA, no cuánto tarda), «no hay cola» (falso), y
+«era la cola» (también falso).
 
-**Esa tercera era mía y era falsa: medí la cola en el lado equivocado.** El semáforo
-envuelve DOS capas distintas y solo miré una. Los segmentos internos del pre-push entran
-con el `KIND` por defecto (`cpu`) y no tienen exclusión: 14 segmentos, **1 s** de espera
-total. Pero cada comando de la sesión de Claude Code va envuelto con `FIA_GATE_KIND=mem`,
-y ahí la línea 259 **sí muerde** — un `mem` no entra si ya hay otro corriendo: 54
-segmentos, **219 s**, con un único `git push` esperando **218 s**. Filtré por rama del
-repo, que es justo el campo que los segmentos del envoltorio no llevan, y la cola se
-volvió invisible.
+Lo que sí quedó medido, y merece la pena por sí solo: **el semáforo envuelve dos capas y
+una era invisible.** Los segmentos internos del pre-push entran con el `KIND` por defecto
+(`cpu`), sin exclusión: 1 s de espera en 14. El envoltorio de cada comando de sesión va
+con `KIND=mem`, donde la línea 259 sí muerde: 219 s en 54. Filtrar por rama del repo no
+alcanza al envoltorio, que no lleva ese campo.
 
-Doble lección: (1) antes de concluir «no hay cola», comprueba que tu filtro alcanza a
-TODAS las capas que piden slot — el envoltorio también hace cola; (2) no sumes los
-`Duration` que declaran las herramientas (de 11 etapas, 2 los declaran, y las que más
-pesan hacen red y no publican tiempo): mide `running→done`.
-Referencia del gate: 398-419 s limpio, 478 s cargado. Tell de vivo: `stat -f %m <log>`.
+**Pero 219 s no explican 70 min, y 218 de esos 219 eran de UN push ajeno a la corrida
+lenta.** Medir bien una cosa no la convierte en la causa de la otra: la tentación, después
+de encontrar por fin un número real, es colgarle el misterio que tenías abierto.
+
+La hora **sigue sin atribuir**. La sospecha viva: de 11 etapas del pre-push solo 2
+declaran `Duration`, y las que más pesan (sincronía de migraciones, `gen:types:check`)
+hacen RED sin publicar tiempo. Se mide instrumentando esas etapas, no el semáforo.
 Ver [[el-suelo-de-carga-de-una-maquina-compartida-no-lo-ponen-las-sesiones]].
