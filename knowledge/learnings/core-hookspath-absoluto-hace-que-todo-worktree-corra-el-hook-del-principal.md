@@ -36,3 +36,20 @@ Y el daño peor no es ejecutar el viejo, es **diagnosticar sobre él**: el 9-sep
 diagnostiqué un bug real y propuse un arreglo. Estaba arreglado en `origin/main` desde hacía
 semanas, y mi arreglo de una línea habría **reintroducido** el fallo que aquel PR cerró.
 Antes de afirmar qué dice un fichero del arnés: `git show origin/main:<ruta>`.
+
+**Tercera vez, y el coste ya no fue diagnosticar: fue REESCRIBIR** (facturaia 11-sep, 224
+commits de atraso). El aviso de cierre, que promete salir una vez por sesión, salió **tres**.
+Le encontré la causa real (en un worktree `.git` es un FICHERO, así que `mkdir -p
+"$root/.git/<marcador>"` falla con «Not a directory» y `2>/dev/null` se lo traga), lo arreglé
+y le escribí una suite de 8 casos… que dio **8/8 contra la versión de `origin/main`**: ya
+estaba arreglado ahí, con la misma cura y con una suite mejor. Tiré mi arreglo y mi suite —
+un segundo arnés divergente es peor que ninguno.
+
+El contraste que explica por qué esto solo pasa con los hooks de Claude Code: los que SÍ
+bloquean (`pre-commit`/`pre-push`) salen de `core.hooksPath=.githooks`, **relativo**, así que
+corrieron los del worktree, al día; entre principal y upstream esos dos ficheros diferían en
+**966 líneas**. Un gate correcto y un arnés fósil conviviendo en la misma sesión.
+
+**Regla:** si un hook de `.claude/` se porta mal, lo primero no es leerlo, es
+`git diff HEAD origin/main -- <ruta>`. Si difieren, no hay bug que arreglar: hay un checkout
+que desplegar.

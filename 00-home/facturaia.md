@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-10
+updated: 2026-09-11
 tags: [cliente, facturaia, hub]
 ---
 
@@ -36,7 +36,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ## NOW (trabajo activo)
 
 - 🟢 **Ticket 169 cerrado entero, papel e inventario (10-sep, #2693, mig 884 en prod)** — **AL016**: lo cerrado como «no llegó» deja de ser facturable. Detalle → [[facturaia-historico-detallado]] · [[un-candado-fail-closed-nuevo-tumba-el-flujo-que-ya-pasaba]]
-- 🟢 **Ticket 175 (Chivite): anular un abono emitido por error — FASE A EN PROD, José avisado (10-sep)** — migs 885/886/887 y PRs #2699/#2705/#2706/#2708; detalle → [[facturaia-historico-detallado]]. **Queda vivo**: el bloqueo `registro_externo` sin caso servido para el smoke (0 abonos importados en sandbox); `origenes_no_recomputados`, que se calcula y se registra pero no se enseña al usuario; y la fase **B** (el abono nace borrador) con prompt en `docs/architecture/PROMPT-continuacion-abono-borrador-fase-b.md` (sin commitear), que anota la **C** (`RegistroAnulacion`). → [[un-espejo-entre-dos-funciones-sql-se-ancla-leyendo-el-prosrc-de-la-otra]]
+- 🟢 **Ticket 175 (Chivite): anular un abono emitido por error — FASE A CERRADA ENTERA, sus dos deudas saldadas (11-sep, #2714 sobre migs 885/886/887)** — el aviso de orígenes mudos ya se enseña (segundo toast `warn`) y el `registro_externo` ya tiene caso servido (integración contra la base local). Detalle → [[facturaia-historico-detallado]]. **Queda vivo**: la fase **B** (el abono nace borrador), BLOQUEADA en la decisión de producto del §4 de `docs/architecture/PROMPT-continuacion-abono-borrador-fase-b.md` (**tuya**), que anota la **C** (`RegistroAnulacion`) y tendrá que reescribir —no duplicar— la frase «ese estado ya no admite cobro». Cabo: **dónde ves el 175 «En revisión»**, si la BD lo da `resuelto` desde el 10-sep. → [[un-spread-de-record-unknown-en-un-insert-tipado-deja-data-en-null]]
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** — módulo por org, apagado por defecto: catálogo de cuentas, N ejes analíticos, aprobación de 3 etapas, exportador Cegid V9. **15 decisiones en `ADR-063`** (renumerado del 033), glosario en `CONTEXT.md`, spec **#2295**, tickets **#2296-#2308**, **sin commitear** en el checkout raíz. Cogibles ya: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]]) y **#2297**. **Tuyo**: los tres cuestionarios y arrancar. → [[facturaia-yooz-agh-migracion]] · [[agh-iberica]]
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
   - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila.

@@ -20,6 +20,37 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 
+## 11-sep-2026 · ticket 175 (Chivite): las dos deudas de la fase A, saldadas (PR #2714, `737ed76d0`, sin migración)
+
+La fase A —anular un abono emitido por error— llevaba en prod desde el 10-sep con las migs
+885/886/887. Dejó dos deudas escritas en el prompt de la fase B, y las dos se cierran aquí.
+
+**§0.1 — el aviso que se calculaba y no se enseñaba.** `origenes_no_recomputados` se calculaba,
+viajaba en el JSON y se registraba en `logAgentAction`, pero el usuario nunca lo veía. Ahora sale
+un **segundo toast `warn`, aparte del de éxito**: separado porque el abono sí se anuló y teñir de
+ámbar una operación correcta es mentir; `warn` porque `duracionToast` le da 20 s de tope en vez de
+10, que es lo que cuesta leer una lista de facturas. El texto vive en
+`src/lib/facturas/aviso-origenes-mudos.ts`, **fuera del componente**, porque el endpoint tiene el
+mismo dato y algún día lo dirán la v1 y el copiloto. Tres ficheros de test, uno por capa donde el
+dato puede volver a morir; los dos de transporte probados por mutación (mutado `origenesDe`→`[]`:
+2 de 4 rojos; mutada la línea del toast: 1 de 2 rojos).
+
+**§0.2 — el bloqueo `registro_externo` sin caso servido.** No había ni un abono importado en las
+orgs `is_test` de prod. El documento planteaba dos salidas —fabricarlo en prod, o aceptar por
+escrito que se quedaba sin smoke— y se tomó una **tercera**: test de integración contra la base
+**local**, donde un abono importado es dato de prueba legítimo. Tres casos, y el tercero es el
+**control** (un origen vivo que sí recomputa): sin él los otros dos pasarían con una función que
+no recomputara nunca.
+
+**Lo que queda para la fase B**: sigue BLOQUEADA en la decisión de producto del §4 (de Manuel), y
+tendrá que **reescribir** la frase «ese estado ya no admite cobro» — con `borrador` entre los
+orígenes mudos, que es justo lo que B introduce, se lee raro. Se reescribe ahí, no se añade una
+segunda frase.
+
+Gotchas de la sesión → [[un-spread-de-record-unknown-en-un-insert-tipado-deja-data-en-null]] ·
+[[una-migracion-extra-en-la-base-local-compartida-puede-ser-de-un-programa-vivo]] ·
+[[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
+
 ## 9-sep-2026 · poda del dashboard: el porqué de seis bloqueos
 
 Los seis siguen VIVOS en el hub, en una línea con la acción y el plazo. Aquí queda el razonamiento completo que los justificaba, que es lo que engordaba el arranque de sesión.
