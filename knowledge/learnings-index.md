@@ -409,6 +409,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[kommo-scope-chats-puede-no-aparecer-en-ui-contactar-soporte]] — kommo scope chats puede no aparecer en ui, contactar soporte
 - [[kommo-task-types-solo-se-crean-desde-ui]] — kommo task types solo se crean desde la UI, no vía API
 - [[llave-css-faltante-invalida-todo-el-css-posterior]] — llave css faltante invalida todo el css posterior
+- [[llevar-a-un-pr-el-wip-de-una-rama-ya-squash-mergeada]] — llevar a un PR el WIP de una rama ya squash-mergeada — se planta sobre main, no sobre la punta vieja
 - [[llm-ambiguity-lista-candidatos-numerados-y-memoria-conversacional]] — llm ambiguity con voz — lista candidatos numerados + memoria conversacional
 - [[llm-safety-critical-un-tool-no-cascada-de-tools]] — LLM safety-critical — un solo tool, no cascada de tools en orden estricto
 - [[llm-tool-use-card-visual-instruir-no-duplicar-lista]] — llm tool-use con cards visuales — instruir explícito a no duplicar la lista

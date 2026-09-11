@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-09-10
+updated: 2026-09-11
 tags: [cliente, agentesia]
 ---
 
@@ -54,7 +54,7 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
     - **La puerta del art. 28.2 por cliente se retiró (28-ago)** — el contrato ya autoriza al subencargado. Cae con ella lo que este hub daba por tuyo: **no hay anexo de Anthropic que firmar** ni 7 clientes que marcar. → [[ADR-060-la-autorizacion-del-subencargado-la-da-el-contrato-no-una-puerta-por-cliente|el contrato autoriza, no una puerta por cliente]]
     Learnings de fase 2: [[columna-de-purga-sin-cron-es-retencion-aparente]] · [[un-gate-que-solo-mide-lo-aplicado-puntua-al-humano]] · [[postgrest-sdk-or-no-compara-columnas]] · [[ADR-059-la-cadencia-del-runner-vive-en-la-bd-no-en-el-cron|la cadencia del runner vive en la BD]] · [[el-trabajo-no-critico-dentro-del-try-hace-que-el-emisor-reintente]] · [[tipo-de-bd-a-mano-sin-relationships-tipa-toda-fila-como-never]] · [[una-suscripcion-realtime-impide-revocar-el-select-de-esa-tabla]].
 
-11. **agency-portal — Pizarra: la agenda deja de estrechar la entrega, columnas plegables y tres densidades (10-sep)** — la agenda pasa a **columna propia anclada a la izquierda** (el tablero scrollea por debajo), las columnas se pliegan (`?plegadas=`) y la tarjeta tiene tres formatos (`?d=comoda|compacta|lista`), todo espejado en la URL sin round-trip al servidor. Lo que no era obvio: los carriles eran pistas `1fr` sin suelo, así que la agenda les robaba ~23 % de ancho a las cuatro; y **plegar dentro de un grid no devuelve nada** — hubo que pasar la fila a flex con `min-w` y bajar el mínimo de 17rem a **16rem** para que plegar la agenda cambie lo que se ve (4×256+36 = 1060 ≤ 1092; a 17rem no entraban ni plegando, o sea que el botón era inerte). 4 gates verdes y **sin commitear**: worktree `pizarra-entrega`, rama `feat/pizarra-agenda`. La migración `tasks` ya está aplicada en prod; el #615 no lleva migración. **Bloqueo**: Borja mergea **#606 y luego #615** (apilado). ⚠️ Dos escrituras REALES en producción por clicar sobre el dev local, restauradas por la UI — sus 4 filas de `/agency/audit` no se pueden borrar. Ver [[plegar-una-columna-solo-sirve-si-el-vecino-cabe-en-el-ancho-liberado]] · [[el-dev-server-local-con-env-de-prod-convierte-cada-clic-de-qa-en-escritura-real]] · [[la-ventana-del-navegador-de-inspeccion-no-reflowa-aunque-resize-diga-ok]]
+11. **agency-portal — Pizarra: agenda en columna propia, columnas plegables y tres densidades (10/11-sep)** — la agenda es **columna anclada a la izquierda** (el tablero scrollea por debajo), las columnas se pliegan (`?plegadas=`) y la tarjeta tiene tres formatos (`?d=comoda|compacta|lista`), todo espejado en la URL sin round-trip al servidor. Lo que no era obvio: los carriles eran pistas `1fr` sin suelo y la agenda les robaba ~23 % de ancho, y **plegar dentro de un grid no devuelve nada** — hubo que pasar la fila a flex con `min-w` y bajar el mínimo a **16rem** (4×256+36 = 1060 ≤ 1092; a 17rem el botón era inerte). **Estado: #606, #615 y #626 en `main` (11-sep); el resto salió del WIP del worktree al PR #628**, 11 ficheros, CI verde, sin migración, y sus tres candados medidos por mutación (víctima los tres). **Pendiente**: aplicar en prod `20260911120000_tasks_select_developer_scope.sql` (de #626), y el checkout raíz sigue con el residuo del 9-sep. La migración `tasks` ya está en prod. ⚠️ Dos escrituras REALES en producción por clicar sobre el dev local, restauradas por la UI — sus 4 filas de `/agency/audit` no se pueden borrar. Ver [[llevar-a-un-pr-el-wip-de-una-rama-ya-squash-mergeada]] · [[plegar-una-columna-solo-sirve-si-el-vecino-cabe-en-el-ancho-liberado]] · [[el-dev-server-local-con-env-de-prod-convierte-cada-clic-de-qa-en-escritura-real]] · [[la-ventana-del-navegador-de-inspeccion-no-reflowa-aunque-resize-diga-ok]]
 
 ## Infraestructura — el monitor del portal (`/agency/infrastructure`)
 
@@ -69,7 +69,7 @@ El alta de un servidor **solo se hace desde el formulario del portal**: el únic
 
 - `notcapi`: mergear **PR #97** de `agentesia-web` (listo) y luego sacar de draft y mergear el **#99** — en ese orden, el #99 depende del #97 (hito 7)
 - Dani: correr diagnóstico del hook de time-tracker (ver hito 2)
-- Borja: mergear **#606** y luego **#615** de `agency-portal` — apilado, en ese orden (hito 11)
+- Borja: mergear **#628** de `agency-portal` (Pizarra: densidad + columnas plegables, CI verde, sin migración) — #606/#615/#626 ya están en `main` (hito 11)
 - GitHub org: subir spending limit / esperar reset de cupo Actions (ver hito 3)
 
 ## Links rápidos

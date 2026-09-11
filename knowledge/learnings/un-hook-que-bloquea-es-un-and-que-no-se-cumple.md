@@ -21,3 +21,10 @@ limpieza no ejecutada en un fichero en `main`** — mirar `git status` antes de 
 
 Y una segunda vez el mismo día: un `cd X && rm y && ...` no es lo único; **cualquier** compuesto donde
 el efecto deseado va antes del que puede fallar tiene este problema.
+
+**Variante del 11-sep: lo que se pierde puede ser el INSUMO, no la limpieza.** El mensaje de commit
+se escribía con un heredoc en el MISMO comando que el `git commit` que el `mutate-guard` bloqueó
+(código y test en la misma tanda). El reintento falló con `could not read log file: No such file or
+directory` — un error que no nombra ningún hook y manda a depurar el sitio equivocado, porque el
+heredoc nunca corrió. **El fichero que alimenta un comando vigilado se escribe en su propio
+comando**, igual que la limpieza.
