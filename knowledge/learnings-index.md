@@ -494,9 +494,10 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (96)
+## Claude Code / agentes / harness (97)
 
 - [[abrir-en-escritura-trunca-antes-de-leer-y-el-control-lo-lee-como-exito]] — abrir en escritura trunca antes de leer; el control por ausencia (`grep -c` → 0) confirma como éxito el fichero que acabas de vaciar
+- [[capturar-pantalla-con-la-url-visible-exige-dos-permisos-de-macos]] — soporte pide capturas sin recortar con la URL visible: Grabación de pantalla para `screencapture` y Automatización para traer la pestaña al frente; `open -a` evita el segundo
 - [[el-suelo-de-carga-de-una-maquina-compartida-no-lo-ponen-las-sesiones]] — antes de negociar turnos de máquina, medir el suelo con nadie corriendo; `ps` dice quién compila, no por qué va lenta
 - [[medir-en-el-mismo-comando-que-lanza-no-es-decidir]] — medir la máquina dentro del comando que lanza no evita la colisión: el lanzamiento tiene que ir detrás de un `if`, y el `if` se prueba con el caso que debe bloquear
 - [[una-rectificacion-que-cambia-la-decision-de-otro-lleva-el-estado-dentro]] — entre sesiones que comparten máquina, el consejo correcto en mal momento provoca la colisión que quería evitar: el estado del recurso va dentro del mensaje

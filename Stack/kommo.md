@@ -44,6 +44,14 @@ tags: [kommo, crm, whatsapp, salesbots, api]
   - Template invitando a responder (ej. "cuéntanos más para ayudarte mejor") → solo para forms breves tipo `contacto_propiedad` donde el cliente dio poca info
   - Template solo confirmación (ej. "hemos recibido, te contactamos en 24-48h") → para forms largos cualificables (valoración, capacidad) donde pedir "más info" es insultante porque ya rellenaron 8 campos
 
+## WhatsApp Cloud API — conectar el canal y leer sus IDs
+
+- **El "ID" que Kommo enseña bajo «Cuenta de WhatsApp Business» NO es el WABA ID, es el `phone_number_id`.** Confundirlos lleva a concluir que la integración apunta a una cuenta inexistente. Para comprobar qué es un ID de Meta: `business.facebook.com/latest/settings/whatsapp_account?...&selected_asset_id=<ID>&selected_asset_type=whatsapp-business-account`. **Nunca lo verifiques metiéndolo en `business_id=`**: si no corresponde, Meta no da error — hace *fallback silencioso* al portfolio por defecto y parece que el ID pertenece a otro cliente (me pasó con Laserys: casi mando ese diagnóstico falso a soporte).
+- **El asistente de conexión se queda colgado en el spinner «estamos conectando tu número…» indefinidamente, pero la conexión SÍ se completa por detrás.** No es que la sesión te expulse. Esperar >2 min, recargar Kommo y reabrir el canal: aparece Conectado. Reintentar el asistente solo encadena spinners.
+- Tras reconectar, si la ficha del canal sigue mostrando `unknown` en nombre de cuenta/negocio, «Límite de mensajes: Desconocido» y «Método de pago: No añadido», Kommo **no está leyendo los datos de la WABA** aunque el número figure Conectado — señal de que tampoco recibirá los webhooks de `messages`. Ver [[incidents]] 11-sep Laserys.
+- **Sin plantillas aprobadas en la WABA el negocio no puede iniciar conversación nunca**, y sin ventana de 24 h abierta Kommo ni siquiera pinta el compositor de WhatsApp en el contacto (solo «Nota») → no hay forma de hacer un test de saliente. Comprobar el contador de plantillas en Meta antes de planificar cualquier prueba.
+- Error **3123** («Vuelve a conectar tu número de teléfono a la integración») al enviar: es el síntoma genérico de canal desalineado, no dice nada de la causa.
+
 ## Doble disparo salesbot — n8n + automation pipeline
 
 Si un workflow n8n llama a `/api/v2/salesbot/run` para invocar un bot, **Y** ese mismo bot está configurado como automation del status del pipeline donde n8n acaba de crear el lead, **se dispara dos veces casi simultáneamente**. Síntoma típico: cliente recibe la misma plantilla WhatsApp dos veces en el mismo segundo.
