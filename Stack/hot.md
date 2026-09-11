@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Cola ~0 con la máquina a tope** — mide `running→done`, no los `Duration` que declara la herramienta. Ver [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]]
 - **Un agente de voz tiene DOS bases de conocimiento** — la del proveedor y tu RAG: corregir una no arregla la otra, y editar un chunk sin reembeber no cambia lo recuperado. [[la-kb-del-proveedor-y-tu-rag-son-dos-fuentes-y-hay-que-corregir-las-dos]]
 - **Cerrar un webhook exige censar TODOS sus emisores** — casi siempre hay dos; n8n ignora la cabecera que no espera, así que se parchean emisores primero y se activa la auth al final, con tráfico real de por medio. Ver [[cerrar-un-webhook-exige-censar-todos-sus-emisores-no-solo-el-obvio]]
 - **Un gate que da el MISMO resultado contra dos versiones distintas no mide** — más barato que mutar, y el rojo fijo se acaba ignorando. [[un-gate-anclado-a-un-diseno-no-desplegado-falla-identico-contra-todo-y-deja-de-medir]]

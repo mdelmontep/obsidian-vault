@@ -32,3 +32,9 @@ contención real); lo falso era el cero, y como el cero es el que fija el margen
 error se propagó justo a la conclusión que importaba: cuánto aire tiene el caso.
 Un umbral calibrado sobre un cero contaminado **no viaja**, y deja de valer sin que
 nadie se entere. Antes de derivar un número de una tabla, medir el reposo.
+
+**Corolario (11-sep): medir el suelo no basta, hay que separar admisión de duración.**
+Con el suelo ya medido, tres sesiones atribuyeron un pre-push de 70 min a la contención
+(load 17 real) y al semáforo. El log decía que la espera de admisión máxima fue **1 s**:
+la cola no era el problema y el load, siendo cierto, no era la causa. Un load alto es
+compatible con cero espera. Ver [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]].
