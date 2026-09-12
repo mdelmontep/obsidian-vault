@@ -28,7 +28,7 @@ tags: [n8n, kommo, workflows, api]
 - `&&` en campo URL inline se rompe — usar editor de expresión completo o nodo Set previo
 - IF no permite AND/OR mixto — expresión JS en una sola condición
 - `$('Nodo')` falla si no se ejecutó — usar `$if($('Nodo').isExecuted, ..., fallback)`
-- **Public API `PUT /workflows/:id` rechaza `settings` con keys extra** (`callerPolicy`, `binaryMode` que vienen del GET). Filtrar a solo `executionOrder`; n8n re-aplica resto del estado anterior. Ver [[n8n-public-api-put-workflow-settings-keys]]
+- **Public API `PUT /workflows/:id`: manda `settings` TAL CUAL y quita solo la clave que el 400 obligue** — la única rechazada medida es `binaryMode`. Filtrar por lista blanca propia BORRA ajustes reales (`errorWorkflow`, `timezone`, `availableInMCP`). Ver la sección «settings allowed list» y [[n8n-public-api-put-workflow-settings-keys]]
 - **Inventario callers auth: `endswith('.code')` deja fuera `toolCode` y `httpRequest`** — al migrar headers `x-service-key` o similar, inspeccionar `parameters` JSON-serializado en TODOS los tipos. Ver [[n8n-inventario-auth-incluye-toolcode-y-httprequest]]
 - Set node reemplaza `$json` — referenciar nodo fuente: `$('Webhook').first().json.body.args.X`
 - **Headers HTTP con `{{ $env.X }}` requieren `=` al inicio del valor** — sin el `=`, n8n manda literal `Bearer {{ $env.X }}` y la API rechaza con 401. El `jsonBody` ya lleva `=` por defecto, los headers no
@@ -119,7 +119,7 @@ for (ctype, cid), refs in all_creds.items():
 OLD = "fantasmaXXX"
 NEW = "realYYY"
 TYPE = "googleCalendarOAuth2Api"
-ALLOWED = {'executionOrder','timezone','saveManualExecutions','errorWorkflow','saveExecutionProgress','saveDataSuccessExecution','saveDataErrorExecution'}
+DENY = {'binaryMode'}   # unica clave que el validador rechaza; NO filtrar por lista blanca (borra errorWorkflow/timezone/availableInMCP)
 for w in wfs:
     full = json.loads(urllib.request.urlopen(urllib.request.Request(f"{BASE}/api/v1/workflows/{w['id']}", headers=H)).read())
     changed = []
@@ -129,7 +129,7 @@ for w in wfs:
             creds[TYPE] = {'id': NEW, 'name': 'Reasignado'}
             changed.append(n['name'])
     if changed:
-        s = {k:v for k,v in (full.get('settings') or {}).items() if k in ALLOWED} or {"executionOrder":"v1"}
+        s = {k:v for k,v in (full.get('settings') or {}).items() if k not in DENY} or {"executionOrder":"v1"}
         payload = {"name":full['name'],"nodes":full['nodes'],"connections":full['connections'],"settings":s,"staticData":full.get('staticData')}
         H2 = {**H, "Content-Type":"application/json"}
         urllib.request.urlopen(urllib.request.Request(f"{BASE}/api/v1/workflows/{w['id']}", data=json.dumps(payload).encode(), headers=H2, method="PUT"))
@@ -176,7 +176,7 @@ for w in wfs:
 - Tests contra webhooks prod disparan acciones reales — usar datos que no activen side effects
 - **Button replies (interactive) = workflow run NUEVO** — al pulsar Confirmar/Corregir/Cancelar, n8n arranca otra ejecución con `msg_type='interactive'`. El estado del run anterior (audio/texto, JSON del agente, productos detectados...) se pierde. Si necesitas algo del run original (ej: caption "por voz" vs "por texto"), persistirlo en BD/sesión cuando arranca el flujo, leerlo en el run del button. `n8n_chat_histories` (Postgres Chat Memory) sirve si añades metadata, o crear tabla pequeña `voice_pending_sessions(phone, source, expires_at)`.
 - **`SUPABASE_SERVICE_ROLE_KEY` hardcodeado en Code nodes es leak silencioso** — cualquiera con login al UI de n8n.X.com ve el JWT en el source del node. Rotar la key no protege si sigue ahí (el patcher la actualiza pero queda visible). Patrón obligatorio: `const SUPABASE_KEY = $env.SUPABASE_SERVICE_ROLE_KEY`. Aplica a cualquier secret.
-- **Public API `PUT /workflows/{id}` solo acepta `name + nodes + connections + settings.executionOrder`** — si pasas el `settings` completo del GET (con `callerPolicy`, `availableInMCP`, `binaryMode`...) devuelve 400 `request/body/settings must NOT have additional properties`. Patrón: limpiar a `{ executionOrder: wf.settings?.executionOrder || 'v1' }` antes del PUT.
+- **`PUT /workflows/{id}` acepta `name + nodes + connections + settings`** — el 400 `request/body/settings must NOT have additional properties` lo dispara `binaryMode`, no `callerPolicy` ni `availableInMCP` (los dos pasan, medido 13-sep-2026). El 400 **no dice qué clave sobra**: compararla con los `settings` de otro workflow que sí pasó el PUT.
 - **Wait node con `parameters: {}` = webhook-type, exec stuck infinita** — sin `resume`/`amount`/`unit` el nodo espera un webhook externo que nunca llega. Síntoma: ejecución running >5min. Fix: PUT REST API con `{"resume":"timeInterval","amount":2,"unit":"seconds"}`. Verificar con `jq '.nodes[] | select(.type=="n8n-nodes-base.wait") | {name,parameters}'`. Ver [[n8n-wait-node-vacio-webhook-type-stuck]]
 - **n8n ↔ Supabase self-hosted Dokploy = REST API por default**, no Postgres directo via Docker network. Ver [[n8n-supabase-selfhosted-default-rest-api-no-postgres]]
 - **Agente que crea entidad relacionada (abono→factura) → tool de lookup OBLIGATORIA** — sin tool `consultar_X`, el agente inventa datos vacíos al referenciar entidades existentes. Patrón: tool de lookup + prompt que la fuerce + agente devuelve `{error}` si no encuentra + endpoint receptor rechaza explícitamente si falta el id origen. Ver [[agente-ia-genera-entidad-relacionada-necesita-tool-lookup-de-referencia]]
@@ -233,13 +233,14 @@ Para que n8n parsee JSON automáticamente:
 Sin esto, downstream Code nodes ven `lead.data` como string y `lead.custom_fields_values` es undefined.
 
 ### n8n public API — settings allowed list para PUT
-Solo estos campos pasan validación al hacer PUT `/api/v1/workflows/:id`:
-```
-executionOrder, timezone, saveExecutionProgress, saveManualExecutions,
-saveDataErrorExecution, saveDataSuccessExecution, executionTimeout,
-errorWorkflow, callerPolicy, callerIds
-```
-**No incluir**: `availableInMCP`, `binaryMode`, ni otros internos. Filtrar antes de PUT o devuelve 400 `"settings must NOT have additional properties"`.
+Pasan validación: `executionOrder`, `timezone`, `saveExecutionProgress`, `saveManualExecutions`,
+`saveDataErrorExecution`, `saveDataSuccessExecution`, `executionTimeout`, `errorWorkflow`,
+`callerPolicy`, `callerIds` y **`availableInMCP`** (medido 13-sep-2026: los tres PUT de Simarro lo
+llevaban y devolvieron 200).
+
+**La única que hay que quitar es `binaryMode`** — y omitirla no la borra: el GET posterior la sigue
+mostrando en `separate`. `availableInMCP` en cambio SÍ se perdió al filtrarla en su día, así que
+assertar tras el PUT qué claves cambiaron, nunca asumir que «n8n re-aplica el resto».
 
 ### Loop polling exit guard para tests
 Patrón: `Get a call → If [status==ended] → ...async... | Wait → loop`. En test playground el call nunca llega a `ended` → loop eterno (hasta cancelación manual).
