@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-10
+updated: 2026-09-12
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,19 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-12 · cambios de cita, preferencias desde la vivienda, y un borrado en las agendas)
+
+**La rama de cambio de cita (`om8iBm8ovENIgaxv`) estaba rota de tres formas a la vez y ya está reescrita y verificada E2E.** (1) El evento nuevo se creaba siempre en el calendario general: ahora `Cal destino (cambio)` resuelve en cascada `Calendar ID visita` del lead → agente asignado (match contra la tabla `agents`) → `resolve_property_calendar` → general solo como último recurso. (2) `Es cambio?` disparaba TAMBIÉN la rama de cancelación, que borraba el evento del agente mientras se creaba el nuevo en el general — conexión eliminada. (3) El sub-workflow terminaba sin salida y el AI Agent le enseñaba `did not return a response` al cliente (caso Blanca, 10-sep). Verificado con leads reales: cambio, hueco ocupado (fail-closed, no toca Kommo) y cancelación, los tres por el camino real del chatbot.
+
+**🔴 Incidente del día, cerrado pero para tener presente: la rama larga de cancelación borró 10 citas reales de las agendas de Ainhoa, Pedro, Ramón y Ramón Simarro.** La disparó un lead de prueba sin `Event ID visita`: los 9 `Buscar <agente>` recibían un item sin `Lead_id`, la query de Google salía **vacía** y `getAll` devolvía el calendario entero, que `Eliminar <agente>` borraba uno a uno. Bug latente desde siempre — cualquier cancelación real de un lead sin Calendar Info hacía lo mismo. Restauradas desde la papelera de Google Calendar por Manu. Fix: query desde el nodo que sí tiene el lead id + 9 nodos `Filtrar <agente>` que exigen `Lead ID: <id>` en la description + entrada extra al Merge para responder "no encuentro la visita" en vez de quedarse mudo. → [[un-borrado-encadenado-a-una-busqueda-no-puede-confiar-en-que-el-filtro-llegue]] · [[un-guard-que-filtra-a-cero-deja-sin-ejecutar-el-resto-de-la-cadena]]
+
+- **El cierre de la tarea de visita al cancelar nunca había funcionado.** El nodo `n8n-nodes-kommo` de tareas ignora el filtro `task_type_id` y devuelve un item con `_embedded.tasks[]` → `$json.id` `undefined` → PATCH a `/tasks/undefined`, en silencio. Sustituido por `httpRequest` + Code en las dos ramas; verificado moviendo y cerrando una tarea real. → [[kommo]]
+- **Las preferencias del lead ya salen de la vivienda de interés** (`Enriquecer_lead_vivienda`): precio mín/máx = precio del anuncio ∓50.000, **m² mínimos = m² del anuncio −20**, habitaciones (enum), baños mínimo y municipio. Se invoca desde `Calendario_a_Kommo` —los leads que nacen de las agendas, que antes no pasaban por ahí— y desde la rama de voz de `iMoTKZWxYLymGuHF`. Test unitario con los bordes: vivienda barata → mínimos a 0, 7 habitaciones → `5+`, sin datos → no escribe nada.
+- **El chatbot ya no pide el nombre y el teléfono que Kommo tiene.** Nodos `Get contacto` + `Contexto lead` antes del `AI Agent`: al modelo le llega el mensaje más un bloque con nombre, teléfono, visita agendada y agente asignado, y las tools `Reservar_cita` / `Cancelar_o_cambiar_cita` los toman de ahí. Fuera las 4 apariciones del ejemplo `+34 645 452 253`, que el modelo mandaba como teléfono real del cliente. **Único cambio de la tanda sin E2E**: probarlo enviaba un WhatsApp a un cliente real. → [[los-ejemplos-del-prompt-acaban-como-datos-reales-en-los-parametros-de-las-tools]]
+- **Retención de ejecuciones de n8n muy corta**: solo 16 ejecuciones vivas de `om8iBm8ovENIgaxv` (desde el 1-sep), así que no se puede descartar que el borrado masivo ya hubiera pasado antes en silencio.
+
+**Pendiente de esta tanda**: (1) los 3 leads `ZZ TEST` (35691514/35691636/35691662) están cerrados como perdidos — borrarlos a mano desde la UI; (2) `Captura_interes_llamadas_voz` no enriquece por vivienda porque el análisis post-llamada de Retell no devuelve `idealista_id` — si se quiere, hay que añadir ese campo al post-call analysis del agente; (3) sigue en pie subir la retención de ejecuciones de n8n.
 
 ## Estado (2026-09-10 · el calendario alimenta el CRM solo)
 

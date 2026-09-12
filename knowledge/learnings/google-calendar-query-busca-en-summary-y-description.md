@@ -14,3 +14,12 @@ Esto permite buscar eventos por un identificador (Lead_id, ticket_id, etc.) sin 
 2. Al cancelar: `getAll` con `query: "12345"` → devuelve el evento → `delete` con el `id` del resultado
 
 **Limitación:** si el mismo ID aparece en varios eventos (ej: cita cancelada y re-creada sin borrar), la búsqueda devuelve todos. El workflow de cancelación borra todos los matches.
+
+**⚠️ El modo de fallo que hace este patrón peligroso (12-sep-2026, Simarro):** `query` es una
+expresión, y si evalúa a `undefined` **no falla: se envía vacía**, y `getAll` con `returnAll`
+devuelve el calendario **entero**. Encadenado a un `delete`, borra todas las citas de esa agenda —
+10 eventos reales de 4 agentes en una ejecución. Y aun con la query bien, `q` es texto libre: un
+teléfono en el summary casa con un ID numérico. Por eso el ID en la description **no basta como
+filtro**: entre buscar y borrar hace falta un nodo que compruebe `Lead ID: <id>` en el propio
+evento, con el id leído de su nodo de origen. Ver
+[[un-borrado-encadenado-a-una-busqueda-no-puede-confiar-en-que-el-filtro-llegue]]

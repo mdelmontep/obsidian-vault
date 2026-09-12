@@ -16,7 +16,6 @@ tags: [stack, index]
 - **`core.hooksPath` absoluto: cada worktree corre el hook del PRINCIPAL** — y si va detrás, tu gate mide menos. [[core-hookspath-absoluto-hace-que-todo-worktree-corra-el-hook-del-principal]]
 - **El detector de un instrumento roto vive en la capa que el roto sigue ejecutando** — un hook no se detecta a sí mismo. [[el-detector-de-un-instrumento-roto-vive-en-la-capa-que-el-roto-sigue-ejecutando]]
 - **Lo que escribes arreglando un hallazgo es el hallazgo siguiente** — el categórico escrito en caliente («la única», «los cuatro») suele ser falso. [[lo-que-escribes-arreglando-un-hallazgo-es-el-siguiente-hallazgo]]
-- **El saldo de una fecha se deriva hacia atrás desde el actual** — si `stock_actual − Σ(ledger)` no da 0, sumar el ledger miente. [[el-saldo-historico-se-deriva-hacia-atras-desde-el-actual]]
 - **Reescribir un paso de un runbook se lleva el aviso que protegía a OTRO paso** — grep del identificador, no de la sección. [[reescribir-una-seccion-se-lleva-el-aviso-que-la-protegia]]
 - **Un cursor incremental que avanza sobre lo que falló pierde el documento para siempre** — el solape de seguridad solo cubre el filo; ancla el cursor al fallo más antiguo de la pasada. Ver [[un-cursor-incremental-que-avanza-sobre-lo-que-fallo-pierde-el-documento]]
 - **Un `/goal` activo salta la parada de OK del prompt** — o dos goals, o tribunal de 3 agentes que decide y deja ADR. Ver [[un-goal-activo-salta-la-parada-de-ok-del-usuario]]
@@ -24,7 +23,6 @@ tags: [stack, index]
 - **Un prefijo `codigo:` en un `throw` de n8n no llega a `message`** — n8n lo mueve a `description`; quien clasifique por él cae al default sin avisar, y el gate que lo probaba mide una copia local caducada. Ver [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]]
 - **Un candado que fija la forma LITERAL del filtro consagra el bug** — vigilar el bucle no ve el predicado previo; contar sin comentarios y por mutación. Ver [[un-candado-que-fija-la-forma-literal-del-filtro-consagra-el-bug]]
 - **La autoprueba de un guard destructivo se arma sola al mutarlo** — si su inocuidad depende de que el guard funcione, solo es segura en el caso en que no hace falta; ruta inexistente y `force: true`. Ver [[la-autoprueba-de-un-guard-destructivo-se-arma-al-mutarlo]]
-- **Capturas guiadas para un cliente: recuadro, velo y etiqueta se pintan con un SVG inyectado antes del `screenshot`** — sin PIL ni ImageMagick; el helper vive en `~/.claude/bin/browser-spot.js` y oculta la franja de impersonación. Ver [[capturas-guiadas-overlay-svg-en-el-navegador]]
 - **Un alcance calculado contra la rama base se vacía al mergear** — y el gate pasa a auditar lo que haya suelto en el árbol, sin avisar. Ver [[un-alcance-calculado-contra-la-rama-base-se-vacia-al-mergear]]
 - **Una sonda con el nombre inventado da un ✗ indistinguible de un fallo real** — los tres ✗ de la verificación eran los tres nombres que no salieron de leer el `create function`. Deriva la lista de la fuente. Ver [[una-sonda-cuyo-nombre-no-salio-de-la-fuente-da-un-fallo-que-parece-del-sistema]]
 - **El porcentaje de swap no discrimina thrashing; los `Swapouts` sí** — al 89 % con 0 swapouts/s el swap está asentado y se puede conducir un navegador. Para una ola de 3-4, el criterio del 50 % sigue mandando. Ver [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
@@ -32,8 +30,6 @@ tags: [stack, index]
 - **Un subagente cita el mecanismo, nunca el guard que lo cierra** — lee tú el `if` de 30 líneas antes, o diseñas contra un riesgo inexistente. Ver [[un-subagente-cita-el-mecanismo-no-el-guard-que-lo-cierra]]
 - **Un guard que discrimina por el NOMBRE de la etiqueta no vigila lo que dice** — en JSX ese nombre es una variable: hace falta un segundo guard que lo reserve. Ver [[un-guard-que-lee-el-nombre-de-la-etiqueta-miente-si-el-nombre-es-un-alias]]
 - **Cero `fetch()` no es cero uso** — mídelo en producción antes de llamar huérfano a un endpoint. Ver [[ausencia-de-consumidor-no-es-ausencia-de-funcion]]
-- **Un fix dentro de una media query, sobre un selector que ahí no existe** — compila, pasa el gate y no cambia nada: contar `querySelectorAll` A ESE ancho antes de escribirlo. Ver [[un-fix-en-una-media-query-sobre-un-selector-que-no-existe-ahi-es-codigo-muerto]]
-- **Una piel/tema se mide por ALCANCE, no por tokens redefinidos** — cuántas cajas pintadas cambian al encenderla (2-16 % aquí, por los valores a mano). Ver [[una-piel-de-tokens-solo-alcanza-lo-que-no-esta-escrito-a-mano]]
 - **El parche de un agente en worktree revierte lo que no commiteaste** — nace del último commit: se fusiona el hunk, no se copia el fichero. Ver [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
 - **Las frases entrecomilladas de un prompt son un guion** — el modelo las recita literales (32,6 % → 18,2 % de turnos). Ver [[las-frases-entrecomilladas-de-un-prompt-son-un-guion-que-el-modelo-recita]]
 - **Lee 2-3 transcripciones de casos que PASAN** — las métricas solo cubren lo que ya sospechabas; el defecto que enfada al usuario vive en el verde. Ver [[la-transcripcion-de-un-test-que-pasa-es-donde-esta-el-defecto-que-nadie-mide]]
@@ -66,6 +62,9 @@ lo que **únicamente** existe como advertencia.
 misma cabecera mientras el fichero tenía 73, y un tope que se incumple 2,4x no ordena nada. La forma de
 bajarlo es la de arriba (convertir en hook), no volver a podar por fecha — eso ya falló dos veces
 (40→15 el 13-jul, 146→129 el 25-jul, y **de vuelta a 159 en dos días**).
+
+- **Un borrado encadenado a una búsqueda necesita un guard propio** — si el filtro evalúa a vacío, el buscador devuelve TODO y el borrado se lo lleva TODO (10 citas reales, 12-sep). Ver [[un-borrado-encadenado-a-una-busqueda-no-puede-confiar-en-que-el-filtro-llegue]]
+- **Lo que ya está en un sistema no lo resuelve el modelo** — un `$fromAI` con ejemplo literal en la descripción devuelve ese ejemplo como dato real. Léelo antes y mapea el parámetro. Ver [[los-ejemplos-del-prompt-acaban-como-datos-reales-en-los-parametros-de-las-tools]]
 
 Transversales de fondo en [[index]] §Transversales y [[patterns-cross-proyecto]].
 
@@ -114,7 +113,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 ## Archivado
 
 Lo que no reincide vive fuera, con su wikilink intacto y recuperable navegando:
-[[hot-archivo-2026-09-10]] (14) · [[hot-archivo-2026-09-05]] (7) · [[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
+[[hot-archivo-2026-09-12]] (4) · [[hot-archivo-2026-09-10]] (14) · [[hot-archivo-2026-09-05]] (7) · [[hot-archivo-2026-08-30]] (14) · [[hot-archivo-2026-08-18]] (37) · [[hot-archivo-2026-08-01]]
 
 - **`it.each` sobre un `.filter()` vacío no registra ningún test** — vitest no se queja; el bloque desaparece del recuento. Ver [[it-each-sobre-filter-vacio-no-registra-ningun-test]]
 - **Republicar un artifact exige haberlo leído EN ESA sesión** — y `updated` del listado es la fecha del registro, no la del contenido. Medir el `diff` antes de pagar la lectura. Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]]
