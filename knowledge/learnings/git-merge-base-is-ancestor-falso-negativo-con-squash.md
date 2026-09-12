@@ -37,3 +37,13 @@ gh pr list --head "<rama>" --state all --json number,state -q '.[] | "\(.number)
 `MERGED` cierra la pregunta en una llamada, sin merge-base ni diffs, y de paso te da el número de PR
 para el registro. Las 18 dieron MERGED. Reserva la comparación de árboles para ramas **sin PR**.
 Antes de borrar, deja los SHA en un fichero: el borrado es recuperable si sabes a qué volver.
+
+**Quinta caída, 12-sep (facturaia, barrido de 23 ramas `feat/marketing-*`).** Volví a medir con
+`--is-ancestor` y salieron **las 23 «sin mergear»**; 15 lo estaban. Para un BARRIDO el `gh pr list
+--head` de arriba son N llamadas: con **una** basta, cruzando por nombre de rama.
+```bash
+gh pr list --state merged --limit 900 --json headRefName -q '.[].headRefName' | sort -u > /tmp/mrg
+git for-each-ref --format='%(refname:short)' refs/heads | grep -vxF -f /tmp/mrg   # las huérfanas de verdad
+```
+Y el diff de árbol contra `main` **no** es el desempate de las que sobran: las 7 huérfanas reales
+daban −17.000/−24.000 líneas, que es `main` yendo por delante, no trabajo suyo.

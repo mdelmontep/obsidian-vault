@@ -37,6 +37,7 @@ tags: [stack, index]
 - **El parche de un agente en worktree revierte lo que no commiteaste** — nace del último commit: se fusiona el hunk, no se copia el fichero. Ver [[el-parche-de-un-agente-en-worktree-borra-lo-que-no-estaba-commiteado]]
 - **Las frases entrecomilladas de un prompt son un guion** — el modelo las recita literales (32,6 % → 18,2 % de turnos). Ver [[las-frases-entrecomilladas-de-un-prompt-son-un-guion-que-el-modelo-recita]]
 - **Lee 2-3 transcripciones de casos que PASAN** — las métricas solo cubren lo que ya sospechabas; el defecto que enfada al usuario vive en el verde. Ver [[la-transcripcion-de-un-test-que-pasa-es-donde-esta-el-defecto-que-nadie-mide]]
+- **Un desplegable filtrado por «lo válido» convierte un valor inválido en «ninguno»** — pinta el id crudo, esconde los controles dependientes y deja el botón activo. Ver [[filtrar-las-opciones-por-un-predicado-convierte-lo-invalido-en-ninguno]]
 - **Todo bot de voz o chat debe identificarse como IA en la primera interacción** (art. 50 del AI Act, vigente desde el 2-ago-2026) — y el aviso va en el flujo, no en el prompt: si depende del modelo, el incumplimiento es silencioso. Ver [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
 
 Este fichero se carga **cuando no hay disparador claro** (CLAUDE.md: "Default / dudo → `Stack/hot.md`").
