@@ -35,7 +35,15 @@ Uso: gate.py [flow.json]   ->  exit 0 si los inviolables VIGENTES se cumplen.
 import json, os, sys, re, unicodedata
 
 S = os.path.dirname(os.path.abspath(__file__))
-BASE = json.load(open(f"{S}/snapshots/flow-PROD-v45.json", encoding="utf-8"))
+# 12-sep-2026: la base era `flow-PROD-v45.json` mientras produccion servia v46 desde el 9-sep.
+# Un gate anclado en una version que ya no atiende llamadas compara el candidato contra el pasado.
+BASE = json.load(open(f"{S}/snapshots/flow-PROD-v46.json", encoding="utf-8"))
+# Cambios estructurales que el candidato declara a proposito. Sin este fichero, CERO cambios
+# permitidos: una arista nueva, una tool borrada o un texto vaciado sin declarar son rojo.
+DECL = {}
+_decl = f"{S}/declarado.json"
+if os.path.exists(_decl):
+    DECL = json.load(open(_decl, encoding="utf-8"))
 # P6 = el diseno de la Fase 4, NO desplegado. Solo alimenta las comprobaciones de deuda.
 P6 = json.load(open(f"{S}/snapshots/flow-P6.json", encoding="utf-8"))
 CAND = json.load(open(sys.argv[1], encoding="utf-8"))
@@ -77,12 +85,28 @@ def deuda(nombre, ok, detalle=""):
     deudas += 1
     if not ok: pendientes.append(f"{nombre}: {detalle}")
 
+# Ruido de normalizacion del API. Medido el 12-sep-2026 con un PATCH NO-OP sobre el flow de
+# TEST (41/41 nodos): cualquier `update-conversation-flow` hace que Retell escriba
+# `skippable: false` en TODOS los nodos, campo que el flow servido hoy (v46) no tiene y que no
+# aparece en su documentacion. Sin esta normalizacion, los 5 checks de la rama de crisis fallan
+# en CUALQUIER despliegue futuro aunque nadie toque un solo caracter de esos nodos — y un gate
+# que se pone rojo haga lo que haga es el fallo que ya motivo la reescritura del 7-sep.
+# Se ignora SOLO el valor por defecto: un `skippable: true` es un cambio de comportamiento real
+# y lo caza el check de mas abajo.
+RUIDO_API = {"skippable": False}
+def sin_ruido(n):
+    if not isinstance(n, dict): return n
+    return {k: v for k, v in n.items() if not (k in RUIDO_API and v == RUIDO_API[k])}
+
 # 1. La rama de crisis, INTACTA byte a byte. Es el unico bloque con riesgo clinico.
 for cid in CRISIS:
     a, b = nodo(BASE, cid), nodo(CAND, cid)
     check(f"crisis {cid} intacto",
-          a is not None and b is not None and json.dumps(a, sort_keys=True, ensure_ascii=False) == json.dumps(b, sort_keys=True, ensure_ascii=False),
+          a is not None and b is not None and json.dumps(sin_ruido(a), sort_keys=True, ensure_ascii=False) == json.dumps(sin_ruido(b), sort_keys=True, ensure_ascii=False),
           "ha cambiado o falta")
+# Nadie enciende `skippable` sin decirlo: un nodo saltable cambia el recorrido de la llamada.
+saltables = [n["id"] for n in CAND["nodes"] if n.get("skippable") is True]
+check("ningun nodo es skippable", not saltables, f"{saltables}")
 for cid in CRISIS_F4:
     deuda(f"F4: existe el nodo {cid}", nodo(CAND, cid) is not None, "la rama de crisis de F4 no esta desplegada")
 
@@ -274,7 +298,10 @@ def textos(n):
     return out
 
 def cifras(n):
-    return sorted(re.findall(r"\b\d{1,2}[.,]\d{3}\b|\b\d{3,4}\b", " ".join(textos(n))))
+    # Hasta el 12-sep el patron era \b\d{1,2}[.,]\d{3}\b|\b\d{3,4}\b: solo numeros de 3-4 cifras.
+    # Cambiar "primera visita gratuita" por "de 80 euros" pasaba el gate entero (mutante
+    # superviviente). Ahora entra tambien 1-2 cifras, que es donde viven precios y duraciones.
+    return sorted(re.findall(r"\b\d{1,2}[.,]\d{3}\b|\b\d{1,4}\b", " ".join(textos(n))))
 for b in BASE["nodes"]:
     c = nodo(CAND, b["id"])
     if c is None: continue
@@ -284,9 +311,57 @@ for b in BASE["nodes"]:
 # 8b. Los precios REALES viven en el global_prompt, no en info_cita: sin este check, alterar
 #     una tarifa pasaba el gate entero (medido por mutacion; el caso de info_cita era un
 #     mutante equivalente, no una victima).
-check("cifras intactas en global_prompt", cifras(gp_raw) == cifras(BASE.get("global_prompt") or ""),
-      f"{cifras(BASE.get('global_prompt') or '')} -> {cifras(gp_raw)}")
+# Las cifras que el candidato quita o anade del global_prompt se declaran una a una en
+# declarado.json. Asi un cambio de tarifa o de telefono no puede colarse escondido entre un
+# cambio de horario legitimo: hay que escribir exactamente que numero desaparece y cual entra.
+import collections as _col
+_cb = _col.Counter(cifras(BASE.get("global_prompt") or ""))
+_cc = _col.Counter(cifras(gp_raw))
+_quit = _col.Counter(DECL.get("cifras_quitadas") or [])
+_anad = _col.Counter(DECL.get("cifras_anadidas") or [])
+_esperado = (_cb - _quit) + _anad
+check("cifras del global_prompt segun lo declarado", _cc == _esperado,
+      f"sobran {sorted((_cc - _esperado).elements())} / faltan {sorted((_esperado - _cc).elements())}")
 check("domicilio O'Donnell", "O'Donnell" in json.dumps(CAND, ensure_ascii=False), "ha desaparecido")
+
+# 9. Lo que la mutacion del 12-sep demostro que el gate NO miraba. Cinco mutantes sobrevivian:
+#    borrar TODAS las tools, vaciar la instruction de un nodo, anadir una arista de fuga,
+#    cambiar el precio de la primera visita y cambiar el numero de la calle. Los tres primeros
+#    se cierran aqui; los dos ultimos, con el regex de cifras de arriba y el check del domicilio.
+def firma_tools(f):
+    out = {}
+    for t in (f.get("tools") or []):
+        pr = (t.get("parameters") or {})
+        out[t.get("name")] = (t.get("url"), tuple(sorted(pr.get("required") or [])),
+                              tuple(sorted((pr.get("properties") or {}).keys())))
+    return out
+fb, fc = firma_tools(BASE), firma_tools(CAND)
+check("las tools siguen estando", set(fc) == set(fb), f"{sorted(set(fb) ^ set(fc))}")
+for nombre in sorted(set(fb) & set(fc)):
+    check(f"tool {nombre} intacta", fb[nombre] == fc[nombre], f"{fb[nombre]} -> {fc[nombre]}")
+
+def aristas(f):
+    out = set()
+    for n in f["nodes"]:
+        es = list(n.get("edges") or [])
+        for k in ("else_edge", "skip_response_edge", "edge"):
+            if n.get(k): es.append(n[k])
+        for e in es: out.add(f"{n['id']}>{e.get('destination_node_id')}")
+    return out
+ab, ac = aristas(BASE), aristas(CAND)
+permitidas = set(DECL.get("aristas_nuevas") or [])
+borrables = set(DECL.get("aristas_borradas") or [])
+check("sin aristas nuevas no declaradas", (ac - ab) <= permitidas, f"{sorted((ac - ab) - permitidas)}")
+check("sin aristas borradas no declaradas", (ab - ac) <= borrables, f"{sorted((ab - ac) - borrables)}")
+
+vacios = [n["id"] for n in CAND["nodes"]
+          if n.get("type") == "conversation" and not ((n.get("instruction") or {}).get("text") or "").strip()]
+check("ningun nodo que habla se quedo mudo", not vacios, f"{vacios}")
+
+# 10. El nodo de crisis no puede perder su destino ni su numero: es la unica salida de riesgo vital.
+tr = nodo(CAND, "crisis_transfer") or {}
+dest = (tr.get("transfer_destination") or {}).get("number")
+check("crisis_transfer marca el 717 003 717", dest == "+34717003717", f"{dest}")
 
 print(f"gate: {checks} inviolables VIGENTES, {len(fallos)} fallo(s)")
 for f in fallos: print("  FALLA -", f)

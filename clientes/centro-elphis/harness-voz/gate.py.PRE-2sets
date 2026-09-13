@@ -1,0 +1,239 @@
+#!/usr/bin/env python3
+"""Gate de inviolables del agente de voz de Centro Elphis.
+
+Reescrito el 7-sep-2026 (F4.9 del RUNBOOK). Antes comparaba contra `snapshots/flow-v29.json`
+y tenia como inviolables «crisis_transfer intacto» y «717 en crisis_transfer»: es decir,
+BLOQUEABA el cambio que Alba ha pedido (cero transferencias). Un gate que impide el fix
+correcto no protege: obliga a saltarselo, y a partir de ahi no protege de nada.
+
+Que cambia y por que:
+- BASE pasa a ser `snapshots/flow-P6.json` (el borrador compuesto de la Fase 4).
+- check 1: el bloque intacto ya no incluye `crisis_transfer`/`crisis_fallback` (no existen);
+  incluye los 11 nodos de la rama de crisis nueva.
+- check 2: el inviolable ya no es «el transfer marca al 717», es «NO hay transfer_call» y
+  «la frase de crisis, literal, dice el 112 y el 717 003 717 de viva voz». Es la misma
+  garantia clinica —que los telefonos de ayuda lleguen a la persona— sin la transferencia.
+- check 2b (NUEVO): el global_prompt no ordena transferir. Ojo: "transfier" SI aparece en el
+  texto correcto, dentro de una PROHIBICION ("NUNCA digas que le pasas, transfieres..."), asi
+  que prohibirlo a secas daria un falso positivo sobre el texto bueno. Se prohiben las formas
+  que solo tienen sentido DICHAS ("te paso", "te pongo con", "no cuelgues") y se exige que
+  cualquier linea con "transfier" sea una prohibicion.
+- check 4 (art. 50): el saludo ya no dice "asistente virtual" sino "una inteligencia
+  artificial", y es `static_text`. El inviolable es que la identificacion como IA siga en el
+  primer turno y siga siendo determinista, no la redaccion vieja.
+- check 5 (RGPD): la formula pasa de "gestionar la cita" a "gestionar tu consulta" (vale en
+  todas las ramas) y el nodo pasa a `static_text`, que es MAS fuerte que "di exactamente
+  esta frase": ya no depende del LLM.
+- check 7: las aristas de fuga cambian de nombre (e_bienv_fin -> e_w_fin, etc.) y de destino
+  (`despedida` -> `extract_datos`). El inviolable de verdad es el que estaba detras: ninguna
+  salida conversacional se va sin pasar por una herramienta. Se comprueba la propiedad, no
+  el nombre de las aristas.
+- check 6/8 se conservan (conjunto de nodos y cifras ancladas al nodo que las dice).
+
+Uso: gate.py <flow.json>   ->  exit 0 si los inviolables se cumplen.
+"""
+import json, os, sys, re, unicodedata
+
+S = os.path.dirname(os.path.abspath(__file__))
+BASE = json.load(open(f"{S}/snapshots/flow-P6.json", encoding="utf-8"))
+CAND = json.load(open(sys.argv[1], encoding="utf-8"))
+
+CRISIS = ["crisis_frase", "crisis_confirmar", "crisis_confirmar_tercero", "crisis_recurso",
+          "crisis_propio", "crisis_tercero", "crisis_cierre_propio", "crisis_cierre_tercero",
+          "fn_crisis_registro", "crisis_sujeto", "fn_crisis_cierre", "extract_crisis"]
+
+def norm(s):
+    # NFKD descompone el acento en base + marca combinante; hay que BORRAR la marca, no solo
+    # descomponerla, o "estas" nunca casa con "estás". Se quitan tambien los signos ¿? ¡! y las
+    # comillas, que el JSON escapa de formas distintas segun quien lo escribiera.
+    s = unicodedata.normalize("NFKD", s or "")
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    s = re.sub(r"[¿?¡!\"'“”]", "", s)
+    return re.sub(r"\s+", " ", s).strip().lower()
+
+def nodo(f, i):
+    return next((n for n in f["nodes"] if n.get("id") == i), None)
+
+fallos, checks = [], 0
+def check(nombre, ok, detalle=""):
+    global checks
+    checks += 1
+    if not ok: fallos.append(f"{nombre}: {detalle}")
+
+# 1. La rama de crisis, INTACTA byte a byte. Es el unico bloque con riesgo clinico.
+for cid in CRISIS:
+    a, b = nodo(BASE, cid), nodo(CAND, cid)
+    check(f"crisis {cid} intacto",
+          a is not None and b is not None and json.dumps(a, sort_keys=True, ensure_ascii=False) == json.dumps(b, sort_keys=True, ensure_ascii=False),
+          "ha cambiado o falta")
+
+# 2. CERO transferencias, y los telefonos de ayuda dichos de viva voz en la frase de crisis.
+check("cero transfer_call", not any(n.get("type") == "transfer_call" for n in CAND["nodes"]),
+      "hay un nodo transfer_call: esta version no pasa llamadas a nadie")
+cf = nodo(CAND, "crisis_frase") or {}
+ins = cf.get("instruction") or {}
+check("crisis_frase es static_text", ins.get("type") == "static_text",
+      f"es {ins.get('type')}: con 'prompt' la frase deja de ser determinista")
+txt = ins.get("text") or ""
+check("crisis dice 112", "112" in txt, "falta el 112 en la frase que se pronuncia")
+check("crisis dice 717 003 717", "717003717" in txt.replace(" ", ""), "falta el Telefono de la Esperanza")
+check("crisis_frase sigue siendo el nodo global del gate",
+      (cf.get("global_node_setting") or {}).get("condition") == (nodo(BASE, "crisis_frase") or {}).get("global_node_setting", {}).get("condition"),
+      "la condicion del gate de crisis ha cambiado")
+check("crisis_frase deja constancia",
+      (cf.get("skip_response_edge") or {}).get("destination_node_id") == "fn_crisis_registro",
+      "la crisis ya no pasa por el registro: quedaria sin constancia")
+
+# 2c. LA COBERTURA DE LA CONDICION DE CRISIS (F4b, 7-sep-2026).
+#     Los checks 1 y 2 anclaban la condicion del gate de crisis al snapshot: BYTE A BYTE. Eso no es
+#     un inviolable, es un CONGELADO — y lo que congelaba estaba medido como roto: con la condicion
+#     de v34, el caso 025 (T2: ideacion explicita de un tercero contada por la tia, con "ahora mismo
+#     no esta en peligro" en el mismo turno) NO entraba en la rama de crisis en ninguna de las dos
+#     corridas de F4. Un gate que impide arreglar el agujero que motivo el plan no protege: obliga a
+#     saltarselo. Se re-ancla la base al borrador corregido y se anaden aqui las tres propiedades
+#     que el congelado suplia, que ademas son INDEPENDIENTES de la base:
+#       (a) la condicion cubre el riesgo dicho de OTRA persona;
+#       (b) que se niegue la inmediatez no la desactiva;
+#       (c) que la llamada venga por cita/ingreso no la desactiva.
+#     Medido: sin (a) T2 se queda fuera; sin (c) T2 se va por `e_w_ingreso` y los globales ya no se
+#     reevaluan para ese turno (batch test_batch_3e2b333ed813: D1, el mismo texto SIN la negacion de
+#     inmediatez, tampoco entraba; D2, el mismo texto SIN el encuadre de ingreso, si entraba).
+cond_cf = ((nodo(CAND, "crisis_frase") or {}).get("global_node_setting") or {}).get("condition") or ""
+cc = norm(cond_cf)
+check("crisis cubre el riesgo de un TERCERO", "otra persona" in cc and "quitarse la vida" in cc,
+      "la condicion no dice que el riesgo contado de otra persona tambien entra: es el agujero del caso 025")
+check("negar la inmediatez NO desactiva la crisis",
+      "no desactiva" in cc and ("ahora mismo no esta en peligro" in cc or "no esta en peligro" in cc),
+      "la condicion no dice que 'ahora mismo no esta en peligro' NO cancela la deteccion")
+check("la crisis gana al motivo de la llamada (cita/ingreso)",
+      "ingreso" in cc and ("gana" in cc or "tampoco la desactiva" in cc),
+      "la condicion no dice que gana sobre cita/ingreso: una arista normal se la come")
+
+# 2d. Las aristas normales que llevan a `crisis_frase` deben llevar EXACTAMENTE la misma condicion
+#     que el nodo global. Este es el defecto medido: `e_w_crisis` era mas ESTRECHA que hacia falta y,
+#     al casar `e_w_ingreso` antes, la decision del turno se cerraba sin que el global entrara nunca.
+#     Una arista mas estrecha que el global es un falso negativo silencioso; esta comprobacion no
+#     depende de la base, solo de que las dos cosas digan lo mismo.
+aristas_cf = [(n["id"], e["id"], (e.get("transition_condition") or {}).get("prompt") or "")
+              for n in CAND["nodes"] for e in (n.get("edges") or [])
+              if e.get("destination_node_id") == "crisis_frase" and not (n.get("global_node_setting"))]
+check("hay aristas normales hacia crisis_frase", len(aristas_cf) >= 4,
+      f"solo {len(aristas_cf)}: los nodos donde aterriza una llamada deben poder entrar en crisis")
+desync = [(nid, eid) for nid, eid, p in aristas_cf if p != cond_cf]
+check("las aristas a crisis_frase no se desincronizan del global", not desync, f"{desync}")
+
+# 2e. Toda arista de ECUACION referencia la variable con {{ }}. Medido el 7-sep-2026: `e_cs_tercero`
+#     comparaba `"dv_crisis_sujeto" == "tercero"` (la cadena literal, sin llaves), que nunca es cierto,
+#     y las cuatro sondas de crisis de tercero cayeron por el else a `crisis_propio` — el nodo que
+#     afirma que la persona en riesgo esta al telefono — con dv_crisis_sujeto == "tercero".
+mal_eq = []
+for n in CAND["nodes"]:
+    es = list(n.get("edges") or [])
+    for k in ("else_edge", "skip_response_edge", "edge"):
+        if n.get(k): es.append(n[k])
+    for e in es:
+        tc = e.get("transition_condition") or {}
+        if tc.get("type") != "equation": continue
+        for eq in tc.get("equations") or []:
+            if not re.fullmatch(r"\{\{[^{}]+\}\}", str(eq.get("left", ""))):
+                mal_eq.append((n["id"], e.get("id"), eq.get("left")))
+check("las ecuaciones referencian la variable con {{ }}", not mal_eq, f"{mal_eq}")
+
+# 2b. El global_prompt no puede ORDENAR transferir. "transfier" es legitimo dentro de una
+#     prohibicion; "te paso" / "te pongo con" / "no cuelgues" no lo son en ningun contexto.
+gp_raw = CAND.get("global_prompt") or ""
+gp = norm(gp_raw)
+for frase in ["te paso", "te pongo con", "no cuelgues"]:
+    check(f"global_prompt sin '{frase}'", frase not in gp, "aparece en el prompt: se recitaria")
+malas = [l for l in gp_raw.lower().split("\n")
+         if "transfier" in l and not re.search(r"nunca|prohibid|no digas|jamas", l)]
+check("global_prompt: 'transfier' solo en prohibiciones", not malas, f"{malas[:1]}")
+
+# 3. Motor: temperatura y modelo no se tocan (la temperatura evalua tambien las condiciones de arista).
+check("temperatura 0.22", CAND.get("model_temperature") == 0.22, f"es {CAND.get('model_temperature')}")
+check("modelo haiku 4.5", (CAND.get("model_choice") or {}).get("model") == (BASE.get("model_choice") or {}).get("model"), "modelo cambiado")
+
+# 4. Art. 50: la identificacion como IA sigue en el PRIMER turno y sigue siendo determinista.
+w = nodo(CAND, "welcome") or {}
+wi = w.get("instruction") or {}
+check("art.50 el saludo es determinista", wi.get("type") == "static_text",
+      "el saludo vuelve a depender del LLM: el aviso de IA deja de estar garantizado")
+check("art.50 inteligencia artificial", "inteligencia artificial" in norm(wi.get("text", "")),
+      "falta (o abreviado a la sigla, que el TTS lee mal)")
+check("art.50 el saludo es el primer turno", CAND.get("start_node_id") in ("calc_hora", "welcome"),
+      f"start_node_id={CAND.get('start_node_id')}")
+check("art.50 el nodo de inicio no habla",
+      (nodo(CAND, "calc_hora") or {}).get("speak_during_execution") in (False, None),
+      "el nodo de inicio habla antes del aviso de IA")
+
+# 5. El consentimiento sigue pidiendose en SU nodo, literal, y solo ahi.
+cons = nodo(CAND, "consentimiento") or {}
+ci = cons.get("instruction") or {}
+check("consentimiento es static_text", ci.get("type") == "static_text",
+      "la formula RGPD vuelve a depender del LLM")
+FORMULA = "para poder registrar tus datos y gestionar tu consulta, me confirmas que estas de acuerdo"
+check("formula RGPD literal e intacta", FORMULA in norm(ci.get("text", "")),
+      "la frase de consentimiento ha cambiado o desaparecido")
+check("consentimiento NO duplicado en global", "me confirmas que estas de acuerdo" not in gp,
+      "la formula ha vuelto al global_prompt: se pedira dos veces")
+
+# 6. Topologia: mismos nodos, ni uno mas ni uno menos.
+check("mismos nodos", sorted(n["id"] for n in BASE["nodes"]) == sorted(n["id"] for n in CAND["nodes"]),
+      "el conjunto de nodos ha cambiado")
+
+# 7. Garantia de registro: ninguna salida conversacional llega a `despedida` o a `end` sin
+#    haber pasado por una herramienta. Sustituye al check de aristas de fuga por nombre, que
+#    comprobaba el sintoma (que existiera e_bienv_fin) y no la propiedad.
+def salidas(n):
+    es = list(n.get("edges") or [])
+    for k in ("else_edge", "skip_response_edge", "edge"):
+        if n.get(k): es.append(n[k])
+    return [e.get("destination_node_id") for e in es if e.get("destination_node_id")]
+ent_desp = sorted({n["id"] for n in CAND["nodes"] if "despedida" in salidas(n)})
+ent_end = sorted({n["id"] for n in CAND["nodes"] if "end" in salidas(n)})
+check("solo despedida entra en end", ent_end == ["despedida"], f"{ent_end}")
+check("toda entrada a despedida viene de una herramienta o de un post-registro",
+      ent_desp == ["cierre", "cierre_cita", "fn_crisis_cierre", "fn_lead_silencioso", "preguntas"], f"{ent_desp}")
+check("consultar_cita nace apagada",
+      (CAND.get("default_dynamic_variables") or {}).get("feature_consulta_cita") == "off",
+      "la bandera de consulta de agenda esta encendida: exige OK de Alba y del DPD")
+
+# 8. Precios y domicilio, ANCLADOS AL NODO QUE LOS DICE.
+#    Comprobar que la cifra existe "en algun sitio del flow" no discrimina: una mutacion que
+#    cambiaba 1.772 -> 1.900 en info_cita pasaba el gate porque la cifra vivia tambien en otro
+#    nodo. Se compara el multiconjunto de cifras nodo a nodo.
+def textos(n):
+    # SOLO lo que se pronuncia o condiciona. json.dumps del nodo entero metia
+    # `display_position` (x=1326, y=414...) en el recuento: el gate saltaba al mover un nodo
+    # en la UI, que es un falso positivo, y un gate con falsos positivos se acaba saltando.
+    out = []
+    if isinstance(n, str): return [n]
+    ins = n.get("instruction") or {}
+    out.append(ins.get("text") or "")
+    es = list(n.get("edges") or [])
+    for k in ("else_edge", "skip_response_edge", "edge"):
+        if n.get(k): es.append(n[k])
+    for e in es:
+        tc = e.get("transition_condition") or {}
+        out.append(str(tc.get("prompt") or ""))
+    out.append(str((n.get("global_node_setting") or {}).get("condition") or ""))
+    return out
+
+def cifras(n):
+    return sorted(re.findall(r"\b\d{1,2}[.,]\d{3}\b|\b\d{3,4}\b", " ".join(textos(n))))
+for b in BASE["nodes"]:
+    c = nodo(CAND, b["id"])
+    if c is None: continue
+    cb = cifras(b)
+    if not cb: continue
+    check(f"cifras intactas en {b['id']}", cifras(c) == cb, f"{cb} -> {cifras(c)}")
+# 8b. Los precios REALES viven en el global_prompt, no en info_cita: sin este check, alterar
+#     una tarifa pasaba el gate entero (medido por mutacion; el caso de info_cita era un
+#     mutante equivalente, no una victima).
+check("cifras intactas en global_prompt", cifras(gp_raw) == cifras(BASE.get("global_prompt") or ""),
+      f"{cifras(BASE.get('global_prompt') or '')} -> {cifras(gp_raw)}")
+check("domicilio O'Donnell", "O'Donnell" in json.dumps(CAND, ensure_ascii=False), "ha desaparecido")
+
+print(f"gate: {checks} comprobaciones, {len(fallos)} fallo(s)")
+for f in fallos: print("  FALLA -", f)
+sys.exit(1 if fallos else 0)

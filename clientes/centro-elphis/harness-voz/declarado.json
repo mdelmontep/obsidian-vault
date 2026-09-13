@@ -1,0 +1,9 @@
+{
+  "_nota": "Cambios estructurales que el candidato en curso declara a proposito. gate.py los resta antes de dar rojo. Vaciar este fichero al empezar un candidato nuevo: lo que no este aqui, bloquea.",
+  "_candidato": "v48 sobre v47: tres instrucciones nombraban nodos que no son salida de su nodo (cierre_cita->cierre, info_cita->fn_reservar/fn_crear_lead, recepcion_aviso->despedida). Solo texto.",
+  "aristas_nuevas": ["recepcion_aviso>info_cita"],
+  "aristas_borradas": [],
+  "_por_que_cifras": "v48 no toca el global_prompt: mismas cifras que v47. Pero el gate compara contra el snapshot de v46, asi que sigue haciendo falta la declaracion de v47 (A1 borro el bloque del horario).",
+  "cifras_quitadas": ["9", "9", "9", "15", "21"],
+  "cifras_anadidas": []
+}

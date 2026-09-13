@@ -1,0 +1,17 @@
+{
+ "_nota": "Cambios estructurales que el candidato en curso declara a proposito. gate.py los resta antes de dar rojo. Vaciar este fichero al empezar un candidato nuevo: lo que no este aqui, bloquea.",
+ "_candidato": "v47 (A1 horario, A2 silencio/narrar, A3 dv_nombre_paciente, A4 arista recado->cita)",
+ "aristas_nuevas": [
+  "recepcion_aviso>info_cita"
+ ],
+ "aristas_borradas": [],
+ "_por_que_cifras": "A1 borra el bloque 'Si el centro esta cerrado', unico sitio del global_prompt donde vivia el horario L-V 9-21 y S 9-15, y su linea 'manana a las 9'. Desaparecen por eso tres nueves, el 15 y el 21. Ninguna cifra nueva: los telefonos (717 003 717, 950), el precio y la direccion siguen intactos.",
+ "cifras_quitadas": [
+  "9",
+  "9",
+  "9",
+  "15",
+  "21"
+ ],
+ "cifras_anadidas": []
+}

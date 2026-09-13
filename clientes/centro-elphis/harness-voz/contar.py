@@ -90,11 +90,26 @@ def resume(etiq,files):
     return filas
 
 if __name__=="__main__":
+    # 12-sep-2026: este bloque llevaba roto desde que se escribio. La linea de S estaba sin
+    # indentar dentro del `if`, asi que el fichero ni siquiera compilaba (`python3 -m py_compile`
+    # da IndentationError en esta linea), y los tres globs apuntaban a etiquetas de corrida
+    # (`reg-v29-*`, `reg-v30-*`, `crisis-v30`) que no existen en `runs/`. Es decir: el paso 4 del
+    # README, el unico lector que NO pregunta al juez LLM, no ha impreso un numero nunca.
+    # Ahora los patrones se pasan por linea de comandos y, sin argumentos, agrupa lo que haya.
     # La raiz se deriva del propio fichero: este arnes vive en el vault, no en un scratchpad.
-S=os.path.dirname(os.path.abspath(__file__))
-    for etiq,pat in [("v29 (control)",f"{S}/runs/reg-v29-*.json"),
-                     ("v30 (candidato)",f"{S}/runs/reg-v30-*.json"),
-                     ("crisis v30",f"{S}/runs/crisis-v30.json")]:
-        fs=sorted(glob.glob(pat))
+    S=os.path.dirname(os.path.abspath(__file__))
+    pats=sys.argv[1:]
+    if not pats:
+        # Agrupa por prefijo de etiqueta hasta el ultimo guion: "cf-v46-final-r5" -> "cf-v46-final".
+        vistos={}
+        for f in sorted(glob.glob(f"{S}/runs/*.json")):
+            et=os.path.basename(f)[:-5]
+            vistos.setdefault(et.rsplit("-",1)[0],[]).append(f)
+        grupos=sorted(vistos.items())
+    else:
+        grupos=[(pat,sorted(glob.glob(pat if "/" in pat else f"{S}/runs/{pat}"))) for pat in pats]
+    if not grupos:
+        print("sin corridas en runs/"); sys.exit(1)
+    for etiq,fs in grupos:
         if fs: resume(etiq,fs)
         else:  print(f"\n=== {etiq}: sin corridas todavia")

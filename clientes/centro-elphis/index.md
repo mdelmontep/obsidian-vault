@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-09
+updated: 2026-09-13
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,9 +10,25 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-09
+## Estado actual · 2026-09-13
 
-**La voz va por la v45 y quien llama ya no acaba con la ficha de otro. Lo que queda abierto: `gate.py` sigue sin medir nada, y hay una contradicción sobre las transferencias en crisis que solo puede cerrar la clienta.**
+**La voz va por la v48, desplegada hoy: ya no se inventa el horario. Lo que queda abierto y lo nota el cliente: una cita cancelada el 11-sep que el CRM no refleja, y el hueco sigue libre en la agenda.**
+
+- ✅ **Voz v48 en producción** (13-sep). Publicada 48 · pin Postgres 48 · DDI `inbound_agents[{agent_version: 48}]`, las tres coherentes y verificadas contra la API. Gate contra la versión **publicada**: 39 inviolables, 0 fallos.
+  - Contenido = v46 + **horario** (deja de inventárselo; era el bloque que usaba `{{current_time_Europe/Madrid}}`) + `dv_nombre_paciente` + arista `recepcion_aviso→info_cita`, más tres instrucciones que nombraban nodos inexistentes y ahora nombran salidas reales.
+  - **Sin el bloque de silencio/narrar.** Ni ese bloque ni el del horario rompen por separado el caso «CR · harto de vivir así» (4/5 y 5/5 en 5 rondas selladas por rama); **juntos lo dejan en 0/5**. La regresión era la interacción, no un bloque — la bisección del 12-sep no la vio porque corría un solo caso que no era el que falla. → [[una-regresion-puede-no-tener-bloque-culpable-solo-la-combinacion]]
+  - Medido: **69/71 frente a 65/72** de la v46 en 6 rondas selladas. Mejora cuatro casos, no empeora ninguno.
+  - **La v47 no se desplegó y no debe desplegarse**: es la que lleva los dos bloques juntos.
+  - 🔜 **Falta verlo con tráfico real**: que el horario salga bien y que el caso de crisis no regrese. Rollback: `harness-voz/ROLLBACK.sh 46`.
+- 🔴 **Laura Caro Nieto canceló el 11-sep su cita del viernes 18/9/2026 a las 11:00 y el CRM no lo refleja.** Su deal (30402149, 87 €, contacto 165002789, +34659941768) está en `status: 3` (Won) y `Cancel: elegir deals` excluye Won/Lost — decisión de Manu del 03-09, correcta en el caso general. El aviso salió a Slack en severidad `info` diciendo `sin anotar: sin_deals_abiertos`, **sin decir de quién**. El hueco está libre y la agenda no lo sabe. Parche escrito y sin aplicar: `harness-voz/fix_aviso_cancel.py` (añade el asunto del correo al aviso; no toca el filtro).
+- ✅ **`ROLLBACK.sh` llevaba meses mintiendo** y se reescribió (13-sep). Republicaba una versión vieja y verificaba la versión **publicada**, no el DDI: imprimía «OK: sirviendo v21» con producción intacta. El rollback de verdad es bajar el pin en Postgres. Probado por mutación. → [[una-verificacion-que-nadie-ejerce-puede-llevar-meses-rota]]
+- ⚠️ **T3 del guard avisa de versiones creadas por encima del pin diciendo «no hay nada que hacer: son autoguardados del editor»** y se silencia 7 días. Cuando lo de arriba es un candidato en cola, lo camufla como ruido. → [[un-aviso-que-explica-toda-anomalia-como-ruido-esconde-lo-deliberado]]
+- ℹ️ **Tres sustos que resultaron falsos** al auditar (13-sep): el aviso de crisis **sí** llega a Elphis (`crisis_detectada: true` en las dos crisis reales); el lead del `ok:false` **no** se perdió (lo creó el post-call webhook); y `Upsert cita` **sí** se ha ejecutado (6 filas). Lo único real: `crisis_event` está vacía porque el flow no declara la tool `registrar_crisis`, así que el digest dirá 0 — falta el informe agregado, no el aviso.
+- 🔜 Pendiente menor de la voz: declarar `registrar_crisis` en el flow, en una versión posterior y medida aparte.
+
+## Estado previo · 2026-09-09
+
+**La voz iba por la v46 y quien llama ya no acaba con la ficha de otro. Lo que queda abierto: `gate.py` sigue sin medir nada, y hay una contradicción sobre las transferencias en crisis que solo puede cerrar la clienta.**
 
 - ✅ **Voz v46 en producción, desplegada en el orden bueno** (pin en Postgres primero, Retell después). Dos corridas de 13 casos contra v44 y v45.
   - **`dv_nombre` es ahora QUIEN LLAMA**, no el paciente. La descripción apuntaba a «la persona que va a ser atendida» y el consumidor la escribe como nombre del contacto de Clientify, que se identifica por el teléfono del llamante: la ficha de Ana se rellenaba con el nombre de Carlos. 3/3 aciertos en las dos corridas; antes 0-1/3. → [[una-extraccion-inestable-entre-corridas-es-una-instruccion-ambigua-no-ruido-del-modelo]]

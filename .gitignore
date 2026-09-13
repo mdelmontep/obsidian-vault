@@ -10,3 +10,6 @@
 
 # registro local de consultas — nunca se versiona
 .vault-queries.log
+
+# bytecode regenerable, no es backup
+__pycache__/
