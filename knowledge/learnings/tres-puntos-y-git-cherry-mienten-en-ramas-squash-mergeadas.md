@@ -28,6 +28,18 @@ Compara los DOS ÁRBOLES ACTUALES, solo en los ficheros que la rama tocó — in
 a cómo se mergeó (fast-forward, rebase o squash) y a cuánto ha avanzado main desde
 entonces.
 
+**Más barato y más decisivo (13-sep): preguntar por el PR, no por el árbol.**
+`gh pr list --head <rama> --state all --json number,state` responde MERGED/CLOSED
+de un tirón; para una rama sin PR, `git log origin/main --grep "<asunto del commit>"`
+dice si entró dentro del squash de otra. El diff de árboles sigue valiendo, pero
+cuesta una pasada por rama y no distingue «cerrado sin mergear» de «nunca propuesto»
+— y eso es justo lo que decide si borrar es reversible.
+
+**Cuarta reincidencia, 13-sep, misma sesión que escribió esto arriba.** Clasifiqué 47
+ramas con `git diff --name-only origin/main...<rama>` y di `feat/abono-anular-avisa-origenes-mudos`
+por «trabajo sin terminar y sin PR»: tenía el #2714 mergeado. Con el estado del PR
+delante, 44 de 47 salieron borrables sin ambigüedad.
+
 Con el método correcto, 85/85 ramas confirmadas redundantes de verdad (incluidas
 3 que resultaron ser BORRADORES ANTERIORES de un informe que main ya tiene
 completo — mergearlas habría sido un retroceso, no una recuperación).

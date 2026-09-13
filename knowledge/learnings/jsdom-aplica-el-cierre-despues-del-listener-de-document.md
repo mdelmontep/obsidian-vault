@@ -16,4 +16,8 @@ el panel escucha Escape en `document` y se cierra si no hay menú abierto.
 Consecuencia: **quitar el guard es un mutante que sobrevive en jsdom**. Un test unitario no
 puede demostrar que ese guard hace falta; hace falta un smoke en el motor real. Vale para
 cualquier pareja handler-de-componente ↔ listener global (Escape, click fuera, atajos).
-Ver [[un-arnes-de-mutacion-sobre-vitest-no-ve-los-candados-de-tipos]]
+
+**Confirmado en producción el 13-sep** conduciendo `app.tufacturaia.com`: con el menú de una
+notificación abierto, el primer Esc cierra solo el menú y el segundo el panel. El smoke cuesta
+cinco minutos y es la única prueba que existe de ese guard.
+Ver [[un-arnes-de-mutacion-sobre-vitest-no-ve-los-candados-de-tipos]] · [[un-bloque-de-comentario-sin-cerrar-se-come-el-resto-del-fichero]]

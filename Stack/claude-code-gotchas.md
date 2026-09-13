@@ -228,6 +228,13 @@ señal. Se descubrió por casualidad meses después, limpiando disco.
 Ver [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]].
 
 ## El clasificador de auto mode veta CONCEDER acceso, no escribir (28-ago-2026)
+- **Y veta el git destructivo, aunque el usuario acabe de decir «ok» (13-sep-2026).** Limpiando ramas
+  en facturaia denegó `git branch -D` («Irreversible Local Destruction») y `git push origin --delete`
+  («Git Destructive»), en lote y de una en una, con el OK explícito del usuario en el turno anterior.
+  Patrón de salida: dejar el trabajo hecho —la lista clasificada en un fichero y un guion de
+  restauración con el SHA de cada rama— y pasarle al humano UNA línea `xargs ... < lista.txt` para
+  que la pegue con `!`. Ojo: el fichero de la lista tiene que crearse en un comando APARTE, porque si
+  va dentro del mismo comando denegado no llega a existir y el humano pega algo que no está.
 
 Reparando datos de un cliente en producción, el clasificador de `autoMode` denegó ~10 llamadas y el
 patrón no era «escritura peligrosa» sino **alta de acceso**:
