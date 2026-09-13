@@ -9,6 +9,10 @@ tags: [cliente, agh-iberica, historico]
 Estados anteriores del hub [[agh-iberica]], sacados del dashboard para que el arranque de sesión no
 los pague. El detalle día a día vive en `docs/status-log/` del repo.
 
+## 31-ago-2026 · #1502 cerrado (`9fc8aaa`)
+
+El backstop de #115 era **ciego al email dictado**: exigía `@` literal y el ASR escribe «arroba». Gemelo de #246. Se reclama el dominio, no la parte local. Residuo en #1503/#1505. → [[un-detector-escrito-para-la-forma-escrita-es-ciego-a-la-dictada]] · [[un-sin-victima-del-barrido-puede-ser-una-rama-muerta]]
+
 ## 26-ago-2026 · #1418 — el emisor `custom_api` hacia Flota IA, en prod
 
 Cuatro PRs dentro con override de founder (#1420 → #1421 → #1423 → #1425); #1418 y #1422

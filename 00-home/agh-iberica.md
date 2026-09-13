@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-08-31
+updated: 2026-09-13
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -52,8 +52,6 @@ Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `Tur
 
 🟢 **Emisor `custom_api` a Flota IA en prod (#1418)** — una interacción = un TURNO, agrupar por llamada abierto en #1419. **Y desde el 31-ago YA hay turnos reales** (barrido de Manu por WhatsApp, 19 turnos 10:21→10:28 UTC): cae la premisa que impedía medirlo, porque el cero de agosto no discriminaba. 👉 Repetir el SELECT del portal anclado a esa ventana, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
 
-🔵 **#1502 cerrado (31-ago, `9fc8aaa`)** — el backstop de #115 era **ciego al email dictado**: exigía `@` literal y el ASR escribe «arroba». Gemelo de #246. Se reclama el dominio, no la parte local (adivinar daría avisos falsos). Residuo en #1503/#1505. → [[un-detector-escrito-para-la-forma-escrita-es-ciego-a-la-dictada]] · [[un-sin-victima-del-barrido-puede-ser-una-rama-muerta]]
-
 🔴 **`AGENT_TRANSCRIPT_CONTEXT` ENCENDIDO en prod** (medido en el contenedor, 31-ago). El `CLAUDE.md` decía lo contrario: **cuarto** sitio del patrón de #1331 y el peor, porque se carga en cada sesión y lo presentaba como *hecho medido que dirige el trabajo*. Corregido nombrando la sonda, no el valor. El egress lo decidió Borja en #1433 (CLOSED), documentado en #1456. → [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]]
 
 🔴 **#1424** — el emisor **solo loguea al FALLAR**: «apagado» y «funcionando» son el mismo silencio. El portal descartó el latido contra su ingesta (ensuciaría `agent_interactions`); a cambio, dos líneas nuestras, una por proceso.
@@ -85,6 +83,17 @@ la regla de aprobación, Mazars los códigos del fichero. **Ninguno bloquea** lo
 (integramos, no rescindimos). Housekeeping: borrar el export `TRA_PRUEBA`.
 
 Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
+
+## Tercer frente (13-sep): piloto People & Culture — ficha del consultor desde contrato y CV
+
+HR sube contrato y CV → propuesta → la técnica aprueba → ficha con originales cifrados. Fase 1 de 5.
+**Diseño y tickets CERRADOS; sin código.** Decisiones reversibles, sin pacto previo, en el tablero.
+- Spec **#1691** · **20 tickets #1692-#1711** con bloqueos nativos · tablero 0-100: `claude.ai/code/artifact/d7588d20`.
+- Libres ya: **#1693 cimientos** (desbloquea casi todo), #1692, #1694; fuera del tren #1695, #1696. #1698 espera la PR #1673.
+- ⚠️ Migración **0044** la quieren #1693 y la fusión de #1678 (CHECK de `audit_log`): la segunda combina.
+- 🔴 Producción (#1710) bloqueada por **#1678/#1680**: las usuarias de P&C se duplicarían al entrar.
+- Regla: cada ticket actualiza su paso del tablero → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
+- ⛔ Documentos reales con PII: nunca a servicios externos ni LLM; corpus de evals sintético.
 
 ## Bloqueantes
 
