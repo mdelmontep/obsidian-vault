@@ -287,6 +287,9 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 ## NEXT (próximas 2 semanas)
 
+- 🟡 **Fase C del ticket 175: el `RegistroAnulacion` de VeriFactu — lo siguiente que coger** — A y B cerraron el problema dentro de nuestro libro; C es decirle a la AEAT que un registro ya remitido queda sin efecto. Prompt entero, verificado fichero:línea, en `docs/architecture/PROMPT-continuacion-verifactu-registro-anulacion-fase-c.md`.
+  **Hoy no urge y conviene saber por qué** (medido en prod el 12-sep con `BEGIN READ ONLY`): **cero** orgs con `verifactu_activo` y **cero** abonos con registro, así que el bloqueo `verifactu_registrado` de `abono_anular` (`bloqueos-abono-anular.ts:67`) no le ha mordido nunca a nadie. **Repite esa medida antes de fijar alcance**: el día que una org encienda `verifactu_activo`, ese bloqueo empieza a negar lo que A y B sí dieron.
+  Plazo legal holgado (RDL 15/2025: los obligados, en 2027; la mitad del productor ya se cerró por declaración responsable). Sin prisa, pero **no se hace a medias**. → [[facturaia-historico-detallado]]
 - 🟡 **ADR-084 aceptado y sin implementar (7-sep, #2583)** — «no lo sé» en la unidad de una línea
   es la AUSENCIA (`NULL`), no `'unidad'`. Falta retirar el `not null default 'unidad'` de
   `lineas_factura.unidad_medida` (mig `384:26`) y el `coalesce` de siete migraciones. **Prohibido
