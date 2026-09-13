@@ -86,16 +86,16 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 
 ## Tercer frente (13-sep): piloto People & Culture — ficha del consultor desde contrato y CV
 
-HR sube contrato y CV → propuesta → la técnica aprueba → ficha con originales cifrados. Fase 1 de 5.
-**4 PRs en revisión (13-sep):** #1713 cimientos (#1693) · #1714 sin root (#1696) · #1719 subidas (#1692) · #1721 gateway (#1694: visión + strict NATIVOS).
+HR sube contrato y CV → propuesta → aprobación → ficha con originales cifrados. Fase 1 de 5.
+**4 PRs en revisión (13-sep), review aplicada:** #1713 cimientos (#1693) · #1714 sin root (#1696) · #1719 subidas (#1692) · #1721 gateway (#1694: visión + strict NATIVOS).
 - Spec **#1691** · tickets #1692-#1711 · tablero `claude.ai/code/artifact/d7588d20`.
-- 🔴 **Borja decide #1720** (guard de evals vs extractores de RRHH). 🔴 **#1696**: sonda de montajes en prod (Manu) + Slack antes del merge.
-- Tras #1713: #1697 → #1699 → #1700. Nuevas: #1715-#1718.
-- Learnings: [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]]
-- ⚠️ Migración **0044** la quieren #1693 y la fusión de #1678 (CHECK de `audit_log`): la segunda combina.
-- 🔴 Producción (#1710) bloqueada por **#1678/#1680**: las usuarias de P&C se duplicarían al entrar.
-- Regla: cada ticket actualiza su paso del tablero → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
-- ⛔ Documentos reales con PII: nunca a servicios externos ni LLM; corpus de evals sintético.
+- 🔴 **Borja decide #1720** (guard de evals vs extractores). 🔴 **#1696**: sonda de montajes en prod (Manu) + Slack antes del merge.
+- Tras #1713: #1697 → #1699 → #1700.
+- Learnings: [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]] · [[el-stop-gate-corre-el-gate-contra-la-base-compartida-y-un-temporal-sin-trackear-lo-dispara]]
+- ⚠️ **0044**: #1693 y #1678 (CHECK de `audit_log`); la segunda combina.
+- 🔴 Prod (#1710) bloqueada por **#1678/#1680** (usuarias de P&C duplicadas al entrar).
+- Tablero: cada ticket actualiza su paso → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
+- ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
 
 ## Bloqueantes
 
