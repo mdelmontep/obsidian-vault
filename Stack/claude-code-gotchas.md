@@ -195,6 +195,7 @@ Lo otro que conviene saber antes de apoyarse en esto:
 Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
 
 - **Si aun así pierdes trabajo, el `.jsonl` de la sesión lo guarda** — trae el resultado completo de cada subagente y se reimplementa desde ahí. (Descartarlo ya lo bloquea `git-guard`, así que eso no hace falta recordarlo.) Ver [[transcript-jsonl-sobrevive-al-worktree-borrado]]
+- **`claude -p` que falla por la API no lo dice en `subtype`** — un rechazo (401/403, cuota) sale con `subtype: success`, `is_error: true`, `api_error_status` y la causa solo en `result`; un fallo del CLI sí usa `subtype`/`errors`. Leer una sola forma deja al runner mudo. Ver [[claude-p-que-falla-por-la-api-deja-el-motivo-en-result-no-en-subtype]]
 - **`claude -p` desde un script hereda hooks y MCP del proyecto del cwd** — en un checkout se cuelga cargando MCPs y `--max-turns 1` da `is_error`; spawn con cwd neutro (`mkdtemp`) y stdin cerrado. Ver [[claude-headless-hereda-hooks-y-mcp-del-proyecto-del-cwd]]
 
 ## `autoMode` es GLOBAL y no se puede mover a un proyecto (15-ago-2026)

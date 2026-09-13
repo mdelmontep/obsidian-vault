@@ -27,6 +27,22 @@ tags: [cliente, facturaia, historico]
 - **Analista semanal** roto cada semana desde el 24-ago (la app dejó de mandar `semana`) → #2753 / PR #2756. **Explorador** 3 semanas en rojo sin motivo (`claude -p` deja el error en stdout) → #2754 / PR #2757, se verifica el 20-sep. **Retoque por instrucción** sin modelo (Higgsfield 423 en `reve/edit`) → #2747, código fal en PR #2755, pasos humanos pendientes.
 - El atributo que Cache Components rellena tras el Suspense llega 36-507 ms después del titular: los E2E esperan con `toHaveAttribute`. → [[cache-components-searchparams-solo-dentro-de-suspense]]
 
+**Cierre del #2754 (13-sep, tarde).** El explorador siguió fallando con #2757 ya desplegado, así que
+la causa no era el código: el CLI **sí** escribe el motivo, pero en dos formas distintas. Con
+`--max-turns 1` (lo que medí por la mañana) sale en `subtype`/`errors`; con un rechazo de la API sale
+con `subtype: success`, `api_error_status: 403` y la causa **solo** en `result` — «Your organization
+has disabled Claude subscription access for Claude Code». Ningún `claude -p` del runner terminaba
+bien desde el 25-ago. **#2764** lleva los dos casos a `last_error` (mutación con víctima en las dos
+ramas nuevas), y el 403 se resolvió con un token de otra cuenta.
+
+Lo que costó la hora no fue el token: **`compose.deploy` no recrea el contenedor** cuando lo que
+cambia es una variable. El runner siguió 45 min con el token viejo pese a un deploy manual y a un
+auto-deploy de otro SHA, los dos con `deployments[].status: done`; lo destapó
+`docker.getContainersByAppNameMatch` («Up 44 minutes») y lo arregló `compose.redeploy`. Run
+`5fec8ab2-…` completado con 5 tendencias. Queda `fal-ai/flux-pro/kontext` en `propuesto`.
+→ [[claude-p-que-falla-por-la-api-deja-el-motivo-en-result-no-en-subtype]] ·
+[[dokploy-redeploy-mismo-commit-es-no-op-cambiar-sha-fuerza-recreacion]]
+
 ## 11-sep-2026 · ticket 175 (Chivite): las dos deudas de la fase A, saldadas (PR #2714, `737ed76d0`, sin migración)
 
 La fase A —anular un abono emitido por error— llevaba en prod desde el 10-sep con las migs
