@@ -20,6 +20,13 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-08-30]] — poda del 30-ago al cerrar el super test V2: 9 entradas retiradas del NOW (la campaña del barrido y la «salida A» del albarán, ticket 156, IA agéntica de categorías, las 22 llamadas al modelo, el arnés `eval:ocr`, el cuerpo de un error, el 303 y la unidad de obra desde el presupuesto).
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 
+## 13-sep-2026 · smokes de un producto que ya no existía (#2752 → PR #2758) y tres fallos del equipo de contenido
+
+- **#2752 / #2758** (merge `dd344927`, desplegado 08:09 UTC): cuatro smokes medían reglas de estilo, «En marcha», la ficha de org y el suelo cross-org de un producto anterior. Al corregirlos salió que un **429 en /admin/orgs/[id] vaciaba el NIF** al desenfocar (el cuerpo de error entraba como la org), que «Usuarios» tumbaba la página entera y que «Config módulos» decía «Sin módulos» cuando la carga fallaba. Las tres lecturas pasan por `fetchJson` con estado de error y reintento; el guardado de features relee siempre. El aviso «no existe o no tienes acceso» de Obras estaba muerto desde el #2281: comparaba el slug contra la frase ya humanizada. Gate 20.698 + integración 607; smoke completo contra el build 571/0. → [[un-error-guardado-como-entidad-con-autoguardado-borra-el-dato-real]] · [[comparar-el-codigo-de-error-contra-el-mensaje-humanizado-nunca-casa]]
+- **Frontera cross-org**: el «29 de un suelo de 59» atribuido al desfase de staging era un ciclo de imports que dejaba `UUID_INEXISTENTE` en `undefined` (27 casos sin medir desde el #2058). Módulo hoja, test de cuerpos sin `undefined`, suelo 64. #1669 sigue abierto. → [[un-ciclo-de-imports-deja-la-constante-undefined-y-el-caso-deja-de-medir]]
+- **Analista semanal** roto cada semana desde el 24-ago (la app dejó de mandar `semana`) → #2753 / PR #2756. **Explorador** 3 semanas en rojo sin motivo (`claude -p` deja el error en stdout) → #2754 / PR #2757, se verifica el 20-sep. **Retoque por instrucción** sin modelo (Higgsfield 423 en `reve/edit`) → #2747, código fal en PR #2755, pasos humanos pendientes.
+- El atributo que Cache Components rellena tras el Suspense llega 36-507 ms después del titular: los E2E esperan con `toHaveAttribute`. → [[cache-components-searchparams-solo-dentro-de-suspense]]
+
 ## 11-sep-2026 · ticket 175 (Chivite): las dos deudas de la fase A, saldadas (PR #2714, `737ed76d0`, sin migración)
 
 La fase A —anular un abono emitido por error— llevaba en prod desde el 10-sep con las migs

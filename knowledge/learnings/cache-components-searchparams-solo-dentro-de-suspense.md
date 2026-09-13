@@ -15,5 +15,9 @@ Letra pequeña: el swap fallback→contenido lo hace un script inline, así que 
 con JavaScript deshabilitado ve el **fallback**. Si el dato es crítico (un gclid en un
 CTA), el fallback debe degradar con sentido y la decisión quedar registrada.
 
+Medido contra el build (13-sep): React retiene el swap, que llega **36-507 ms** después de pintarse
+lo de fuera del Suspense. Un E2E que lee el atributo nada más ver el titular lee el fallback: usar
+una aserción que espera (`toHaveAttribute`), y comprobar el HTML servido aparte con una petición.
+
 Caso real: landing del apex de TuFacturaIA (FB-10, ADR-020) — el gate cazó que el CTA
 perdía el gclid hasta hidratar; el fix fue exactamente este patrón.
