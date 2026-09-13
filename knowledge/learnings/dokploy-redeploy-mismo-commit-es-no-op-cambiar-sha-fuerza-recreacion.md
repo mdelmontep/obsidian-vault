@@ -20,3 +20,10 @@ Para diagnosticar "¿mi código está vivo?" sin adivinar: `ssh` + `docker ps`
 literales no). Y si el código SÍ está pero falla → reproduce la query por el
 mismo cliente contra prod, no asumas que es el deploy. Ver
 [[reference-dokploy-facturaia]] · [[column-list-drift-clientes-proveedores-select-inexistente-42703]].
+
+**13-sep-2026, ampliación**: tampoco basta un commit nuevo cuando lo que cambia es
+una VARIABLE del env. Cambiado `CLAUDE_CODE_OAUTH_TOKEN` en el panel, el runner
+de contenido siguió 45 min con el token viejo pese a un `compose.deploy` manual y
+a un auto-deploy de otro SHA. Lo que recrea es `POST /api/compose.redeploy`
+(«Redeployment queued»), y se comprueba por `docker.getContainersByAppNameMatch`
+→ `status: "Up 8 seconds"`, nunca por `deployments[].status: done`.
