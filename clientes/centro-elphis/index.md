@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-13
+updated: 2026-09-14
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,23 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-13
+## Estado actual · 2026-09-14
+
+**La voz va por la v50 (12:00): cuando piden hablar con una persona, Laura pide el nombre, pasa el aviso a recepción y dice cuándo llaman. Los avisos a recepción ya no se tragan la segunda llamada del mismo paciente.**
+
+- ✅ **Voz v50 en producción** (14-sep, 12:00:08). Publicada 50 · pin 50 · DDI 50. = v49 + recado corto a recepción, tocando solo `recepcion_aviso`, `cierre`, `dv_motivo`, `fn_crear_lead` y una línea del `global_prompt`. Nace de `call_a183daf13cd82892e50761e887f` (le preguntaba el motivo y el teléfono a quien solo quería una persona).
+  - Guion: «Claro, paso el aviso a recepción para que te llamen. ¿Me dices tu nombre?» → «¿Te puedo ayudar en algo más?» → «Listo, ya he pasado tu aviso a recepción y te llaman» + `cuando_llaman`. Nunca pide motivo ni teléfono.
+  - `fn_crear_lead` habla con texto fijo «Un momento.»: con instrucción `prompt` se despedía antes de tener el resultado. → [[retell-nodo-funcion-con-instruccion-prompt-improvisa-el-resultado-antes-de-tenerlo]]
+  - Medido (`batch-r50.json`, 3 rondas alternas): **42/46 frente a 31/46** de la v49; recados 9/9 por transcript (0/9 en v49); crisis sin regresión («CR harto de vivir así» 3/3). Gate 39/39. Rollback: bajar el pin a 49.
+  - ⚠️ El rojo de T1 de las 12:00 fue el falso positivo conocido del despliegue (observado 49, esperado 50). Arreglo de T1 ofrecido, **sin OK**.
+- ✅ **n8n, avisos a recepción** (14-sep):
+  - **Dedup por llamada, no por teléfono.** Bruno llamó a las 15:49 y a las 16:02 del 9-sep y el segundo aviso lo tragó `notif-recepcion-<teléfono>`. El arreglo de ese día estaba muerto: `call_id` no estaba declarado en `Recibir inputs` de `registrar-lead`. Conectado en `registrar-lead`, `retell-tool-crear-lead` y `retell-post-call-webhook`. Verificado con `dry_run`. → [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]]
+  - **El motivo se perdía en el aviso** (`call_c11718072e217b57a11d53f5e5f`: WhatsApp y email salieron sin motivo porque no había permiso de datos). Ahora un recado (`tipo_consulta=handoff`) deja pasar el motivo si es exactamente una gestión de lista cerrada: cambiar/cancelar cita, pagos o facturas, hablar con su terapeuta, quiere hablar con el equipo.
+  - `Shape response` devuelve `centro_abierto` + `cuando_llaman` («enseguida» / «en cuanto abra el centro») con hora de Madrid: L-V 9-21, S 9-15, últimos 15 min cuentan como cerrado. **Los festivos no.**
+- 🔜 Falta tráfico real: un recado con la v50, el aviso con motivo de lista, y la clave por `call_id` entrando por el post-call (solo probado el camino de la tool).
+- 🔜 Sigue abierto de la v49: 🔴 la cita cancelada de Laura Caro Nieto (18/9) sin reflejar en el CRM, el deal de prueba `32122661` y el aviso a Alba.
+
+## Estado previo · 2026-09-13
 
 **La voz va por la v49 (14:05): da el horario fijo en palabras y ya no lo manda a recepción. Lo que queda abierto y lo nota el cliente: una cita cancelada el 11-sep que el CRM no refleja, y el hueco sigue libre en la agenda.**
 
