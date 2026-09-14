@@ -1,7 +1,7 @@
 """Crea un borrador del agente a partir de una base, le aplica los parches y lo
 verifica CONTRA EL SERVIDOR. No publica nunca: publicar es un paso aparte y a mano.
 """
-import json,os,sys,copy,time,urllib.request,urllib.error
+import json,os,sys,copy,time,urllib.request,urllib.error,urllib.parse
 # La raiz se deriva del propio fichero: este arnes vive en el vault, no en un scratchpad.
 S=os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0,f"{S}/v30"); import patches
@@ -13,8 +13,16 @@ def api(m,p,b=None):
         data=json.dumps(b).encode() if b is not None else None)
     try: return json.load(urllib.request.urlopen(r))
     except urllib.error.HTTPError as e: print("HTTP",e.code,e.read().decode()[:300]); raise
+def versiones():
+    # get-agent-versions desaparece el 15-sep-2026; list-agent-versions pagina (50 por pagina, mas nueva primero).
+    out,pk=[],None
+    while True:
+        d=api("GET",f"/list-agent-versions/{AG}"+(f"?pagination_key={urllib.parse.quote(pk)}" if pk else ""))
+        out+=d["items"]
+        if not d.get("has_more"): return out
+        pk=d["pagination_key"]
 def sirviendo():
-    return max(v["version"] for v in api("GET",f"/get-agent-versions/{AG}") if v.get("is_published"))
+    return max(v["version"] for v in versiones() if v.get("is_published"))
 
 base=int(sys.argv[1]); saltar=tuple(sys.argv[2].split(",")) if len(sys.argv)>2 and sys.argv[2] else ()
 antes=sirviendo(); print("produccion antes: v%d"%antes)
