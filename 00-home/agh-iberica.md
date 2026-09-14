@@ -97,6 +97,17 @@ HR sube contrato y CV → propuesta → aprobación → ficha con originales cif
 - Tablero: cada ticket actualiza su paso → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
 - ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
 
+## Tercer frente (13-sep): piloto People & Culture — ficha del consultor desde contrato y CV
+
+HR sube contrato y CV → propuesta → aprobación → ficha con originales cifrados. Fase 1 de 5.
+- Spec **#1691** · tickets #1692-#1711 · tablero `claude.ai/code/artifact/d7588d20`.
+- ✅ En `main`: #1719 · #1713 · #1721 · #1714 · **PR-2 #1738 (`eba8a61`, 14-sep)**, que cierra #1697 y #1718. Decisiones en ADR 0010.
+- 🔴 **Tuyo**: verificar la 0046 en prod (bases dev con 0046 vieja → recrear). Siguiente **PR-3 #1699**; seguimientos #1733-#1737.
+- 🔴 Prod (#1710) bloqueada por **#1678/#1680** (usuarias de P&C duplicadas al entrar).
+- Learnings: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]]
+- Tablero: cada ticket actualiza su paso → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
+- ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
+
 ## Bloqueantes
 
 _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una consulta, no estado.)_
