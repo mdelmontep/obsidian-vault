@@ -19,4 +19,9 @@ Mac (ni PIL ni ImageMagick), así que la vía es **renderizar y leerlo como imag
 Aquí el desfase era +1 al principio y +3 a partir de la mitad (páginas sin numerar intercaladas).
 Localiza por el índice, salta a `física ≈ impresa + 1`, lee el pie de esa página y recalibra.
 
+**Variante peor (15-sep, agh-iberica): SÍ hay capa de texto y aun así no trae los datos.** Un
+formulario rellenado e impreso con «Microsoft: Print To PDF» deja como texto solo los rótulos
+preimpresos; los valores quedan **vectorizados** (`pdfimages` = 0 imágenes, ~157k operadores de
+curva). «¿Tiene capa de texto?» no discrimina: exige candidatos del dato (importe, fecha) en el texto.
+
 Ver [[la-copia-durable-de-una-fuente-efimera-se-hace-el-mismo-dia-o-no-se-hace]]

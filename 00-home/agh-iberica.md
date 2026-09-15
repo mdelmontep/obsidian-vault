@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-13
+updated: 2026-09-15
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -87,24 +87,13 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 ## Tercer frente (13-sep): piloto People & Culture — ficha del consultor desde contrato y CV
 
 HR sube contrato y CV → propuesta → aprobación → ficha con originales cifrados. Fase 1 de 5.
-**4 PRs en revisión (13-sep), review aplicada:** #1713 cimientos (#1693) · #1714 sin root (#1696) · #1719 subidas (#1692) · #1721 gateway (#1694: visión + strict NATIVOS).
-- Spec **#1691** · tickets #1692-#1711 · tablero `claude.ai/code/artifact/d7588d20`.
-- 🔴 **Borja decide #1720** (guard de evals vs extractores). 🔴 **#1696**: sonda de montajes en prod (Manu) + Slack antes del merge.
-- Tras #1713: #1697 → #1699 → #1700.
-- Learnings: [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]] · [[el-stop-gate-corre-el-gate-contra-la-base-compartida-y-un-temporal-sin-trackear-lo-dispara]]
-- ⚠️ **0044**: #1693 y #1678 (CHECK de `audit_log`); la segunda combina.
-- 🔴 Prod (#1710) bloqueada por **#1678/#1680** (usuarias de P&C duplicadas al entrar).
-- Tablero: cada ticket actualiza su paso → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
-- ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
-
-## Tercer frente (13-sep): piloto People & Culture — ficha del consultor desde contrato y CV
-
-HR sube contrato y CV → propuesta → aprobación → ficha con originales cifrados. Fase 1 de 5.
-- Spec **#1691** · tickets #1692-#1711 · tablero `claude.ai/code/artifact/d7588d20`.
-- ✅ En `main`: #1719 · #1713 · #1721 · #1714 · **PR-2 #1738 (`eba8a61`, 14-sep)**, que cierra #1697 y #1718. Decisiones en ADR 0010.
-- 🔴 **Tuyo**: verificar la 0046 en prod (bases dev con 0046 vieja → recrear). Siguiente **PR-3 #1699**; seguimientos #1733-#1737.
-- 🔴 Prod (#1710) bloqueada por **#1678/#1680** (usuarias de P&C duplicadas al entrar).
-- Learnings: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]]
+- Spec **#1691** · tickets #1692-#1711 · tablero `claude.ai/artifact/BJK4TRyDiVUWGShNGrG3JZ` (el anterior se borró el 15-sep: su historial guardaba datos personales → [[republicar-un-artefacto-no-purga-sus-versiones-anteriores]]).
+- ✅ En `main`: #1719 · #1713 · #1721 · #1714 · #1738 (originales cifrados, 0046) · **15-sep**: #1743 (puerta de identidad) · #1748 (fusión de usuarios, 0045) · #1751 (herramientas PDF) · **#1755 PR-A de #1700 (`a7ece17`)**: contrato con texto → 10 campos con cita verificada; evals ×1 con prompt congelado: 0 verificados erróneos en 31 sintéticos, ~0,004 $/doc.
+- 🔴 **El contrato real llega impreso a PDF con los valores vectorizados** → #1755 no lo lee (sirve para anexos/CV); **#1702 (visión) obligatorio**, y el enrutador exige candidato de importe/fecha → [[pdf-escaneado-sin-capa-de-texto-renderizar-paginas-con-pdftoppm]].
+- Siguiente: #1702 + #1705 (CV) en paralelo, luego PR-B de #1700 (0047, cola, worker, tope de coste).
+- 🔴 **Tuyo**: enviar a David el WhatsApp de #1741 (2-3 contratos y CV reales, dónde constan cliente y beneficio). Prod (#1710) bloqueada por **Borja** (3 preguntas de la fusión) y **Carlos** (correo para `DASHBOARD_BOOTSTRAP_ADMINS`).
+- Learnings: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]] · [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]] · [[el-stop-gate-corre-el-gate-contra-la-base-compartida-y-un-temporal-sin-trackear-lo-dispara]]
+- Learnings 15-sep: [[el-canal-obligatorio-caido-deja-el-ciclo-sin-cerrar]] · [[un-artifact-compartido-se-lee-pero-nunca-se-escribe]] · [[un-candado-que-empareja-dos-senales-se-esquiva-renombrando-una]] · [[un-paso-de-mi-propio-runbook-tambien-se-mide]]
 - Tablero: cada ticket actualiza su paso → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
 - ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
 
