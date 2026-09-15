@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-09-11
+updated: 2026-09-15
 tags: [cliente, agentesia]
 ---
 
@@ -13,6 +13,7 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 
 - **agency-portal** (Borja como reviewer) — Next.js, integra con TuFacturaIA via API v1 (HMAC webhooks + outbox + Stripe-style sync)
 - **`/agency/time`** — dashboard de horas del equipo (Dani/Borja/Manu): ingesta vía hooks locales de Claude Code (`ops/claude-time-tracker`), límites de uso 5h/semanal (+ countdown de reset real, 25-jul, ver hito 0), síntesis IA (gpt-4o-mini) de qué está haciendo cada uno en "Trabajando ahora" (árbol persona→sesión, agrupado por `claudeSessionId` desde PR #166 — antes agrupaba por proyecto y fusionaba sesiones paralelas del mismo proyecto en una sola fila; la fusión de DURACIÓN sigue siendo por sesión, no se pierde). Gráficas "Trabajo del mes" (técnico/proyecto) rediseñadas 25-jul: barras (no líneas) para todas las métricas, panel lateral con total REAL del periodo (no una suma que crece sin techo), 6 rangos (Hoy/Ayer/7 días/Este mes/30 días/Personalizado) × vela 5min-7días — ver hito 0. El nombre de proyecto se deriva del cwd en el hook: normalizado en la ingesta (mismo repo con carpetas distintas por máquina) y, desde 25-jul, los **git worktrees resuelven al repo principal** en vez de a la rama. "Activo ahora" = última actividad hace <15 min (`ACTIVITY_GAP_MS`), y sin heartbeat un turno más largo que eso no aparece.
+- **Codex en Horas IA (15-sep)** — [#644](https://github.com/AgentesIA-MAdrid/agency-portal/pull/644) desplegado, migración aplicada y envío manual verificado. Los 7 hooks locales ya están habilitados y confiables; falta reabrir Codex y comprobar registro automático. Límites de Claude y Codex separados; la respuesta general de esta cuenta solo aporta semanal. Instalación, límites y cierre Obsidian: [[codex-time-tracking]].
 - **Chatbot propio** — dos workflows vivos en `n8n.agentesia.madrid`: **`89B9QN23hOHDq6oP` "ChatBOT mejorado"** (WhatsApp vía Chatwoot, 63 nodos: captación + soporte/tickets) y **`G8vbSYm0SY3zi912` "Web Chat Agentesia"** (widget de la landing, síncrono, 12 nodos, NO pasa por Chatwoot). `enVlCyi7McKfwkRQ` está **apagado desde abril** pese a que la doc vieja lo señalaba como el vivo. Los dos escriben en el mismo Sheet `Registro de Leads AGENTESIA` distinguidos por `Channel`. Widget en el repo `agentesia-web` → `src/pages/ChatbotPage.tsx:21`. API key n8n en 1Password `N8N API Key - AgentesIA (Claude)` (vault Agentesia)
 - **agentesia-web** — la landing pública (`agentesialabs.com`), Vite + react-ssg (NO Next). Gates: `npm run lint && npx tsc --noEmit && npm test && npm run build`; el H1 se comprueba sobre el `dist/index.html` prerenderizado, no sobre el DOM del dev. ⚠️ **`mdelmontep` NO tiene push aquí** — se contribuye por fork+PR y mergea `notcapi`. Ver [[permiso-de-github-es-por-repo-no-por-pertenecer-a-la-org]]
 - **Slack workspace** activo, canvases por proyecto
