@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-14
+updated: 2026-09-15
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,20 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-14
+## Estado actual · 2026-09-15
+
+**Voz v51 en producción (14-sep, 16:05) y probada por Manuel («funciona bien»). Los avisos por email salen del buzón del centro. El post-call ya respeta el «no» al consentimiento.**
+
+- ✅ **Voz v51** = v50 + tildes en frases literales («Cuídate», «teléfono») + regla en `intake`: si piden «información» a secas, se contesta ya (qué se trata y primera visita gratuita de media hora) con UNA pregunta para concretar, sin volver a «qué te preocupa» + `voice_temperature` 1.2 (bajarla suena robótica). Rollback: pin a 50.
+  - Descartado: abrir turnos con «vale/claro» (con frecuencia explícita rompía la crisis «harto de vivir así»: 0/4 vs 8/9) y backchannel (no le gusta a Manuel).
+  - Poda del prompt analizada (~2.100 caracteres seguros, 10 contradicciones), **sin aplicar**: versión aparte con rondas extra de crisis.
+- ✅ **`registrar-lead`**: (1) falso Slack `lead_no_registrado` — la rama de email fallido era el último nodo y se convertía en la respuesta del sub-workflow → [[n8n-subworkflow-return-es-ultima-hoja-rama-paralela-contamina]]; (2) **un aviso por llamada**: clave `notif-llamada-<call_id>` (tool y post-call avisaban dos veces porque el post-call reclasifica).
+- ✅ **SMTP**: `smtp-agentesia` (Gmail) daba `535` desde la madrugada del 14-sep. Nueva credencial `smtp-centroelphis` (Webempresa, `mail.centroelphis.com:465`; `ns1481.webempresa.eu` falla el certificado), remitente `Bot Elphis <info@centroelphis.com>` en los 4 nodos activos. Prueba real desde n8n `250 OK`. Contraseña en 1Password Elphis, **débil: rotar** (y a la vez la credencial IMAP).
+- ✅ **Consentimiento en el post-call**: `Decidir registro voz` lee `dv_consentimiento` de Retell; antes solo borraba el motivo si el extractor marcaba `false` y guardó diagnósticos de la prueba de Manuel en deal y contacto (limpiados). → [[dos-caminos-que-escriben-el-mismo-dato-de-salud-deben-leer-el-mismo-consentimiento]]
+- 🔜 Verificar con el primer lead real: sin Slack falso, un solo WhatsApp (`notif-llamada-`), email desde info@centroelphis.com.
+- 🔜 Abierto en voz: narración con eco (caso GR), «Un momento.» tras la despedida, poda del prompt, fix del rojo falso de T1 (sin respuesta).
+
+## Estado previo · 2026-09-14
 
 **La voz va por la v50 (12:00): cuando piden hablar con una persona, Laura pide el nombre, pasa el aviso a recepción y dice cuándo llaman. Los avisos a recepción ya no se tragan la segunda llamada del mismo paciente.**
 

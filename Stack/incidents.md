@@ -21,6 +21,8 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 ## 2026-09
 
 <!-- añade nuevas entradas aquí debajo -->
+- 2026-09-14 · centro-elphis · Slack rojo «lead no registrado» con el lead creado, y los emails de aviso sin salir → SMTP Gmail `535` (contraseña de aplicación revocada) + la rama de email fallido era la última hoja del sub-workflow y se volvió su respuesta → rama conectada a `Shape OK`, SMTP a Webempresa (info@centroelphis.com)
+- 2026-09-14 · centro-elphis · motivo y diagnósticos en Clientify y en el WhatsApp pese al «no» al consentimiento → el post-call solo borraba con `false` explícito de su extractor → lee `dv_consentimiento` de Retell; deal y contacto limpiados
 - 2026-09-09 · centro-elphis · paciente llama dos veces en 13 min y el segundo aviso a recepción no sale → dedup por teléfono; el fix por `call_id` de ese día estaba muerto (campo no declarado en `Recibir inputs`, el `|| phone` lo tapaba) → `call_id` conectado en los 3 workflows, 14-sep · [[n8n-executeworkflowtrigger-schema-estricto-filtra-campos]]
 - 2026-09-13 · centro-elphis · Laura (voz v48) mandaba el horario a recepción y luego lo recitaba «de 9 a 21 horas» → la regla del fix del horario prohibía el dato fijo que seguía en la base + cifras 24 h sin forma de decirlas → v49, solo `global_prompt`, 39/39 vs 33/39 · [[prohibir-el-dato-fijo-para-evitar-una-deduccion-enfrenta-la-regla-con-la-base]]
 - 2026-09-13 · TuFacturaIA · analista semanal de contenido fallaba cada semana desde el 24-ago → la app dejó de mandarle `semana` en el encargo → PR #2756

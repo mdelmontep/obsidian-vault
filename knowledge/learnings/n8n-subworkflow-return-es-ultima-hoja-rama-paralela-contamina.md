@@ -9,3 +9,5 @@ Un workflow con `executeWorkflowTrigger` devuelve a su llamador los datos de su(
 Fix: nada de ramas paralelas dead-end en sub-workflows. Si necesitas un dato extra solo en cierto caso, ramifica con IF para que **una sola hoja produzca salida por ejecución** (bonus: el fetch solo corre cuando hace falta → menos latencia).
 
 Caso real Simarro: "zonas cercanas" colgado del Start rompía la tool `Buscar_viviendas` (devolvía una fila del catálogo en vez de `{found,results}`). Movido a `IF found==0 → Get Catálogo → Build Zones`. Relacionado: [[n8n-nodos-compartidos-entre-ramas-requieren-if-isExecuted]].
+
+Caso Elphis (14-sep-2026): la rama de error `Avisar email notif no enviado` de `registrar-lead` no tenía salida y era lo último que corría cuando fallaba el SMTP → el padre `retell-tool-crear-lead` leyó `ok:false` y mandó a Slack «lead no registrado» con el lead creado y el WhatsApp enviado. Fix: conectar esa rama a `Shape OK`. Tell: toda rama de aviso/log en un sub-workflow debe desembocar en el nodo de salida.
