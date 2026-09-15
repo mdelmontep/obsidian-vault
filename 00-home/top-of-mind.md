@@ -48,7 +48,6 @@ tags: [home, prioridades]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
 
-- **agency-portal / Codex** — reabrir Codex y verificar latidos automáticos en Horas IA; 7 hooks confiables, envío manual probado. → [[codex-time-tracking]]
 - 🟠 **Arnés — el semáforo mide quién entra, no cuánto tarda (11-sep noche)** — **`gate:stop` en `main`** (#2720): 99 s contra el techo de 240 s. Gate completo 398-419 s limpio / 478 s cargado. Guard de memoria **sigue sin justificar**: hubo `vpl=2` pero la espera de admisión fue **0-1 s en 2,5 h**. **Por orden**: `fia-gate:27` (control `KIND=cpu` vs `mem`) · `fia-cierre-reminder.sh:17` → `--git-common-dir` · 90 worktrees en agency-portal. → [[facturaia]] · [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]]
 - 🟠 **TuFacturaIA — staging por detrás (#1669)** — el «29 de 59» cross-org era un ciclo de imports, no el desfase (suelo 64, smoke 571/0 el 13-sep); queda alinear staging. → [[facturaia]] · [[una-base-de-staging-por-detras-deja-un-candado-sin-medir]]
 - 🔴 **TODOS los agentes deben identificarse como IA (art. 50, vigente desde el 2-ago-2026)** — hecho en Elphis (17-ago) y Tecnocloud (24-ago, v47, en el begin_message). Faltan Clínica Zen, Simarro, EcoBox, AGH, Danny, Gesfincas y el chatbot propio. **Laserys dice «soy Sara… la asistente virtual»** (10-sep, v26): ambiguo, no dice que sea IA — decidir si basta. Hasta 15 M€ o 3 %, y lo nota el cliente antes que tú. → [[una-obligacion-legal-no-puede-colgar-del-prompt-del-llm]]
