@@ -86,13 +86,10 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 
 ## Tercer frente: People & Culture — contrato+CV → ficha
 
-Fase 1/5, spec #1691; tablero → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]].
-- ✅ En main: #1755 (texto), #1762 → #1764 → #1763 y docs #1767, con gate local y Actions verdes. Sin nueva verificación de prod; resto de PRs en `docs/PROJECT-STATUS.md`.
-- 🔴 Contrato real: rótulos en texto, valores vectorizados. #1702 V1 dio `vision`, `solo_rotulos`, 0 importes/fechas; sin PR. → [[pdf-escaneado-sin-capa-de-texto-renderizar-paginas-con-pdftoppm]].
-- 🟠 #1768 (V2) abierta sobre main: cinco marcas `@export-solo-para-test` retiradas; gate local verde (Σ6073/Σ1496), CI rojo con 0 pasos en ambos jobs. #1702 abierto.
-- Pendiente: Borja revisa CI/merge; PR V1, #1705 (CV), PR-B #1700 (0047). Manu pide contratos/CV a David (#1741); Carlos da correo bootstrap.
-- Slack: plugin instalado, herramientas ausentes en esta sesión; aviso en `#cli-agh-iberica` sin enviar.
-- ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
+**Prioridad de Manu:** email contrato + CV → propuesta, aprobación → ficha con originales. Spec #1691; HTML local `docs/piloto-rrhh-estado-2026-09-15.html`. 4/18 tickets cerrados (22 % formal).
+- ✅ `main` `912085c`: #1697 originales; #1702 V1–V4 sin ficha. V4 mide solo geometría sintética. Gate previo verde; Actions `steps: 0`; **prod no verificada**.
+- 🔴 Orden: PR #1673 → #1698; #1699 → PR-B #1700; #1698/#1699 → #1701 → #1705. En paralelo eval `.opt` #1702; después #1707 y #1710. #1741 ya pregunta a David por muestras/fuentes.
+- ⚠️ #1691 exige aprobación; cliente deriva de asignación; beneficio requiere alta humana; “añadimos X” como **mensaje** no está en #1707. No enviar #1741 sin autorización. ⛔ PII real fuera de repo, Slack y evals de pago.
 
 ## Bloqueantes
 
