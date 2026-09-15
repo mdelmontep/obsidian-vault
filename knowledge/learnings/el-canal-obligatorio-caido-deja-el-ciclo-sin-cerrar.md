@@ -1,21 +1,26 @@
 ---
-title: si el canal obligatorio se cae, el aviso va al artefacto que sí acepta escritura
+title: un error que nombra exactamente lo que falta no es una caída: relee el esquema del parámetro
 date: 2026-09-15
 source: agh-iberica
-tags: [proceso, slack, harness, coordinacion]
+tags: [diagnostico, mcp, herramientas, sesgo]
 ---
-El protocolo de AGH exige anunciar y cerrar cada PR en `#cli-agh-iberica`. El 15-sep
-`slack_send_message` empezó a devolver `no_text` con CUALQUIER texto —también con uno
-de 21 caracteres— después de cuatro envíos correctos en la misma sesión; `slack_read_channel`
-seguía funcionando. Descartado por bisección: no era longitud, mrkdwn, enlaces `<url|txt>`,
-comillas ni caracteres no ASCII.
+> ⚠️ El nombre de este fichero es de una primera versión cuya premisa era FALSA («el canal
+> se cayó»). Se conserva el nombre porque ya estaba commiteado y citado; lo que vale es el
+> título de arriba.
 
-Lo que importa no es el fallo, es qué hacer: el aviso redactado **no se tira ni se deja
-en el transcript**. Va como comentario en la propia PR, marcado «pendiente de enviar al
-canal», y el prompt de la sesión siguiente lo nombra como primer paso. Así el ciclo queda
-recuperable por alguien que no estuvo.
+`slack_send_message` devolvió `no_text` seis veces. Bisecté el CONTENIDO —longitud,
+mrkdwn, enlaces, comillas, no-ASCII, hasta un texto de 21 caracteres— concluí «la
+herramienta está caída», lo escribí como learning y mandé un reporte de bug. El
+parámetro obligatorio se llama **`message`**; yo pasaba `text`. El campo llegaba vacío y
+`no_text` decía literalmente eso. Otra sesión lo resolvió al primer intento.
 
-Regla de parada: 2-3 intentos y un texto trivial para discriminar herramienta vs contenido.
-Insistir con el mensaje largo confirma lo mismo y cuesta una llamada cada vez.
+Dos señales que ignoré, y son las que valen:
+1. **El nombre del error describía la causa.** Antes de bisecar el contenido, releer el
+   esquema del parámetro (`ToolSearch select:<tool>` cuesta una llamada).
+2. **«Funcionaba antes en esta misma sesión»** era premisa falsa: los envíos buenos
+   llevaban otro formato. Sostuvo todo el diagnóstico sin comprobarse.
 
-Ver [[un-artifact-compartido-se-lee-pero-nunca-se-escribe]].
+Regla: con un error de forma (`no_X`, `missing_Y`, `invalid_Z`), el primer contrafáctico
+es el ESQUEMA, no el dato. Bisecar el contenido solo prueba cosas sobre el contenido.
+
+Ver [[un-instrumento-que-devuelve-cero-para-todo-no-es-un-dato]].
