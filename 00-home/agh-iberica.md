@@ -84,17 +84,14 @@ la regla de aprobación, Mazars los códigos del fichero. **Ninguno bloquea** lo
 
 Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 
-## Tercer frente (13-sep): piloto People & Culture — ficha del consultor desde contrato y CV
+## Tercer frente: People & Culture — contrato+CV → ficha
 
-HR sube contrato y CV → propuesta → aprobación → ficha con originales cifrados. Fase 1 de 5.
-- Spec **#1691** · tickets #1692-#1711 · tablero `claude.ai/artifact/BJK4TRyDiVUWGShNGrG3JZ` (el anterior se borró el 15-sep: su historial guardaba datos personales → [[republicar-un-artefacto-no-purga-sus-versiones-anteriores]]).
-- ✅ En `main`: #1719 · #1713 · #1721 · #1714 · #1738 (originales cifrados, 0046) · **15-sep**: #1743 (puerta de identidad) · #1748 (fusión de usuarios, 0045) · #1751 (herramientas PDF) · **#1755 PR-A de #1700 (`a7ece17`)**: contrato con texto → 10 campos con cita verificada; evals ×1 con prompt congelado: 0 verificados erróneos en 31 sintéticos, ~0,004 $/doc.
-- 🔴 **El contrato real llega impreso a PDF con los valores vectorizados** → #1755 no lo lee (sirve para anexos/CV); **#1702 (visión) obligatorio**, y el enrutador exige candidato de importe/fecha → [[pdf-escaneado-sin-capa-de-texto-renderizar-paginas-con-pdftoppm]].
-- Siguiente: #1702 + #1705 (CV) en paralelo, luego PR-B de #1700 (0047, cola, worker, tope de coste).
-- 🔴 **Tuyo**: enviar a David el WhatsApp de #1741 (2-3 contratos y CV reales, dónde constan cliente y beneficio). Prod (#1710) bloqueada por **Borja** (3 preguntas de la fusión) y **Carlos** (correo para `DASHBOARD_BOOTSTRAP_ADMINS`).
-- Learnings: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]] · [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]] · [[el-stop-gate-corre-el-gate-contra-la-base-compartida-y-un-temporal-sin-trackear-lo-dispara]]
-- Learnings 15-sep: [[el-canal-obligatorio-caido-deja-el-ciclo-sin-cerrar]] · [[un-artifact-compartido-se-lee-pero-nunca-se-escribe]] · [[un-candado-que-empareja-dos-senales-se-esquiva-renombrando-una]] · [[un-paso-de-mi-propio-runbook-tambien-se-mide]]
-- Tablero: cada ticket actualiza su paso → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]]
+Fase 1/5, spec #1691; tablero → [[la-regla-del-tablero-viaja-en-el-ticket-no-en-la-sesion]].
+- ✅ En main: #1755 (texto), #1762 → #1764 → #1763 y docs #1767, con gate local y Actions verdes. Sin nueva verificación de prod; resto de PRs en `docs/PROJECT-STATUS.md`.
+- 🔴 Contrato real: rótulos en texto, valores vectorizados. #1702 V1 dio `vision`, `solo_rotulos`, 0 importes/fechas; sin PR. → [[pdf-escaneado-sin-capa-de-texto-renderizar-paginas-con-pdftoppm]].
+- 🟠 #1768 (V2) abierta sobre main: cinco marcas `@export-solo-para-test` retiradas; gate local verde (Σ6073/Σ1496), CI rojo con 0 pasos en ambos jobs. #1702 abierto.
+- Pendiente: Borja revisa CI/merge; PR V1, #1705 (CV), PR-B #1700 (0047). Manu pide contratos/CV a David (#1741); Carlos da correo bootstrap.
+- Slack: plugin instalado, herramientas ausentes en esta sesión; aviso en `#cli-agh-iberica` sin enviar.
 - ⛔ PII real: nunca a servicios externos ni LLM; evals sintéticas.
 
 ## Bloqueantes
@@ -113,6 +110,8 @@ _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una 
 - 🟠 **#1394** — lo vivo es el **preflight** que avise de worktrees retirables, con un candado que discrimine el que tiene trabajo dentro (los dos abandonados ya no existen).
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
+
+Aprendizajes RRHH: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]] · [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]] · [[el-stop-gate-corre-el-gate-contra-la-base-compartida-y-un-temporal-sin-trackear-lo-dispara]] · [[el-canal-obligatorio-caido-deja-el-ciclo-sin-cerrar]] · [[un-artifact-compartido-se-lee-pero-nunca-se-escribe]] · [[un-candado-que-empareja-dos-senales-se-esquiva-renombrando-una]] · [[un-paso-de-mi-propio-runbook-tambien-se-mide]].
 
 ### Backlog de issues (consulta, no estado — `gh issue list --label ready-for-agent`)
 
