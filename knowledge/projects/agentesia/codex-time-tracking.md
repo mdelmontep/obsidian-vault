@@ -1,7 +1,7 @@
 ---
 title: Codex en Horas IA y cierre Obsidian
 date: 2026-09-15
-updated: 2026-09-15
+updated: 2026-09-16
 source: agency-portal
 tags: [agentesia, codex, horas, obsidian]
 ---
@@ -39,3 +39,8 @@ Contexto: [[agentesia]] · [[top-of-mind]].
 
 - Skill instalada en `~/.codex/skills/obsidian-1/SKILL.md`; invocable como `obsidian1` o `$obsidian-1`. Conserva el original de Claude en `references/claude-original.md`.
 - Usa las utilidades locales `~/.claude/bin/vault-*`; guarda resultados y pendientes, protege cambios concurrentes y solicita un OK antes de publicar el vault.
+
+## Aprobaciones locales de Codex (16-sep)
+
+- `~/.codex/config.toml` mantiene `approval_policy = "on-request"`, pero cambia `approvals_reviewer` de `user` a `auto_review`: las escaladas rutinarias pasan por revisión automática y las de riesgo elevado pueden seguir llegando a Manu.
+- El cambio se validó cargando la configuración con Codex CLI 0.154.0. Se aplica al reiniciar Codex o abrir una sesión nueva; no altera el sandbox ya fijado para una sesión abierta.
