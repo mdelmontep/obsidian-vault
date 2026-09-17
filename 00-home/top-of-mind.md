@@ -72,7 +72,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — Supabase subido a Pro (10-jul)** — egress tumbó prod ~1h; ya no urge, vigilar uso, NO bajar a Free. [[facturaia]]
 - **TuFacturaIA — rotar secrets tras fuga Dokploy (Capa 2)** — Capa 1 cerrada (#870); rotar Supabase→Stripe→Meta. [[facturaia]]
 - 🟡 **Tecnocloud — dos cabos del 24-ago** — la cabecera del webhook a 1Password y borrar los 2 tickets `PRUEBA NOMBRE`. Luego vigilar 3-4 llamadas y el cuestionario de FAQ a Dani/Carlos. → [[tecnocloud]]
-- **EcoBox WEB — `www` en Dokploy + Search Console (17-sep)** — la web salió de `noindex`; el `www` sigue con el cert por defecto de Traefik (comprobado 17-sep). Email al cliente ya enviado. → [[clientes/ecobox/index|ecobox]]
+- **EcoBox WEB — Search Console (17-sep)** — la web salió de `noindex` tras meses invisible; falta darla de alta y pedir indexación. `www` y email, hechos. → [[clientes/ecobox/index|ecobox]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; chat hueco nuevo no-doble-booking (la reserva E2E real ya se corrió). [[clientes/ecobox/index|ecobox]]
 - 🔴 **cryptobruj-bot — SIGUE en `live`: 76 h, no 32 (03-ago)** — opera `scalp-5m` (−0,515R, la peor) con 1 posición abierta; el resto en paper. **Tuyo y solo tuyo**: sin `ADMIN_TOKEN` (no está en 1Password) y con la contraseña del panel dando 401, nadie más puede pararlo. Orden: `POST /strategies/scalp-5m/stop` (corta entradas, sigue gestionando la salida) y SOLO con la posición cerrada, `TRADING_MODE=paper` + Deploy — al revés la deja huérfana. Pendiente también el nocional real en BingX. → [[cryptobruj]]
 
