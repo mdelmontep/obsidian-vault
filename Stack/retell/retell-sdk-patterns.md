@@ -47,3 +47,11 @@ tags: [retell, voice, sdk, webhooks]
 - **`PATCH /update-conversation-flow/{id}?version=N` sobre una versión YA publicada da 400** `"Cannot update published conversation flow"` — solo se puede patchear el draft (omite `version` o usa el número del draft, nunca el del publicado).
 - **`POST /publish-agent/{id}` publica la versión que acabas de patchear Y abre un draft nuevo encima** — tras publicar, `list-agents` muestra dos filas `is_published: true` (la vieja publicada sigue marcada así en el histórico) — la que importa es la de mayor `version`. Verificar con `GET /get-agent/{id}?version=N` explícito, no fiarse del default.
 - **`PATCH /update-conversation-flow` en el campo `nodes`: hay que mandar el array COMPLETO**, no solo el nodo que cambia — es reemplazo, no merge. Sacar la lista de "Valid Body Fields" con la doc oficial (`global_prompt`, `nodes`, `start_node_id`, `tools`, `model_choice`... — NO `conversation_flow_id`/`version`/`is_published`, son de solo lectura) y filtrar el objeto a esos campos antes de enviarlo.
+
+## Suite de simulación por API (medido 17-sep-2026, cuenta Agentesia)
+
+- `list-test-case-definitions` **exige** `?type=conversation-flow&conversation_flow_id=<id>`; sin `type` responde 400.
+- `create-batch-test` acepta `{response_engine:{type,conversation_flow_id,version}, test_case_definition_ids:[…]}` y **admite una versión borrador**: se puede probar antes de publicar.
+- El estado del batch se lee en `get-batch-test/<id>` **sin `v2`** (con `v2` da 404), pero los casos en `v2/list-test-runs/<id>`.
+- En `list-test-runs`, el id del caso viene en `test_case_definition_snapshot.testCaseDefinitionId` (camelCase), no en snake_case como en el resto de la API.
+- Los casos traen sus `tool_mocks` (`input_match_rule: any`), así que `crear_lead`/`reservar_visita` no tocan producción — **pero un nodo `transfer_call` sí marca de verdad**: excluir los casos de crisis o usar un flujo de pruebas con el número neutralizado.

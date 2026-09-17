@@ -10,7 +10,20 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-15
+## Estado actual · 2026-09-17
+
+**Voz v52 en producción (13:09) con el saludo que propuso Alba, y el enlace a la llamada del panel ya se escribe solo en Clientify.**
+
+- ✅ **Voz v52** = v51 + saludo nuevo en `welcome`: «Hola, soy Laura, agente con inteligencia artificial de Centro Elphis. Ahora mismo el equipo está ocupado, pero puedo darte información general sobre los tratamientos, agendar una primera visita o recoger tu mensaje para que te llamen. ¿Qué prefieres?» (15,4 s medidos en llamada real, el doble que la v51) + regla «si te interrumpe a mitad, callate y atiende» + los 6 `finetune_examples` alineados (recitaban el saludo viejo). `global_prompt`, transiciones y posiciones intactos. Rollback: pin a 51.
+  - **Por qué**: 21 de 77 llamadas reales del último mes se cortan antes de los 10 s (27%), tasa **estable** semana a semana → no era regresión de ninguna versión. La v51 tardaba 6,8 s y no decía «Centro Elphis» hasta el segundo 5,5; los cuelgues de 3,3-3,8 s ocurrían en «la asistente virtual con…». Apuesta a medir de nuevo a primeros de octubre con el mismo criterio.
+  - Suite 10/12 contra el borrador (fuera los 2 casos que transfieren, para no marcar al Teléfono de la Esperanza). Los 2 fallos son anteriores al cambio.
+  - ⚠️ **«Ahora mismo el equipo está ocupado» está en producción sin confirmar que sea cierto**: solo lo es si Laura atiende las llamadas que recepción no descuelga. Pendiente de respuesta de Manuel.
+- ✅ **Enlace a la transcripción desde Clientify, EN PRODUCCIÓN** — workflow `clientify-enlace-llamada` (`mKScVNdl67fN03OS`) activo, cada 10 min: campo Url «Última llamada (panel)» en el contacto + nota por llamada en el deal no cerrado más reciente (Expired no cuenta como cierre). Probado end-to-end con llamada real (exec 19939): nada más de la ficha ni del deal se toca. Portal: PR #637 mergeado y desplegado (`/automations/llamadas/retell/<call_id>`). Detalle y límites → memoria `elphis-enlace-llamada-panel-en-clientify`.
+- 🔴 **El bloqueante real del alcance**: en el camino de **ingreso residencial** Laura no llama a `crear_lead` de forma fiable (medido: v51 pasa 4/11, v52 2/10, siempre llamando a `reservar_visita` en su lugar). Sin ficha no hay enlace que colgar. Siguiente tarea propuesta.
+- 🔜 Portal, dos arreglos pequeños sin OK: el login de producción no conserva `next` (`proxy.ts` está en la raíz y el repo usa `src/`, así que Next no lo carga → [[nextjs16-middleware-to-proxy]]), y un usuario de agencia con otro cliente activo ve «esta llamada aún se está procesando» en vez de «es de otro cliente».
+- 🔜 Limpieza en Clientify (UI): 3 notas «PRUEBA…» del deal 32122661 y `Como-Prefieres-Ser-Contactado = PRUEBA` del contacto 161749243.
+
+## Estado previo · 2026-09-15
 
 **Voz v51 en producción (14-sep, 16:05) y probada por Manuel («funciona bien»). Los avisos por email salen del buzón del centro. El post-call ya respeta el «no» al consentimiento.**
 

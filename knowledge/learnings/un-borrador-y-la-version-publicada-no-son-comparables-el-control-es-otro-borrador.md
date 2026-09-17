@@ -21,3 +21,8 @@ el cambio.
 
 Ver [[regresion-en-suite-tras-bump-verificar-contra-main-limpio-antes-atribuir]] y
 [[el-control-que-deja-dentro-el-test-del-cambio-se-mide-a-si-mismo]].
+
+**Reincidencia 17-sep-2026** (misma cuenta, otro cambio): medí el borrador v52 contra la v51
+**publicada** y el caso «ingreso residencial» dio 2/10 frente a 4/11. Conclusión correcta («el saludo
+nuevo no es la causa») pero por poco: el sesgo conocido empuja al borrador hacia abajo, así que una
+diferencia pequeña EN CONTRA del borrador no prueba nada. El control no-op sigue costando una llamada.

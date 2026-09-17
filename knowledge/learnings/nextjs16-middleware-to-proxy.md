@@ -23,3 +23,12 @@ export const config = { matcher: [...] }
 ## ⚠️ NO revertir a `middleware.ts`
 
 **Caso real 2026-05-20**: ante un Forbidden en endpoint que dependía de cookie `impersonate_org`, asumí erróneamente que Next.js 16 había dejado de invocar `proxy.ts` y reverté el rename. **Falso**: `proxy.ts` es la convención correcta v16; `middleware.ts` solo sigue activo por backcompat con deprecation warning. La causa real era otra (override semantics + cookie con maxAge 1h). Ver [[nextjs16-impersonation-cookie-stuck-no-implica-middleware-off]].
+
+## ⚠️ En la RAÍZ con `src/` no se carga — y falla en silencio
+
+**Medido 2026-09-17 (agency-portal, prod).** `proxy.ts` estaba en la raíz del repo y el proyecto usa
+`src/`: Next no lo invoca nunca. No hay warning ni error; el síntoma es indirecto —las rutas protegidas
+siguen redirigiendo a `/login` porque los guards de servidor tapan el agujero, pero **sin el `next=`**
+que el proxy añadía—, así que quien llega desde un enlace externo acaba en `/` tras loguearse.
+Tell de 5 segundos, sin leer código: `curl -sI <ruta protegida> | grep location`; si sale `/login` a
+secas en TODAS las rutas, el proxy no corre. Va junto a `app/`: con `src/`, en `src/proxy.ts`.
