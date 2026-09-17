@@ -18,3 +18,10 @@ de Supabase. Fix: restaurar el proyecto (subir plan / quitar spend cap). La cuot
 egress es por ciclo mensual y se resetea; en Free (~5GB) recurre → prod real va a Pro.
 Al restaurar, el healthcheck pasa y Traefik re-registra la ruta SOLO, sin deploy ni
 recarga. Ver [[dokploy-requiere-reload-manual-traefik-tras-redeploy]].
+
+**Mismo 404, causa trivial** (17-sep, ecobox): durante la ventana de un redeploy de Dokploy
+el contenedor viejo ya no está y el nuevo aún no, así que Traefik devuelve ese mismo
+`404 page not found` en `text/plain`. Antes de diagnosticar nada, repetir el `curl`: si a los
+segundos da 200, era el deploy. El síntoma no distingue «app rota» de «app ausente un rato»;
+lo que distingue es que sea transitorio. Se elimina con rolling update (healthcheck del nuevo
+en verde antes de retirar el viejo).

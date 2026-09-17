@@ -72,6 +72,7 @@ tags: [home, prioridades]
 - **TuFacturaIA — Supabase subido a Pro (10-jul)** — egress tumbó prod ~1h; ya no urge, vigilar uso, NO bajar a Free. [[facturaia]]
 - **TuFacturaIA — rotar secrets tras fuga Dokploy (Capa 2)** — Capa 1 cerrada (#870); rotar Supabase→Stripe→Meta. [[facturaia]]
 - 🟡 **Tecnocloud — dos cabos del 24-ago** — la cabecera del webhook a 1Password y borrar los 2 tickets `PRUEBA NOMBRE`. Luego vigilar 3-4 llamadas y el cuestionario de FAQ a Dani/Carlos. → [[tecnocloud]]
+- **EcoBox WEB — `www` en Dokploy + Search Console (17-sep)** — la web salió de `noindex`; falta el cert del `www` y pedir indexación. Y el email al cliente. → [[clientes/ecobox/index|ecobox]]
 - **EcoBox — smokes pendientes** — grúa/Mutua→handoff+email; chat hueco nuevo no-doble-booking (la reserva E2E real ya se corrió). [[clientes/ecobox/index|ecobox]]
 - 🔴 **cryptobruj-bot — SIGUE en `live`: 76 h, no 32 (03-ago)** — opera `scalp-5m` (−0,515R, la peor) con 1 posición abierta; el resto en paper. **Tuyo y solo tuyo**: sin `ADMIN_TOKEN` (no está en 1Password) y con la contraseña del panel dando 401, nadie más puede pararlo. Orden: `POST /strategies/scalp-5m/stop` (corta entradas, sigue gestionando la salida) y SOLO con la posición cerrada, `TRADING_MODE=paper` + Deploy — al revés la deja huérfana. Pendiente también el nocional real en BingX. → [[cryptobruj]]
 
@@ -98,7 +99,7 @@ tags: [home, prioridades]
 | Simarro | [[simarro]] | **correo resuelto, remitente real (13-sep)** · **calendario → Kommo en producción**, cron 5 min · cartera de Ramón: 2.595 por soltar, 47 fichas a borrar · alta/baja de agentes automática desde Calendar · voz al día (Ana v33) · **cambio/cancelación de cita arreglado y con guards (12-sep)** |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · etapa del lead con un solo escritor + reenganche arreglado (8-sep, sin estrenar) · DST y CC arreglados · confirmación al paciente de voz reconectada, sin estrenar · recordatorios aún sin verse en vivo |
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
-| EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz **v25** + chat LIVE · E2E real corrido (16/17-sep) · sin modo test · **siguiente: llamada con ruido, reserva por WhatsApp, rotar secretos, Cristian** |
+| EcoBox | [[clientes/ecobox/index\|ecobox]] | Voz **v25** + chat LIVE · E2E real corrido (16/17-sep) · sin modo test · **siguiente: llamada con ruido, reserva por WhatsApp, rotar secretos, Cristian** · web fuera de `noindex` (17-sep) |
 | Centro Elphis | [[clientes/centro-elphis/index\|centro-elphis]] | **voz v51 en prod (14-sep)** · email desde info@centroelphis.com · 🔴 **cita del 18/9 cancelada y no reflejada en el CRM** · firma de Meta en observación: falta el App Secret + `NODE_FUNCTION_ALLOW_BUILTIN=crypto` · secretos sin rotar |
 | Elphis Psicología | [[clientes/elphis-psicologia/index\|elphis-psicologia]] | **Línea viva y contestando (7-sep) con la firma pendiente → guardián en rojo a propósito** · voz v19, los knobs eran de Adicciones v5 · cierre del 7-sep sin commitear, main divergente 42/18 · PR #30 abierto · token de Chatwoot sin rotar · sin backups |
 | IET | [[iet]] | iet.es en producción · pendientes menores |

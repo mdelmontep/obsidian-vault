@@ -40,8 +40,45 @@ Estado tras la sesión del 17-sep (detalle abajo). Voz **v25** publicada y el n�
    Cristian. Mensajes `[PRUEBA - borrar]` en el Slack de incidencias (C0ASNEXM2N4) sin borrar.
    Simulaciones: con todos los datos de golpe se salta deletreo y resumen; «el jueves que viene» dio
    dos fechas distintas en dos pruebas.
-5. **agency-portal** descarta `custom_analysis_data` de Retell (los 12 campos de EcoBox) en
+5. **WEB — alta de `www.ecobox360.es` en Dokploy** (app `ecobox-web-exjura`, host
+   185.99.186.132): lo único que falta del cierre web del 17-sep. El DNS ya apunta y el 301 al
+   apex ya está en `nginx.conf`; falta que Traefik le emita el certificado. Hasta entonces quien
+   teclee `www.` ve el aviso de certificado. Después: alta de `ecobox360.es` en Search Console y
+   pedir indexación — la web acaba de dejar de ser `noindex`.
+6. **agency-portal** descarta `custom_analysis_data` de Retell (los 12 campos de EcoBox) en
    `src/lib/fleet/channels/retell/adapter.ts` y no avisa de transferencias fallidas.
+
+## Sesión 2026-09-17 (web) — la web estaba en `noindex` desde el primer deploy
+
+Rama `main`, commits `2280b62`, `efaed19`, `e0abd3a`. Publicado y verificado en producción.
+
+- **La web pedía a Google que no la indexara, y llevaba así desde el alta.** El `map $host` de
+  `nginx.conf` eximía del `X-Robots-Tag: noindex` a `www.ecobox360.es`, host que **nunca se dio de
+  alta en Dokploy**: Traefik no le pidió certificado y no conecta. El apex, el único que sirve la
+  web, caía en el `default`. `SITE.url` apuntaba al mismo host muerto, así que canonical, `og:url`,
+  JSON-LD, las 23 URLs del sitemap y la URL por defecto de `verify-desplegado.mjs` iban todas allí
+  — y el verificador moría en `self-signed certificate` antes de comprobar nada, un falso rojo que
+  se venía leyendo como «el dominio aún no apunta». Canónico al apex, 301 del `www`, y el check de
+  robots ahora exige la cabecera AUSENTE. Verificado por cabecera `Host` contra el contenedor (7
+  casos) antes de pushear; `verify-desplegado.mjs` da 15/15 y ya sin variable de entorno.
+  Ver [[el-canonico-apuntaba-al-unico-host-sin-certificado-y-todo-le-siguio]].
+- **`absolute_redirect off`**: las redirecciones de barra final de nginx salían absolutas y en
+  `http://` (dentro del contenedor no hay TLS), así que `/revision` degradaba a HTTP.
+- **La barra de lectura cruzaba el logo** en modo revisión: `top: 79px` era la décima copia a mano
+  de la altura del header y el barrido anterior grepeó `80px`.
+  Ver [[centralizar-un-valor-magico-el-grep-del-valor-no-ve-el-off-by-one]].
+- **`/revision` publicado** (18 variantes de portada, `noindex` + fuera del sitemap) con barra fija
+  de acceso, para que el cliente compare desde el dominio real. Temporal: se retira cuando elija.
+- **Fichas de Google: existen, a nombre de SLAM.** Corrige el «ninguna de las dos tiene ficha» que
+  venía del onboarding y estaba escrito en el `CLAUDE.md` del repo y en este hub. Presupuesto
+  **P2026-0020** (2.000 € + IVA): rebrand de las dos fichas conservando reseñas (500 €) + SEO
+  (página por sede, keywords locales, Search Console, blog). Contarlo **separando Google de SEO**.
+  La aprobación del cambio de nombre la da Google y exige acceso de propietario a las dos fichas.
+- **Cada deploy de Dokploy corta el servicio unos segundos** y Traefik devuelve su `404 page not
+  found` en texto plano — se confundió con la web rota. Rolling update ofrecido y **descartado por
+  Manu** («no hace falta que prepares»).
+- Pendiente de enviar: email al cliente (cambios web + botón de portadas + cuota de mantenimiento +
+  presupuesto + agente la semana que viene), con hueco para URL/usuario/contraseña.
 
 ## Sesión 2026-09-17 — el nombre: dos notas correctas del vault que se componen en un bug
 
@@ -236,8 +273,10 @@ taller**. Todo en `main` de `AgentesIA-MAdrid/ecobox`, 62 ficheros, +6.103/−88
 
 **El negocio tiene DOS talleres**, confirmado hoy: C/ Rotterdam 3 (Las Rozas, domicilio
 social) y **C/ Monjitas 13, 28220 Majadahonda**. Mismo teléfono, mismo horario, mismos
-seis servicios, mismo domicilio fiscal. **Ninguna de las dos tiene ficha de Google
-Business Profile** — es la tarea de mayor impacto pendiente y no es de código.
+seis servicios, mismo domicilio fiscal. ~~Ninguna de las dos tiene ficha de Google
+Business Profile~~ → **FALSO, corregido el 17-sep: las dos SÍ tienen ficha, a nombre de
+SLAM** (la marca anterior) y con cientos de reseñas. Sigue siendo la tarea de mayor impacto
+y sigue sin ser de código, pero el trabajo es renombrar + optimizar, no crear.
 
 - **`src/lib/` es la única fuente de verdad** (once módulos). Ningún componente escribe
   ya un teléfono ni una dirección. Las sedes viven en una lista `LOCATIONS`, no en dos

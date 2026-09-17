@@ -17,3 +17,11 @@ el navegador contra el origen que ya usa (RFC 9110 §10.2.2). No hay nada que ad
 **No** leer `X-Forwarded-Host`: la escribe quien esté delante, así que construir un destino con ella es
 dejar que otro elija a dónde van tus usuarios. `NextResponse.redirect` no sirve: exige URL absoluta.
 Guard barato: rechazar destinos que no empiecen por una sola barra (`//otro.com` es otro dominio).
+
+**El mismo patrón en nginx** (17-sep, ecobox): las redirecciones que nginx genera solo —la barra
+final de un directorio, `/revision` → `/revision/`— salen absolutas y en `http://`, porque dentro
+del contenedor no hay TLS: lo termina Traefik. Cada enlace sin barra final degradaba a HTTP.
+Se arregla con `absolute_redirect off;` (Location relativo), no leyendo `X-Forwarded-Proto`.
+Regla general: detrás de un proxy, **cualquier capa que construya un `Location` absoluto está
+adivinando el exterior desde dentro**. Ver
+[[el-canonico-apuntaba-al-unico-host-sin-certificado-y-todo-le-siguio]].
