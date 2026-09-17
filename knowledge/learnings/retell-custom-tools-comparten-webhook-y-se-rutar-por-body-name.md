@@ -32,3 +32,6 @@ Todas las custom tools de un agente Retell pueden apuntar al mismo webhook (ej: 
 - `parameter_type: "json"` en la tool de Retell para que los args lleguen como objeto, no como form-encoded
 - Si la tool tiene `speak_during_execution: true`, Retell habla mientras espera la respuesta del webhook
 - Los args los rellena el LLM del agente según las `parameters.properties` definidas en la tool
+- ⚠️ Ese `name` de primer nivel **colisiona con un campo de negocio que se llame igual**: un
+  `args?.name || body?.name` acaba guardando el nombre de la tool como nombre del cliente.
+  Ver [[n8n-edit-fields-optional-chaining-body-args-plano-vs-wrapped]]

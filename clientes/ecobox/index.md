@@ -1,7 +1,7 @@
 ---
 title: EcoBox HUB
 date: 2026-05-26
-updated: 2026-09-10
+updated: 2026-09-17
 tags: [cliente, ecobox, hub]
 ---
 
@@ -11,29 +11,199 @@ Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas 
 
 **Estimación de horas** (2026-08-04, retroactiva, sin time-tracking — método en [[estimar-horas-retroactivas-sin-time-tracking-cruzar-git-y-hub-cliente]]): web ~5-6h (autor `notcapi`, vía git log del repo `ecobox`) · automatización n8n/Retell/WhatsApp/Chatwoot/GCal ~24-32h (Manuel, estimado por densidad del hub + 3 ADRs del 22-may). Total proyecto ~29-38h, 20-may a 2-jun.
 
-## ▶︎ EMPEZAR AQUÍ (10-sep-2026, noche)
+## ▶︎ EMPEZAR AQUÍ (17-sep-2026)
 
-Al retomar EcoBox, las dos cosas abiertas son:
+Estado tras la sesión del 17-sep (detalle abajo). Voz **v25** publicada y el número sirve
+`latest_published`; **ninguna llamada real la ha estrenado todavía**.
 
-1. **Atacar el Redis** — idempotencia y el TOCTOU de `Reservar_cita`. Diseño listo (`incr` para
-   `idem:` + lock separado `slot:`, `IF primera vez`, `IF gano el hueco`, `Redis liberar slot`, dos
-   Respond nuevos). Hoy el `SET` es **decorativo: nadie lee su resultado**, y hay una ventana real de
-   1-3 s para que dos clientes cojan el mismo hueco. **Probarlo exige crear citas REALES en el
-   calendario** (`ZZZ0000` cortocircuita antes de `Build idem key`) → hace falta tu permiso y limpieza
-   después. Ver [[lock-e-idempotencia-en-n8n-con-redis-incr-sin-set-nx]].
-2. **Que Cristian cierre lo suyo** — sin sus respuestas no avanzan tres frentes:
-   - **Antelación mínima para cancelar** (propuesta: 24 h, blanda y escalada). El guard está escrito
-     entero (176 líneas, 13 casos) y sin aplicar, esperando solo ese número.
-   - **4 plantillas de Meta** para recordatorios (`recordatorio_{48h,24h}_{rozas,majadahonda}`,
-     UTILITY, `es`, 2 parámetros) — trámite externo de hasta 24 h. **Y hay que decirle que los
-     recordatorios NUNCA han enviado nada todavía.**
-   - Bloque 0: desvío de llamadas/operadora, número único, destino real de la transferencia, y si
-     Alex cierra solo valoraciones.
+0. **Limpiar Calendar:** las pruebas del 16/17-sep dejaron 4 citas REALES el 17-sep —
+   «Peritaje — Reservar_cita — 3254JBC» (12:00 Rozas, la del bug), «Agentesia Proba» (11:30 Rozas),
+   «Manuel del mundo» (11:00 Rozas) y «Manu 🥦» (11:00 Majadahonda).
+1. **Pruebas reales pendientes (humano):**
+   - Llamar al +34910054813 desde un móvil que NO sea el 617314938, **con ruido de fondo a
+     propósito**, y pedir "hablar con una persona" → debe sonar el 617314938 mostrando el
+     910054813, y Alex no debe cortarse con el ruido (v24: `noise-cancellation`, interrupción 0.3).
+     Si aún corta, el siguiente paso es `ambient_sound: null`, NO bajar más la sensibilidad.
+     **En esa misma llamada, Alex debe pedirte nombre y apellido justo después del taller** (v25).
+   - WhatsApp: reserva completa de punta a punta para confirmar que ahora pide nombre real y email
+     y que el correo de confirmación llega. **Ya no hay modo test: toda prueba crea cita real.**
+2. **Handoff:** Cristian ya tiene cuenta en Chatwoot (ver sesión tarde). Hasta hoy ninguna de las 16
+   conversaciones reales tenía un mensaje de un humano. Falta el email de recepción para su cuenta, y
+   cambiar el `assignee_id: 1` fijo del nodo "Assign a Ecobox" por reparto real. Horario del inbox
+   definido L-V 9-17 pero `working_hours_enabled:false`.
+3. **Que Cristian cierre lo suyo:** antelación mínima para cancelar (guard escrito y sin aplicar),
+   Bloque 0 (operadora, destino real de la transferencia, si Alex cierra valoraciones), y datos de
+   negocio contradictorios: Mutua (KB compatible, flow deriva siempre), Aval fuera de la lista de
+   aseguradoras, eléctricos (web sí, KB no), recogida «sin coste en el noroeste», sustitución gratis
+   para seguros/renting, mecánica sin cita.
+4. **Dudas abiertas:** el nodo "Email a Cristian" de `Reservar_cita` escribe a m.delmonte.p@, no a
+   Cristian. Mensajes `[PRUEBA - borrar]` en el Slack de incidencias (C0ASNEXM2N4) sin borrar.
+   Simulaciones: con todos los datos de golpe se salta deletreo y resumen; «el jueves que viene» dio
+   dos fechas distintas en dos pruebas.
+5. **agency-portal** descarta `custom_analysis_data` de Retell (los 12 campos de EcoBox) en
+   `src/lib/fleet/channels/retell/adapter.ts` y no avisa de transferencias fallidas.
 
-Además, sin bloqueante: **PASO 2 de la auth de webhooks**. Los 8 emisores ya mandan `X-Ecobox-Token`
-y nada se ha caído; falta activar `headerAuth` en los 4 webhooks, y para eso hace falta **una llamada
-real y un WhatsApp real** que demuestren que la cabecera llega por los dos caminos
-(`31-auth-emisores.py --comprobar`). Ver [[cerrar-un-webhook-exige-censar-todos-sus-emisores-no-solo-el-obvio]].
+## Sesión 2026-09-17 — el nombre: dos notas correctas del vault que se componen en un bug
+
+- **La cita de las 12:00 del 17-sep se tituló «Peritaje — Reservar_cita — 3254JBC — choque».** No fue
+  el fallback `'Cliente'`: el cuerpo de Retell tiene tres claves —`args`, `call` y `name`— y ese
+  `name` de primer nivel **es el nombre de la tool**. Con `args.name` vacío,
+  `args?.name || body?.name || 'Cliente'` se quedó con `"Reservar_cita"` y nunca llegó al default.
+  Evidencia: llamada `call_2d5689afe3f5b582bf0ae8afe17` (v24, `user_name: ""`, dos invocaciones con
+  `"name": ""`) y ejecución 5960.
+- **Por qué Alex no lo preguntaba:** el prompt decía «1. Nombre completo (si no lo tienes ya en
+  `user_name`)», y `user_name` solo lo rellena `n-extract-1` si el cliente lo suelta por su cuenta;
+  encima la cláusula ORDEN lo mandaba explícitamente detrás de seguro, grúa y taller.
+- **La puerta de validación era código muerto.** `Validate input` exige `name notEmpty`, pero
+  `Edit Fields` rellenaba el campo antes, así que esa condición no podía disparar desde que existe.
+  Mismo anti-patrón que [[normalizar-en-un-nodo-intermedio-no-protege-a-quien-relee-el-de-entrada]]
+  visto del otro lado: no es quién relee la entrada, es que la entrada pone un default.
+- **El arreglo NO podía ser quitar `|| body.name`**: el chat postea el cuerpo PLANO (la tool
+  `reservar_cita` del bot usa `specifyBody: keypair`) y esa rama es la que ha creado todas las citas
+  buenas de WhatsApp. Se discrimina por forma:
+  `(($json.body?.args ? $json.body.args.name : $json.body?.name) || '').toString().trim()`.
+- **Voz v25 publicada:** nombre y apellido obligatorios y explícitos, colocados en la cláusula ORDEN
+  justo tras el taller; prohibido llamar `Reservar_cita` con `name` vacío; manejo del motivo
+  `missing_data`; y la descripción del argumento `name` de la tool deja de ser «Nombre completo del
+  cliente». Número verificado sirviendo `latest_published`.
+- **Lo que enseña del vault:** las dos piezas llevaban meses escritas —
+  [[n8n-edit-fields-optional-chaining-body-args-plano-vs-wrapped]] (1-jun) prescribe justo la cadena
+  `args?.X || body?.X`, y [[retell-custom-tools-comparten-webhook-y-se-rutar-por-body-name]] (18-abr)
+  dice que Retell enruta por `body.name`. Cada una es correcta; juntas producen el bug. La del 1-jun
+  ya lleva escrita la excepción.
+- **Sigue pendiente de seguridad:** el `X-Ecobox-Token` volvió a aparecer en consola (vive en claro
+  en la definición de la tool del flow). Rotarlo junto al HMAC de Chatwoot.
+
+## Sesión 2026-09-16 — el bug del debounce, email del cliente, fuera modo test, voz v24
+
+- **El fallo que hacía repreguntar datos ya dados no era la memoria, era el consumidor.** El AI Agent
+  leía `$('Edit Fields').item.json.message`, que es el mensaje del ÚLTIMO webhook, no el buffer del
+  debounce ya unido. Evidencia: ejecución 5899, `Redis Get buffer drain` = `["Choque trasero, seat
+  leon", "Zzz0000"]`, `Join buffer into message` los unió bien, y al modelo le llegó solo `Zzz0000`
+  (así quedó también en Postgres). Causa raíz: `Get labels` es un HTTP Request y reemplaza `$json`
+  ([[n8n-dollar-json-tras-http-es-respuesta-http-no-item-original]]), así que el agente tiraba del
+  nodo pre-buffer. Arreglado con `$if($('Join buffer into message').isExecuted, …, $('Edit
+  Fields')…)` para no romper el camino `Fail-open sin debounce`. Siguiendo
+  [[n8n-json-narrowed-rompe-nodos-lejanos-sin-error]] se auditaron TODOS los consumidores: el otro
+  era `Build handoff email`, que mandaba a Cristian el texto recortado. Verificado en la ejecución
+  5916: el modelo recibió `'Hola, quiero pedir cita\nChoque trasero, Seat León'`.
+- **Prompt del chat:** prohibidas listas numeradas y viñetas (gpt-4.1 copiaba la estructura del
+  checklist y soltaba parrafadas), un dato por turno, no repreguntar lo ya dicho. Nuevo paso 8b:
+  prohibido llamar a `reservar_cita` en el mismo turno que `mirar_disponibilidad` — antes reservaba
+  y DESPUÉS preguntaba "¿te confirmo?" (5903 + 5907, doble llamada; no duplicó evento solo porque
+  la idempotencia `idem:reservar:tel:sede:fecha:matrícula` tiene TTL 900s). Verificado en 5930/5933.
+- **Memoria limpiada:** 176 filas de `+34617314938` en `ecobox_chat_memory`, con 12 confirmaciones
+  afirmadas por el modelo ANTES de existir la guardia ("te he reservado… 16:00 Las Rozas", cita que
+  nunca existió). El agente lee 20 turnos, así que las arrastraba como contexto real. Backup en el
+  scratchpad de la sesión. El resto de sesiones intactas.
+- **`Email al cliente` no había funcionado NUNCA**, ni en chat ni en voz: enviaba a
+  `{{ $json.email_cliente }}`, campo que no existía en ningún sitio → "No recipients defined" en
+  todas las reservas, mudo por `onError: continueRegularOutput`. Ahora `Reservar_cita` recoge
+  `email_cliente`, el chat lo pide una vez (opcional, la cita sale igual sin él) y una puerta
+  `IF tiene email` evita el error cuando no hay correo.
+- **Modo test eliminado** de `Reservar_cita` (único workflow que lo tenía, comprobado en los 12):
+  la condición era `matricula == ZZZ0000`, que incumple el formato que el propio prompt exige
+  (4 números + 3 consonantes), así que Alex la rechazaba y la "prueba" acababa creando una cita
+  real — pasó el 16-sep con `0000ZZZ` (evento `ec2s2ht1d0tbkit710e9fni1k2krcc1r`, 17-sep 11:00
+  Majadahonda, que el cliente decidió mantener).
+- **El nombre ya no sale del perfil de WhatsApp.** El tag `[ctx]` trae el nombre de WhatsApp, que
+  suele ser un apodo con emojis: el evento del 17-sep quedó como "Peritaje — Manu 🥦 — 0000ZZZ".
+  El prompt ahora pregunta y confirma nombre y apellido reales antes de reservar.
+- **Voz v24 publicada** (número sirve `latest_published`, verificado): saludo sin el aviso de
+  grabación, `denoising_mode: no-denoise → noise-cancellation` y `interruption_sensitivity`
+  0.4 → 0.3. La causa de que Alex se cortara con cualquier ruido era el `no-denoise`, no la
+  sensibilidad. Sin tocar, pero fuera de la config canónica: `voice_temperature` 0.96 (canónico
+  0.5) y `ambient_sound: call-center` (canónico null).
+- **Decisión de grabación (Manuel, 16-sep):** se sigue grabando y el saludo ya no lo menciona. El
+  matiz que la sostiene: la política de privacidad de la web YA declara que Retell guarda la
+  grabación o la transcripción (`web/src/lib/legal.ts:612-615`), así que la divulgación existe por
+  escrito; lo que se quitó es el aviso hablado.
+- **Pendiente de seguridad:** en la sesión quedaron impresos en consola el secreto HMAC de Chatwoot
+  y el `X-Ecobox-Token`. Rotar ambos y actualizar 1Password.
+- El PUT a la API pública de n8n rechaza `settings.binaryMode` (`must NOT have additional
+  properties`), pero al mandar solo la allowlist **n8n conserva el valor existente**: no se pierde.
+
+## Sesión 2026-09-15 (tarde) — auth de webhooks, alertas solo Slack, voz v21, Chatwoot
+
+- **Webhooks cerrados, token rotado.** `reservar_cita`, `buscar_reserva`, `cancelar_cita`,
+  `mirar_disponibilidad`, `aviso_estado` → `headerAuth` con credencial n8n "Webhook EcoBox
+  X-Ecobox-Token (rotado 2026-09-15)"; la vieja borrada. Token en 1Password EcoBox, ítem "Webhook n8n
+  EcoBox — X-Ecobox-Token (rotado 2026-09-15)". Probado: sin cabecera 403, token viejo 403, nuevo 200.
+  `chatwoot-bot-ecobox`: Code node "Auth Chatwoot" verifica `X-Chatwoot-Signature` (HMAC-SHA256 de
+  `<timestamp>.<body>`, ventana 10 min, HMAC en JS puro porque el sandbox prohíbe `crypto`) con respaldo
+  por `?t=`. `ecobox-logo` sigue público a propósito (PNG de los emails). Las versiones 12-19 del flow
+  conservan el token viejo, ya revocado. Ver [[cerrar-un-webhook-exige-censar-todos-sus-emisores-no-solo-el-obvio]].
+- **Segundo bug de cabeceras en los tools del bot:** sin `valueProvider` el default es `modelRequired`
+  y el LLM rellenaba el token ("your_token"). Va `valueProvider:"fieldValue"` además de `parametersHeaders`.
+- **Alertas técnicas solo a Agentesia y solo por Slack** (C0ASNEXM2N4, credencial "Slack EcoBox
+  incidencias"). Error Handler sin email y con dedup Redis 30 min; `Meta token health check` (antes
+  mandaba EMAIL A CRISTIAN) y `Calendario festivos` pasados a Slack con dedup 6 h / 24 h. Gotcha: el
+  nodo Redis sustituye `$json` por `{clave: contador}`; el contexto se lee con `$('<nodo previo>')`.
+  `TEST Email Templates` desactivado. `ASSET logo` no tiene `errorWorkflow`.
+- **Voz v21 publicada** (la publicó Manuel; el clasificador bloqueó al agente). Saludo: «Hola, soy
+  Alex, el asistente virtual de EcoBox. Te aviso de que la llamada se graba. ¿En qué te puedo ayudar
+  hoy?» (grabación activa: `data_storage_setting: everything`). Arista `e-damage-to-date` exige seguro,
+  rodando/grúa y taller; matrícula confirmada o 2 intentos → `PENDIENTE` (Reservar la acepta y el email
+  al taller la marca "⚠ revisar"). KB: 4 fuentes reescritas en vivo (cancelar y estado no derivan,
+  1 hueco, sin extras por iniciativa); 11 fuentes.
+- **Chatwoot** `https://chatecobox.agentesialabs.com` (4.17.0, cuenta Ecobox360 id 1, inbox WhatsApp
+  id 2). Creado `cristian@ecobox360.es` administrador + miembro del inbox; contraseña fijada desde Super
+  Admin y verificada con login, en 1Password EcoBox "Chatwoot Ecobox — Cristian". El usuario del ítem
+  "Chatwoot Ecobox" es SuperAdmin; el formulario de `/super_admin/sign_in` usa `super_admin[email]` /
+  `super_admin[password]` (con `user[...]` da "Invalid credentials").
+
+## Sesión 2026-09-15 — auditoría voz + chat y dos rondas de fixes (6 agentes + auditoría cruzada)
+
+**Voz (Retell), publicada v19:**
+- **El número servía el BORRADOR.** `inbound_agents` sin `agent_version` = sirve la última versión
+  *incluido el draft*: el 3-jun una llamada corrió en v11, publicada el 26-ago. Contradice lo que decía
+  la skill `n8n-surgical-edit` ("absent = latest published"). Fijado a `latest_published`.
+- `{{from_number}}` fuera del flow: el teléfono lo pone n8n desde el canal. Buscar/Cancelar sin `phone`
+  en el schema; Reservar/Aviso solo con número oculto. Adiós "¿con este número o con otro?".
+- "(año 2026…)" fuera del `global_prompt`. Cancelar exige `sede`. Motivos nuevos en el prompt.
+- **Transferencia Netelip 5/5 fallida:** SIP 500 porque Netelip no deja presentar como llamante un
+  número ajeno. `show_transferee_as_caller: false` (Simarro y Elphis transfieren por el mismo trunk sin
+  esa opción). El compañero ve el 910054813, no al cliente. Pendiente de prueba real.
+
+**Tools n8n (contrato "teléfono del canal"):** `phone = N(body.call.from_number || body.channel_phone)`.
+- Cancelar comprueba que el `Tel:` del evento es del canal (`no_es_tuya`); 404 ≠ error de Google.
+- Reservar: lock `lock:<sede>:<fecha>` (INCR sin TTL + `Set lock TTL` solo al ganador, 3 reintentos de
+  1,5 s), liberado en todas las ramas; idem con matrícula; Redis caído → `error_temporal`, nunca cita
+  sin lock. **Ventana residual:** si Redis falla entre el INCR ganador y el SET TTL y también al liberar,
+  la clave queda sin TTL y bloquea esa sede/día hasta borrarla a mano.
+- **Buscar_reserva llevaba tiempo sin encontrar nada** (Google no casa `q=+34…`): ahora lista 180 días
+  y compara `Tel:` normalizado. Los WhatsApp de confirmación de Netelip salían sin el 34: arreglado.
+- **2027 NO ampliado:** a 15-sep no hay BOE, decreto CAM ni locales de Las Rozas/Majadahonda.
+  `fuera_de_calendario` con motivo claro; el aviso de festivos salta a mediados de octubre.
+
+**Chat (bot `lv7pee2XAU5OngOB`):**
+- **Bug preexistente desde el 10-sep: los 4 tools del chat fallaban SIEMPRE** ("tool input did not match
+  expected schema"). La cabecera se guardó en `headerParameters` y n8n 2.18.7 lee `parametersHeaders`
+  en `toolHttpRequest` 1.1 → genera un parámetro requerido de nombre vacío. Movido. Sin impacto real:
+  desde el 10-sep solo hubo actividad en la conversación de pruebas.
+- `channel_phone` como `fieldValue` desde `Edit Fields`; el modelo ya no elige teléfono.
+- Dedup por id + debounce 8 s en Redis `chat:` (fail-open). Adjuntos pasan el filtro con nota.
+  **Abierto:** el acuse de la foto no sale fiable (el LLM saluda genérico).
+- Handoff: mensaje saliente con `sender.type:"user"` → pausa; asigna a "Ecobox" y reabre; el mensaje
+  sale aunque falle la etiqueta (verificado por config, no por fallo inyectado).
+- Payloads: contacto `sender.type:"contact"`, bot `"agent_bot"`. Integración por webhook de cuenta
+  (el agent bot no está asignado a inbox; funciona así). Sin automation rules.
+
+**Recordatorios `QVPf25PZyLv0UHII`:** nunca habían enviado nada. Ahora claim atómico → Meta → marca
+solo con `messages[0].id`; rama 48 h creada; ventana 9-21 h; solo eventos con `Cliente:`; números
+extranjeros intactos; cita reservada después del momento natural no recibe recordatorio; alertas de
+Slack deduplicadas en Redis (Meta y errores de GCal/Postgres). Plantillas genéricas
+`recordatorio_{24h,48h}_cita` (sin sede). **No verificado que la de 48 h siga APPROVED**: falta el WABA
+ID (no está en 1Password; sacarlo de WhatsApp Manager y guardarlo).
+
+**Meta:** `CONNECTED`, calidad GREEN, `name_status: AVAILABLE_WITHOUT_REVIEW`, `TIER_250`. No hay
+limitación real; el "LIMITED" de la primera auditoría era erróneo.
+
+**Sin verificar:** retención de ejecuciones n8n (~15 h visibles). `dokploy-safe.sh` redacta el compose
+entero y la clave SSH no está autorizada en 185.99.186.132:5251 → mirar a mano en Dokploy
+`EXECUTIONS_DATA_*`. Filas de prueba en `ecobox_chat_memory` del 617314938 sin limpiar.
+
+**Datos que estaban mal en este HUB (corregidos abajo):** número de voz, modelo, voz, tools.
 
 ## Sesión 2026-09-10 (noche) — motor de citas: segunda pasada, teléfono obsoleto y auth a medias
 
@@ -172,15 +342,19 @@ Learnings nuevos para vault (ver /obsidian-1): IF mensaje cliente debe aceptar a
 | Dokploy dedicado | `https://ecobox.agentesialabs.com` · server Stackscale `185.99.186.132:5251` |
 | n8n self-hosted | `https://n8necobox.agentesialabs.com` · postgres17 + redis7 + n8n 2.18.7 |
 | Chatwoot **dedicado EcoBox** | `https://chatecobox.agentesialabs.com` (pivot 2026-05-22: pasó de compartido a propio) |
-| Retell agent voz | `agent_250ae0d683b8086fdcaaed9027` — Alex — modelo del flow `gpt-4o` (cambiado desde gpt-4.1 por latencia) |
-| Retell Conversation Flow | `conversation_flow_5f455ab09cf4` — Rigid, 13 nodos, 4 tools custom |
-| Retell KB | `knowledge_base_34f85cf8295d3369` — 11 chunks info taller |
-| Número Retell inbound | **`+34919932797`** asignado al agente Alex (Zadarma SIP) |
-| Voz | `custom_voice_ba7fd23dc476d2ac821f8edd10` **Pablo Fernández** ElevenLabs (tras descartar "Borja" 9cdd… por estar mal etiquetada — sonaba femenina pese al nombre) |
-| Número transfer humano | **`+34617314938`** (definitivo Cristian, era placeholder +34636521315) |
+| Retell agent voz | `agent_250ae0d683b8086fdcaaed9027` — Alex — flow en `gpt-4.1` cascading, temp 0.3, `tool_call_strict_mode` (verificado 15-sep; el gpt-4o que ponía aquí ya no es cierto) |
+| Retell Conversation Flow | `conversation_flow_5f455ab09cf4` — Rigid, 5 tools custom (Mirar_disponibilidad, Reservar_cita, Buscar_reserva, Cancelar_cita, Aviso_estado). Publicada **v23** (15-sep tarde: v21 arista/KB/saludo; v22 la transferencia explica el motivo, p.ej. «al venir de Mutua te tengo que pasar directamente con mis compañeros»; v23 taller justo tras seguro/grúa + PASO 0 en fecha, hora dentro de horario sin «lo siento», y latencia: `eleven_flash_v2_5` + `stt_mode: fast` + `enable_dynamic_responsiveness: false`, ver [[eleven-v3-en-retell-cuadruplica-el-tts-frente-a-flash]]) |
+| Retell KB | `knowledge_base_34f85cf8295d3369` — 11 fuentes de texto, top_k 3 |
+| Número de voz real | **`+34910054813` "Ecobox Netelip"**, `agent_version: latest_published` (fijado 15-sep). El `+34919932797` (Zadarma) es hoy "Peluqueria Muestra (demo)" y lo atiende otro agente |
+| Voz | `custom_voice_b1e828eb8fc685cb9e0caa21ce`, eleven_v3 (cambiada el 15-sep 08:29, v17; antes Pablo Fernández `custom_voice_ba7fd23dc476d2ac821f8edd10`) |
+| Número transfer humano | **`+34617314938`**, cold, `show_transferee_as_caller: false` (Netelip da SIP 500 con `true`) |
 | 1Password vault | "EcoBox" en agentesialab — 9 items |
 
 ## Estado workflows n8n (2026-05-25)
+
+> **Histórico.** Al 15-sep los 12 workflows están activos (incluidos Recordatorios, Meta health check,
+> Aviso_estado `622XAIV0Dek8NEJI`, Calendario festivos `kuR5tIxQ66VrvbhJ`, Error Handler
+> `z2EWXyATOsj6qtAW`). Lo vigente de cada uno está en "Sesión 2026-09-15"; esta tabla no.
 
 | WF | ID | Estado | Notas |
 |---|---|---|---|
