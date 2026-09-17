@@ -40,11 +40,12 @@ Estado tras la sesión del 17-sep (detalle abajo). Voz **v25** publicada y el n�
    Cristian. Mensajes `[PRUEBA - borrar]` en el Slack de incidencias (C0ASNEXM2N4) sin borrar.
    Simulaciones: con todos los datos de golpe se salta deletreo y resumen; «el jueves que viene» dio
    dos fechas distintas en dos pruebas.
-5. **WEB — alta de `www.ecobox360.es` en Dokploy** (app `ecobox-web-exjura`, host
-   185.99.186.132): lo único que falta del cierre web del 17-sep. El DNS ya apunta y el 301 al
-   apex ya está en `nginx.conf`; falta que Traefik le emita el certificado. Hasta entonces quien
-   teclee `www.` ve el aviso de certificado. Después: alta de `ecobox360.es` en Search Console y
-   pedir indexación — la web acaba de dejar de ser `noindex`.
+5. **WEB — dar de alta `ecobox360.es` en Search Console y pedir indexación.** La web salió de
+   `noindex` el 17-sep tras meses invisible para Google, así que hasta que no se indexe no hay
+   nada que medir. ~~Alta del `www` en Dokploy~~ **hecho el 17-sep**: Let's Encrypt emitió el
+   certificado y las cuatro puertas (`http`/`https` × `www`/apex) acaban en `https://ecobox360.es`
+   con 301. Un host que no figura en Domains no existe para Traefik: devuelve su `404 page not
+   found` en texto plano y nunca pide certificado — se confundió tres veces con la web caída.
 6. **agency-portal** descarta `custom_analysis_data` de Retell (los 12 campos de EcoBox) en
    `src/lib/fleet/channels/retell/adapter.ts` y no avisa de transferencias fallidas.
 
