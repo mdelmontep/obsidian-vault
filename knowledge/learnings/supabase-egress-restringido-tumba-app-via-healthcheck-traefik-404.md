@@ -19,9 +19,15 @@ egress es por ciclo mensual y se resetea; en Free (~5GB) recurre → prod real v
 Al restaurar, el healthcheck pasa y Traefik re-registra la ruta SOLO, sin deploy ni
 recarga. Ver [[dokploy-requiere-reload-manual-traefik-tras-redeploy]].
 
-**Mismo 404, causa trivial** (17-sep, ecobox): durante la ventana de un redeploy de Dokploy
-el contenedor viejo ya no está y el nuevo aún no, así que Traefik devuelve ese mismo
-`404 page not found` en `text/plain`. Antes de diagnosticar nada, repetir el `curl`: si a los
-segundos da 200, era el deploy. El síntoma no distingue «app rota» de «app ausente un rato»;
-lo que distingue es que sea transitorio. Se elimina con rolling update (healthcheck del nuevo
-en verde antes de retirar el viejo).
+**Mismo 404, causa mucho más tonta** (17-sep, ecobox): el host no estaba dado de alta en
+*Domains*. Para Traefik `www.x.es` y `x.es` son hosts distintos y no heredan nada: sin su
+entrada no hay router, así que contesta ese `404 page not found` en `text/plain` y **tampoco
+le pide certificado a Let's Encrypt** — el aviso de certificado y el 404 son el mismo fallo,
+no dos. Fix: añadir el dominio en Domains (mismo Path/Port que el que ya sirve).
+
+Discriminar entre las tres causas es barato y hay que hacerlo ANTES de tocar nada: `curl` al
+**host exacto** que abre el usuario, dos veces. Persistente en un host y 200 en otro → falta
+el alta. Transitorio en todos → era la ventana del redeploy (Dokploy baja el viejo antes de
+levantar el nuevo). Persistente en todos → mirar el healthcheck, que es el caso de arriba.
+Yo di por bueno «era el deploy» tras verlo pasar una vez, y el 404 volvió: el `curl` iba al
+apex y el navegador al `www`.
