@@ -77,8 +77,9 @@ Rama `main`, commits `2280b62`, `efaed19`, `e0abd3a`. Publicado y verificado en 
 - **Cada deploy de Dokploy corta el servicio unos segundos** y Traefik devuelve su `404 page not
   found` en texto plano — se confundió con la web rota. Rolling update ofrecido y **descartado por
   Manu** («no hace falta que prepares»).
-- Pendiente de enviar: email al cliente (cambios web + botón de portadas + cuota de mantenimiento +
-  presupuesto + agente la semana que viene), con hueco para URL/usuario/contraseña.
+- **Email al cliente enviado el 17-sep** (cambios web + botón de portadas + cuota de mantenimiento +
+  presupuesto P2026-0020 + agente la semana que viene). Queda esperar su elección de portada para
+  retirar `/revision` y la barra de revisión.
 
 ## Sesión 2026-09-17 — el nombre: dos notas correctas del vault que se componen en un bug
 
