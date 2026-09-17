@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-14
+updated: 2026-09-17
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,12 +35,14 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🔴 **Ticket 181 (Chivite, albaranes): el arreglo EN PROD, el cierre automático NO (17-sep, mig 916, #2773/#2774)** — el lector se equivocaba de columna y `albaran_validar` ahora se niega con **OB067** si `cantidad × precio_neto` no cuadra con el importe impreso; verificado de punta a punta **en producción** conduciendo la pantalla (se niega, 0 movimientos, 0 partidas, aviso con las tres cifras y los dos candidatos). El 73059582 remediado (PMP 79,23 / 51,09 / 24,31, sin salidas previas). **Tuyo**: enviar la respuesta preparada por «Al cliente» (el ticket quedó reabierto a `en_revision`; cerrarlo dispara un SEGUNDO correo de resolución, así que se cierra cuando José dé el visto bueno). → [[un-guard-nuevo-se-mide-contra-los-datos-que-ya-existen]] · [[un-404-no-dice-si-la-ruta-esta-desplegada-el-content-type-si]]
+- 🔴 **El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)** — pasó con el 181: cerrado y correo enviado 2 s tras el merge, con la migración sin aplicar. El merge pasa a SELLAR (`cierre_diferido_*`) y lo consuma el vigía con dos condiciones (ventana cerrada **y** proceso arrancado después del merge). **Bloqueado por el vigía**: sin schedule, sella y nadie consuma. **Tuyo**: elegir entre provisionar las dos variables en Dokploy (#2530) o una RPC `SECURITY DEFINER` que lea `schema_migrations` desde la app. #2774 (tipos + fuera los shims) es mergeable ya.
 - 🟢 **El inventario se vende y el centro fiscal deja de venderse — EN PROD (14-sep, migs 912/913, #2766/#2767)** — `stock` a 99 €/mes (990 €/año) fuera de los planes, con `grandfathered` para las 4 orgs que ya lo usaban; `fiscal` a **`proximamente`** (se anuncia, no se compra) y su precio vivo a propósito; enterprise a 4 empresas. Demo de OCR→stock lista en `~/Desktop/demo-inventario-facturaia/` (5 documentos + `GUION.md`, se suben a Tienda Sandbox, que mueve stock y PMP de verdad). **Tuyo**: cuándo se publica el fiscal y si el trial de 14 días se anuncia en la landing. Detalle → [[facturaia-historico-snapshot-2026-09-14]] · [[una-migracion-con-excepciones-verifica-las-dos-mitades]]
 - 🟢 **Ticket 175 (Chivite): fases A y B en prod (13-sep, #2735, #2760-#2765)** — queda la **fase C** (`RegistroAnulacion`) y ver «apagado + motivo» en vivo. → [[facturaia-historico-snapshot-2026-09-14]] · [[jsdom-aplica-el-cierre-despues-del-listener-de-document]]
 - 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** — **tuyo**: aceptar o rechazar `flux-pro/kontext`, en `propuesto`. → [[facturaia-historico-snapshot-2026-09-14]] · [[filtrar-las-opciones-por-un-predicado-convierte-lo-invalido-en-ninguno]]
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** — módulo por org, apagado por defecto: catálogo de cuentas, N ejes analíticos, aprobación de 3 etapas, exportador Cegid V9. **15 decisiones en `ADR-063`** (renumerado del 033), glosario en `CONTEXT.md`, spec **#2295**, tickets **#2296-#2308**, **sin commitear** en el checkout raíz. Cogibles ya: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]]) y **#2297**. **Tuyo**: los tres cuestionarios y arrancar. → [[facturaia-yooz-agh-migracion]] · [[agh-iberica]]
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
-  - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila.
+  - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila — y desde el #2773 de él depende además que se CIERREN los tickets de soporte. Añadir también `DEPLOY_COMMIT`: hoy `deploy.commit` es `null` en prod, así que la app no sabe qué código corre y solo puede mirar su hora de arranque.
   - **José (Chivite)**: que diga **qué día contó** (19-sep, **#2538**); si calla, se anota y **no se ajusta nada**.
   - **Decidir**: la escala de la deuda del ADR-086 y si `disputada` vuelve a `pendiente`.
   - **IET**: la huérfana de `docs/plan/cierres.json`, el catálogo a 500k (ADR-069) y el código de impuesto de las dos líneas de FacturaDirecta.
