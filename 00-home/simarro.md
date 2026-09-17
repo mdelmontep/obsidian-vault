@@ -145,6 +145,8 @@ Ver [[simarro-auditoria-voz-2026-08]] para el detalle completo (8 agentes de aud
 
 ## Otros pendientes
 
+- 🔴 **Trunk SIP antes del 30-sep-2026 (Netelip)** — el DDI **+34910054675** reenvía a la dirección vieja de Retell (`sip:5t4n6j0wnrl.sip.livekit.cloud`), que se apaga ese día: después **no entra ninguna llamada a Ana**. Cambiar el destino a `sip:sip.retellai.com` en el panel de Netelip (1Password «Contraseña Netelip retell») y añadir los rangos de Retell si filtra por IP. La dirección nueva ya acepta; pide llamada de prueba real. Mismo caso en [[clientes/centro-elphis/index|centro-elphis]] (+34910054950). → [[retell-endpoints-deprecados-2026]]
+
 - **Limpieza leads de test 17-ago (Kommo UI)**: `34951382` (TEST E2E Phone Guard), `34951644`/`34951946` (TEST E2E/E2E Outbound) — usados para validar el guard de teléfono y los fixes de voz de hoy.
 - **Limpieza leads de test 12-ago (Kommo UI)**: `34790206` ("TEST BORRAR - validacion tarea") y su contacto `38931342` — usado para validar el fix de latencia de cancelación. Y avisar a `rss@`/`pss@simarroproperties.com`: recibieron 2-3 emails reales de "visita" por las pruebas de reserva de esta sesión (nombre "Test Latencia Claude").
 - **Contacto `38942304` ("Manuel del Monte") con teléfono roto (`+34` sin dígitos)** — corregirlo a mano con el número real y reenviar el mensaje de confirmación fallido de la conversación A236 para confirmar que el fix del teléfono ya lo resuelve de verdad (sin probar en real todavía).

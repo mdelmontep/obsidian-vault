@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Migrar un endpoint deprecado cambia la FORMA de la respuesta** — URL, cuerpo y parser en el mismo PUT. [[migrar-un-endpoint-deprecado-cambia-la-forma-y-el-consumidor-lo-calla]]
 - **Una migración con excepciones verifica las DOS mitades** — contar solo lo que sobra da verde con el uuid exceptuado mal tecleado. [[una-migracion-con-excepciones-verifica-las-dos-mitades]]
 - **Cola ~0 con la máquina a tope** — mide `running→done`, no los `Duration` que declara la herramienta. Ver [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]]
 - **Un agente de voz tiene DOS bases de conocimiento** — la del proveedor y tu RAG: corregir una no arregla la otra, y editar un chunk sin reembeber no cambia lo recuperado. [[la-kb-del-proveedor-y-tu-rag-son-dos-fuentes-y-hay-que-corregir-las-dos]]

@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-09-07
+updated: 2026-09-17
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -143,6 +143,20 @@ es una identidad— así que fue `import-phone-number` con el trunk de Netelip
 (`retellai.netelip.com`, TCP, `auth_username` = el propio número; contraseña en 1P
 `Dani/Borja/Manu` → «Contraseña Netelip retell») y después `update-phone-number` con
 `agent_version: "latest_published"`, nunca un entero.
+
+## Endpoints de Retell · al día (14-sep)
+
+`verify:voz-desplegado` leía dos endpoints que Retell retira: ahora pagina
+`list-agent-versions` y `v2/list-phone-numbers`, con **la misma salida medida contra el
+agente vivo** (v19 y los 2 problemas conocidos). El arnés `infra/tests/rojo-voz-herramientas.py`
+publicaba con `publish-agent/{id}`, que ya daba 400: pasa a `publish-agent-version` con
+`{"version": N}` — **sin ejecutar**, porque muta el agente vivo y ya hay un número apuntando.
+Commit `5b7d6f7` en local; `main` va **47/3** con `origin`, así que sigue **sin push**.
+Tabla de fechas → [[retell-endpoints-deprecados-2026]]
+
+El trunk de este número (Netelip) se importó el 7/09 ya contra la dirección nueva, así que
+**no está en la lista de los que hay que mover antes del 30-sep** (esos son
+[[clientes/centro-elphis/index|centro-elphis]] y [[simarro]]).
 
 ## Bloqueos (terceros)
 

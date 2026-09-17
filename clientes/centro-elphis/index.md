@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-15
+updated: 2026-09-17
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -22,6 +22,15 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 - ✅ **Consentimiento en el post-call**: `Decidir registro voz` lee `dv_consentimiento` de Retell; antes solo borraba el motivo si el extractor marcaba `false` y guardó diagnósticos de la prueba de Manuel en deal y contacto (limpiados). → [[dos-caminos-que-escriben-el-mismo-dato-de-salud-deben-leer-el-mismo-consentimiento]]
 - 🔜 Verificar con el primer lead real: sin Slack falso, un solo WhatsApp (`notif-llamada-`), email desde info@centroelphis.com.
 - 🔜 Abierto en voz: narración con eco (caso GR), «Un momento.» tras la despedida, poda del prompt, fix del rojo falso de T1 (sin respuesta).
+
+## Estado previo · 2026-09-14 (noche) · los guardianes ya hablan la API nueva de Retell
+
+**`guard-retell-pin` migrado a `POST /v3/list-calls` y verificado en la primera corrida real (18:52 UTC, VERDE).** Salió de los correos «Deprecated API usage»: el tráfico deprecado de `185.47.13.173` era este guardián, cada 15 min.
+
+- ✅ **`guard-retell-pin` (T2) y `crisis-reconciler`** — URL, cuerpo y parser en el mismo PUT: el filtro de fecha pasa a tipado y la respuesta de array a `{items}`. Cambiar solo la URL habría dejado a T2 mudo con el latido en verde. Ensayado antes contra llamadas reales (misma salida que v2 en 7 casos) y con control negativo. `crisis-reconciler` sigue **inactivo**: solo se corrigió su borrador. Backups `elphis-*-pre-v3-*.json`. → [[migrar-un-endpoint-deprecado-cambia-la-forma-y-el-consumidor-lo-calla]] · [[un-verificador-se-estrena-contra-el-estado-de-antes-del-cambio]]
+- ✅ **Harness de voz** (`harness-voz/crear.py`, commit `d45ab418`) — `get-agent-versions` → `list-agent-versions`, que **pagina de 50 en 50**: sin paginar, `sirviendo()` solo vería la primera página. Los `desplegar_*.py` y `ROLLBACK.sh` quedan sin commitear (otra sesión los está sacando del repo).
+- 🔴 **Trunk SIP antes del 30-sep** — el DDI **+34910054950** es de **Netelip** y reenvía a la dirección vieja de Retell (`sip:5t4n6j0wnrl.sip.livekit.cloud`), que se apaga ese día: a partir de ahí **nadie llega a Laura**. Hay que cambiar el destino a `sip:sip.retellai.com` en el panel de Netelip (1Password: «Contraseña Netelip retell») y, si filtra por IP, añadir los rangos de Retell. La dirección nueva ya acepta, así que se puede hacer ya; requiere llamada de prueba real. Mismo caso en [[simarro]] (+34910054675).
+- ℹ️ Tabla completa de endpoints y fechas → [[retell-endpoints-deprecados-2026]]
 
 ## Estado previo · 2026-09-14
 
