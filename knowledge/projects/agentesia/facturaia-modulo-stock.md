@@ -7,6 +7,16 @@ tags: [facturaia, stock, inventario, rama]
 
 # TuFacturaIA — Módulo Stock / Inventario
 
+> **ACTUALIZACIÓN 2026-09-17 (ticket #180, en prod):** corregido el OCR de
+> columnas para no convertir `12 × 2 €` en `1 × 24 €` y endurecido el
+> enlace línea→producto. Una sugerencia difusa o el historial ya no autoasignan:
+> solo una regla activa con evidencia estable puede hacerlo; conflictos o poca
+> evidencia se abstienen. La aprobación exige ahora escoger producto o marcar
+> expresamente «No afecta al inventario», con CTA «Revisar inventario» y
+> procedencia visible. Mig **914** aplicada; `main` **`d225f741c`** desplegado y
+> verificado por health + assets. El ticket de José (dos DAORO y una Huitres
+> Geay) quedó respondido y resuelto; los dos avisos por correo se entregaron.
+
 > **ACTUALIZACIÓN 2026-07-02 (verificado en prod):** el módulo YA está en
 > `disponibilidad='activo'` (no `proximamente`/`beta` como dice abajo). El
 > reempaquetado (mig 399) lo plegó dentro de **Pro/Enterprise** y **eliminó el
