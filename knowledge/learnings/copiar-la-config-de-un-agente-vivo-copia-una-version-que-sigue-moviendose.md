@@ -17,6 +17,7 @@ existía**, y el defecto salió por la vía cara: «suena embotellada» en la pr
   es un dato, es una fecha implícita.
 - Antes de dar por bueno «esto es lo de X», pedir su config **viva** y diffear campo a campo
   (`get-agent/<id>` sin `?version` devuelve la última).
+- **`voice_temperature` no viaja entre voces** (18-sep): es estabilidad, no «naturalidad». 1.2 va bien con Cristina (Adicciones) y hace que Alejandra estire palabras y pronuncie mal; con ella, 0.9.
 - Vale doble para `client-onboarding` y `pollo-costco`: clonan de un cliente que sigue vivo.
 
 Ver [[create-or-replace-copiar-de-version-vigente]] · [[un-hallazgo-medido-en-otro-agente-viaja-el-mecanismo-nunca-el-porcentaje]]

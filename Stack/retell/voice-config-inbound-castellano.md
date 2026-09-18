@@ -12,7 +12,7 @@ Config validada en producción para **voice agent inbound en español castellano
 | Param | Valor | Por qué |
 |---|---|---|
 | `voice_speed` | **1.0** | >1.05 con voz clonada (Cartesia/ElevenLabs) introduce artefactos perceptibles como stutter. |
-| `voice_temperature` | **0.5** | 0.6+ en custom voice = más variabilidad → tropiezos. 0.4-0.5 estable. |
+| `voice_temperature` | **0.5** | 0.6+ en custom voice = más variabilidad → tropiezos. 0.4-0.5 estable. **Depende de la voz**: 1.2 va con Cristina (Adicciones) y estira palabras con Alejandra (Elphis Psicología, 0.9). Ver [[copiar-la-config-de-un-agente-vivo-copia-una-version-que-sigue-moviendose]] |
 | `interruption_sensitivity` | **0.5** | 0.7+ hacía que Ana cortara con cualquier ruido del cliente (respiración, "ehm"). 0.5 = sweet spot defensivo. |
 | `responsiveness` | **0.7** | Con sonnet-4.6 (TTFT alto), 0.6 daba arranques antes de tener buffer → micro-pausas. 0.7 espera lo justo. |
 | `ambient_sound` | **null** | Tener call-center a vol >1.0 + denoising agresivo creaba "pumping" perceptible como stutter. |

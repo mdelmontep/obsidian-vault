@@ -77,6 +77,8 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   [[copiar-la-config-de-un-agente-vivo-copia-una-version-que-sigue-moviendose]] ·
   [[retell-omite-los-campos-apagados-y-un-guardian-por-stringify-da-falso-rojo]] ·
   [[como-suena-un-agente-de-voz-no-se-juzga-ni-en-web-ni-en-la-grabacion]]
+  **18/09: servida la v23** — gpt-4.1 a 0,4, `responsiveness` 1, `voice_temperature` **0,9** (1,2 estiraba palabras con Alejandra) y solo la herramienta `colgar`: el rediseño a solicitud por correo de la rama `feat/solicitud-por-correo` (sin mergear) es la fuente del prompt vivo. Una v21 mía pisó esa v20 y se restauró en v22. →
+  [[publicar-en-retell-con-sesion-paralela-releer-la-publicada-justo-antes]]
 - ✅ **WhatsApp** — `psico-whatsapp-cerebro` vivo y con conversaciones reales
   (Chatwoot en el bucle, Basic Auth: Chatwoot **no firma** en la 4.0.3, medido).
   Prompt y las tres plantillas de Meta generados desde `site.ts`.
