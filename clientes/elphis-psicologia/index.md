@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-09-17
+updated: 2026-09-18
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -36,6 +36,10 @@ copia: el guardián existe porque estas cosas se editan desde un panel con un cl
   [[nodo-gcal-de-n8n-no-soporta-extendedproperties]] ·
   [[lock-e-idempotencia-en-n8n-con-redis-incr-sin-set-nx]] ·
   [[parse-roto-de-una-respuesta-200-se-confunde-con-fallo-y-duplica]]
+- ✅ **Formulario web** — `psico-formulario-web` (`IFjHsftalFKFSKnW`), vivo desde el 26/08;
+  el 18/09, con el OK de Alba, destino → `info@elphispsicologia.com` y redirección al
+  dominio real. Falta que Borja ponga `PUBLIC_FORM_ENDPOINT` y el honeypot `website`.
+  `infra/README-formulario.md`.
 - ✅ **Base de conocimiento** — `infra/kb/conocimiento.md`, generada entera desde
   `web/src/lib/`. `verify:kb` cierra el hueco de que sea la única copia del dato de
   la web que vive fuera de la web. Siete de sus once tests comprueban **ausencias**
