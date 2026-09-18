@@ -18,4 +18,4 @@ fallidos dos push que entraron los dos, y el `git push origin HEAD:<rama>` sigui
 - Corolario: `Everything up-to-date` con un `ls-remote` discrepante significa que el `ls-remote`
   es viejo, no que git mienta.
 
-Relacionado: [[el-veredicto-de-un-merge-se-lee-del-estado-no-del-exit-code]].
+Relacionado: [[el-exit-code-que-lees-no-es-el-del-comando-que-te-importa]].
