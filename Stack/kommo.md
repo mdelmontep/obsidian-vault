@@ -31,6 +31,11 @@ tags: [kommo, crm, whatsapp, salesbots, api]
 - Listar templates aprobados: `GET /ajax/v4/chats/templates?limit=25` (consola navegador en la cuenta Kommo, requiere sesión)
 - El name visible vs el name interno snake_case pueden diferir — el ID es lo que importa
 - Categoría Marketing por defecto. Confirmación de cita puede ir como Utility (más barata, a veces Meta la rechaza y hay que reenviar como Marketing)
+- **Crear/editar por API v4 no sirve para producción**: `POST /api/v4/chats/templates` crea, pero `waba_selected_waba_ids` se ignora (vuelve `[]`) y sin cuenta WABA `POST .../{id}/review` responde 200 con `reviews: []`. Una aprobada tampoco se edita (`PATCH` → `EntityNotFound` pese a `is_editable: true`): plantilla nueva y repuntar el bot. `waba_footer` no acepta cadena vacía — omitir la clave
+- **La UI puede guardar la variable como TEXTO** y la vista previa se ve igual: comprobar por API antes de mandar a aprobar — buena = `{{contact.name}}` en `content` + `waba_examples` con valores; rota = `[Manu]` literal y `waba_examples: []`
+- Estado de moderación de todas: `GET /api/v4/chats/templates?with=reviews` → `review_status` `approved`/`review`/`rejected`. Mirarlo de vez en cuando: una rechazada por Meta no avisa a nadie y el bot que la manda deja de enviar
+- **Kommo acorta los enlaces de los mensajes de TEXTO del salesbot** (`kommo.cc/K/...`, con evento `link_followed`), pero NO los de dentro de una plantilla, ni en el cuerpo ni en un botón `type: url`. Ver [[kommo-acorta-enlaces-del-salesbot-pero-no-los-de-plantilla]]
+- `PATCH /api/v4/contacts` acepta `tags_to_add`/`tags_to_delete` igual que leads — es donde va la marca de "a este paciente ya se le envió", que el lead es efímero. Ver [[envio-unico-por-paciente-se-marca-en-el-contacto-no-en-el-lead]]
 
 ## WhatsApp Cloud API + Salesbots Kommo (limitación clave)
 

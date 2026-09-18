@@ -464,3 +464,51 @@ y WhatsApp**. La rama de voz cuelga ahora de `Insert rows in a table3/1` (tras `
 ended`), así que **el aviso de una cita telefónica sale al colgar, no al reservar**. Postgres y
 OpenAI con `onError: continueRegularOutput`. **CC a `info@zendental.es`** solo ahí. Probado
 end-to-end con un workflow temporal ya borrado: 23 turnos leídos, 24 casos verdes, 3 mutantes.
+
+## Estado 8/9-sep-2026 (movido del hub el 18-sep, ya estrenado)
+
+**Primera tanda (día 8)**: los 10 nodos `salesbot*` de `u0AQPe9pxN79dbFa` mandaban el texto con
+`status_id: 104875243` hardcodeado en el mismo PATCH y borraban «Pendiente de asignar»; fuera de los
+10, y los 4 `Marcar Pendiente si Reserva*` pasan a ser el único punto que escribe etapa. Mismo
+`status_id` quitado del Reenganche. Y el correo interno de `Send Confirmation Email1` lleva ahora
+resumen IA de la conversación (una consulta cubre voz y WhatsApp) con CC a `info@zendental.es`; el
+aviso de una cita telefónica sale **al colgar**, no al reservar. Detalle → [[clinica-zen-historico]] ·
+[[el-nodo-que-envia-el-mensaje-no-debe-escribir-la-etapa-del-lead]]
+
+**Segunda tanda (noche del 8-sep)**, todo verificado contra el `workflowData` de ejecuciones reales
+—no contra el workflow vivo, que es de hoy y el evento era de ayer; tres diagnósticos falsos salieron
+de ahí y están retractados en [[clinica-zen-historico]]:
+
+- **Reenganche (`bfc4dWuztZsWfb4Q`) vuelve a correr** — gate de ESTADO (cita en el campo `1864817`,
+  status del lead, palancas manuales) y, al tercer intento, el descarte **se persiste**
+  (`status='skipped'`, CHECK ampliado) con `ORDER BY r.created_at ASC` antes del `LIMIT 5`. Sin eso
+  el descarte recirculaba cada 30 min y cinco conversaciones cerradas habrían dejado los abandonos
+  reales sin evaluar. Execs 13806 (escribe el descarte) y 13808 (cero filas).
+  → [[un-descarte-que-no-se-persiste-recircula-y-con-limit-desplaza-a-los-reales]]
+- **Un solo escritor de verdad en la reserva** — `Update leads` de `RN0wl8RaRmwLpnfQ` seguía
+  escribiendo Contestados justo al reservar (exec 13697: crea el evento y manda la confirmación)
+  mientras el guard escribía Pendiente de asignar: salía bien por orden de llegada, no por diseño.
+  Ahora escribe `104115975`. **Regla de negocio (Manuel, 8-sep)**: llega el lead y contestamos →
+  Contestados; en cuanto hay cita → Pendiente de asignar.
+  → [[al-centralizar-quien-escribe-el-estado-quedan-dos-huecos-tipicos]]
+- **`NO_PISAR` con «Perdido»** — un paciente que CANCELA (→143) resucitaba a Contestados 37 s después
+  con el siguiente mensaje del bot (exec 13682 → 13684). Añadidos `143` y `111224991` a los 4 nodos.
+  La objeción de la sesión paralela («entierra al que anula y vuelve a pedir cita») quedó retirada:
+  `reservarCalled` retorna ANTES de mirar `NO_PISAR`, así que quien vuelve a reservar sale de Perdido.
+  **Pregunta de negocio abierta**: el que anuló y escribe *sin* reservar ya no vuelve al radar — si la
+  clínica quiere verlo, es una etapa o tarea propia, no sacar `143` de la lista.
+
+**Tercera tanda (noche 8/9-sep, sesión paralela)** — tres fallos de cara al PACIENTE, arreglados:
+el **horario de verano** salía del número de mes en 4 nodos, así que ~34 días al año la cita se creaba
+**una hora antes** de lo dicho · el **CC a `info@zendental.es` no llegaba nunca** (`ccEmail` fuera de
+`options`) · **quien reserva por voz no recibía nada escrito** (`WA Confirmación Cita A/B` huérfanos,
+reconectados; el correo «de confirmación» va a la clínica). **Pendiente: capturar email y teléfono en
+la llamada — es del agente de Retell, no de n8n.** Detalle → [[clinica-zen-historico]] ·
+[[offset-de-zona-horaria-por-numero-de-mes-desfasa-una-hora-las-citas]] ·
+[[ccemail-en-la-raiz-del-nodo-email-se-descarta-sin-dar-error]] · [[el-webhook-que-notifica-un-cambio-no-es-quien-lo-hizo]]
+
+⚠️ **Ni este cambio ni la reconexión de los `WA Confirmación Cita A/B` (sesión paralela) se han
+estrenado**: 0 ejecuciones del chatbot desde el PUT de las 20:05:36Z. La primera conversación real
+prueba los dos a la vez.
+
+Kommo devuelve **400**, no 404, para un lead que ya no existe (`{"errors":{"<id>":"Lead not found"}}`).
