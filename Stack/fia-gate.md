@@ -25,3 +25,4 @@ Vive en `~/.claude/gate/` (impl completa en la memoria del agente, no duplicar a
 - Matchear el comando por POSICIÓN, no substring → [[guard-hooks-matchear-comando-sin-comillas-no-substring-cruda]].
 - Banner UI a medida desde script no es fiable → [[ui-flotante-desde-script-macos-swiftdialog-no-osascript-panel]].
 - BSD sed / while-read → [[macos-shell-bsd-sed-label-una-linea-y-while-read-ultima-linea]].
+- **Un push encolado sube el HEAD de cuando sale, no el de cuando se lanzó**: no commitear mientras espera → [[un-push-encolado-en-fia-gate-empuja-el-head-del-momento-en-que-sale]].
