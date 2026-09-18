@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-17
+updated: 2026-09-18
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,17 +10,28 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-17
+## Estado actual · 2026-09-18
+
+**El «bloqueante» de `crear_lead` era un criterio de prueba mal escrito — pero al medir la rama que faltaba salió un hueco de verdad. Los dos arreglos del panel, en producción.**
+
+- ✅ **Falso bloqueante, cerrado**: el caso 03 exigía «llama a `crear_lead`», y la simulada pide cita: el flujo sale por `reservar_visita` → `book-and-notify`, que hace `Clientify upsert` + `create deal`. **La ficha se crea igual.** Criterio reescrito como resultado («registra el contacto: `crear_lead` **o** `reservar_visita`»), caso nuevo `test_case_4778deaf0679`. → [[un-criterio-que-nombra-la-herramienta-mide-el-camino-no-el-resultado]]
+- 🔴 **Hueco real, medido y SIN arreglar**: caso nuevo `test_case_62aedd9165ef` (ingreso + NO quiere cita): **2 de 5** llamadas acaban en `end_call` sin `crear_lead`. Quien da nombre, sustancia y pide que le llamen se queda sin ficha, sin aviso a recepción y sin enlace. Causa: la despedida de `intake` (y la de `info_cita`) va directa a `despedida` sin pasar por `extract_lead`.
+  - **v53 propuesta, NO desplegada (falta OK de Manuel)**: enrutar esas despedidas por `extract_lead → fn_crear_lead → cierre → despedida`; los comerciales siguen saliendo por `fuera_alcance`. Desplegar = subir el pin a 53 en `idempotency_log` (`guard-retell-pin:config`) → T1 repone el DDI en 5 min y manda el rojo falso conocido.
+- ✅ **«Ahora mismo el equipo está ocupado» CONFIRMADO**: Laura atiende **todas** las llamadas (no solo las que recepción no descuelga) y aun así la frase se queda, por decisión de Manuel y Alba. **No volver a proponer quitarla.**
+- ✅ **Panel, los dos arreglos EN PRODUCCIÓN** (17-sep noche, verificado a las 20:54): **#657** (`0bdae3e7`) mueve `proxy.ts` a `src/` —Next solo lo busca en el padre de `app/`— y el login vuelve a conservar `next`; **#658** (`f3d0ec9a`) enseña «esta llamada es de otro cliente» con botón de cambio (Server Action, nunca un GET) a los usuarios de agencia. Los cuatro gates corridos en local porque **el CI de GitHub no corre en ningún PR del repo** («recent account payments have failed or your spending limit needs to be increased»). → [[nextjs16-middleware-to-proxy]]
+- ⚠️ **La API de casos de test de Retell no tiene UPDATE**: editar un criterio es crear + borrar, y el id cambia. → [[retell-sdk-patterns]]
+
+## Estado previo · 2026-09-17
 
 **Voz v52 en producción (13:09) con el saludo que propuso Alba, y el enlace a la llamada del panel ya se escribe solo en Clientify.**
 
 - ✅ **Voz v52** = v51 + saludo nuevo en `welcome`: «Hola, soy Laura, agente con inteligencia artificial de Centro Elphis. Ahora mismo el equipo está ocupado, pero puedo darte información general sobre los tratamientos, agendar una primera visita o recoger tu mensaje para que te llamen. ¿Qué prefieres?» (15,4 s medidos en llamada real, el doble que la v51) + regla «si te interrumpe a mitad, callate y atiende» + los 6 `finetune_examples` alineados (recitaban el saludo viejo). `global_prompt`, transiciones y posiciones intactos. Rollback: pin a 51.
   - **Por qué**: 21 de 77 llamadas reales del último mes se cortan antes de los 10 s (27%), tasa **estable** semana a semana → no era regresión de ninguna versión. La v51 tardaba 6,8 s y no decía «Centro Elphis» hasta el segundo 5,5; los cuelgues de 3,3-3,8 s ocurrían en «la asistente virtual con…». Apuesta a medir de nuevo a primeros de octubre con el mismo criterio.
   - Suite 10/12 contra el borrador (fuera los 2 casos que transfieren, para no marcar al Teléfono de la Esperanza). Los 2 fallos son anteriores al cambio.
-  - ⚠️ **«Ahora mismo el equipo está ocupado» está en producción sin confirmar que sea cierto**: solo lo es si Laura atiende las llamadas que recepción no descuelga. Pendiente de respuesta de Manuel.
+  - ~~⚠️ «el equipo está ocupado» sin confirmar~~ — confirmado el 18-sep: Laura coge todas y la frase se queda.
 - ✅ **Enlace a la transcripción desde Clientify, EN PRODUCCIÓN** — workflow `clientify-enlace-llamada` (`mKScVNdl67fN03OS`) activo, cada 10 min: campo Url «Última llamada (panel)» en el contacto + nota por llamada en el deal no cerrado más reciente (Expired no cuenta como cierre). Probado end-to-end con llamada real (exec 19939): nada más de la ficha ni del deal se toca. Portal: PR #637 mergeado y desplegado (`/automations/llamadas/retell/<call_id>`). Detalle y límites → memoria `elphis-enlace-llamada-panel-en-clientify`.
-- 🔴 **El bloqueante real del alcance**: en el camino de **ingreso residencial** Laura no llama a `crear_lead` de forma fiable (medido: v51 pasa 4/11, v52 2/10, siempre llamando a `reservar_visita` en su lugar). Sin ficha no hay enlace que colgar. Siguiente tarea propuesta.
-- 🔜 Portal, dos arreglos pequeños sin OK: el login de producción no conserva `next` (`proxy.ts` está en la raíz y el repo usa `src/`, así que Next no lo carga → [[nextjs16-middleware-to-proxy]]), y un usuario de agencia con otro cliente activo ve «esta llamada aún se está procesando» en vez de «es de otro cliente».
+- ~~🔴 «`crear_lead` no fiable en ingreso»~~ — criterio de prueba equivocado; el hueco verdadero y su arreglo, arriba (18-sep).
+- ~~🔜 Portal, dos arreglos pequeños~~ — #657 y #658, en producción (18-sep, arriba).
 - 🔜 Limpieza en Clientify (UI): 3 notas «PRUEBA…» del deal 32122661 y `Como-Prefieres-Ser-Contactado = PRUEBA` del contacto 161749243.
 
 ## Estado previo · 2026-09-15
