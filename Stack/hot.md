@@ -108,6 +108,7 @@ estar escrito. Si una de estas se puede comprobar con un comando, su sitio es un
 
 - **Un gate que descubre lo que audita pasa en verde si su lista sale vacía** — suelo explícito y fallar CERRADO. [[un-gate-derivado-del-repo-necesita-guarda-contra-su-propia-ceguera]]
 - **La fuente única no impide que reescriban el cálculo a mano** — el guard va sobre el PATRÓN, no sobre los sitios. [[una-funcion-correcta-no-impide-que-la-reescriban-a-mano]]
+- **Un guard de texto prohíbe la FORMA dentro del bloque, no una cadena** — recortar el literal contando llaves; prohibir un texto concreto pasa trivialmente y se pone rojo por una coma. [[un-guard-de-texto-prohibe-la-forma-no-la-cadena]]
 - **El arnés se mide a sí mismo** — un gate que construye la orden en vez de ejecutarla, un mock que declara una cadena que el código ya no usa, un check que nadie invoca, un default que nadie corrió, y el más fino: uno que mide que algo cambió pero no **dónde**. [[el-arnes-se-mide-a-si-mismo]]
 - **Verificar la conclusión, no la evidencia** — el estado de un secreto externo lo dice el proveedor, no un `SELECT`. [[verificar-la-conclusion-no-solo-la-evidencia]]
 - **El proxy de Next trunca a 10 MB en silencio y rompe firmas HMAC** — 401 intermitente solo en payloads grandes; excluir la ruta del matcher (la auth es del handler) + preflight antes de gastar. Ver [[proxy-de-next-trunca-el-body-a-10mb-y-rompe-firmas-hmac]]
