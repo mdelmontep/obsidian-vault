@@ -52,3 +52,5 @@ Tres precisiones que sobrevivieron al cierre, y que son el filo de la nota:
   `rmSync` en su `afterEach`— y con que sobreviviera todo lo demás.
 - Corolario del pipe: correr con `> fichero 2>&1` **y** `--reporter=json --outputFile=`. Así el nombre
   lo escribe el reporter aunque falles el grep.
+
+**Variante barata de reproducir (18-sep, agh-iberica): DOS gates en el MISMO worktree.** No hacen falta cinco procesos ni una máquina cargada: lancé un segundo gate creyendo que el primero no había arrancado y cayó `extract-isolated-oom-race.test.ts` —un test cuya aserción es literalmente *«60 extracciones no tumban el proceso»*—, en 428 ms. La corrida limpia, mismo árbol y mismo commit, dio verde. Los tests que **miden presión de memoria o de ficheros** son los primeros en caer, porque su sujeto ES el recurso que el otro proceso está gastando. Antes de clasificar ese rojo: `ps -eo pid,command | grep -E "vitest|tsx scripts/gate"`. Y si el lanzador no imprime nada durante minutos, **no es que no haya arrancado**: comprueba el proceso, no el fichero de salida.

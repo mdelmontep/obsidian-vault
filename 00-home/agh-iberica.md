@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-15
+updated: 2026-09-18
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -84,22 +84,21 @@ la regla de aprobación, Mazars los códigos del fichero. **Ninguno bloquea** lo
 
 Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 
-## Tercer frente: People & Culture — contrato+CV → ficha
+## Tercer frente: People & Culture — expediente → ficha
 
-**Prioridad de Manu:** email contrato + CV → propuesta, aprobación → ficha con originales. Spec #1691; HTML local `docs/piloto-rrhh-estado-2026-09-15.html`. 4/18 tickets cerrados (22 % formal).
-- ✅ `main` `912085c`: #1697 originales; #1702 V1–V4 sin ficha. V4 mide solo geometría sintética. Gate previo verde; Actions `steps: 0`; **prod no verificada**.
-- 🔴 Orden: PR #1673 → #1698; #1699 → PR-B #1700; #1698/#1699 → #1701 → #1705. En paralelo eval `.opt` #1702; después #1707 y #1710. #1741 ya pregunta a David por muestras/fuentes.
-- ⚠️ #1691 exige aprobación; cliente deriva de asignación; beneficio requiere alta humana; “añadimos X” como **mensaje** no está en #1707. No enviar #1741 sin autorización. ⛔ PII real fuera de repo, Slack y evals de pago.
+**Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada.
+- ✅ **En `main` y AHORA SÍ EN PROD (18-sep noche):** #1834 cerrado — `hr-text` desplegado, **los tres workers de RRHH corriendo** con tope de **5 €/día por tenant**. Además la vista de la propuesta con su procedencia (#1831/#1862) y el lector de celdas del SNC (#1855/#1856).
+- 🟢 **AGH contestó por escrito el 18-sep** (registrado en #1741/#1819/#1705/#1702, snapshot en `f0b08a03`): `cliente` **no está en el contrato** → sale del **SNC**, que pasa a ser el 4.º documento del expediente · beneficio social **en la 7.ª cláusula** (rótulo = ancla para #1702) · salario en contrato, su modificación en el anexo · **CV en PDF** (DOCX fuera de alcance) · y un requisito nuevo: **casar cada documento con su consultor** → **#1867**.
+- 🔬 **Hallazgo que cambia la urgencia:** hay **dos familias de contrato** (Print To PDF vectorizado vs **Docusign DMv10**, que se lee sin visión). **#1702 ya no es el bloqueante universal** y su enrutado V1 queda validado. Y la premisa «el salario vive en el anexo» era falsa. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]
+- 🔴 **Siguiente:** #1849 (ventana de deploy para abrir la subida) → **#1701** (aprobar y escribir la ficha, que es el DECIDIR) → #1705 CV → #1707 → #1710. De terceros quedan **dos**: cuántos contratos de cada familia, y los SNC por correo (#1819). **#1774 sigue sin eval pagada: no afirmar exactitud, coste ni latencia.**
 
 ## Bloqueantes
 
 _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una consulta, no estado.)_
 
-- 🔴🔴 **Langfuse no guarda trazas desde el 23-ago 03:00 (#1284).** ClickHouse **no existe** en el host (`/api/public/traces` → 500 `EAI_AGAIN clickhouse`) y aun así `/api/public/health` da **200** (#1304). **Segunda vez**: cayó el 17-ago, se reparó, escribió del 19 al 23 y volvió a caer ⇒ **repara pero no cura**; causa desconocida (sin OOM, disco y RAM de sobra, nada en cron a las 03:00). ⚠️ **Nada de `docker volume prune`**: el volumen sobrevivió las dos veces (38 GB, del 5-jul, nunca recreado) y #1284 lo daba por perdido — falso. Receta: [[docker-infra]] §«Un servicio AUSENTE se levanta solo». 👉 Mientras siga así, **#1361 y #1009 miden un sitio que no guarda nada**.
+- 🟠 **Langfuse/observabilidad: los tres issues del frente están CERRADOS** (#1284 el 27-ago, #1304, #1361) — pero «cerrado» no dice que hoy escriba trazas: **córrelo, no lo leas de aquí**. Sigue pendiente de Manu (2 min) subir las claves de API a 1Password (**#1009**), sin las cuales nadie puede correr la sonda desde un portátil. Historia de las dos caídas de ClickHouse → [[agh-iberica-historico]].
 - 🔴 **El DPA con AGH NO está firmado y la FIRMA no está en ninguna cola** (#1350 OPEN, de Borja, **sin fecha objetivo ni ubicación del documento**). Se opera igualmente por **decisión de Manu del 26-ago asumiendo el riesgo**: es decisión de negocio, **no cobertura documental**. → [[un-control-que-un-documento-cliente-facing-afirma-necesita-registro]]
 - 🔴🔴 **RGPD OpenAI — #1349 contestado el 18-ago: el DPA no está firmado y el ZDR no está activo ni solicitado.** Ya no es «verificar», es **hacer**: dos acciones de panel de **MANU** en `agentesia-lab` (`org-iE0lJRHrjWaSI4ugYc6P50Ze`). ⚠️ Son **tres cosas distintas**: «no entrenar» es el defecto y sí está · el **DPA** se firma · el **ZDR** se solicita y **se aprueba o no** (por defecto retienen ~30 días). El doc que ve el compliance de AGH ya no las da por hechas (#1383). Pendiente aparte: si el piloto salta al escalón 2 (Azure tenant-UE), que es un flip de configuración.
-- 🔴 **De Manu, 2 min: claves de API de Langfuse a 1Password → #1009** (OPEN, sin dueño). Sin ellas nadie corre la sonda desde un portátil — pero ver el bloqueante de arriba: hoy no hay nada que sondear.
-- 🔴 **El disparador diario de la sonda sigue sin existir → #1361** (su único dueño era #1304, `CLOSED`). Seguimos sin saber si Carlos usa la demo.
 - 🔴 **HUMANO, en el panel de Dokploy:** activar el digest en lista con `WHATSAPP_OPEN_THREADS_LIST_PREFIX=hilos_semana` y `WHATSAPP_OPEN_THREADS_LIST_MAX=6`.
 - 🔴 **DE MANU, 10 segundos:** mandar **un WhatsApp a Paquita** — es lo único que falta para saber si el emisor de #1418 emite. Y crear el incoming webhook de `#alertas-flota` (`C0BT7SLJ4G0`) para pegarlo en `/agency/admin` → conector Slack (hoy el aviso de silencio entrega en `#02-consumo-clientes`). Ninguna sesión puede hacer ninguna de las dos.
 - 🔴 **DE MANU:** qué hacer con `d.martins`, que recibió tres mensajes con los hilos de otra persona. No se ha avisado a nadie.
@@ -108,7 +107,9 @@ _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una 
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
 
-Aprendizajes RRHH: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]] · [[un-test-de-una-barrera-que-otra-barrera-tambien-para-no-la-discrimina]] · [[vitest-exclude-claude-rompe-el-run-por-fichero-en-worktrees-de-claude-code]] · [[el-stop-gate-corre-el-gate-contra-la-base-compartida-y-un-temporal-sin-trackear-lo-dispara]] · [[el-canal-obligatorio-caido-deja-el-ciclo-sin-cerrar]] · [[un-artifact-compartido-se-lee-pero-nunca-se-escribe]] · [[un-candado-que-empareja-dos-senales-se-esquiva-renombrando-una]] · [[un-paso-de-mi-propio-runbook-tambien-se-mide]].
+Aprendizajes del 18-sep: [[verificar-un-push-mientras-sigue-en-vuelo-lee-la-punta-vieja]] · [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]] · [[la-suite-completa-bajo-paralelismo-no-distingue-regresion-de-saturacion]] (dos gates en el mismo worktree) · [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]] (vale también para un documento entero).
+
+Aprendizajes RRHH del 15-sep: [[una-revision-adversaria-en-bucle-necesita-criterio-de-parada-escrito-antes]] · [[un-test-que-exige-ok-dentro-de-un-plazo-mide-la-cpu-del-runner]] · [[instanceof-de-la-clase-padre-se-traga-la-subclase-con-otra-semantica]].
 
 ### Backlog de issues (consulta, no estado — `gh issue list --label ready-for-agent`)
 

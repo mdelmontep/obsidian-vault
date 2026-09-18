@@ -157,3 +157,10 @@ Premisas del día que se cayeron al medirlas: **#1100 abaratado** (`lastQuestion
 ## 2026-08-26 — Paquita emite al portal de Flota IA (#1418)
 
 Cuatro PRs con override de founder (#1420 → #1421 → #1423 → #1425). Una interacción = **un turno**, `externalInteractionId = traceId`. Aprendido y aplicado al runbook del repo: `Rebuild` ≠ `Deploy` y `builtAt` es ciego a un reinicio → [[rebuild-no-recrea-el-contenedor-y-el-sello-de-build-es-ciego-al-reinicio]]. Nadie pudo comprobar que emita porque Paquita no tuvo ningún turno → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]. Además: el hub y el repo llamaban «Carlos» al agente (se llama **Paquita**) y el error contaminó a un tercero — corregido por #1422.
+
+## Langfuse — las dos caídas de ClickHouse (ago-2026, condensado del hub el 18-sep)
+
+- 🔴🔴 **Langfuse no guarda trazas desde el 23-ago 03:00 (#1284).** ClickHouse **no existe** en el host (`/api/public/traces` → 500 `EAI_AGAIN clickhouse`) y aun así `/api/public/health` da **200** (#1304). **Segunda vez**: cayó el 17-ago, se reparó, escribió del 19 al 23 y volvió a caer ⇒ **repara pero no cura**; causa desconocida (sin OOM, disco y RAM de sobra, nada en cron a las 03:00). ⚠️ **Nada de `docker volume prune`**: el volumen sobrevivió las dos veces (38 GB, del 5-jul, nunca recreado) y #1284 lo daba por perdido — falso. Receta: [[docker-infra]] §«Un servicio AUSENTE se levanta solo». 👉 Mientras siga así, **#1361 y #1009 miden un sitio que no guarda nada**.
+
+- 🔴 **De Manu, 2 min: claves de API de Langfuse a 1Password → #1009** (OPEN, sin dueño). Sin ellas nadie corre la sonda desde un portátil — pero ver el bloqueante de arriba: hoy no hay nada que sondear.
+- 🔴 **El disparador diario de la sonda sigue sin existir → #1361** (su único dueño era #1304, `CLOSED`). Seguimos sin saber si Carlos usa la demo.
