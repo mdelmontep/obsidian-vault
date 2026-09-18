@@ -1,7 +1,7 @@
 ---
 title: rebasar un worktree deja node_modules caduco, y el gate no lo distingue de instalado
 date: 2026-08-06
-updated: 2026-08-07
+updated: 2026-09-18
 source: claude-code-session
 tags: [worktrees, gate, npm, verificacion]
 ---
@@ -24,6 +24,12 @@ Coste real: 3 corridas de gate perdidas en un tren de 7 merges (AGH, 6-ago).
   el **sello ausente cuenta como caduco** (npm ≥7 siempre lo escribe; si falta, ese árbol no lo
   instaló npm ahí — el `ln -s` al `node_modules` de otro proyecto, que dio 3 rojos fantasma), y la
   pista tiene que ser **distinta** de la de «no instalado» o separar los dos estados no sirve de nada.
+
+- **18-sep: el `touch -r` NO salva un `node_modules` enlazado.** El preflight lee dos cosas del
+  disco, el `mtime` **y si la entrada es un enlace**, así que envejecer `package.json` a mano
+  (el arreglo del sello caduco) deja el rojo igual cuando el `node_modules` es un `ln -s` al de
+  otro worktree. En un árbol recién creado para medir sale `npm ci` de verdad, en la raíz y en cada
+  proyecto del gate — y son ~2 min, no un atajo.
 
 Relacionado: [[worktree-monorepo-symlink-node-modules-anidado]] ·
 [[auditar-sobre-origin-main-worktree-no-cwd-stale]].
