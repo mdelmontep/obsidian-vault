@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-09-18
+updated: 2026-09-19
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -17,6 +17,20 @@ Bloque A (web, marca) = Borja · **Bloque B (agentes) = Manu**. Autoridad docume
 `docs/bloqueantes.md` > `docs/protocolo-crisis.md` > `PRODUCT.md` > spec de julio.
 
 ## Estado · 2026-08-31
+
+- 🟢 **Solicitud por correo (18-19/09)** — voz y WhatsApp ya no agendan: recogen datos y
+  `psico-solicitud-correo` manda un correo HTML de marca (logo, botón `tel:`, datos,
+  resumen y la conversación; en WhatsApp la trae de Chatwoot) + parte de texto. Envía el
+  buzón del centro por SMTP de Webempresa (`waldE5kz6ZOoZ5yd`); destino provisional
+  m.delmonte.p@agentesia.madrid, a info@ cuando se diga. Logo servido por
+  `psico-marca-logo`. Guardián `verify:voz-llamada-desplegado`. Rama
+  `feat/solicitud-por-correo` sin push. Webmail: webmail.elphispsicologia.com.
+  → [[email-imagenes-base64-bloqueadas-usar-hosting]]
+- 🔴 **Meta/WhatsApp real** — WABA «Elphis Psicología» aparte en el portafolio de
+  Adicciones. Falta que un admin la cree y la asigne al usuario de sistema «App Elphis»
+  (token 1P `yozmvo7f…`, hoy sin WABA asignada); el resto por API: añadir el 910, OTP
+  por voz (agente mudo temporal en Retell), registro, override de webhook a Chatwoot y
+  bandeja. → [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]]
 
 **El bloque B ya no tiene ninguna pieza a medias.** Todo lo que sigue está vivo en
 `n8n-psicologia.elphis.agentesialabs.com` o en Retell, y **cada pieza tiene un
@@ -175,7 +189,7 @@ El trunk de este número (Netelip) se importó el 7/09 ya contra la dirección n
   grabación no lleva el ambiente ni la banda estrecha) · **conseguir write sobre el repo
   y mergear el PR #42** (merge commit, no borrar la rama —es su `main` del fork— y
   cerrar el #30) · rotar el token
-  de Chatwoot (las dos credenciales) · backups fuera del host · las 4 confirmaciones de
-  la WABA (número virgen · SIP · OTP · SMTP) · password del ítem 1P · el Connect de
+  de Chatwoot (las dos credenciales) · backups fuera del host · crear la WABA y
+  asignarla a «App Elphis» · password del ítem 1P · el Connect de
   OAuth · una llamada real que mida el retardo de `call_analyzed` y el experimento de
   `basic_attributes_only`.

@@ -16,3 +16,10 @@ Patrón usado en AgentesIA:
 - Subir via API GitHub (necesita `Contents: write` en PAT fine-grained) o web UI
 
 Para el HTML del email usar `<img src="URL_PUBLICA">` siempre.
+
+**SVG tampoco** (Gmail no lo pinta): logo a PNG 3x. Rasterizar el SVG con Playwright
+`setContent` + fuentes como `data:font/woff2;base64,…` — `file://` desde `about:blank`
+falla en silencio (`document.fonts` → `error`) y sale con la fallback.
+**Sin repo donde publicar**: un workflow n8n lo sirve (Webhook GET `responseNode` →
+Code con `binary.data` en base64 → Respond `binary` + `Cache-Control` largo). Visto en
+[[clientes/elphis-psicologia/index|elphis-psicologia]] (19-sep).

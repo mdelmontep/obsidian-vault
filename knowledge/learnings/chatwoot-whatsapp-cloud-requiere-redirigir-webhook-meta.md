@@ -23,3 +23,9 @@ Chatwoot genera la URL de callback y el verify token automáticamente. Aparecen 
 ## Nota
 
 El token de Meta (Clave de API en Chatwoot) debe ser un **permanent token**, no el temporal de 24h. Se genera en Meta Business Settings → System Users.
+
+## Dos WABA en la misma app (mismo portafolio)
+La app tiene UNA callback: una WABA nueva suscrita sin más entrega sus mensajes al destino
+de la otra. Suscribirla YA con `POST /{waba}/subscribed_apps {override_callback_uri,
+verify_token}` (prioridad: número > WABA > app). Crear la WABA no se puede por API salvo
+BSP. Caso: [[clientes/elphis-psicologia/index|elphis-psicologia]] junto a Adicciones (19-sep).
