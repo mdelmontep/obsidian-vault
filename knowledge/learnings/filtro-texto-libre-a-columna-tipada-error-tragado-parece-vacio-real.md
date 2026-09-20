@@ -30,3 +30,12 @@ cliente el mismo día: un selector se tragaba el fallo de red y decía «Sin res
 4.940 materiales en catálogo, así que búsqueda rota y búsqueda sin coincidencias se leían
 igual. **Al tercer aviso deja de ser despiste: grep de `const { data } =` sin `error` en
 cada cierre.**
+
+**Cuarta, 2026-09-20** (facturaia, mig 922): el catch era DELIBERADO —los cuadres fiscales
+se calculan «best-effort» y `persist.ts:222` se traga el error a propósito— así que
+`fiscal_calcular_cuadres` llevaba abortando con `42501` en el 100 % de sus llamadas desde la
+mig 150 sin que nadie lo notara: los cuadres que se veían en pantalla eran los de TypeScript.
+Un catch intencionado no es un descuido, pero convierte «la función no existe» en «no hay
+nada que avisar», que es el mismo síntoma. Si tragas a propósito, cuenta los fallos en algún
+sitio. Lo destapó reescribir la función, no usarla:
+[[reescribir-una-funcion-vieja-la-somete-a-los-guards-de-hoy]].
