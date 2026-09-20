@@ -173,3 +173,13 @@ Cuatro PRs con override de founder (#1420 → #1421 → #1423 → #1425). Una in
 
 - 🔴 **De Manu, 2 min: claves de API de Langfuse a 1Password → #1009** (OPEN, sin dueño). Sin ellas nadie corre la sonda desde un portátil — pero ver el bloqueante de arriba: hoy no hay nada que sondear.
 - 🔴 **El disparador diario de la sonda sigue sin existir → #1361** (su único dueño era #1304, `CLOSED`). Seguimos sin saber si Carlos usa la demo.
+
+
+## People & Culture — detalle condensado desde el hub (20-sep-2026)
+
+- **18-sep, en prod:** `hr-text` con los tres workers y tope de 5 €/día por tenant (#1834), la vista de la propuesta con su procedencia (#1831/#1862) y el lector de celdas del SNC (#1855/#1856).
+- **18-sep, AGH contestó por escrito** (#1741/#1819/#1705/#1702): `cliente` sale del SNC (4.º documento) · beneficio social en la 7.ª cláusula · salario en contrato, su modificación en el anexo · CV en PDF · casar cada documento con su consultor (#1867).
+- **19-20 sep:** lector de CV (#1918, por vía distinta de la prevista), pantalla de revisión (#1894), tablas del perfil (mig. 0062), historial de sueldo con fecha de efecto (#1886/#1915).
+- **#1925 estaba escrito DOS veces** sin que ninguna entrega lo cerrara (#1855 lo delegó en #1831; #1831 no lo menciona).
+- **#1908/#1910 cerrados el 20-sep** (PR #1934): el guard del servidor descartaba en silencio las claves de CV y una sola fila de CV tumbaba la lectura entera con un 500.
+- **Permisos:** `docsView`/`docsManage` en `dashboard/api/staffing/permissions.ts` nacen apagados para todo rol, admin incluido.
