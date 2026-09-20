@@ -6,6 +6,15 @@ tags: [cliente, agh-iberica, historico]
 
 # AGH Ibérica — histórico de estados
 
+## 31-ago — emisor a Flota IA, y la flag que el CLAUDE.md afirmaba al revés (movido del hub el 20-sep)
+
+🟢 **Emisor `custom_api` a Flota IA en prod (#1418)** — una interacción = un TURNO, agrupar por llamada abierto en #1419. **Y desde el 31-ago YA hay turnos reales** (barrido de Manu por WhatsApp, 19 turnos 10:21→10:28 UTC): cae la premisa que impedía medirlo, porque el cero de agosto no discriminaba. 👉 Repetir el SELECT del portal anclado a esa ventana, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
+
+🔴 **`AGENT_TRANSCRIPT_CONTEXT` ENCENDIDO en prod** (medido en el contenedor, 31-ago). El `CLAUDE.md` decía lo contrario: **cuarto** sitio del patrón de #1331 y el peor, porque se carga en cada sesión y lo presentaba como *hecho medido que dirige el trabajo*. Corregido nombrando la sonda, no el valor. El egress lo decidió Borja en #1433 (CLOSED), documentado en #1456. → [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]]
+
+🔴 **#1424** — el emisor **solo loguea al FALLAR**: «apagado» y «funcionando» son el mismo silencio. El portal descartó el latido contra su ingesta (ensuciaría `agent_interactions`); a cambio, dos líneas nuestras, una por proceso.
+
+
 Estados anteriores del hub [[agh-iberica]], sacados del dashboard para que el arranque de sesión no
 los pague. El detalle día a día vive en `docs/status-log/` del repo.
 

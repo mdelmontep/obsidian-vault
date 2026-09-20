@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-18
+updated: 2026-09-20
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -46,15 +46,11 @@ Cerebro en **código** (no n8n). TS. **Mastra NO adoptado en el MVP** (spike #6:
 
 Un solo **cerebro** detrás de una costura estable: `NormalizedMessage` → `TurnResult` (`Action[]` + `OutboundMessage[]`). **Canales** = adaptadores finos. **Tools** = interfaces fakeables tenant-scoped. **Multi-tenant** (`tenant_id` + `owner_user_id`) desde el día 1. **HITL** en todo write (un HITL por turno, batch). **Recall fundamentado** (solo tools, "no consta" antes que inventar).
 
-## Estado (2026-08-31) — Paquita probada en prod de verdad
+## Estado (2026-09-20)
 
 > ⚠️ Sin SHA de `main` **a propósito**: un snapshot que nombra su punta se desfasa con su propio merge. `git rev-parse --short origin/main`.
 
-🟢 **Emisor `custom_api` a Flota IA en prod (#1418)** — una interacción = un TURNO, agrupar por llamada abierto en #1419. **Y desde el 31-ago YA hay turnos reales** (barrido de Manu por WhatsApp, 19 turnos 10:21→10:28 UTC): cae la premisa que impedía medirlo, porque el cero de agosto no discriminaba. 👉 Repetir el SELECT del portal anclado a esa ventana, no al arranque. → [[una-ventana-de-observacion-anclada-al-arranque-caduca-con-cada-merge]]
-
-🔴 **`AGENT_TRANSCRIPT_CONTEXT` ENCENDIDO en prod** (medido en el contenedor, 31-ago). El `CLAUDE.md` decía lo contrario: **cuarto** sitio del patrón de #1331 y el peor, porque se carga en cada sesión y lo presentaba como *hecho medido que dirige el trabajo*. Corregido nombrando la sonda, no el valor. El egress lo decidió Borja en #1433 (CLOSED), documentado en #1456. → [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]]
-
-🔴 **#1424** — el emisor **solo loguea al FALLAR**: «apagado» y «funcionando» son el mismo silencio. El portal descartó el latido contra su ingesta (ensuciaría `agent_interactions`); a cambio, dos líneas nuestras, una por proceso.
+🔴 **Dos cosas del 31-ago que siguen vivas, en una línea cada una:** el emisor `custom_api` a Flota IA **solo loguea al fallar**, así que «apagado» y «funcionando» son el mismo silencio (**#1424**, con #1419 para agrupar por llamada) · y **`AGENT_TRANSCRIPT_CONTEXT` está ENCENDIDO en prod** — pero eso **se sondea, no se lee de aquí**: `docker service inspect agh-agente-x9jpvt` filtrando a la flag. Detalle de ambas en [[agh-iberica-historico]]. → [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]]
 
 📚 **19-ago (fidelidad de resolución)** → [[agh-iberica-historico]]. Vivo: la disyuntiva de #941 es de Borja · #1100 abaratado · la causa raíz de #938 es falsa · #1401/#1402/#1403 `ready-for-agent`. ⛔ El instrumento de evals **no** es cola de agente (#738/#1304 CLOSED); lo vivo (#1026 #1361 #1009 #1002 #985) es `ready-for-human`.
 
@@ -87,10 +83,13 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 ## Tercer frente: People & Culture — expediente → ficha
 
 **Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada.
-- ✅ **En `main` y AHORA SÍ EN PROD (18-sep noche):** #1834 cerrado — `hr-text` desplegado, **los tres workers de RRHH corriendo** con tope de **5 €/día por tenant**. Además la vista de la propuesta con su procedencia (#1831/#1862) y el lector de celdas del SNC (#1855/#1856).
-- 🟢 **AGH contestó por escrito el 18-sep** (registrado en #1741/#1819/#1705/#1702, snapshot en `f0b08a03`): `cliente` **no está en el contrato** → sale del **SNC**, que pasa a ser el 4.º documento del expediente · beneficio social **en la 7.ª cláusula** (rótulo = ancla para #1702) · salario en contrato, su modificación en el anexo · **CV en PDF** (DOCX fuera de alcance) · y un requisito nuevo: **casar cada documento con su consultor** → **#1867**.
+- ✅ **En prod desde el 18-sep:** `hr-text` con los **tres workers** corriendo y tope de **5 €/día por tenant** (#1834), la vista de la propuesta con su procedencia (#1831/#1862) y el lector de celdas del SNC (#1855/#1856).
+- 🟢 **AGH contestó por escrito el 18-sep** (#1741/#1819/#1705/#1702): `cliente` sale del **SNC** (4.º documento) · beneficio social en la 7.ª cláusula · salario en contrato, su modificación en el anexo · **CV en PDF** · y **casar cada documento con su consultor** → **#1867**.
 - 🔬 **Hallazgo que cambia la urgencia:** hay **dos familias de contrato** (Print To PDF vectorizado vs **Docusign DMv10**, que se lee sin visión). **#1702 ya no es el bloqueante universal** y su enrutado V1 queda validado. Y la premisa «el salario vive en el anexo» era falsa. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]
-- 🔴 **Siguiente:** #1849 (ventana de deploy para abrir la subida) → **#1701** (aprobar y escribir la ficha, que es el DECIDIR) → #1705 CV → #1707 → #1710. De terceros quedan **dos**: cuántos contratos de cada familia, y los SNC por correo (#1819). **#1774 sigue sin eval pagada: no afirmar exactitud, coste ni latencia.**
+- ✅ **19-20 sep:** el **lector de CV** entró en `main` (#1918, por vía distinta de la prevista), más la pantalla de revisión (#1894), las tablas del perfil (migración **0062**) y el historial de sueldo con fecha de efecto (#1886/#1915). El tablero del piloto va por **53/100**.
+- 🔴 **Dos huecos medidos que NO son «falta construir», son «se construyó y no conecta»:** **#1925** — la **nómina** se lee bien pero el `sheet-worker` escribe en `hr_form_fields` sin pasar por `hr_field_proposals`, y la ruta que sirve la propuesta rechaza de plano lo que no sea contrato: **dos barreras**, y el hueco estaba escrito **dos veces** (#1855 lo delegó en #1831; #1831 no lo menciona) sin que ninguna entrega lo cerrara. · **#1908/#1910** — el CV se lee y nadie puede aprobarlo: el guard del servidor descarta sus claves en silencio.
+- 🔴 **Siguiente:** **#1849** (los tres candados de producción: `HR_DOCS_ENCRYPTION_KEY`, `documents_enabled` y los workers; runbook de 7 pasos, con la prueba de restauración del backup **antes** del primer documento real) → **#1701** (aprobar y escribir la ficha, que es el DECIDIR) → #1705 → #1710. De terceros: cuántos contratos de cada familia y los SNC por correo (#1819). **#1774 sigue sin eval pagada: no afirmar exactitud, coste ni latencia.**
+- 🔬 **Permisos, ya resueltos y sin que nadie lo hubiera anotado:** los documentos de RRHH nacen apagados **para todo rol, admin incluido** (`docsView`/`docsManage` en `dashboard/api/staffing/permissions.ts`), se conceden por persona desde el dashboard, y el tope de coste por tenant ya existe con **5 €/día** por defecto. Lo que parecía trabajo pendiente para abrir producción era **una decisión**, no código.
 
 ## Bloqueantes
 
@@ -106,6 +105,10 @@ _(El backlog de issues vivos está más abajo, en «Backlog de issues»: es una 
 - 🟠 **#1394** — lo vivo es el **preflight** que avise de worktrees retirables, con un candado que discrimine el que tiene trabajo dentro (los dos abandonados ya no existen).
 
 ⬇️ _Debajo de esta línea: historial, referencia y contexto de negocio — no se paga al arrancar una sesión._
+
+Aprendizajes del 20-sep (cierre de la cola de PRs): [[una-pr-introduce-el-candado-que-otra-viola]] (los tres instrumentos del tren de merges dicen la verdad y ninguno lo ve) · [[una-ventana-de-coordinacion-se-dispara-por-fichero-no-por-reloj]] (y los ficheros del cierre no son los de la PR) · [[un-no-aplica-correcto-convalida-una-evidencia-caducada]] · [[una-cota-laxa-sobre-la-salida-no-mide-el-algoritmo]].
+
+Aprendizajes del 17-19 sep: [[un-desempate-de-order-by-necesita-un-fixture-por-clausula]] · [[tres-rojas-seguidas-no-prueban-que-un-fallo-sea-determinista]] · [[una-afirmacion-negativa-sobre-el-codigo-se-propaga-antes-de-medirse]] · [[una-revision-con-contexto-limpio-corrige-lo-que-ya-publicaste]].
 
 Aprendizajes del 18-sep: [[verificar-un-push-mientras-sigue-en-vuelo-lee-la-punta-vieja]] · [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]] · [[la-suite-completa-bajo-paralelismo-no-distingue-regresion-de-saturacion]] (dos gates en el mismo worktree) · [[un-comentario-no-puede-afirmar-el-estado-de-un-panel-de-deploy]] (vale también para un documento entero).
 
