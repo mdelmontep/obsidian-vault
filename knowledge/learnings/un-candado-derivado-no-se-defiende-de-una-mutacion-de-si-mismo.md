@@ -13,3 +13,5 @@ Un guard cuya expectativa se **deriva** de la fuente (la matriz sale del descrip
 **Corolario, mismo día:** si un lote de mutaciones sale con **todas** sin víctima, sospecha del instrumento antes que del código. Un `git commit` que falló se comió el heredoc con la variable del comando de test, y las cuatro salieron «sin víctima» — iba a apuntar cuatro huecos inexistentes. Un resultado uniformemente negativo es señal de arnés.
 
 Vecino, otra familia: [[arnes-con-asserts-de-eco-y-falso-verde-no-detecta-nada]].
+
+Vecino, la otra cara: un candado puede existir y no discriminar porque su aserción es una **cota**, no un valor — [[una-cota-laxa-sobre-la-salida-no-mide-el-algoritmo]].
