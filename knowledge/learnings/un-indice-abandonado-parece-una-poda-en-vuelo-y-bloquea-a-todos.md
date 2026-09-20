@@ -23,6 +23,17 @@ write-tree) -p HEAD` + `git update-ref refs/backup/<nombre>` para anclarlo, y de
 **`git reset` a secas** — sincroniza índice y `HEAD` y **no toca el árbol de trabajo**
 (verificado con el listado de ficheros antes y después). Quedaron 96 de las 596 líneas.
 
+🔴 **Y el índice no lo abandonó nadie: lo fabrica la herramienta.** `vault-commit` construye
+cada commit en un **índice temporal** (`read-tree` → `update-index` → `write-tree` →
+`commit-tree` → `update-ref`) y **nunca toca el índice real**, a propósito, para no llevarse
+lo de otra sesión. Efecto: cada commit deja el índice **un commit más atrás**, y con él crecen
+los falsos `D`. Reproducido el mismo día una hora después de escribir esta nota — un learning
+recién commiteado aparecía como borrado en el índice. Así que no es un descuido de alguien que
+se dejó algo a medias: es el estado al que el vault tiende **solo**.
+
+Prevención, entonces, no es solo «mira si existen en disco»: es **`git reset` a secas de vez
+en cuando**, que sincroniza índice y `HEAD` y no toca el árbol.
+
 Corolario: el bloqueo se cobra dos veces, porque el crecimiento del trinquete de contexto se
 atribuye a «la poda sin commitear» cuando en realidad ya estaba en `main`.
 Ver [[un-script-que-mezcla-indice-y-head-se-contradice-con-un-rename-staged]] ·
