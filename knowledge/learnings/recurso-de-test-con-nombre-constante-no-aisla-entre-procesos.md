@@ -15,4 +15,4 @@ El síntoma no se parece a la causa y varía: carrera en el `CREATE` (`duplicate
 
 **Prueba, no razonamiento:** lanzar dos corridas concurrentes y comparar exit codes. Si fallan LAS DOS, es determinista, no un flake — «nunca me ha pasado» solo significa que los relojes no se cruzaron.
 
-Ver [[gh-pr-merge-delete-branch-falla-local-si-main-en-otro-worktree]] · [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]
+Ver [[gh-pr-merge-delete-branch-no-borra-la-rama-si-falla-su-checkout-local]] · [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]
