@@ -82,3 +82,25 @@ causa y con pinta de bug de código**. Censo en facturaia: 42 casos del patrón 
 Así que la comprobación aislada no es opcional aquí, es lo único que discrimina —
 y al hacerla, verifica que los casos **se ejecutaron** y no se saltaron: un
 `describe.skipIf` sin credenciales sale verde igual.
+
+## La variante sin víctima: rojo con CERO tests fallando (20-sep, facturaia)
+
+Las cuatro firmas anteriores dan por hecho que algo cae — un test, un hook, una
+excepción. Aquí no cae nada: `Test Files 2046 passed (2046)` y `Tests 21203
+passed`, **cero fallos**, y el `pre-push` aborta igual con «la suite está en
+rojo». El rojo venía de una línea fuera del recuento:
+
+```
+Errors  2 errors
+[vitest-pool-runner]: Timeout waiting for worker to respond
+```
+
+Vitest sale con código distinto de cero por errores del *pool*, que no son casos
+y por eso no salen en el marcador. **Leer solo el resumen de tests te hace buscar
+un fallo que no existe**: el tell es `Errors N` con `0 failed`.
+
+Y al revés que el 19-ago, aquí **esperar sí funcionó**: el ocupante era otro gate
+`mem` del semáforo (`~/.claude/gate/state/slots/slot.0/kind`), no ruido del host.
+Con `uptime` de 13,2 → 7,6 el reintento dio `2048 passed` y `ec=0` sin tocar una
+línea. Mirar quién tiene el slot distingue «espera y reintenta» de «reintenta en
+bucle». Nunca `--no-verify`: el hook estaba midiendo bien.
