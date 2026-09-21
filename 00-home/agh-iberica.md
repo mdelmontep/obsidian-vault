@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-20
+updated: 2026-09-21
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -82,15 +82,15 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 
 ## Tercer frente: People & Culture — expediente → ficha
 
-**Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada. Tablero del piloto: **55/100** (21-sep, sobre `8500ceae`; bajó a 52 al aparecer #1936 y subió al mergear).
+**Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada. Tablero del piloto: **59/100** (21-sep noche, `main` `555f25a1`).
 
 - ✅ **En prod / en `main`:** los tres workers de `hr-text` con tope de **5 €/día por tenant**, la vista de la propuesta con su procedencia, el lector de celdas del SNC, el **lector de CV** (#1918), la pantalla de revisión (#1894), las tablas del perfil (mig. **0062**) y el sueldo con fecha de efecto. Detalle y números → [[agh-iberica-historico]].
-- ✅ **Cerrado 20-21 sep:** cuatro lanes (#1932/#1934/#1930/#1933) + **#1931** (#1937 `342eb576`, cierre #1938 `8500ceae`, en prod). La ruta sirve la propuesta de cualquier documento con la puerta **derivada** del lector, no una lista de `docKind`: un humano ya VE campo a campo lo que el modelo leyó de un CV. Cerró de paso que aprobar un campo de CV escribiera `people.full_name` por el camino del contrato. Detalle y premisas falsas → [[agh-iberica-historico]].
+- ✅ **Cerrado 20-21 sep:** 4 lanes + #1931 (la propuesta la ve un humano con la puerta derivada del lector). → [[agh-iberica-historico]].
 - 🔬 **Dos familias de contrato** (Print To PDF vs Docusign DMv10, que se lee sin visión) → **#1702 no es el bloqueante universal**, y «el salario vive en el anexo» era falso. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]. Los permisos de RRHH nacen apagados **para todo rol, admin incluido**: era una **decisión**, no código.
-- 🔴 **#1936 — nadie escribe la ficha** (8 premisas re-medidas, todas ciertas). `skill` no cabe en el CHECK de la 0062 y `fechas` es texto libre contra `DATE`: dos decisiones que el issue no lista.
-- 🔴 **Siguiente (medido 21-sep):** el /goal «Paquita responde por WhatsApp sobre CV» son cuatro cortes, no #1936: #1858 (arrastra migración), permisos del agente (#1458), de qué consultor es el CV, #1936, #1859 — más dos clics humanos. #1849: candados abiertos y centinela `ok`; falta el primer documento real. Trazas con CV: #1940.
+- ✅ **Tren del 21-sep: 21 PRs en `main` (`555f25a1`) en 4 olas**, cada una integrada entera antes de mergear, lo que cazó 2 defectos de composición. Cierra #1936 (ficha), T1 permisos, T2·1 WhatsApp, validador de CV y otros; migraciones 0063–0069 autodesplegadas **sin sondear**. Nota: `docs/status-log/2026-09-21-manu-tren-cv-whatsapp-21-prs.md`.
+- 🟠 **Siguiente:** pegar `.claude/worktrees/HANDOFF-cv-whatsapp/PROMPT-continuacion.md`. Ola A = #1909 → tramo 2 de #1925 → T2·2 en serie. Tres decisiones ya firmadas en `DECISIONES.md` (#1858 se estrecha a D11, el revert de #1867 con «último escritor» + 409, la matriz de #1710). **Tuyo:** Deploy de los hr-workers → `/version/workers` → restauración → ensayo #1849, y decidir si una técnica sin `salariesView` aprueba CVs.
 
-_Método de esta tanda: [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._
+_Método de esta tanda: [[integrar-la-ola-entera-antes-de-mergear-caza-defectos-de-composicion]] · [[un-fetch-fallido-deja-fetch-head-viejo-y-el-merge-sale-verde]] · [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._
 
 ## Bloqueantes
 
