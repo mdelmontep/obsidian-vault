@@ -25,6 +25,8 @@ falta el camino, no una búsqueda por nombre. Y el coste: una premisa falsa dent
 cara que un bug, porque nadie la vuelve a medir — se hereda como dato, así que se corrige **donde vive**
 (el issue, el snapshot) y no solo en la PR que la descubrió.
 
+**Segundo caso, por la FORMA (AGH 21-sep):** escaneé la 0062 buscando `ON DELETE CASCADE` y leí su ausencia en dos FK como «no llevan `ON DELETE`». Llevaban `ON DELETE SET NULL (source_document_id)`, la variante con lista de columnas de PG15+. Se publicó en Slack como bug y hubo que retirarlo. Un grep negativo también es ciego a **la variante que no buscabas**: para afirmar que falta una cláusula, se lee la línea entera.
+
 Familia: [[nul-byte-literal-en-markdown-hace-que-git-trate-el-archivo-como-binario]] (grep ciego por el
 CONTENIDO; este, por el NOMBRE) · [[grep-classname-plano-subestima-template-literals]] ·
 [[auditar-un-lado-de-par-simetrico-revisar-el-espejo]].
