@@ -110,6 +110,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - 2026-09-21 · simarro · cita cancelada en Kommo pero viva en Google + lead fantasma con recordatorios a quien ya canceló → la valoración estaba en DOS agendas y solo se marcaba/borraba un evento → gemelos marcados con el mismo `simarro_lead` y borrados juntos al cancelar/cambiar. → [[simarro]]
 - 2026-09-21 · simarro · 9 valoraciones acabaron en el pipeline de Ventas → PATCH con `status_id`/`pipeline_id` de Ventas en recordatorio 48h y anulación/cambio → etapa mapeada por pipeline leído del lead. → [[kommo-status-id-de-otro-pipeline-mueve-el-lead-de-pipeline]]
 - 2026-09-21 · simarro · encuesta 48h y recordatorio 4h salían con "Error" desde mayo → plantillas aprobadas en la fuente WABA vieja → 4h desactivado, encuesta por rehacer. → [[plantilla-waba-kommo-queda-atada-a-la-fuente-donde-se-aprobo]]
+- 2026-09-21 · facturaia · el 303 de Lucas Hadj no calculaba el 1T → una emitida importada (EXT) al 0 % a un cliente NL sin marca intracom; `importarEmitidaExterna` era la única puerta sin guard → guard que pregunta a `clasificarLinea303` antes de crear cliente (PR #2842, ADR-102); el dato, pendiente del cliente. → [[un-guard-antes-de-un-find-or-create-debe-juzgar-la-fila-que-reutilizara]]
 
 ## Archivo
 - Agosto 2026 → [[incidents-archive-2026-08]] (182 entradas, archivadas el 10-sep)

@@ -84,6 +84,7 @@ tags: [home, prioridades]
 - 🟢 **Worktrees — 51 GB pendientes en `agency-portal`** +4 del 1-sep: purgar al cerrar la tanda del juez, que está en vuelo. Lo demás ya limpio, 19 GB. → [[rescatar-el-wip-de-un-worktree-sin-commitear-ni-tocar-el-stash-compartido]]
 ## Bloqueos (esperando a terceros)
 
+- **TuFacturaIA — Lucas Hadj: el 303 del 1T bloqueado por F2600000008 (21-sep)** — **Tuyo**: mergear #2842 y mandar el email redactado a `ryomakers@gmail.com`; con su respuesta, SQL. → [[facturaia]]
 - **TuFacturaIA — Salt Edge Test access (Manu), única llave del PR #610** — el PR sigue DRAFT y sin tocar desde el 27-jul (+921/−14 en 23 ficheros, `feat/saltedge-psd2-ais`), con una fuga cross-tenant sin resolver: **no se mergea** hasta tener sandbox real Y ese bug cerrado. Dos salidas y hay que elegir una, no dejarlo abierto otro mes: aprobar el Test access en el dashboard de Salt Edge, o cerrar el PR y recuperar la rama cuando toque. **Desde el 5-sep hay issue: #2541**, por la colisión de la mig 423 que esa rama arrastra. Aprobarlo solo lo puedes hacer tú (login externo). → seguir en [[facturaia]].
 - **TuFacturaIA — NotCaído detecta pero sus avisos no llegan a nadie (Manu, 27-jul)** — el monitor SÍ pilló el corte del 26 a los 13 min; lo roto es la última milla, y lleva meses (un servicio suyo caído 81 días sin que nadie se enterara). Configurar y probar el canal hasta verlo en el móvil. Sin esto no hay detección de caídas en vivo. Detalle → [[facturaia]] §Bloqueos
 
