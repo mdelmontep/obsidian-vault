@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-12
+updated: 2026-09-21
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,16 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-21 · cancelaciones, emails, valoraciones y plantillas)
+
+**Citas en dos agendas (gemelos).** Causa de "cancelada en Kommo, viva en Google" (Noemi) y del lead fantasma `35889602`: los agentes apuntan la misma valoración en dos agendas. `Calendario_a_Kommo` ahora marca el gemelo (misma hora) con el mismo `simarro_lead`, y `om8` tras cancelar/cambiar borra en todas las agendas los eventos con ese `simarro_lead` salvo el vigente. Borrado de gemelo **sin probar en real** (no había caso).
+- **Emails**: todo lo interno a `consultingsimarroproperties@gmail.com`. Nuevos avisos de cancelación/cambio: interno siempre + cliente si tiene email (contacto, si no CF `Email lead`). Probados E2E, incluido el del cliente. El post-visita no salía nunca (leía `data` sin parsear): arreglado.
+- **Valoraciones ya no saltan a Ventas**: 48h solo mueve a Post-visita si no es Valoraciones; anulación → Contacto inicial, cambio → Visita valoración programada. 9 leads afectados devueltos. → [[kommo-status-id-de-otro-pipeline-mueve-el-lead-de-pipeline]]
+- **Recordatorios**: 24 h de valoración propio (bot `98892`, plantilla `valoracion_recordatorio_24h`); el de 4 h **desactivado** (plantilla en la línea vieja, no llegaba).
+- **Encuesta 48h ("Valoración", bot `87873`) sale con Error**: plantilla aprobada en la fuente vieja → [[plantilla-waba-kommo-queda-atada-a-la-fuente-donde-se-aprobo]]. Decidido rehacerla con botón a reseñas de Google + "Tengo una sugerencia" (tarea al agente). **Bloqueado por el enlace de reseñas de Ramón** (mensaje enviado por Manu).
+- Nodo `Email Visita Interna (desactivado)` estaba activo y era el único aviso interno de reservas WA → renombrado `Email Visita Interna WA`.
+- **A revisar**: `iMoTKZWxYLymGuHF` (reserva) sin ninguna ejecución desde el 9-sep. Memoria: `project-emails-y-gemelos-20260921`. Backups `*-20260921.json` en `n8n-backups/simarro/`.
 
 ## Estado (2026-09-12 · cambios de cita, preferencias desde la vivienda, y un borrado en las agendas)
 
