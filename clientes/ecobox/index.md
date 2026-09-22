@@ -34,7 +34,8 @@ Citas existentes y «¿cómo va mi reparación?» también van por email.
   (`Clinica Zen/Retell API`).
 - **Web (22-sep):** hero con la foto de la cabina (Audi blanco) a sangre, desplazada a la derecha y
   con velo bajo el texto; foto nueva del taller en «Sobre nosotros». En prod (`dc24de2`).
-  `por-que-nosotros.*` quedó sin uso en `web/public/`.
+  Favicon: el emblema del logo (pistola en su círculo), sustituye al de Astro por defecto que
+  llevaba desde el principio (`4b1ad94`). `por-que-nosotros.*` quedó sin uso en `web/public/`.
 
 **Pendiente:**
 1. **Estreno real:** llamar en horario y fuera de horario, y un WhatsApp, y confirmar que el email
