@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-20
+updated: 2026-09-22
 tags: [cliente, facturaia, hub]
 ---
 
@@ -35,6 +35,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## NOW (trabajo activo)
 
+- 🟢 **Fabbros (cartonaje, Alcalá; vía Itziar/AGH): reunión presencial 23-sep, demo lista (22-sep)** — org sandbox `is_test` con 98 productos, 2 clientes y A2026-0001 cuadrando con su Excel (2.238,10 €); el precio unitario sale con sus decimales en PDF, ficha y Excel (#2861, en prod). **Tuyo**: la reunión y decidir fase 2 (albaranes de venta, tarifas por cliente); flecos del PDF: ciudad del emisor y nombre de serie. Briefing: https://claude.ai/artifact/CzfPDfTQ76UtGihbS4Gp2c
 - 🟢 **El devengo, cerrado de punta a punta y en prod (13→20-sep)** — el abono se periodifica por su fecha de expedición (#2807, mig 922, ADR-100), el 347 y el libro registro leen ya esa misma fuente (#2833 · #2834 · #2835) y el asiento contable se fecha por el devengo en vez de por la expedición (#2831), con norma detrás (PGC, art. 75.Uno LIVA) y sin perder la expedición, que sigue en su columna. Los tres alcances se midieron en prod ANTES de tocar y los tres salieron preventivos. Fuera, con issue: los devengos especiales del 75.Dos y 75.Uno.8º (**#2810 · #2808 · #2786**). También cerrados: la salida del abono (migs 920/921) y el inventario como add-on (migs 912/913). Detalle → [[facturaia-historico-snapshot-2026-09-14]] · [[seleccionar-por-un-campo-y-etiquetar-por-otro-es-un-fallo-antes-de-saber-cual-es-el-bueno]] · [[reconstruir-el-script-de-una-skill-desde-el-contexto-corre-la-version-vieja]]
 - 🟠 **Lucas Hadj: 2T y 3T desbloqueados; 1T lo bloquea solo F2600000008 (Muevelo, NL) (act. 21-sep)** — `NL866428550` incompleto y sin marca intracom. Email a `ryomakers@gmail.com` redactado: **Manu lo envía**; con su respuesta, SQL con `clave_operacion_intracom = 'prestacion_servicios'` (enum, no letra) o rectificar al 21 % en FacturaDirecta. F2600000026: 434,07 € de suplidos al 0 % en casilla 60, pregunta al cliente. Que no vuelva a entrar: **PR #2842 (ADR-102)**, `/fia-cierre` con reservas ya resueltas, listo para merge; seguimientos #2843 y #2844. → [[un-guard-antes-de-un-find-or-create-debe-juzgar-la-fila-que-reutilizara]]
 - 🟠 **Ticket 182 (Chivite): ENTREGADO el 20-sep — esperando dos respuestas suyas** — los 8 PRs están en prod y la respuesta salió en dos mensajes (el panel corta a 5.000 caracteres), con el ticket reabierto a `en_revision` a propósito: contestar no lo resuelve. Todas las cifras se re-midieron contra prod antes de enviar. **Pendiente de José**: (1) rehacer o no los 5 abonos mal fechados (julio +6.053 €, septiembre −6.796 €), que cuesta diez números de la serie B; (2) si el cobro del 28-ago de B2026-0003 era en realidad el de la factura A2026-0060. → [[una-regla-contra-hoy-va-en-trigger-no-en-check]] · [[el-contrato-acepta-el-campo-y-la-pantalla-escribe-hoy]]
