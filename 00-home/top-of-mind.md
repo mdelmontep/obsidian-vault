@@ -10,7 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟠 **TuFacturaIA — Fabbros (cartonaje, Alcalá): reunión presencial 23-sep, demo y briefing listos** — **Tuyo**: la reunión y decidir fase 2 (albaranes de venta, tarifas por cliente). → [[facturaia]]
+- 🟠 **TuFacturaIA — Fabbros (cartonaje, Alcalá): reunión presencial 23-sep, demo, logo y tres presentaciones listas** — en prod hoy los dos arreglos que salieron de montarla (#2864 decimales del precio, #2868 el email al emitir). **Tuyo**: la reunión y decidir fase 2 (albaranes de venta, tarifas por cliente). → [[facturaia]]
 - 🟢 **EcoBox — sin citas desde el 22-sep (voz v26 + WhatsApp → email al taller), sin estrenar** — **tuyo**: llamada real en y fuera de horario + un WhatsApp y confirmar email a Cristian/info, **rotar HMAC de Chatwoot + `X-Ecobox-Token`**, decidir si se apagan los workflows de reservas. → [[clientes/ecobox/index|ecobox]] §EMPEZAR AQUÍ
 - 🟠 **AGH — su contabilidad sale de Yooz a TuFacturaIA (30-ago)**: diseño CERRADO (ADR-063, spec #2295, 13 tickets #2296-#2308; #2296 y #2297 cogibles ya). **Sin código y sin commitear** desde hace 8 días. **Tuyo**: mandar los tres cuestionarios (Giuliana, Carlos, Mazars) y decidir si arranca el primer ticket. → [[agh-iberica]] · [[facturaia-yooz-agh-migracion]]
 - 🟠 **AGH People & Culture — CV por WhatsApp (22-sep):** olas A y B en `main` (`2c827f64`; #1867 cerrado, hr-workers desplegados). **Tuyo:** autorizar las evals ×3 de T3-c (#1859, no se mergea hasta #1349/#1350), el ensayo de #1849, decidir `salariesView` para aprobar CVs y mergear la PR de docs #2017. → [[agh-iberica]] · [[un-rojo-ajeno-del-gate-puede-ser-el-bug-que-arregla-otra-pr-del-tren]]
