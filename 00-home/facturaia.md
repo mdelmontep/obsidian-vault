@@ -12,7 +12,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ## Cómo usar este hub
 
 **Modelo de 2 niveles — no leer todo, leer lo que toca:**
-- **Arranque de sesión (siempre, ~12K tokens hoy, medido; objetivo 8K)**: leer solo este bloque superior — `Estado` + `NOW` + `Bloqueos` + `Decisiones pendientes` + `Índice de áreas`. Es la foto del proyecto.
+- **Arranque de sesión (~8K tokens, medido el 22-sep tras sacar el NOW a subfiles; era 13K)**: leer solo este bloque superior — `Estado` + `NOW` + `Bloqueos` + `Decisiones pendientes` + `Índice de áreas`. Es la foto del proyecto.
 - **Durante (bajo demanda)**: abrir el subfile del área en la que trabajas (ver `Índice de áreas`) o la sección inferior concreta (NEXT / Smoke / WIP). NO leer el hub entero ni el histórico salvo que se pida.
 - **Cierre — `/fia-precommit` → `/fia-cierre` → `/obsidian-1`**: el cierre corre 4 dimensiones (`codigo`, `datos`, `plataforma`, `cabos`) con el diff INYECTADO y el alcance decidido por `npm run cierre:alcance`. Al leer su informe, comprobar **qué dimensiones corrieron de verdad**: pueden caerse o devolver relleno. Lo cerrado (✅ / ~~tachado~~) se mueve a [[facturaia-historico-detallado]]; las entradas del hub son 1-2 líneas mirando hacia delante. Desde el #2563 el marcador va en `--git-common-dir`, así que avisa una vez por SESIÓN y no una por worktree: [[un-marcador-de-sesion-en-git-dir-se-escribe-una-vez-por-worktree]].
 
@@ -33,16 +33,46 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ---
 
-## NOW (trabajo activo)
+## NOW (trabajo activo) — 59 frentes, repartidos por área
 
-- 🟢 **Fabbros (cartonaje, Alcalá; vía Itziar/AGH): reunión presencial 23-sep, todo listo** — org sandbox `is_test` con 98 productos, 2 clientes, su logo en las facturas y A2026-0001 cuadrando con su Excel (2.238,10 €). En prod hoy, salidos de montarla: #2864 (decimales del precio) y #2868 (un solo campo de email al emitir, verificado con navegador). **Tuyo**: la reunión y decidir la fase 2 (albaranes de venta, tarifas por cliente), que el deck ya NO compromete: dice «hoy no está» y que se estudia con sus albaranes delante, con respuesta por escrito después; flecos del PDF: ciudad del emisor y nombre de serie. Material: [briefing](https://claude.ai/artifact/CzfPDfTQ76UtGihbS4Gp2c) · [deck para ellos](https://claude.ai/artifact/ToXSLsxLqdhQWpun2wwdgc) · [guion de la demo](https://claude.ai/artifact/1MU3iPeNDroWhmrWghaktf) → [[el-logo-de-marca-en-un-deck-sale-del-componente-react-no-de-un-png]]
-- 🟢 **El devengo, cerrado de punta a punta y en prod (13→20-sep)** — abono periodificado por fecha de expedición (#2807, mig 922, ADR-100), y el 347, el libro registro y el asiento contable leyendo ya esa fuente (#2833-#2835, #2831). Fuera, con issue: los devengos especiales del 75.Dos y 75.Uno.8º (**#2810 · #2808 · #2786**). Detalle → [[facturaia-historico-snapshot-2026-09-14]]
-- 🟠 **Lucas Hadj: 2T y 3T desbloqueados; 1T lo bloquea solo F2600000008 (Muevelo, NL) (act. 21-sep)** — `NL866428550` incompleto y sin marca intracom. Email a `ryomakers@gmail.com` redactado: **Manu lo envía**; con su respuesta, SQL con `clave_operacion_intracom = 'prestacion_servicios'` (enum, no letra) o rectificar al 21 % en FacturaDirecta. F2600000026: 434,07 € de suplidos al 0 % en casilla 60, pregunta al cliente. Que no vuelva a entrar: **PR #2842 (ADR-102)**, `/fia-cierre` con reservas ya resueltas, listo para merge; seguimientos #2843 y #2844. → [[un-guard-antes-de-un-find-or-create-debe-juzgar-la-fila-que-reutilizara]]
-- 🟠 **Ticket 182 (Chivite): ENTREGADO el 20-sep — esperando dos respuestas suyas** — los 8 PRs están en prod y la respuesta salió en dos mensajes (el panel corta a 5.000 caracteres), con el ticket reabierto a `en_revision` a propósito: contestar no lo resuelve. Todas las cifras se re-midieron contra prod antes de enviar. **Pendiente de José**: (1) rehacer o no los 5 abonos mal fechados (julio +6.053 €, septiembre −6.796 €), que cuesta diez números de la serie B; (2) si el cobro del 28-ago de B2026-0003 era en realidad el de la factura A2026-0060. → [[una-regla-contra-hoy-va-en-trigger-no-en-check]] · [[el-contrato-acepta-el-campo-y-la-pantalla-escribe-hoy]]
-- 🔴 **El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)** — pasó con el 181: cerrado y correo enviado 2 s tras el merge, con la migración sin aplicar. El merge pasa a SELLAR (`cierre_diferido_*`) y lo consuma el vigía con dos condiciones (ventana cerrada **y** proceso arrancado después del merge). **Bloqueado por el vigía**: sin schedule, sella y nadie consuma. **Tuyo**: elegir entre provisionar las dos variables en Dokploy (#2530) o una RPC `SECURITY DEFINER` que lea `schema_migrations` desde la app. #2774 (tipos + fuera los shims) es mergeable ya.
-- 🟢 **Ticket 175 (Chivite): fases A y B en prod (13-sep, #2735, #2760-#2765)** — queda la **fase C** (`RegistroAnulacion`) y ver «apagado + motivo» en vivo. → [[facturaia-historico-snapshot-2026-09-14]] · [[jsdom-aplica-el-cierre-despues-del-listener-de-document]]
-- 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** — **tuyo**: aceptar o rechazar `flux-pro/kontext`, en `propuesto`. → [[facturaia-historico-snapshot-2026-09-14]] · [[filtrar-las-opciones-por-un-predicado-convierte-lo-invalido-en-ninguno]]
-- 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** — módulo por org, apagado por defecto: catálogo de cuentas, N ejes analíticos, aprobación de 3 etapas, exportador Cegid V9. **15 decisiones en `ADR-063`** (renumerado del 033), glosario en `CONTEXT.md`, spec **#2295**, tickets **#2296-#2308**, **sin commitear** en el checkout raíz. Cogibles ya: **#2296** (patrones PGC — relajar `src/lib/modules/catalog.ts:314-321`, que rechaza cuentas de 11 dígitos → [[un-pattern-mas-estrecho-que-el-dato-del-cliente-bloquea-el-alta-antes-del-codigo]]) y **#2297**. **Tuyo**: los tres cuestionarios y arrancar. → [[facturaia-yooz-agh-migracion]] · [[agh-iberica]]
+> El cuerpo de cada frente vive en su subfile. Aquí quedan **lo que depende de ti** y **el título
+> de cada 🔴**, para que nada desaparezca de la vista al arrancar. Abre solo el área que toques.
+
+### Depende de ti
+
+- 🟢 **Fabbros (cartonaje, Alcalá; vía Itziar/AGH): reunión presencial 23-sep, todo listo** → [[facturaia-now-clientes]]
+- 🔴 **El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)** → [[facturaia-now-producto]]
+- 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** → [[facturaia-now-ocr]]
+- 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** → [[facturaia-now-clientes]]
+- 🟡 **Dos pruebas del smoke que no miden (22-sep, de la auditoría del reparto)** → [[facturaia-now-infra]]
+- 🟠 **Arnés y WORM: 3 de 5 tracks cerrados (20-ago)** → [[facturaia-now-fiscal]]
+- 🟢 **Conector MCP: los dos incidentes del 9-sep, cerrados y verificados en prod (#2662)** → [[facturaia-now-infra]]
+- 🟠 **Skeletons de carga: arreglados y SIN COMMITEAR desde el 04-ago** → [[facturaia-now-producto]]
+- 🔴 **Cobro con tarjeta (#1704): el webhook de Connect funciona en prod; ahora bloquea la KYC (20-ago)** → [[facturaia-now-producto]]
+
+### Por área
+
+- **Clientes y cuentas** — 11 frentes · 3 🔴 → [[facturaia-now-clientes]]
+  - 🔴 Cabo del 144: que IET repase los tics de suministro/instalación que marcara con la vista de costes abierta
+  - 🔴 IET no puede presupuestar: tiene cargado el catálogo EQUIVOCADO (07-ago, medido en prod)
+  - 🔴 Preguntas sueltas para Natalia
+- **Obras** — 6 frentes · 3 🔴 → [[facturaia-now-obras]]
+  - 🔴 Cabo del #1550: la recepción de albarán rotulaba «Material» en casi toda recepción real
+  - 🔴 «Actualizar precios» multiplica el precio al cliente si al material le falta el descuento, y no lo dice (02-ago)
+  - 🔴 Dos defectos de datos, medidos en prod (03-ago, `issues/obras-097` y `-098`)
+- **Fiscal y VeriFactu** — 9 frentes · 0 🔴 → [[facturaia-now-fiscal]]
+- **Arnés, tests e infraestructura** — 15 frentes · 3 🔴 → [[facturaia-now-infra]]
+  - 🔴 Los PDF de factura siguen sin copia de seguridad (#1641)
+  - 🔴 Dos smokes antes de tocar B2
+  - 🔴 Rotar las claves del proyecto sandbox `vtovkkrcybstlzpgqsaq` (Manu)
+- **Producto y UI** — 13 frentes · 5 🔴 → [[facturaia-now-producto]]
+  - 🔴 El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)
+  - 🔴 `brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)
+  - 🔴 Dos cabos del ticket 159, sin issue (28-ago)
+  - 🔴 En una org suspendida, Ajustes → Empresa guarda la mitad y descarta la otra sin avisar (#2100, smoke del 22-ago)
+  - 🔴 Cobro con tarjeta (#1704): el webhook de Connect funciona en prod; ahora bloquea la KYC (20-ago)
+- **OCR e IA** — 4 frentes · 0 🔴 → [[facturaia-now-ocr]]
+
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
   - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila — y desde el #2773 de él depende además que se CIERREN los tickets de soporte. Añadir también `DEPLOY_COMMIT`: hoy `deploy.commit` es `null` en prod, así que la app no sabe qué código corre y solo puede mirar su hora de arranque.
   - **José (Chivite)**: que diga **qué día contó** (19-sep, **#2538**); si calla, se anota y **no se ajusta nada**.
@@ -52,63 +82,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
   - **Cobro con tarjeta**: en borrador y sin precio; faltan Backblaze y SOCIAL MEDIA CLOUD SOLUTIONS.
   - Código abierto: **#2416** (agente), la costura PNG→ffmpeg sin test, que el runner maqueta los slides solo. **Decidir**: ¿trazo grueso de iconos también en `/admin`?
   - **Avisar** a Borja Galván y Pescados Chivite: reconecten el banco (en rojo «Sin completar» desde el barrido V2).
-- 🟠 **Reverificar 27 mediciones del barrido V2 (olas B/C)** — se archivaron como «bloqueadas por swap» y el motivo era un `next build` ajeno; el resto, en prod (migs 776-777). → [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
-- 🟠 **Auditoría del 27-ago dentro (31-ago, #2318)** — **queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
-- 🟠 **Prompt de continuación del 31-ago** (supersede al del 23) — **tres huecos**: `PLAN.md` 23 secciones vs `estado.json` 25; `qa/supertest-v2` ya no está en el remoto; `permisos-escritura-service-role` fuera de la cola. → [[antes-de-inventar-un-protocolo-mirar-si-el-esquema-ya-lo-codifica]]
-- 🟡 **Dos pruebas del smoke que no miden (22-sep, de la auditoría del reparto)** — **#2865**: los casos 3b/4b de `ui-design-system` buscan un `button` donde el `Segmented` pinta `radio`, y su única aserción va dentro de un `if (count > 0)`, así que nunca corre; arreglarlos obliga a restaurar estado en un `finally`. **#2866**: los 7 casos de `stock-fase-d` se saltan siempre porque nadie siembra sus precondiciones — o seeder propio, o sacarlo del smoke y decirlo. → [[un-trinquete-que-cuenta-en-memoria-se-apaga-al-reiniciar-el-worker]] **22-sep (#2870)**: el caso A de `proxy-active`, al dejar de saltar, salio rojo **por el test**: la cookie `impersonate_org` se RENUEVA fuera de `/admin`. Corregidos test y `gotchas.md:21`. **Tuyo**: `stock-fase-d` (#2866), seeder propio o fuera del smoke. · [[un-test-saltado-puede-esconder-una-asercion-invertida-no-solo-cobertura-ausente]] · [[carriles-en-paralelo-se-comparan-por-reloj-no-por-suma-de-tiempos]]
-- 🟠 **`ratchet:maxrows` es textual y ciego a la consulta SIN `.limit()`** (cabo del #2332+#2334, en prod con smoke verde). → [[una-huella-de-chunks-de-otra-ruta-no-detecta-un-deploy]]
-- 🟠 **Cabos del 26-ago, todo lo demás en prod** — agéntica `categorias`: cobertura de lo que escribe solo (**#2227**) y 22 circulares de `_parts` (**#2228**), OCR en shadow · albaranes: falta el smoke que ejerza el guard del doble conteo · PSD2 sigue sin integrar por coste, y es decisión, no avería. → [[facturaia-historico-snapshot-2026-08-30]]
-
-- 🔴 **`brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)** — una org con marca propia recibe 10-13 Lc MENOS que la de fábrica, sin aviso. Preexistente; no entra en #2272.
-
-- 🟠 **Las filas de `/admin/feedback` no se pueden abrir con teclado ni por rol, sin issue (10-sep)** — `<tr>` con `onClick` sin `role`/`tabIndex`: fuera del árbol de accesibilidad, sin cobertura E2E, y responder hubo que hacerlo por el `fetch` del propio panel. → [[una-fila-clicable-sin-rol-no-la-abre-ni-un-lector-ni-un-agente]]
-  Y el mismo ticket sigue en `resuelto` (`manual`, 8-sep) con el hilo vivo el 9 y el 10 y una petición recién salida: el estado y la conversación van por libre.
-- 🔴 **Dos cabos del ticket 159, sin issue (28-ago)** — (1) `/admin/orgs` en «Cargando…» es **hidratación, no la API**: decidir si es defecto o artefacto de QA → [[una-vista-en-cargando-con-su-api-en-200-esta-sin-hidratar]]; (2) el OCR **no aprende línea→producto** y ese cliente arrastra 17 recibidas sin aprobar.
-
-- 🟠 **`eval:ocr`: eval de `doc-extract` y gap `multi-albaran-multipagina`.** → [[facturaia-historico-snapshot-2026-08-30]]
-- 🟠 **Espejo de facturación en prod, sin verificar por otros ojos (#2119, mig 751)** — **queda** los cinco tracks de lectura de `PROMPT-continuacion-23-ago.md`. → [[un-trinquete-por-fichero-absuelve-al-que-ya-importa-el-helper]]
-- 🟠 **Siete decisiones fiscales abiertas, con encargo escrito (23-ago)** — para decidirlas con fuente primaria: `docs/architecture/PROMPT-decisiones-fiscales-con-norma.md` (#2135). Reparto: mías la cola fiscal + #2133; #2131 y #2136 en prod.
-- 📅 **303: el 3T vence el 20-oct.**
-- 🟠 **Staging va por detrás y ahí se mide la suite (#1669 abierto)** — corregido el 13-sep: el «29 de un suelo de 59» de la frontera cross-org era un ciclo de imports (27 casos con `id: undefined`), no el desfase; suelo en **59** (`permisos-parametro.spec.ts:70`; este hub decia 64, que no existe en ningun spec). **22-sep**: `seed.sql` siembra ya la org B en seis tablas (#2872, idempotencia validada por mutacion), **sin aplicar a staging** y sin remedir — esa cifra se MIDE con `PERMISOS_LOG`. Prompt → `docs/architecture/PROMPT-continuacion-22-sep-seed-org-b-y-trinquete.md`. → [[una-base-de-staging-por-detras-deja-un-candado-sin-medir]] · [[un-ciclo-de-imports-deja-la-constante-undefined-y-el-caso-deja-de-medir]]
-- 🔴 **Los PDF de factura siguen sin copia de seguridad (#1641)** — falta **crear el bucket** `tufacturaia-storage-backup` en Backblaze (sin Object Lock; DISTINTO del WORM fiscal, que sí está activo) y pegar sus claves en 1Password: los cuatro campos siguen en `PEGAR_AQUI` (remedido 1-sep), y hasta entonces `backups:storage:verificar` sale rojo. Con ellos, el resto es mío → `backup-restore-runbook.md:169`.
-- 🔴 **Dos smokes antes de tocar B2**: un WhatsApp real con factura y una escritura que confirme el cifrado. La causa (variable fuera del compose) ya está cerrada con `env-guard` (#1984) → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
-- 🟠 **#1776**: se reduce a `preferred_locales:['es']` y cierra con el encendido de #1778 (0 customers reales).
-- 🟠 **#1778: PR 1-3 en prod, flag `FACTURAS_SUSCRIPCION_PROPIAS` apagada (20-ago)** — **queda**: PR 4 (encender + smoke), PR 5 (devoluciones/disputas) y modelar N2 (#1994). Sin urgencia: 1 cliente live y es ES. → [[facturaia-historico-detallado]] · [[codigo-de-exencion-no-expresa-una-operacion-no-sujeta]]
-- ⏸️ **EN STANDBY por decisión de Manu (24-ago): los dos trámites del certificado FNMT de AgentesiaLab** — el `.p12` para VeriFACTU (bloquea el SELLADO, no la emisión) y el 036 de alta en el ROI. Ninguno lo puede hacer un agente. Detalle → [[facturaia-historico-detallado]]
-- 🔒 **ADR-011: la suite E2E NO lleva sesión superadmin; `/admin` solo LECTURA** (la suite corre contra prod) — 21 de 24 vistas cubiertas (#1611), candado `blindarSoloLectura` en el navegador. Escribir prohibido hasta tener staging separado. Contratos: `rutas-admin-exigen-superadmin.test.ts` · `admin-perimetro.spec.ts` (ADR-011 vive en el repo, `docs/decisions/`).
-- 🟠 **El gate solo vive en local: la suite corre en `pre-push`, en CI no (#2096)** — mientras no se pague el billing de Actions es decisión, no deuda. PITR apagado → RPO 24 h. → [[ADR-043-sin-ci-el-gate-local-es-el-contrato]] · [[actions-sin-billing-hooks-locales-unico-gate]]
-- 🟢 **`gate:stop` en prod y el semáforo, medido (11-sep, #2720)** — **queda**: `fia-gate:27` y `fia-cierre-reminder.sh:17` → `--git-common-dir`. → [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]]
-- 🟠 **Arnés y WORM: 3 de 5 tracks cerrados (20-ago)** — **queda**: key de B2 sin `deleteFiles`, sellar al exportar (**tuyo**, producto) y puerto por checkout en E2E. → `PROMPT-continuacion-20-ago-arnes-y-worm.md` · [[hook-que-resuelve-git-en-el-cwd-de-la-sesion-juzga-el-repo-equivocado]]
-- 🟠 **Barrido por secciones: 1/24, cobertura 37/757 (5 %)** — queda la **Parte B empezando por T1** (97 ítems de dinero y ley, no necesita staging); `admin` sí lo necesita y espera. Plan y método → `docs/qa/funcional/PLAN.md`; arranque → `docs/architecture/PROMPT-staging-y-barrido.md`. Partes 0, A y C(1)(2) cerradas. → [[verificar-que-el-bug-sigue-vivo-contra-codigo-actual-antes-de-fixear]]
-- 🟠 **Barrido T1: del item 1 solo queda el punto 4, la deriva de perfil (18-ago)** — comparar `perfilFiscalHash` desde el cron choca con que el calculador es fuente única en TS: decisión de arquitectura, no parche. Lo cerrado → [[facturaia-historico-eventos]] · `docs/architecture/PROMPT-fiscal-inventario-cobros-t1.md`
-- 🔴 **En una org suspendida, Ajustes → Empresa guarda la mitad y descarta la otra sin avisar (#2100, smoke del 22-ago)** — el `settings` persiste (endpoint de servidor, bypasea RLS); las columnas de `organizations` chocan con `is_billing_readonly` (mig 323) y devuelven **204 = éxito** con cero filas. Mismo clic: `epigrafe` guardado, `direccion` perdida. **Decidir**: si no puede editar su ficha, tampoco su `settings` por la puerta de al lado. → [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]]
-- 🟠 **Fiscal, orden vivo: #1933 y #1934 EN PROD (migs 722/741/742, 22-ago) → queda #1899** — el #1934 registra justificante y aceptada/rechazada en `resultado_aeat`; el #1899 (rectificativa) es `ready-for-human`, falta payload real. → [[facturaia-historico-snapshot-2026-08-19]] · [[ADR-055-la-rectificativa-del-303-va-detras-de-capturar-el-justificante]]
-- 🟠 **#1668: solo queda la decisión de producto** — el manual ya no promete de más (corregido en #1976); lo abierto es si hay que sellar al EXPORTAR → §Decisiones pendientes. **#1669 staging: DECIDIDO dejarlo como está** (46 migraciones de retraso, cero consumidores). → [[facturaia-historico-snapshot-2026-08-19]]
-- 🟠 **De páginas quedan 7 no-admin, todas bloqueadas por precondición** — 4 de onboarding piden una org en un estado que hoy no existe; 3 de fiscal chocan con `proximamente`. Las 3 de `/admin` que faltan, por ADR-011.
-- 🟠 **Decisión de producto pendiente: exigir certificado activo para `verifactu_activo=true`** — hoy `PUT /api/settings/verifactu` deja activarlo sin certificado, y entonces el worker hace `if (!cert) continue` en silencio y las facturas se quedan en `pendiente_envio` para siempre. Notificar sin ese gate dispararía sobre orgs a mitad de configurar.
-- 🔴 **Cabo del #1550: la recepción de albarán rotulaba «Material» en casi toda recepción real** — arreglado y con guard, pero **no sabemos qué usuarios validaron albaranes a ciegas** (el modal traía el catálogo paginado: 50 de 11.595). Preguntar a IET antes de cerrarlo. → [[resolver-label-nombre-en-cliente-contra-endpoint-paginado-cae-al-uuid]]
-- 🔴 **Cabo del 144: que IET repase los tics de suministro/instalación que marcara con la vista de costes abierta** — al desplazar la rejilla, seleccionar una partida marcaba su tic y le movía el precio. Arreglado; esos datos no se reparan solos. Falta que confirme.
-- 🔴 **IET no puede presupuestar: tiene cargado el catálogo EQUIVOCADO (07-ago, medido en prod)** — sus 7.683 materiales son dos tarifas de fabricante; el real (11.595 materiales, 7.871 tiempos, 3.945 UO) está en la sandbox; cobertura por uso **0,9 %**. **Decisión abierta**: migrar usados + tiempos + UO casando por `cod_almacen` (un tiempo de instalación no caduca). Cifras → [[facturaia-historico-eventos]]
-- 📤 **Natalia (IET): de 4 preguntas queda 1, y es la del dinero — su OK al §5** — copiar `tiempo_mo_horas` + `tipo_mo_id` a los que casan por `cod_almacen` sube **294 precios, +2.152,34 €** (media 26,5 %). Es el efecto buscado, pero la magnitud la decide ella y esos UPDATE no son reversibles (backup antes). El 07-ago contestó y **no era un OK**: lo confunde con la conversión de unidades ya hecha, que no movió un céntimo. **Toca llamarla.** Los CSV ya entregados; mandarle el texto plano, las tablas markdown se le rompen al pegar. → [[facturaia-iet-preguntas-tiempos-mo]] · detalle [[facturaia-historico-eventos]]
-- 🟠 **Sigue faltando el coste por TRABAJADOR (Excel de Natalia)** — para `obras_tarifas_hora_instalador` (mig 510), sección «Tarifas propias» de la ficha del operario; cascada `manual > especial de obra > trabajador > categoría`. Es el coste REAL de los partes, distinto del medio de arriba (el previsto al presupuestar). **Preguntarle si lo carga ella o nosotros.** → [[facturaia-iet-preguntas-tiempos-mo]]
-- 🟠 **Impersonando a un cliente, las rutas `/obras/*` dan 404 (07-ago)** — las 15, con el sidebar enlazándolas y `GET /api/obras/settings` devolviendo la org correcta: sidebar y API resuelven la org impersonada, la página no. Como usuario real cargan bien, así que es del modo Vista cliente. **Hoy no puedes ver el módulo Obras de IET desde tu panel**, que es justo el cliente que lo usa. Sin issue abierto. → [[impersonacion-superadmin-no-sirve-para-qa-de-ui-org-scoped]]
-- 🟢 **Conector MCP: los dos incidentes del 9-sep, cerrados y verificados en prod (#2662)** — **tuyo**: que Borja confirme que el suyo apunta a la URL **con `/mcp`**. Detalle → [[facturaia-historico-detallado]] · `gotchas.md` §MCP
-- 🟠 **Skeletons de carga: arreglados y SIN COMMITEAR desde el 04-ago** — `<SkeletonTable>` en 18 ficheros, gates verdes. **Tuyo: revisar y commitear.** → [[nombre-de-clase-css-modules-como-string-global-es-selector-muerto-sin-error]]
-- 🟠 **OCR: la referencia de proveedor, del 25 % al 75 % (02-ago, #1466)** — su control es `low`: deja rastro en `ocr_extraction_audit` pero no avisa. Si el casado falla, **reintentar la lectura**, no otra regla en el prompt. Ver [[un-control-por-cardinalidad-mide-irregularidad-no-perdida]]
-- 🔴 **«Actualizar precios» multiplica el precio al cliente si al material le falta el descuento, y no lo dice (02-ago)** — medido en un presupuesto real: total de 1.583 € a 5.999 € (**×3,8**). La aritmética es correcta y no es bug de la mig 626; el daño es que lo aplica **en masa, sobre un presupuesto ya hecho y en silencio**. El modal enseña el delta pero no que N partidas no tienen descuento — en el catálogo de Natalia, la mayoría. Arreglo propuesto (necesita mig, no hecho): contador `lineas_sin_descuento` en la RPC + aviso. **Decisión suya.** → [[facturaia-historico-eventos]]
-- 🔴 **Preguntas sueltas para Natalia** — (2) ¿«SIN FAMILIA» son los 793 cuadros a medida que parecen? Su explicación describe `PROYECTO` (32) y `DESPLAZAMIENTOS` (1), no 1.306 materiales; ojo, el diagnóstico «cero ref. de fabricante y cero marca» **no discrimina** (lo cumplen los 11.595 de esa sandbox: el volcado del 21-jul no trajo esas columnas). (3) ¿qué presupuesto quería refrescar? El suyo vivo ya estaba al día. (4) ¿negocia el descuento sobre «cable» o sobre `RZ1-K`/`RV-K` por separado? Decide si es una pantalla o una tabla de equivalencias por proveedor.
-
-- 🟠 **Unidad de obra desde el presupuesto: queda el paso 3, editar la copia.** → [[facturaia-historico-snapshot-2026-08-30]]
-- 🟠 **Dígitos invertidos al teclear: arreglado en prod (01-ago, #1446). Queda el hueco vecino** — si la app reescribe el valor de un campo enfocado sigue el mismo camino; anterior a #1443 y NO arreglado. Ver [[jsdom-no-reproduce-el-reset-de-seleccion-al-cambiar-input-type]]
-- 🟠 **Dos issues abiertos por el bloque de obras (01-ago)** — `ocr-001`: el desglose de una factura larga da **entre 2 y 41 líneas según la pasada** sobre el mismo PDF, sin truncado de tokens; toca 303, libro de IVA y stock, y es preexistente. `ui-001`: el `autoFocus` de los modales nunca llega al campo (`<Modal>` enfoca el diálogo en un efecto posterior); afecta a todo el repo.
-
-- 🟠 **Constantes de WAPI: `% Retención Facturas` sin decidir (07-ago)** — para IET está todo a cero (`irpf_pct_default=0`, 0 obras con `retencion_pct`, 0 filas en `obras_retenciones`) y hay dos campos candidatos (IRPF de factura vs retención de garantía, mig 538). Pregunta para Natalia; SIN aviso en la app a propósito (retiene muy poca gente, sería ruido).
-- 🟠 **OCR/ejercicio (01-ago, #1457): quedan 5 recibidas desviadas en prod** — Laserys, `sin_aprobar`, con pinta de carga histórica. → [[facturaia-historico-snapshot-2026-08-02]]
-- 🔴 **Dos defectos de datos, medidos en prod (03-ago, `issues/obras-097` y `-098`)** — (1) **121 líneas con snapshot 0,00 € y catálogo > 0**; el modal ya avisa y no se recalcula al copiar (traería el inflado ×3,8). Queda decidir si se barren. (2) **3.120 pares (presupuesto, material) con dos precios** para la misma referencia, p95 ×22,6: vienen de la carga de WAPI, no de nuestro motor. **Bloqueado en Natalia**: si en su ERP es intencionado, no hay bug.
-- 🔴 **Rotar las claves del proyecto sandbox `vtovkkrcybstlzpgqsaq` (Manu)** — anon y service_role quedaron volcadas en un log de sesión al imprimir la salida entera del CLI. Es entorno de pruebas, pero es credencial.
-
-- 🟡 **`perf-001` — CLS: queda el banner de billing (#1258, #1305)** — **decisión de diseño**: `.billing-banner` empuja 36 px tras el primer render → resolver en servidor o reservarle hueco. Residual: `useOrgRole` da `role: null` mientras carga y el rail mete 7 secciones después; el hook ya expone `loaded` y nadie lo mira. → [[facturaia-historico-snapshot-2026-08-01]] · [[cero-mientras-carga-no-es-cero-vacio-y-provoca-cls]]
-- 🔴 **Cobro con tarjeta (#1704): el webhook de Connect funciona en prod; ahora bloquea la KYC (20-ago)** — endpoint LIVE creado, declarado en el compose y probado con la sonda de firma. **Tuyo**: completar la KYC de plataforma en `acct_1Td5cc`. Runbook → `docs/architecture/cobro-stripe-connect-runbook.md`
 
 ## Bloqueos / esperando a terceros
 
@@ -171,6 +144,9 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **Modelo 130/IRPF en `incluir_fiscal` (Cashflow IA v3 opcional)** — hoy solo IVA 303. Diferido por análisis producto-GTM (la mayoría en directa simplificada tributa al final del año, no trimestre). Re-evaluar si clientes lo piden.
 
 ## Índice de áreas (abrir solo el que toca)
+
+**El NOW por áreas** (extraído del dashboard el 22-sep para que arrancar cueste 8K tokens y no 13K):
+[[facturaia-now-clientes]] · [[facturaia-now-obras]] · [[facturaia-now-fiscal]] · [[facturaia-now-infra]] · [[facturaia-now-producto]] · [[facturaia-now-ocr]]
 
 | Área | Detalle / estado (vault) | Doc técnico (repo) |
 |---|---|---|

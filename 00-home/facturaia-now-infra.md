@@ -1,0 +1,28 @@
+---
+title: FacturaIA — NOW Arnés, tests e infraestructura
+updated: 2026-09-22
+tags: [facturaia, now, infra]
+---
+
+# NOW — Arnés, tests e infraestructura
+
+Extraído del dashboard de [[facturaia]] el 22-sep-2026: el NOW tenía 59 frentes y 22 KB,
+la mitad del arranque de cada sesión. Aquí viven los 15 de esta área, íntegros.
+
+Vuelve al hub: [[facturaia]]
+
+- 🟠 **Reverificar 27 mediciones del barrido V2 (olas B/C)** — se archivaron como «bloqueadas por swap» y el motivo era un `next build` ajeno; el resto, en prod (migs 776-777). → [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
+- 🟠 **Auditoría del 27-ago dentro (31-ago, #2318)** — **queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
+- 🟠 **Prompt de continuación del 31-ago** (supersede al del 23) — **tres huecos**: `PLAN.md` 23 secciones vs `estado.json` 25; `qa/supertest-v2` ya no está en el remoto; `permisos-escritura-service-role` fuera de la cola. → [[antes-de-inventar-un-protocolo-mirar-si-el-esquema-ya-lo-codifica]]
+- 🟡 **Dos pruebas del smoke que no miden (22-sep, de la auditoría del reparto)** — **#2865**: los casos 3b/4b de `ui-design-system` buscan un `button` donde el `Segmented` pinta `radio`, y su única aserción va dentro de un `if (count > 0)`, así que nunca corre; arreglarlos obliga a restaurar estado en un `finally`. **#2866**: los 7 casos de `stock-fase-d` se saltan siempre porque nadie siembra sus precondiciones — o seeder propio, o sacarlo del smoke y decirlo. → [[un-trinquete-que-cuenta-en-memoria-se-apaga-al-reiniciar-el-worker]] **22-sep (#2870)**: el caso A de `proxy-active`, al dejar de saltar, salio rojo **por el test**: la cookie `impersonate_org` se RENUEVA fuera de `/admin`. Corregidos test y `gotchas.md:21`. **Tuyo**: `stock-fase-d` (#2866), seeder propio o fuera del smoke. · [[un-test-saltado-puede-esconder-una-asercion-invertida-no-solo-cobertura-ausente]] · [[carriles-en-paralelo-se-comparan-por-reloj-no-por-suma-de-tiempos]]
+- 🟠 **`ratchet:maxrows` es textual y ciego a la consulta SIN `.limit()`** (cabo del #2332+#2334, en prod con smoke verde). → [[una-huella-de-chunks-de-otra-ruta-no-detecta-un-deploy]]
+- 🟠 **Staging va por detrás y ahí se mide la suite (#1669 abierto)** — corregido el 13-sep: el «29 de un suelo de 59» de la frontera cross-org era un ciclo de imports (27 casos con `id: undefined`), no el desfase; suelo en **59** (`permisos-parametro.spec.ts:70`; este hub decia 64, que no existe en ningun spec). **22-sep**: `seed.sql` siembra ya la org B en seis tablas (#2872, idempotencia validada por mutacion), **sin aplicar a staging** y sin remedir — esa cifra se MIDE con `PERMISOS_LOG`. Prompt → `docs/architecture/PROMPT-continuacion-22-sep-seed-org-b-y-trinquete.md`. → [[una-base-de-staging-por-detras-deja-un-candado-sin-medir]] · [[un-ciclo-de-imports-deja-la-constante-undefined-y-el-caso-deja-de-medir]]
+- 🔴 **Los PDF de factura siguen sin copia de seguridad (#1641)** — falta **crear el bucket** `tufacturaia-storage-backup` en Backblaze (sin Object Lock; DISTINTO del WORM fiscal, que sí está activo) y pegar sus claves en 1Password: los cuatro campos siguen en `PEGAR_AQUI` (remedido 1-sep), y hasta entonces `backups:storage:verificar` sale rojo. Con ellos, el resto es mío → `backup-restore-runbook.md:169`.
+- 🔴 **Dos smokes antes de tocar B2**: un WhatsApp real con factura y una escritura que confirme el cifrado. La causa (variable fuera del compose) ya está cerrada con `env-guard` (#1984) → [[compose-que-enumera-variables-no-entrega-lo-que-guardas-en-el-panel]]
+- 🔒 **ADR-011: la suite E2E NO lleva sesión superadmin; `/admin` solo LECTURA** (la suite corre contra prod) — 21 de 24 vistas cubiertas (#1611), candado `blindarSoloLectura` en el navegador. Escribir prohibido hasta tener staging separado. Contratos: `rutas-admin-exigen-superadmin.test.ts` · `admin-perimetro.spec.ts` (ADR-011 vive en el repo, `docs/decisions/`).
+- 🟠 **El gate solo vive en local: la suite corre en `pre-push`, en CI no (#2096)** — mientras no se pague el billing de Actions es decisión, no deuda. PITR apagado → RPO 24 h. → [[ADR-043-sin-ci-el-gate-local-es-el-contrato]] · [[actions-sin-billing-hooks-locales-unico-gate]]
+- 🟢 **`gate:stop` en prod y el semáforo, medido (11-sep, #2720)** — **queda**: `fia-gate:27` y `fia-cierre-reminder.sh:17` → `--git-common-dir`. → [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]]
+- 🟠 **Barrido por secciones: 1/24, cobertura 37/757 (5 %)** — queda la **Parte B empezando por T1** (97 ítems de dinero y ley, no necesita staging); `admin` sí lo necesita y espera. Plan y método → `docs/qa/funcional/PLAN.md`; arranque → `docs/architecture/PROMPT-staging-y-barrido.md`. Partes 0, A y C(1)(2) cerradas. → [[verificar-que-el-bug-sigue-vivo-contra-codigo-actual-antes-de-fixear]]
+- 🟠 **De páginas quedan 7 no-admin, todas bloqueadas por precondición** — 4 de onboarding piden una org en un estado que hoy no existe; 3 de fiscal chocan con `proximamente`. Las 3 de `/admin` que faltan, por ADR-011.
+- 🟢 **Conector MCP: los dos incidentes del 9-sep, cerrados y verificados en prod (#2662)** — **tuyo**: que Borja confirme que el suyo apunta a la URL **con `/mcp`**. Detalle → [[facturaia-historico-detallado]] · `gotchas.md` §MCP
+- 🔴 **Rotar las claves del proyecto sandbox `vtovkkrcybstlzpgqsaq` (Manu)** — anon y service_role quedaron volcadas en un log de sesión al imprimir la salida entera del CLI. Es entorno de pruebas, pero es credencial.
