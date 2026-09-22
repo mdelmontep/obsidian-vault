@@ -1,7 +1,7 @@
 ---
 title: EcoBox HUB
 date: 2026-05-26
-updated: 2026-09-17
+updated: 2026-09-22
 tags: [cliente, ecobox, hub]
 ---
 
@@ -11,43 +11,41 @@ Cliente AgentesIA · Taller de chapa y pintura + mecánica rápida · Las Rozas 
 
 **Estimación de horas** (2026-08-04, retroactiva, sin time-tracking — método en [[estimar-horas-retroactivas-sin-time-tracking-cruzar-git-y-hub-cliente]]): web ~5-6h (autor `notcapi`, vía git log del repo `ecobox`) · automatización n8n/Retell/WhatsApp/Chatwoot/GCal ~24-32h (Manuel, estimado por densidad del hub + 3 ADRs del 22-may). Total proyecto ~29-38h, 20-may a 2-jun.
 
-## ▶︎ EMPEZAR AQUÍ (17-sep-2026)
+## ▶︎ EMPEZAR AQUÍ (22-sep-2026)
 
-Estado tras la sesión del 17-sep (detalle abajo). Voz **v25** publicada y el número sirve
-`latest_published`; **ninguna llamada real la ha estrenado todavía**.
+**Cambio de modelo (22-sep): Alex YA NO AGENDA CITAS, ni por voz ni por WhatsApp.** Recoge qué
+quiere el cliente (datos básicos, sin matrícula), le dice que el taller le llama «en cuanto pueda»
+(o al día siguiente si es después de las 17:00) y manda email a **cristian@ + info@ecobox360.es**.
+Citas existentes y «¿cómo va mi reparación?» también van por email.
 
-0. **Limpiar Calendar:** las pruebas del 16/17-sep dejaron 4 citas REALES el 17-sep —
-   «Peritaje — Reservar_cita — 3254JBC» (12:00 Rozas, la del bug), «Agentesia Proba» (11:30 Rozas),
-   «Manuel del mundo» (11:00 Rozas) y «Manu 🥦» (11:00 Majadahonda).
-1. **Pruebas reales pendientes (humano):**
-   - Llamar al +34910054813 desde un móvil que NO sea el 617314938, **con ruido de fondo a
-     propósito**, y pedir "hablar con una persona" → debe sonar el 617314938 mostrando el
-     910054813, y Alex no debe cortarse con el ruido (v24: `noise-cancellation`, interrupción 0.3).
-     Si aún corta, el siguiente paso es `ambient_sound: null`, NO bajar más la sensibilidad.
-     **En esa misma llamada, Alex debe pedirte nombre y apellido justo después del taller** (v25).
-   - WhatsApp: reserva completa de punta a punta para confirmar que ahora pide nombre real y email
-     y que el correo de confirmación llega. **Ya no hay modo test: toda prueba crea cita real.**
-2. **Handoff:** Cristian ya tiene cuenta en Chatwoot (ver sesión tarde). Hasta hoy ninguna de las 16
-   conversaciones reales tenía un mensaje de un humano. Falta el email de recepción para su cuenta, y
-   cambiar el `assignee_id: 1` fijo del nodo "Assign a Ecobox" por reparto real. Horario del inbox
-   definido L-V 9-17 pero `working_hours_enabled:false`.
-3. **Que Cristian cierre lo suyo:** antelación mínima para cancelar (guard escrito y sin aplicar),
-   Bloque 0 (operadora, destino real de la transferencia, si Alex cierra valoraciones), y datos de
-   negocio contradictorios: Mutua (KB compatible, flow deriva siempre), Aval fuera de la lista de
-   aseguradoras, eléctricos (web sí, KB no), recogida «sin coste en el noroeste», sustitución gratis
-   para seguros/renting, mecánica sin cita.
-4. **Dudas abiertas:** el nodo "Email a Cristian" de `Reservar_cita` escribe a m.delmonte.p@, no a
-   Cristian. Mensajes `[PRUEBA - borrar]` en el Slack de incidencias (C0ASNEXM2N4) sin borrar.
-   Simulaciones: con todos los datos de golpe se salta deletreo y resumen; «el jueves que viene» dio
-   dos fechas distintas en dos pruebas.
-5. **WEB — dar de alta `ecobox360.es` en Search Console y pedir indexación.** La web salió de
-   `noindex` el 17-sep tras meses invisible para Google, así que hasta que no se indexe no hay
-   nada que medir. ~~Alta del `www` en Dokploy~~ **hecho el 17-sep**: Let's Encrypt emitió el
-   certificado y las cuatro puertas (`http`/`https` × `www`/apex) acaban en `https://ecobox360.es`
-   con 301. Un host que no figura en Domains no existe para Traefik: devuelve su `404 page not
-   found` en texto plano y nunca pide certificado — se confundió tres veces con la web caída.
-6. **agency-portal** descarta `custom_analysis_data` de Retell (los 12 campos de EcoBox) en
-   `src/lib/fleet/channels/retell/adapter.ts` y no avisa de transferencias fallidas.
+- **Voz:** Retell v26 publicada (número en `latest_published`). Flow: bienvenida → intención →
+  `Consultar_horario` → derivar a persona **solo en horario** (+34 91 638 32 81; fuera → `n-cerrado`)
+  o recoger datos → `Registrar_llamada` → despedida.
+- **n8n `Registrar_llamada EcoBox`** (`mHe8PbwDotbCruu7`): webhooks `consultar_horario` y
+  `registrar_llamada` (header `X-Ecobox-Token`) → Postgres `llamadas_pendientes` (upsert por
+  `idem_key`, `status` pendiente/avisado/error) → email SMTP. WhatsApp detectado por `channel_phone`
+  → email con enlace a la conversación de Chatwoot. Festivos: `FESTIVOS_COMUNES`, válido hasta 2026
+  (el workflow de aviso de caducidad `kuR5tIxQ66VrvbhJ` ya lo recuerda).
+- **WhatsApp** (`lv7pee2XAU5OngOB`): fuera `mirar_disponibilidad`/`reservar_cita`/`buscar_reserva`/
+  `cancelar_cita`; nueva tool `pasar_aviso_taller` → mismo webhook. Prompt nuevo.
+- Filas de prueba borradas de `llamadas_pendientes`. Cómo se probó el flow por chat:
+  [[probar-un-conversation-flow-de-voz-por-chat-exige-clonarlo-a-un-chat-agent-temporal]].
+- La credencial Retell del ítem de EcoBox en 1Password es inválida; se usa la de agencia
+  (`Clinica Zen/Retell API`).
+- **Web (22-sep):** hero con la foto de la cabina (Audi blanco) a sangre, desplazada a la derecha y
+  con velo bajo el texto; foto nueva del taller en «Sobre nosotros». En prod (`dc24de2`).
+  `por-que-nosotros.*` quedó sin uso en `web/public/`.
+
+**Pendiente:**
+1. **Estreno real:** llamar en horario y fuera de horario, y un WhatsApp, y confirmar que el email
+   llega a Cristian/info. Ninguna conversación real ha pasado aún por v26.
+2. **Rotar secretos** HMAC de Chatwoot + `X-Ecobox-Token` (sigue pendiente del 17-sep).
+3. Calendar: 4 citas de prueba del 17-sep sin borrar (ver sesión 17-sep). Los workflows de reservas
+   siguen existiendo aunque nadie los llame: decidir si se desactivan.
+4. **WEB — alta en Search Console** de `ecobox360.es` y pedir indexación.
+5. Handoff Chatwoot: `assignee_id: 1` fijo y `working_hours_enabled:false` (ver 17-sep).
+6. **agency-portal** descarta `custom_analysis_data` de Retell y no avisa de transferencias fallidas.
+7. Identificarse como IA (art. 50) — ver top-of-mind.
 
 ## Sesión 2026-09-17 (web) — la web estaba en `noindex` desde el primer deploy
 

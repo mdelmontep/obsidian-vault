@@ -494,3 +494,4 @@ tags: [home, archivo]
 - 2026-09-07 · Simarro · `EXECUTIONS_DATA_MAX_AGE` del n8n de Simarro: sospecha de agosto DESCARTADA — está en 336 (14 días) con `EXECUTIONS_DATA_PRUNE=true`, no en horas como en Clínica Zen.
 - **TuFacturaIA — abono parcial: los 7 PRs en prod, paraguas #2426 y ticket #170 cerrados** (7-sep-2026; archivado el 14-sep — la decisión `disputada` → `pendiente` sigue viva en el hub).
 - 2026-09-15 · AGH People & Culture · V1–V4 de #1702 y docs mergeados en `main` (#1769 → #1768 → #1771 → #1772 → #1773 → #1770); V1 ya tiene PR/merge, V2 dejó de estar abierta y el aviso/cierre de Slack tiene enlace. El trabajo de ficha completa sigue abierto en [[agh-iberica]].
+- 2026-09-22 · EcoBox — smokes de reservas (grúa/Mutua→handoff, no-doble-booking por chat) retirados: Alex deja de agendar citas.

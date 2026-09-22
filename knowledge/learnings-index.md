@@ -460,6 +460,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[retell-knowledge-base-api-requiere-multipart-form-data]] — retell create-knowledge-base requiere multipart no json
 - [[retell-tools-conversation-flow-require-tool-id-field]] — retell custom tools en conversation flow requieren tool_id explícito
 - [[retell-transfer-call-builtin-vs-custom-function-para-sip]] — Retell transfer_call built-in vs custom function — solo el built-in transfiere SIP
+- [[probar-un-conversation-flow-de-voz-por-chat-exige-clonarlo-a-un-chat-agent-temporal]] — probar un conversation flow de voz por chat exige clonarlo a un chat agent temporal
 - [[saldo-inicial-cashflow-coexistencia-psd2-manual]] — Saldo inicial cashflow — coexistencia PSD2 + manual sin conflicto
 - [[scroll-fade-dinamico-mascara-gotchas]] — scroll-fade dinámico con mask-image — 3 gotchas (transition/@property, box-shadow, portal)
 - [[scroll-shadows-komarov-con-css-variable-dark-mode]] — scroll shadows técnica Komarov con variable CSS para dark mode
