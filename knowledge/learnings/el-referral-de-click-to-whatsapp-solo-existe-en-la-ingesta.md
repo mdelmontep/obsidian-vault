@@ -15,5 +15,9 @@ Dos trampas juntas:
   y se purga por diseño (RGPD). Si no se persiste en la MISMA transacción que guarda el mensaje entrante,
   se pierde para siempre y ninguna atribución ni Conversions API lo puede reconstruir.
 
+- **Con Kommo (u otro CRM) de BSP, el `referral` ni siquiera llega**: se lo come el CRM y su webhook
+  `add_message` no lo reenvía (clinica-zen, 86 ejecuciones, 21-sep). Vías: UTM en el anuncio → campos
+  `tracking_data` del lead en Kommo, o una 2.ª app propia suscrita al WABA (`subscribed_apps`) que solo escuche.
+
 Regla: en cualquier integración de WhatsApp, `persistReferral()` va dentro de la ingesta, nunca en una
 fase posterior del plan. Es de las pocas decisiones de calendario que son irreversibles.

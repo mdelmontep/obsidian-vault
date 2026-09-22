@@ -1,13 +1,30 @@
 ---
 title: clinica-zen
 date: 2026-07-29
-updated: 2026-09-18
+updated: 2026-09-22
 tags: [cliente, clinica-zen]
 ---
 
 # Clínica Zen
 
 Clínica dental + estética facial en Las Rozas. Chatbot WhatsApp (Kommo) + agente de voz Retell + recordatorios + emails. Contactos: Gonzalo (legacy), Dani.
+
+## Estado 21/22-sep-2026: agente según la campaña de Meta Ads (diseño, esperando token)
+
+Objetivo: saber de qué anuncio viene el lead de WhatsApp y responder con el contexto de esa campaña
+(doc de campañas del 8-sep: «Mito del Hueso», «Segunda Opinión»; la 3.ª, «Anti-Miedo», sin aprobar).
+- **Hoy el `referral` no llega**: Meta → Kommo → `add_message` sin `referral`/`ad_id`/UTM (86 ejecuciones
+  18–21 sep). Kommo ya tiene los campos `utm_*`/`fbclid` (`tracking_data`, ids 1816708–1816726), pero vacíos.
+  → [[el-referral-de-click-to-whatsapp-solo-existe-en-la-ingesta]]
+- **Plan (pendiente de OK)**: A) UTM por anuncio → leerlos del lead en `Get list of leads`; si no se rellenan,
+  B) 2.ª app nuestra suscrita al WABA que solo escucha (teléfono→`ad_id` en Redis). Respaldo: casar el
+  mensaje prellenado (Marketing API, `autofill_message`). Catálogo = cron desde Meta (activo, `ad_id`,
+  prellenado) + Google Sheet que edita la clínica (tono, límites, «aprobada»); se usa si está activa **y**
+  aprobada. Campo «Campaña» en el lead. Voz: fuera por ahora (luego, cruce por teléfono).
+- **Bloqueante**: falta token de usuario del sistema de Meta (`ads_read`, `whatsapp_business_management`,
+  `whatsapp_business_messaging`) en el vault `Clinica Zen`. Manuel confirma acceso a la cuenta de Meta.
+- **1Password**: «Token Larga duración Whatsapp» es en realidad el token de **Kommo** (JWT, cuenta 36308863,
+  caduca 2031, da 200). «kommo» y «Long Lived Token» dan 401.
 
 ## Estado 15/18-sep-2026: valoración post-cita en WhatsApp
 
