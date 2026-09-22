@@ -78,6 +78,23 @@ ni symlinks: «We couldn't find the Next.js package (next/package.json)». Se le
 instalación corrupta del repo padre. Fix: `npm ci` en el worktree, lo primero, antes de la
 primera línea de código — mismo consejo de siempre, un síntoma nuevo por el que llegar tarde.
 
+**Séptima (22-sep), misma firma que la quinta y un síntoma nuevo: el que SÍ cae es el typecheck,
+y miente.** Worktree anidado con `node_modules` vacío: `lint` verde y `vitest` verde (suben al padre,
+como en la quinta), pero `npm run typecheck` sale en **rojo** — y no es un error de tipos:
+`scripts/typecheck.mjs` invoca `node_modules/typescript/bin/tsc` por ruta **absoluta** desde el cwd,
+así que no puede subir por el árbol y muere con `MODULE_NOT_FOUND`. El rojo llega donde esperas un
+error de código, así que se lee como regresión propia; el `Cannot find module` queda enterrado bajo
+el stack de Node. Regla que generaliza las dos firmas: **lo que resuelve por árbol (lint, vitest,
+`npx`) miente en verde; lo que resuelve por ruta absoluta miente en rojo. Ninguno mide.**
+
+Y el fallo de verificación que lo dejó pasar, que es el que más duele: comprobé
+`ls node_modules >/dev/null && echo presente` — y `ls` de un directorio **vacío** devuelve 0, así que
+dije «presente (real)» de una carpeta con **cero paquetes**. Esta misma nota ya avisaba de contar
+entradas (`ls node_modules | wc -l`) y aun así comprobé presencia en vez de cantidad. La sonda buena
+no es «existe la carpeta» sino **«existe el binario que voy a ejecutar»**:
+`test -d node_modules/typescript && test -d node_modules/eslint`, o directamente `npm ci` antes de
+la primera línea. Ver [[abrir-en-escritura-trunca-antes-de-leer-y-el-control-lo-lee-como-exito]].
+
 Ver [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[worktree-facturaia-build-supabase]] ·
 [[worktree-qa-next-standalone-symlink-node-modules]] · [[worktree-monorepo-symlink-node-modules-anidado]].
 

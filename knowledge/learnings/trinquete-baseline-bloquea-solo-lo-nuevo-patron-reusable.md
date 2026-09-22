@@ -26,3 +26,19 @@ Antes de confiar en un checker nuevo: probarlo con un caso que DEBERÍA
 fallar (quitar una entrada del baseline a mano, confirmar exit 1) — no basta
 con que corra sin errores. Regla homóloga a la disciplina de loops/checkers
 en general (ver memoria del agente `feedback_loop_engineering_disciplina`).
+
+🔁 **El modo de fallo del patrón: un trinquete que nadie consolida le cobra a quien pase después**
+(23-sep, vault de Obsidian). El trinquete de contexto de arranque (`scripts/context-budget.mjs`) salió
+rojo en mi cierre. Antes de condensar nada restauré `origin/main` **puro** y volví a medir: **+7,6 KB
+ya estaban ahí con CERO cambios míos**; lo mío eran 1,4 KB. O sea que el **84 % del rojo era deuda de
+otras sesiones que cerraron sin correr el trinquete**. Un baseline solo aprieta si se consolida en el
+mismo cierre que produce el cambio.
+
+- Deja al siguiente ante dos malos incentivos: **subir el baseline por inercia** (el trinquete deja de
+  medir) o **condensar lo que no es suyo** para pasar (poda a ciegas de trabajo ajeno). Los dos
+  rompen el patrón, y ninguno deja rastro de que se rompió.
+- La sonda que separa lo tuyo de lo heredado: **mide sobre `origin/main` limpio antes de tocar nada**,
+  y resta. Sin ese control no sabes si estás pagando tu factura o la de tres sesiones.
+- Corolario para el trinquete de un repo COMPARTIDO por sesiones simultáneas: correrlo en el cierre no
+  es opcional ni cortesía — es lo único que impide que la deuda se acumule en el que llegue con prisa.
+  Y si BAJA, consolidar también: un baseline flojo deja de apretar igual que uno inflado.

@@ -28,4 +28,18 @@ porque `main` local iba un commit por detrás de `origin/main` y hacía falta un
 `merge --ff-only`. Las dos mitades juntas: la rama no dice nada del contenido, y la
 dirección que se mide tampoco.
 
+🔁 **Y el atraso no solo te hace leer viejo: te inventa PENDIENTES** (22-sep, facturaia). Hasta aquí
+el daño era de lectura. También lo es de escritura, y ese se cuela en un PR. `git status` no dice
+«pendiente», dice «distinto de MI HEAD»: con el raíz en `dcb8d12a4` (1-sep) contra `origin/main` en
+`ad6b84dfe` (22-sep) —**333 commits, 21 días**— de 7 ficheros `M` **cuatro eran copias ANTIGUAS de
+trabajo YA mergeado**. Trabajo real: 3. Llevar los 7 a un PR «para no perder nada» habría **rebobinado
+tres ficheros de main**, y el diff habría tenido pinta de aportación.
+
+La sonda es **por fichero**, no del repo: `git diff HEAD:<ruta> origin/main:<ruta>` — vacío = ya está
+arriba, tu copia es la vieja, déjala. Y al construir el PR, **parte de `git show origin/main:<ruta>` y
+aplica encima solo tu hunk**; nunca subas el fichero local entero. Lo hice así con `CONTEXT.md` en el
+#2874 y por eso entró 22/0 en vez de pisar tres semanas ajenas. Tell de que estás en este caso: un
+`git status` largo en el checkout **principal**, justo donde nadie trabaja — el trabajo real vive en
+los worktrees creados desde `origin/main`. Un museo con el árbol sucio parece un backlog.
+
 Ver [[git-diff-vs-main-drifteado-usar-merge-base]] · [[triaje-seguro-ramas-worktrees-sesiones-paralelas]] · [[pr-review-ya-resuelta-por-el-reviewer-mismo]].
