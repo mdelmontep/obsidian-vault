@@ -38,3 +38,5 @@ Con el suelo ya medido, tres sesiones atribuyeron un pre-push de 70 min a la con
 (load 17 real) y al semáforo. El log decía que la espera de admisión máxima fue **1 s**:
 la cola no era el problema y el load, siendo cierto, no era la causa. Un load alto es
 compatible con cero espera. Ver [[el-suelo-de-un-semaforo-explica-quien-entra-no-cuanto-tarda]].
+
+**Comparar dos configuraciones en esta máquina exige que la diferencia supere la dispersión de una misma** (22-sep, `maxWorkers` de vitest). La tanda 5, 7, 5, 7 dio 272/220/349/246 s y parecía un 25 % a favor de 7; la tanda 6, 5, 6 dio 220/208/188 s, con el 5 a 208 s en cuanto bajó la carga (load 11-19 durante todo el experimento). Intercalar A/B y pedir que el efecto sea mayor que el rango de repetir A; si no, es ruido y la config calibrada se queda.
