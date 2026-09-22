@@ -112,6 +112,8 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - 2026-09-21 · simarro · encuesta 48h y recordatorio 4h salían con "Error" desde mayo → plantillas aprobadas en la fuente WABA vieja → 4h desactivado, encuesta por rehacer. → [[plantilla-waba-kommo-queda-atada-a-la-fuente-donde-se-aprobo]]
 - 2026-09-21 · facturaia · el 303 de Lucas Hadj no calculaba el 1T → una emitida importada (EXT) al 0 % a un cliente NL sin marca intracom; `importarEmitidaExterna` era la única puerta sin guard → guard que pregunta a `clasificarLinea303` antes de crear cliente (PR #2842, ADR-102); el dato, pendiente del cliente. → [[un-guard-antes-de-un-find-or-create-debe-juzgar-la-fila-que-reutilizara]]
 - 2026-09-22 · facturaia · PDF, ficha y Excel pintaban el precio unitario a 2 decimales (0,25 € por 0,25338) aunque la BD guarda 6 → formateador de importe usado para un precio → `fmtPrecioUnitario` (2-6 decimales) y numFmt `#,##0.00####` (#2861).
+- 2026-09-22 · simarro · una clienta recibió «visita confirmada» por rellenar el formulario de una vivienda → `OFGGroWlifA88YFN` creaba el lead en Lead Caliente, cuya etapa dispara «Confirmación Cita» → ahora cae en Formulario Web y se quita el Salesbot Run manual (duplicaba el saludo). → [[el-inventario-de-automatismos-no-esta-solo-en-el-orquestador]]
+- 2026-09-22 · simarro · leads de una agente nueva con «Agente asignado» vacío → las opciones del campo de Kommo y `AGENTE_ENUM` eran listas escritas a mano → opciones leídas en cada ejecución + `Sync_agentes_calendar` da de alta las que faltan. → [[una-lista-de-opciones-copiada-en-codigo-se-queda-atras-con-cada-alta]]
 
 ## Archivo
 - Agosto 2026 → [[incidents-archive-2026-08]] (182 entradas, archivadas el 10-sep)

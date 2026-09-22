@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-21
+updated: 2026-09-22
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,16 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-22 · formulario web en su embudo, chatbot con contexto, agentes nuevos solos)
+
+- **Formulario de vivienda → etapa Formulario Web** (`OFGGroWlifA88YFN`). Antes caía en Lead Caliente, que dispara «Confirmación Cita», y Rita recibió «visita confirmada» sin tener cita. Quitado el Salesbot Run manual: la etapa ya lanza el bot 87869. Probado E2E (lead 35985114, un solo WhatsApp). → [[el-inventario-de-automatismos-no-esta-solo-en-el-orquestador]]
+- **Chatbot `Contexto lead`** lee la referencia (CF 1373305) y el mensaje del formulario (CF 1373307), para no volver a pedir el ID. Solo probado en local: falta la respuesta real a «¿tiene garaje?».
+- **Agente asignado sin listas a mano.** Añadida Claudia (1034222) y rellenados sus 4 leads. `Calendario_a_Kommo` lee las opciones en cada ejecución. `Sync_agentes_calendar` da de alta las que faltan (solo añade, avisa a Slack). Para un agente nuevo basta con compartir su agenda. Aún no se ha visto un lead nuevo real con agente. → [[una-lista-de-opciones-copiada-en-codigo-se-queda-atras-con-cada-alta]]
+- **Sigue abierto:**
+  - «Confirmación Cita» salta con cualquier lead que entre en Lead Caliente, tenga cita o no (interés de voz, leads creados a mano). La condición irá en el salesbot 87865, pendiente de OK. Los leads de interés de voz se quedan en Lead Caliente: lo decidió Manu.
+  - La oficina tiene que cerrar el duplicado de Irene (35971302), creado a mano sin contacto.
+- Memoria: `project-embudo-formulario-web-20260922`. Backups `*-20260922.json` en `n8n-backups/simarro/`.
 
 ## Estado (2026-09-21 · cancelaciones, emails, valoraciones y plantillas)
 

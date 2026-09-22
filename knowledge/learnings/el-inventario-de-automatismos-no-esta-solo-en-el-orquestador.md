@@ -21,3 +21,8 @@ Detección sin acceso a la config: `GET /api/v4/events` tras crear una entidad d
 por API (`/api/v2/salesbot` da 403/404), pero sí desde el navegador con sesión: ver [[kommo]].
 
 Ver [[dar-de-alta-con-fecha-pasada-despierta-los-automatismos-de-esa-fecha]] · [[recordatorios-visita-por-task-type]]
+
+**Caso 2 (22-sep, Simarro).** El formulario web de una vivienda creaba el lead en *Lead Caliente*.
+Esa etapa dispara «Confirmación Cita», así que la clienta recibió «visita confirmada» sin tener cita.
+Elegir la etapa en la que se crea un lead es elegir qué bot se ejecuta. Cada formulario tiene que
+caer en su propio embudo, no en uno que se le parezca.
