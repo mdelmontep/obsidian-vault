@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un test saltado puede afirmar lo CONTRARIO del codigo** — al despertarlo, sospecha del test antes que del codigo: nunca ha corrido. [[un-test-saltado-puede-esconder-una-asercion-invertida-no-solo-cobertura-ausente]]
 - **`proxy.ts` en la RAÍZ con `src/` no corre** — sin warning; tell: `curl -sI` da `/login` sin `next`. [[nextjs16-middleware-to-proxy]]
 - **Migrar un endpoint deprecado cambia la FORMA de la respuesta** — URL, cuerpo y parser en el mismo PUT. [[migrar-un-endpoint-deprecado-cambia-la-forma-y-el-consumidor-lo-calla]]
 - **Una migración con excepciones verifica las DOS mitades** — contar solo lo que sobra da verde con el uuid exceptuado mal tecleado. [[una-migracion-con-excepciones-verifica-las-dos-mitades]]
