@@ -1,7 +1,7 @@
 ---
 title: Elphis Psicología — HUB
 date: 2026-08-24
-updated: 2026-09-19
+updated: 2026-09-22
 source: elphis-psicologia
 tags: [cliente, agentesia, elphis-psicologia, voz, whatsapp, retell, n8n, dokploy, rgpd, agency-portal]
 ---
@@ -18,19 +18,24 @@ Bloque A (web, marca) = Borja · **Bloque B (agentes) = Manu**. Autoridad docume
 
 ## Estado · 2026-08-31
 
-- 🟢 **Solicitud por correo (18-19/09)** — voz y WhatsApp ya no agendan: recogen datos y
-  `psico-solicitud-correo` manda un correo HTML de marca (logo, botón `tel:`, datos,
-  resumen y la conversación; en WhatsApp la trae de Chatwoot) + parte de texto. Envía el
-  buzón del centro por SMTP de Webempresa (`waldE5kz6ZOoZ5yd`); destino provisional
-  m.delmonte.p@agentesia.madrid, a info@ cuando se diga. Logo servido por
-  `psico-marca-logo`. Guardián `verify:voz-llamada-desplegado`. Rama
-  `feat/solicitud-por-correo` sin push. Webmail: webmail.elphispsicologia.com.
+- 🟢 **Solicitud por correo (18-19/09), mergeada el 21/09** (PR #55, con #42/#56) — voz y
+  WhatsApp no agendan ni llevan protocolo de crisis: recogen datos, remiten al 024/112 si hay
+  riesgo, y `psico-solicitud-correo` manda correo HTML de marca. Voz v24 publicada; el 910
+  (Netelip → Retell, `latest_published`) lo contesta el agente. Correo de prueba recibido.
+  Contrato de encargado **enviado a firma** (21/09; `DPA_SIGNED` sigue `false`).
   → [[email-imagenes-base64-bloqueadas-usar-hosting]]
-- 🔴 **Meta/WhatsApp real** — WABA «Elphis Psicología» aparte en el portafolio de
-  Adicciones. Falta que un admin la cree y la asigne al usuario de sistema «App Elphis»
-  (token 1P `yozmvo7f…`, hoy sin WABA asignada); el resto por API: añadir el 910, OTP
-  por voz (agente mudo temporal en Retell), registro, override de webhook a Chatwoot y
-  bandeja. → [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]]
+- 🟢 **WhatsApp real (21/09)** — WABA `1070210239055854` en el portafolio de Adicciones,
+  número `1334983306361380` CONNECTED (nombre en revisión). Todo por API: inbox Chatwoot 3
+  (cuenta 4), app suscrita a la WABA con `override_callback_uri` (el webhook de la app, de
+  Adicciones, intacto), web del perfil a elphispsicologia.com. Tono corto y conversacional
+  publicado (PR #58, `verify:wa-desplegado` verde). Sin plantillas de Meta.
+  **Falta**: `WHATSAPP_CHANNEL_LIVE = true` en `legal.ts`, entrada en `bloqueantes.md`,
+  borrar inbox 2 (pruebas), foto de perfil. Scripts de publicación en el scratchpad de la
+  sesión (`publicar-wa.py`: compara lo vivo con el commit publicado, no con `main~1`).
+  → [[chatwoot-whatsapp-cloud-requiere-redirigir-webhook-meta]]
+- ⏸️ **Tono corto en el WhatsApp de Adicciones** — propuesto y aparcado por Manu (21/09):
+  vive en `router-ia` («Build LLM call 1»), ya pide 1-3 frases; la propuesta era bajar a 1-2
+  y «solo lo preguntado», sin tocar las fórmulas de la clienta.
 
 **El bloque B ya no tiene ninguna pieza a medias.** Todo lo que sigue está vivo en
 `n8n-psicologia.elphis.agentesialabs.com` o en Retell, y **cada pieza tiene un

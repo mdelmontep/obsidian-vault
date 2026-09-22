@@ -29,3 +29,6 @@ La app tiene UNA callback: una WABA nueva suscrita sin más entrega sus mensajes
 de la otra. Suscribirla YA con `POST /{waba}/subscribed_apps {override_callback_uri,
 verify_token}` (prioridad: número > WABA > app). Crear la WABA no se puede por API salvo
 BSP. Caso: [[clientes/elphis-psicologia/index|elphis-psicologia]] junto a Adicciones (19-sep).
+Todo el alta cabe en API (21-sep): inbox con `POST /api/v1/accounts/{id}/inboxes` usando la
+sesión de `/auth/sign_in` (no rota el token compartido); el `webhook_verify_token` sale en
+`provider_config` del inbox → va a la suscripción de arriba.
