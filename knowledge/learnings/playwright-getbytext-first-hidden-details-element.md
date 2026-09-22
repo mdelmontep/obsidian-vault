@@ -34,3 +34,7 @@ await page.locator('.forecast-list').getByText(concepto, { exact: true })
 Aplica siempre que haya `<details>`/`<summary>` o elementos con
 `display:none`/`visibility:hidden` que contengan el mismo texto que el
 elemento target. Regla: en tests de listas, scopear siempre al contenedor.
+
+## Caso 2 (facturaia #2855, 22-sep-2026): CSS responsive al ancho exacto
+
+`getByText(capitulo).first()` cogía el nombre dentro del panel del árbol, que va antes en el DOM y se oculta con `@media (max-width: 1280px)`. Desktop Chrome de Playwright mide **justo 1280 px**, y `max-width` es inclusivo. Parecía «solo falla contra `next start`», y era una pista falsa: no tenía que ver con el build. Fix: `getByRole('heading', { name })`, que es el elemento visible de la rejilla. Antes de culpar al entorno, mira qué elemento resolvió el locator: el error de Playwright lo dice (`resolved to <… hidden>`).
