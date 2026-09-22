@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-21
+updated: 2026-09-22
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -87,10 +87,10 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 - ✅ **En prod / en `main`:** los tres workers de `hr-text` con tope de **5 €/día por tenant**, la vista de la propuesta con su procedencia, el lector de celdas del SNC, el **lector de CV** (#1918), la pantalla de revisión (#1894), las tablas del perfil (mig. **0062**) y el sueldo con fecha de efecto. Detalle y números → [[agh-iberica-historico]].
 - ✅ **Cerrado 20-21 sep:** 4 lanes + #1931 (la propuesta la ve un humano con la puerta derivada del lector). → [[agh-iberica-historico]].
 - 🔬 **Dos familias de contrato** (Print To PDF vs Docusign DMv10, que se lee sin visión) → **#1702 no es el bloqueante universal**, y «el salario vive en el anexo» era falso. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]. Los permisos de RRHH nacen apagados **para todo rol, admin incluido**: era una **decisión**, no código.
-- ✅ **Tren del 21-sep: 21 PRs en `main` (`555f25a1`) en 4 olas**, cada una integrada entera antes de mergear, lo que cazó 2 defectos de composición. Cierra #1936 (ficha), T1 permisos, T2·1 WhatsApp, validador de CV y otros; migraciones 0063–0069 autodesplegadas **sin sondear**. Nota: `docs/status-log/2026-09-21-manu-tren-cv-whatsapp-21-prs.md`.
-- 🟠 **Siguiente:** pegar `.claude/worktrees/HANDOFF-cv-whatsapp/PROMPT-continuacion.md`. Ola A = #1909 → tramo 2 de #1925 → T2·2 en serie. Tres decisiones ya firmadas en `DECISIONES.md` (#1858 se estrecha a D11, el revert de #1867 con «último escritor» + 409, la matriz de #1710). **Tuyo:** Deploy de los hr-workers → `/version/workers` → restauración → ensayo #1849, y decidir si una técnica sin `salariesView` aprueba CVs.
+- ✅ **21-22 sep: 38 PRs en `main` (`2c827f64`) en olas integradas enteras.** Cierra #1936, #1858 (D11), #1925, #1867 (casar/deshacer, mig 0073), #2009; migraciones 0063–0073 en prod y 5 hr-workers desplegados. Notas en `docs/status-log/2026-09-2{1,2}-manu-*`.
+- 🟠 **Siguiente (tuyo):** evals ×3 de T3-c (#1859, worktree `t3c` @ `7734a64b`; no se mergea hasta #1349/#1350) · ensayo #1849 · #1909 (medir filas de prod con dato protegido en la cita) · decidir `salariesView` para aprobar CVs · mergear #2017 (docs). Seguimiento: #2015, #2016.
 
-_Método de esta tanda: [[integrar-la-ola-entera-antes-de-mergear-caza-defectos-de-composicion]] · [[un-fetch-fallido-deja-fetch-head-viejo-y-el-merge-sale-verde]] · [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._
+_Método de esta tanda: [[un-rojo-ajeno-del-gate-puede-ser-el-bug-que-arregla-otra-pr-del-tren]] · [[integrar-la-ola-entera-antes-de-mergear-caza-defectos-de-composicion]] · [[un-fetch-fallido-deja-fetch-head-viejo-y-el-merge-sale-verde]] · [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._
 
 ## Bloqueantes
 

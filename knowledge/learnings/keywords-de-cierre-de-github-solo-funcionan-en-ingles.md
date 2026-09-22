@@ -18,4 +18,6 @@ Casos reales: agh-iberica PR #633 mergeada (`66026f4`), issue #632 abierto — c
 
 **Seis semanas después seguía pasando, y ya no es un caso: es el 100 %.** El 7-sep en TuFacturaIA los CINCO issues de una tanda (#2544, #2545, #2532, #2573, #2530) estaban `OPEN` con su PR mergeado, uno de ellos desde la misma mañana. Escribir el learning no lo arregló: la plantilla de mensajes del repo sigue diciendo `Cierra #N`. Esto ya pide **hook**, no prosa — un `pre-push` que rechace `Cierra|Resuelve|Arregla #N` en el cuerpo, o un cierre de sesión que corra `gh issue view` sobre lo que dio por resuelto.
 
+**Y cierra también desde un asunto de commit (22-sep, agh-iberica #1867):** una PR con `Refs` en todo el cuerpo cerró el issue porque un commit del squash se titulaba `fix: #1867 …`. Además, «fix #3» en la prosa del cuerpo enlazó el #3 como cierre. Comprobar `gh pr view N --json closingIssuesReferences` antes de mergear.
+
 *(Fusionado el 29-jul con `cierra-en-espanol-no-cierra-la-issue-de-github`, que decía lo mismo.)*
