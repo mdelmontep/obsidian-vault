@@ -20,4 +20,9 @@ limpio antes de hacer QA visual. Regla general: **no mezcles `build` y `dev`
 en el mismo working tree activo** — usa un worktree separado para el pre-commit
 gate si el dev server debe seguir vivo para QA.
 
+Actualizado 2026-09-23 (Next 16.3): `next dev` ya compila en `.next/dev`, aislado; quien se rompe
+ahora es `next start`. El pre-push de facturaia hace `next build` sobre `.next` y pisa el bundle de
+un `dev-staging.sh build` del mismo worktree: el candado de permisos no encuentra `#login-email`.
+Fix: para el push, servir con `next dev` (`PORT=3003 scripts/dev-staging.sh`).
+
 Relacionado: [[next-build-lock-huerfano-hace-fallar-pre-push-hook]].

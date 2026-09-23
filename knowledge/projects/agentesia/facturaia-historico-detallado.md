@@ -1378,3 +1378,7 @@ Encargo: lo que la métrica de contraste APCA **no** ve — jerarquía, densidad
 ### 2026-09-09 — conector MCP, los dos incidentes
 
 - 🟢 **Conector MCP: los dos incidentes del 9-sep, cerrados y VERIFICADOS en prod (#2662 → `7e23d5947`)** — la URL del conector lleva `/mcp` (lo mandaba mal el manual) y el **AS partido** ya manda el `iss` de RFC 9207, que era lo que hacía que `codex mcp login` se negara. Desplegado app primero, servicio después. Tras el deploy: Lucas encadenó el primer registro **Codex** de la historia de `oauth_clients` → consent → token → **3 llamadas v1 en 200**, y el conector de **Borja** refrescó su token una hora más tarde, así que el `iss` nuevo no rompió a los clientes existentes. **Tuyo**: que Borja confirme que el suyo apunta a la URL **con `/mcp`**. → [[partir-el-authorization-server-oauth-obliga-a-mandar-el-iss]] · [[el-puerto-del-redirect-de-loopback-no-cuenta-rfc-8252]] · `gotchas.md` §MCP
+
+### 2026-09-23 — smoke stock-fase-d
+
+- 🟢 **`stock-fase-d.spec.ts` deja de saltarse (#2866 → PR #2883, `97915405b`)** — `StockFaseDSeeder` restablece la fixture en el `beforeAll` (15/7,00 → 18/7,50); 9 passed/0 skipped dos veces en staging, 4 mutaciones con víctima. Staging recibió las migs 902-922. Ver [[npm-run-build-rompe-next-dev-corriendo-mismo-repo]]
