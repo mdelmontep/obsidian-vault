@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-22
+updated: 2026-09-23
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -85,10 +85,10 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 **Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada. Tablero del piloto: **59/100** (21-sep noche, `main` `555f25a1`).
 
 - ✅ **En prod / en `main`:** los tres workers de `hr-text` con tope de **5 €/día por tenant**, la vista de la propuesta con su procedencia, el lector de celdas del SNC, el **lector de CV** (#1918), la pantalla de revisión (#1894), las tablas del perfil (mig. **0062**) y el sueldo con fecha de efecto. Detalle y números → [[agh-iberica-historico]].
-- ✅ **Cerrado 20-21 sep:** 4 lanes + #1931 (la propuesta la ve un humano con la puerta derivada del lector). → [[agh-iberica-historico]].
 - 🔬 **Dos familias de contrato** (Print To PDF vs Docusign DMv10, que se lee sin visión) → **#1702 no es el bloqueante universal**, y «el salario vive en el anexo» era falso. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]. Los permisos de RRHH nacen apagados **para todo rol, admin incluido**: era una **decisión**, no código.
-- ✅ **21-22 sep: 38 PRs en `main` (`2c827f64`) en olas integradas enteras.** Cierra #1936, #1858 (D11), #1925, #1867 (casar/deshacer, mig 0073), #2009; migraciones 0063–0073 en prod y 5 hr-workers desplegados. Notas en `docs/status-log/2026-09-2{1,2}-manu-*`.
-- 🟠 **Siguiente (tuyo):** evals ×3 de T3-c (#1859, worktree `t3c` @ `7734a64b`; no se mergea hasta #1349/#1350) · ensayo #1849 · #1909 (medir filas de prod con dato protegido en la cita) · decidir `salariesView` para aprobar CVs · mergear #2017 (docs) · mergear #2021, #2022 y luego #2023 (#1702, apilada) · decidir #2026 → [[una-palanca-que-apaga-al-worker-debe-apagar-lo-que-anuncia-que-hay-worker]]. Seguimiento: #2015, #2016.
+- ✅ **20-23 sep:** 4 lanes + #1931 y 38 PRs en olas (#1936, #1858, #1925, #1867, #2009; migraciones 0063–0075), contratos #2021–#2023 con las palancas APAGADAS y #2032 y #2033 (`3d2e1782`) → [[agh-iberica-historico]]. `hr-workers` redesplegado por la API de Dokploy el 23-sep, sin deriva.
+- 📥 **Encargo ampliado de AGH (23-sep):** inventario, 4 SNC, «Activos asociados» y el Excel de Clientes pendiente → #2034–#2038. El SNC solo persiste SBA y fecha (#1989). Lo que falte se avisa (#2037) y después va la Ayuda (#2038).
+- 🟠 **Siguiente (tuyo):** evals ×3 de T3-c (#1859, worktree `t3c` @ `7734a64b`; no se mergea hasta #1349/#1350) · ensayo #1849 · #1909 (medir filas de prod con dato protegido en la cita) · decidir `salariesView` para aprobar CVs · mergear la PR de docs del 23-sep · Teams con AGH (margen/tarifa, SNC en la herramienta) → [[una-palanca-que-apaga-al-worker-debe-apagar-lo-que-anuncia-que-hay-worker]]. Seguimiento: #2015, #2016.
 
 _Método de esta tanda: [[un-rojo-ajeno-del-gate-puede-ser-el-bug-que-arregla-otra-pr-del-tren]] · [[integrar-la-ola-entera-antes-de-mergear-caza-defectos-de-composicion]] · [[un-fetch-fallido-deja-fetch-head-viejo-y-el-merge-sale-verde]] · [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._
 
