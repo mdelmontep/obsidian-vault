@@ -115,6 +115,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - 2026-09-22 · simarro · una clienta recibió «visita confirmada» por rellenar el formulario de una vivienda → `OFGGroWlifA88YFN` creaba el lead en Lead Caliente, cuya etapa dispara «Confirmación Cita» → ahora cae en Formulario Web y se quita el Salesbot Run manual (duplicaba el saludo). → [[el-inventario-de-automatismos-no-esta-solo-en-el-orquestador]]
 - 2026-09-22 · simarro · leads de una agente nueva con «Agente asignado» vacío → las opciones del campo de Kommo y `AGENTE_ENUM` eran listas escritas a mano → opciones leídas en cada ejecución + `Sync_agentes_calendar` da de alta las que faltan. → [[una-lista-de-opciones-copiada-en-codigo-se-queda-atras-con-cada-alta]]
 - 2026-09-23 · facturaia · por WhatsApp los presupuestos/proformas llegaban como enlace y no como PDF (Lucas Hadj) → `pdfForCopilotoResult` los buscaba en `facturas` y viven en `presupuestos`; tres tools fuera de la lista → adjunto en todos los casos (PR #2873).
+- 2026-09-23 · facturaia · el informe de ventas de Chivite restaba 12.889 € de base por 5 descuentos de 51 € → abonos parciales nacidos de «Anular» y editados a mano conservaban las líneas de la factura entera → líneas reescritas en prod con guard y traza en `audit_log`, y la mig 923 impide ya editar las líneas de un abono de anulación.
 
 ## Archivo
 - Agosto 2026 → [[incidents-archive-2026-08]] (182 entradas, archivadas el 10-sep)
