@@ -496,7 +496,9 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (97)
+## Claude Code / agentes / harness (99)
+- [[una-lectura-de-load1-no-acredita-una-ventana-de-medida]] — Una lectura puntual de load1 no acredita una ventana de medida
+- [[un-ensayo-en-seco-que-sustituye-el-gate-no-prueba-la-medida]] — Un ensayo en seco que sustituye el gate no prueba la medida
 
 - [[abrir-en-escritura-trunca-antes-de-leer-y-el-control-lo-lee-como-exito]] — abrir en escritura trunca antes de leer; el control por ausencia (`grep -c` → 0) confirma como éxito el fichero que acabas de vaciar
 - [[capturar-pantalla-con-la-url-visible-exige-dos-permisos-de-macos]] — soporte pide capturas sin recortar con la URL visible: Grabación de pantalla para `screencapture` y Automatización para traer la pestaña al frente; `open -a` evita el segundo
