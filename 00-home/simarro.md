@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-22
+updated: 2026-09-23
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,11 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-23 · chatbot: búsqueda por referencia corregida en producción)
+
+- **Resuelto `Required → at query`**, ejecución [17625](https://n8nsimarro.agentesia.madrid/workflow/QLfRT9AWmV1HLMZs/executions/17625) (19:13 Madrid): «En qué lugar?» terminó en `AI Agent` tras tres intentos. `Buscar_viviendas` exigía `query` aunque el prompt permite consultar solo por referencia; los argumentos fallidos no quedaron guardados. Único cambio: añadir `''` como cuarto argumento de `$fromAI('query', …, 'string', '')`. Versión activa verificada: `675595b5-c549-4573-998d-b1516857096c`; resto de nodos, posiciones, conexiones y ajustes idénticos.
+- **Prueba por webhook aislado aprobada:** llamada real de GPT-4o con solo `idealista_id: 112084877` → vivienda exacta, `found: 1`; workflow temporal eliminado, sin enviar WhatsApp ni aportar lead para escribir en CRM. No se reenvió el mensaje original. Backup previo local temporal: `/tmp/simarro-chatbot-pre-query-fix-0923.json`; verificación: `/tmp/simarro-chatbot-query-verified-0923.json`.
 
 ## Estado (2026-09-22 · formulario web en su embudo, chatbot con contexto, agentes nuevos solos)
 

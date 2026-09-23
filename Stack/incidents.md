@@ -117,6 +117,8 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - 2026-09-23 · facturaia · por WhatsApp los presupuestos/proformas llegaban como enlace y no como PDF (Lucas Hadj) → `pdfForCopilotoResult` los buscaba en `facturas` y viven en `presupuestos`; tres tools fuera de la lista → adjunto en todos los casos (PR #2873).
 - 2026-09-23 · facturaia · el informe de ventas de Chivite restaba 12.889 € de base por 5 descuentos de 51 € → abonos parciales nacidos de «Anular» y editados a mano conservaban las líneas de la factura entera → líneas reescritas en prod con guard y traza en `audit_log`, y la mig 923 impide ya editar las líneas de un abono de anulación.
 
+- 2026-09-23 · simarro · chatbot aborta con `Required → at query` al consultar una vivienda por referencia (17625) → `query` sin default en `$fromAI` → default vacío publicado y probado con solo `idealista_id`, devuelve la vivienda exacta. → [[simarro]]
+
 ## Archivo
 - Agosto 2026 → [[incidents-archive-2026-08]] (182 entradas, archivadas el 10-sep)
 - Julio 2026 → [[incidents-archive-2026-07]] (110 entradas, archivadas el 12-ago)
