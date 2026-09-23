@@ -85,7 +85,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Bloqueos / esperando a terceros
 
-- **[EN CURSO — 23-sep] Ticket 176: nomenclatura `25I-RE-0127/01A`** — PR1 en prod (#2896, mig 924), inerte sin sigla. Natalia respondida (reset recomendado en 2027). Queda PR2 (UI sigla/departamentos, subpresupuesto, `obras.codigo`), PR3 (drag-to-scroll), manuales + ADR C1-C6, y el contador que no salta números ocupados. `en_revision`. → `facturaia/docs/architecture/PROMPT-continuacion-tk176-nomenclatura-iet.md` · [[contador-de-serie-aparte-se-queda-atras-al-importar-y-el-alta-choca-con-el-unique]]
+- **[EN CURSO — 23-sep] Ticket 176: nomenclatura `25I-RE-0127/01A`** — PR1 en prod (#2896, mig 924), inerte sin sigla. Natalia respondida (reset en 2027). Contador DECIDIDO: nunca da un número ocupado (`GREATEST` con el máximo vivo). Orden: PR-A contador + ADR → PR2 UI → PR3 drag-to-scroll (lleva el trailer). `en_revision`. → `facturaia/docs/architecture/PROMPT-continuacion-23-sep-tk176-pr2-pr3.md` · [[contador-de-serie-aparte-se-queda-atras-al-importar-y-el-alta-choca-con-el-unique]]
 
 - **[EN STANDBY 24-ago] Certificado de representante → 036 (ROI) → NIF-IVA a los proveedores** — mismo asunto que la entrada ⏸️ del NOW, no lo dupliques al leer. Lo que puedo hacer yo en cuanto se retome: vigilar VIES y avisar el día que salga válido, redactar los tres mensajes de rectificativa con su cita legal, y dejar lista la DR y la consulta a la DGT. Lo que NO puedo: solicitar el certificado, presentar el 036, crear cuentas ni meter credenciales.
 
