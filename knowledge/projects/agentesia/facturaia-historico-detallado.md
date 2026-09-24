@@ -21,6 +21,11 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 24-sep-2026 · Obras: borrar en bloque un principal con sus subpresupuestos (#2917 → PR #2920)
+
+- El lote borraba en paralelo y en orden de selección, y el principal chocaba con el 409 `principal_con_subpresupuestos` («1 eliminados, 1 con error»). Fix solo en el cliente (`borrado-lote.ts`): agrupa por año+número y borra cada grupo en secuencia, de la letra más alta a la A; el guard del DELETE no se toca. El toast nombra el principal cuando sus hijos quedan fuera de la selección, en ámbar. Merge `13a7ac662`, smoke en prod con 3 casos verde.
+- Para probar subpresupuestos en la sandbox de Obras hace falta sigla (sin ella `subpresupuesto_sin_sigla`): ponerla en Ajustes → Empresa y quitarla al acabar.
+
 ## 13-sep-2026 · smokes de un producto que ya no existía (#2752 → PR #2758) y tres fallos del equipo de contenido
 
 - **#2752 / #2758** (merge `dd344927`, desplegado 08:09 UTC): cuatro smokes medían reglas de estilo, «En marcha», la ficha de org y el suelo cross-org de un producto anterior. Al corregirlos salió que un **429 en /admin/orgs/[id] vaciaba el NIF** al desenfocar (el cuerpo de error entraba como la org), que «Usuarios» tumbaba la página entera y que «Config módulos» decía «Sin módulos» cuando la carga fallaba. Las tres lecturas pasan por `fetchJson` con estado de error y reintento; el guardado de features relee siempre. El aviso «no existe o no tienes acceso» de Obras estaba muerto desde el #2281: comparaba el slug contra la frase ya humanizada. Gate 20.698 + integración 607; smoke completo contra el build 571/0. → [[un-error-guardado-como-entidad-con-autoguardado-borra-el-dato-real]] · [[comparar-el-codigo-de-error-contra-el-mensaje-humanizado-nunca-casa]]

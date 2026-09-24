@@ -85,8 +85,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Bloqueos / esperando a terceros
 
-- **Obras: borrar en bloque un principal con sus subpresupuestos da «1 con error» (#2917, 24-sep)** — el lote borra en orden de selección y el principal choca con `principal_con_subpresupuestos`; fix: ordenar por `letra_idx` desc y en secuencia. Ticket 176 cerrado → [[archive-completed]]
-
 - **[EN STANDBY 24-ago] Certificado de representante → 036 (ROI) → NIF-IVA a los proveedores** — mismo asunto que la entrada ⏸️ del NOW, no lo dupliques al leer. Lo que puedo hacer yo en cuanto se retome: vigilar VIES y avisar el día que salga válido, redactar los tres mensajes de rectificativa con su cita legal, y dejar lista la DR y la consulta a la DGT. Lo que NO puedo: solicitar el certificado, presentar el 036, crear cuentas ni meter credenciales.
 
 - **[ACCIÓN MANU — 30 s, desbloquea `gen:types`] Emitir un PAT nuevo de Supabase** — los dos de 1Password dan 401, y sin un PAT válido ningún agente puede emitir otro: supabase.com → Account → Access Tokens → 1Password. Porqué → [[facturaia-historico-detallado]]
