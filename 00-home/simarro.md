@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-23
+updated: 2026-09-24
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,12 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-24 · presupuesto de captación P2026-0024, en borrador)
+
+- **P2026-0024** en TuFacturaIA (AgentesiaLab, borrador): base 1.390 € + IVA = 1.681,90 €, más 29 €/mes de mantenimiento. Conceptos: calendario → Kommo (incluido, ya implementado) · Idealista → Kommo 590 · alquiler por voz y WhatsApp 800 · documentación del inquilino en la ficha (incluida). PDF para el cliente, sin precio por concepto: `~/Projects/simarro/Presupuesto_Simarro_P2026-0024.pdf`. Propuesta web: https://claude.ai/artifact/7XwtZmVjDgF7UZKmw1168U (desfasada: 39 €/mes y sin alquiler/documentación).
+- **Punto de partida del alquiler, medido hoy:** el chatbot y la voz *rechazan* el alquiler (prompt «solo compra/venta», nodo Retell `n_alquiler` «no operamos») · el catálogo trae 23 viviendas, todas `operation: sale` (Apify solo busca venta, o no hay alquileres en Idealista: preguntar a Ramón) · no hay embudo de alquileres en Kommo · el `Switch` del chatbot solo enruta voice/texto/audio/picture: **los PDF se descartan sin respuesta** y las fotos van a «describe la imagen».
+- **Tuyo:** enviar a Ramón (cobro 50/50 sin validar); pedirle avisos de Idealista, buzón, condiciones de alquiler y si publica alquileres en Idealista.
 
 ## Estado (2026-09-23 · chatbot: búsqueda por referencia corregida en producción)
 
@@ -37,6 +43,13 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **Encuesta 48h ("Valoración", bot `87873`) sale con Error**: plantilla aprobada en la fuente vieja → [[plantilla-waba-kommo-queda-atada-a-la-fuente-donde-se-aprobo]]. Decidido rehacerla con botón a reseñas de Google + "Tengo una sugerencia" (tarea al agente). **Bloqueado por el enlace de reseñas de Ramón** (mensaje enviado por Manu).
 - Nodo `Email Visita Interna (desactivado)` estaba activo y era el único aviso interno de reservas WA → renombrado `Email Visita Interna WA`.
 - **A revisar**: `iMoTKZWxYLymGuHF` (reserva) sin ninguna ejecución desde el 9-sep. Memoria: `project-emails-y-gemelos-20260921`. Backups `*-20260921.json` en `n8n-backups/simarro/`.
+
+## Estado (2026-09-14 · la vivienda de las citas de agenda sale de la calle)
+
+**`Calendario_a_Kommo` ya rellena la vivienda por calle o ubicación, sin referencia de Idealista.** Antes solo buscaba `1\d{8}` en el título, y como 0 de 74 citas reales la llevan, la rama `Enriquecer preferencias` no había corrido nunca con una cita real. Ahora hay un nodo `Leer catálogo` (`executeOnce` + `alwaysOutputData`) y en `Clasificar` un resolutor que lee título + `location` + descripción, **solo en VISITA** (en una valoración la casa es del propietario): (1) referencia si aparece; (2) calle del anuncio — **si casan varias se coge la primera** (decisión de Manu: Hernán Cortés 4 = 10 pisos) y el número de portal se ignora; `4 dimension` = Cuarta Dimensión; una calle de una palabra que también es lugar (`Toledo`) exige `calle/c/avda` delante; (3) barrio o municipio **solo si hay una única vivienda activa ahí** — cubre las 12 de 24 con `showAddress:false`. Queda la traza en `plan[].vivienda_via` y en `resumen.con_vivienda`. Test de 23 casos con dientes medidos por mutación y el catálogo del día en `n8n-backups/simarro/calendario-a-kommo-resolutor-vivienda-20260914/`; backup previo junto a él.
+- **Relleno de 7 leads que ya existían** con el propio `Enriquecer_lead_vivienda` (workflow temporal, ya borrado): 35734758, 35671232, 35657384 (Retama 9), 35619218 (Mestanza), 35619216 (Cuarta Dimensión), 35657908 y 35619212 (Collado Villalba, por municipio). Solo se tocaron campos: sin cambio de etapa ni mensajes.
+- **Riesgos que se aceptan**: un apellido que coincida con un barrio único (`Encinas` → Boadilla) casaría mal; "coger la primera" en calles con varias viviendas puede asignar el piso equivocado del mismo portal. Sin casar: `cinca`, `Guadiana 25` y `Aurelia`, que no están en el catálogo con esa calle.
+- **El sync del catálogo va un día tarde**: `Sync_catalogo_idealista` corre a las 06:25 y las 4 tareas de Apify scrapean a las 08:00, así que carga el scrape de ayer; el watchdog (26 h) no puede verlo. **Pendiente decidir**: pasar el cron a las 08:30. Sync manual lanzado hoy por Manu (`14075`): 24 activas, sin cambios. → [[un-consumidor-programado-antes-que-su-productor-va-un-dia-tarde]] · [[un-fallback-legitimo-hace-mudo-un-parser-incompleto]]
 
 ## Estado (2026-09-12 · cambios de cita, preferencias desde la vivienda, y un borrado en las agendas)
 
