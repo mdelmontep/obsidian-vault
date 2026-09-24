@@ -496,7 +496,11 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[zip-minimo-navegador-sin-dependencias-store]] — construir un zip válido en el navegador sin dependencias usando solo store
 - [[zod-v3-no-tiene-z-email-ni-z-uuid-como-top-level]] — zod v3 no tiene z.email ni z.uuid como top-level
 
-## Claude Code / agentes / harness (100)
+## Claude Code / agentes / harness (104)
+- [[un-presupuesto-de-reintentos-fijo-no-distingue-carga-transitoria-de-sostenida]] — un presupuesto de espera constante durmio 28 de 30 min sin producir una fila
+- [[una-medida-limpia-que-no-llega-al-umbral-es-el-resultado]] — elegir la f que salva la palanca es elegir la conclusion; el criterio se fija antes
+- [[el-log-de-un-brazo-no-es-su-fichero-de-resultado]] — 11 vs 10 bytes decia «hacen lo mismo»; el log real eran 136 vs 0
+- [[un-conteo-con-grep-falla-en-silencio]] — un 0 o el total exacto suele ser el patron; en diffs, --numstat en vez de filtrar texto
 - [[un-diff-de-config-puede-no-tener-ni-un-cambio-semantico]] — Un diff de config puede no tener ni un cambio semántico
 - [[una-lectura-de-load1-no-acredita-una-ventana-de-medida]] — Una lectura puntual de load1 no acredita una ventana de medida
 - [[un-ensayo-en-seco-que-sustituye-el-gate-no-prueba-la-medida]] — Un ensayo en seco que sustituye el gate no prueba la medida
