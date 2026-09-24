@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-09-24 · FacturaIA — ticket 176 (IET) resuelto** — contador que nunca da un número ocupado (#2908, mig 926, ADR-104), sigla/departamentos/subpresupuesto en la UI (#2902) y arrastrar para desplazar la rejilla (#2900); los tres con smoke en prod y Natalia respondida en el hilo. → [[facturaia]]
 - **2026-09-23 · FacturaIA — ticket 182 (Chivite) resuelto** — 5 abonos reescritos a una línea, nota corregida, PDFs regenerados y respuesta enviada; ticket en `resuelto`. → [[facturaia]]
 - **2026-09-15 · agency-portal — Codex en Horas IA verificado** — #644/#645/#646 en producción; hooks automáticos de sesiones reales persistidos y minutos visibles por técnico y proyecto. Histórico de `agency-portal`, `agh-iberica` y `facturaia` incorporado desde los archivos locales; Manu confirmó ambas gráficas. → [[codex-time-tracking]]
 - **2026-09-15 · Codex — obsidian-1 recuperado** — instalado desde el comando de Claude, con copia del original; invocación `obsidian1` o `$obsidian-1`. → [[codex-time-tracking]]
