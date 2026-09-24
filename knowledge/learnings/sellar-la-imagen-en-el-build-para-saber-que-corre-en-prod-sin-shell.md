@@ -32,3 +32,5 @@ un control artificial. Dos corolarios al leerlo: un commit **docs-only no mueve 
 correcto por diseño, no un deploy que falta; y el `builtAt` que acompaña al sello **no sirve para fechar
 deploys** — salió a ~10 s del merge las dos veces, cifra plausible solo con la capa del `npm ci`
 cacheada, que no lo está si el diff toca `package.json`.
+
+**`builtAt` no dice qué build es; el digest sí** (AGH, 24-sep). Un build 10 s después del merge parecía el del merge ANTERIOR, porque «no da tiempo». Pero con la capa de `npm ci` en caché, el build tarda segundos. El digest calculado en local sobre `main` coincidía: era el nuevo.
