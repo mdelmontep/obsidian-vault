@@ -148,6 +148,8 @@ iteraciones de golpe. Y dejar escrito en la fuente cuál es la URL viva **y por 
 
 ## Mensajería entre sesiones: el `[ref]` es obligatorio la primera vez (7-ago-2026)
 
+> **24-sep-2026 · Quién es una sesión:** el nombre de `ListAgents` no dice qué worktree trabaja; sale de `events.jsonl` de fia-gate → UUID → `~/.claude/sessions/*.json`. Ver [[la-sesion-duena-de-un-worktree-se-encuentra-por-su-session-id]].
+
 La doc de *cross-session messaging* dice que el ` [ref]` que `ListAgents` imprime tras cada
 nombre solo hace falta **cuando dos filas comparten nombre**. Medido: **también hace falta
 la primera vez que escribes a una sesión que no es tuya, sin que haya colisión ninguna.**
