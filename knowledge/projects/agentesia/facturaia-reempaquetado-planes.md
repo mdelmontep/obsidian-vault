@@ -9,6 +9,14 @@ tags: [facturaia, pricing, planes, billing, stripe, producto]
 
 Estrategia de pricing aprobada por Manu (2026-06-26) tras auditoría de pagos. **Fase 1** (bugs + conexión + soft-limits) + **Fase 2 núcleo** (tier Plus + reempaquetado + grandfathering) en PR #509. Prices Plus creados en Stripe live, migración 399 aplicada a prod (vía MCP execute_sql).
 
+## Reempaquetado v2 (#1704) — EN PROD (24-sep-2026)
+
+- Planes 14/29/49/99 € (Starter/Plus/Pro/Enterprise); facturas_mes 40/150/400/1000, usuarios 1/2/4/10, empresas 1/1/2/4, ia_usos_mes 100/250/500/1000. Copiloto, WhatsApp y voz en todos; emitir nunca se bloquea. Fiscal y Obras ocultos (Obras grandfathered).
+- Prueba inversa: 14 días en Pro y luego solo lectura; sin plan gratis (decisión de Manu).
+- Packs de IA a la venta: `ia_pack_100` 15 € e `ia_pack_500` 59 €, 12 meses, mig 936 (#2924, ace4df27f). Migs 927-936 aplicadas en prod.
+- Una fila de `plan_prices` sin `stripe_price_id` no entra en la caché de precios y `price-coherence` la reporta como `missing`.
+- **Pendiente**: smoke de compra de un pack en navegador (sandbox) y arreglar `getPlanFromPriceId(null)`, que cae al env y da «starter anual» (hoy lo tapan las guardas de quien llama).
+
 ## Estado (2026-06-26)
 
 - ✅ Prices Plus en Stripe LIVE: producto `prod_Um5L4qmpOHIfs4`, mensual 29€ `price_1TmXAyGgQMT2aOqBsL6pkhp1`, anual 278,40€ `price_1TmXAyGgQMT2aOqBETcDK1NJ`. En `.env.local` (dev).
