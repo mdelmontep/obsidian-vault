@@ -119,6 +119,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - 2026-09-23 · facturaia · el informe de ventas de Chivite restaba 12.889 € de base por 5 descuentos de 51 € → abonos parciales nacidos de «Anular» y editados a mano conservaban las líneas de la factura entera → líneas reescritas en prod con guard y traza en `audit_log`, y la mig 923 impide ya editar las líneas de un abono de anulación.
 
 - 2026-09-23 · simarro · chatbot aborta con `Required → at query` al consultar una vivienda por referencia (17625) → `query` sin default en `$fromAI` → default vacío publicado y probado con solo `idealista_id`, devuelve la vivienda exacta. → [[simarro]]
+- 2026-09-24 · facturaia · «No fui yo» no cerraba las sesiones del intruso → `admin.auth.admin.signOut` recibía un userId y devuelve `{error}` sin lanzar → RPC `auth_cerrar_sesiones_usuario` (mig 935, #2916). Ver [[signOut-solo-invalida-refresh-no-access-token]]
 
 ## Archivo
 - Agosto 2026 → [[incidents-archive-2026-08]] (182 entradas, archivadas el 10-sep)
