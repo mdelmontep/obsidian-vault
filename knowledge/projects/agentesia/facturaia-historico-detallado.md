@@ -28,6 +28,8 @@ tags: [cliente, facturaia, historico]
 ## 25-sep-2026 · sesiones, reinvitación y casts de billing
 
 - «No fui yo» cierra las sesiones de verdad (#2916, mig 935); `cierre:alcance` avisa de superficie visible sin manual (#2918); cast de `cerrar-sesiones.ts` fuera (#2921 → #2931). Ver [[signOut-solo-invalida-refresh-no-access-token]]
+- Dos bugs previos del equipo, abiertos como issues: reinvitar mientras el invitado acepta lo devuelve a `invitado` (#2960), y un miembro en `pausa` se reinvita sin la confirmación del revocado (#2961).
+- Podado del dashboard del hub (trinquete de contexto +0,7 KB): Higiene de trinquetes (6 en pre-commit, el 6º `ratchet:size` techo 400 líneas de código, cerrado 9-ago → §Higiene de trinquetes); conector MCP, los dos incidentes del 9-sep cerrados y verificados en prod (#2662); comentarios de bloqueos cerrados (DNS de tufacturaia.com DNS-only 16-may; plantilla Meta `otp_facturaia` aprobada `es_ES` 16-may); feature flags globales descartados por YAGNI (11-may: `org_features` cubre pilotos; si aparece un caso real, `system_config` clave-valor sin UI hasta 3+ flags).
 - Reinvitar a un revocado dice «enviada» y audita «invitó» (#2943, smoke prod OK en Obras sandbox; usuarios de prueba borrados). Casts locales de billing fuera (#2926 → #2946).
 - Code review de #2943/#2946 con 6 agentes: la invitación `invitado` ya vencida que el cron aún no marcó también cuenta como nueva (usa `invitacionCaducada`, la regla de aceptar) y el último comentario falso del patrón #2926 (`obras/adicionales-db.ts`) corregido. #2958. Ver [[background-bash-io-bound-se-mata-solo-reintentar]]
 
