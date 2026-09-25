@@ -21,6 +21,11 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 25-sep-2026 · sesiones, reinvitación y casts de billing
+
+- «No fui yo» cierra las sesiones de verdad (#2916, mig 935); `cierre:alcance` avisa de superficie visible sin manual (#2918); cast de `cerrar-sesiones.ts` fuera (#2921 → #2931). Ver [[signOut-solo-invalida-refresh-no-access-token]]
+- Reinvitar a un revocado dice «enviada» y audita «invitó» (#2943, smoke prod OK en Obras sandbox; usuarios de prueba borrados). Casts locales de billing fuera (#2926 → #2946).
+
 ## 24-sep-2026 · Obras: borrar en bloque un principal con sus subpresupuestos (#2917 → PR #2920)
 
 - El lote borraba en paralelo y en orden de selección, y el principal chocaba con el 409 `principal_con_subpresupuestos` («1 eliminados, 1 con error»). Fix solo en el cliente (`borrado-lote.ts`): agrupa por año+número y borra cada grupo en secuencia, de la letra más alta a la A; el guard del DELETE no se toca. El toast nombra el principal cuando sus hijos quedan fuera de la selección, en ámbar. Merge `13a7ac662`, smoke en prod con 3 casos verde.
