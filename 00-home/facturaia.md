@@ -351,7 +351,7 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 ## WIP (sesiones en curso, branches sin mergear)
 
-- **Sesiones y cierre (24-sep)**: «No fui yo» ya cierra las sesiones de verdad (#2916, mig 935) y `cierre:alcance` avisa si el diff toca superficie visible sin manual (#2918). Queda #2921 (quitar el cast de `cerrar-sesiones.ts` al regenerar tipos, tras el merge de ia-packs de facturaia-2a). Ver [[signOut-solo-invalida-refresh-no-access-token]]
+- **Sesiones y cierre (24-sep)**: «No fui yo» ya cierra las sesiones de verdad (#2916, mig 935) y `cierre:alcance` avisa si el diff toca superficie visible sin manual (#2918). #2921 cerrado (#2931); el reenvío de invitación a un miembro revocado ya dice «enviada» y audita la acción correcta (#2943, smoke en prod OK); #2926 (casts obsoletos de billing) en PR. Ver [[signOut-solo-invalida-refresh-no-access-token]]
 - 🟠 **#2105 — loop de tickets publicado sin `--merge`** (22-ago, gate EC=0) — su guard comparaba con `git diff` antes de existir el commit, así que no veía untracked: un test nuevo en `__integration__` pasaba verde. Endurecido con `:(glob)` + `ls-files --others` + `__evals__`. Porqué → ADR-057.
 - 🟠 **#2106 — `/ingesta` deja de aprobar en silencio** (22-ago, gate EC=0, test verificado por mutación) — un UPDATE que la RLS deja en cero filas no es error para PostgREST, así que `gestor_externo` aprobaba con la cabecera del OCR. Medido en prod: **un solo `gestor_externo`, en org de test**, 0 divergencias reales en 173 recibidas → deuda latente. Copiar la cabecera en servidor queda **aparcado**: como estaba especificado reintroduce el bug de duplicados.
 
