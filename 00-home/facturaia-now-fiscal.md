@@ -1,6 +1,6 @@
 ---
 title: FacturaIA — NOW Fiscal y VeriFactu
-updated: 2026-09-22
+updated: 2026-09-25
 tags: [facturaia, now, fiscal]
 ---
 
@@ -12,6 +12,7 @@ la mitad del arranque de cada sesión. Aquí viven los 9 de esta área, íntegro
 Vuelve al hub: [[facturaia]]
 
 - 🟢 **El devengo, cerrado de punta a punta y en prod (13→20-sep)** — abono periodificado por fecha de expedición (#2807, mig 922, ADR-100), y el 347, el libro registro y el asiento contable leyendo ya esa fuente (#2833-#2835, #2831). Fuera, con issue: los devengos especiales del 75.Dos y 75.Uno.8º (**#2810 · #2808 · #2786**). Detalle → [[facturaia-historico-snapshot-2026-09-14]]
+- 🟠 **Ticket 182 · fecha de operación en todas las superficies: cerrado lo construible (25-sep)**: #2839-#2841, #2947-#2953 mergeados; ADR-101 (el duplicado no la hereda) y ADR-106 (la certificación de obra no devenga por el mes certificado). **Queda**: #2934 y #2936 (cuelgan de #2786); #2940 punto 1, periodificar por cobro las certificaciones de obra (decisión, cambia el 303); smoke del MCP `crear_borrador_factura` con `fecha_operacion` en una sesión nueva (el esquema del conector se cachea).
 - 🟠 **Siete decisiones fiscales abiertas, con encargo escrito (23-ago)** — para decidirlas con fuente primaria: `docs/architecture/PROMPT-decisiones-fiscales-con-norma.md` (#2135). Reparto: mías la cola fiscal + #2133; #2131 y #2136 en prod.
 - 📅 **303: el 3T vence el 20-oct.**
 - ⏸️ **EN STANDBY por decisión de Manu (24-ago): los dos trámites del certificado FNMT de AgentesiaLab** — el `.p12` para VeriFACTU (bloquea el SELLADO, no la emisión) y el 036 de alta en el ROI. Ninguno lo puede hacer un agente. Detalle → [[facturaia-historico-detallado]]
