@@ -21,6 +21,10 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 25-sep-2026 · caso de soporte 177: la obra con código propio y adicionales que se aprueban
+
+- Obra con código `OB-AAAA-NNNN` y adicionales en borrador hasta la aprobación explícita (mig 939, #2932; tipos #2942; manual admin §60 y QA #2944). Auditoría prod: 561 obras, 0 sin código, 0 duplicados por org. Smoke en sandbox: OB-2026-0555, adicional aprobado y total 230,85 €. Ticket resuelto y respuesta a Natalia enviada. Pendiente fuera de alcance: #2938, #2939.
+
 ## 25-sep-2026 · sesiones, reinvitación y casts de billing
 
 - «No fui yo» cierra las sesiones de verdad (#2916, mig 935); `cierre:alcance` avisa de superficie visible sin manual (#2918); cast de `cerrar-sesiones.ts` fuera (#2921 → #2931). Ver [[signOut-solo-invalida-refresh-no-access-token]]
