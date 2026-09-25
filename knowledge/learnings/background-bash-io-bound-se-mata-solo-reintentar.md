@@ -16,3 +16,9 @@ tiempo diagnosticando la muerte; reintentar primero. Y no lanzar timers de esper
 la notificación real del proceso — cada uno de más compite por el mismo límite.
 
 Caso: AGH Ibérica 2026-07-22, evals ×3 de dos PRs (#567/#569), `evals:check` matado 2 veces seguidas.
+
+**Actualización 25-sep-2026 (facturaia):** ahora la causa SÍ se ve. Claude Code avisa «stopped because
+the system is running low on memory» y mata los background de la sesión cuando está OCIOSA. Un commit
+con pre-commit encolado en fia-gate cayó dos veces así, y un Monitor también. En ese caso no se
+reintenta a ciegas: esperar a que baje la carga (`gate-dash --once`) y lanzarlo en PRIMER PLANO
+(timeout 600 s y esperas en primer plano). Mientras la sesión no está ociosa, no se lo lleva.

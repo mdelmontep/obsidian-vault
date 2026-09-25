@@ -29,6 +29,7 @@ tags: [cliente, facturaia, historico]
 
 - «No fui yo» cierra las sesiones de verdad (#2916, mig 935); `cierre:alcance` avisa de superficie visible sin manual (#2918); cast de `cerrar-sesiones.ts` fuera (#2921 → #2931). Ver [[signOut-solo-invalida-refresh-no-access-token]]
 - Reinvitar a un revocado dice «enviada» y audita «invitó» (#2943, smoke prod OK en Obras sandbox; usuarios de prueba borrados). Casts locales de billing fuera (#2926 → #2946).
+- Code review de #2943/#2946 con 6 agentes: la invitación `invitado` ya vencida que el cron aún no marcó también cuenta como nueva (usa `invitacionCaducada`, la regla de aceptar) y el último comentario falso del patrón #2926 (`obras/adicionales-db.ts`) corregido. #2958. Ver [[background-bash-io-bound-se-mata-solo-reintentar]]
 
 ## 24-sep-2026 · Obras: borrar en bloque un principal con sus subpresupuestos (#2917 → PR #2920)
 
