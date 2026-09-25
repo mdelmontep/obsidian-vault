@@ -122,6 +122,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - 2026-09-23 · simarro · chatbot aborta con `Required → at query` al consultar una vivienda por referencia (17625) → `query` sin default en `$fromAI` → default vacío publicado y probado con solo `idealista_id`, devuelve la vivienda exacta. → [[simarro]]
 - 2026-09-24 · facturaia · «No fui yo» no cerraba las sesiones del intruso → `admin.auth.admin.signOut` recibía un userId y devuelve `{error}` sin lanzar → RPC `auth_cerrar_sesiones_usuario` (mig 935, #2916). Ver [[signOut-solo-invalida-refresh-no-access-token]]
 - 2026-09-24 · facturaia · Chivite (ticket 183) no podía aprobar un abono de proveedor, «error del servidor» → abono parcial declarado en `sin_aprobar` sin `linea_origen_ambito` + un cargo dentro del abono leído como devolución → migs 937/938, ADR-105, #2927 · [[el-build-del-pre-push-pisa-el-next-del-servidor-del-mismo-checkout]]
+- 2026-09-25 · facturaia · Chivite (ticket 185) subió una factura que entró como albarán y no había forma de devolverla a factura → la regla «la cabecera manda» (ADR-032) solo vivía en el prompt, y una resubida creaba un segundo albarán → candado de cabecera leyendo el texto del PDF, botón «Es una factura, no un albarán» con `tipo_confirmado` (mig 943) y candado de duplicado (#2980). → [[pdfjs-dist-en-node-importa-el-worker-antes-y-va-en-serverexternalpackages]]
 
 ## Archivo
 - Agosto 2026 → [[incidents-archive-2026-08]] (182 entradas, archivadas el 10-sep)
