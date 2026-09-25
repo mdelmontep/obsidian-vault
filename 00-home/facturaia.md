@@ -83,6 +83,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Bloqueos / esperando a terceros
 
+- **[Obras · Natalia 25-sep] Feedback de subpresupuestos y obra aceptada** — respondió a las 3 preguntas. Lo que pide, en 3 issues: **#2978** editar trabajos de la obra aceptada hasta facturar, con lo facturado bloqueado (lo más urgente para ella; antes hay que decidirlo en un ADR vía `/grill-with-docs`: hoy la API sella todo lo que no es borrador y OB031 solo impide borrar); **#2977** el panel de «Toda la obra» no sigue al presupuesto marcado; **#2979** la obra como la pantalla del presupuesto (con número, apertura y pedido del cliente), navegable a escala (Amadeus tiene cientos de letras por planta). Para #2979 **faltan sus variaciones**. Prompt: `docs/architecture/PROMPT-continuacion-26-sep-obras-natalia.md` (sin trackear).
+
 - **[EN STANDBY 24-ago] Certificado de representante → 036 (ROI) → NIF-IVA a los proveedores** — mismo asunto que la entrada ⏸️ del NOW, no lo dupliques al leer. Lo que puedo hacer yo en cuanto se retome: vigilar VIES y avisar el día que salga válido, redactar los tres mensajes de rectificativa con su cita legal, y dejar lista la DR y la consulta a la DGT. Lo que NO puedo: solicitar el certificado, presentar el 036, crear cuentas ni meter credenciales.
 
 - **[ACCIÓN MANU — 30 s, desbloquea `gen:types`] Emitir un PAT nuevo de Supabase** — los dos de 1Password dan 401, y sin un PAT válido ningún agente puede emitir otro: supabase.com → Account → Access Tokens → 1Password. Porqué → [[facturaia-historico-detallado]]
