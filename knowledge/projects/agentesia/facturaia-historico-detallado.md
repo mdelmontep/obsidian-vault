@@ -24,6 +24,7 @@ tags: [cliente, facturaia, historico]
 ## 26-sep-2026 · impersonación en `/obras` (#2938 → PR #2986) y fecha SEPA del setup E2E (#2939 → PR #2985)
 - Las RSC de `/obras` usaban `getOrgId()` (ignora `impersonate_org`): impersonando daban 404 por el gate de sector de la org propia. Ahora `resolvePageOrgId()` + candado `no-getorgid-en-rsc.test.ts`. Smoke prod discriminante con la org activa distinta de la impersonada. Cierra la entrada 🟠 del 07-ago de `facturaia-now-obras`.
 - `escenarios.setup.ts` pide la fecha de cargo a `fechaCargoPropuesta(7)`. El 201 de la remesa queda sin ejercer (smoke pendiente en el hub).
+- Tarde: staging puesto al día 922 → 948 (#1669 cerrado; `obras-vistas-detalle` sin 500, queda un rojo de datos de seed) y el 201 de la remesa ejercido en staging (remesa `4929e792`, cargo 2026-10-05). Cierre registrado en `cierres.json`.
 
 ## 25-sep-2026 · caso de soporte 177: la obra con código propio y adicionales que se aprueban
 
