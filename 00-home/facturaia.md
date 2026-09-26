@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-22
+updated: 2026-09-26
 tags: [cliente, facturaia, hub]
 ---
 
@@ -83,7 +83,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Bloqueos / esperando a terceros
 
-- **[Obras · Natalia 25-sep]** #2978 editar obra aceptada hasta facturar (ADR vía `/grill-with-docs` antes de código) · #2979 familia antes de la obra + escala por planta (**faltan sus variaciones** y que repruebe tras #2968). #2977 ya resuelto. Prompt: `PROMPT-continuacion-26-sep-obras-natalia.md`.
+- **[Obras · Natalia 25-sep]** #2978 editar obra aceptada: grill ronda 4 (Q15-Q21 abiertas) → `ADR-obras-009`, su mig absorbe #2959 · #2979 espera a Natalia. Prompt: `PROMPT-continuacion-26-sep-obras-natalia.md`.
 
 - **[EN STANDBY 24-ago] Certificado de representante → 036 (ROI) → NIF-IVA a los proveedores** — mismo asunto que la entrada ⏸️ del NOW, no lo dupliques al leer. Lo que puedo hacer yo en cuanto se retome: vigilar VIES y avisar el día que salga válido, redactar los tres mensajes de rectificativa con su cita legal, y dejar lista la DR y la consulta a la DGT. Lo que NO puedo: solicitar el certificado, presentar el 036, crear cuentas ni meter credenciales.
 
