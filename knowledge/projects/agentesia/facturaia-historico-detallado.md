@@ -21,6 +21,10 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 26-sep-2026 · impersonación en `/obras` (#2938 → PR #2986) y fecha SEPA del setup E2E (#2939 → PR #2985)
+- Las RSC de `/obras` usaban `getOrgId()` (ignora `impersonate_org`): impersonando daban 404 por el gate de sector de la org propia. Ahora `resolvePageOrgId()` + candado `no-getorgid-en-rsc.test.ts`. Smoke prod discriminante con la org activa distinta de la impersonada. Cierra la entrada 🟠 del 07-ago de `facturaia-now-obras`.
+- `escenarios.setup.ts` pide la fecha de cargo a `fechaCargoPropuesta(7)`. El 201 de la remesa queda sin ejercer (smoke pendiente en el hub).
+
 ## 25-sep-2026 · caso de soporte 177: la obra con código propio y adicionales que se aprueban
 
 - Obra con código `OB-AAAA-NNNN` y adicionales en borrador hasta la aprobación explícita (mig 939, #2932; tipos #2942; manual admin §60 y QA #2944). Auditoría prod: 561 obras, 0 sin código, 0 duplicados por org. Smoke en sandbox: OB-2026-0555, adicional aprobado y total 230,85 €. Ticket resuelto y respuesta a Natalia enviada. Pendiente fuera de alcance: #2938, #2939.
