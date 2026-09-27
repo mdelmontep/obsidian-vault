@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-25
+updated: 2026-09-27
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -82,13 +82,13 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 
 ## Tercer frente: People & Culture — expediente → ficha
 
-**Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada. Tablero del piloto: **80/100** (v27, 25-sep tarde, `main` `f19af377`).
+**Meta #1691:** contrato + anexo + SNC + CV → propuesta humana → ficha cifrada. Tablero: **80/100** (v28).
 
 - ✅ **En prod / en `main`:** los tres workers de `hr-text` con tope de **5 €/día por tenant**, la vista de la propuesta con su procedencia, el lector de celdas del SNC, el **lector de CV** (#1918), la pantalla de revisión (#1894), las tablas del perfil (mig. **0062**) y el sueldo con fecha de efecto. Detalle y números → [[agh-iberica-historico]].
 - 🔬 **Dos familias de contrato** (Print To PDF vs Docusign DMv10, que se lee sin visión) → **#1702 no es el bloqueante universal**, y «el salario vive en el anexo» era falso. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]. Los permisos de RRHH nacen apagados **para todo rol, admin incluido**: era una **decisión**, no código.
-- ✅ **20-25 sep:** unas 55 PRs (mig. 0063–0077; palancas de contratos APAGADAS) → [[agh-iberica-historico]].
+- ✅ **20-25 sep:** ~55 PRs (mig. 0063–0077; palanca de contratos APAGADA); #1702 AC3 cumplido (93,2 %), Word fuera (#1977) → [[agh-iberica-historico]] · [[reutilizar-base-sembrada-con-secreto-nuevo-deja-pantallas-sin-medir]]
 - 📥 **Encargo ampliado (23-sep):** activos asociados y Excel de Clientes → #2035, #2036, #2038.
-- 🟢 **25-sep:** #1702 AC3 **cumplido** (93,2 %, #2052 cerrada); Word fuera del alcance (#1977). → [[reutilizar-base-sembrada-con-secreto-nuevo-deja-pantallas-sin-medir]]
+- 🟢 **27-sep:** Consultores rehecho en prod (#2091); abiertas #2090 (céntimos→euros), #2092-93.
 - 🟠 **Siguiente (tuyo):** encender visión de contratos · #2055 · #782 · avisar a AGH del tope de cotización 2023 · evals ×3 de T3-c (#1859, worktree `t3c` @ `7734a64b`; no se mergea hasta #1349/#1350) · ensayo #1849 · #1909 (medir filas de prod con dato protegido en la cita) · decidir `salariesView` para aprobar CVs · Teams con AGH (margen/tarifa, SNC en la herramienta) → [[una-palanca-que-apaga-al-worker-debe-apagar-lo-que-anuncia-que-hay-worker]]. Seguimiento: #2015, #2016.
 
 _Método de esta tanda: [[un-rojo-ajeno-del-gate-puede-ser-el-bug-que-arregla-otra-pr-del-tren]] · [[integrar-la-ola-entera-antes-de-mergear-caza-defectos-de-composicion]] · [[un-fetch-fallido-deja-fetch-head-viejo-y-el-merge-sale-verde]] · [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._

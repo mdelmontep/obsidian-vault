@@ -16,3 +16,5 @@ Cadena de skills para llevar un componente UI de "funciona" a "producción flags
 7. **`/typeset`** — pareja de fuentes, hierarchy ratio 1.25, line-height por contexto, `text-balance`/`text-pretty`.
 
 Cada skill añade ~10-15 fixes específicos. Las 6-7 juntas llevan un componente medio de 16/20 a 20/20. Para componentes pequeños, basta `/polish` + `/audit`. Para flagship, las 7.
+
+⚠️ **`critique` deja basura en el repo** (27-sep, agh-iberica #2089): guarda su snapshot en `<repo>/.impeccable/critique/`, y un test que escanea el disco (qué entra en la imagen) sale rojo con cara de regresión del diff. Tras una critique, sacar `.impeccable/` al scratchpad **antes** del gate. Misma clase que [[dockerignore-no-es-gitignore-y-la-basura-local-pone-el-gate-rojo]].
