@@ -73,7 +73,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
   - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila — y desde el #2773 de él depende además que se CIERREN los tickets de soporte. Añadir también `DEPLOY_COMMIT`: hoy `deploy.commit` es `null` en prod, así que la app no sabe qué código corre y solo puede mirar su hora de arranque.
-  - **Chivite**: 171 sin ajuste (#2538). D12 en PR #3018 (no mergear hasta el 1-oct: repetir dry-run, renumerar, db push). #3013 en PR #3024 (unidad del papel fuera de la revalorización; a prod tras D12, con OK). Colectores de salud #3019 y #3022 mergeados → [[guardarrail-de-banda-solo-caza-errores-de-unidad-grandes]] · [[reconciliar-por-ausencia-lectura-fallida-no-es-cero]]
+  - **Chivite**: 171 sin ajuste (#2538). D12 en PR #3018 (no mergear hasta el 1-oct: repetir dry-run, renumerar, db push). #3013 cerrado: PR #3024 mergeado y mig 959 en prod (27-sep). Colectores de salud #3019 y #3022 mergeados → [[guardarrail-de-banda-solo-caza-errores-de-unidad-grandes]] · [[reconciliar-por-ausencia-lectura-fallida-no-es-cero]]
   - **Decidir**: la escala de la deuda del ADR-086 y si `disputada` vuelve a `pendiente`.
   - **IET**: la huérfana de `docs/plan/cierres.json`, el catálogo a 500k (ADR-069) y el código de impuesto de las dos líneas de FacturaDirecta.
   - **Dokploy/cuentas**: borrar `SUPERADMIN_EMAILS` e `IA_OPS_SHOW_TRANSCRIPTS`, superadmin fuera en 4 de las 8 cuentas, DPA al despacho (ADR-067 §16).
