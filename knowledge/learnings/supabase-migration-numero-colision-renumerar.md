@@ -42,3 +42,5 @@ done | grep -oE '^supabase/migrations/[0-9]{3}' | sort -u | tail -5
 nada, pero desmiente el «es idempotente»: lo es respecto de sí mismo, no respecto de un
 renombrado manual. Y la fila vieja puede quedarse huérfana en el `schema_migrations`
 **local** — se corrige con un `UPDATE ... SET version` ahí, nunca en prod.
+
+Ver también [[mig-renumerar-sin-marcador-mueve-el-fichero-antes-de-abortar]]: sin el marcador `mig:provisional`, el script mueve el fichero y después aborta.
