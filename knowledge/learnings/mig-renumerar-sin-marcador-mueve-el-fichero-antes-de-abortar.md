@@ -14,6 +14,6 @@ Arreglo, en este orden:
 3. Añadir el marcador en la primera línea.
 4. Volver a correr `mig:renumerar`, que esta vez sella la cabecera con `-- mig:959 — numero definitivo…`.
 
-Un exit 2 con «QUEDAN N APARICIONES DEL NÚMERO VIEJO» es otra cosa. Revisa las N una a una: con un provisional `999` suelen ser importes de los manuales (9.999,99 €), que no se tocan.
+Un exit 2 con «QUEDAN N APARICIONES DEL NÚMERO VIEJO» es otra cosa. Revísalas una a una, no las descartes en bloque. El 27-sep, entre cinco «999» que eran importes, había una cita real «La mig 999 reescribió…» que el #2969 dejó sin traducir al pasar a 947 (arreglada en el #3025).
 
 Ver [[supabase-migration-numero-colision-renumerar]].
