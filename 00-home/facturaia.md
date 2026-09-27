@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-26
+updated: 2026-09-27
 tags: [cliente, facturaia, hub]
 ---
 
@@ -73,7 +73,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
   - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila — y desde el #2773 de él depende además que se CIERREN los tickets de soporte. Añadir también `DEPLOY_COMMIT`: hoy `deploy.commit` es `null` en prod, así que la app no sabe qué código corre y solo puede mirar su hora de arranque.
-  - **José (Chivite)**: que diga **qué día contó** (19-sep, **#2538**); si calla, se anota y **no se ajusta nada**.
+  - **Chivite**: 171 sin ajuste (#2538). D12 espera tu OK al mensaje; sin la 29608848 hasta #3013 → [[guardarrail-de-banda-solo-caza-errores-de-unidad-grandes]] · [[reconciliar-por-ausencia-lectura-fallida-no-es-cero]]
   - **Decidir**: la escala de la deuda del ADR-086 y si `disputada` vuelve a `pendiente`.
   - **IET**: la huérfana de `docs/plan/cierres.json`, el catálogo a 500k (ADR-069) y el código de impuesto de las dos líneas de FacturaDirecta.
   - **Dokploy/cuentas**: borrar `SUPERADMIN_EMAILS` e `IA_OPS_SHOW_TRANSCRIPTS`, superadmin fuera en 4 de las 8 cuentas, DPA al despacho (ADR-067 §16).
