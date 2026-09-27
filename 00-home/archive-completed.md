@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-09-27 · FacturaIA — ticket 182: fecha de operación en todas las superficies cerrada (#2786)** — copiloto #2994, v1 #2990, obra con/sin materiales #2993 (mig 950), ADR-106 #3008, borrado desde el conector MCP #3007; smokes de copiloto y MCP en prod OK.
 - **2026-09-26 · FacturaIA — #2955 aceptar una versión nueva ya no crea otra obra** — sustituye a la aceptada con el contratado correcto y el diálogo dice «no cambia» si el total es el mismo; PR #2984, smoke en prod.
 - **2026-09-24 · FacturaIA — ticket 176 (IET) resuelto** — contador que nunca da un número ocupado (#2908, mig 926, ADR-104), sigla/departamentos/subpresupuesto en la UI (#2902) y arrastrar para desplazar la rejilla (#2900); los tres con smoke en prod y Natalia respondida en el hilo. → [[facturaia]]
 - **2026-09-24 · TuFacturaIA — `pre-push` sin atasco (#2928)** — cada etapa pide su plaza en el semáforo y se reutilizan los verdes del mismo árbol, con la huella de la base dentro de la clave. `fia-gate` pasa a FIFO con reserva `mem`. → [[facturaia-now-infra]]

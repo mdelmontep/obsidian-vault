@@ -21,6 +21,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 ## 2026-09
 
 <!-- añade nuevas entradas aquí debajo -->
+- 2026-09-27 · facturaia · `eliminar_borrador_factura`/`eliminar_borrador_presupuesto` del conector MCP daban 422 siempre → la v1 exige `Idempotency-Key` en DELETE y `V1DeleteOptions` no la llevaba → #3007 (clave obligatoria en el tipo + determinista por actor/tool/id) y deploy manual del MCP
 - 2026-09-24 · facturaia · Obras: borrar en bloque un principal + sus subpresupuestos daba «1 con error» → el lote borraba en paralelo y el principal chocaba con el 409 de hijos vivos → orden por letra desc y en secuencia dentro de cada grupo (#2920)
 - 2026-09-24 · facturaia · conector MCP de claude.ai en 404 (`HTTP 404 at https://mcp.tufacturaia.com`) → #2662 (9-sep) movió el endpoint a `/mcp` y la raíz ya no sirve → re-alta del conector con `/mcp`; pendiente que la raíz siga sirviendo. → [[mover-la-ruta-de-un-servidor-mcp-deja-en-404-los-conectores-ya-dados-de-alta]]
 - 2026-09-18 · elphis-psicologia · el correo de solicitud no salía → SMTP Google de AIA `535` (contraseña de aplicación revocada) → credencial n8n al buzón del centro en Webempresa (info@elphispsicologia.com, 465 SSL); el primer «no llega» era mi payload sin `transcript_object`, filtrado en silencio por la puerta
