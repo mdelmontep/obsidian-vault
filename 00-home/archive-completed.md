@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-09-27 · FacturaIA — defectos de los smokes del ticket 182 arreglados y en prod** — #3003 ficha con «(op. …)» (PR #3015), #3004 NIF normalizado (PR #3020, mig 956, 6 parejas duplicadas de orgs test fusionadas antes), #3005 `created_via='copiloto'` para el asistente de la app (PR #3017, mig 955), #3012 404 en género (PR #3016); smokes en prod OK. [[un-check-aplicado-antes-del-merge-deja-al-codigo-viejo-escribiendo-contra-el]]
 - **2026-09-27 · FacturaIA — ticket 182: fecha de operación en todas las superficies cerrada (#2786)** — copiloto #2994, v1 #2990, obra con/sin materiales #2993 (mig 950), ADR-106 #3008, borrado desde el conector MCP #3007; smokes de copiloto y MCP en prod OK.
 - **2026-09-26 · FacturaIA — #2955 aceptar una versión nueva ya no crea otra obra** — sustituye a la aceptada con el contratado correcto y el diálogo dice «no cambia» si el total es el mismo; PR #2984, smoke en prod.
 - **2026-09-24 · FacturaIA — ticket 176 (IET) resuelto** — contador que nunca da un número ocupado (#2908, mig 926, ADR-104), sigla/departamentos/subpresupuesto en la UI (#2902) y arrastrar para desplazar la rejilla (#2900); los tres con smoke en prod y Natalia respondida en el hilo. → [[facturaia]]

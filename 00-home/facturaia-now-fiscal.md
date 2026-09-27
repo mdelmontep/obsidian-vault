@@ -12,7 +12,6 @@ la mitad del arranque de cada sesión. Aquí viven los 9 de esta área, íntegro
 Vuelve al hub: [[facturaia]]
 
 - 🟢 **El devengo, cerrado de punta a punta y en prod (13→20-sep)** — abono periodificado por fecha de expedición (#2807, mig 922, ADR-100), y el 347, el libro registro y el asiento contable leyendo ya esa fuente (#2833-#2835, #2831). Fuera, con issue: los devengos especiales del 75.Dos y 75.Uno.8º (**#2810 · #2808 · #2786**). Detalle → [[facturaia-historico-snapshot-2026-09-14]]
-- 🟢 **Ticket 182 · fecha de operación en todas las superficies: CERRADO (27-sep)** — #2786 cerrado con #2994 (copiloto), #2990 (v1), #2993 (flag `aporta_materiales` en la obra, mig 950) y #3008 (ADR-106: #2940 punto 1 descartado). Smokes de copiloto y MCP en prod OK. **Quedan** los defectos que sacaron: #3003 (la ficha no muestra la fecha de operación), #3004 (NIF con guion → cliente duplicado), #3005 (errata y origen «WhatsApp/voz» del copiloto web). Panel: https://claude.ai/artifact/LpamX8Y2bXaGLZdRbzFK5s
 - 🟠 **Siete decisiones fiscales abiertas, con encargo escrito (23-ago)** — para decidirlas con fuente primaria: `docs/architecture/PROMPT-decisiones-fiscales-con-norma.md` (#2135). Reparto: mías la cola fiscal + #2133; #2131 y #2136 en prod.
 - 📅 **303: el 3T vence el 20-oct.**
 - ⏸️ **EN STANDBY por decisión de Manu (24-ago): los dos trámites del certificado FNMT de AgentesiaLab** — el `.p12` para VeriFACTU (bloquea el SELLADO, no la emisión) y el 036 de alta en el ROI. Ninguno lo puede hacer un agente. Detalle → [[facturaia-historico-detallado]]
