@@ -19,3 +19,5 @@ respuesta de red), nunca contra el aspecto del campo.
 Caso: vaciar `copy_publicacion` en el smoke de contenido-06 (facturaia,
 13-ago-2026): dos "guardados" en verde que no habían guardado nada; el PATCH
 real solo salió tras vaciar por teclado.
+
+Ampliado 28-sep-2026 (facturaia #3045): en un `NumberField` (alterna `type` number/text con el foco) `fill` con texto **AÑADE** al valor (`7.25` + `8` → `7.258`) y `Meta+a` no selecciona. Lo que funciona en los dos casos: `eval` con el setter nativo — `Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v)` + `el.dispatchEvent(new Event('input',{bubbles:true}))`.

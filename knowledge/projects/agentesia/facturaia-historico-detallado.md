@@ -21,6 +21,17 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 28-sep-2026 · #3045: la línea «Varios» con mano de obra tecleada y descripción propia (PR #3054 + #3056, mig 975)
+
+- En prod y staging: MO libre (deja la línea sin horas y el coste de MO desconocido) y descripción propia, que sale en pantalla, PDF, XLSX, proforma, factura y copiloto; el pedido al proveedor sigue con el nombre del material. Smoke en sandbox sobre un aceptado: alta, edición en la rejilla y PDF.
+- #3056: vaciar la celda de precio (MO o material) guardaba 0 € porque `Number('')` = 0. Lo destapó la revisión post-merge de 7d; ver [[react-state-string-vs-number-para-inputs-numericos]] y [[agent-browser-fill-vacio-no-dispara-onchange-react]]. Sin probar en prod: facturar la línea (cubierto por integración).
+
+## 27-28 sep 2026 · pre-push y smoke del aceptado (sesión facturaia-7d)
+
+- #3052 (`37e127502`): smoke E2E del aceptado editable y su conformidad (#2978), `tests/e2e/smoke/obras-conformidad.spec.ts` + seeder.
+- #3055 (`f6ae310f8`, cierra #3053): el candado de permisos va ANTES del build en el pre-push, y tras el build avisa si el servidor de `E2E_BASE_URL` es de ese worktree. Ver [[el-build-del-pre-push-pisa-el-next-del-servidor-del-mismo-checkout]].
+- #2838 (`0452b6e9d`, cierra #2829): con `.env.test` y el servidor caído, un push dentro del perímetro (endpoints, gates, migraciones) ABORTA; fuera, avisa. Ver [[test-que-recorta-bloque-del-hook-hasta-la-seccion-siguiente-se-rompe-al-reordenar]] y [[keywords-de-cierre-de-github-solo-funcionan-en-ingles]].
+
 ## 28-sep-2026 · programa #2978: el aceptado se edita por una sola puerta hasta facturar (ADR-obras-009)
 - 14 PRs entre 2 sesiones coordinadas (tablero en `/tmp`; solo una numera y aplica migraciones): PR-1a #3021 · PR-1b #3027-#3029 · PR-1d #3031 · PR-2 #3033 · PR-1e #3035 · PR-1c #3036 · PR-4a #3037 · PR-5 #3039 · PR-6 #3040 · PR-3 #3043 · manual #3046 · cierre #3049, más los PRs de tipos. Las migs 963-972 y 974 se aplicaron y verificaron en prod ANTES de cada merge (la 973 es de Chivite).
 - Smokes verdes en sandbox: PR-1d, PR-5, PR-6 (abono por unidades) y PR-3 (conformidad). La 974 reconstruye 567 de las 570 fotos de aceptación, sin PDF ni autor y con la fecha de la última escritura.
