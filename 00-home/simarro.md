@@ -13,6 +13,13 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
+## Estado (2026-09-28 · caso Lucila, valoraciones y ficha del lead)
+
+- **Lucila (valoración):** el equipo la apuntó a mano a las 17:00 y la borró de Google sin tocar Kommo; el bot la leía a las 17 y, por la regla «ofrece las DOS primeras», re-ofreció 13:00/13:30. Prompt con excepción de hora concreta; `Cancelar_o_cambiar_cita` ya no pasa email/tipo inventados.
+- **Cambio de valoración (`om8i`):** conserva título (nombre) y 1 h; `Calc_Disponibilidad` acepta `duracion_min` (30 por defecto). Pendiente: la creación por bot sigue a 30 min (iMoT/Mirar_disponibilidad no lo pasan); el borrado del evento viejo falla en silencio si ya no existe.
+- **Recordatorio 24 h:** ya no sale en Valoraciones (IF en `Oa1lSQuDgEZvZCNS`); compra lo mantiene.
+- **Ficha del lead:** arriba Nombre/Teléfono/Email (espejo api-only del contacto, workflow `Espejo_contacto_lead` `Msj02uTFbhaXhFYq`, cada 5 min, solo si difiere), Dirección, Habitaciones, Baños, Precio máx., m², Características esenciales; el resto en la pestaña «Interno». Backfill 57 leads + dirección de 24 valoraciones sacada del título de Google (`Calendario_a_Kommo` ya la rellena). Rellenar mueve `updated_at` → [[escribir-en-un-lead-cambia-updated-at-y-falsea-la-inactividad]].
+
 ## Estado (2026-09-28 · obra nueva de Méntrida sin visitas)
 
 **Las 10 de C/ Hernán Cortés 4 («Balconejo») no se visitan (sin piso piloto) y chatbot + voz ya lo gestionan.** Regla automática: columna generada `properties.visitable` (migración 020: obra nueva sin terminar = false) → `Calcular` de kSgD devuelve `motivo:no_visitable`, así que ni WA ni voz pueden reservar. Detalle y rollback: memoria `project-obra-nueva-mentrida-20260928`; backups `*-20260928.json`.
