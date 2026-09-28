@@ -13,6 +13,14 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
 
+## Estado (2026-09-28 · voz: v41→v46 publicadas + teléfono en n8n)
+
+- **Retell v46 en producción** (rollback = publicar v45). 16 casos «FH» ×5 en Retell con todas las tools mockeadas; publica el usuario con `!` (el clasificador bloquea publish). Memoria `project-voz-horas-antes-agenda-20260928`.
+- **v41:** ya no dice horas ni «reservada» antes de mirar agenda (41/64 → 0/80): `n_mirar` en silencio, `n_reservar` static_text, fecha verbalizada. → [[retell-function-node-instruction-construye-iso-params]]
+- **v42:** el ejemplo TTS del prompt era el móvil de Ramón y se colaba en `Reservar`. **v44:** llamadas anónimas → nodo `branch` + `n_pedir_tel` (0/8 → 8/8). **v45:** salida de despedida en pedir día/franja (bucle). **v46:** ventana −1h/+2h en la descripción de After/Before (10/70 → 53/70). → [[retell-la-condicion-del-edge-manda-sobre-el-prompt]]
+- **n8n `iMoT` `Edit Fields3`:** el teléfono de la reserva es `call.from_number` si es válido; `args.phone` solo en anónimas (antes 3/30 reales con número ajeno). Backup `n8n-backups/simarro/iMoTKZWxYLymGuHF-pre-telefono-llamante-20260928.json`. → [[retell-from_number-no-auto-sustituye-en-tool-args]]
+- **Pendiente:** consentimiento puede repetir una hora ocupada que el cliente re-dice (1/75 sim); corregir en Kommo el teléfono de las reservas del 26-may, 1-jun y 8-ago (**aparcado**); revisar la primera llamada real anónima, la primera reserva tras el cambio de n8n y un cambio de cita (`n_cambiar_mirar` no simulado).
+
 ## Estado (2026-09-28 · caso Lucila, valoraciones y ficha del lead)
 
 - **Lucila (valoración):** el equipo la apuntó a mano a las 17:00 y la borró de Google sin tocar Kommo; el bot la leía a las 17 y, por la regla «ofrece las DOS primeras», re-ofreció 13:00/13:30. Prompt con excepción de hora concreta; `Cancelar_o_cambiar_cita` ya no pasa email/tipo inventados.
@@ -25,9 +33,9 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 **Las 10 de C/ Hernán Cortés 4 («Balconejo») no se visitan (sin piso piloto) y chatbot + voz ya lo gestionan.** Regla automática: columna generada `properties.visitable` (migración 020: obra nueva sin terminar = false) → `Calcular` de kSgD devuelve `motivo:no_visitable`, así que ni WA ni voz pueden reservar. Detalle y rollback: memoria `project-obra-nueva-mentrida-20260928`; backups `*-20260928.json`.
 - **Chatbot:** pide email + un dato de la vivienda (dormitorios o precio) y llama al sub-workflow `WIT9xD0BwzNNqGkf` (CF email + ref, tarea tipo 1, email a consulting@). Prompt: nunca mostrar ids internos. Si el lead lleva tag `obra-nueva-mentrida`, `Contexto lead` avisa de que responde a la plantilla.
 - **Debounce del chatbot rehecho:** respondía por separado a 2 mensajes seguidos → «gana el último» (RPUSH + `SET last=execution id` + Wait 12 s). → [[n8n-debounce-redis-1s-causa-duplicados-en-chatbot]]
-- **Voz:** Retell **v34** publicada (se queda; v35–v38 en borrador), nodo `n_no_visitable` → webhook `XWY6oRNyiBV74c4z` (lead en Lead entrante, tag, tarea, salesbot 99138 con la plantilla `obra_nueva_mentrida` 88634).
+- **Voz:** (hoy ya v46, ver arriba) Retell v34 publicada entonces, nodo `n_no_visitable` → webhook `XWY6oRNyiBV74c4z` (lead en Lead entrante, tag, tarea, salesbot 99138 con la plantilla `obra_nueva_mentrida` 88634).
 - **Buscador:** «piso en Las Rozas» ya ofrece el chalet de la misma zona en vez de «no hay nada».
-- **Tuyo / sin decidir:** envío del aviso a los que ya contactaron (Rita, Yenesis, Marcelo y 2 llamantes) — **en espera, «no envíes nada»**; probar registro completo del chatbot (manda email a consulting@); `n_buscar` de la voz improvisa horas antes de mirar disponibilidad; `VCOHMQGfYmk5OPky` «BORRADOR» está activo; borrar contactos ZZ 40431994 y 40432046.
+- **Tuyo / sin decidir:** envío del aviso a los que ya contactaron (Rita, Yenesis, Marcelo y 2 llamantes) — **en espera, «no envíes nada»**; probar registro completo del chatbot (manda email a consulting@); `VCOHMQGfYmk5OPky` «BORRADOR» está activo; borrar contactos ZZ 40431994 y 40432046.
 
 ## Estado (2026-09-24 · presupuesto de captación P2026-0024, en borrador)
 

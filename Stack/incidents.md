@@ -21,6 +21,7 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 ## 2026-09
 
 <!-- añade nuevas entradas aquí debajo -->
+- 2026-09-28 · simarro · el agente de voz ofrecía horas y decía «reservada» antes de consultar agenda, y 3/30 reservas reales guardaron un teléfono ajeno (el de Ramón) → Talk While Waiting generaba la frase de espera con el LLM; el ejemplo TTS del prompt era su móvil y n8n se fiaba de cualquier número con forma de teléfono → Retell v41–v46 (silencio/static_text, reglas en la descripción de los parámetros, branch para anónimas) + n8n prefiere `call.from_number`. [[retell-function-node-instruction-construye-iso-params]]
 - 2026-09-27 · facturaia · `eliminar_borrador_factura`/`eliminar_borrador_presupuesto` del conector MCP daban 422 siempre → la v1 exige `Idempotency-Key` en DELETE y `V1DeleteOptions` no la llevaba → #3007 (clave obligatoria en el tipo + determinista por actor/tool/id) y deploy manual del MCP
 - 2026-09-24 · facturaia · Obras: borrar en bloque un principal + sus subpresupuestos daba «1 con error» → el lote borraba en paralelo y el principal chocaba con el 409 de hijos vivos → orden por letra desc y en secuencia dentro de cada grupo (#2920)
 - 2026-09-24 · facturaia · conector MCP de claude.ai en 404 (`HTTP 404 at https://mcp.tufacturaia.com`) → #2662 (9-sep) movió el endpoint a `/mcp` y la raíz ya no sirve → re-alta del conector con `/mcp`; pendiente que la raíz siga sirviendo. → [[mover-la-ruta-de-un-servidor-mcp-deja-en-404-los-conectores-ya-dados-de-alta]]
