@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-18
+updated: 2026-09-28
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,13 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-18
+## Estado actual · 2026-09-28
+
+- ✅ **WhatsApp no entregado → Elphis se entera** (EN PROD): cuando Meta devuelve `status: failed`, `wa-inbound-bridge` deja nota en el deal abierto de Clientify (o en el contacto) y manda email a `info@` con qué mensaje no llegó y qué hacer; antes solo avisaba a nuestro Slack. Probado con fallos sintéticos y con uno real (#29365). → [[whatsapp-accepted-no-es-entregado-y-el-aviso-debe-llegar-al-cliente]]
+- Caso que lo destapó: una paciente de voz (deal 32969140) con el enlace de cita fallido dos veces (131026, también el reenvío). Recepción avisada por email + nota en el deal; queda llamarla.
+- Lo del 18-sep sigue abierto: **v53 pendiente de OK** (despedida de `intake` salta `crear_lead`).
+
+## Estado previo · 2026-09-18
 
 **El «bloqueante» de `crear_lead` era un criterio de prueba mal escrito — pero al medir la rama que faltaba salió un hueco de verdad. Los dos arreglos del panel, en producción.**
 
