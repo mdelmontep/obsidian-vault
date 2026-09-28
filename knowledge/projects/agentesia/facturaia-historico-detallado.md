@@ -21,6 +21,11 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 28-sep-2026 · programa #2978: el aceptado se edita por una sola puerta hasta facturar (ADR-obras-009)
+- 14 PRs entre 2 sesiones coordinadas (tablero en `/tmp`; solo una numera y aplica migraciones): PR-1a #3021 · PR-1b #3027-#3029 · PR-1d #3031 · PR-2 #3033 · PR-1e #3035 · PR-1c #3036 · PR-4a #3037 · PR-5 #3039 · PR-6 #3040 · PR-3 #3043 · manual #3046 · cierre #3049, más los PRs de tipos. Las migs 963-972 y 974 se aplicaron y verificaron en prod ANTES de cada merge (la 973 es de Chivite).
+- Smokes verdes en sandbox: PR-1d, PR-5, PR-6 (abono por unidades) y PR-3 (conformidad). La 974 reconstruye 567 de las 570 fotos de aceptación, sin PDF ni autor y con la fecha de la última escritura.
+- El cierre cazó que los manuales prometían que OB112 avisa de una pantalla vieja, y no lo hace → [[token-de-concurrencia-leido-en-el-servidor-no-protege-la-pantalla]].
+
 ## 26-sep-2026 · impersonación en `/obras` (#2938 → PR #2986) y fecha SEPA del setup E2E (#2939 → PR #2985)
 - Las RSC de `/obras` usaban `getOrgId()` (ignora `impersonate_org`): impersonando daban 404 por el gate de sector de la org propia. Ahora `resolvePageOrgId()` + candado `no-getorgid-en-rsc.test.ts`. Smoke prod discriminante con la org activa distinta de la impersonada. Cierra la entrada 🟠 del 07-ago de `facturaia-now-obras`.
 - `escenarios.setup.ts` pide la fecha de cargo a `fechaCargoPropuesta(7)`. El 201 de la remesa queda sin ejercer (smoke pendiente en el hub).
