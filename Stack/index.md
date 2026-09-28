@@ -51,7 +51,7 @@ Para lo reciente (< 2 semanas), ver [[hot]].
 - **Shippear desde working tree compartido sucio → worktree + diff-0** [[shippear-quirurgico-desde-working-tree-compartido-sucio]]
 - **Colisiones git multi-sesión (index/MERGE_HEAD/build-lock) → worktree + cherry aislado** [[claude-code-sesiones-paralelas-mismo-repo-colisiones-git]] · triaje borrable si cherry-0/diff-main vacío [[triaje-seguro-ramas-worktrees-sesiones-paralelas]]
 - **Worktree facturaia: `node_modules` real para `next build` (symlink rompe Turbopack)** [[worktree-facturaia-build-supabase]]
-- **Colisión NNN migraciones (rama stale) → renumerar + `uniq -d` post-merge; el hook pre-push NO la detecta** [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]
+- **Colisión NNN migraciones (rama stale) → renumerar + `uniq -d` post-merge; el hook pre-push NO la detecta** [[colision-de-numero-de-migracion-hace-que-db-push-la-salte-en-silencio]]
 - **Migración aplicada fuera de historial → idempotente + reconciliar schema_migrations** [[migracion-aplicada-fuera-de-historial-supabase]]
 
 ### método prod / supabase

@@ -117,4 +117,4 @@ Lotes/series, fabricación/BOM, catálogo B2B, escáner hardware, picking/packin
 - **Polish** (#475): badge usa coste/ud convertido; desplegable "Por cajas (N ud)" sin truncar; cifras mono.
 
 ## Refs
-Colisión numeración migraciones rama stale: [[supabase-db-push-colision-numeracion-migraciones-rama-stale]]. Onboarding por-org no solo backfill: [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]].
+Colisión numeración migraciones rama stale: [[colision-de-numero-de-migracion-hace-que-db-push-la-salte-en-silencio]]. Onboarding por-org no solo backfill: [[feature-recurso-por-org-actualizar-onboarding-no-solo-backfill]].

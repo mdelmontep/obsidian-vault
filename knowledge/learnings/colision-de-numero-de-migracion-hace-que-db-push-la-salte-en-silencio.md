@@ -48,3 +48,5 @@ era el **868**, sin ningún 99x. Merece decirlo porque las dos sesiones que
 lo miramos enunciamos primero el dato de la base local como si fuera de prod.
 Se esquiva numerando con `mig:renumerar`, que sí consulta prod, nunca a mano
 mirando el hueco más alto.
+
+**Origen, junio 2026 (fusionado de la nota vieja de la rama stale)**: la trampa nació con ramas creadas sobre un `main` viejo; el stock chocó 3 veces en dos días (213-216 → 219-222 → 223-226) y feedback/categorías se pisaron el 301. En el `uniq -d` la `/` inicial no es decorativa: sin ella, `e164` dentro de `066_…e164…` da un falso «164» duplicado.

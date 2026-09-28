@@ -14,5 +14,5 @@ Fix: reparar desde un **worktree de `origin/main`** (que sí tiene el fichero), 
 `main` viejo; `repair 279 280` aplicó 279 pero falló en 280 hasta hacerlo desde un
 worktree detached de origin/main.
 
-Relacionado: [[supabase-db-push-colision-numeracion-migraciones-rama-stale]],
+Relacionado: [[colision-de-numero-de-migracion-hace-que-db-push-la-salte-en-silencio]],
 [[migracion-aplicada-fuera-de-historial-supabase]].

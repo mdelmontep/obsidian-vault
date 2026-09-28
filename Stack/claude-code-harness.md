@@ -487,3 +487,6 @@ Estaban en el índice de arranque, que se paga en TODA sesión sin disparador cl
 
 - **El coste de un fan-out de agentes es CONTEXTO, no razonamiento** — 94 % en cache read/write, 6 % en output. La palanca no es bajar effort: es inyectarles lo que ya sabes en vez de que lo redescubran. Ver [[el-coste-de-un-fanout-de-agentes-es-contexto-no-razonamiento]]
 - **Un agente cortado a media tarea deja trabajo que PARECE terminado y pasa el gate** — cuatro murieron a la vez por límite de sesión; uno dejó una función escrita, importada y nunca llamada (typecheck verde, comportamiento ausente) y otro un rechazo mudo sin rama `else`. Al recoger trabajo interrumpido, recorrer los criterios de aceptación uno a uno; el último mensaje del agente apunta justo a la pieza que falta. Ver [[agente-cortado-a-media-tarea-deja-trabajo-que-parece-terminado]]
+
+- **Un presupuesto de reintentos fijo no distingue carga transitoria de sostenida**: aborta tras 2 descartes seguidos y apunta quién tenía la carga. Ver [[un-presupuesto-de-reintentos-fijo-no-distingue-carga-transitoria-de-sostenida]].
+- **Un working tree en rama stale te hace leer código viejo**: verifica contra `origin/main` antes de reimplementar un follow-up. Ver [[working-tree-en-rama-stale-verifica-antes-de-reimplementar]].

@@ -335,3 +335,5 @@ Vinieron del `CLAUDE.md` global al podarlo. La tercera de aquella terna —«200
 Estaban en el índice de arranque, que se paga en TODA sesión sin disparador claro, y la regla del propio `hot.md` dice que un gotcha de un stack concreto no entra ahí: su casa es este fichero, que ya se carga cuando tocas lo suyo.
 
 - **`curl` en macOS valida una cadena TLS que GitHub y Node rechazan** — completa el intermedio por su cuenta y te engaña; cuenta posiciones con `openssl s_client`. Ver [[cadena-tls-incompleta-curl-en-macos-la-salva-y-engana]]
+
+- **Colima publica en `*:puerto` lo que un contenedor escucha en `0.0.0.0`**: queda abierto a toda la wifi. Ver [[colima-publica-los-puertos-de-docker-en-toda-la-red-local]].
