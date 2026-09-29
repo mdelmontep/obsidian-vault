@@ -36,3 +36,5 @@ tenía nada que resolver. Dejándolo como está en main (`git show origin/main:<
 se commitea solo si algo lo valida o alguien lo lee dentro del repo.
 
 **El derivado que NO da conflicto es el peligroso (7-sep)**: en dos merges de `main`, `nucleo-vs-dominio.md` chocó y `dependencies.json` auto-mergeó limpio. Git produjo ahí un grafo que ningún generador habría escrito, sin marcadores y sin avisar. Regenera SIEMPRE los dos, no solo el que se queja: el conflicto es una suerte, no la condición.
+
+**Un cambio que es SOLO la fecha de un derivado cuesta un gate entero (29-sep)**: `deps:nucleo` reescribe la fecha de cabecera de `nucleo-vs-dominio.md` aunque el contenido no cambie. Dos PRs del mismo tren lo commitearon así, y cada merge dejaba al siguiente en conflicto. El rebase cambia el árbol, y el guard de merge obliga a repetir el gate completo (unos 25 min, dos veces el mismo día). Si tras regenerar el diff de ese fichero es solo la línea de fecha, déjalo como está en `main` (`git show origin/main:<ruta> > <ruta>`).
