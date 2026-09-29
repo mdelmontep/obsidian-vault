@@ -20,6 +20,11 @@ Tres colas que trae detrás, medidas:
   acumulan globs muertos. El runner hace copia y la restaura en el trap.
 - Sin `outputFileTracingRoot` en un monorepo, el build ni siquiera es determinista entre corridas.
 
+- **Lo mismo con un servidor vivo** (facturaia, 29-sep): un build en el checkout donde otro proceso sirve
+  staging deja el HTML pidiendo chunks borrados; el login no hidrata y el E2E cae como si fuera auth.
+  Allí `distDir` propio NO valía (Next 16 mete `<distDir>/types` en el `include` del tsconfig trackeado):
+  se sondean 3 chunks del HTML antes de lanzar Playwright (#3097).
+
 Corolario general: **no midas un sistema mientras otro agente lo mueve.** Tres «rojos» que reporté en
 esta horda eran un `mutate` de otro agente corriendo a la vez. El gate final se corre con todos parados.
 Ver [[editar-un-script-en-caliente-rompe-las-corridas-en-curso]] · [[la-suite-completa-bajo-paralelismo-no-distingue-regresion-de-saturacion]]

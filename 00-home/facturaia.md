@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-09-28
+updated: 2026-09-29
 tags: [cliente, facturaia, hub]
 ---
 
@@ -172,6 +172,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 
 ## Smoke tests pendientes
+- 🟡 **[29-sep] Portal del cliente EN PROD (#3047, mig 977) y copiloto `getKPIs` con periodo de Madrid (#2925)**: desde la org sandbox, invitar un email, entrar como cliente y ver solo sus facturas (anuladas incluidas); la 4.ª invitación en 24 h se niega. Staging ya tiene 976-978. Del mismo día, en el gate: reanudable por etapa (#3092) y la clase 23 ya no se reintenta (#3096) → [[reintentar-la-suite-que-muere-tapa-un-dato-aleatorio-que-viola-un-constraint]] · [[un-build-con-directorio-de-salida-fijo-no-aguanta-agentes-en-paralelo]]
 - 🟡 **[22-sep] Copiloto web: la frase de «qué está haciendo» EN PROD (#2856)**: en el cajón, una pregunta de IVA tiene que enseñar «Calculando el IVA del trimestre…» junto a los puntos, sin la estrella duplicada. Verificado solo en localhost. Aviso abierto: la frase no se borra en el primer `delta` (`copiloto-drawer.tsx:366`), así que se verá si algún día el runner hace streaming. El registro del cierre en `cierres.json` quedó fuera de main: entrada a añadir en el próximo PR = commit `f115b5286`, rama `feat/copiloto-web-etiqueta-tool`, `con-reservas`, 0 bloqueantes, `codigo,plataforma,cabos`, 22-sep.
 - 🟡 **[4-sep] El diálogo del coste anómalo, SIN ver en pantalla (#2486)** — el 409 y su texto están candados por tests (uno de ellos probado por mutación) y la función verificada por catálogo en prod, pero nadie lo ha visto renderizado. El smoke exige fabricar antes 3 compras del mismo producto en una org `is_test`: hoy **ninguna** las tiene, así que son cuatro aprobaciones seguidas, no una.
 - 🟡 **[22-ago] Tres de esa tanda NO son alcanzables con los datos de prod** — #2077 (resultado AEAT) exige una declaración **presentada** y presentarla sella WORM; #2079 (Mayús en remesas) necesita ≥2 filas y hay 0 en Cobros y 1 en Pagos; #2080b (reel con controles propios) exige una pieza CON vídeo y ninguna lo tiene. Los tres se prueban cuando exista el dato, no antes.
