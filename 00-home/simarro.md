@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-28
+updated: 2026-09-29
 tags: [cliente, simarro]
 ---
 
@@ -31,7 +31,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 ## Estado (2026-09-28 · obra nueva de Méntrida sin visitas)
 
 **Las 10 de C/ Hernán Cortés 4 («Balconejo») no se visitan (sin piso piloto) y chatbot + voz ya lo gestionan.** Regla automática: columna generada `properties.visitable` (migración 020: obra nueva sin terminar = false) → `Calcular` de kSgD devuelve `motivo:no_visitable`, así que ni WA ni voz pueden reservar. Detalle y rollback: memoria `project-obra-nueva-mentrida-20260928`; backups `*-20260928.json`.
-- **Chatbot:** pide email + un dato de la vivienda (dormitorios o precio) y llama al sub-workflow `WIT9xD0BwzNNqGkf` (CF email + ref, tarea tipo 1, email a consulting@). Prompt: nunca mostrar ids internos. Si el lead lleva tag `obra-nueva-mentrida`, `Contexto lead` avisa de que responde a la plantilla.
+- **Chatbot:** pide email + un dato de la vivienda (dormitorios o precio) y llama al sub-workflow `WIT9xD0BwzNNqGkf` (CF email + ref, tarea tipo 1, email a consulting@). Prompt: nunca mostrar ids internos. Si el lead lleva tag `obra-nueva-mentrida`, `Contexto lead` avisa de que responde a la plantilla. **29-sep (caso Rocío):** se re-presentaba y repetía el aviso → XWY6 mete la plantilla en la memoria del chat (tabla `simarro` de la BD `n8n`), `Contexto lead` da el texto y distingue voz/registrado/enlace, WIT9 actualiza la tarea de la llamada en vez de crear otra. Pendiente: mirar la primera conversación real y cerrar la tarea duplicada 8989876 de Rocío. → [[plantilla-enviada-fuera-del-chatbot-no-entra-en-su-memoria]]
 - **Debounce del chatbot rehecho:** respondía por separado a 2 mensajes seguidos → «gana el último» (RPUSH + `SET last=execution id` + Wait 12 s). → [[n8n-debounce-redis-1s-causa-duplicados-en-chatbot]]
 - **Voz:** (hoy ya v46, ver arriba) Retell v34 publicada entonces, nodo `n_no_visitable` → webhook `XWY6oRNyiBV74c4z` (lead en Lead entrante, tag, tarea, salesbot 99138 con la plantilla `obra_nueva_mentrida` 88634).
 - **Buscador:** «piso en Las Rozas» ya ofrece el chalet de la misma zona en vez de «no hay nada».
