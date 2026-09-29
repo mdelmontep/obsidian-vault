@@ -10,7 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
-- 🟠 **TuFacturaIA — Fabbros (cartonaje, Alcalá): reunión presencial 23-sep, demo, logo y tres presentaciones listas** — en prod hoy los dos arreglos que salieron de montarla (#2864 decimales del precio, #2868 el email al emitir). **Tuyo**: la reunión y decidir fase 2 (albaranes de venta, tarifas por cliente). → [[facturaia]]
+- 🟠 **TuFacturaIA — Fabbros (cartonaje, Alcalá): reunión presencial 23-sep, demo, logo y tres presentaciones listas** — en prod hoy los dos arreglos que salieron de montarla (#2864 decimales del precio, #2868 el email al emitir). Fase 2 en marcha: albarán de venta, 21 tickets (#3106). → [[facturaia]]
 - 🟢 **EcoBox — sin citas desde el 22-sep (voz v26 + WhatsApp → email al taller), sin estrenar** — **tuyo**: llamada real en y fuera de horario + un WhatsApp y confirmar email a Cristian/info, **rotar HMAC de Chatwoot + `X-Ecobox-Token`**, decidir si se apagan los workflows de reservas. → [[clientes/ecobox/index|ecobox]] §EMPEZAR AQUÍ
 - 🟠 **AGH — su contabilidad sale de Yooz a TuFacturaIA (30-ago)**: diseño CERRADO y **ADR-063 ya en `main`** (#2874; spec #2295, tickets #2296-#2308, #2296/#2297 cogibles). **Sin código** desde el 30-ago. **Tuyo**: mandar los tres cuestionarios (Giuliana, Carlos, Mazars) y decidir si arranca el primer ticket. → [[agh-iberica]] · [[facturaia-yooz-agh-migracion]]
 - 🟠 **AGH People & Culture (27-sep):** tablero **80 %** (v28). Consultores (#2091) y #2090/92/93/66 en prod (28-sep). **Tuyo:** publicar tablero v29 (cuenta agentesia.madrid). **Tuyo:** encender `vision_contracts_enabled`, #2055 (four-eyes), #782, ensayo #1849, avisar a AGH del tope de cotización de 2023 y la llamada de Teams. → [[agh-iberica]]
