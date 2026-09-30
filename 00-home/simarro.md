@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-29
+updated: 2026-09-30
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,10 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-09-30 · la reserva de voz/WA ya escribe «Agente asignado»)
+
+- **Caso Diana Gonzalo** (lead 36184680, voz, visita el 1-oct a las 17:30): la RPC la enrutó bien a la agenda de Carlos, pero el lead salía sin agente porque `iMoT` nunca escribía el CF 1373105. Ahora `Opciones agente Retell/WA` → `Guardar Calendar Info *` añade el `enum_id` desde `resolved_agent_key`, con la misma regla por tokens que `Calendario_a_Kommo`; con `fallback` no escribe el agente. Probado con un workflow temporal sin escrituras (carlos/ramon simarro/claudia/fallback). Diana corregida a mano, única afectada desde el 8-sep. Pendiente: ver la primera reserva real con agente. Backup `n8n-backups/simarro/iMoTKZWxYLymGuHF-pre-agente-asignado-reserva-20260930.json`. → [[un-campo-que-rellena-un-solo-camino-de-alta-sale-vacio-en-los-demas]]
 
 ## Estado (2026-09-28 · voz: v41→v46 publicadas + teléfono en n8n)
 
@@ -66,7 +70,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **Recordatorios**: 24 h de valoración propio (bot `98892`, plantilla `valoracion_recordatorio_24h`); el de 4 h **desactivado** (plantilla en la línea vieja, no llegaba).
 - **Encuesta 48h ("Valoración", bot `87873`) sale con Error**: plantilla aprobada en la fuente vieja → [[plantilla-waba-kommo-queda-atada-a-la-fuente-donde-se-aprobo]]. Decidido rehacerla con botón a reseñas de Google + "Tengo una sugerencia" (tarea al agente). **Bloqueado por el enlace de reseñas de Ramón** (mensaje enviado por Manu).
 - Nodo `Email Visita Interna (desactivado)` estaba activo y era el único aviso interno de reservas WA → renombrado `Email Visita Interna WA`.
-- **A revisar**: `iMoTKZWxYLymGuHF` (reserva) sin ninguna ejecución desde el 9-sep. Memoria: `project-emails-y-gemelos-20260921`. Backups `*-20260921.json` en `n8n-backups/simarro/`.
+- ~~A revisar: `iMoTKZWxYLymGuHF` sin ejecuciones desde el 9-sep~~ — sí ejecuta (p. ej. 21051, 30-sep). Memoria: `project-emails-y-gemelos-20260921`. Backups `*-20260921.json` en `n8n-backups/simarro/`.
 
 ## Estado (2026-09-12 · cambios de cita, preferencias desde la vivienda, y un borrado en las agendas)
 
