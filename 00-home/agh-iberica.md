@@ -1,7 +1,7 @@
 ---
 title: agh-iberica
 date: 2026-07-02
-updated: 2026-09-27
+updated: 2026-10-01
 tags: [cliente, agh-iberica, agente-comercial, mastra, m365, whatsapp, multi-tenant, HUB]
 ---
 
@@ -88,7 +88,7 @@ Detalle, plan verificado y aprendizajes → [[facturaia-yooz-agh-migracion]]
 - 🔬 **Dos familias de contrato** (Print To PDF vs Docusign DMv10, que se lee sin visión) → **#1702 no es el bloqueante universal**, y «el salario vive en el anexo» era falso. → [[mismo-tipo-de-documento-dos-familias-segun-quien-lo-genero]]. Los permisos de RRHH nacen apagados **para todo rol, admin incluido**: era una **decisión**, no código.
 - ✅ **20-25 sep:** ~55 PRs (mig. 0063–0077; palanca de contratos APAGADA); #1702 AC3 cumplido (93,2 %), Word fuera (#1977) → [[agh-iberica-historico]] · [[reutilizar-base-sembrada-con-secreto-nuevo-deja-pantallas-sin-medir]]
 - 📥 **Encargo ampliado (23-sep):** activos asociados y Excel de Clientes → #2035, #2036, #2038.
-- 🟢 **27-28-sep:** Consultores rehecho (#2091) + #2090 #2092 #2093 #2066 cerradas, en prod. Falta publicar tablero v29. → [[leer-un-valor-desde-el-updater-de-setstate-tras-un-await-no-funciona-en-react]]
+- 🟢 **27-sep → 01-oct, en prod:** Consultores (#2091; #2090/92/93/66) y «Crear ficha» desde CV, contrato o anexo (#2135: #2142 + #2148). Falta publicar tablero v29. → [[leer-un-valor-desde-el-updater-de-setstate-tras-un-await-no-funciona-en-react]] · [[el-reloj-de-la-vm-de-colima-oscila-los-tests-host-bd-toleran]]
 - 🟠 **Siguiente (tuyo):** encender visión de contratos · #2055 · #782 · avisar a AGH del tope de cotización 2023 · evals ×3 de T3-c (#1859, worktree `t3c` @ `7734a64b`; no se mergea hasta #1349/#1350) · ensayo #1849 · #1909 (medir filas de prod con dato protegido en la cita) · decidir `salariesView` para aprobar CVs · Teams con AGH (margen/tarifa, SNC en la herramienta) → [[una-palanca-que-apaga-al-worker-debe-apagar-lo-que-anuncia-que-hay-worker]]. Seguimiento: #2015, #2016.
 
 _Método de esta tanda: [[un-rojo-ajeno-del-gate-puede-ser-el-bug-que-arregla-otra-pr-del-tren]] · [[integrar-la-ola-entera-antes-de-mergear-caza-defectos-de-composicion]] · [[un-fetch-fallido-deja-fetch-head-viejo-y-el-merge-sale-verde]] · [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]] · [[una-verificacion-que-inicializa-si-falta-es-tautologica-sobre-el-estado-vacio]] · [[un-flag-encendido-contra-el-defecto-del-codigo-se-busca-antes-de-llamarlo-fallo]]._

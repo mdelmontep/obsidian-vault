@@ -137,3 +137,4 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - Junio 2026 → [[incidents-archive-2026-06]] (82 entradas, archivadas el 27-jul)
 - Mayo 2026 y anteriores → [[incidents-archive-2026]] (archivadas el 13-jul)
 - 2026-10-01 · facturaia · un día sin subir facturas al buzón en todas las orgs (500 `upload_failed`, ticket de soporte 188) → la RESTRICTIVE de la mig 983 comparaba `foldername(name)[2] = 'albaran-venta'`, NULL en rutas de una carpeta → mig 991 con `IS NOT DISTINCT FROM` (#3178). Ver [[una-politica-restrictive-que-vale-null-deniega-todo]].
+- 2026-10-01 · agh-iberica · un contrato subido por «Subir CV» quedó `unclassified` para siempre y «Crear consultor» daba 409 `no_verified_name` → la escalada CV→contrato se guardaba `type_mismatch`, que el router no reclama → `received` en la escalada y la mig 0081 re-encoló la fila (#2135).
