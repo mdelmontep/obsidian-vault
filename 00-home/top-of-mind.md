@@ -49,6 +49,7 @@ tags: [home, prioridades]
 - 🔴 **Agentesia — el chatbot cerraba ventas sin crear la cita (4-sep)** — arreglado en prod (tool `Agendar` inexistente; ya con invitado, Meet y anti-duplicado) + precios alineados con la web. **Tuyo:** `Reservar` no se ha ejecutado nunca — escribirle al bot y confirmar evento, invitación y un solo Slack. Hito 5 → [[agentesia]] · [[tool-description-generica-no-fuerza-ejecucion-de-tool-critica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
+- **1Password — renovar el token de `opsa` antes del 1-nov** — caduca ese día y el síntoma no dirá «caducado»: vuelve a pedir huella todo lo que lee secretos, y el aviso semanal de volumen de tipos solo llegaría al Mac. Tras renovar: `~/.claude/scripts/fia-volumen-tipos.sh --probar-slack "prueba"`. → [[1password]]
 
 - 🔴 **30-sep: Retell apaga la dirección SIP vieja y `v2/create-web-call` (14-sep)** — sin tocar nada, ese día dejan de entrar llamadas en [[clientes/centro-elphis/index|centro-elphis]] (+34910054950) y [[simarro]] (+34910054675) —trunks de Netelip— y muere la demo de voz de la web (PR #109, lo mergea Borja). El cómo, en los dos hubs. → [[retell-endpoints-deprecados-2026]]
 - 🟢 **Arnés — auditoría cerrada, 0 de 16 palancas (24-sep)** — L2-1 medida y descartada (Δ 7,55 s: esas etapas del `pre-push` cuestan 7,5 s, no ~17). **Queda**: la línea base **L1**, 2 etapas de 9, no medible en horario laborable; y `fia-gate:27`. → [[facturaia-now-infra]] · [[una-medida-limpia-que-no-llega-al-umbral-es-el-resultado]]

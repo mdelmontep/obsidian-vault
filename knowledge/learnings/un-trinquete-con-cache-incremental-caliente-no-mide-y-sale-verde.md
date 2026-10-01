@@ -32,3 +32,5 @@ Corolario al cruzar el tope de verdad: **baja tu propio coste antes de subir un
 baseline compartido**. 821 literales de objeto contra una interfaz costaban 2.710
 tipos; el mismo fichero generado como `readonly string[]` + `.map()` cuesta plano.
 Ver [[antes-de-exceptuar-una-deuda-mira-que-trinquete-la-mide]].
+
+**Retirado del gate y del pre-push el 1-oct-2026 (#3197)**: en un mes el baseline se reescribió 8 veces al alza sin rechazar nada, medía el total (la deriva de main la pagaba el PR siguiente) y costaba 56 s de mediana por gate. Ahora es una serie semanal sobre main (`~/.claude/scripts/fia-volumen-tipos.sh`, lunes 08:00) que avisa en Slack #pro-facturaia si sube >5 %.
