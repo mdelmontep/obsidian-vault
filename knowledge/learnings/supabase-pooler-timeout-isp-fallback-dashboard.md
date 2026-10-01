@@ -1,6 +1,7 @@
 ---
 title: supabase pooler :5432/:6543 timeout desde ISP — fallback dashboard sql editor
 date: 2026-05-30
+updated: 2026-10-01
 source: claude-code-session
 tags: [supabase, postgres, network, migrations, mcp, gotcha]
 ---
@@ -31,5 +32,11 @@ que el MCP `execute_sql`, sin necesitar el MCP montado. Mismo criterio que el pu
 `schema_migrations` va DENTRO de la misma llamada que la migración, nunca aparte.
 
 **Mismo bloqueo también rompe `gen:types --linked`** (cuelga en "Initialising login role..." sin error, sin socket abierto — verificar con `lsof -p <pid>`). Fix: `supabase gen types typescript --project-id <ref> --schema public,graphql_public` (Management API, HTTPS, no pasa por 5432/6543). Ojo: puede servir un schema con caché de minutos — antes de commitear el diff, verificar con `execute_sql` contra `information_schema.tables` que las tablas que el diff ELIMINA de verdad no existen en prod.
+
+**Otro cuelgue que NO es la red: el CLI leyendo el Keychain** (1-oct, facturaia): `gen:types:check` del gate
+salía 124 y hasta `supabase projects list` se colgaba, con `curl https://api.supabase.com` respondiendo en
+0,1 s y `security find-generic-password -s "Supabase CLI" -w` entregando el token. `--debug` se para justo
+tras leer `~/.supabase/profile`. Fix: `SUPABASE_ACCESS_TOKEN="$(security find-generic-password -s 'Supabase CLI' -w)" <comando>`
+(token inline, nunca impreso); hereda a los hijos, así que envuelve el gate o el push enteros.
 
 Ver [[campo-huerfano-shape-sin-migracion-paralela]] (caso típico que pide push urgente).
