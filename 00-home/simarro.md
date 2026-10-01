@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-09-30
+updated: 2026-10-01
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,15 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-10-01 · voz v47/v48: transferencia, `user_number`, duplicados en Kommo)
+
+- **Transferencia:** «te paso con alguien» no transfería si el cliente callaba (Rocío 29-sep, Diana 30-sep). `n_escalar` es ahora un branch por ecuación (L-V 10-14 y 17-20, `timezone: Europe/Madrid` en el agente) → static «Te paso…» + `skip_response_edge` → transfer; fuera de horario o transfer fallido → aviso estático y fin. → [[retell-los-batch-tests-ignoran-la-timezone-del-agente]] · [[retell-el-nodo-end-no-habla-la-despedida-necesita-nodo-propio]]
+- **`{{from_number}}` nunca existió en llamadas reales** → `{{user_number}}` en 6 sitios; normales 0/16 piden teléfono, anónimas 4/4. Comisión/consentimiento: responde sin cifras y vuelve a pedir el consentimiento. → [[retell-from_number-no-auto-sustituye-en-tool-args]]
+- **v48:** saludo a 2 s (la locución «Llamada de idealista» acaba a 1,78 s) + regla de no contestarla. Rollback: v47 → v46. Backup `n8n-backups/simarro/retell-flow-v46-pre-transfer-usernumber-20261001.json`.
+- **Captura_interes (`LdEaJ1qhsg6l130m`):** `IF Existe Contacto` siempre falso (hal+json en `$json.data`) → cada llamada con interés creaba lead + contacto vacío duplicado. Arreglado; el lead nuevo (Lead Caliente) lleva el teléfono **solo** en el CF 1381872 y el contacto sin teléfono ni vínculo, porque Lead Caliente dispara «Confirmación Cita»; `Actualizar Lead Existente` desactivado (pisaba zona/precio del matching). Backup `LdEaJ1qhsg6l130m-pre-contacto-parse-20261001.json`. → [[n8n-http-request-sin-responseformat-json-devuelve-string-en-data]]
+- **Kommo limpiado (sin etapas ni contactos):** duplicados 36184714, 36149752, 36149740 renombrados «[DUPLICADO — borrar]» → **Tuyo: borrarlos en la UI**. Notas de las llamadas en Rocío 36149748; teléfono en el CF de 36064806 y 36064292.
+- Memoria `project-voz-transfer-usernumber-20261001`.
 
 ## Estado (2026-09-30 · la reserva de voz/WA ya escribe «Agente asignado»)
 

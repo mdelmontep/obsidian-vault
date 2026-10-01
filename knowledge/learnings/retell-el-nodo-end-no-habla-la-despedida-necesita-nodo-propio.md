@@ -18,3 +18,9 @@ Patrón para una frase garantizada (misma receta que la frase de crisis):
 transiciona sin esperar al usuario.
 
 Ver [[retell-nodo-conversacional-debe-cubrir-explicito-el-caso-no-entendi]].
+
+**Mismo mecanismo en un «te paso con alguien» (Simarro, 1-oct-2026):** un nodo
+`conversation` solo evalúa sus edges **después de un turno del usuario**. El agente
+decía «te paso» y se quedaba esperando; si el cliente callaba, la llamada acababa
+por inactividad sin transferir (2 llamadas reales). Receta: frase en static_text +
+`skip_response_edge` al nodo transfer. Ver [[retell-los-batch-tests-ignoran-la-timezone-del-agente]].
