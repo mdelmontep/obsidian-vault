@@ -12,6 +12,7 @@ tags: [supabase, saas, facturaia]
 - **Connection pooler**: `postgresql://postgres.{ref}:{password}@aws-0-{region}.pooler.supabase.com:6543/postgres` — la region se descubre probando (TuFacturaIA: `eu-west-1`). Error "Tenant or user not found" = region incorrecta, no error de password
 - **`sb_secret_*` / `sb_publishable_*` son keys de billing/plataforma** — no sirven para ejecutar SQL ni para la Management API. Access token para CLI debe ser formato `sbp_...` (Personal Access Token del dashboard)
 - **Service role JWT solo funciona con PostgREST** — lectura/escritura de filas vía API REST, NO DDL (CREATE TABLE, ALTER, etc.)
+- **Logs por Management API**: `logs.all` está retirado. Ahora es `GET /v1/projects/<ref>/analytics/endpoints/logs?sql=…`: SQL ClickHouse sobre una tabla `logs` filtrada por `source` (`postgres_logs`, `edge_logs`), con los campos en `log_attributes['request.path']`, `['response.status_code']` (con `toInt32OrZero`) y `['parsed.sql_state_code']`. Necesita un PAT `sbp_`.
 
 ## Gotchas generales
 

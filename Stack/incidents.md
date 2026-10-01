@@ -136,3 +136,4 @@ Para incidentes con análisis largo (>1 línea de causa), crear nota separada en
 - Julio 2026 → [[incidents-archive-2026-07]] (110 entradas, archivadas el 12-ago)
 - Junio 2026 → [[incidents-archive-2026-06]] (82 entradas, archivadas el 27-jul)
 - Mayo 2026 y anteriores → [[incidents-archive-2026]] (archivadas el 13-jul)
+- 2026-10-01 · facturaia · un día sin subir facturas al buzón en todas las orgs (500 `upload_failed`, ticket de soporte 188) → la RESTRICTIVE de la mig 983 comparaba `foldername(name)[2] = 'albaran-venta'`, NULL en rutas de una carpeta → mig 991 con `IS NOT DISTINCT FROM` (#3178). Ver [[una-politica-restrictive-que-vale-null-deniega-todo]].
