@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-09-28
+updated: 2026-10-01
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,14 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-09-28
+## Estado actual · 2026-10-01
+
+- 🔜 **Alba quiere cambiar de Clientify al CRM de Holded** (su programa de facturación). Renuevan Clientify y lo hacemos «con calma». 15 workflows activos tocan Clientify (7 `clientify-*` + `registrar-lead`, `doctoralia-email-sync`, `chatwoot-event`, `wa-inbound-bridge`, `book-and-notify`, `router-ia`, `retell-tool-reservar-visita`, `error-handler-global`); se replica igual (mismo embudo y etapas). Estimado 26–36 h.
+- Presupuesto **P2026-0025: 1.200 € + IVA (1.452 €)**, solo total sin desglose, sin histórico. PDF y datos en `~/Projects/elphis/presupuesto-holded/`. Manu vio caro 2.400 € y eligió precio de fidelización.
+- Pendiente: añadir la conexión directa del formulario web (WordPress; hoy va por un Zapier que es de la agencia que hizo la web, no de Elphis) como +200 € y quitar del PDF «la web la reconfiguran ellos»; pedir acceso admin WP y saber qué plugin de formularios; cargarlo en TuFacturaIA (conector sin autenticar).
+- A medir en la fase de análisis (API Holded: leads, `PUT /leads/{id}/stages`, notas): si el enlace a la llamada sale clicable, si se pueden buscar los leads de un contacto (sin eso, duplicados), tags en leads (Doctoralia los usa) y si los contactos del CRM se mezclan con los de facturación.
+
+## Estado previo · 2026-09-28
 
 - ✅ **WhatsApp no entregado → Elphis se entera** (EN PROD): cuando Meta devuelve `status: failed`, `wa-inbound-bridge` deja nota en el deal abierto de Clientify (o en el contacto) y manda email a `info@` con qué mensaje no llegó y qué hacer; antes solo avisaba a nuestro Slack. Probado con fallos sintéticos y con uno real (#29365). → [[whatsapp-accepted-no-es-entregado-y-el-aviso-debe-llegar-al-cliente]]
 - Caso que lo destapó: una paciente de voz (deal 32969140) con el enlace de cita fallido dos veces (131026, también el reenvío). Recepción avisada por email + nota en el deal; queda llamarla.
