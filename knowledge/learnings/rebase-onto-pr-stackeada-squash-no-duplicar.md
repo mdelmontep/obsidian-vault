@@ -12,4 +12,6 @@ Fix: `git rebase --onto origin/main <sha-base-original> <rama-stackeada>` → re
 los commits PROPIOS de la stackeada sobre el main que ya lleva la base dentro.
 
 Después, antes de mergear: `gh pr edit <n> --base main` + `gh pr view <n> --json baseRefName`
-(== main; gotcha del retarget) y re-correr el gate sobre el HEAD rebasado.
+(== main; gotcha del retarget). El squash deja en main el ÁRBOL exacto de la base, así que
+si nadie mergea entre medias el `--onto` no cambia el árbol de la apilada (`HEAD^{tree}` igual):
+su gate, corrido en paralelo sobre la base, sigue valiendo. Si main se movió, re-gate (1-oct-2026).
