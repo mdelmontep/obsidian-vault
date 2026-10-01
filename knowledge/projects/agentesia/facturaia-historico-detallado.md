@@ -1426,3 +1426,7 @@ Encargo: lo que la métrica de contraste APCA **no** ve — jerarquía, densidad
 ### 2026-09-29 — la lámina se genera con el modelo de su estilo (ADR-110)
 
 - 🟢 **#3075 → `bf9f5e2a8`, runner y app desplegados** — el `modelo_id` del estilo visual pasa a ser el modelo con el que se genera cada lámina o post, si sirve para producir; si no, el de config sin 409. Precio del catálogo en la estimación y en el tope. Verificado en prod: el carrusel `7de4d0f9` (Ilustración editorial azul) se regeneró con la config en Popcorn y salieron las 5 láminas con Recraft a 0,04 € (estimado 4 céntimos). Reels fuera de alcance. Comparativa: https://claude.ai/artifact/H3braFRSsG8neMswjr4YJg
+
+### 2026-10-01 — smokes de #3171 y #3172 en prod
+
+- 🟢 **#3171 y #3172 verificados con el navegador** — /clientes en tarjetas: «Archivar» desde «⋯» abre solo su confirmación y el clic en la tarjeta sí abre la ficha. Sandbox de Obras: AV2026-0004 saca 3 de LOTE-C, se reasigna 1 a SMOKE-AUD desde `/admin/stock/rectificaciones` y al anular vuelven las 3, cada una a su partida (LOTE-C 4, SMOKE-AUD 5). Override `albaran_venta` devuelto a `false`.
