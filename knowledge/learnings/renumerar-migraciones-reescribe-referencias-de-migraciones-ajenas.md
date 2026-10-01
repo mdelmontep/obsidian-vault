@@ -22,3 +22,5 @@ son de otra cosa.
   a una** contra `ls supabase/migrations`. El listado de "no supe traducir" que imprime el
   script NO las incluye: esas las traduce sin preguntar.
 - Arreglo de raíz: sacar `mig NNN` del reemplazo automático y meterlo en ese listado.
+
+Excepción: una migración ya aplicada en prod no se renumera → [[una-migracion-ya-aplicada-en-prod-no-se-renumera-aunque-entre-tarde]].
