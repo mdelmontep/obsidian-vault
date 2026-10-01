@@ -16,4 +16,7 @@ commit → registrar → commit propio `chore(cierre)` que el squash absorbe.
 
 Gotcha al testearlo: `git status --porcelain` colapsa un directorio untracked entero en una
 línea (`?? docs/`), no lista sus ficheros; para buscar una ruta, `--untracked-files=all`.
+Lo inverso también pasa: el gate de facturaia exige el árbol limpio contando los no trackeados, y la
+caché de un hook que se escribe al editar (`.impeccable/hook.cache.json`, 1-oct) dejó un gate verde
+sin registrar. Antes del gate, `git status --porcelain --untracked-files=all` vacío.
 Probar el guard con `mutate`: sin él, el test del árbol sucio debe caer.
