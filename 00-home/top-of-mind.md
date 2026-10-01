@@ -97,7 +97,7 @@ tags: [home, prioridades]
 |---|---|---|
 | TuFacturaIA | [[facturaia]] | Activo · NEXT/Smoke/LATER en el hub |
 | Agentesia / agency-portal | [[agentesia]] | Onboarding portal + chatbot ticketing + **Flota IA fase 1 EN PROD** · **fase 2: el juez arreglado y rearrancado de cero** (1-sep: reset + 628 reencolados) |
-| Simarro | [[simarro]] | **1-oct:** voz v48 (transferencia, `user_number`, aviso Idealista) · Captura sin duplicados · borrar 3 leads «[DUPLICADO]» en Kommo · 2.595 contactos por soltar |
+| Simarro | [[simarro]] | **1-oct:** voz v48 (transfer, `user_number`) · 2.595 contactos por soltar |
 | Clínica Zen | [[clinica-zen]] | Voz+chat LIVE · detección de campaña Meta Ads diseñada, esperando token (22-sep) · valoración post-cita automática y probada (18-sep) · recordatorio 24 h con teléfonos · etapa del lead con un solo escritor + reenganche (8-sep) · plantilla «Doctor Asignado» rechazada por Meta |
 | Tecnocloud | [[tecnocloud]] | Voz Laura LIVE (v47, ya avisa de IA) · webhook cerrado · #26/#29/#30 en prod |
 | EcoBox | [[clientes/ecobox/index\|ecobox]] | **Sin citas (22-sep):** voz v26 + WhatsApp recogen datos → Postgres + email al taller · derivación a persona solo en horario · web: hero cabina (22-sep) · **siguiente: estreno real, rotar secretos, Search Console** |

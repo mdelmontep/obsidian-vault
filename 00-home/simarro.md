@@ -19,7 +19,7 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 - **`{{from_number}}` nunca existió en llamadas reales** → `{{user_number}}` en 6 sitios; normales 0/16 piden teléfono, anónimas 4/4. Comisión/consentimiento: responde sin cifras y vuelve a pedir el consentimiento. → [[retell-from_number-no-auto-sustituye-en-tool-args]]
 - **v48:** saludo a 2 s (la locución «Llamada de idealista» acaba a 1,78 s) + regla de no contestarla. Rollback: v47 → v46. Backup `n8n-backups/simarro/retell-flow-v46-pre-transfer-usernumber-20261001.json`.
 - **Captura_interes (`LdEaJ1qhsg6l130m`):** `IF Existe Contacto` siempre falso (hal+json en `$json.data`) → cada llamada con interés creaba lead + contacto vacío duplicado. Arreglado; el lead nuevo (Lead Caliente) lleva el teléfono **solo** en el CF 1381872 y el contacto sin teléfono ni vínculo, porque Lead Caliente dispara «Confirmación Cita»; `Actualizar Lead Existente` desactivado (pisaba zona/precio del matching). Backup `LdEaJ1qhsg6l130m-pre-contacto-parse-20261001.json`. → [[n8n-http-request-sin-responseformat-json-devuelve-string-en-data]]
-- **Kommo limpiado (sin etapas ni contactos):** duplicados 36184714, 36149752, 36149740 renombrados «[DUPLICADO — borrar]» → **Tuyo: borrarlos en la UI**. Notas de las llamadas en Rocío 36149748; teléfono en el CF de 36064806 y 36064292.
+- **Kommo limpiado (sin etapas ni contactos):** duplicados 36184714, 36149752, 36149740 borrados (1-oct, verificado por API). Notas de las llamadas en Rocío 36149748; teléfono en el CF de 36064806 y 36064292.
 - Memoria `project-voz-transfer-usernumber-20261001`.
 
 ## Estado (2026-09-30 · la reserva de voz/WA ya escribe «Agente asignado»)
