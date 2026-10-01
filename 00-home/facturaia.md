@@ -40,7 +40,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ### Depende de ti
 
 - 🟠 **Fabbros → carga de datos 7-oct**: arreglos en prod (#3157, #3167); quedan manuales, smoke y ajustes de la org → [[facturaia-now-clientes]]
-- 🟠 **Fabbros → albarán de venta** (ADR-112, spec #3106, tickets #3108-#3128): #3130 espera la mig 981 tras #3129; siguiente #3110 + #3109. Arranque: `docs/architecture/PROMPT-continuacion-30-sep-albaran-venta.md` → [[facturaia-now-clientes]]
+- 🟠 **Fabbros → albarán de venta** (ADR-112, #3106): en prod hasta mig 989; encender solo por override hasta #3115/#3164. Siguen #3112 (990), #3142, #3163. Arranque: `docs/architecture/PROMPT-continuacion-1-oct-albaran-venta.md` → [[facturaia-now-clientes]]
 - 🔴 **El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)** → [[facturaia-now-producto]]
 - 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** → [[facturaia-now-ocr]]
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** → [[facturaia-now-clientes]]
@@ -173,6 +173,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ---
 
 ## Smoke tests pendientes
+- 🟡 **[1-oct] #3171 y #3172 EN PROD**: en /clientes (tarjetas), «Archivar» desde el menú «⋯» no abre la ficha detrás; y en `/admin/stock/rectificaciones`, reasignar parte de la salida de un albarán de venta deja la parte movida enlazada a su línea (mig 989).
 - 🟡 **[29-sep] Portal del cliente EN PROD (#3047, mig 977) y copiloto `getKPIs` con periodo de Madrid (#2925)**: desde la org sandbox, invitar un email, entrar como cliente y ver solo sus facturas (anuladas incluidas); la 4.ª invitación en 24 h se niega. Staging ya tiene 976-978. Del mismo día, en el gate: reanudable por etapa (#3092) y la clase 23 ya no se reintenta (#3096) → [[reintentar-la-suite-que-muere-tapa-un-dato-aleatorio-que-viola-un-constraint]] · [[un-build-con-directorio-de-salida-fijo-no-aguanta-agentes-en-paralelo]]
 - 🟡 **[22-sep] Copiloto web: la frase de «qué está haciendo» EN PROD (#2856)**: en el cajón, una pregunta de IVA tiene que enseñar «Calculando el IVA del trimestre…» junto a los puntos, sin la estrella duplicada. Verificado solo en localhost. Aviso abierto: la frase no se borra en el primer `delta` (`copiloto-drawer.tsx:366`), así que se verá si algún día el runner hace streaming. El registro del cierre en `cierres.json` quedó fuera de main: entrada a añadir en el próximo PR = commit `f115b5286`, rama `feat/copiloto-web-etiqueta-tool`, `con-reservas`, 0 bloqueantes, `codigo,plataforma,cabos`, 22-sep.
 - 🟡 **[4-sep] El diálogo del coste anómalo, SIN ver en pantalla (#2486)** — el 409 y su texto están candados por tests (uno de ellos probado por mutación) y la función verificada por catálogo en prod, pero nadie lo ha visto renderizado. El smoke exige fabricar antes 3 compras del mismo producto en una org `is_test`: hoy **ninguna** las tiene, así que son cuatro aprobaciones seguidas, no una.
