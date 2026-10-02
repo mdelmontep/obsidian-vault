@@ -24,3 +24,9 @@ bypasea RLS) y DESCARTA las columnas de `organizations` (PATCH del navegador con
 Corolario para los mocks: en cuanto el código pasa por ahí, un mock que devuelve
 `{data: null, error: null}` ya no es "da igual", es un 409. Ver
 [[el-gate-verde-no-sustituye-una-revision-adversarial-antes-de-mergear]].
+
+Y al revés, el agujero más traicionero: un fake cuyo `.maybeSingle()` sobre un UPDATE devuelve
+`[]` en vez de `null` hace pasar la guarda por «escrito» (`[]` es truthy), y los tests de
+carrera dan verde sin probar nada. Caso real (agency-portal «Me la quedo», 2-oct-2026): el fix
+fue que el fake imite PostgREST (fila o `null`). Comprobar que el test de carrera FALLA sin la
+guarda antes de creerlo.
