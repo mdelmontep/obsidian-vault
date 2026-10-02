@@ -41,7 +41,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 - 🟠 **Fabbros → carga de datos 7-oct**: auditoría cerrada, todo en prod (último #3188), smoke verde y guía completa; quedan los ajustes de la org con AGH → [[facturaia-now-clientes]]
 - 🟠 **Fabbros → albarán de venta** (ADR-112, #3106): ola 2 en prod (1-oct, mig 992; avisos del cierre en #3203; abierto #3202, PDF del portal de anulados, medir en prod antes); staging sin las migs 990/992; encender solo por override hasta #3115/#3164. Siguiente: #3115, #3122, #3123. Arranque: `docs/architecture/PROMPT-continuacion-1-oct-albaran-venta-ola3.md` → [[facturaia-now-clientes]]
-- 🔴 **El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)** → [[facturaia-now-producto]]
 - 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** → [[facturaia-now-ocr]]
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** → [[facturaia-now-clientes]]
 - 🟡 **Dos pruebas del smoke que no miden (22-sep, de la auditoría del reparto)** → [[facturaia-now-infra]]
@@ -65,7 +64,6 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
   - 🔴 Dos smokes antes de tocar B2
   - 🔴 Rotar las claves del proyecto sandbox `vtovkkrcybstlzpgqsaq` (Manu)
 - **Producto y UI** — 13 frentes · 5 🔴 → [[facturaia-now-producto]]
-  - 🔴 El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)
   - 🔴 `brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)
   - 🔴 Dos cabos del ticket 159, sin issue (28-ago)
   - 🔴 En una org suspendida, Ajustes → Empresa guarda la mitad y descarta la otra sin avisar (#2100, smoke del 22-ago)
@@ -73,7 +71,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 - **OCR e IA** — 4 frentes · 0 🔴 → [[facturaia-now-ocr]]
 
 - 🟢 **13 hitos cerrados y en prod (1→9-sep), podados del NOW** — el detalle íntegro, con sus wikilinks, en [[facturaia-historico-snapshot-2026-09-09]]. Lo que sigue en tu tejado:
-  - **Vigía**: `SUPABASE_ACCESS_TOKEN` en Dokploy. Sin él el vigía no vigila — y desde el #2773 de él depende además que se CIERREN los tickets de soporte. Añadir también `DEPLOY_COMMIT`: hoy `deploy.commit` es `null` en prod, así que la app no sabe qué código corre y solo puede mirar su hora de arranque.
+  - **Vigía**: corre desde el 2-oct sin PAT (RPC `vigia_migraciones_aplicadas`, mig 995, #2773; schedule Dokploy `e7DQE__PnZpEvxi-FuTCr`, cada hora) y cierra los tickets al desplegar. Queda añadir `DEPLOY_COMMIT`: hoy `deploy.commit` es `null` en prod, así que la app no sabe qué código corre y solo puede mirar su hora de arranque.
   - **Chivite**: 171 sin ajuste (#2538). D12 en prod (mig 973, 28-sep), ticket 184 resuelto. Falta revalorizar la 29608848 (excluida por #3013, ya cerrado). #3013 cerrado: PR #3024 mergeado y mig 959 en prod (27-sep). Colectores de salud #3019 y #3022 mergeados → [[guardarrail-de-banda-solo-caza-errores-de-unidad-grandes]] · [[reconciliar-por-ausencia-lectura-fallida-no-es-cero]]
   - **Decidir**: la escala de la deuda del ADR-086 y si `disputada` vuelve a `pendiente`.
   - **IET**: la huérfana de `docs/plan/cierres.json`, el catálogo a 500k (ADR-069) y el código de impuesto de las dos líneas de FacturaDirecta.
@@ -114,7 +112,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Decisiones pendientes (producto)
 
-- ⏸️ **Máquina de CI del gate, Fase 1 — APARCADA (29-sep): el Mac no se enciende** — #3058 en main y runner `fia-gate-mac` registrado pero offline; `gate.yml` desactivado (`disabled_manually`) y su cola vaciada. Sin él, el gate corre en local y el guard de merge acepta el verde local. Retomar: `gh workflow enable gate.yml`, rehacer las fases toolchain y runner (`docs/architecture/ci-runner-runbook.md`) y decidir Team vs Free (paso 9).
+- ⏸️ **Máquina de CI del gate, Fase 1 — APARCADA (29-sep): el Mac no se enciende** — #3058 en main y runner `fia-gate-mac` registrado pero offline; `gate.yml` desactivado (`disabled_manually`) y su cola vaciada. Sin él, el gate corre en local y el guard de merge acepta el verde local. Retomar: `gh workflow enable gate.yml`, rehacer las fases toolchain y runner (`docs/architecture/ci-runner-runbook.md`) y decidir Team vs Free (paso 9). #3082 (verde del Mac en el guard) cerrado el 2-oct: con el guard de #3100/#3105 hay que rehacerlo, no rebasarlo.
 - ❓ **¿Qué hacemos con «un modelo sin precio publicado aprende el suyo de la primera generación»? (12-sep, criterio 5 del #2683)** — **no es implementable hoy**: ni Higgsfield ni los demás proveedores devuelven el coste de la llamada, así que no hay de dónde aprenderlo. Los otros 4 criterios están en prod (#2731) y el issue sigue abierto solo por éste. Dos salidas, y hay que elegir una: (a) **retirar el criterio** y que los precios se tecleen a mano en «Modelos» —que es lo que ya pasa y funciona—, o (b) dejar el #2683 abierto esperando a un proveedor que publique coste por llamada. Recomendada la (a). → medición en el comentario del issue #2683
 
 - ❓ **¿La deuda que se enseña se mide en bruto fiscal o en cobrable? (8-sep, ADR-086 mergeado en #2632 como PROPUESTA)** — la conciliación ya la mide en cobrable (migs 820/838), pero widgets e informes siguen sumando el bruto: el mismo cliente ve dos cifras de lo mismo. Medido en prod: el agregado baja **3,78 %** y esa media engaña — cambian **2 de las 5** orgs reales y una baja un **11 %**; causa única, el **IRPF** (6.451,05 €), con abonos, cobros y garantía a cero. Holded resta el IRPF y **no tiene** retención de garantía, lo que respalda no restarla (issue **#2589**, abierto a propósito). → [[facturaia-historico-eventos]]

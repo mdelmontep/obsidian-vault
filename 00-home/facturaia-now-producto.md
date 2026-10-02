@@ -11,7 +11,7 @@ la mitad del arranque de cada sesión. Aquí viven los 13 de esta área, íntegr
 
 Vuelve al hub: [[facturaia]]
 
-- 🔴 **El trailer `Ticket-feedback:` cierra y avisa al cliente ANTES de que el arreglo esté vivo — arreglo listo sin mergear (#2773)** — pasó con el 181: cerrado y correo enviado 2 s tras el merge, con la migración sin aplicar. El merge pasa a SELLAR (`cierre_diferido_*`) y lo consuma el vigía con dos condiciones (ventana cerrada **y** proceso arrancado después del merge). **Bloqueado por el vigía**: sin schedule, sella y nadie consuma. **Tuyo**: elegir entre provisionar las dos variables en Dokploy (#2530) o una RPC `SECURITY DEFINER` que lea `schema_migrations` desde la app. #2774 (tipos + fuera los shims) es mergeable ya.
+- ✅ **Cierre de ticket diferido al deploy, en prod (2-oct, #2773, migs 995-996)** — el merge sella; el vigía cierra y avisa cuando el arreglo corre.
 - 🟠 **Cabos del 26-ago, todo lo demás en prod** — agéntica `categorias`: cobertura de lo que escribe solo (**#2227**) y 22 circulares de `_parts` (**#2228**), OCR en shadow · albaranes: falta el smoke que ejerza el guard del doble conteo · PSD2 sigue sin integrar por coste, y es decisión, no avería. → [[facturaia-historico-snapshot-2026-08-30]]
 
 - 🔴 **`brand-tokens.ts` deriva la marca personalizada por el SUELO (28-ago, sin issue)** — una org con marca propia recibe 10-13 Lc MENOS que la de fábrica, sin aviso. Preexistente; no entra en #2272.
