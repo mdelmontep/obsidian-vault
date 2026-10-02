@@ -59,3 +59,4 @@ el mismo gesto funciona a la primera. Segunda vez que este trap hace dudar de c�
 Regla: **cuando una medición contradice al diff, reiniciar el dev server va ANTES de tocar el código.**
 El log de arranque no sirve de prueba si se pipea (`npm run dev | tail` queda en buffer y no imprime el
 "Compiled"): redirigir a fichero.
+Variante con `next dev` (2-oct, reembolsos FacturaIA): HMR recompila, pero la pestaña de agent-browser abierta antes de la edición sigue con el bundle viejo → el fix «no funciona». Recargar (`open` de nuevo) antes de concluir nada.
