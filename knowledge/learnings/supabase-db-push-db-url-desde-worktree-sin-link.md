@@ -17,5 +17,7 @@ y se queda sin red/sin TTY. Alternativa limpia (NO es SQL directo — actualiza
 Por qué importa: el dev server usa `.env.local` → **Supabase de PROD** (no hay BD de
 test separada con el schema). Una feature con migración nueva da **500 en localhost**
 hasta el `db push`; y el flujo que muta (p.ej. importar devoluciones) toca prod →
-hazlo solo en org `is_test`. Orden correcto: merge → `db push` desde main → QA.
+hazlo solo en org `is_test`. Orden vigente (CLAUDE.md de facturaia): `db push` ANTES del merge, con 0 de atraso.
+
+**La salida no dice si aplicó** (4-oct, #3227): `db push --linked` imprimió una traza de pg-delta (`ssl-config.js getCertValue`) y acabó en «Finished supabase db push». Sí aplicó. Verificar siempre leyendo prod: `schema_migrations` + `has_function_privilege`/catálogo, no la salida.
 Ver [[migracion-aplicada-fuera-de-historial-supabase]] · [[verificacion-no-mutar-estado-prod-cuenta-real]].
