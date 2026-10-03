@@ -11,7 +11,7 @@ la mitad del arranque de cada sesión. Aquí viven los 13 de esta área, íntegr
 
 Vuelve al hub: [[facturaia]]
 
-- 🟠 **Reembolsos a quien adelanta el pago de una recibida: en prod (2-oct, #3211, mig 997). Fase 2b por decidir** — conciliar la transferencia con el banco: plan revisado por 4 agentes; empieza por MEDIR (orgs con reembolsos ∩ extractos importados) → `docs/architecture/PROMPT-continuacion-2-oct-reembolsos-conciliacion.md`. Aparte, para issue: el cashflow fecha la salida el día que pagó el empleado, no el del reembolso.
+- 🟠 **Reembolsos a quien adelanta el pago de una recibida: en prod (2-oct, #3211, mig 997; UX 3-oct #3224: medio de pago real, insignia «Por reembolsar», ficha enlazable `?factura`/`/recibidas/[id]`, smoke prod OK; [[cache-components-deja-el-modal-oculto-en-el-dom-y-contar-dialogos-miente]]). Fase 2b por decidir** — conciliar la transferencia con el banco: plan revisado por 4 agentes; empieza por MEDIR (orgs con reembolsos ∩ extractos importados) → `docs/architecture/PROMPT-continuacion-2-oct-reembolsos-conciliacion.md`. Aparte, para issue: el cashflow fecha la salida el día que pagó el empleado, no el del reembolso.
 - ✅ **Cierre de ticket diferido al deploy, en prod (2-oct, #2773, migs 995-996)** — el merge sella; el vigía cierra y avisa cuando el arreglo corre.
 - 🟠 **Cabos del 26-ago, todo lo demás en prod** — agéntica `categorias`: cobertura de lo que escribe solo (**#2227**) y 22 circulares de `_parts` (**#2228**), OCR en shadow · albaranes: falta el smoke que ejerza el guard del doble conteo · PSD2 sigue sin integrar por coste, y es decisión, no avería. → [[facturaia-historico-snapshot-2026-08-30]]
 
