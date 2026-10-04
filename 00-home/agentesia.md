@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-10-03
+updated: 2026-10-04
 tags: [cliente, agentesia]
 ---
 
@@ -59,8 +59,9 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
     - **La puerta del art. 28.2 por cliente se retiró (28-ago)** — el contrato ya autoriza al subencargado. Cae con ella lo que este hub daba por tuyo: **no hay anexo de Anthropic que firmar** ni 7 clientes que marcar. → [[ADR-060-la-autorizacion-del-subencargado-la-da-el-contrato-no-una-puerta-por-cliente|el contrato autoriza, no una puerta por cliente]]
     Learnings de fase 2: [[columna-de-purga-sin-cron-es-retencion-aparente]] · [[un-gate-que-solo-mide-lo-aplicado-puntua-al-humano]] · [[postgrest-sdk-or-no-compara-columnas]] · [[ADR-059-la-cadencia-del-runner-vive-en-la-bd-no-en-el-cron|la cadencia del runner vive en la BD]] · [[el-trabajo-no-critico-dentro-del-try-hace-que-el-emisor-reintente]] · [[tipo-de-bd-a-mano-sin-relationships-tipa-toda-fila-como-never]] · [[una-suscripcion-realtime-impide-revocar-el-select-de-esa-tabla]].
 
-11. **agency-portal — Pizarra (act. 2-oct)** — #606/#615/#626/#628 en `main` (agenda anclada, columnas plegables, densidades). **2-oct: #716** (post-its por etapa, agenda horizontal, alta/edición/archivo con deshacer, «Me la quedo» con guardas anti-carrera, tipo de proyecto obligatorio, pestaña «Tareas» en la ficha del cliente) **y #717 apilado** (notas internas con «leída» por usuario, «+ Nota» desde el tablero). Migración `20261002120000_client_note_reads` **aplicada y verificada en prod**. Pendiente: Borja mergea #716 → #717; sin verificar si `20260911120000_tasks_select_developer_scope.sql` está en prod; opcional revocar REFERENCES/TRIGGER de `client_note_reads` (OK tuyo). ⚠️ `.env.local` apunta a Supabase Cloud muerto: el dev local no carga. Ver [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]] · [[llevar-a-un-pr-el-wip-de-una-rama-ya-squash-mergeada]] · [[plegar-una-columna-solo-sirve-si-el-vecino-cabe-en-el-ancho-liberado]] · [[el-dev-server-local-con-env-de-prod-convierte-cada-clic-de-qa-en-escritura-real]]
+11. **agency-portal — Pizarra (act. 2-oct)** — #606/#615/#626/#628 en `main` (agenda anclada, columnas plegables, densidades). **2-oct: #716** (post-its por etapa, agenda horizontal, alta/edición/archivo con deshacer, «Me la quedo» con guardas anti-carrera, tipo de proyecto obligatorio, pestaña «Tareas» en la ficha del cliente) **y #717 apilado** (notas internas con «leída» por usuario, «+ Nota» desde el tablero). Migración `20261002120000_client_note_reads` **aplicada y verificada en prod**. #716/#717 ya en `main`. Sin verificar si `20260911120000_tasks_select_developer_scope.sql` está en prod; opcional revocar REFERENCES/TRIGGER de `client_note_reads` (OK tuyo). ⚠️ `.env.local` apunta a Supabase Cloud muerto: el dev local no carga. Ver [[update-que-afecta-cero-filas-no-devuelve-error-en-postgrest]] · [[llevar-a-un-pr-el-wip-de-una-rama-ya-squash-mergeada]] · [[plegar-una-columna-solo-sirve-si-el-vecino-cabe-en-el-ancho-liberado]] · [[el-dev-server-local-con-env-de-prod-convierte-cada-clic-de-qa-en-escritura-real]]
    - **3-oct: #724** — cada autor edita y borra sus comentarios del panel de la card (auditoría + «· editado»). Migración `20261003150000_board_comments_edited_at` **aplicada y verificada en prod** (renombrada: `20261003120000` ya era la de prioridad #723). Límite: realtime solo escucha INSERT, la edición ajena no se ve hasta reabrir.
+   - **4-oct: pizarra unificada** — pila #723←#725←#726←#727←#728←#729 lista para Borja: #728 embudo por etapas + «Ganar trato» (cliente + proyecto en Planificación), #729 retira `/agency/pipeline`. Review con 6 agentes y remediación (ganar atómico, perdido se reabre antes de ganar, «Pipeline €» solo ofertas vivas, cierre por fecha real). Paquita unificada en prod por SQL. **#730**: FK compuesta agente→proyecto del mismo cliente, **aplicada y verificada en prod**. Sin probar en navegador (dev local escribe en prod).
 12. **agency-portal — onboarding WhatsApp: descubrimiento adaptativo (act. 3-oct)** — **#718** (fase 1) y **#722** apilado (fase 2: entrevista adaptativa, amplía alcance solo, informe HTML interno, `gpt-6.1-sol`). Migración `20261002150000` **aplicada y verificada en prod**; la key de OpenAI está en `platform_credentials`. Pendiente: Borja mergea #718 → #722 y despliega; después, prueba E2E con el script propio (sin cliente real).
 
 ## Infraestructura — el monitor del portal (`/agency/infrastructure`)
@@ -76,7 +77,7 @@ El alta de un servidor **solo se hace desde el formulario del portal**: el únic
 
 - `notcapi`: mergear **PR #97** de `agentesia-web` (listo) y luego sacar de draft y mergear el **#99** — en ese orden, el #99 depende del #97 (hito 7)
 - Dani: correr diagnóstico del hook de time-tracker (ver hito 2)
-- Borja: mergear **#716** y después **#717** de `agency-portal` (Pizarra: post-its, tareas en la ficha, notas leídas; gates verdes, migración ya en prod) (hito 11)
+- Borja: mergear en orden **#723→#725→#726→#727→#728→#729** y **#730** de `agency-portal` (Pizarra unificada; migraciones ya en prod; esperar CI de cada apilado al retargetear) (hito 11)
 - Borja: mergear **#718** → **#722** (onboarding, hito 12) y **#724** (comentarios, hito 11); migraciones ya en prod
 - GitHub org: subir spending limit / esperar reset de cupo Actions (ver hito 3)
 
