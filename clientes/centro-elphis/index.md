@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-10-01
+updated: 2026-10-04
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,20 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-10-01
+## Estado actual · 2026-10-04
+
+**El CRM es Holded desde el 3-oct; Clientify queda retirado. Voz v53 en producción.** Detalle de la migración en el repo `~/Projects/elphis/holded-migracion`; para Alba, el artifact «Elphis en Holded» (claude.ai/artifact/6p5fZjccK6ES6mMaq5DpQP, v7).
+
+- ✅ **Bot escribiendo en Holded** (chat, voz, Doctoralia, formulario): `holded-api` + cola `holded-reconcile`; los 6 `clientify-*` desactivados el 4-oct (ids en `backups/clientify-desactivados-20261004.json`). `crm_target='clientify'` ya no lo lee ningún workflow activo.
+- ✅ **Voz v53** (DDI v53 desde las 12:30 del 4-oct): enlace de cita al número que llama; si es fijo, pide un móvil (gpt-4.1 en `extract_movil`, dígitos uno a uno).
+- 🔴 Sigue **sin OK el arreglo de `intake → despedida`** (2 de 5 llamadas de ingreso sin ficha, 18-sep): no entró en la v53.
+- ✅ **Doctoralia en lote** (`928b206`): `doctoralia-email-sync` solo tiene el IMAP y llama a `doctoralia-procesar-correo` (`gf1WPtE07NZIfEOC`) correo a correo; antes se perdía todo menos el primero de cada lectura. Avisos devueltos como dato y reenviados por avisar-fallo → [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]].
+- ⚠️ **Cuota de la API de Holded: octubre en 12.928 / 7.500** (las pruebas e2e llamaban sin contar; ya cuentan, `abec8aa`). Contador igualado a Holded (`sql/009`) y tope propio de octubre a 15.000 (`holded_quota_month_2026-10`, `c8c005f`); el 1-nov vuelve solo a 7.500. **Nada de pruebas contra la API hasta noviembre.** → [[holded-api-cuota-mes-natural-y-uso-por-endpoint]]
+- 🔜 **Hueco del corte (2-3 oct): Olga mete a mano 5 contactos** (lista en la sección 06 del artifact); cuando confirme, quitar la lista del artifact.
+- 🔜 Vigilancia (la hace Manuel): primeros leads reales en Holded, primer correo real de Doctoralia por el sub. Leads de prueba 610/618 se quedan.
+- Plantilla WA interna que dice «Clientify»: no se cambia (decisión de Manuel, es interna).
+
+## Estado previo · 2026-10-01
 
 - 🔜 **Alba quiere cambiar de Clientify al CRM de Holded** (su programa de facturación). Renuevan Clientify y lo hacemos «con calma». 15 workflows activos tocan Clientify (7 `clientify-*` + `registrar-lead`, `doctoralia-email-sync`, `chatwoot-event`, `wa-inbound-bridge`, `book-and-notify`, `router-ia`, `retell-tool-reservar-visita`, `error-handler-global`); se replica igual (mismo embudo y etapas). Estimado 26–36 h.
 - Presupuesto **P2026-0025: 1.200 € + IVA (1.452 €)**, solo total sin desglose, sin histórico. PDF y datos en `~/Projects/elphis/presupuesto-holded/`. Manu vio caro 2.400 € y eligió precio de fidelización.
