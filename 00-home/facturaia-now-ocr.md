@@ -1,6 +1,6 @@
 ---
 title: FacturaIA — NOW OCR e IA
-updated: 2026-09-22
+updated: 2026-10-04
 tags: [facturaia, now, ocr]
 ---
 
@@ -11,6 +11,7 @@ la mitad del arranque de cada sesión. Aquí viven los 4 de esta área, íntegro
 
 Vuelve al hub: [[facturaia]]
 
+- 🟢 **Recibidas con varios tipos de IVA, EN PROD (4-oct, #3241, mig 1012 en prod y staging)** — el OCR lee el cuadro de IVA del papel y el tipo de cada línea; la RPC guarda el de la línea; no aprueba sin cuadre por tipo (409 `iva_por_tipo_no_cuadra`). Smoke en Obras sandbox: líneas 4/10/21, cuota 4,66 €. **Abierto, tuyo**: ¿el IVA de un ticket sin NIF del destinatario se deduce? Hoy se deduce.
 - 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** — **tuyo**: aceptar o rechazar `flux-pro/kontext`, en `propuesto`. → [[facturaia-historico-snapshot-2026-09-14]] · [[filtrar-las-opciones-por-un-predicado-convierte-lo-invalido-en-ninguno]]
 - 🟠 **`eval:ocr`: eval de `doc-extract` y gap `multi-albaran-multipagina`.** → [[facturaia-historico-snapshot-2026-08-30]]
 - 🟠 **OCR: la referencia de proveedor, del 25 % al 75 % (02-ago, #1466)** — su control es `low`: deja rastro en `ocr_extraction_audit` pero no avisa. Si el casado falla, **reintentar la lectura**, no otra regla en el prompt. Ver [[un-control-por-cardinalidad-mide-irregularidad-no-perdida]]
