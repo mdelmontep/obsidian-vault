@@ -21,6 +21,9 @@ tags: [cliente, facturaia, historico]
 - [[facturaia-historico-snapshot-2026-09-09]] — poda del 9-sep al cerrar la horda del backlog de hallazgos: 13 entradas 🟢 retiradas del NOW (integración y sus doce cabos, horda ≥2590, FacturaDirecta, tickets 125-132/166-171, abono parcial, cobro con tarjeta en catálogo, rastro de acceso + DPA).
 - [[facturaia-historico-snapshot-2026-09-14]] — poda del 14-sep: el empaquetado (inventario a complemento, centro fiscal a `proximamente`, migs 912/913) con su demo, más cuatro entradas cerradas retiradas del NOW.
 
+## 4-oct-2026 · auditoría de inventario, catálogo, importaciones y tarifas: cerrada (PRs #3238-#3256, migs 1004-1013)
+Los 8 PRs están en prod. Desde #3255, la unidad de un producto con movimientos, partidas o presentaciones no se cambia: el trigger da `UN001`, que llega como 409 a la ficha, a la v1/MCP y al copiloto, y como aviso de fila al importar. Smoke en staging con `dev-staging.sh`: la ventana de descuadre separa lo reconciliable del bloque de revisión, que es solo lectura, y sin nada reconciliable queda sin botón. La ficha, las partidas y el historial enseñan 4 decimales (0,1234 €, PMP 6,6804 €). En otros proyectos no hay nada igual: en AGH y agency-portal el histórico guarda su propia copia del valor. #2472 se dejó fuera: es anterior a la auditoría.
+
 ## 28-sep-2026 · #3045: la línea «Varios» con mano de obra tecleada y descripción propia (PR #3054 + #3056, mig 975)
 
 - En prod y staging: MO libre (deja la línea sin horas y el coste de MO desconocido) y descripción propia, que sale en pantalla, PDF, XLSX, proforma, factura y copiloto; el pedido al proveedor sigue con el nombre del material. Smoke en sandbox sobre un aceptado: alta, edición en la rejilla y PDF.
