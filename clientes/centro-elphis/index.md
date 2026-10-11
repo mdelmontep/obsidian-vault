@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-10-04
+updated: 2026-10-05
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -10,7 +10,7 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
 
-## Estado actual · 2026-10-04
+## Estado actual · 2026-10-05
 
 **El CRM es Holded desde el 3-oct; Clientify queda retirado. Voz v53 en producción.** Detalle de la migración en el repo `~/Projects/elphis/holded-migracion`; para Alba, el artifact «Elphis en Holded» (claude.ai/artifact/6p5fZjccK6ES6mMaq5DpQP, v7).
 
@@ -19,6 +19,8 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 - 🔴 Sigue **sin OK el arreglo de `intake → despedida`** (2 de 5 llamadas de ingreso sin ficha, 18-sep): no entró en la v53.
 - ✅ **Doctoralia en lote** (`928b206`): `doctoralia-email-sync` solo tiene el IMAP y llama a `doctoralia-procesar-correo` (`gf1WPtE07NZIfEOC`) correo a correo; antes se perdía todo menos el primero de cada lectura. Avisos devueltos como dato y reenviados por avisar-fallo → [[n8n-parte-el-mensaje-de-error-en-el-primer-dos-puntos]].
 - ⚠️ **Cuota de la API de Holded: octubre en 12.928 / 7.500** (las pruebas e2e llamaban sin contar; ya cuentan, `abec8aa`). Contador igualado a Holded (`sql/009`) y tope propio de octubre a 15.000 (`holded_quota_month_2026-10`, `c8c005f`); el 1-nov vuelve solo a 7.500. **Nada de pruebas contra la API hasta noviembre.** → [[holded-api-cuota-mes-natural-y-uso-por-endpoint]]
+- ✅ **Formulario web «Te llamamos» → Holded (5-oct), hecho por nosotros con admin de WP** (fuera de alcance del presupuesto). El popup 10344 incrustaba un superform de Clientify: ahora lleva el CF7 10342 con el mismo aspecto (CSS al final del CSS adicional del tema). CF7 → `web-form-lead` (`VtrlveQCeRJBkag1`, cabecera `X-Elphis-Form-Token`) → `registrar-lead` canal `web`, sin aviso del bot. El correo de CF7 sigue yendo a **centroelphis@gmail.com**. FormsCRM se queda sin clave de Clientify y los errores del webhook van a info@agentesia.madrid. Probado con un lead real que se limpió después. Backups en `backups/web-formulario/`. → [[cambiar-el-destino-de-un-formulario-wordpress-exige-inventariar-todas-sus-salidas]]
+- 🔜 Formulario, falta: desactivar el Zap y cancelar Clientify; leer en Clientify (solo lectura) los leads web desde el 3-oct.
 - 🔜 **Hueco del corte (2-3 oct): Olga mete a mano 5 contactos** (lista en la sección 06 del artifact); cuando confirme, quitar la lista del artifact.
 - 🔜 Vigilancia (la hace Manuel): primeros leads reales en Holded, primer correo real de Doctoralia por el sub. Leads de prueba 610/618 se quedan.
 - Plantilla WA interna que dice «Clientify»: no se cambia (decisión de Manuel, es interna).
@@ -27,7 +29,7 @@ Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquet
 
 - 🔜 **Alba quiere cambiar de Clientify al CRM de Holded** (su programa de facturación). Renuevan Clientify y lo hacemos «con calma». 15 workflows activos tocan Clientify (7 `clientify-*` + `registrar-lead`, `doctoralia-email-sync`, `chatwoot-event`, `wa-inbound-bridge`, `book-and-notify`, `router-ia`, `retell-tool-reservar-visita`, `error-handler-global`); se replica igual (mismo embudo y etapas). Estimado 26–36 h.
 - Presupuesto **P2026-0025: 1.200 € + IVA (1.452 €)**, solo total sin desglose, sin histórico. PDF y datos en `~/Projects/elphis/presupuesto-holded/`. Manu vio caro 2.400 € y eligió precio de fidelización.
-- Pendiente: añadir la conexión directa del formulario web (WordPress; hoy va por un Zapier que es de la agencia que hizo la web, no de Elphis) como +200 € y quitar del PDF «la web la reconfiguran ellos»; pedir acceso admin WP y saber qué plugin de formularios; cargarlo en TuFacturaIA (conector sin autenticar).
+- ~~Pendiente: añadir la conexión directa del formulario web~~ (hecho el 5-oct, ver arriba): (WordPress; hoy va por un Zapier que es de la agencia que hizo la web, no de Elphis) como +200 € y quitar del PDF «la web la reconfiguran ellos»; pedir acceso admin WP y saber qué plugin de formularios; cargarlo en TuFacturaIA (conector sin autenticar).
 - A medir en la fase de análisis (API Holded: leads, `PUT /leads/{id}/stages`, notas): si el enlace a la llamada sale clicable, si se pueden buscar los leads de un contacto (sin eso, duplicados), tags en leads (Doctoralia los usa) y si los contactos del CRM se mezclan con los de facturación.
 
 ## Estado previo · 2026-09-28
