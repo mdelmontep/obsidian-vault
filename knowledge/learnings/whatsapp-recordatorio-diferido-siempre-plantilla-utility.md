@@ -18,3 +18,6 @@ pedido por el usuario, no promocional — gratis dentro de ventana, tarifa utili
 La plantilla es **config, no texto**: `template_name` + `language_code` + params `{{n}}`
 ordenados, pre-aprobada por Meta. El sistema guarda eso, no la frase. Canales sin ventana
 (Telegram) → texto libre. Sanear params (Meta rechaza `\n` o 4+ espacios seguidos).
+
+**Meta puede reclasificar al aprobar** (12-oct, `bienvenida_copiloto` de FacturaIA: pedida UTILITY, aprobada MARKETING): tarifa de
+marketing y no llega a quien bloquea el marketing. Tras aprobar, releer `category` con un GET y prever el envío `fallida`.
