@@ -213,7 +213,7 @@ Ver [[simarro-auditoria-voz-2026-08]] para el detalle completo (8 agentes de aud
 
 ## Otros pendientes
 
-- 🔴 **Trunk SIP antes del 30-sep-2026 (Netelip)** — el DDI **+34910054675** reenvía a la dirección vieja de Retell (`sip:5t4n6j0wnrl.sip.livekit.cloud`), que se apaga ese día: después **no entra ninguna llamada a Ana**. Cambiar el destino a `sip:sip.retellai.com` en el panel de Netelip (1Password «Contraseña Netelip retell») y añadir los rangos de Retell si filtra por IP. La dirección nueva ya acepta; pide llamada de prueba real. Mismo caso en [[clientes/centro-elphis/index|centro-elphis]] (+34910054950). → [[retell-endpoints-deprecados-2026]]
+- ✅ **Trunk SIP migrado (12-oct, 22:10 UTC)** — en Netelip, el DDI **+34910054675** apunta ahora a `SIP/+34910054675@sip.retellai.com:5060` (antes `…@5t4n6j0wnrl.sip.livekit.cloud`). No se hizo llamada de prueba: se valida con el tráfico real del 13-oct (llamada sin cabeceras `x-lk-*` = dirección nueva). Pendiente probar una **transferencia a humano**, que sale por el mismo trunk. Procedimiento y vuelta atrás → [[retell-endpoints-deprecados-2026]]
 
 - **Limpieza leads de test 17-ago (Kommo UI)**: `34951382` (TEST E2E Phone Guard), `34951644`/`34951946` (TEST E2E/E2E Outbound) — usados para validar el guard de teléfono y los fixes de voz de hoy.
 - **Limpieza leads de test 12-ago (Kommo UI)**: `34790206` ("TEST BORRAR - validacion tarea") y su contacto `38931342` — usado para validar el fix de latencia de cancelación. Y avisar a `rss@`/`pss@simarroproperties.com`: recibieron 2-3 emails reales de "visita" por las pruebas de reserva de esta sesión (nombre "Test Latencia Claude").

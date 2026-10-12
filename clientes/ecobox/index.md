@@ -1,7 +1,7 @@
 ---
 title: EcoBox HUB
 date: 2026-05-26
-updated: 2026-09-22
+updated: 2026-10-13
 tags: [cliente, ecobox, hub]
 ---
 
@@ -21,6 +21,8 @@ Citas existentes y «¿cómo va mi reparación?» también van por email.
 - **Voz:** Retell v26 publicada (número en `latest_published`). Flow: bienvenida → intención →
   `Consultar_horario` → derivar a persona **solo en horario** (+34 91 638 32 81; fuera → `n-cerrado`)
   o recoger datos → `Registrar_llamada` → despedida.
+- **SIP (13-oct):** el DDI 910054813 entra por `sip.retellai.com` (migrado en Netelip el 12-oct).
+  Transferencia a humano sin probar tras el cambio → [[retell-endpoints-deprecados-2026]].
 - **n8n `Registrar_llamada EcoBox`** (`mHe8PbwDotbCruu7`): webhooks `consultar_horario` y
   `registrar_llamada` (header `X-Ecobox-Token`) → Postgres `llamadas_pendientes` (upsert por
   `idem_key`, `status` pendiente/avisado/error) → email SMTP. WhatsApp detectado por `channel_phone`

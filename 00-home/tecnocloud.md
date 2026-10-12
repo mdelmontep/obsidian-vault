@@ -16,6 +16,8 @@ También tiene agente de voz Retell propio (Laura) para soporte técnico inbound
 - **15 facturas** emitidas en últimos 90d, 5 pendientes (33%)
 - 0 proveedores con varianza alta (no recibe sugerencia antifraud)
 - **Agente de voz Laura** (Retell) en producción para soporte L1, inbound al +34919935205
+- **Admicom** (cliente de Tecnocloud): DDI de Netelip **+34910052668** → `agent_befaed76ddc7124b4f9d69d03d`. Lo dio de alta Dani el 8-oct desde su Mac con la clave «Tecnocloud»; el primer intento falló por usar `inbound_agent_id`. Su trunk nació apuntando a la dirección SIP vieja y se migró el 12-oct a `sip.retellai.com`. No estaba documentado en ningún sitio.
+- **`n8n-borja.tecnocloud.es` = 185.47.13.164** (Dokploy, mismo bloque que nuestros hosts). Es el colector de incidencias y tiene un workflow que llama a Retell `POST /v2/list-calls` (deprecado) todos los días a las 06:00 UTC. No tenemos credenciales suyas.
 
 ## Próximos hitos
 

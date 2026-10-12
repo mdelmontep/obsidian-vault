@@ -179,9 +179,13 @@ publicaba con `publish-agent/{id}`, que ya daba 400: pasa a `publish-agent-versi
 Commit `5b7d6f7` en local; `main` va **47/3** con `origin`, así que sigue **sin push**.
 Tabla de fechas → [[retell-endpoints-deprecados-2026]]
 
-El trunk de este número (Netelip) se importó el 7/09 ya contra la dirección nueva, así que
-**no está en la lista de los que hay que mover antes del 30-sep** (esos son
-[[clientes/centro-elphis/index|centro-elphis]] y [[simarro]]).
+**Corrección (12-oct):** lo que se escribió aquí, que el trunk se importó el 7/09 ya contra la
+dirección nueva, era falso. Lo nuevo era el alta en Retell, pero el destino en Netelip seguía en
+`…@5t4n6j0wnrl.sip.livekit.cloud`, y todas sus llamadas llevaban cabeceras `x-lk-*`. Se migró el
+12-oct a `SIP/+34910059223@sip.retellai.com:5060` y se probó con una llamada real
+(`call_802edc64f1b8de6830161564277`, entrada por la dirección nueva). Este agente no guarda
+transcripción ni grabación (`data_storage_setting: basic_attributes_only`), así que su ausencia en
+una llamada **no** indica fallo; las latencias de ASR, LLM y TTS sí prueban que hubo conversación.
 
 ## Bloqueos (terceros)
 
