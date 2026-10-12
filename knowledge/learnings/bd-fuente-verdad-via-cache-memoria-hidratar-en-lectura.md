@@ -17,3 +17,9 @@ siguen síncronas; solo el entrypoint `await`-ea la hidratación.
 
 Caso real: `stripe-plans.ts` — `refreshPriceCache` solo se llamaba dentro de
 `createPriceForTarget` (escritura). Añadido `ensurePriceCache()` en los 4 flujos.
+
+Recaída (11-oct-2026, facturaia #3384): el 5º entrypoint (checkout de complementos)
+nació sin `ensurePriceCache()` → 503 `price_id_not_configured` en el inventario con
+los precios en BD, y solo «a ratos» (cuando otro flujo había calentado la cache).
+Un consumidor nuevo hereda la obligación sin que nada avise: el test que lo caza es
+cache fría + sin env + fila en BD → debe resolver.
