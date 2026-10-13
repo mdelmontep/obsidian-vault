@@ -359,8 +359,8 @@ Durante ventanas de redeploy Dokploy, Traefik devuelve `404 page not found\n` (t
 Endpoints state machine que UPSERT con `{...existing, ...incoming}` contaminan al cambiar contexto: campos viejos coexisten con nuevos en el JSONB. Mandar `field: null` explícito desde el cliente para los que deben morir. Simétrico: al guardar draft, nullear last_listado. Ver [[persist-merge-shallow-deja-cruft-entre-contextos]]
 
 
-### Google OAuth credentials NO se pueden crear via Public API
-Schema buggy: `useDynamicClientRegistration` controla if/else en allOf pero no está en `properties` (`additionalProperties: false`). Workaround: crear cred OAuth en n8n UI (browser, requiere OAuth dance anyway). Vía API solo `openAiApi`, `postgres`, `redis`, `smtp`, `httpHeaderAuth`, `telegramApi`. Ver [[n8n-public-api-google-oauth-schema-buggy-crear-en-ui]]
+### Google OAuth credentials SÍ se crean via Public API (con todas las ramas)
+El schema tiene `if` sobre `useDynamicClientRegistration` (no está en `properties`): mandar `serverUrl: ""`, `sendAdditionalBodyProperties: false`, `additionalBodyProperties: "{}"`, `allowedDomains: ""` junto a `clientId`/`clientSecret` → 200. Falta solo «Sign in with Google» en UI (13-oct, Laserys). Ver [[n8n-public-api-google-oauth-schema-buggy-crear-en-ui]] · email robusto: [[email-n8n-gmail-oauth-cuenta-cliente-no-app-password-compartida]]
 
 ### Postgres node con responseMode lastNode solo devuelve primer row
 `SELECT` que retorna N filas + webhook `lastNode` → solo primera fila en respuesta HTTP. Engaña pensando que las queries no corrieron. Fix: agregar con `array_agg()` o `json_agg()`, o usar `responseNode` con JSON.stringify($items()). Ver [[n8n-postgres-webhook-lastnode-solo-devuelve-primer-row]]

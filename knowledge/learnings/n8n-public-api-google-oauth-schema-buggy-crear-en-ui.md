@@ -20,7 +20,9 @@ tags: [n8n, oauth, google, api]
 
 `useDynamicClientRegistration` NO está en `properties` y `additionalProperties: false` lo rechaza. Si lo omites, se evalúa como undefined → cae en el else → requiere NOT serverUrl pero al mismo tiempo el segundo allOf requiere clientId+clientSecret. Imposible satisfacer.
 
-**Workaround**: crear las creds OAuth en n8n UI (browser). Requiere el OAuth dance manual de todas formas. Para automatizar, crear cred placeholder de tipo `httpHeaderAuth` y referenciarla — usuario completa en UI tras OAuth.
+**REFUTADO el 13-oct-2026 (Laserys)**: sí se puede. Mandar en `data` TODAS las ramas condicionales para que ningún `if` vacío las exija: `{clientId, clientSecret, serverUrl: "", sendAdditionalBodyProperties: false, additionalBodyProperties: "{}", allowedDomains: ""}` → 200 (`gmailOAuth2`). Luego solo falta pulsar «Sign in with Google» en la UI.
+
+~~**Workaround**: crear las creds OAuth en n8n UI (browser).~~ Requiere el OAuth dance manual de todas formas. Para automatizar, crear cred placeholder de tipo `httpHeaderAuth` y referenciarla — usuario completa en UI tras OAuth.
 
 Casos donde sí funciona via API: `openAiApi`, `postgres`, `redis`, `smtp`, `httpHeaderAuth`, `telegramApi`.
 
