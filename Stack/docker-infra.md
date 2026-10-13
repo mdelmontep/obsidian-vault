@@ -232,6 +232,7 @@ ps aux | head -5                     # procesos y CPU time
 
 ## Dokploy — acceso SSH al host y contraseña root de tanda
 
+- **Desde el 6-oct-2026, SSH solo por AIAVPN (WireGuard)**: IP privada `10.250.0.<último octeto de la pública>`, puerto 5251; la pública ya no responde. Verificadas: agentesia `.166`, agh `.138`, Clínica Zen `.168`, Simarro `.169`, tufacturaia `.170`, Elphis `.173`. **Fuera del cierre**: `dokploymanu` (`185.99.186.76`). Alias en `~/.ssh/config` con la clave personal de 1Password por el agente («SSH Manu ed25519 (AIAVPN)», vault Employee); las `*_root` siguen autorizadas como respaldo. Ver [[pasar-ssh-a-ip-privada-verificar-por-huella-y-probar-la-clave-fijada]].
 - Puerto SSH de estos hosts: **5251** (el 22 está cerrado). Tanda `185.47.13.x`: Clínica Zen `.168`, Simarro `.169`, tufacturaia `.170`, Elphis `.173`. Además el Dokploy de Tecnocloud `dokploymanu` = `185.99.186.76` (host DOKPLOYMANU, corre TuCRMIA).
 - **Todos los Dokploy de Manu comparten la contraseña root** — la del item `Dokploy SSH root — Clínica Zen` (vault Clinica Zen) abre TODOS, incluso el de Tecnocloud en otro proveedor (`185.99.186.x`). Si "falta la clave SSH de un host", no resetees: usa esa. Ojo: la de "SSH Laserys" y la "plantilla" NO valen.
 - Los 4 hosts tienen ya en su vault: documento `SSH root — <host> (ed25519, compartida)` (clave privada) + ítem SERVER `Dokploy SSH root — <host>`. Alias local `ssh <host>` en `~/.ssh/config`.
@@ -279,6 +280,8 @@ Antes de generar cualquier compose, preguntar siempre en este orden:
 - Ojo: el panel `/admin/system` de la app (tabla `cron_runs`) y los "Deployments" del schedule en Dokploy miden cosas distintas — la app registra cualquier ejecución del endpoint; Dokploy solo las que dispara su scheduler.
 
 ## Dokploy AgentesIA — acceso SSH
+
+> Desfasado en las IP: desde el 6-oct se entra por la VPN (ver arriba, «acceso SSH al host»).
 
 | Host | IP | Puerto SSH | Uso |
 |---|---|---|---|
