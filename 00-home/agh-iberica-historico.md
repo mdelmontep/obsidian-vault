@@ -192,3 +192,8 @@ Cuatro PRs con override de founder (#1420 → #1421 → #1423 → #1425). Una in
 - **Hueco destapado y cerrado en la misma PR:** `nombre_completo` es clave de contrato Y de CV → todo CV se abría editable en `HrDecisionReview` y aprobarlo escribía `people.full_name`. Gate `wrong_doc_kind` en `loadState()`, un solo `if` para `preview` y `decide` (E1: la ruta de decisiones **nunca** proxya al agente).
 - Hallazgo abierto después del cierre: **#1939**, la misma colisión de clave en el ETIQUETADO. Se había anotado como «a ver si #1936 lo absorbe» y se rectificó: #1936 tarda semanas, así que el hallazgo se quedaba sin cola. **Medido al día siguiente: síntoma FALSO** — los dos literales son idénticos (`"Nombre completo"`), el test habría salido verde sin medir nada; devuelta a `needs-triage` como robustez.
 - Método: [[un-cierre-documental-escrito-antes-del-merge-entra-mintiendo]] · [[la-cola-del-gate-miente-en-dos-direcciones]].
+
+## People & Culture — movido del hub el 2026-10-13
+
+- ✅ **20-25 sep:** ~55 PRs (mig. 0063–0077; palanca de contratos APAGADA); #1702 AC3 cumplido (93,2 %), Word fuera (#1977) → [[agh-iberica-historico]] · [[reutilizar-base-sembrada-con-secreto-nuevo-deja-pantallas-sin-medir]]
+- 📥 **Encargo ampliado (23-sep):** activos asociados y Excel de Clientes → #2035, #2036, #2038.
