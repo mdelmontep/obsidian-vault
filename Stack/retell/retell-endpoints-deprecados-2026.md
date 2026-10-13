@@ -62,6 +62,8 @@ El correo da IP, cliente HTTP y nombre de la clave, nunca el sistema. Se cruzan 
   `data_storage_setting: basic_attributes_only` (Elphis Psicología): mirar las latencias de ASR y TTS.
 - **Verificador**: `python3 -I ~/Projects/obsidian-vault/Stack/retell/verificar-migracion-sip.py` lista,
   por DDI, las llamadas posteriores a la migración y por qué vía entraron (lee la clave con `opsa`).
+  Llamadas de 3-12 s con `user_hangup` a mitad del saludo son llamantes que cuelgan al oír «IA», no
+  cortes: si la transcripción tiene voz del llamante, el audio va en los dos sentidos.
 - Quedó en LiveKit el **+34846635194**, que no está dado de alta en Retell.
 - Hacer clic en Desactivar/Guardar desde Claude in Chrome lo bloquea a veces el clasificador del modo auto
   («Modify Shared Resources»). Con el permiso explícito del usuario en el chat se pudo.
