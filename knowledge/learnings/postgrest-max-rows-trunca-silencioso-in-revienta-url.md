@@ -73,3 +73,9 @@ caían más allá de la fila 1.000. Un importe corto se huele; una fecha plausib
 alarmas" no los huele nadie. Corolario para el criterio de arreglo: los agregados de dinero y los
 contadores de decisión deben **fallar cerrado** (500) si no caben en el tope, no devolver la
 cifra calculada sobre el conjunto incompleto.
+
+**13-oct, una RPC tampoco se libra.** `rpc('fn')` sobre una función `SETOF`/`RETURNS TABLE` se
+corta igual a 1.000: el vigía de migraciones leía `schema_migrations` (1.006 filas) por RPC, perdía
+de la 1049 en adelante y alertaba de «1 migración sin aplicar» que SÍ estaba aplicada. Fix: el
+builder de `rpc()` acepta `.order().range()` (va como offset/limit) → `fetchAllPages` (#3471). Tell:
+una tabla que crece sola (migraciones, logs) cruza el tope un día cualquiera sin que cambie el código.
