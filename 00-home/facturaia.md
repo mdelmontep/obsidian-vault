@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-10-04
+updated: 2026-10-13
 tags: [cliente, facturaia, hub]
 ---
 
@@ -59,7 +59,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
   - 🔴 «Actualizar precios» multiplica el precio al cliente si al material le falta el descuento, y no lo dice (02-ago)
   - 🔴 Dos defectos de datos, medidos en prod (03-ago, `issues/obras-097` y `-098`)
 - **Fiscal y VeriFactu** — 9 frentes · 0 🔴 → [[facturaia-now-fiscal]]
-- **Arnés, tests e infraestructura** — 15 frentes · 3 🔴 → [[facturaia-now-infra]]
+- **Arnés, tests e infraestructura** — 21 frentes · 3 🔴 → [[facturaia-now-infra]]
   - 🔴 Los PDF de factura siguen sin copia de seguridad (#1641)
   - 🔴 Dos smokes antes de tocar B2
   - 🔴 Rotar las claves del proyecto sandbox `vtovkkrcybstlzpgqsaq` (Manu)
