@@ -392,6 +392,9 @@ Las expresiones en `workflowInputs` no admiten IIFEs. Si la expresión es comple
 - **Inventaría los webhooks vivos antes de dar por bueno un go-live** — `select w.name, x->'parameters'->>'path' from workflow_entity w, jsonb_array_elements(w.nodes::jsonb) x where w.active and x->>'type'='n8n-nodes-base.webhook'`. El campo `authentication` NO basta: varios validan el token en un Code posterior. Caso Elphis: `purge-idem`, sin auth → `TRUNCATE` de dos tablas, vivo desde mayo. Ver [[el-utillaje-de-pruebas-se-queda-encendido-en-produccion]]
 - **Un sub-workflow ACTIVO puede no ser llamado por nadie** — `select id,name from workflow_entity where nodes::text like '%<ID_SUB>%'` antes de editarlo; cero filas = huérfano y el arreglo no tiene efecto (10-ago: `notify-cita-confirmada-email` editado con PUT 200 y checks verdes, muerto desde el rediseño de junio). Es la versión «workflow entero» de la línea de arriba sobre ramas. Ver [[workflow-activo-no-significa-llamado-grep-su-id-antes-de-editarlo]]
 
+### IMAP trigger: «had to be deactivated» tras «Will try to reactivate» no es un apagado
+El error workflow recibe el texto genérico, pero el log con `docker logs -t` muestra la reactivación en ~1,5 s. Al reabrir el buzón, node-imap emite `mail` desde total 0 (`imap/lib/Connection.js`) y el v2 busca UNSEEN: lo llegado en el hueco se recoge. Lo que sí pierde correos: el trigger marca leído ANTES de procesar, así que una ejecución fallida no se reintenta, y si otro cliente vacía el buzón (POP) ya no hay copia. Medido en Elphis, 13-oct-2026.
+
 ## API: `?status=crashed` NO filtra (verificado 3-ago-2026)
 
 `GET /api/v1/executions?status=crashed` **ignora el filtro y devuelve TODAS las ejecuciones**,
