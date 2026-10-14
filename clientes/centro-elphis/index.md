@@ -1,7 +1,7 @@
 ---
 title: Centro Elphis — HUB
 date: 2026-05-18
-updated: 2026-10-13
+updated: 2026-10-14
 source: investigación + onboarding firmado + discovery Clientify + propuesta enviada
 tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia, n8n, dokploy]
 ---
@@ -9,6 +9,10 @@ tags: [cliente, agentesia, elphis, voz, whatsapp, retell, clientify, doctoralia,
 # Centro Elphis · HUB
 
 Centro privado de tratamiento de adicciones en Madrid. Cliente Agentesia: paquete avanzado (voz Retell + chatbot WhatsApp + Clientify).
+
+## 2026-10-14 · las llamadas sin lead ya dejan rastro
+- Toda llamada telefónica que no acaba en lead → Holded «Volver a contactar» + actividad («Llamada sin conversación» / «Llamada sin datos») + email a info@, sin WhatsApp interno. Dedup de 15 min por número; número oculto → solo email; quedan fuera las `web_call` y las crisis. Probado con una llamada real de Manu (19:17). → [[post-call-que-solo-registra-leads-pierde-los-cuelgues]]
+- Pendiente: reprocesar la llamada del 13-oct 21:07 (602709666; el permiso se denegó) o pasársela a Alba a mano; borrar el lead de prueba 617314938 en Holded.
 
 ## Estado actual · 2026-10-05
 

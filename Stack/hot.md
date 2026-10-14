@@ -6,6 +6,7 @@ tags: [stack, index]
 
 # Hot Cache
 
+- **Un post-call que solo registra leads hace invisibles los cuelgues** — toda llamada telefónica deja rastro (CRM + email); filtra `web_call`, porque las pruebas de Retell llegan al mismo webhook. [[post-call-que-solo-registra-leads-pierde-los-cuelgues]]
 - **Un test saltado puede afirmar lo CONTRARIO del codigo** — al despertarlo, sospecha del test antes que del codigo: nunca ha corrido. [[un-test-saltado-puede-esconder-una-asercion-invertida-no-solo-cobertura-ausente]]
 - **`proxy.ts` en la RAÍZ con `src/` no corre** — sin warning; tell: `curl -sI` da `/login` sin `next`. [[nextjs16-middleware-to-proxy]]
 - **Migrar un endpoint deprecado cambia la FORMA de la respuesta** — URL, cuerpo y parser en el mismo PUT. [[migrar-un-endpoint-deprecado-cambia-la-forma-y-el-consumidor-lo-calla]]
