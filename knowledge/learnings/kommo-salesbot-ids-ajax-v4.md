@@ -16,3 +16,5 @@ fetch('/ajax/v4/bots/?limit=100').then(r=>r.json()).then(d=>console.log(JSON.str
 
 Devuelve `_embedded.items[]` con `id` y `name` de cada bot.
 El POST a `/api/v2/salesbot` también es privado (error_code 110) — import solo via UI.
+
+**Contenido de un bot** (14-oct-2026): `/ajax/v4/bots/{id}?with=text,positions` con cabecera `X-Requested-With: XMLHttpRequest`, desde la página logada. El campo `text` trae los pasos y el `template_id` de cada plantilla. `GET /api/v4/bots` solo da metadatos.

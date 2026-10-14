@@ -12,6 +12,7 @@ Token System User → `GET /debug_token` ve `type` y `scopes`. `subscribed_apps:
 
 `GET /{waba}?fields=health_status` → errores accionables:
 - `141010` = negocio sin verificar → mensajería LIMITED.
+- `141006` = problema con el método de pago → `can_send_message: BLOCKED`, pero los envíos SALEN (Simarro, 14-oct). No sirve de alarma: vigilar `status`, `platform_type`, `quality_rating` e `is_on_biz_app` contra el estado anterior.
 - `2494160` (al crear plantilla) = WABA sin permiso para gestionar plantillas (combo no-verificado + número no onboarded).
 - `2388293` (al crear plantilla) = ratio variables/palabras demasiado alto (mete más texto fijo).
 

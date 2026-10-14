@@ -34,6 +34,7 @@ tags: [kommo, crm, whatsapp, salesbots, api]
 - **Crear/editar por API v4 no sirve para producción**: `POST /api/v4/chats/templates` crea, pero `waba_selected_waba_ids` se ignora (vuelve `[]`) y sin cuenta WABA `POST .../{id}/review` responde 200 con `reviews: []`. Una aprobada tampoco se edita (`PATCH` → `EntityNotFound` pese a `is_editable: true`): plantilla nueva y repuntar el bot. `waba_footer` no acepta cadena vacía — omitir la clave
 - **La UI puede guardar la variable como TEXTO** y la vista previa se ve igual: comprobar por API antes de mandar a aprobar — buena = `{{contact.name}}` en `content` + `waba_examples` con valores; rota = `[Manu]` literal y `waba_examples: []`
 - Estado de moderación de todas: `GET /api/v4/chats/templates?with=reviews` → `review_status` `approved`/`review`/`rejected`. Mirarlo de vez en cuando: una rechazada por Meta no avisa a nadie y el bot que la manda deja de enviar
+- **Una plantilla atada a una WABA desconectada no se borra por API**: `DELETE /api/v4/chats/templates/{id}` → 500 (las 12 de Simarro, 14-oct); un borrador sin WABA sí (204). Si cambia la WABA: plantillas nuevas en el canal nuevo, repuntar los bots y borrar las viejas a mano en la UI
 - **Kommo acorta los enlaces de los mensajes de TEXTO del salesbot** (`kommo.cc/K/...`, con evento `link_followed`), pero NO los de dentro de una plantilla, ni en el cuerpo ni en un botón `type: url`. Ver [[kommo-acorta-enlaces-del-salesbot-pero-no-los-de-plantilla]]
 - `PATCH /api/v4/contacts` acepta `tags_to_add`/`tags_to_delete` igual que leads — es donde va la marca de "a este paciente ya se le envió", que el lead es efímero. Ver [[envio-unico-por-paciente-se-marca-en-el-contacto-no-en-el-lead]]
 
@@ -136,7 +137,7 @@ curl -s "https://${SUB}.kommo.com/api/v4/leads/custom_fields?limit=250" -H "Auth
 ### Salesbot API v2 es PRIVADA
 `/api/v2/salesbot/{id}` y `/api/v2/salesbot` (list) devuelven `{error_code: "110", error: "This is a private API"}`. Solo se pueden inspeccionar/editar desde la UI Kommo.
 
-Implicación: si necesitas saber cuántos pasos tiene un salesbot (debug WhatsApp duplicado, etc), tienes que ir a `Setup → Salesbots → <bot_id>` en la UI. No hay vía API.
+Lectura sí hay (14-oct): `fetch('/ajax/v4/bots/{id}?with=text,positions', {headers:{'X-Requested-With':'XMLHttpRequest'}})` desde la página de Kommo devuelve el bot entero (`text` con cada paso y su `template_id`); `GET /api/v4/bots` solo da metadatos. Así se audita qué plantilla manda cada bot (Simarro: uno apuntaba a una plantilla borrada). Ver [[kommo-salesbot-ids-ajax-v4]].
 
 ### WhatsApp duplicado tras Reservar — triage
 Si tras una reserva el cliente recibe 2 WhatsApp y solo hay 1 ejecución n8n con 1 disparo a `/salesbot/run`:
