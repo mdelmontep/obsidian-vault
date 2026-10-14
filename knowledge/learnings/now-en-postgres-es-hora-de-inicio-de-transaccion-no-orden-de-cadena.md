@@ -25,3 +25,5 @@ Y si además hay un timestamp que debe ser coherente con la cadena, usa
 `clock_timestamp()` (instante real, dentro del lock), no `now()`.
 
 Caso: FacturaIA mig 663, `facturas.verifactu_cadena_pos`.
+
+**Mismo origen, otro síntoma (15-oct, agency-portal #799):** un verify en `BEGIN…ROLLBACK` que prueba `stale` por `updated_at` (sellado con `now()` por trigger) no ve el cambio: la versión leída antes y después de la escritura es la misma. Fabrica la vieja (`updated_at - interval '1 second'`).
