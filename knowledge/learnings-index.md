@@ -75,6 +75,7 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[dos-castigos-por-el-mismo-evento-hacen-inalcanzable-el-estado-bueno]] — dos guardas que castigan el mismo evento hacen inalcanzable el estado que protegen
 - [[dos-modales-que-se-cierran-a-la-vez-dejan-el-body-sin-scroll]] — dos modales que se cierran a la vez dejan el body sin scroll para siempre
 - [[drift-gate-schema-postgres-psql-c-y-pg-dump-16]] — gate de drift de schema postgres — gotchas de psql -c y pg_dump ≥16
+- [[el-cli-de-supabase-trata-como-remota-una-db-url-con-otro-puerto]] — el cli de supabase trata como remota una db-url con otro puerto y exige tls
 - [[el-delimitador-se-elige-contra-el-dato-real-no-a-gusto]] — el delimitador se elige contra el dato real, no a gusto tipográfico
 - [[el-magic-link-de-supabase-ignora-un-redirect-fuera-de-la-allowlist]] — el magic link de supabase ignora un redirect que no esté en su allowlist
 - [[el-trabajo-no-critico-dentro-del-try-hace-que-el-emisor-reintente]] — el trabajo no crítico dentro del try del crítico hace que el emisor reintente

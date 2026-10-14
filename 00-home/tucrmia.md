@@ -1,6 +1,6 @@
 ---
 title: TuCRMIA
-updated: 2026-09-06 · project_id local = ref de prod (pendiente) · iteración 56 (main 41537a80 · 33 agentes en paralelo, entra lo medido · 89 pasos de gate · 016 en rama sin verificar · el tablero se borra solo)
+updated: 2026-10-15 · CI en el runner propio (#5) · 2026-09-06 · project_id local = ref de prod (pendiente) · iteración 56 (main 41537a80 · 33 agentes en paralelo, entra lo medido · 89 pasos de gate · 016 en rama sin verificar · el tablero se borra solo)
 tags: [hub, tucrmia, crm]
 ---
 
@@ -18,6 +18,12 @@ Repo `AgentesIA-MAdrid/tucrmia` · local `~/Projects/agentesia-crm`.
   así que el diagnóstico «la lectura previa es por sesión» explica el coste de republicar, **no el
   borrado**, que sigue sin causa → [[tablero-artefacto-se-borra-solo]] (inbox).
   Ver [[republicar-un-artifact-exige-haberlo-leido-en-esa-sesion]] y [[claude-code-gotchas]].
+
+## Estado (14-oct) — el gate de CI vuelve a correr, en el runner propio
+
+- **PR #5** (`2c41ff35`): `gate.yml` y `seguridad-dependencias.yml` en `[self-hosted, gates]` (Actions hospedado bloqueado por facturación). Verde en PR y en `main`; desplegado (`/api/health` → `2c41ff3`).
+- `sync:shared:check` lee TuFacturaIA con la deploy key de SOLO LECTURA `tucrmia-ci-lectura` (secreto `FACTURAIA_DEPLOY_KEY`), no con un PAT.
+- Pre-commit ligero (#4): el gate completo pasa al pre-push, en la VM. Un worktree necesita su propio `node_modules` (el del checkout principal estaba en Next 16.2).
 
 ## Estado (6-sep) — el `project_id` local es el ref de producción
 
