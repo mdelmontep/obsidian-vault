@@ -24,7 +24,7 @@ tags: [home, prioridades]
 
 - 🟢 **Elphis Psicología — voz v24 + WhatsApp real en el 910 (21-sep): sin agenda ni crisis, solicitud por correo** — ramas mergeadas (#55/#58), contrato enviado a firma, WABA conectada por API a Chatwoot con tono corto. **Falta**: `WHATSAPP_CHANNEL_LIVE`, borrar inbox 2, foto de perfil, token de Chatwoot, backups. → [[clientes/elphis-psicologia/index|elphis-psicologia]]
 
-- 🟢 **agency-portal — Borja: mergear #723→#725→#726→#727→#728→#729 (Pizarra, en orden), #724, #730 y #718→#722 (onboarding); migraciones ya en prod** — **Tuyo**: E2E del onboarding tras el merge. → [[agentesia]] hitos 11-12
+- 🟢 **agency-portal — agente de Pizarra (14-oct)**: Borja mergea #791 → #792/#793 y plugin #16 → #17 (migraciones ya en prod); #722 sigue abierto. **Tuyo**: pasos humanos del hito 11c. → [[agentesia]]
 - 🔴 **agency-portal — panel de tareas de la Pizarra vacío**: `listAgencyTasks` traga el error (`queries.ts:89`); 2 tareas duplicadas «[Fuera de alcance] Formulario web…» en Migración a Holded por limpiar. → [[agentesia]]
 - 🟢 **agency-portal / Flota IA** — comprobar cosecha del primer lote (0,06 $) tras reset del 1-sep: 628 reencolados, 50/tanda (~12 tandas). → [[agentesia]] hito 10
 - 🟢 **Arnés — el contexto ya se ve y ya se corta (20-ago)** — 91 % del gasto pasa por encima de 200k y la barra medía sobre 1M (20 % en verde). Presupuesto 200k + `autoCompactWindow` 300k; los 4 `CLAUDE.md` grandes a `.claude/rules`, en `main`. **Tuyo**: ¿el aviso «`paths:` dispara con Read, no con Bash» baja a los 4 rules? → [[donde-se-va-el-coste-de-claude-code-no-es-el-claude-md]]
