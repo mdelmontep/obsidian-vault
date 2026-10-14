@@ -50,7 +50,7 @@ tags: [home, prioridades]
 - 🔴 **Agentesia — el chatbot cerraba ventas sin crear la cita (4-sep)** — arreglado en prod (tool `Agendar` inexistente; ya con invitado, Meet y anti-duplicado) + precios alineados con la web. **Tuyo:** `Reservar` no se ha ejecutado nunca — escribirle al bot y confirmar evento, invitación y un solo Slack. Hito 5 → [[agentesia]] · [[tool-description-generica-no-fuerza-ejecucion-de-tool-critica]]
 
 ## NEXT (próximas 2 semanas — inminente, cross-cliente)
-- 🟠 **Gates y CI en la VM (14-oct)** — `gates vm` fijado; CI de TuFacturaIA y TuCRMIA en el runner gates-1. **Tuyo**: borrar la deploy key `claudedev-servidor` de facturaia (escritura, sin uso desde jun.); login `tecnocloudes` para subir `11e9eed5` (panel-tecnocloud); hooks del semáforo del runner a Dani. → [[tucrmia]]
+- 🟠 **Gates y CI en la VM (14-oct)** — `gates vm` fijado; CI de TuFacturaIA y TuCRMIA en el runner gates-1. **Tuyo**: login `tecnocloudes` para subir `11e9eed5` (panel-tecnocloud); hooks del semáforo del runner a Dani. → [[tucrmia]]
 - **1Password — renovar el token de `opsa` antes del 1-nov** — caduca ese día y el síntoma no dirá «caducado»: vuelve a pedir huella todo lo que lee secretos, y el aviso semanal de volumen de tipos solo llegaría al Mac. Tras renovar: `~/.claude/scripts/fia-volumen-tipos.sh --probar-slack "prueba"`. → [[1password]]
 
 - 🟡 **Retell: SIP de Netelip migrado (12-oct)** — 6 DDI en `sip.retellai.com`, validado con tráfico real el 13-oct (Simarro, Elphis). **Queda**: Borja y Dani corrigen endpoints viejos (n8n-borja `v2/list-calls`; avisados 13-oct), saldo Netelip **-0,04 €** (AGH renueva 2-nov), el +34846635194 sigue en LiveKit, demo web PR #109 sin confirmar. → [[retell-endpoints-deprecados-2026]]
