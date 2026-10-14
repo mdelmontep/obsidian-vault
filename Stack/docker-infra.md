@@ -20,6 +20,17 @@ tags: [docker, traefik, dokploy, infra]
 - El guion corre EN EL HOST y sólo imprime nombres, longitudes y huellas: ningún valor cruza a la sesión.
 - Verificar siempre en el plano de datos, no en el de control. Y el contenedor no lo toma al vuelo.
 
+## Rotar BETTER_AUTH_SECRET de Dokploy deja los `env` cifrados ilegibles (Dokploy#4833)
+
+- Dokploy cifra `env` y otros campos con `enc:v1:` + AES-256-GCM, con clave `HMAC-SHA256(secreto, "dokploy:db-encryption:v1")`, y el secreto es `ENCRYPTION_KEY` o, si no hay, `BETTER_AUTH_SECRET`. Sin secreto configurado usa el legacy público `better-auth-secret-123456789`.
+- El script `https://dokploy.com/security/0.29.3.sh` crea un secreto nuevo y **solo vuelve a cifrar `two_factor`**. Todo `enc:v1:` previo deja de poder descifrarse, y el siguiente deploy sale `done` con un `.env` de 3 variables (`APP_NAME`, `COMPOSE_PROJECT_NAME`, `DOCKER_CONFIG`). Tell: «variable is not set» en `/etc/dokploy/logs/<appName>/`. Incidente del 14-oct en [[incidents]].
+- **Antes de lanzar el script**: contar en la BD de Dokploy cuántos `enc:v1:` hay. Si hay alguno, hacer lo de abajo en la MISMA ventana.
+- **Arreglo, conservando el secreto nuevo**: `decryptValue` también prueba las claves de `$BASE_PATH/encryption.key` (hex de 32 bytes por línea; `/etc/dokploy` en el host). La clave legacy derivada es `76c55d160af355d97ec752ce895f49f7c9e342dde3ad413fdec98a3fbf544247` (sale de una constante pública):
+  `printf %s <hex> > /etc/dokploy/encryption.key && chmod 600 /etc/dokploy/encryption.key && docker service update --force dokploy`. Hace falta reiniciar porque la clave se cachea por proceso. Después, redesplegar lo que salió vacío.
+- **Cierre**: volver a cifrar con la clave nueva. Lo hace `~/.claude/bin/recifrar-dokploy.sh` (`ssh <host> "bash -s -- dry|apply" < script`), que corre en el host, descifra con la clave legacy y cifra con la nueva dentro del contenedor `dokploy`, todo en una transacción y sin imprimir valores. Después, un deploy de prueba contando variables y, solo entonces, borrar `encryption.key` y reiniciar.
+- Un revert (`--env-rm BETTER_AUTH_SECRET_FILE --secret-rm dokploy-auth-secret`) también levanta las apps, pero vuelve a abrir la vulnerabilidad: se descarta.
+- `docker service update` del panel con el `start-first` por defecto se queda en «host-mode port already in use» hasta que converge solo.
+
 ## API Dokploy: `compose.one` y `schedule.one` devuelven el `env` COMPLETO
 
 - Ambos endpoints incluyen el bloque `env` entero del compose (todos los secrets: DB, API keys de terceros, tokens) en la respuesta, aunque solo se pida para leer metadata (autoDeploy, appName, último deploy).
