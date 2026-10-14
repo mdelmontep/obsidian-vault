@@ -1,7 +1,7 @@
 ---
 title: simarro
 date: 2026-06-10
-updated: 2026-10-01
+updated: 2026-10-14
 tags: [cliente, simarro]
 ---
 
@@ -12,6 +12,16 @@ Inmobiliaria (Las Rozas, Madrid). Chatbot WhatsApp + agente de voz Retell "Ana" 
 > Source of truth técnico: `~/Projects/simarro/CLAUDE.md`. Snapshot detallado: [[estado-actual]]. Routing/buffer citas: [[routing-citas-por-agente]].
 >
 > La web (solo landing/marketing) vive aparte en `~/Projects/simarro_web/` — no mezclar con este proyecto de automatización.
+
+## Estado (2026-10-14 · WhatsApp caído desde el 6-oct, auditoría voz+chatbot, repo compartido)
+
+- 🔴 **WhatsApp caído desde el 6-oct 21:07.** El 7-oct a las 10:35 Meta quitó la app de Kommo de la WABA `1517919943024153` («Deleted User»); el número +34 910 05 46 75 está en **coexistencia** (app de un móvil + QR de Kommo) y figura «Fuera de internet». Las salesbots devolvían `success:true`: 7 días sin detectar. **Dani lo reconecta por Cloud API pura** (runbook en el repo; el código por llamada lo coge Ana; si sale WABA nueva, hay que rehacer las plantillas). Compartir la WABA con AgentesiaLab dio «No se pueden asignar activos»: reintentar tras reconectar. → [[whatsapp-conectar-numero-propio-en-movil-a-cloud-api]] · [[kommo-salesbot-run-success-sin-acciones]]
+- **Watchdog `TGvGPilKJR2TQASy`** (actividad en Kommo y 0 salientes en 24 h → Slack) creado **desactivado**, sin OK. Plan: cuando la WABA esté compartida, Graph `status` cada 2 h y este como red diaria.
+- **Recordatorios (`Oa1lSQuDgEZvZCNS`) solo leía la página 1 de tareas (50 de 69)**: las visitas del 7, 8 y 13-oct nunca tuvieron recordatorio. Ahora HTTP paginado con limit 250.
+- **Voz v49 publicada** (rollback v48): hora fuera de slots → ofrece las 2 más cercanas (slots llega desordenado), ningún día/mes antes de Mirar, se presenta ante «¿con quién hablo?», 9 dígitos sin prefijo válidos, sin promesas de aviso sin tool. `LdEa` crea tarea «Devolver llamada» si pasa por fuera de horario o falla el transfer; E.164 en `LdEa` e `iMoT`.
+- **Chatbot:** regla dura #6 (lo que no está en catálogo → `comentario` o Derivar), preguntar qué vivienda si hay varias; `WIT9` acepta `telefono`/`comentario`. Fuera de alcance: `Buscar_viviendas_catalogo` pisa Property reference en cada búsqueda con un resultado (pide OK).
+- **Repo privado `AgentesIA-MAdrid/simarro-automatizacion`** (= `~/Projects/simarro`): export saneado de 40 workflows + flow v49, docs y runbooks, para Borja y Dani. Refrescar con `scripts/export.sh` tras cada cambio. Falta dar escritura a Borja y Dani (logins de GitHub).
+- Pendiente al volver WhatsApp: reenviar la confirmación del lead 36392738 y el matching del 12-oct. Memoria `project-auditoria-20261014`, `project-repo-simarro-automatizacion`. Backups `*-20261014.json`.
 
 ## Estado (2026-10-01 · voz v47/v48: transferencia, `user_number`, duplicados en Kommo)
 
@@ -213,8 +223,9 @@ Ver [[simarro-auditoria-voz-2026-08]] para el detalle completo (8 agentes de aud
 
 ## Otros pendientes
 
+- **Flecos de la carpeta recreada (12-ago, sin prisa; bajado de top-of-mind el 14-oct)**: vincular `simarro`/`simarro-web` al cliente en `/agency/time`; ¿borrar el repo GitHub `mdelmontep/simarro-properties-web`?
 - ✅ **Trunk SIP migrado (12-oct, 22:10 UTC)** — en Netelip, el DDI **+34910054675** apunta ahora a `SIP/+34910054675@sip.retellai.com:5060` (antes `…@5t4n6j0wnrl.sip.livekit.cloud`). Validado con tráfico real el 13-oct (`call_e19bfa8a9fe92d0419145212f2c`, sin `x-lk-*`). Pendiente probar una **transferencia a humano**, que sale por el mismo trunk. Procedimiento y vuelta atrás → [[retell-endpoints-deprecados-2026]]
-- 🔴 **Ana no deriva cuando piden persona (13-oct, `call_e19bfa8a9fe92d0419145212f2c`)** — ante «¿con quién hablo?» repitió el saludo literal; el llamante (de Idealista) pidió una persona y Ana colgó (`agent_hangup`) sin transferir. Revisar el flow; es la misma prueba de transferencia pendiente.
+- ✅ (v49, 14-oct: ya se presenta) **Ana no deriva cuando piden persona (13-oct, `call_e19bfa8a9fe92d0419145212f2c`)** — ante «¿con quién hablo?» repitió el saludo literal; el llamante (de Idealista) pidió una persona y Ana colgó (`agent_hangup`) sin transferir. Revisar el flow; es la misma prueba de transferencia pendiente.
 
 - **Limpieza leads de test 17-ago (Kommo UI)**: `34951382` (TEST E2E Phone Guard), `34951644`/`34951946` (TEST E2E/E2E Outbound) — usados para validar el guard de teléfono y los fixes de voz de hoy.
 - **Limpieza leads de test 12-ago (Kommo UI)**: `34790206` ("TEST BORRAR - validacion tarea") y su contacto `38931342` — usado para validar el fix de latencia de cancelación. Y avisar a `rss@`/`pss@simarroproperties.com`: recibieron 2-3 emails reales de "visita" por las pruebas de reserva de esta sesión (nombre "Test Latencia Claude").
