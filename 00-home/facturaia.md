@@ -112,6 +112,8 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Decisiones pendientes (producto)
 
+- ❓ **Triage 13-oct: decisiones en GitHub y ola en main (15-oct)**. Queda **#3558** (ocultar el IBAN exige permiso fiscal) y #3541/#3546-#3548/#3551 → [[facturaia-decisiones-13-oct-backlog]]
+
 - ⏸️ **Máquina de CI del gate, Fase 1 — APARCADA (29-sep): el Mac no se enciende** — #3058 en main y runner `fia-gate-mac` registrado pero offline; `gate.yml` desactivado (`disabled_manually`) y su cola vaciada. Sin él, el gate corre en local y el guard de merge acepta el verde local. Retomar: `gh workflow enable gate.yml`, rehacer las fases toolchain y runner (`docs/architecture/ci-runner-runbook.md`) y decidir Team vs Free (paso 9). #3082 (verde del Mac en el guard) cerrado el 2-oct: con el guard de #3100/#3105 hay que rehacerlo, no rebasarlo.
 - ❓ **¿Qué hacemos con «un modelo sin precio publicado aprende el suyo de la primera generación»? (12-sep, criterio 5 del #2683)** — **no es implementable hoy**: ni Higgsfield ni los demás proveedores devuelven el coste de la llamada, así que no hay de dónde aprenderlo. Los otros 4 criterios están en prod (#2731) y el issue sigue abierto solo por éste. Dos salidas, y hay que elegir una: (a) **retirar el criterio** y que los precios se tecleen a mano en «Modelos» —que es lo que ya pasa y funciona—, o (b) dejar el #2683 abierto esperando a un proveedor que publique coste por llamada. Recomendada la (a). → medición en el comentario del issue #2683
 
