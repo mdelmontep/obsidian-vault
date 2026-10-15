@@ -112,7 +112,7 @@ tags: [home, prioridades]
 | AGH Ibérica | [[agh-iberica]] | **Dos frentes**: Paquita (el agente; «Carlos» es el CEO) y **la contabilidad fuera de Yooz** (diseño cerrado, 13 tickets abiertos → [[facturaia-yooz-agh-migracion]]) · 🟢 **#1418 en prod: emite al portal de Flota IA**; hay turnos reales desde el 31-ago, falta el SELECT anclado · 🔴 **#1349 + #1350: los dos DPA sin firmar** · 🔴 tuyo 2 min: claves Langfuse (**#1009**) · #1424 el emisor solo loguea al fallar · 82 % de la cola humana sin dueño (#1351) |
 | Laserys Las Rozas | *sin hub* — backlog en `~/Projects/laserys-las-rozas/PENDIENTES.md` | Voz **v26** LIVE · 🔴 **WhatsApp sin entrantes desde el 9-jul**; el 11-sep el canal de Kommo amanece sin número y el *Registro de actividad* de Meta no registra desconexión → interno de Kommo. Capturas enviadas, **esperando respuesta, sin reconectar a propósito** · **tuyo**: captura 6 (móvil → Plataforma para empresas), borrar 8 leads `ZZ TEST`, 45 días de agenda con una sola cita |
 | Aula | [[aula]] | Propio · publicada · **repo en GitHub privado** · 115 temas / 7 lecciones · el runner escribe solo |
-| MandaDM | [[mandadm]] | Propio · desplegado y en verde · bloqueado solo por A6 (cliente tester de Instagram) |
+| MandaDM | [[mandadm]] | Propio · 🔴 **comprometido (React2Shell) y PARADO desde el 14-oct** · AEPD, App Secret de Meta y API key de Resend pendientes → [[mandadm-incidente-2026-10-14]] |
 | cryptobruj-bot | [[cryptobruj]] | Propio · 🔴 **en `live` 76 h, `scalp-5m` con 1 posición abierta** · solo tú puedes pararlo (sin ADMIN_TOKEN ni panel) · harness de 3 capas sin commitear |
 
 ## Completado reciente
