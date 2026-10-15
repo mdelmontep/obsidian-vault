@@ -507,3 +507,4 @@ tags: [home, archivo]
 - 2026-09-27 · TuFacturaIA · staging a la par de main (#1669 cerrado; 953-954 las aplicó otra sesión), seed con obra certificable (#3006, PR #3010); `SUELO_MEDIDOS_B` ya estaba en 64 desde #2758.
 - 2026-09-11 · agency-portal · PR #628 (Pizarra: densidad + columnas plegables) mergeado a `main`.
 - 2026-10-13 · TuFacturaIA · gate: huso Madrid en unitaria (#3451, #3283 cerrado) y clasificador de tarifas por clave con test en tuplas (#3454, mig 1053 en prod), cierre con tests de ventanas (#3460).
+- 2026-10-15 · agency-portal · Pizarra: #791–#799 y #802/#803 en `main` y desplegados (agente, horas cobrables/estimadas, propuestas comerciales, `quote.link`); plugin agentesia-skills #16–#24.
