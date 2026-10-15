@@ -11,7 +11,7 @@ la mitad del arranque de cada sesión. Aquí viven los 15 de esta área, íntegr
 
 Vuelve al hub: [[facturaia]]
 
-- 🟠 **Trenes de merge del 14-15 oct: 8 trenes y 30 PRs en prod (último #3572, migs 1055-1069)**. Pendiente: Docker de la VM reiniciado, pero fia-dbtest sigue en 0.0.0.0 ([[docker-daemon-json-ip-solo-vale-para-la-red-bridge-por-defecto]]); bajar la limpieza de `gate-remoto` (`-mtime +14`) a 1 día; `test-integracion.mjs` ignora los ficheros que recibe (~35 min).
+- 🟠 **Trenes de merge del 14-15 oct: 8 trenes y 30 PRs en prod (último #3572, migs 1055-1069)**. Pendiente: fia-dbtest ya escucha solo en 127.0.0.1 (red recreada el 15-oct, workdir `~/fia-dbtest-workdir`; [[docker-daemon-json-ip-solo-vale-para-la-red-bridge-por-defecto]]). Queda: bajar la limpieza de `gate-remoto` (`-mtime +14`) a 1 día; `test-integracion.mjs` ignora los ficheros que recibe (~35 min).
 - 🟠 **Reverificar 27 mediciones del barrido V2 (olas B/C)** — se archivaron como «bloqueadas por swap» y el motivo era un `next build` ajeno; el resto, en prod (migs 776-777). → [[el-porcentaje-de-swap-no-discrimina-thrashing-los-swapouts-si]]
 - 🟠 **Auditoría del 27-ago dentro (31-ago, #2318)** — **queda**: los 29 issues #2238-#2266. → [[un-recuento-sobre-el-estado-final-no-ve-la-ventana-de-exposicion]]
 - 🟠 **Prompt de continuación del 31-ago** (supersede al del 23) — **tres huecos**: `PLAN.md` 23 secciones vs `estado.json` 25; `qa/supertest-v2` ya no está en el remoto; `permisos-escritura-service-role` fuera de la cola. → [[antes-de-inventar-un-protocolo-mirar-si-el-esquema-ya-lo-codifica]]
