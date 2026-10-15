@@ -1,6 +1,7 @@
 ---
 title: una base de staging por detrás deja un candado sin medir, y el rojo parece del código
 date: 2026-09-08
+updated: 2026-10-15
 source: facturaia
 tags: [staging, migraciones, e2e, seguridad]
 ---
@@ -13,10 +14,11 @@ morder**. En facturaia (8-sep) la frontera cross-org medía 29 endpoints con
 403/404 sobre un suelo declarado de 59, con 101 sin medir. Ese eje no estaba
 verde ni rojo: estaba **sin medir**, y nada lo decía en alto.
 
-Cómo se mide el desfase sin acceso a `schema_migrations`: saca de cada migración
-la tabla que crea (`grep -oiE "create table ..."`) y biseca por PostgREST con la
-service role — 200 = aplicada, 404 = no. Staging cortaba entre la 754 y la 764,
-con el repo en la 880: **109 migraciones sin aplicar**, no las 10 del issue.
+Cómo se mide: `supabase migration list --db-url "$STAGING_DB_URL"` devuelve en JSON
+`local`/`remote` por versión, y las que tienen `remote` vacío son las que faltan.
+8-sep: 109 sin aplicar. 15-oct: faltaban de la 1055 a la 1063, y `visual-app` daba
+`db_error` («column … pdf_portal_no_derivable_at does not exist»). Nadie aplica a
+staging al mergear: se queda atrás cada semana.
 
 Ver [[una-asercion-deja-de-medir-cuando-cambia-su-fuente]] ·
 [[un-e2e-rojo-por-timeout-de-navegacion-mide-el-servidor-de-desarrollo]].
