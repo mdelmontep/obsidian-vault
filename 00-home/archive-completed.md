@@ -5,6 +5,7 @@ tags: [home, archivo]
 ---
 
 # Completado
+- **2026-10-15 · VM gates — disco recuperado (132 → 108 GB, 58 %)** — manu: copias de `~/gates` + prune rootless (−10 GB) y `gate-remoto` borra a 1 día + umbral 80 %; Dani como root: prune de gh-runner/ci-run (−16 GB) y `prune-docker-ci.timer` diario 04:30. El Docker de root pesaba 252 KB. → [[disco-de-vm-multiusuario-con-docker-rootless-se-mide-por-usuario]]
 - **2026-10-04 · agency-portal — #716/#717 (post-its y notas leídas de la Pizarra) mergeados en `main`** — pila siguiente #723→#729 y #730 lista para Borja. → [[agentesia]] hito 11
 - **2026-10-02 · FacturaIA — reembolsos a quien adelanta el pago de una recibida, en prod (#3211, mig 997)** — petición de abba: «La pagó alguien de la empresa…» en la ficha + Recibidas → Por reembolsar; smoke de prod OK. Siguiente: [[facturaia-now-producto]] (conciliación con el banco, por decidir).
 - **2026-09-27 · FacturaIA — defectos de los smokes del ticket 182 arreglados y en prod** — #3003 ficha con «(op. …)» (PR #3015), #3004 NIF normalizado (PR #3020, mig 956, 6 parejas duplicadas de orgs test fusionadas antes), #3005 `created_via='copiloto'` para el asistente de la app (PR #3017, mig 955), #3012 404 en género (PR #3016); smokes en prod OK. [[un-check-aplicado-antes-del-merge-deja-al-codigo-viejo-escribiendo-contra-el]]
