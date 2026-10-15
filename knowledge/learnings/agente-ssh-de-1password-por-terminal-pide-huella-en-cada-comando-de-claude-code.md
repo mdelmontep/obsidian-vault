@@ -1,16 +1,15 @@
 ---
 title: agente ssh de 1password por terminal pide huella en cada comando de claude code
 date: 2026-10-13
-source: claude-harness (sesión SSH vía 1Password, Mac)
-tags: [1password, ssh, claude-code]
+updated: 2026-10-16
+source: claude-harness (sesión SSH vía 1Password, Mac; ~/bin/gate-remoto y VM gates, 15-oct-2026)
+tags: [1password, ssh, claude-code, gates, gate-remoto]
 ---
-- **Síntoma**: con el agente SSH de 1Password, cada `ssh` que lanza Claude Code pide Touch ID, aunque acabes de aprobar.
-- **Causa**: Claude Code abre una shell nueva en cada llamada a Bash. Si el permiso se da por terminal (`Ask approval for each new` = *application and terminal session*), cada llamada cuenta como terminal nueva.
-- **Fix**, en la app del Mac, Settings → Developer → SSH Agent:
-  - `Ask approval for each new` = **application**.
-  - `Remember key approval` = un tiempo fijo (4 h o 12 h) en vez de «until 1Password locks».
-  - El aviso de huella trae la casilla «Approve for all applications».
-- El permiso se pierde igualmente si 1Password se autobloquea (Settings → Security → Auto-lock).
-- **No hay aprobación desde la app del móvil**: solo en el Mac, con Touch ID, contraseña o Apple Watch.
-- Fuente: https://developer.1password.com/docs/ssh/agent/security
-- Relacionado: [[1password]] (`opsa` para secretos, sin huella).
+- **Huella en cada `ssh` de Claude Code**: cada llamada a Bash es una shell nueva. Si se aprueba por *application and terminal session*, cada llamada cuenta como terminal nueva. Fix en Settings → Developer → SSH Agent: aprobar por **application**, recordar la aprobación un tiempo fijo y marcar la casilla «Approve for all applications». La aprobación solo se puede dar en el Mac; el móvil no sirve.
+- **Pre-push o gate en segundo plano: `agent refused operation` → `Permission denied (publickey)`** (15-oct). Con 1Password autobloqueado, el agente no tiene la clave privada y pide desbloqueo en cada firma. En segundo plano nadie lo atiende. La aprobación sobrevive al bloqueo, pero la firma no. Ningún ajuste de aprobación lo arregla. El rechazo va por conexión: un script con 8 conexiones tiene 8 ocasiones de caer. La pista fue `lastUnlock` en `settings.json`, que coincidía al segundo con el fallo.
+- **Fix para una máquina de builds**: clave dedicada en fichero y `IdentityAgent none` en su `Host`. En la VM, `restrict,pty,from=<subred de clientes VPN>`. En el script, un solo `ControlMaster` por corrida.
+- **`from=` va con la subred de CLIENTES de AIAVPN (10.251.0.x)**, no con la de servidores (10.250.0.x). Si está mal, la clave buena sale con el mismo `Permission denied` que una ajena.
+- **Para probar una sola clave**: `ssh -F /dev/null -i clave -p PUERTO user@IP`. `-i` añade la clave a las del `Host`, no las sustituye.
+- **Coste aceptado**: cualquier proceso del usuario entra en la VM sin preguntar. Una passphrase en el Keychain no lo evita, porque ssh la lee sin preguntar. Vale si en la VM no hay sudo, Docker rootless y sin secretos.
+- **«Pseudo-terminal will not be allocated»** sale con `RequestTTY auto`, sin orden remota y con stdin que no es una terminal; hasta `ssh -G` lo imprime. No viene del `pty` del servidor.
+- Fuente: https://developer.1password.com/docs/ssh/agent/security · Relacionado: [[1password]]
