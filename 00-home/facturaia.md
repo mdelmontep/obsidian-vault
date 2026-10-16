@@ -1,7 +1,7 @@
 ---
 title: facturaia
 date: 2026-05-10
-updated: 2026-10-15
+updated: 2026-10-16
 tags: [cliente, facturaia, hub]
 ---
 
@@ -112,7 +112,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ## Decisiones pendientes (producto)
 
-- ✅ **Triage 13-oct cerrado (16-oct, trenes 10-11)**. Restos: #3578, #3573, #3586 → [[facturaia-decisiones-13-oct-backlog]]
+- ✅ **Triage 13-oct cerrado (16-oct, trenes 10-11)**. Restos en trenes 12-13 → [[facturaia-decisiones-13-oct-backlog]]
 
 - ⏸️ **Máquina de CI del gate, Fase 1 — APARCADA (29-sep): el Mac no se enciende** — #3058 en main y runner `fia-gate-mac` registrado pero offline; `gate.yml` desactivado (`disabled_manually`) y su cola vaciada. Sin él, el gate corre en local y el guard de merge acepta el verde local. Retomar: `gh workflow enable gate.yml`, rehacer las fases toolchain y runner (`docs/architecture/ci-runner-runbook.md`) y decidir Team vs Free (paso 9). #3082 (verde del Mac en el guard) cerrado el 2-oct: con el guard de #3100/#3105 hay que rehacerlo, no rebasarlo.
 - ❓ **¿Qué hacemos con «un modelo sin precio publicado aprende el suyo de la primera generación»? (12-sep, criterio 5 del #2683)** — **no es implementable hoy**: ni Higgsfield ni los demás proveedores devuelven el coste de la llamada, así que no hay de dónde aprenderlo. Los otros 4 criterios están en prod (#2731) y el issue sigue abierto solo por éste. Dos salidas, y hay que elegir una: (a) **retirar el criterio** y que los precios se tecleen a mano en «Modelos» —que es lo que ya pasa y funciona—, o (b) dejar el #2683 abierto esperando a un proveedor que publique coste por llamada. Recomendada la (a). → medición en el comentario del issue #2683
@@ -259,7 +259,7 @@ Tarjeta expandible móvil emitidas/recibidas · pills listado docs móvil · toa
 
 ## NEXT (próximas 2 semanas)
 
-- 🟡 **Aprendizaje compartido entre empresas** (15-oct): SPEC, dictamen y ADR-133 en main (#3524 vía #3539). Faltan issues T0-T5 (`/to-tickets` del SPEC §8) y T8, con Manuel: publicar Condiciones/DPA §3 bis/`/privacidad` y avisar a los 11 clientes 30 días antes, antes de activar el agregador.
+- 🟡 **Aprendizaje compartido entre empresas** (16-oct): textos legales en prod (#3606: `/legal/condiciones`, `/privacidad`, DPA v0.2 §3 bis; efecto 15-nov para los clientes actuales) e interruptor opt-out en Ajustes → Empresa con aviso (#3613, mig 1075, tren 13 #3615). T0-T5 (#3595-#3600) ya no esperan a T8 (decisión de Manuel, 16-oct). **Tuyo**: enviar el email a los 11 clientes (`docs/compliance/aviso-clientes-condiciones-conocimiento-compartido.md`) y, si se quieren, las cláusulas que faltan (precios, baja, responsabilidad, jurisdicción, consumidores).
 - 🟡 **Fase C del ticket 175: el `RegistroAnulacion` de VeriFactu — lo siguiente que coger** — A y B cerraron el problema dentro de nuestro libro; C es decirle a la AEAT que un registro ya remitido queda sin efecto. Prompt entero, verificado fichero:línea, en `docs/architecture/PROMPT-continuacion-verifactu-registro-anulacion-fase-c.md`.
   **Hoy no urge y conviene saber por qué** (medido en prod el 12-sep con `BEGIN READ ONLY`): **cero** orgs con `verifactu_activo` y **cero** abonos con registro, así que el bloqueo `verifactu_registrado` de `abono_anular` (`bloqueos-abono-anular.ts:67`) no le ha mordido nunca a nadie. **Repite esa medida antes de fijar alcance**: el día que una org encienda `verifactu_activo`, ese bloqueo empieza a negar lo que A y B sí dieron.
   Plazo legal holgado (RDL 15/2025: los obligados, en 2027; la mitad del productor ya se cerró por declaración responsable). Sin prisa, pero **no se hace a medias**. → [[facturaia-historico-detallado]]

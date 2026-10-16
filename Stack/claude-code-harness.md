@@ -238,6 +238,8 @@ checker».
 
 ## Lo que un hook PUEDE ver, por evento (8-ago-2026)
 
+- **PreToolUse: `deny` con la receta, no `ask`** (16-oct): un `ask` para al humano en cada llamada y el modelo no aprende; `allow` a la forma canónica y `deny` con el comando literal → [[un-hook-que-deniega-con-la-receta-ahorra-la-confirmacion-humana]]
+
 - **`PreToolUse` evalúa el estado PREVIO.** Un compuesto que ensucia y descarta en la misma llamada
   —`printf >> f && … && git checkout -- f`— pasa sin bloquear, porque cuando el guard mira, `f` todavía
   está limpio. Comprobado: el mismo compuesto SÍ bloquea si el fichero venía sucio. No es un fallo del
