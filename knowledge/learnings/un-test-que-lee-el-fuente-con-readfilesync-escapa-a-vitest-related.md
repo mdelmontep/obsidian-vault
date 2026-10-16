@@ -13,4 +13,9 @@ Fix: si tocas un fichero que un test lee por ruta, córrelo a mano por nombre. P
 `git grep -l "readFileSync" -- '*.test.ts' | xargs grep -l "<nombre del fichero>"`. Lo cazó
 facturaia-39 en el tren 4 del albarán de venta (15-oct).
 
+Dos disparadores obligan al barrido: crear una ruta con `[id]` (hay candados que barren
+`src/app/api`) y MOVER lógica de fichero (el candado sigue leyendo el de origen). Los specs de
+Playwright `e2e:layout` que leen el JSX tampoco salen: si tocas componentes, córrelos. Tres rojos
+de una sola rama en el tren 11 (#3585, 16-oct); desde #3593 el pre-push lo hace solo.
+
 Ver [[una-asercion-deja-de-medir-cuando-cambia-su-fuente]].
