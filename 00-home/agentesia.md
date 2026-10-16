@@ -1,7 +1,7 @@
 ---
 title: agentesia
 date: 2026-07-22
-updated: 2026-10-16
+updated: 2026-10-17
 tags: [cliente, agentesia]
 ---
 
@@ -17,6 +17,7 @@ La empresa. agency-portal + ticketing chatbot + integración con TuFacturaIA + S
 - **Chatbot propio** — dos workflows vivos en `n8n.agentesia.madrid`: **`89B9QN23hOHDq6oP` "ChatBOT mejorado"** (WhatsApp vía Chatwoot, 63 nodos: captación + soporte/tickets) y **`G8vbSYm0SY3zi912` "Web Chat Agentesia"** (widget de la landing, síncrono, 12 nodos, NO pasa por Chatwoot). `enVlCyi7McKfwkRQ` está **apagado desde abril** pese a que la doc vieja lo señalaba como el vivo. Los dos escriben en el mismo Sheet `Registro de Leads AGENTESIA` distinguidos por `Channel`. Widget en el repo `agentesia-web` → `src/pages/ChatbotPage.tsx:21`. API key n8n en 1Password `N8N API Key - AgentesIA (Claude)` (vault Agentesia)
 - **agentesia-web** — la landing pública (`agentesialabs.com`), Vite + react-ssg (NO Next). Gates: `npm run lint && npx tsc --noEmit && npm test && npm run build`; el H1 se comprueba sobre el `dist/index.html` prerenderizado, no sobre el DOM del dev. ⚠️ **`mdelmontep` NO tiene push aquí** — se contribuye por fork+PR y mergea `notcapi`. Ver [[permiso-de-github-es-por-repo-no-por-pertenecer-a-la-org]]
 - **Slack workspace** activo, canvases por proyecto
+- **Avisos del portal (17-oct)** — toda lectura fallida pasa por `readFailed` → Telegram (#845–#854, guard con deuda 0); módulos fail-closed (#844); sonda `ops/portal-db-probe` instalada en el host de NotCaido (BD + 686 selects, cada 5 min). Pendiente: Manuel no está en el grupo «Alertas infra AIA» (creador capi) → `issues/PROMPT-CONTINUACION-AVISOS-LECTURA.md`. [[embed-postgrest-sobre-fk-compuesta-por-nombre-de-columna-da-pgrst200]] · [[canal-de-alertas-que-envia-bien-puede-no-llegar-a-quien-actua]]
 
 ## Próximos hitos
 
