@@ -5,3 +5,5 @@ source: agentesia-lab (P2026-0017 Orión Dental)
 tags: [inbox, skills, presupuestos]
 ---
 Para el P2026-0017 se parcheó una copia del motor (guardada en `~/Documents/Orion/motor/presupuesto_desarrollo.py`) (la skill de `~/Projects/agentesia-skills` tenía cambios sin commitear de otra sesión). El parche añade `horas` por módulo (columna HORAS EST. en modo `solo_total`) y, si cada módulo trae `back` y `front`, las columnas BACK END / FRONT END con sus totales; comprueba que `back + front == horas`. Propuesta: portarlo a la skill junto con la tarifa de 30 €/h (18,75 € de coste + costes operativos + 20 % de margen).
+
+Feedback de Dani (15-oct) al portarlo: el cliente no entiende horas sin euros. Con horas por bloque, poner también el importe por bloque (h × tarifa), una línea «N h × 30 €/h» antes del total, y dejar back/front solo para uso interno (no en el PDF del cliente). Que la intro y las Condiciones digan lo mismo: o precio cerrado o estimación.
