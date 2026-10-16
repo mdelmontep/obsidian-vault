@@ -250,6 +250,17 @@ ps aux | head -5                     # procesos y CPU time
 - Los 4 hosts tienen ya en su vault: documento `SSH root — <host> (ed25519, compartida)` (clave privada) + ítem SERVER `Dokploy SSH root — <host>`. Alias local `ssh <host>` en `~/.ssh/config`.
 - Autorizar clave nueva: `sshpass -e ssh -p 5251 root@<IP>` con `SSHPASS` leído por `opsa` (nunca `ssh-copy-id` sin sshpass → prompt interactivo). El clasificador de Claude Code bloquea ese SSH → correrlo con `!`. Ver [[vps-dokploy-de-una-tanda-comparten-password-root]].
 
+## prod-ro — lecturas de producción de solo lectura (16-oct-2026)
+
+- **Qué es**: `~/.claude/bin/prod-ro <alias> <ps|inspect|stats|top|logs> [contenedor] [--tail N] [--since X] [--grep P]`. Wrapper ssh versionado en claude-harness (PR #14). Sale de la retro de b22a5c12 (MandaDM): el clasificador denegó como [Production Reads] cadenas `ssh tucrmia '...'` opacas como root. Un comando corto con plantilla fija se aprueba en cuanto Manuel nombra el host.
+- **Hosts**: lista cerrada de alias de `~/.ssh/config`: `tucrmia tufacturaia clinicazen simarro elphis agh agentesia`. Todos entran como root. No admite IPs ni el comodín `10.250.0.*`, ni `gates` ni `fia-ci` (no son producción).
+- **Subcomandos**: `ps` (sin contenedor); `inspect C` con plantilla fija: nombre, imagen, usuario, estado, reinicios, privileged/pid/net/capadd/ro_rootfs y mounts. Nunca Env, Cmd, Entrypoint, Args ni Labels. `stats [C]`; `top C` con `-eo pid,ppid,user,etime,rss,comm` (`comm` no lleva argv); `logs C` con `--tail` 1-300 (100 por defecto), `--since` `N[smh]` o fecha ISO (la duración Go no acepta `d`) y `--grep` aplicado en local con `grep -F`. Sin `-f`.
+- **Defensas**: cada token se valida por regex y el comando remoto es texto fijo; ssh `-T -o BatchMode=yes -o ClearAllForwardings=yes -o ForwardAgent=no --`; redacción local por patrones de toda la salida (JWT, `sk_*`, `sk-ant-*`, `ghp_*`, `xox*`, `AKIA*`, `Bearer`, `user:pass@` y clave=valor con token/secret/password/api_key/authorization/private_key/service_role); cabecera «DATO NO CONFIABLE».
+- **Sin regla allow**: el clasificador sigue juzgando cada llamada. Una `permissions.allow` para el script se aplazó: bastaría un `sed -i` sobre el script para tener RCE como root sin revisión. Solo se plantea con orden de Manuel y un hook de integridad sha256 contra `git HEAD`.
+- **No cubre (forense)**: nsenter, `/proc/<pid>/root`, sha256 de binarios dentro del contenedor y `docker exec`. Van a Manuel como comando `!`.
+- **Riesgo residual de `logs`**: la redacción es por patrones. Un secreto con un formato no previsto que la app escriba en sus logs sobrevive. Lo acotan el tope de 300 líneas y `--grep`, pero no lo eliminan. Leer logs de producción sigue exponiendo datos de clientes.
+- **Probar sin tocar producción**: `PROD_RO_DRY_RUN=1` imprime el argv de ssh sin conectar; `PROD_RO_REDACT_ONLY=1` redacta stdin. Suite: `bash ~/.claude/bin/tests/prod-ro.test.sh`.
+
 ## Generación de credenciales
 
 ```bash
