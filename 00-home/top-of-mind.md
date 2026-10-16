@@ -10,6 +10,7 @@ tags: [home, prioridades]
 
 ## NOW (máx 5)
 
+- 🟠 **TuFacturaIA — auditoría: trenes 1-3 en prod (16-oct)** — **Tuyo**: enforce AAL2 el 18-oct → [[facturaia]]
 - 🟠 **TuFacturaIA — Fabbros (cartonaje, Alcalá): reunión presencial 23-sep, demo, logo y tres presentaciones listas** — en prod hoy los dos arreglos que salieron de montarla (#2864 decimales del precio, #2868 el email al emitir). Albarán de venta: #3106 y #3128 cerradas (13-oct). → [[facturaia]]
 - 🟢 **EcoBox — sin citas desde el 22-sep (voz v26 + WhatsApp → email al taller), sin estrenar** — **tuyo**: llamada real en y fuera de horario + un WhatsApp y confirmar email a Cristian/info, **rotar HMAC de Chatwoot + `X-Ecobox-Token`**, decidir si se apagan los workflows de reservas. → [[clientes/ecobox/index|ecobox]] §EMPEZAR AQUÍ
 - 🟠 **AGH — su contabilidad sale de Yooz a TuFacturaIA (30-ago)**: diseño CERRADO y **ADR-063 ya en `main`** (#2874; spec #2295, tickets #2296-#2308, #2296/#2297 cogibles). **Sin código** desde el 30-ago. **Tuyo**: mandar los tres cuestionarios (Giuliana, Carlos, Mazars) y decidir si arranca el primer ticket. → [[agh-iberica]] · [[facturaia-yooz-agh-migracion]]
