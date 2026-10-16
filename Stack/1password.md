@@ -19,5 +19,6 @@ Movido desde `~/.claude/CLAUDE.md` §Herramientas CLI (28-sep-2026). El global c
 - **Higiene**: NUNCA imprimir el secreto; consumir inline (`PGPASSWORD=$(opsa read ...) psql ...`). Tampoco en args de permisos ni en settings: un secreto pegado en `settings.local.json` queda en disco en claro.
 
 - **Agente SSH**: si pide huella en cada comando de Claude Code → [[agente-ssh-de-1password-por-terminal-pide-huella-en-cada-comando-de-claude-code]].
+- **Crear claves SSH o tocar authorized_keys** → guion `/wizard` desde el primer paso (huella de 1Password, VPN, prueba de la clave fijada). Ver [[pasar-ssh-a-ip-privada-verificar-por-huella-y-probar-la-clave-fijada]].
 
 Ver [[op-item-delete-falla-con-campo-ssologin]] · [[op-cli-instalar-arm64-sin-homebrew]] · `Stack/claude-code-gotchas.md` (arqueología pre-service-account).
