@@ -1,5 +1,5 @@
 ---
-title: ADR-080 — Pizarra vincula presupuestos de FacturaIA, no los crea
+title: ADR-134 — Pizarra vincula presupuestos de FacturaIA, no los crea
 date: 2026-10-15
 status: accepted
 tags: [adr, agency-portal, pizarra, facturaia]
