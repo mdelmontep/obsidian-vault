@@ -40,7 +40,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 ### Depende de ti
 
 - 🟠 **Fabbros → carga de datos 7-oct**: auditoría cerrada, todo en prod (último #3188), smoke verde y guía completa; quedan los ajustes de la org con AGH → [[facturaia-now-clientes]]
-- 🟢 **Fabbros → albarán de venta** (ADR-112): 32/33 cerradas (tren 13, 16-oct; staging al día hasta la 1073). Abierta: #3476. Restos: #3592 y #3609 (org activa del E2E compartido). Decisiones en [[facturaia-decisiones-14-oct-backlog]] → [[facturaia-now-clientes]]
+- 🟢 **Fabbros → albarán de venta** (ADR-112): 32/33 cerradas (tren 13, 16-oct). Abierta: #3476. Restos: #3592, #3609. Decisiones en [[facturaia-decisiones-14-oct-backlog]] → [[facturaia-now-clientes]]
 - 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** → [[facturaia-now-ocr]]
 - 🟠 **Contabilidad analítica + export Cegid `.TRA` (AGH Ibérica) — diseño cerrado, sin código (30-ago)** → [[facturaia-now-clientes]]
 - 🟡 **Dos pruebas del smoke que no miden (22-sep, de la auditoría del reparto)** → [[facturaia-now-infra]]
