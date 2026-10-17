@@ -6,7 +6,7 @@ tags: [adr, agency-portal, pizarra, facturaia]
 ---
 
 ## Contexto
-Desde el 9-jun el portal no crea presupuestos: los 13 desde junio se hicieron a mano en TuFacturaIA. El PDF de la skill presupuesto-desarrollo numera a mano y choca (P2026-0019 de ORCONSA es de Alba Orgaz en FacturaIA).
+Desde el 9-jun el portal no crea presupuestos: los 13 desde junio se hicieron a mano en TuFacturaIA. El PDF de la skill presupuesto-desarrollo numera a mano y choca: el de ORCONSA salió como P2026-0019, número que en FacturaIA ya era de Alba Orgaz; allí el de ORCONSA quedó como P2026-0022.
 
 ## Opciones consideradas
 - **A** — Pizarra crea el presupuesto (`quote.draft`) desde la sesión: duplica numeración y flujo; pocas veces se pide.
