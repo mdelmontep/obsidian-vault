@@ -5,6 +5,15 @@ status: accepted
 tags: [adr, facturaia, mcp, oauth, seguridad]
 ---
 
+
+> [!info] Portado al repo como **ADR-061** (30-ago-2026)
+> El código de `facturaia` cita esta decisión desde `services/mcp-server/`, así
+> que vive también en `facturaia/docs/decisions/ADR-061-el-as-oauth-del-mcp-esta-partido-app-servicio-y-va-hand-roll.md`,
+> donde los tests pueden anclarla. Cambia el número porque el `ADR-032` del repo
+> es otra decisión (el albarán valorado) y las dos series se citan igual; ver
+> `facturaia/docs/decisions/NUMERACION.md`. **La copia del repo manda**: si algo
+> cambia, se cambia allí y este documento se queda como está, con su fecha.
+
 ## Contexto
 El servidor MCP remoto necesita OAuth 2.1 (issue 045). El servicio vive en `mcp.tufacturaia.com` y la sesión Supabase (cookies) en `app.tufacturaia.com`. El access token está fijado por el contrato 041 (user-token JWT ES256, ya verificado por la v1 en slice 044). El PRD había anotado usar `@jmondi/oauth2-server`.
 

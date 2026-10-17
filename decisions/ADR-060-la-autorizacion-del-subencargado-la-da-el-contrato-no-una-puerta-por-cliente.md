@@ -1,5 +1,5 @@
 ---
-title: la autorización del subencargado la da el contrato, no una puerta por cliente
+title: ADR-060 — la autorización del subencargado la da el contrato, no una puerta por cliente
 date: 2026-08-28
 status: aceptada
 tags: [rgpd, flota-ia, agency-portal]

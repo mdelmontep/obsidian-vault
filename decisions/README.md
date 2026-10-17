@@ -8,6 +8,18 @@ tags: [decisions, adr, architecture]
 
 Una decisión = un archivo `ADR-NNN-slug.md`. Cuando elijas A sobre B y la elección no sea obvia leyendo el código (porque B también funcionaría), regístrala aquí. Sin esto, en 6 meses no recuerdas por qué.
 
+## Cómo se numera
+
+**El número siguiente es el mayor de las DOS series más uno**, no el mayor de esta
+carpeta. Hay otra serie de ADR en `~/Projects/facturaia/docs/decisions/`, el código
+de ese repo cita las dos por el mismo prefijo `ADR-NNN`, y un número repetido lleva
+al lector a un documento coherente que habla de otra cosa — el peor fallo posible de
+una cita, porque no parece un fallo.
+
+La cifra no se apunta aquí porque caduca sola (esta línea dijo «el 063» durante
+veinte ADR): mídela en las dos carpetas antes de numerar. La política completa y su
+porqué están en `facturaia/docs/decisions/NUMERACION.md`.
+
 ## Cuándo crear ADR
 - Elegir librería/herramienta entre alternativas reales (no "uso fetch porque sí").
 - Schema de BD donde había 2+ formas válidas (single table vs split, FK vs JSON, etc.).
@@ -25,6 +37,7 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 ## Index
 <!-- añade aquí cada ADR como 1 línea: NNN · YYYY-MM-DD · título -->
 - 001 · 2026-05-11 · [[ADR-001-cron-observability|Observabilidad de crons via tabla cron_runs + Dokploy externo]] (TuFacturaIA)
+- 001 · 2026-05-18 · [[ADR-001-doctoralia-google-calendar|Agenda de Centro Elphis vía Google Calendar, no la API de Doctoralia]] (Centro Elphis) — **el 001 está usado dos veces**, en dos proyectos distintos. No se renumera porque aquí todo se cita por wikilink de slug, que sí es único; pero el número solo no identifica nada, así que no lo cites a secas.
 - 002 · 2026-05-18 · [[ADR-002-bot-state-machine-postgres|State machine conversacional del bot WhatsApp en Postgres chat_state]] (TuFacturaIA)
 - 003 · 2026-05-18 · [[ADR-003-slot-resolver-determinista|Slot resolver determinista pre-LLM con regex en español]] (TuFacturaIA)
 - 004 · 2026-05-18 · [[ADR-004-tool-calling-vs-json-schema-en-extraccion-onboarding|Tool calling con tool_choice forzado para extracción estructurada]] (agency-portal)
@@ -55,7 +68,7 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - 029 · 2026-06-13 · [[ADR-029-conciliacion-casos-asientos-no-ledger|Conciliación casos contables (préstamos/suplidos/compensación): NO ledger, aproximación por categorización como ámbito futuro]] (TuFacturaIA)
 - 030 · 2026-06-16 · [[ADR-030-ingreso-sin-factura-ticket-vs-fuera-iva|Ingreso sin factura: ticket (simplificada) para ventas con IVA al 303; "sin factura" solo para no sujetos]] (TuFacturaIA)
 - 031 · 2026-06-16 · [[ADR-031-stock-lotes-opt-in|Stock por partidas/lotes: opt-in híbrido por producto, motor aislado]] (TuFacturaIA)
-- 032 · 2026-06-18 · [[ADR-032-mcp-oauth-as-split-app-servicio-handroll|AS OAuth del MCP partido app↔servicio + hand-roll (no @jmondi)]] (TuFacturaIA)
+- 032 · 2026-06-18 · [[ADR-032-mcp-oauth-as-split-app-servicio-handroll|AS OAuth del MCP partido app↔servicio + hand-roll (no @jmondi)]] (TuFacturaIA) — **portado al repo como `ADR-061`** el 30-ago-2026, porque el código lo citaba por número y aquí ese número es otro documento en `facturaia/docs/decisions/`. Manda la copia del repo; ésta se queda con su fecha.
 - 033 · 2026-06-18 · [[ADR-033-posicionamiento-popovers-floating-ui|Posicionamiento de popovers anclados con @floating-ui/react (no CSS anchor positioning aún, no cálculo casero)]] (TuFacturaIA)
 - 034 · 2026-06-19 · [[ADR-034-paginacion-offset-vs-keyset|Paginación UI interna — offset vs keyset]] (TuFacturaIA)
 - 035 · 2026-07-01 · [[ADR-035-control-canal-ingesta-pantalla-unica-vs-duplicado|Control de un canal de ingesta vive en una sola pantalla, con estado de solo lectura en el resto]] (TuFacturaIA)
@@ -71,6 +84,7 @@ Copiar `_template.md`, máx 15 líneas. Si necesita más, hay debate pendiente �
 - [[ADR-045-el-coste-medio-se-rehace-desde-el-ledger-al-revertir-una-compra]] — al revertir una compra el coste medio se recalcula desde el ledger aunque pise un valor tecleado a mano: un acumulado no se arregla repitiendo la operación buena.
 - [[ADR-046-secretos-por-service-account-no-en-env-en-claro]] — los secretos se leen con service account (`opsa`) y hook que bloquea el `op` interactivo; nunca se vuelcan a un `.env` en claro.
 - [[ADR-047-escalon-1-openai-para-el-agente-de-agh-provisional]] — de momento OpenAI directo y se cambia si hace falta: la elección de proveedor es nuestra y reversible por config, pero NO autoriza el egress de filas al modelo, que es del cliente final.
+- [[ADR-048-tufacturaia-sigue-en-supabase-cloud]] — TuFacturaIA se queda en Supabase Cloud: la factura real medida son 20 $/mes y autoalojar se reabre solo por encima de ~150 $/mes. La hipótesis de «el dinero está en los PDF» se descartó al medir.
 - [[ADR-049-pagos-declarados-en-ledger-aparte-del-de-banco]] — los cobros sin banco detrás van a su propio ledger y recompute pasa a ser el único escritor del estado; se unifica la LECTURA (una sola función suma), no el almacenamiento.
 - [[ADR-050-el-modelo-frasea-solo-donde-el-guard-puede-rechazarlo]] — el LLM reformula solo donde un guard determinista puede rechazarlo; la lectura cuyo texto lleva un hecho no verificable se declara literal. Ni ampliar la whitelist (persigue el caso) ni apagar el fraseo (era su único trabajo).
 - [[ADR-051-el-redondeo-de-importes-sube-el-medio-centimo]] — el `x,xx5` sube (variante con `Number.EPSILON`): 55 copias del redondeo a una sola en `lib/dinero/`. `lib/fiscal` queda fuera, ya usa céntimos con `BigInt`.
