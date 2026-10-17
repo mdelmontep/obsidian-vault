@@ -39,7 +39,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ### Depende de ti
 
-- 🟠 **Auditoría + remediación (16-oct)**: trenes 1-3 en prod (#3637, #3644). **Tuyo**: enforce AAL2 tras la sombra (18-oct 20:17Z), ejecutar `medicion-prod-ola2.sql`, OK a Payment Links (PR-11). Plan: `PROMPT-continuacion-16-oct-auditoria-trenes.md` · [[gate-remoto-se-corta-cuando-el-mac-se-duerme]]
+- 🟠 **Auditoría + remediación (16-oct)**: trenes 1-3 y 2FA (#3647 mig 1084, #3649) en prod; queda PR D (RLS aal2, sesión fresca). **Tuyo**: OK a `MFA_API_AAL_MODE=enforce` antes del `db push` de D; `medicion-prod-ola2.sql`; OK a PR-11. Plan: `PROMPT-continuacion-16-oct-auditoria-trenes.md` §Paso 0 · [[supabase-mfa-totp-integracion-gotchas]]
 - 🟠 **Fabbros → carga de datos 7-oct**: auditoría cerrada, todo en prod (último #3188), smoke verde y guía completa; quedan los ajustes de la org con AGH → [[facturaia-now-clientes]]
 - ✅ **Fabbros → albarán de venta** (ADR-112): 33/33 cerradas (tren 13, 16-oct; #3476 vía #3608). Restos: #3592, #3609. Decisiones en [[facturaia-decisiones-14-oct-backlog]] → [[facturaia-now-clientes]]
 - 🟢 **Estudio de pieza (#2667): seis tickets en prod (13-sep, #2737-#2749)** → [[facturaia-now-ocr]]

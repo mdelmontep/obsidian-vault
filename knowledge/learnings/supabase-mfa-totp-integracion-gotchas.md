@@ -10,4 +10,6 @@ Integrar 2FA TOTP nativo de Supabase (`auth.mfa.*`). Gotchas:
 - `listFactors().totp` solo trae factores **verified**; los `unverified` colgando están en `.all` → limpiarlos antes de re-enrollar (TS además marca `.totp[].status` como literal `'verified'`).
 - `unenroll` exige aal2 (re-verificar el código antes de desactivar).
 - Recovery codes NO existen en Supabase y NO elevan AAL → tabla propia de hashes; sirven para desactivar el factor perdido (`admin.mfa.deleteFactor`), no para saltarse el 2FA.
+- `getAuthenticatorAssuranceLevel()` **sin jwt** saca `nextLevel` de `session.user.factors`, que viene de la COOKIE (editable): un gate de middleware que se fía de él se salta quitando el factor de la cookie. Decidir con el claim `aal` del access token + `user.factors` de `getUser()`, y fallar cerrado (16-oct, FacturaIA #3649).
+- La RLS no mira `aal`: todo gate en Next es cosmético frente a PostgREST/GraphQL/Storage con la anon key. Hace falta política `RESTRICTIVE` con `auth.jwt()->>'aal'` (diseño FacturaIA PR D).
 - `session_timeout` por-org NO es posible (JWT expiry global del proyecto) → solo cierre por inactividad client-side. Ver [[2fa-telefono-solo-para-canal-que-lo-usa-no-gate-global]].
