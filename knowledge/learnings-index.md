@@ -1070,3 +1070,4 @@ sabes en qué área estás; no para comprobar si algo existe — para eso, `vaul
 - [[holded-api-cuota-mes-natural-y-uso-por-endpoint]] — la cuota de la api de holded es por mes natural y su ui la desglosa por endpoint
 - [[embed-postgrest-sobre-fk-compuesta-por-nombre-de-columna-da-pgrst200]] — embed de postgrest sobre fk compuesta nombrado por columna da pgrst200
 - [[canal-de-alertas-que-envia-bien-puede-no-llegar-a-quien-actua]] — un canal de alertas que envía bien puede no llegarle a quien tiene que actuar
+- [[un-servicio-keepalive-que-cae-al-arrancar-no-avisa-solo-engorda-el-log]] — un servicio keepalive que cae al arrancar no avisa, solo engorda el log

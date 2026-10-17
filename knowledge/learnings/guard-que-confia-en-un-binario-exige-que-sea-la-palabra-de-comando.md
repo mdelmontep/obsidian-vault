@@ -12,5 +12,6 @@ Patrón:
 - Rutas de flags que escriben: relativas y sin `..`.
 - Una asignación `X=…` cuenta solo en posición de comando (`--from hot=/tmp/x` no es entorno).
 - Tests de deny por lanzador + mutantes de la función que decide.
+- Ni «palabra mágica» en el texto: `dokploy-secret-guard` eximía todo comando con `dokploy-safe` (`curl … # dokploy-safe`); una inyección la escribe igual. Quitarla si la forma legítima ya pasa por otra condición (17-oct).
 
 Relacionado: [[claude-code-gotchas]]

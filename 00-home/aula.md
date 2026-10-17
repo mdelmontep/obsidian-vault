@@ -1,7 +1,7 @@
 ---
 title: Aula
 date: 2026-08-10
-updated: 2026-08-18
+updated: 2026-10-17
 tags: [proyecto, aprendizaje, nextjs, supabase, dokploy]
 ---
 
@@ -51,6 +51,11 @@ Repo `~/Projects/learn-agentesia` → **`github.com/mdelmontep/learn-agentesia` 
   `launchctl unload ~/Library/LaunchAgents/es.agentesia.aula.runner-remoto.plist`. Log en
   `~/Library/Logs/aula-runner-remoto.log`.
   → [[matar-un-proceso-no-lo-para-si-detras-hay-un-servicio-que-lo-resucita]]
+- 🟠 **Runner caído del 14 al 17-oct sin avisar** — `node_modules` amaneció vacío el 14-oct 00:01 (el día
+  que los gates pasaron a la VM; `gate-remoto` lo menciona, sin confirmar que sea él) y KeepAlive lo
+  relanzó 24.347 veces con `Cannot find package '@supabase/supabase-js'`. `npm ci` el 17-oct lo levanta.
+  **Vigilar el log tras el próximo gate de learn-agentesia**; vaciar el log (31 MB) es tuyo.
+  → [[un-servicio-keepalive-que-cae-al-arrancar-no-avisa-solo-engorda-el-log]]
 - ⚠️ **La petición del trabajo se congela al encolar** — al reescribir los temas, 16 de 20 trabajos
   pendientes seguían pidiendo la versión vieja. Antes de tocar el temario: retirar los desfasados y
   reencolar. → [[un-trabajo-en-cola-que-guarda-el-texto-y-no-la-referencia-nace-caducando]]
