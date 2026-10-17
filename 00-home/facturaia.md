@@ -39,6 +39,7 @@ App SaaS de facturación con IA (OCR, agente WhatsApp, voz, recomendador). Multi
 
 ### Depende de ti
 
+- 🟢 **Firma de contraparte**: 5a en prod (#3651, mig 1086, 17-oct); falta el PR 6 (pantalla) en sesión nueva, `PROMPT-continuacion-17-oct-firma-pr6.md`. **#3656**: 3 crons leen `org_features` y 12/13 orgs no reciben avisos; decide Manuel.
 - 🟠 **Auditoría + remediación (16-oct)**: trenes 1-3, 2FA (#3647 mig 1084, #3649, D #3653) y Q35 (#3654, fuera validate-phone y cola WA) en prod; manuales #3652. Medición ola 2 hecha (17-oct): PR-17 se replantea, 18/19/20/29 siguen. **Tuyo**: OK a la lista de PR-11 antes del barrido. Plan: `PROMPT-continuacion-16-oct-auditoria-trenes.md` · [[supabase-mfa-totp-integracion-gotchas]]
 - 🟠 **Fabbros → carga de datos 7-oct**: auditoría cerrada, todo en prod (último #3188), smoke verde y guía completa; quedan los ajustes de la org con AGH → [[facturaia-now-clientes]]
 - ✅ **Fabbros → albarán de venta** (ADR-112): 33/33 cerradas (tren 13, 16-oct; #3476 vía #3608). Restos: #3592, #3609. Decisiones en [[facturaia-decisiones-14-oct-backlog]] → [[facturaia-now-clientes]]
